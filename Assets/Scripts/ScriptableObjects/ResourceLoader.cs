@@ -168,6 +168,6 @@ public class ResourceLoader : ScriptableObject
 
     public bool FileExists(string fileName)
     {
-        return File.Exists(Path.Combine(Caching.currentCacheForWriting.path, fileName););
+        return File.Exists(Path.Combine(Caching.currentCacheForWriting.path, fileName));
     }
 }
