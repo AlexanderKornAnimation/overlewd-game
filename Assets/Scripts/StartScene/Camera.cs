@@ -9,10 +9,7 @@ public class Camera : MonoBehaviour
 
     private void Awake()
     {
-        bool has = resourceLoader.HasNetworkConection();
-        bool wifi = resourceLoader.NetworkTypeWIFI();
-        bool mobile = resourceLoader.NetworkTypeMobile();
-        int q = 0;
+
     }
 
     // Start is called before the first frame update

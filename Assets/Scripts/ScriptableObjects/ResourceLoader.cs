@@ -8,6 +8,10 @@ using UnityEngine.Networking;
 [CreateAssetMenu(fileName = "New ResourceLoader", menuName = "Resource Loader", order = 51)]
 public class ResourceLoader : ScriptableObject
 {
+    public string GetDeviceId()
+    {
+        return SystemInfo.deviceUniqueIdentifier;
+    }
     public bool HasNetworkConection()
     {
         return Application.internetReachability != NetworkReachability.NotReachable;
