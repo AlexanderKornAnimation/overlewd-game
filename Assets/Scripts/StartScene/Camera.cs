@@ -7,7 +7,10 @@ public class Camera : MonoBehaviour
     [SerializeField]
     private ResourceLoader resourceLoader;
 
-    private void Awake()
+    [SerializeField]
+    private Player player;
+
+    void Awake()
     {
 
     }
