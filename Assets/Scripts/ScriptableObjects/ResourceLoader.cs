@@ -139,4 +139,35 @@ public class ResourceLoader : ScriptableObject
         }
     }
 
+    public void CacheText(string fileName, string text)
+    {
+        var path = Path.Combine(Caching.currentCacheForWriting.path, fileName);
+        File.WriteAllText(path, text);
+    }
+
+    public void TextFromCache(string fileName, Action<string> response)
+    {
+        var path = Path.Combine(Caching.currentCacheForWriting.path, fileName);
+        response(File.ReadAllText(path));
+    }
+
+    private void CacheBinary(string fileName, byte[] data)
+    {
+        var path = Path.Combine(Caching.currentCacheForWriting.path, fileName);
+        File.WriteAllBytes(path, data);
+    }
+
+    private void TextureFromCache(string fileName, Action<Texture2D> response)
+    {
+        var path = Path.Combine(Caching.currentCacheForWriting.path, fileName);
+        var texture = new Texture2D(1, 1);
+        var data = File.ReadAllBytes(path);
+        texture.LoadImage(data, true);
+        response(texture);
+    }
+
+    public bool FileExists(string fileName)
+    {
+        return File.Exists(Path.Combine(Caching.currentCacheForWriting.path, fileName););
+    }
 }
