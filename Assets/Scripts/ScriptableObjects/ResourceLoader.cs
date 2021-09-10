@@ -28,7 +28,9 @@ public class ResourceLoader : ScriptableObject
     public void AddCacheAtPath(string path)
     {
         if (!Directory.Exists(path))
+        {
             Directory.CreateDirectory(path);
+        }
 
         Cache newCache = Caching.AddCache(path);
 
@@ -121,7 +123,7 @@ public class ResourceLoader : ScriptableObject
         }
     }
 
-    public IEnumerator LoadBundleFromServer(string url, Action<AssetBundle> response)
+    public IEnumerator LoadAssetBundleFromServer(string url, Action<AssetBundle> response)
     {
         using (var request = UnityWebRequestAssetBundle.GetAssetBundle(url))
         {
@@ -134,6 +136,45 @@ public class ResourceLoader : ScriptableObject
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
+                response(null);
+            }
+        }
+    }
+
+    public IEnumerator LoadAssetBundleFromServerWithCache(string url, Action<AssetBundle> response)
+    {
+        while (!Caching.ready)
+        {
+            yield return null;
+        }
+
+        using (var requestManifest = UnityWebRequest.Get(url + ".manifest"))
+        {
+            yield return requestManifest.SendWebRequest();
+
+            if (!RequestCheckError(requestManifest))
+            {
+                var hashRow = requestManifest.downloadHandler.text.ToString().Split("\n".ToCharArray())[5];
+                var hash = Hash128.Parse(hashRow.Split(':')[1].Trim());
+
+                using (var requestAssetBundle = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0))
+                {
+                    yield return requestAssetBundle.SendWebRequest();
+
+                    if (!RequestCheckError(requestAssetBundle))
+                    {
+                        response(DownloadHandlerAssetBundle.GetContent(requestAssetBundle));
+                    }
+                    else
+                    {
+                        Debug.LogErrorFormat("error request [{0}, {1}]", url, requestAssetBundle.error);
+                        response(null);
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogErrorFormat("error request [{0}, {1}]", url, requestManifest.error);
                 response(null);
             }
         }

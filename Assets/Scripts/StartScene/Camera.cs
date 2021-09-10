@@ -8,6 +8,9 @@ public class Camera : MonoBehaviour
     private ResourceLoader resourceLoader;
 
     [SerializeField]
+    private ResourceManager resourceManager;
+
+    [SerializeField]
     private Player player;
 
     void Awake()

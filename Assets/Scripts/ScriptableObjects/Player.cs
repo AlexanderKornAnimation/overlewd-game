@@ -8,5 +8,7 @@ public class Player : ScriptableObject
     [SerializeField]
     private ResourceLoader resourceLoader;
 
+    [SerializeField]
+    private ResourceManager resourceManager;
 
 }
