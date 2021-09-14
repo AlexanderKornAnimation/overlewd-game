@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d047006b9c321439c24e2c0bb549e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceLoader: {fileID: 11400000, guid: 1f22d5dcd5fd2fa43ab15c9fab217090, type: 2}
+  networkHelper: {fileID: 11400000, guid: 1f22d5dcd5fd2fa43ab15c9fab217090, type: 2}
   resourceManager: {fileID: 11400000, guid: 1fc436b20da231343b4475b8cb6aee39, type: 2}
   player: {fileID: 11400000, guid: fd6c2feceb6bdc84d9c10edf82c17a78, type: 2}
 --- !u!20 &519420031
