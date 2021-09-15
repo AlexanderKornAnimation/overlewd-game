@@ -32,7 +32,7 @@ public class ResourceManager : ScriptableObject
 
     public void InitializeCache()
     {
-        var cachePath = "OverlewdCache";
+        var cachePath = Path.Combine(Application.persistentDataPath, "OverlewdCache");
         if (!Directory.Exists(cachePath))
         {
             Directory.CreateDirectory(cachePath);
