@@ -2,35 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New ResourceManager", menuName = "Resource Manager", order = 51)]
-public class ResourceManager : ScriptableObject
+public static class ResourceManager
 {
-    [SerializeField]
-    private NetworkHelper networkHelper;
-
-    public string GetCachePath()
+    public static string GetCachePath()
     {
         return Caching.currentCacheForWriting.path;
     }
 
-    public string GetCacheFilePath(string fileName)
+    public static string GetCacheFilePath(string fileName)
     {
         return Path.Combine(Caching.currentCacheForWriting.path, fileName);
     } 
 
-    public string GetResourcesPath()
+    public static string GetResourcesPath()
     {
         return Path.Combine(Caching.currentCacheForWriting.path, "Resources");
     }
 
-    public string GetResourcesFilePath(string fileName)
+    public static string GetResourcesFilePath(string fileName)
     {
         return Path.Combine(GetResourcesPath(), fileName);
     }
 
-    public void InitializeCache()
+    public static void InitializeCache()
     {
         var cachePath = Path.Combine(Application.persistentDataPath, "OverlewdCache");
         if (!Directory.Exists(cachePath))
@@ -52,7 +49,7 @@ public class ResourceManager : ScriptableObject
         }
     }
 
-    public List<string> GetDirectoryFileNames(string directoryPath)
+    public static List<string> GetDirectoryFileNames(string directoryPath)
     {
         if (!Directory.Exists(directoryPath))
         {
@@ -70,57 +67,57 @@ public class ResourceManager : ScriptableObject
         return result;
     }
 
-    public List<string> GetFileNamesFormResources()
+    public static List<string> GetFileNamesFormResources()
     {
         return GetDirectoryFileNames(GetResourcesPath());
     }
 
-    public void CacheText(string filePath, string text)
+    public static void CacheText(string filePath, string text)
     {
         File.WriteAllText(filePath, text);
     }
 
-    public void TextFromCache(string filePath, Action<string> response)
+    public static void TextFromCache(string filePath, Action<string> response)
     {
-        response(File.ReadAllText(filePath));
+        response?.Invoke(File.ReadAllText(filePath));
     }
 
-    private void CacheBinary(string filePath, byte[] data)
+    private static void CacheBinary(string filePath, byte[] data)
     {
         File.WriteAllBytes(filePath, data);
     }
 
-    private void TextureFromCache(string filePath, Action<Texture2D> response)
+    private static void TextureFromCache(string filePath, Action<Texture2D> response)
     {
         var texture = new Texture2D(1, 1);
         var data = File.ReadAllBytes(filePath);
         texture.LoadImage(data, true);
-        response(texture);
+        response?.Invoke(texture);
     }
 
-    public bool FileExists(string filePath)
+    public static bool FileExists(string filePath)
     {
         return File.Exists(filePath);
     }
 
-    public void FileDelete(string filePath)
+    public static void FileDelete(string filePath)
     {
         File.Delete(filePath);
     }
 
-    public IEnumerator LoadResourcesMeta(Action<NetworkResources> success)
+    public static IEnumerator LoadResourcesMeta(Action<NetworkResources> success)
     {
-        return networkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", networkHelper.tokens.accessToken, s =>
+        yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", NetworkHelper.tokens.accessToken, s =>
         {
             Debug.Log("GET RESOURCES META");
             Debug.Log(s);
 
             var resources = JsonUtility.FromJson<NetworkResources>(s);
-            success(resources);
+            success?.Invoke(resources);
         });
     }
 
-    public IEnumerator DeleteNotRelevantResources(NetworkResources resourcesMeta, List<string> existingFiles)
+    public static IEnumerator DeleteNotRelevantResources(NetworkResources resourcesMeta, List<string> existingFiles)
     {
         foreach (var fileName in existingFiles)
         {
@@ -132,23 +129,20 @@ public class ResourceManager : ScriptableObject
         }
     }
 
-    public IEnumerator DownloadMissingResources(NetworkResources resourcesMeta, List<string> existingFiles)
-    {       
+    public static IEnumerator DownloadMissingResources(NetworkResources resourcesMeta, List<string> existingFiles, Action success = null)
+    {
         foreach (var resourceMeta in resourcesMeta.items)
         {
             if (!existingFiles.Exists(item => item == resourceMeta.hash))
             {
-                yield return networkHelper.LoadTextureFromServer(resourceMeta.url, tex =>
+                yield return NetworkHelper.LoadTextureFromServer(resourceMeta.url, tex =>
                 {
                     var data = tex.EncodeToPNG();
                     CacheBinary(GetResourcesFilePath(resourceMeta.hash), data);
                 });
             }
-            else
-            {
-                yield return resourceMeta.hash;
-            }
         }
+        success?.Invoke();
     }
 
     [Serializable]

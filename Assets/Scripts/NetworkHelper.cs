@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-[CreateAssetMenu(fileName = "New NetworkHelper", menuName = "Network Helper", order = 51)]
-public class NetworkHelper : ScriptableObject
+public static class NetworkHelper
 {
     [Serializable]
     public class Tokens
@@ -15,39 +15,37 @@ public class NetworkHelper : ScriptableObject
         public string refreshToken;
     }
 
-    public Tokens tokens;
+    public static Tokens tokens;
 
-    public IEnumerator Authorization(Action<Tokens> success)
+    public static IEnumerator Authorization(Action<Tokens> success)
     {
         var formAuthorization = new WWWForm();
         formAuthorization.AddField("deviceId", GetDeviceId());
-        return Post("https://overlude-api.herokuapp.com/auth/login", formAuthorization, s =>
+        yield return Post("https://overlude-api.herokuapp.com/auth/login", formAuthorization, s =>
         {
-            Debug.Log("Authorization");
-            Debug.Log(s);
-            tokens = JsonUtility.FromJson<NetworkHelper.Tokens>(s);
-            success(tokens);
+            tokens = JsonUtility.FromJson<Tokens>(s);
+            success?.Invoke(tokens);
         });
     }
 
-    public string GetDeviceId()
+    public static string GetDeviceId()
     {
         return SystemInfo.deviceUniqueIdentifier;
     }
-    public bool HasNetworkConection()
+    public static bool HasNetworkConection()
     {
         return Application.internetReachability != NetworkReachability.NotReachable;
     }
-    public bool NetworkTypeMobile()
+    public static bool NetworkTypeMobile()
     {
         return Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork;
     }
-    public bool NetworkTypeWIFI()
+    public static bool NetworkTypeWIFI()
     {
         return Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
     }
 
-    private bool RequestCheckError(UnityWebRequest request)
+    private static bool RequestCheckError(UnityWebRequest request)
     {
         if (request.result != UnityWebRequest.Result.ProtocolError &&
             request.result != UnityWebRequest.Result.ConnectionError)
@@ -58,7 +56,7 @@ public class NetworkHelper : ScriptableObject
         return true;
     }
 
-    public IEnumerator Get(string url, Action<string> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator Get(string url, Action<string> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequest.Get(url))
         {
@@ -66,20 +64,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(request.downloadHandler.text);
+                successResponse?.Invoke(request.downloadHandler.text);
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator GetWithToken(string url, string token, Action<string> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator GetWithToken(string url, string token, Action<string> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequest.Get(url))
         {
@@ -89,20 +84,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(request.downloadHandler.text);
+                successResponse?.Invoke(request.downloadHandler.text);
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator Post(string url, WWWForm form, Action<string> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator Post(string url, WWWForm form, Action<string> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequest.Post(url, form))
         {
@@ -110,20 +102,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(request.downloadHandler.text);
+                successResponse?.Invoke(request.downloadHandler.text);
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator PostWithToken(string url, WWWForm form, string token, Action<string> successResponse,
+    public static IEnumerator PostWithToken(string url, WWWForm form, string token, Action<string> successResponse,
         Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequest.Post(url, form))
@@ -134,20 +123,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(request.downloadHandler.text);
+                successResponse?.Invoke(request.downloadHandler.text);
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator LoadAudioFromServer(string url, AudioType audioType, Action<AudioClip> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadAudioFromServer(string url, AudioType audioType, Action<AudioClip> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequestMultimedia.GetAudioClip(url, audioType))
         {
@@ -155,20 +141,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(DownloadHandlerAudioClip.GetContent(request));
+                successResponse?.Invoke(DownloadHandlerAudioClip.GetContent(request));
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator LoadTextureFromServer(string url, Action<Texture2D> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadTextureFromServer(string url, Action<Texture2D> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequestTexture.GetTexture(url))
         {
@@ -176,20 +159,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(DownloadHandlerTexture.GetContent(request));
+                successResponse?.Invoke(DownloadHandlerTexture.GetContent(request));
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator LoadAssetBundleFromServer(string url, Action<AssetBundle> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadAssetBundleFromServer(string url, Action<AssetBundle> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequestAssetBundle.GetAssetBundle(url))
         {
@@ -197,20 +177,17 @@ public class NetworkHelper : ScriptableObject
 
             if (!RequestCheckError(request))
             {
-                successResponse(DownloadHandlerAssetBundle.GetContent(request));
+                successResponse?.Invoke(DownloadHandlerAssetBundle.GetContent(request));
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }
 
-    public IEnumerator LoadAssetBundleFromServerWithCache(string url, Action<AssetBundle> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadAssetBundleFromServerWithCache(string url, Action<AssetBundle> successResponse, Action<string> errorResponse = null)
     {
         while (!Caching.ready)
         {
@@ -232,25 +209,19 @@ public class NetworkHelper : ScriptableObject
 
                     if (!RequestCheckError(requestAssetBundle))
                     {
-                        successResponse(DownloadHandlerAssetBundle.GetContent(requestAssetBundle));
+                        successResponse?.Invoke(DownloadHandlerAssetBundle.GetContent(requestAssetBundle));
                     }
                     else
                     {
                         Debug.LogErrorFormat("error request [{0}, {1}]", url, requestAssetBundle.error);
-                        if (errorResponse != null)
-                        {
-                            errorResponse(null);
-                        }
+                        errorResponse?.Invoke(null);
                     }
                 }
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, requestManifest.error);
-                if (errorResponse != null)
-                {
-                    errorResponse(null);
-                }
+                errorResponse?.Invoke(null);
             }
         }
     }

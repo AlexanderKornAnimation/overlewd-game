@@ -6,49 +6,40 @@ using UnityEngine.Networking;
 
 public class MainCamera : MonoBehaviour
 {
-    [SerializeField]
-    private NetworkHelper networkHelper;
-
-    [SerializeField]
-    private ResourceManager resourceManager;
-
-    [SerializeField]
-    private Player player;
-
     void Awake()
     {
-        resourceManager.InitializeCache();
-
-        StartCoroutine(networkHelper.Authorization(e =>
-        {
-            StartCoroutine(player.GetPlayerInfo(e =>
-            {
-                StartCoroutine(player.ChangeName("NewName", e =>
-                {
-                    
-                }));
-            }));
-
-            StartCoroutine(resourceManager.LoadResourcesMeta(meta =>
-            {
-                var metaFilePath = resourceManager.GetCacheFilePath("ResourcesMeta");
-                if (resourceManager.FileExists(metaFilePath))
-                {
-                    resourceManager.FileDelete(metaFilePath);
-                }
-                resourceManager.CacheText(metaFilePath, JsonUtility.ToJson(meta));
-
-                var existingFiles = resourceManager.GetFileNamesFormResources();
-
-                StartCoroutine(resourceManager.DeleteNotRelevantResources(meta, existingFiles));
-                StartCoroutine(resourceManager.DownloadMissingResources(meta, existingFiles));
-            }));
-        }));
+        
     }
 
     void Start()
     {
+        ResourceManager.InitializeCache();
 
+        StartCoroutine(NetworkHelper.Authorization(e =>
+        {
+            StartCoroutine(Player.GetPlayerInfo(e =>
+            {
+                StartCoroutine(Player.ChangeName("NewName", e =>
+                {
+
+                }));
+            }));
+
+            StartCoroutine(ResourceManager.LoadResourcesMeta(meta =>
+            {
+                var metaFilePath = ResourceManager.GetCacheFilePath("ResourcesMeta");
+                if (ResourceManager.FileExists(metaFilePath))
+                {
+                    ResourceManager.FileDelete(metaFilePath);
+                }
+                ResourceManager.CacheText(metaFilePath, JsonUtility.ToJson(meta));
+
+                var existingFiles = ResourceManager.GetFileNamesFormResources();
+
+                StartCoroutine(ResourceManager.DeleteNotRelevantResources(meta, existingFiles));
+                StartCoroutine(ResourceManager.DownloadMissingResources(meta, existingFiles));
+            }));
+        }));
     }
 
     void Update()
