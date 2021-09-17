@@ -27,6 +27,11 @@ public static class ResourceManager
         return Path.Combine(GetResourcesPath(), fileName);
     }
 
+    public static long GetSpaceFreeBytes()
+    {
+        return Caching.currentCacheForWriting.spaceFree;
+    }
+
     public static void InitializeCache()
     {
         var cachePath = Path.Combine(Application.persistentDataPath, "OverlewdCache");
@@ -67,7 +72,7 @@ public static class ResourceManager
         return result;
     }
 
-    public static List<string> GetFileNamesFormResources()
+    public static List<string> GetResourcesFileNames()
     {
         return GetDirectoryFileNames(GetResourcesPath());
     }
@@ -87,7 +92,7 @@ public static class ResourceManager
         File.WriteAllBytes(filePath, data);
     }
 
-    private static void TextureFromCache(string filePath, Action<Texture2D> response)
+    public static void TextureFromCache(string filePath, Action<Texture2D> response)
     {
         var texture = new Texture2D(1, 1);
         var data = File.ReadAllBytes(filePath);
@@ -117,8 +122,11 @@ public static class ResourceManager
         });
     }
 
-    public static IEnumerator DeleteNotRelevantResources(NetworkResources resourcesMeta, List<string> existingFiles)
+    public static IEnumerator ActualizeResources(NetworkResources resourcesMeta, Action<NetworkResource> downloadItem, Action done)
     {
+        var existingFiles = GetResourcesFileNames();
+
+        //DeleteNotRelevantResources
         foreach (var fileName in existingFiles)
         {
             if (!resourcesMeta.items.Exists(item => item.hash == fileName))
@@ -127,22 +135,21 @@ public static class ResourceManager
             }
             yield return fileName;
         }
-    }
 
-    public static IEnumerator DownloadMissingResources(NetworkResources resourcesMeta, List<string> existingFiles, Action success = null)
-    {
+        //DownloadMissingResources
         foreach (var resourceMeta in resourcesMeta.items)
         {
             if (!existingFiles.Exists(item => item == resourceMeta.hash))
             {
-                yield return NetworkHelper.LoadTextureFromServer(resourceMeta.url, tex =>
+                downloadItem?.Invoke(resourceMeta);
+                yield return NetworkHelper.LoadTextureFromServer(resourceMeta.url, (tex, data) =>
                 {
-                    var data = tex.EncodeToPNG();
                     CacheBinary(GetResourcesFilePath(resourceMeta.hash), data);
                 });
             }
         }
-        success?.Invoke();
+
+        done?.Invoke();
     }
 
     [Serializable]

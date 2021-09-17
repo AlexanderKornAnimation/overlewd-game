@@ -133,7 +133,7 @@ public static class NetworkHelper
         }
     }
 
-    public static IEnumerator LoadAudioFromServer(string url, AudioType audioType, Action<AudioClip> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadAudioFromServer(string url, AudioType audioType, Action<AudioClip, byte[]> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequestMultimedia.GetAudioClip(url, audioType))
         {
@@ -141,7 +141,7 @@ public static class NetworkHelper
 
             if (!RequestCheckError(request))
             {
-                successResponse?.Invoke(DownloadHandlerAudioClip.GetContent(request));
+                successResponse?.Invoke(DownloadHandlerAudioClip.GetContent(request), request.downloadHandler.data);
             }
             else
             {
@@ -151,7 +151,7 @@ public static class NetworkHelper
         }
     }
 
-    public static IEnumerator LoadTextureFromServer(string url, Action<Texture2D> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadTextureFromServer(string url, Action<Texture2D, byte[]> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequestTexture.GetTexture(url))
         {
@@ -159,7 +159,7 @@ public static class NetworkHelper
 
             if (!RequestCheckError(request))
             {
-                successResponse?.Invoke(DownloadHandlerTexture.GetContent(request));
+                successResponse?.Invoke(DownloadHandlerTexture.GetContent(request), request.downloadHandler.data);
             }
             else
             {
@@ -169,7 +169,7 @@ public static class NetworkHelper
         }
     }
 
-    public static IEnumerator LoadAssetBundleFromServer(string url, Action<AssetBundle> successResponse, Action<string> errorResponse = null)
+    public static IEnumerator LoadAssetBundleFromServer(string url, Action<AssetBundle, byte[]> successResponse, Action<string> errorResponse = null)
     {
         using (var request = UnityWebRequestAssetBundle.GetAssetBundle(url))
         {
@@ -177,50 +177,11 @@ public static class NetworkHelper
 
             if (!RequestCheckError(request))
             {
-                successResponse?.Invoke(DownloadHandlerAssetBundle.GetContent(request));
+                successResponse?.Invoke(DownloadHandlerAssetBundle.GetContent(request), request.downloadHandler.data);
             }
             else
             {
                 Debug.LogErrorFormat("error request [{0}, {1}]", url, request.error);
-                errorResponse?.Invoke(null);
-            }
-        }
-    }
-
-    public static IEnumerator LoadAssetBundleFromServerWithCache(string url, Action<AssetBundle> successResponse, Action<string> errorResponse = null)
-    {
-        while (!Caching.ready)
-        {
-            yield return null;
-        }
-
-        using (var requestManifest = UnityWebRequest.Get(url + ".manifest"))
-        {
-            yield return requestManifest.SendWebRequest();
-
-            if (!RequestCheckError(requestManifest))
-            {
-                var hashRow = requestManifest.downloadHandler.text.ToString().Split("\n".ToCharArray())[5];
-                var hash = Hash128.Parse(hashRow.Split(':')[1].Trim());
-
-                using (var requestAssetBundle = UnityWebRequestAssetBundle.GetAssetBundle(url, hash, 0))
-                {
-                    yield return requestAssetBundle.SendWebRequest();
-
-                    if (!RequestCheckError(requestAssetBundle))
-                    {
-                        successResponse?.Invoke(DownloadHandlerAssetBundle.GetContent(requestAssetBundle));
-                    }
-                    else
-                    {
-                        Debug.LogErrorFormat("error request [{0}, {1}]", url, requestAssetBundle.error);
-                        errorResponse?.Invoke(null);
-                    }
-                }
-            }
-            else
-            {
-                Debug.LogErrorFormat("error request [{0}, {1}]", url, requestManifest.error);
                 errorResponse?.Invoke(null);
             }
         }
