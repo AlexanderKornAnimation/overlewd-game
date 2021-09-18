@@ -4,27 +4,55 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public static class ResourceManager
 {
-    public static string GetCachePath()
+    private static Dictionary<string, Texture2D> loadTextures = new Dictionary<string, Texture2D>();
+    private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
+    private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
+
+    public static string GetRootPath()
     {
         return Caching.currentCacheForWriting.path;
     }
 
-    public static string GetCacheFilePath(string fileName)
+    public static string GetRootFilePath(string fileName)
     {
-        return Path.Combine(Caching.currentCacheForWriting.path, fileName);
+        return Path.Combine(GetRootPath(), fileName);
     } 
 
     public static string GetResourcesPath()
     {
-        return Path.Combine(Caching.currentCacheForWriting.path, "Resources");
+        return Path.Combine(GetRootPath(), "Resources");
     }
 
     public static string GetResourcesFilePath(string fileName)
     {
         return Path.Combine(GetResourcesPath(), fileName);
+    }
+
+    public static List<string> GetDirectoryFileNames(string directoryPath)
+    {
+        if (!Directory.Exists(directoryPath))
+        {
+            return new List<string>();
+        }
+
+        var directoryFilePaths = Directory.GetFiles(directoryPath);
+
+        var result = new List<string>();
+        foreach (var filePath in directoryFilePaths)
+        {
+            result.Add(Path.GetFileName(filePath));
+        }
+
+        return result;
+    }
+
+    public static List<string> GetResourcesFileNames()
+    {
+        return GetDirectoryFileNames(GetResourcesPath());
     }
 
     public static long GetSpaceFreeBytes()
@@ -54,60 +82,138 @@ public static class ResourceManager
         }
     }
 
-    public static List<string> GetDirectoryFileNames(string directoryPath)
-    {
-        if (!Directory.Exists(directoryPath))
-        {
-            return new List<string>();
-        }
-
-        var directoryFilePaths= Directory.GetFiles(directoryPath);
-
-        var result = new List<string>();
-        foreach (var filePath in directoryFilePaths)
-        {
-            result.Add(Path.GetFileName(filePath));
-        }
-
-        return result;
-    }
-
-    public static List<string> GetResourcesFileNames()
-    {
-        return GetDirectoryFileNames(GetResourcesPath());
-    }
-
-    public static void CacheText(string filePath, string text)
+    public static void WriteText(string filePath, string text)
     {
         File.WriteAllText(filePath, text);
     }
 
-    public static void TextFromCache(string filePath, Action<string> response)
+    public static string LoadText(string filePath)
     {
-        response?.Invoke(File.ReadAllText(filePath));
+        return File.ReadAllText(filePath);
     }
 
-    private static void CacheBinary(string filePath, byte[] data)
+    private static void WriteBinary(string filePath, byte[] data)
     {
         File.WriteAllBytes(filePath, data);
     }
 
-    public static void TextureFromCache(string filePath, Action<Texture2D> response)
-    {
-        var texture = new Texture2D(1, 1);
-        var data = File.ReadAllBytes(filePath);
-        texture.LoadImage(data, true);
-        response?.Invoke(texture);
-    }
-
-    public static bool FileExists(string filePath)
+    public static bool Exists(string filePath)
     {
         return File.Exists(filePath);
     }
 
-    public static void FileDelete(string filePath)
+    public static void Delete(string filePath)
     {
         File.Delete(filePath);
+    }
+
+    /*private static Texture2D LoadTexture(string fileName)
+    {
+        var filePath = Path.Combine(GetResourcesPath(), fileName);
+        var texture = new Texture2D(1, 1);
+        var data = File.ReadAllBytes(filePath);
+        texture.LoadImage(data, true);
+        return texture;
+    }
+
+    private static AssetBundle LoadAssetBundle(string fileName)
+    {
+        var filePath = Path.Combine(GetResourcesPath(), fileName);
+        return AssetBundle.LoadFromFile(filePath);
+    }*/
+
+    public static IEnumerator LoadTexture(string fileName, Action<Texture2D> doLoad = null)
+    {
+        if (loadTextures.ContainsKey(fileName))
+        {
+            doLoad?.Invoke(loadTextures[fileName]);
+            yield break;
+        }
+
+        var filePath = GetResourcesFilePath(fileName);
+        using (var request = UnityWebRequestTexture.GetTexture(filePath))
+        {
+            yield return request.SendWebRequest();
+            var texture = DownloadHandlerTexture.GetContent(request);
+            loadTextures.Add(fileName, texture);
+            doLoad?.Invoke(texture);
+        }
+    }
+
+    public static IEnumerator LoadTexture(string fileName, string bundleName, Action<Texture2D> doLoad = null)
+    {
+        var textureKey = Path.Combine(bundleName, fileName);
+        if (loadTextures.ContainsKey(textureKey))
+        {
+            doLoad?.Invoke(loadTextures[textureKey]);
+            yield break;
+        }
+
+        AssetBundle assetBundle = null;
+        yield return LoadAssetBundle(bundleName, (_assetBundle) => { assetBundle = _assetBundle; });
+
+        var request = assetBundle.LoadAssetAsync<Texture2D>(fileName);
+        yield return request;
+
+        var texture = (Texture2D)(request.asset);
+        loadTextures.Add(textureKey, texture);
+        doLoad?.Invoke(texture);
+    }
+
+    public static IEnumerator LoadAudioClip(string fileName, AudioType audioType, Action<AudioClip> doLoad = null)
+    {
+        if (loadSounds.ContainsKey(fileName))
+        {
+            doLoad?.Invoke(loadSounds[fileName]);
+            yield break;
+        }
+
+        var filePath = GetResourcesFilePath(fileName);
+        using (var request = UnityWebRequestMultimedia.GetAudioClip(filePath, audioType))
+        {
+            yield return request.SendWebRequest();
+            var sound = DownloadHandlerAudioClip.GetContent(request);
+            loadSounds.Add(fileName, sound);
+            doLoad?.Invoke(sound);
+        }
+    }
+
+    public static IEnumerator LoadAudioClip(string fileName, string bundleName, Action<AudioClip> doLoad = null)
+    {
+        var soundKey = Path.Combine(bundleName, fileName);
+        if (loadSounds.ContainsKey(soundKey))
+        {
+            doLoad?.Invoke(loadSounds[soundKey]);
+            yield break;
+        }
+
+        AssetBundle assetBundle = null;
+        yield return LoadAssetBundle(bundleName, (_assetBundle) => { assetBundle = _assetBundle; });
+
+        var request = assetBundle.LoadAssetAsync<AudioClip>(fileName);
+        yield return request;
+
+        var sound = (AudioClip)(request.asset);
+        loadSounds.Add(soundKey, sound);
+        doLoad?.Invoke(sound);
+    }
+
+    public static IEnumerator LoadAssetBundle(string fileName, Action<AssetBundle> doLoad = null)
+    {
+        if (loadAssetBundles.ContainsKey(fileName))
+        {
+            doLoad?.Invoke(loadAssetBundles[fileName]);
+            yield break;
+        }
+
+        var filePath = GetResourcesFilePath(fileName);
+        using (var request = UnityWebRequestAssetBundle.GetAssetBundle(filePath))
+        {
+            yield return request.SendWebRequest();
+            var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
+            loadAssetBundles.Add(fileName, assetBundle);
+            doLoad?.Invoke(assetBundle);
+        }
     }
 
     public static IEnumerator LoadResourcesMeta(Action<NetworkResources> success)
@@ -131,7 +237,7 @@ public static class ResourceManager
         {
             if (!resourcesMeta.items.Exists(item => item.hash == fileName))
             {
-                FileDelete(GetResourcesFilePath(fileName));
+                Delete(GetResourcesFilePath(fileName));
             }
             yield return fileName;
         }
@@ -144,7 +250,7 @@ public static class ResourceManager
                 downloadItem?.Invoke(resourceMeta);
                 yield return NetworkHelper.LoadTextureFromServer(resourceMeta.url, (tex, data) =>
                 {
-                    CacheBinary(GetResourcesFilePath(resourceMeta.hash), data);
+                    WriteBinary(GetResourcesFilePath(resourceMeta.hash), data);
                 });
             }
         }

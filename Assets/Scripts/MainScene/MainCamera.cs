@@ -30,12 +30,12 @@ public class MainCamera : MonoBehaviour
 
                 StartCoroutine(ResourceManager.LoadResourcesMeta(meta =>
                 {
-                    var metaFilePath = ResourceManager.GetCacheFilePath("ResourcesMeta");
-                    if (ResourceManager.FileExists(metaFilePath))
+                    var metaFilePath = ResourceManager.GetRootFilePath("ResourcesMeta");
+                    if (ResourceManager.Exists(metaFilePath))
                     {
-                        ResourceManager.FileDelete(metaFilePath);
+                        ResourceManager.Delete(metaFilePath);
                     }
-                    ResourceManager.CacheText(metaFilePath, JsonUtility.ToJson(meta));
+                    ResourceManager.WriteText(metaFilePath, JsonUtility.ToJson(meta));
 
                     StartCoroutine(ResourceManager.ActualizeResources(
                         meta,
@@ -63,6 +63,11 @@ public class MainCamera : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void OnGUI()
+    {
+        
     }
 
     void DoLoadResources()
