@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 
 public static class ResourceManager
 {
+    private static ResourcesMeta runtimeResourcesMeta = null;
     private static Dictionary<string, Texture2D> loadTextures = new Dictionary<string, Texture2D>();
     private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
     private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
@@ -130,10 +131,15 @@ public static class ResourceManager
             yield break;
         }
 
-        var filePath = GetResourcesFilePath(fileName);
+        var filePath = "file://" + GetResourcesFilePath(fileName);
         using (var request = UnityWebRequestTexture.GetTexture(filePath))
         {
             yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                doLoad?.Invoke(null);
+                yield break;
+            }
             var texture = DownloadHandlerTexture.GetContent(request);
             loadTextures.Add(fileName, texture);
             doLoad?.Invoke(texture);
@@ -152,8 +158,20 @@ public static class ResourceManager
         AssetBundle assetBundle = null;
         yield return LoadAssetBundle(bundleName, (_assetBundle) => { assetBundle = _assetBundle; });
 
+        if (assetBundle == null)
+        {
+            doLoad?.Invoke(null);
+            yield break;
+        }
+
         var request = assetBundle.LoadAssetAsync<Texture2D>(fileName);
         yield return request;
+
+        if (request.asset == null)
+        {
+            doLoad?.Invoke(null);
+            yield break;
+        }
 
         var texture = (Texture2D)(request.asset);
         loadTextures.Add(textureKey, texture);
@@ -168,10 +186,15 @@ public static class ResourceManager
             yield break;
         }
 
-        var filePath = GetResourcesFilePath(fileName);
+        var filePath = "file://" + GetResourcesFilePath(fileName);
         using (var request = UnityWebRequestMultimedia.GetAudioClip(filePath, audioType))
         {
             yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                doLoad?.Invoke(null);
+                yield break;
+            }
             var sound = DownloadHandlerAudioClip.GetContent(request);
             loadSounds.Add(fileName, sound);
             doLoad?.Invoke(sound);
@@ -190,8 +213,20 @@ public static class ResourceManager
         AssetBundle assetBundle = null;
         yield return LoadAssetBundle(bundleName, (_assetBundle) => { assetBundle = _assetBundle; });
 
+        if (assetBundle == null)
+        {
+            doLoad?.Invoke(null);
+            yield break;
+        }
+
         var request = assetBundle.LoadAssetAsync<AudioClip>(fileName);
         yield return request;
+
+        if (request.asset == null)
+        {
+            doLoad?.Invoke(null);
+            yield break;
+        }
 
         var sound = (AudioClip)(request.asset);
         loadSounds.Add(soundKey, sound);
@@ -206,29 +241,84 @@ public static class ResourceManager
             yield break;
         }
 
-        var filePath = GetResourcesFilePath(fileName);
+        var filePath = "file://" + GetResourcesFilePath(fileName);
         using (var request = UnityWebRequestAssetBundle.GetAssetBundle(filePath))
         {
             yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                doLoad?.Invoke(null);
+                yield break;
+            }
             var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
             loadAssetBundles.Add(fileName, assetBundle);
             doLoad?.Invoke(assetBundle);
         }
     }
 
-    public static IEnumerator LoadResourcesMeta(Action<NetworkResources> success)
+    public static IEnumerator GetServerResourcesMeta(Action<ResourcesMeta> success)
     {
         yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", NetworkHelper.tokens.accessToken, s =>
         {
-            Debug.Log("GET RESOURCES META");
-            Debug.Log(s);
-
-            var resources = JsonUtility.FromJson<NetworkResources>(s);
+            var resources = JsonUtility.FromJson<ResourcesMeta>(s);
             success?.Invoke(resources);
         });
     }
 
-    public static IEnumerator ActualizeResources(NetworkResources resourcesMeta, Action<NetworkResource> downloadItem, Action done)
+    public static ResourcesMeta GetLocalResourcesMeta()
+    {
+        var metaFilePath = GetRootFilePath("ResourcesMeta");
+        if (Exists(metaFilePath))
+        {
+            var metaJson = LoadText(metaFilePath);
+            var meta = JsonUtility.FromJson<ResourcesMeta>(metaJson);
+            return meta;
+        }
+
+        return null;
+    }
+
+    public static void SaveLocalResourcesMeta(ResourcesMeta meta)
+    {
+        if (meta != null)
+        {
+            var metaFilePath = GetRootFilePath("ResourcesMeta");
+            var metaJson = JsonUtility.ToJson(meta);
+            WriteText(metaFilePath, metaJson);
+        }
+    }
+
+    public static void InitRuntimeResourcesMeta(ResourcesMeta meta)
+    {
+        runtimeResourcesMeta = meta;
+    }
+
+    public static bool HasFreeSpaceForNewResources(ResourcesMeta serverResourcesMeta)
+    {
+        var localResourcesMeta = GetLocalResourcesMeta();
+
+        var deleteSize = 0;
+        foreach (var localItem in localResourcesMeta.items)
+        {
+            if (!serverResourcesMeta.items.Exists(serverItem => serverItem.hash == localItem.hash))
+            {
+                deleteSize += localItem.size;
+            }
+        }
+
+        var downloadSize = 0;
+        foreach (var serverItem in serverResourcesMeta.items)
+        {
+            if (!localResourcesMeta.items.Exists(localItem => serverItem.hash == localItem.hash))
+            {
+                downloadSize += serverItem.size;
+            }
+        }
+
+        return (GetSpaceFreeBytes() + deleteSize - downloadSize) > 0;
+    }
+
+    public static IEnumerator ActualizeResources(ResourcesMeta resourcesMeta, Action<NetworkResource> downloadItem, Action done)
     {
         var existingFiles = GetResourcesFileNames();
 
@@ -262,12 +352,15 @@ public static class ResourceManager
     public class NetworkResource
     {
         public int id;
-        public string url;
+        public string type;
+        public string internalFormat;
         public string hash;
+        public int size;
+        public string url;
     }
 
     [Serializable]
-    public class NetworkResources
+    public class ResourcesMeta
     {
         public List<NetworkResource> items;
     }

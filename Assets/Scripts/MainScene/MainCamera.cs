@@ -1,21 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class MainCamera : MonoBehaviour
 {
-    public LoadingScreen loadingScreen;
+    private LoadingScreen loadingScreen;
+    private ContentViewer contentViewer;
 
     void Awake()
     {
-        ShowLoadingScreen();
-        ResourceManager.InitializeCache();
+        
     }
 
     void Start()
     {
+        ResourceManager.InitializeCache();
         if (NetworkHelper.HasNetworkConection())
         {
             StartCoroutine(NetworkHelper.Authorization(e =>
@@ -28,34 +30,46 @@ public class MainCamera : MonoBehaviour
                     }));
                 }));
 
-                StartCoroutine(ResourceManager.LoadResourcesMeta(meta =>
+                StartCoroutine(ResourceManager.GetServerResourcesMeta(serverResourcesMeta =>
                 {
-                    var metaFilePath = ResourceManager.GetRootFilePath("ResourcesMeta");
-                    if (ResourceManager.Exists(metaFilePath))
+                    if (!ResourceManager.HasFreeSpaceForNewResources(serverResourcesMeta))
                     {
-                        ResourceManager.Delete(metaFilePath);
+                        ShowNoFreeSpaceMessageBox();
                     }
-                    ResourceManager.WriteText(metaFilePath, JsonUtility.ToJson(meta));
+                    else
+                    {
+                        ResourceManager.SaveLocalResourcesMeta(serverResourcesMeta);
+                        ResourceManager.InitRuntimeResourcesMeta(serverResourcesMeta);
 
-                    StartCoroutine(ResourceManager.ActualizeResources(
-                        meta,
-                        (resourceMeta) =>
-                        {
-                            ShowLoadingScreen();
-                            loadingScreen.loadingLabel = "Download: " + resourceMeta.url;
-                        },
-                        () =>
-                        {
-                            DestroyLoadingScreen();
-                            DoLoadResources();
-                        }
-                    ));
+                        StartCoroutine(ResourceManager.ActualizeResources(
+                            serverResourcesMeta,
+                            (resourceItemMeta) =>
+                            {
+                                ShowLoadingScreen();
+                                loadingScreen.loadingLabel = "Download: " + resourceItemMeta.url;
+                            },
+                            () =>
+                            {
+                                DestroyLoadingScreen();
+                                DoLoadResources();
+                            }
+                        ));
+                    }
                 }));
             }));
         }
         else
         {
-            ShowNoInternetMessageBox();
+            var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
+            if (localResourcesMeta != null)
+            {
+                ResourceManager.InitRuntimeResourcesMeta(localResourcesMeta);
+                DoLoadResources();
+            }
+            else
+            {
+                ShowNoInternetMessageBox();
+            }
         }
         
     }
@@ -72,22 +86,42 @@ public class MainCamera : MonoBehaviour
 
     void DoLoadResources()
     {
-
+        ShowContentViewer();
     }
 
     void ShowNoInternetMessageBox()
     {
-        var box = gameObject.AddComponent<DialogBoxYesNo>();
-        box.title = "No Internet Connection";
-        box.yesAction = () =>
+        var dlgBox = gameObject.AddComponent<DialogBoxYesNo>();
+        dlgBox.title = "No Internet ñonnection";
+        dlgBox.yesAction = () =>
         {
+            DestroyImmediate(dlgBox);
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
             Application.Quit();
+#endif
+        };
+    }
+
+    void ShowNoFreeSpaceMessageBox()
+    {
+        var dlgBox = gameObject.AddComponent<DialogBoxYesNo>();
+        dlgBox.title = "Not enough free space";
+        dlgBox.yesAction = () =>
+        {
+            DestroyImmediate(dlgBox);
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         };
     }
 
     void ShowLoadingScreen()
     {
-        if (!loadingScreen)
+        if (loadingScreen == null)
         {
             loadingScreen = gameObject.AddComponent<LoadingScreen>();
         }
@@ -95,9 +129,14 @@ public class MainCamera : MonoBehaviour
 
     void DestroyLoadingScreen()
     {
-        if (loadingScreen)
+        DestroyImmediate(loadingScreen);
+    }
+
+    void ShowContentViewer()
+    {
+        if (contentViewer == null)
         {
-            DestroyImmediate(loadingScreen);
+            contentViewer = gameObject.AddComponent<ContentViewer>();
         }
     }
 }

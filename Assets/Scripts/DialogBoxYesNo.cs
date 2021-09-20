@@ -28,12 +28,10 @@ public class DialogBoxYesNo : MonoBehaviour
         GUI.Label(new Rect(10, 20, dialogWidth - 20, (int)(dialogHeight * 0.4)), message, labelStyle);
         if (GUI.Button(new Rect(btnOffset, dialogHeight - btnHeight - btnOffset, btnWidth, btnHeight), "No", buttonStyle))
         {
-            DestroyImmediate(this);
             noAction?.Invoke();
         }
         if (GUI.Button(new Rect(dialogWidth - btnWidth - btnOffset, dialogHeight - btnHeight - btnOffset, btnWidth, btnHeight), "Yes", buttonStyle))
         {
-            DestroyImmediate(this);
             yesAction?.Invoke();
         }
     }

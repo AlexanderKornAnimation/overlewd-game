@@ -16,9 +16,6 @@ public static class Player
     {
         yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/me", NetworkHelper.tokens.accessToken, s =>
         {
-            Debug.Log("ME");
-            Debug.Log(s);
-
             var playerInfo = JsonUtility.FromJson<PlayerInfo>(s);
             success?.Invoke(playerInfo);
         });
@@ -30,9 +27,6 @@ public static class Player
         formMe.AddField("name", name);
         yield return NetworkHelper.PostWithToken("https://overlude-api.herokuapp.com/me", formMe, NetworkHelper.tokens.accessToken, s =>
         {
-            Debug.Log("ME");
-            Debug.Log(s);
-
             var playerInfo = JsonUtility.FromJson<PlayerInfo>(s);
             success?.Invoke(playerInfo);
         });
