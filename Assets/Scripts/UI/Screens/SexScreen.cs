@@ -8,7 +8,10 @@ namespace Overlewd
     {
         void Start()
         {
-
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/SexScreen/SimpleTest"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
         }
 
         void Update()
