@@ -42,6 +42,8 @@ namespace Overlewd
         {
             if (doLoad)
             {
+                GUI.depth = 2;
+
                 GUIStyle btnStyle = new GUIStyle(GUI.skin.button);
                 btnStyle.fontSize = (int)sph(10);
 

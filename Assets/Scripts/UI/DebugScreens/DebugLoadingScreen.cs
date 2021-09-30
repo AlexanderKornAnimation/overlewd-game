@@ -57,6 +57,7 @@ namespace Overlewd
 
         void OnGUI()
         {
+            GUI.depth = 2;
             var rect = new Rect(0, 0, Screen.width, Screen.height);
             GUI.DrawTexture(rect, screenTexture);
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,10 @@ namespace Overlewd
 {
     public class MarketScreen : BaseScreen
     {
-        void Start()
+        private List<ShortMarketData> shortDataItems;
+        private List<FullMarketData> fullDataItems = new List<FullMarketData>();
+
+        IEnumerator Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ScreenRoot"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -25,6 +29,31 @@ namespace Overlewd
                 image.sprite = sprite;
                 resPrefab.transform.SetParent(grid, false);
             }
+
+            yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", NetworkHelper.tokens.accessToken, (downloadHandler) =>
+            {
+                var shortItemsJson = "{ \"items\" : " + downloadHandler.text + " }";
+                shortDataItems = JsonUtility.FromJson<ShortMarketsData>(shortItemsJson).items;
+            },
+            (errorMsg) => {
+                var msg = errorMsg;
+            }));
+
+            foreach (var item in shortDataItems)
+            {
+                yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets/" + item.id.ToString(),
+                    NetworkHelper.tokens.accessToken, (downloadHandler) => {
+                        var fullItemsJson = "{ \"items\" : " + downloadHandler.text + " }";
+                        var fullItems = JsonUtility.FromJson<FullMarketsData>(fullItemsJson).items;
+                        fullDataItems.AddRange(fullItems);
+                    },
+                    (errorMsg) =>
+                    {
+
+                    }));
+            }
+
+            bool doLoad = true;
         }
 
         void Update()
@@ -52,6 +81,49 @@ namespace Overlewd
                 }
             }
             GUI.EndGroup();
+        }
+
+        [Serializable]
+        public class ShortMarketData
+        {
+            public int id;
+            public string name;
+            public string backgroundUrl;
+            public string bannerUrl;
+            public string dateStart;
+            public string dateEnd;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        [Serializable]
+        public class ShortMarketsData
+        {
+            public List<ShortMarketData> items;
+        }
+
+        [Serializable]
+        public class FullMarketData
+        {
+            public int id;
+            public string name;
+            public string imageUrl;
+            public string description;
+            public string price;
+            public string discount;
+            public string specialOfferLabel;
+            public string itemPack;
+            public string dateStart;
+            public string dateEnd;
+            public string discountStart;
+            public string discountEnd;
+            public string sortPriority;
+        }
+
+        [Serializable]
+        public class FullMarketsData
+        {
+            public List<FullMarketData> items;
         }
     }
 }
