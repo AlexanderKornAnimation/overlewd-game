@@ -34,7 +34,7 @@ namespace Overlewd
                 else
                 {
                     ResourceManager.SaveLocalResourcesMeta(serverResourcesMeta);
-                    ResourceManager.InitRuntimeResourcesMeta(serverResourcesMeta);
+                    ResourceManager.runtimeResourcesMeta = serverResourcesMeta;
 
                     StartCoroutine(ResourceManager.ActualizeResources(
                         serverResourcesMeta,

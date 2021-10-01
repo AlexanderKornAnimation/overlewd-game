@@ -11,7 +11,7 @@ namespace Overlewd
 
     public static class ResourceManager
     {
-        private static ResourcesMeta runtimeResourcesMeta = null;
+        public static ResourcesMeta runtimeResourcesMeta { get; set; }
         private static Dictionary<string, Texture2D> loadTextures = new Dictionary<string, Texture2D>();
         private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
         private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
@@ -132,7 +132,12 @@ namespace Overlewd
             return AssetBundle.LoadFromFile(filePath);
         }*/
 
-        public static IEnumerator LoadTexture(string fileName, Action<Texture2D> doLoad = null)
+        public static NetworkResource GetResourceMetaById(string id)
+        {
+            return runtimeResourcesMeta.items.Find(item => item.id == id);
+        }
+
+        public static IEnumerator LoadTextureByFileName(string fileName, Action<Texture2D> doLoad = null)
         {
             if (loadTextures.ContainsKey(fileName))
             {
@@ -146,13 +151,23 @@ namespace Overlewd
                 yield return request.SendWebRequest();
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    doLoad?.Invoke(null);
                     yield break;
                 }
                 var texture = DownloadHandlerTexture.GetContent(request);
                 loadTextures.Add(fileName, texture);
                 doLoad?.Invoke(texture);
             }
+        }
+
+        public static IEnumerator LoadTextureById(string id, Action<Texture2D> doLoad = null)
+        {
+            var resourceMeta = GetResourceMetaById(id);
+            if (resourceMeta == null)
+            {
+                yield break;
+            }
+
+            yield return LoadTextureByFileName(resourceMeta.hash, doLoad);
         }
 
         public static IEnumerator LoadTexture(string fileName, string bundleName, Action<Texture2D> doLoad = null)
@@ -298,11 +313,6 @@ namespace Overlewd
             }
         }
 
-        public static void InitRuntimeResourcesMeta(ResourcesMeta meta)
-        {
-            runtimeResourcesMeta = meta;
-        }
-
         public static bool HasFreeSpaceForNewResources(ResourcesMeta serverResourcesMeta)
         {
             var existingFiles = GetResourcesFileNames();
@@ -361,7 +371,7 @@ namespace Overlewd
         [Serializable]
         public class NetworkResource
         {
-            public int id;
+            public string id;
             public string type;
             public string internalFormat;
             public string hash;
@@ -374,6 +384,7 @@ namespace Overlewd
         {
             public List<NetworkResource> items;
         }
+
     }
 
 }

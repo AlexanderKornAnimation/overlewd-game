@@ -18,17 +18,18 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            var texture = Resources.Load<Texture2D>("Ulvi");
+            var grid = screenPrefab.transform.Find("CanvasRoot").Find("Grid");
+
+            /*var texture = Resources.Load<Texture2D>("Ulvi");
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
 
-            var grid = screenPrefab.transform.Find("CanvasRoot").Find("Grid");
             for (int i = 0; i < 5; i++)
             {
                 var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
                 var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
                 image.sprite = sprite;
                 resPrefab.transform.SetParent(grid, false);
-            }
+            }*/
 
             yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", NetworkHelper.tokens.accessToken, (downloadHandler) =>
             {
@@ -53,7 +54,43 @@ namespace Overlewd
                     }));
             }
 
-            bool doLoad = true;
+
+            //add to grid
+            foreach (var shortItem in shortDataItems)
+            {
+                yield return StartCoroutine(ResourceManager.LoadTextureById(shortItem.backgroundUrl, (texture) => 
+                {
+                    var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                    var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
+                    var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
+                    image.sprite = sprite;
+                    resPrefab.transform.SetParent(grid, false);
+                }));
+
+                foreach (var fullItem in fullDataItems)
+                {
+                    yield return StartCoroutine(ResourceManager.LoadTextureById(fullItem.imageUrl, (texture) =>
+                    {
+                        var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                        var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
+                        var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
+                        image.sprite = sprite;
+                        resPrefab.transform.SetParent(grid, false);
+                    }));
+
+                    foreach (var priceItem in fullItem.price)
+                    {
+                        yield return StartCoroutine(ResourceManager.LoadTextureById(priceItem.iconUrl, (texture) =>
+                        {
+                            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                            var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
+                            var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
+                            image.sprite = sprite;
+                            resPrefab.transform.SetParent(grid, false);
+                        }));
+                    }
+                }
+            }
         }
 
         void Update()
@@ -109,7 +146,7 @@ namespace Overlewd
             public string name;
             public string imageUrl;
             public string description;
-            public string price;
+            public List<PriceItem> price;
             public string discount;
             public string specialOfferLabel;
             public string itemPack;
@@ -124,6 +161,17 @@ namespace Overlewd
         public class FullMarketsData
         {
             public List<FullMarketData> items;
+        }
+
+        [Serializable]
+        public class PriceItem
+        {
+            public int id;
+            public string name;
+            public string iconUrl;
+            public string createdAt;
+            public string updatedAt;
+            public int count;
         }
     }
 }

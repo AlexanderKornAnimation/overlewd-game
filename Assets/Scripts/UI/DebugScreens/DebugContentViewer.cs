@@ -25,11 +25,12 @@ namespace Overlewd
             var resources = ResourceManager.GetResourcesFileNames();
             foreach (var resName in resources)
             {
-                yield return ResourceManager.LoadTexture(resName, texture =>
+                yield return ResourceManager.LoadTextureByFileName(resName, texture =>
                 {
                     loadedTextures.Add(texture);
                 });
             }
+
             doLoad = true;
         }
 
