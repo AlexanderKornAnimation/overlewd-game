@@ -19,9 +19,9 @@ namespace Overlewd
                 UIManager.ShowScreen<MapScreen>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Market").GetComponent<Button>().onClick.AddListener(() =>
+            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<MarketScreen>();
+                UIManager.ShowScreen<CastleScreen>();
             });
 
             screenRectTransform.Find("Canvas").Find("Harem").GetComponent<Button>().onClick.AddListener(() =>
