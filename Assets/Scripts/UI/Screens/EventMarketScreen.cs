@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,28 +9,20 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/EventMarket"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
 
+            screenRectTransform.Find("Canvas").Find("Market").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<MarketScreen>();
+            });
         }
 
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 2;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            {
-                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "Event Market Screen");
-
-                var rect = new Rect(Screen.width - 130, 10, 110, 30);
-                if (GUI.Button(rect, "Market"))
-                {
-                    UIManager.ShowScreen<MarketScreen>();
-                }
-            }
-            GUI.EndGroup();
         }
     }
 }

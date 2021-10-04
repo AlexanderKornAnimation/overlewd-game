@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,28 +9,20 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestOverlay"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
 
+            screenRectTransform.Find("Canvas").Find("Back").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.HideOverlay();
+            });
         }
 
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 1;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            {
-                GUI.Box(new Rect(Screen.width - 400, 0, 400, Screen.height), "Quest Overlay");
-
-                var rect = new Rect(Screen.width - 130, 10, 110, 30);
-                if (GUI.Button(rect, "Back"))
-                {
-                    UIManager.HideOverlay();
-                }
-            }
-            GUI.EndGroup();
         }
     }
 }

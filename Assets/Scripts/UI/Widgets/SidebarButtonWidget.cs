@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,19 +9,12 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
 
-        }
-
-        void Update()
-        {
-
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 2;
-            var rect = new Rect(10, 10, 110, 30);
-            if (GUI.Button(rect, "Sidebar Menu"))
+            screenRectTransform.Find("Canvas").Find("SidebarMenu").GetComponent<Button>().onClick.AddListener(() => 
             {
                 if (!UIManager.ShowingOverlay<SidebarMenuOverlay>())
                 {
@@ -30,7 +24,12 @@ namespace Overlewd
                 {
                     UIManager.HideOverlay();
                 }
-            }
+            });
+        }
+
+        void Update()
+        {
+
         }
     }
 

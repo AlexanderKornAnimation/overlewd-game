@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,6 +9,41 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/Map"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
+
+            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Dialog").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<DialogScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Sex").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<SexScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("PrepareBattle").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<PrepareBattleScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Event1").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<EventMapScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Event2").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<EventMapScreen>();
+            });
+
             gameObject.AddComponent<EventsWidget>();
             gameObject.AddComponent<QuestsWidget>();
             gameObject.AddComponent<SidebarButtonWidget>();
@@ -16,53 +52,6 @@ namespace Overlewd
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 3;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            {
-                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "Map Screen");
-
-                var rect = new Rect(60, 100, 110, 30);
-                if (GUI.Button(rect, "Castle"))
-                {
-                    UIManager.ShowScreen<CastleScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Dialog"))
-                {
-                    UIManager.ShowScreen<DialogScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Sex"))
-                {
-                    UIManager.ShowScreen<SexScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Prepare Battle"))
-                {
-                    UIManager.ShowScreen<PrepareBattleScreen>();
-                }
-
-                //Events list
-                rect.y += 50;
-                if (GUI.Button(rect, "Event 1"))
-                {
-                    UIManager.ShowScreen<EventMapScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Event 2"))
-                {
-                    UIManager.ShowScreen<EventMapScreen>();
-                }
-            }
-            GUI.EndGroup();
         }
     }
 }

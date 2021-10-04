@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,46 +9,35 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/GirlScreen/Girl"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
 
+            screenRectTransform.Find("Canvas").Find("Harem").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<HaremScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Memory").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<MemoryScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Dialog").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<DialogScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Portal").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<PortalScreen>();
+            });
         }
 
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 2;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            {
-                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "Girl Screen");
-
-                var rect = new Rect(60, 100, 110, 30);
-                if (GUI.Button(rect, "Harem"))
-                {
-                    UIManager.ShowScreen<HaremScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Memory"))
-                {
-                    UIManager.ShowScreen<MemoryScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Dialog"))
-                {
-                    UIManager.ShowScreen<DialogScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Portal"))
-                {
-                    UIManager.ShowScreen<PortalScreen>();
-                }
-            }
-            GUI.EndGroup();
         }
     }
 }

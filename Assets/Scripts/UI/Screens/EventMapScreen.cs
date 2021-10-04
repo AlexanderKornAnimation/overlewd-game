@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,6 +9,37 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/EventMap"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
+
+            screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<MapScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Dialog").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<DialogScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("Sex").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<SexScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("PrepareBattle").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<PrepareBattleScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("PrepapreBossFight").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<PrepareBossFightScreen>();
+            });
+
+
             gameObject.AddComponent<EventsWidget>();
             gameObject.AddComponent<QuestsWidget>();
             gameObject.AddComponent<SidebarButtonWidget>();
@@ -16,46 +48,6 @@ namespace Overlewd
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 3;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            {
-                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "Event Map Screen");
-
-                var rect = new Rect(60, 100, 110, 30);
-                if (GUI.Button(rect, "Global Map"))
-                {
-                    UIManager.ShowScreen<MapScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Dialog"))
-                {
-                    UIManager.ShowScreen<DialogScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Sex"))
-                {
-                    UIManager.ShowScreen<SexScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Prepare Battle"))
-                {
-                    UIManager.ShowScreen<PrepareBattleScreen>();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Prepare Boss Fight"))
-                {
-                    UIManager.ShowScreen<PrepareBossFightScreen>();
-                }
-            }
-            GUI.EndGroup();
         }
     }
 }

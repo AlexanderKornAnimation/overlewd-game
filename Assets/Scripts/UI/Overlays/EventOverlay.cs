@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,34 +9,25 @@ namespace Overlewd
     {
         void Start()
         {
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventsOverlay"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
 
+            screenRectTransform.Find("Canvas").Find("Back").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.HideOverlay();
+            });
+
+            screenRectTransform.Find("Canvas").Find("EventMarket").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<EventMarketScreen>();
+            });
         }
 
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 1;
-            GUI.BeginGroup(new Rect(0, 0, Screen.width, Screen.height));
-            {
-                GUI.Box(new Rect(Screen.width - 400, 0, 400, Screen.height), "Events Overlay");
-
-                var rect = new Rect(Screen.width - 130, 10, 110, 30);
-                if (GUI.Button(rect, "Back"))
-                {
-                    UIManager.HideOverlay();
-                }
-
-                rect.y += 35;
-                if (GUI.Button(rect, "Event Market"))
-                {
-                    UIManager.ShowScreen<EventMarketScreen>();
-                }
-            }
-            GUI.EndGroup();
         }
     }
 }
