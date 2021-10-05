@@ -56,6 +56,7 @@ namespace Overlewd
             uiRootCanvasGO_canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             var uiRootCanvasGO_canvasScaler = uiRootCanvasGO.AddComponent<CanvasScaler>();
             uiRootCanvasGO_canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            uiRootCanvasGO_canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             uiRootCanvasGO_canvasScaler.referenceResolution = new Vector2(1920, 1080);
             var uiRootCanvasGO_graphicRaycaster = uiRootCanvasGO.AddComponent<GraphicRaycaster>();
 
