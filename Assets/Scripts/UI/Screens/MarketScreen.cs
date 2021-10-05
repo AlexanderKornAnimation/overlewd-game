@@ -10,6 +10,7 @@ namespace Overlewd
     {
         private List<ShortMarketData> shortDataItems;
         private List<FullMarketData> fullDataItems = new List<FullMarketData>();
+        private List<CurrencyItem> currencies = new List<CurrencyItem>();
 
         IEnumerator Start()
         {
@@ -28,18 +29,8 @@ namespace Overlewd
                 UIManager.ShowScreen<EventMarketScreen>();
             });
 
-            var grid = screenRectTransform.Find("CanvasRoot").Find("Grid");
-
-            /*var texture = Resources.Load<Texture2D>("Ulvi");
-            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-
-            for (int i = 0; i < 5; i++)
-            {
-                var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
-                var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
-                image.sprite = sprite;
-                resPrefab.transform.SetParent(grid, false);
-            }*/
+            var gridMarkets = screenRectTransform.Find("CanvasRoot").Find("GridMarkets");
+            var gridCurrencies = screenRectTransform.Find("CanvasRoot").Find("GridCurrencies");
 
             yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", NetworkHelper.tokens.accessToken, (downloadHandler) =>
             {
@@ -64,43 +55,58 @@ namespace Overlewd
                     }));
             }
 
+            yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/currencies", NetworkHelper.tokens.accessToken, (downloadHandler) =>
+            {
+                var currenciesJson = "{ \"items\" : " + downloadHandler.text + " }";
+                currencies = JsonUtility.FromJson<Currenies>(currenciesJson).items;
+            },
+            (errorMsg) => {
+                var msg = errorMsg;
+            }));
 
-            //add to grid
+
+            //add markets to grid
             foreach (var shortItem in shortDataItems)
             {
                 yield return StartCoroutine(ResourceManager.LoadTextureById(shortItem.backgroundUrl, (texture) => 
                 {
-                    var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-                    var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
-                    var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
-                    image.sprite = sprite;
-                    resPrefab.transform.SetParent(grid, false);
+                    AddResourceToGrid(texture, gridMarkets);
                 }));
 
                 foreach (var fullItem in fullDataItems)
                 {
                     yield return StartCoroutine(ResourceManager.LoadTextureById(fullItem.imageUrl, (texture) =>
                     {
-                        var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-                        var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
-                        var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
-                        image.sprite = sprite;
-                        resPrefab.transform.SetParent(grid, false);
+                        AddResourceToGrid(texture, gridMarkets);
                     }));
 
                     foreach (var priceItem in fullItem.price)
                     {
                         yield return StartCoroutine(ResourceManager.LoadTextureById(priceItem.iconUrl, (texture) =>
                         {
-                            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-                            var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
-                            var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
-                            image.sprite = sprite;
-                            resPrefab.transform.SetParent(grid, false);
+                            AddResourceToGrid(texture, gridMarkets);
                         }));
                     }
                 }
             }
+
+            //add currencies
+            foreach (var currency in currencies)
+            {
+                yield return StartCoroutine(ResourceManager.LoadTextureById(currency.iconUrl, (texture) =>
+                {
+                    AddResourceToGrid(texture, gridCurrencies);
+                }));
+            }
+        }
+
+        private void AddResourceToGrid(Texture2D texture, Transform grid)
+        {
+            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
+            var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
+            image.sprite = sprite;
+            resPrefab.transform.SetParent(grid, false);
         }
 
         void Update()
@@ -160,6 +166,22 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public int count;
+        }
+
+        [Serializable]
+        public class CurrencyItem
+        { 
+            public int id;
+            public string name;
+            public string iconUrl;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        [Serializable]
+        public class Currenies
+        {
+            public List<CurrencyItem> items;
         }
     }
 }
