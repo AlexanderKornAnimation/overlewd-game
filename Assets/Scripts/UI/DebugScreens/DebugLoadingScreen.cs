@@ -44,7 +44,7 @@ namespace Overlewd
                         },
                         () =>
                         {
-                            UIManager.ShowScreen<LoadingScreen>();
+                            UIManager.ShowScreen<CastleScreen>();
                         }
                     ));
                 }

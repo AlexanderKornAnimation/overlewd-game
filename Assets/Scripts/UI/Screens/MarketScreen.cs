@@ -15,9 +15,11 @@ namespace Overlewd
         IEnumerator Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/Market"));
+            screenPrefab.SetActive(false);
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
+
 
             screenRectTransform.Find("CanvasRoot").Find("ToThroneRoom").GetComponent<Button>().onClick.AddListener(() => 
             {
@@ -95,17 +97,22 @@ namespace Overlewd
             {
                 yield return StartCoroutine(ResourceManager.LoadTextureById(currency.iconUrl, (texture) =>
                 {
-                    AddResourceToGrid(texture, gridCurrencies);
+                    AddResourceToGrid(texture, gridCurrencies, currency.name);
                 }));
             }
+
+            //activate screen
+            screenPrefab.SetActive(true);
         }
 
-        private void AddResourceToGrid(Texture2D texture, Transform grid)
+        private void AddResourceToGrid(Texture2D texture, Transform grid, string name = "")
         {
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
             var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
             var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
             image.sprite = sprite;
+            var text = resPrefab.transform.Find("RootCanvas").Find("Image").Find("Text").GetComponent<Text>();
+            text.text = name;
             resPrefab.transform.SetParent(grid, false);
         }
 

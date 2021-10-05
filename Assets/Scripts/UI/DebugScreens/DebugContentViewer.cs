@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -8,17 +9,10 @@ namespace Overlewd
     {
         private List<Texture2D> loadedTextures = new List<Texture2D>();
         private int currentTextureId;
-        private bool doLoad;
 
-        private float spw(float p)
-        {
-            return Screen.width * (p / 100.0f);
-        }
-
-        private float sph(float p)
-        {
-            return Screen.height * (p / 100.0f);
-        }
+        private Button prevBtn;
+        private Button nextBtn;
+        private Image image;
 
         IEnumerator Start()
         {
@@ -31,51 +25,79 @@ namespace Overlewd
                 });
             }
 
-            doLoad = true;
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
+
+            image = screenRectTransform.Find("Canvas").Find("Image").GetComponent<Image>();
+
+            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            });
+
+            if (loadedTextures.Count > 0)
+            {
+                SetSprite();
+            }
+
+            prevBtn = screenRectTransform.Find("Canvas").Find("PrevBtn").GetComponent<Button>();
+            prevBtn.onClick.AddListener(() =>
+            {
+                currentTextureId--;
+                CheckButtons();
+                SetSprite();
+            });
+
+            nextBtn = screenRectTransform.Find("Canvas").Find("NextBtn").GetComponent<Button>();
+            nextBtn.onClick.AddListener(() =>
+            {
+                currentTextureId++;
+                CheckButtons();
+                SetSprite();
+            });
+
+            CheckButtons();
+        }
+
+        private void SetSprite()
+        {
+            var texture = loadedTextures[currentTextureId];
+            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            image.sprite = sprite;
+        }
+
+        private void CheckButtons()
+        {
+            if (loadedTextures.Count > 0)
+            {
+                if (currentTextureId == 0)
+                {
+                    prevBtn.gameObject.SetActive(false);
+                    nextBtn.gameObject.SetActive(true);
+                }
+                else if (currentTextureId == loadedTextures.Count - 1)
+                {
+                    prevBtn.gameObject.SetActive(true);
+                    nextBtn.gameObject.SetActive(false);
+                }
+                else
+                {
+                    prevBtn.gameObject.SetActive(true);
+                    nextBtn.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                prevBtn.gameObject.SetActive(false);
+                nextBtn.gameObject.SetActive(false);
+            }
         }
 
         void Update()
         {
 
-        }
-
-        void OnGUI()
-        {
-            if (doLoad)
-            {
-                GUI.depth = 2;
-
-                GUIStyle btnStyle = new GUIStyle(GUI.skin.button);
-                btnStyle.fontSize = (int)sph(10);
-
-                if (loadedTextures.Count > 0)
-                {
-                    var rect = new Rect(0, 0, Screen.width, Screen.height);
-                    GUI.DrawTexture(rect, loadedTextures[currentTextureId]);
-                }
-
-                if (currentTextureId > 0)
-                {
-                    if (GUI.Button(new Rect(spw(2), sph(78), spw(10), sph(20)), "<", btnStyle))
-                    {
-                        currentTextureId--;
-                    }
-                }
-
-                if (currentTextureId < (loadedTextures.Count - 1))
-                {
-                    if (GUI.Button(new Rect(spw(88), sph(78), spw(10), sph(20)), ">", btnStyle))
-                    {
-                        currentTextureId++;
-                    }
-                }
-
-                btnStyle.fontSize = (int)sph(5);
-                if (GUI.Button(new Rect(spw(88), sph(2), spw(10), sph(10)), "Castle", btnStyle))
-                {
-                    UIManager.ShowScreen<CastleScreen>();
-                }
-            }
         }
     }
 }
