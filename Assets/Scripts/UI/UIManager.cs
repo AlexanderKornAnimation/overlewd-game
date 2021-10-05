@@ -26,6 +26,15 @@ namespace Overlewd
             var layerGO_rectTransform = layerGO.AddComponent<RectTransform>();
             layerGO_rectTransform.SetParent(uiRootCanvasGO.transform, false);
             SetStretch(layerGO_rectTransform);
+
+            //FullHD fixed aspect
+            var layerGO_aspectRatioFitter = layerGO.AddComponent<AspectRatioFitter>();
+            layerGO_aspectRatioFitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            layerGO_aspectRatioFitter.aspectRatio = 1.777778f;
+
+            //cut screen content outside FullHD 
+            var layerGO_rectMask2D = layerGO.AddComponent<RectMask2D>();
+
             layerGO.transform.SetSiblingIndex(siblingIndex);
         }
 
@@ -35,7 +44,7 @@ namespace Overlewd
             rectTransform.offsetMin = Vector2.zero;
             rectTransform.anchorMin = Vector2.zero;
             rectTransform.anchorMax = Vector2.one;
-            rectTransform.pivot = Vector2.zero;
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
 
         public static void Initialize()
