@@ -37,6 +37,11 @@ namespace Overlewd
                 UIManager.ShowScreen<CastleScreen>();
             });
 
+            screenRectTransform.Find("Canvas").Find("ScreenViewer").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowScreen<DebugScreenViewer>();
+            });
+
             if (loadedTextures.Count > 0)
             {
                 SetSprite();
