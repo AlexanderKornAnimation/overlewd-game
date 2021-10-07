@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public class EventsWidget : BaseWidget
     {
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();

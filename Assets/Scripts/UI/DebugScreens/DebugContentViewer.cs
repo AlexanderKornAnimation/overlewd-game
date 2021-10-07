@@ -59,6 +59,17 @@ namespace Overlewd
             });
 
             CheckButtons();
+
+            //load spine
+            var spineGO = new GameObject("spine_test");
+            var spineGO_rt = spineGO.AddComponent<RectTransform>();
+            spineGO_rt.SetParent(transform, false);
+
+            var skeletonDataAsset = Resources.Load<Spine.Unity.SkeletonDataAsset>("Spine/Ulvi/idle_SkeletonData");
+            var spineGO_sg = spineGO.AddComponent<Spine.Unity.SkeletonGraphic>();
+            spineGO_sg.skeletonDataAsset = skeletonDataAsset;
+            spineGO_sg.Initialize(false);
+            spineGO_sg.AnimationState.SetAnimation(0, "idle", true);
         }
 
         private void SetSprite()

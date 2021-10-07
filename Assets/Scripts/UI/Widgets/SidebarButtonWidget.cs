@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public class SidebarButtonWidget : BaseWidget
     {
-        void Start()
+        private void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();

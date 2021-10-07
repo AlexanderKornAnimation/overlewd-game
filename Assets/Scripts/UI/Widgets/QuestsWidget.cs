@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public class QuestsWidget : BaseWidget
     {
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
