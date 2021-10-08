@@ -81,6 +81,7 @@ namespace Overlewd
                 currentScreenGO_rectTransform.SetParent(uiScreenLayerGO.transform, false);
                 SetStretch(currentScreenGO_rectTransform);
                 currentScreenGO.AddComponent<T>();
+                currentScreenGO.AddComponent<ScreenShowAnimation>();
 
                 HideOverlay();
             }
