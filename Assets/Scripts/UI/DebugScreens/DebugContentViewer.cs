@@ -69,6 +69,7 @@ namespace Overlewd
             var anim_sex = SpineWidget.Attacht("spine_test_sex", transform);
             anim_sex.skeletonDataPath = "Spine/Ulvi/sex/idle01_SkeletonData";
             anim_sex.animName = "idle";
+            anim_sex.multipleRenderCanvas = true;
 
             var anim_ui = SpineWidget.Attacht("spine_test_ui", transform);
             anim_ui.skeletonDataPath = "Spine/Ulvi/ui/idle_SkeletonData";

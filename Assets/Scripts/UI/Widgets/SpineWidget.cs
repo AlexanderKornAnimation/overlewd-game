@@ -9,6 +9,7 @@ namespace Overlewd
     {
         public string skeletonDataPath { get; set; }
         public string animName { get; set; }
+        public bool multipleRenderCanvas { get; set; }
 
         void Awake()
         {
@@ -19,7 +20,7 @@ namespace Overlewd
         {
             var skeletonDataAsset = Resources.Load<Spine.Unity.SkeletonDataAsset>(skeletonDataPath);
             var spineGO_sg = gameObject.AddComponent<Spine.Unity.SkeletonGraphic>();
-            spineGO_sg.allowMultipleCanvasRenderers = true;
+            spineGO_sg.allowMultipleCanvasRenderers = multipleRenderCanvas;
             spineGO_sg.skeletonDataAsset = skeletonDataAsset;
             spineGO_sg.Initialize(false);
             spineGO_sg.AnimationState.SetAnimation(0, animName, true);
