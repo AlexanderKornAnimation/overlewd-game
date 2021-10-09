@@ -15,5 +15,15 @@ namespace Overlewd
         {
 
         }
+
+        public override void Show()
+        {
+            gameObject.AddComponent<OverlayShow>();
+        }
+
+        public override void Hide()
+        {
+            gameObject.AddComponent<OverlayHide>();
+        }
     }
 }

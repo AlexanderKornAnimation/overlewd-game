@@ -74,14 +74,14 @@ namespace Overlewd
         {
             if (currentScreenGO?.GetComponent<T>() == null)
             {
-                GameObject.Destroy(currentScreenGO);
+                currentScreenGO?.GetComponent<BaseScreen>().Hide();
+                
                 currentScreenGO = new GameObject(typeof(T).Name);
                 currentScreenGO.layer = 5;
                 var currentScreenGO_rectTransform = currentScreenGO.AddComponent<RectTransform>();
                 currentScreenGO_rectTransform.SetParent(uiScreenLayerGO.transform, false);
                 SetStretch(currentScreenGO_rectTransform);
-                currentScreenGO.AddComponent<T>();
-                //currentScreenGO.AddComponent<ScreenShowAnimation>();
+                currentScreenGO.AddComponent<T>().Show();
 
                 HideOverlay();
             }
@@ -93,7 +93,7 @@ namespace Overlewd
 
         public static void HideScreen()
         {
-            GameObject.Destroy(currentScreenGO);
+            currentScreenGO?.GetComponent<BaseScreen>().Hide();
             currentScreenGO = null;
         }
 
@@ -101,20 +101,20 @@ namespace Overlewd
         {
             if (currentOverlayGO?.GetComponent<T>() == null)
             {
-                GameObject.Destroy(currentOverlayGO);
+                currentOverlayGO?.GetComponent<BaseOverlay>().Hide();
+
                 currentOverlayGO = new GameObject(typeof(T).Name);
                 currentOverlayGO.layer = 5;
                 var currentOverlayGO_rectTransform = currentOverlayGO.AddComponent<RectTransform>();
-                currentOverlayGO_rectTransform.SetParent(uiScreenLayerGO.transform, false);
+                currentOverlayGO_rectTransform.SetParent(uiOverlayLayerGO.transform, false);
                 SetStretch(currentOverlayGO_rectTransform);
-                currentOverlayGO.AddComponent<T>();
-                currentOverlayGO.transform.SetParent(uiOverlayLayerGO.transform);
+                currentOverlayGO.AddComponent<T>().Show();
             }
         }
 
         public static void HideOverlay()
         {
-            GameObject.Destroy(currentOverlayGO);
+            currentOverlayGO?.GetComponent<BaseOverlay>().Hide();
             currentOverlayGO = null;
         }
 

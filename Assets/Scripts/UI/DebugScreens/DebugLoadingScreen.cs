@@ -68,5 +68,15 @@ namespace Overlewd
             int labelHeight = (int)(labelStyle.fontSize * 1.5);
             GUI.Label(new Rect(0, Screen.height - labelHeight, Screen.width, labelHeight), loadingLabel, labelStyle);
         }
+
+        public override void Show()
+        {
+            gameObject.AddComponent<ImmediatelyShow>();
+        }
+
+        public override void Hide()
+        {
+            gameObject.AddComponent<ImmediatelyHide>();
+        }
     }
 }

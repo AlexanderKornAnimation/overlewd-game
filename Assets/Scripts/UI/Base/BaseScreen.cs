@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class BaseScreen : MonoBehaviour
+    public abstract class BaseScreen : MonoBehaviour
     {
         void Start()
         {
@@ -14,6 +14,16 @@ namespace Overlewd
         void Update()
         {
 
+        }
+
+        public virtual void Show()
+        {
+            gameObject.AddComponent<ScreenShow>();
+        }
+
+        public virtual void Hide()
+        {
+            gameObject.AddComponent<ScreenHide>();
         }
     }
 }
