@@ -10,30 +10,6 @@ namespace Overlewd
 {
     public static class NetworkHelper
     {
-        [Serializable]
-        public class Tokens
-        {
-            public string accessToken;
-            public string refreshToken;
-        }
-
-        public static Tokens tokens;
-
-        public static IEnumerator Authorization(Action<Tokens> success)
-        {
-            var formAuthorization = new WWWForm();
-            formAuthorization.AddField("deviceId", GetDeviceId());
-            yield return Post("https://overlude-api.herokuapp.com/auth/login", formAuthorization, downloadHandler =>
-            {
-                tokens = JsonUtility.FromJson<Tokens>(downloadHandler.text);
-                success?.Invoke(tokens);
-            });
-        }
-
-        public static string GetDeviceId()
-        {
-            return SystemInfo.deviceUniqueIdentifier;
-        }
         public static bool HasNetworkConection()
         {
             return Application.internetReachability != NetworkReachability.NotReachable;

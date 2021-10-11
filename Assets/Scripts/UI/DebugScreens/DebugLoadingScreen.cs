@@ -17,15 +17,15 @@ namespace Overlewd
 
         void Start()
         {
-            /*StartCoroutine(Player.GetPlayerInfo(e =>
+            /*StartCoroutine(AdminBRO.me(e =>
             {
-                StartCoroutine(Player.ChangeName("NewName", e =>
+                StartCoroutine(AdminBRO.me("NewName", e =>
                 {
 
                 }));
             }));*/
 
-            StartCoroutine(ResourceManager.GetServerResourcesMeta(serverResourcesMeta =>
+            StartCoroutine(AdminBRO.resources(serverResourcesMeta =>
             {
                 if (!ResourceManager.HasFreeSpaceForNewResources(serverResourcesMeta))
                 {

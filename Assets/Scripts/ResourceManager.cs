@@ -11,7 +11,7 @@ namespace Overlewd
 
     public static class ResourceManager
     {
-        public static ResourcesMeta runtimeResourcesMeta { get; set; }
+        public static AdminBRO.ResourcesMeta runtimeResourcesMeta { get; set; }
         private static Dictionary<string, Texture2D> loadTextures = new Dictionary<string, Texture2D>();
         private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
         private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
@@ -132,7 +132,7 @@ namespace Overlewd
             return AssetBundle.LoadFromFile(filePath);
         }*/
 
-        public static NetworkResource GetResourceMetaById(string id)
+        public static AdminBRO.NetworkResource GetResourceMetaById(string id)
         {
             return runtimeResourcesMeta.items.Find(item => item.id == id);
         }
@@ -280,30 +280,20 @@ namespace Overlewd
             }
         }
 
-        public static IEnumerator GetServerResourcesMeta(Action<ResourcesMeta> success, Action<string> error = null)
-        {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", NetworkHelper.tokens.accessToken, downloadHandler =>
-            {
-                var resources = JsonUtility.FromJson<ResourcesMeta>(downloadHandler.text);
-                success?.Invoke(resources);
-            },
-            error);
-        }
-
-        public static ResourcesMeta GetLocalResourcesMeta()
+        public static AdminBRO.ResourcesMeta GetLocalResourcesMeta()
         {
             var metaFilePath = GetRootFilePath("ResourcesMeta");
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                var meta = JsonUtility.FromJson<ResourcesMeta>(metaJson);
+                var meta = JsonUtility.FromJson<AdminBRO.ResourcesMeta>(metaJson);
                 return meta;
             }
 
             return null;
         }
 
-        public static void SaveLocalResourcesMeta(ResourcesMeta meta)
+        public static void SaveLocalResourcesMeta(AdminBRO.ResourcesMeta meta)
         {
             if (meta != null)
             {
@@ -313,7 +303,7 @@ namespace Overlewd
             }
         }
 
-        public static bool HasFreeSpaceForNewResources(ResourcesMeta serverResourcesMeta)
+        public static bool HasFreeSpaceForNewResources(AdminBRO.ResourcesMeta serverResourcesMeta)
         {
             var existingFiles = GetResourcesFileNames();
 
@@ -338,7 +328,7 @@ namespace Overlewd
             return (GetSpaceFreeBytes() + deleteSize - downloadSize) > 0;
         }
 
-        public static IEnumerator ActualizeResources(ResourcesMeta resourcesMeta, Action<NetworkResource> downloadItem, Action done)
+        public static IEnumerator ActualizeResources(AdminBRO.ResourcesMeta resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem, Action done)
         {
             var existingFiles = GetResourcesFileNames();
 
@@ -367,24 +357,6 @@ namespace Overlewd
 
             done?.Invoke();
         }
-
-        [Serializable]
-        public class NetworkResource
-        {
-            public string id;
-            public string type;
-            public string internalFormat;
-            public string hash;
-            public int size;
-            public string url;
-        }
-
-        [Serializable]
-        public class ResourcesMeta
-        {
-            public List<NetworkResource> items;
-        }
-
     }
 
 }

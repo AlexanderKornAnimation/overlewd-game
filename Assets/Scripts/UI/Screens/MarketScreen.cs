@@ -8,9 +8,9 @@ namespace Overlewd
 {
     public class MarketScreen : BaseScreen
     {
-        private List<ShortMarketData> shortDataItems;
-        private List<FullMarketData> fullDataItems = new List<FullMarketData>();
-        private List<CurrencyItem> currencies = new List<CurrencyItem>();
+        private List<AdminBRO.ShortMarketData> shortDataItems;
+        private List<AdminBRO.FullMarketData> fullDataItems = new List<AdminBRO.FullMarketData>();
+        private List<AdminBRO.CurrencyItem> currencies = new List<AdminBRO.CurrencyItem>();
 
         IEnumerator Start()
         {
@@ -34,38 +34,23 @@ namespace Overlewd
             var gridMarkets = screenRectTransform.Find("CanvasRoot").Find("GridMarkets");
             var gridCurrencies = screenRectTransform.Find("CanvasRoot").Find("GridCurrencies");
 
-            yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", NetworkHelper.tokens.accessToken, (downloadHandler) =>
+            yield return StartCoroutine(AdminBRO.markets((shortMarketsData) =>
             {
-                var shortItemsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                shortDataItems = JsonUtility.FromJson<ShortMarketsData>(shortItemsJson).items;
-            },
-            (errorMsg) => {
-                var msg = errorMsg;
+                shortDataItems = shortMarketsData.items;
             }));
 
             foreach (var item in shortDataItems)
             {
-                yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets/" + item.id.ToString(),
-                    NetworkHelper.tokens.accessToken, (downloadHandler) => {
-                        var fullItemsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                        var fullItems = JsonUtility.FromJson<FullMarketsData>(fullItemsJson).items;
-                        fullDataItems.AddRange(fullItems);
-                    },
-                    (errorMsg) =>
-                    {
-
-                    }));
+                yield return StartCoroutine(AdminBRO.markets(item.id, (fullItems) =>
+                {
+                    fullDataItems.AddRange(fullItems.items);
+                }));
             }
 
-            yield return StartCoroutine(NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/currencies", NetworkHelper.tokens.accessToken, (downloadHandler) =>
+            yield return StartCoroutine(AdminBRO.currencies((currenciesData) =>
             {
-                var currenciesJson = "{ \"items\" : " + downloadHandler.text + " }";
-                currencies = JsonUtility.FromJson<Currenies>(currenciesJson).items;
-            },
-            (errorMsg) => {
-                var msg = errorMsg;
+                currencies = currenciesData.items;
             }));
-
 
             //add markets to grid
             foreach (var shortItem in shortDataItems)
@@ -119,76 +104,6 @@ namespace Overlewd
         void Update()
         {
 
-        }
-
-        [Serializable]
-        public class ShortMarketData
-        {
-            public int id;
-            public string name;
-            public string backgroundUrl;
-            public string bannerUrl;
-            public string dateStart;
-            public string dateEnd;
-            public string createdAt;
-            public string updatedAt;
-        }
-
-        [Serializable]
-        public class ShortMarketsData
-        {
-            public List<ShortMarketData> items;
-        }
-
-        [Serializable]
-        public class FullMarketData
-        {
-            public int id;
-            public string name;
-            public string imageUrl;
-            public string description;
-            public List<PriceItem> price;
-            public string discount;
-            public string specialOfferLabel;
-            public string itemPack;
-            public string dateStart;
-            public string dateEnd;
-            public string discountStart;
-            public string discountEnd;
-            public string sortPriority;
-        }
-
-        [Serializable]
-        public class FullMarketsData
-        {
-            public List<FullMarketData> items;
-        }
-
-        [Serializable]
-        public class PriceItem
-        {
-            public int id;
-            public string name;
-            public string iconUrl;
-            public string createdAt;
-            public string updatedAt;
-            public int count;
-        }
-
-        [Serializable]
-        public class CurrencyItem
-        { 
-            public int id;
-            public string name;
-            public string iconUrl;
-            public string createdAt;
-            public string updatedAt;
-        }
-
-        [Serializable]
-        public class Currenies
-        {
-            public List<CurrencyItem> items;
         }
     }
 }

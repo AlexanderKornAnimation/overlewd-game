@@ -16,7 +16,12 @@ namespace Overlewd
 
             if (NetworkHelper.HasNetworkConection())
             {
-                StartCoroutine(NetworkHelper.Authorization(e =>
+                /*StartCoroutine(NetworkHelper.Authorization(e =>
+                {
+                    UIManager.ShowScreen<DebugLoadingScreen>();
+                }));*/
+
+                StartCoroutine(AdminBRO.auth_login(() =>
                 {
                     UIManager.ShowScreen<DebugLoadingScreen>();
                 }));
