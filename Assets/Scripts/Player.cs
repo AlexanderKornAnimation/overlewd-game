@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public static class Player
     {
-        
+        public static AdminBRO.PlayerInfo playerInfo { get; set; }
     }
 
 }

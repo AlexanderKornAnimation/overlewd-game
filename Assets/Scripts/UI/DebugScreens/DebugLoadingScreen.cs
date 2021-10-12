@@ -17,13 +17,15 @@ namespace Overlewd
 
         void Start()
         {
-            /*StartCoroutine(AdminBRO.me(e =>
+            StartCoroutine(AdminBRO.me(e =>
             {
-                StartCoroutine(AdminBRO.me("NewName", e =>
+                Player.playerInfo = e;
+
+                /*StartCoroutine(AdminBRO.me("NewName", e =>
                 {
 
-                }));
-            }));*/
+                }));*/
+            }));
 
             StartCoroutine(AdminBRO.resources(serverResourcesMeta =>
             {

@@ -8,8 +8,8 @@ namespace Overlewd
 {
     public class MarketScreen : BaseScreen
     {
-        private List<AdminBRO.ShortMarketData> shortDataItems;
-        private List<AdminBRO.FullMarketData> fullDataItems = new List<AdminBRO.FullMarketData>();
+        private List<AdminBRO.MarketItem> markets;
+        private List<AdminBRO.MarketProductItem> products = new List<AdminBRO.MarketProductItem>();
         private List<AdminBRO.CurrencyItem> currencies = new List<AdminBRO.CurrencyItem>();
 
         IEnumerator Start()
@@ -34,16 +34,16 @@ namespace Overlewd
             var gridMarkets = screenRectTransform.Find("CanvasRoot").Find("GridMarkets");
             var gridCurrencies = screenRectTransform.Find("CanvasRoot").Find("GridCurrencies");
 
-            yield return StartCoroutine(AdminBRO.markets((shortMarketsData) =>
+            yield return StartCoroutine(AdminBRO.markets((marketsData) =>
             {
-                shortDataItems = shortMarketsData.items;
+                markets = marketsData.items;
             }));
 
-            foreach (var item in shortDataItems)
+            foreach (var item in markets)
             {
-                yield return StartCoroutine(AdminBRO.markets(item.id, (fullItems) =>
+                yield return StartCoroutine(AdminBRO.markets(item.id, (productsData) =>
                 {
-                    fullDataItems.AddRange(fullItems.items);
+                    products.AddRange(productsData.items);
                 }));
             }
 
@@ -53,26 +53,30 @@ namespace Overlewd
             }));
 
             //add markets to grid
-            foreach (var shortItem in shortDataItems)
+            foreach (var marketItem in markets)
             {
-                yield return StartCoroutine(ResourceManager.LoadTextureById(shortItem.backgroundUrl, (texture) => 
+                yield return StartCoroutine(ResourceManager.LoadTextureById(marketItem.backgroundUrl, (texture) => 
                 {
                     AddResourceToGrid(texture, gridMarkets);
                 }));
 
-                foreach (var fullItem in fullDataItems)
+                foreach (var productItem in products)
                 {
-                    yield return StartCoroutine(ResourceManager.LoadTextureById(fullItem.imageUrl, (texture) =>
+                    yield return StartCoroutine(ResourceManager.LoadTextureById(productItem.imageUrl, (texture) =>
                     {
                         AddResourceToGrid(texture, gridMarkets);
                     }));
 
-                    foreach (var priceItem in fullItem.price)
+                    foreach (var priceItem in productItem.price)
                     {
-                        yield return StartCoroutine(ResourceManager.LoadTextureById(priceItem.iconUrl, (texture) =>
+                        var currency = currencies.Find(item => item.id == priceItem.currency);
+                        if (currency != null)
                         {
-                            AddResourceToGrid(texture, gridMarkets);
-                        }));
+                            yield return StartCoroutine(ResourceManager.LoadTextureById(currency.iconUrl, (texture) =>
+                            {
+                                AddResourceToGrid(texture, gridMarkets);
+                            }));
+                        }
                     }
                 }
             }

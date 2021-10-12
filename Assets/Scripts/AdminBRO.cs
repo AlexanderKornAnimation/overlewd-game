@@ -59,7 +59,7 @@ namespace Overlewd
                 var playerInfo = JsonUtility.FromJson<PlayerInfo>(downloadHandler.text);
                 success?.Invoke(playerInfo);
             },
-            (msg) => 
+            (msg) =>
             {
                 error?.Invoke();
             });
@@ -73,8 +73,8 @@ namespace Overlewd
             {
                 var playerInfo = JsonUtility.FromJson<PlayerInfo>(downloadHandler.text);
                 success?.Invoke(playerInfo);
-            }, 
-            (msg) => 
+            },
+            (msg) =>
             {
                 error?.Invoke();
             });
@@ -85,30 +85,67 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public List<InventoryItem> inventory;
+            public List<WalletItem> wallet;
         }
 
+        [Serializable]
+        public class InventoryItem
+        {
+            public int id;
+            public string createdAt;
+            public string updatedAt;
+            public TradableItem tradable;
+        }
+
+        [Serializable]
+        public class TradableItem
+        {
+            public int id;
+            public string name;
+            public string imageUrl;
+            public string description;
+            public string discount;
+            public string specialOfferLabel;
+            public string itemPack;
+            public string dateStart;
+            public string dateEnd;
+            public string discountStart;
+            public string discountEnd;
+            public string sortPriority;
+        }
+
+        [Serializable]
+        public class WalletItem
+        {
+            public int id;
+            public int amount;
+            public string createdAt;
+            public string updatedAt;
+            public CurrencyItem currency;
+        }
 
         // /markets; /markets/{id}
-        public static IEnumerator markets(Action<ShortMarketsData> success, Action error = null)
+        public static IEnumerator markets(Action<Markets> success, Action error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", tokens.accessToken, (downloadHandler) =>
             {
-                var shortItemsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var shortDataItems = JsonUtility.FromJson<ShortMarketsData>(shortItemsJson);
-                success?.Invoke(shortDataItems);
+                var marketsJson = "{ \"items\" : " + downloadHandler.text + " }";
+                var markets = JsonUtility.FromJson<Markets>(marketsJson);
+                success?.Invoke(markets);
             },
             (errorMsg) => {
                 error?.Invoke();
             });
         }
 
-        public static IEnumerator markets(int id, Action<FullMarketsData> success, Action error = null)
+        public static IEnumerator markets(int id, Action<MarketProducts> success, Action error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets/" + id.ToString(),
             tokens.accessToken, (downloadHandler) => {
-                var fullItemsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var fullItems = JsonUtility.FromJson<FullMarketsData>(fullItemsJson);
-                success?.Invoke(fullItems);
+                var marketProductsJson = "{ \"items\" : " + downloadHandler.text + " }";
+                var marketProducts = JsonUtility.FromJson<MarketProducts>(marketProductsJson);
+                success?.Invoke(marketProducts);
             },
             (errorMsg) =>
             {
@@ -117,7 +154,7 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class ShortMarketData
+        public class MarketItem
         {
             public int id;
             public string name;
@@ -130,24 +167,20 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class ShortMarketsData
+        public class Markets
         {
-            public List<ShortMarketData> items;
+            public List<MarketItem> items;
         }
 
         [Serializable]
         public class PriceItem
         {
-            public int id;
-            public string name;
-            public string iconUrl;
-            public string createdAt;
-            public string updatedAt;
-            public int count;
+            public int currency;
+            public int amount;
         }
 
         [Serializable]
-        public class FullMarketData
+        public class MarketProductItem
         {
             public int id;
             public string name;
@@ -165,9 +198,9 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class FullMarketsData
+        public class MarketProducts
         {
-            public List<FullMarketData> items;
+            public List<MarketProductItem> items;
         }
 
         // /currencies
@@ -179,7 +212,7 @@ namespace Overlewd
                 var currencies = JsonUtility.FromJson<Currenies>(currenciesJson);
                 success?.Invoke(currencies);
             },
-            (errorMsg) => 
+            (errorMsg) =>
             {
                 error?.Invoke();
             });
@@ -209,7 +242,7 @@ namespace Overlewd
                 var resources = JsonUtility.FromJson<ResourcesMeta>(downloadHandler.text);
                 success?.Invoke(resources);
             },
-            (msg) => 
+            (msg) =>
             {
                 error?.Invoke(msg);
             });
@@ -231,6 +264,94 @@ namespace Overlewd
         {
             public List<NetworkResource> items;
         }
-    }
 
+        // /tradable/{id}/buy
+        public static IEnumerator tradable_buy(int tradable_id, Action<TradableBuyStatus> success, Action<string> error = null)
+        {
+            var form = new WWWForm();
+            yield return NetworkHelper.PostWithToken(String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id), form, tokens.accessToken, downloadHandler =>
+            {
+                var status = JsonUtility.FromJson<TradableBuyStatus>(downloadHandler.text);
+                success?.Invoke(status);
+            },
+            (msg) =>
+            {
+                error?.Invoke(msg);
+            });
+        }
+
+        [Serializable]
+        public class TradableBuyStatus
+        {
+            public bool status;
+        }
+
+        // /events
+        public static IEnumerator events(Action<Events> success, Action<string> error = null)
+        {
+            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/events", tokens.accessToken, (downloadHandler) =>
+            {
+                var eventsJson = "{ \"items\" : " + downloadHandler.text + " }";
+                var events = JsonUtility.FromJson<Events>(eventsJson);
+                success?.Invoke(events);
+            },
+            (errorMsg) => {
+                error?.Invoke(errorMsg);
+            });
+        }
+
+        [Serializable]
+        public class EventItem
+        {
+            public int id;
+            public string name;
+            public string description;
+            public string dateStart;
+            public string dateEnd;
+            public string backgroundUrl;
+            public List<int> currencies;
+            public string mapBackgroundUrl;
+            public List<int> markets;
+            public List<int> quests;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        [Serializable]
+        public class Events
+        {
+            public List<EventItem> items;
+        }
+
+
+        // /quests
+        public static IEnumerator quests(Action<Quests> success, Action<string> error = null)
+        {
+            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/quests", tokens.accessToken, (downloadHandler) =>
+            {
+                var questsJson = "{ \"items\" : " + downloadHandler.text + " }";
+                var quests = JsonUtility.FromJson<Quests>(questsJson);
+                success?.Invoke(quests);
+            },
+            (errorMsg) => {
+                error?.Invoke(errorMsg);
+            });
+        }
+
+        [Serializable]
+        public class QuestItem
+        {
+            public int id;
+            public string name;
+            public string description;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        [Serializable]
+        public class Quests
+        {
+            public List<QuestItem> items;
+        }
+    }
 }
