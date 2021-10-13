@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class BaseWidget : MonoBehaviour
+    public abstract class BaseWidget : MonoBehaviour
     {
         void Start()
         {

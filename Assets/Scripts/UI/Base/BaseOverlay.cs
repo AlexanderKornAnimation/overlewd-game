@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class BaseOverlay : BaseScreen
+    public abstract class BaseOverlay : BaseScreen
     {
         void Start()
         {
@@ -14,16 +14,6 @@ namespace Overlewd
         void Update()
         {
 
-        }
-
-        public override void Show()
-        {
-            gameObject.AddComponent<OverlayShow>();
-        }
-
-        public override void Hide()
-        {
-            gameObject.AddComponent<OverlayHide>();
         }
     }
 }

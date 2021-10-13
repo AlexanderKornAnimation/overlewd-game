@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class UIAnimationBase : MonoBehaviour
+    public abstract class UIAnimationBase : MonoBehaviour
     {
     
         void Awake()
