@@ -70,71 +70,48 @@ namespace Overlewd
             var uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
-        private static void ShowScreen<T, S, H>() where T : BaseScreen
-                                                 where S : UIAnimationBase
-                                                 where H : UIAnimationBase
+        public static void ShowScreen<T>() where T : BaseScreen
         {
             if (currentScreenGO?.GetComponent<T>() == null)
             {
-                HideScreen<H>();
+                HideScreen();
 
                 currentScreenGO = new GameObject(typeof(T).Name);
                 currentScreenGO.layer = 5;
                 var currentScreenGO_rectTransform = currentScreenGO.AddComponent<RectTransform>();
                 currentScreenGO_rectTransform.SetParent(uiScreenLayerGO.transform, false);
                 SetStretch(currentScreenGO_rectTransform);
-                currentScreenGO.AddComponent<T>().gameObject.AddComponent<S>();
+                currentScreenGO.AddComponent<T>().Show();
             }
-        }
 
-        public static void HideScreen<H>() where H : UIAnimationBase
-        {
-            currentScreenGO?.GetComponent<BaseScreen>().gameObject.AddComponent<H>();
-            currentScreenGO = null;
-        }
-
-        public static void ShowScreen<T>() where T : BaseScreen
-        {
-            ShowScreen<T, ScreenShow, ScreenHide>();
             HideOverlay();
         }
 
         public static void HideScreen()
         {
-            HideScreen<ScreenHide>();
+            currentScreenGO?.GetComponent<BaseScreen>().Hide();
+            currentScreenGO = null;
         }
 
-        private static void ShowOverlay<T, S, H>() where T : BaseOverlay
-                                                   where S : UIAnimationBase
-                                                   where H : UIAnimationBase
+        public static void ShowOverlay<T>() where T : BaseOverlay
         {
             if (currentOverlayGO?.GetComponent<T>() == null)
             {
-                HideOverlay<H>();
+                HideOverlay();
 
                 currentOverlayGO = new GameObject(typeof(T).Name);
                 currentOverlayGO.layer = 5;
                 var currentOverlayGO_rectTransform = currentOverlayGO.AddComponent<RectTransform>();
                 currentOverlayGO_rectTransform.SetParent(uiOverlayLayerGO.transform, false);
                 SetStretch(currentOverlayGO_rectTransform);
-                currentOverlayGO.AddComponent<T>().gameObject.AddComponent<S>();
+                currentOverlayGO.AddComponent<T>().Show();
             }
-        }
-
-        public static void ShowOverlay<T>() where T : BaseOverlay
-        {
-            ShowOverlay<T, OverlayShow, OverlayHide>();
-        }
-
-        public static void HideOverlay<H>() where H : UIAnimationBase
-        {
-            currentOverlayGO?.GetComponent<BaseOverlay>().gameObject.AddComponent<H>();
-            currentOverlayGO = null;
         }
 
         public static void HideOverlay()
         {
-            HideOverlay<OverlayHide>();
+            currentOverlayGO?.GetComponent<BaseOverlay>().Hide();
+            currentOverlayGO = null;
         }
 
         public static bool ShowingOverlay<T>() where T : BaseOverlay
