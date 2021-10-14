@@ -175,7 +175,7 @@ namespace Overlewd
         [Serializable]
         public class PriceItem
         {
-            public int currency;
+            public int currencyId;
             public int amount;
         }
 
@@ -353,5 +353,39 @@ namespace Overlewd
         {
             public List<QuestItem> items;
         }
+
+        // /i18n
+        public static IEnumerator i18n(Action<LocalizationDictionary> success, Action<string> error = null)
+        {
+            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/i18n", tokens.accessToken, (downloadHandler) =>
+            {
+                var dictionaryJson = "{ \"items\" : " + downloadHandler.text + " }";
+                var dictionary = JsonUtility.FromJson<LocalizationDictionary>(dictionaryJson);
+                success?.Invoke(dictionary);
+            },
+            (errorMsg) => {
+                error?.Invoke(errorMsg);
+            });
+        }
+
+        [Serializable]
+        public class LocalizationItem
+        {
+            public int id;
+            public string key;
+            public string type;
+            public string locale;
+            public string text;
+            public string descripton;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        [Serializable]
+        public class LocalizationDictionary
+        {
+            public List<LocalizationItem> items;
+        }
+
     }
 }

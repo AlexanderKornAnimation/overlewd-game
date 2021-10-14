@@ -69,7 +69,7 @@ namespace Overlewd
 
                     foreach (var priceItem in productItem.price)
                     {
-                        var currency = currencies.Find(item => item.id == priceItem.currency);
+                        var currency = currencies.Find(item => item.id == priceItem.currencyId);
                         if (currency != null)
                         {
                             yield return StartCoroutine(ResourceManager.LoadTextureById(currency.iconUrl, (texture) =>

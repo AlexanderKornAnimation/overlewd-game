@@ -27,6 +27,11 @@ namespace Overlewd
                 }));*/
             }));
 
+            StartCoroutine(AdminBRO.i18n((dict) =>
+            {
+                var d = dict;
+            }));
+
             StartCoroutine(AdminBRO.resources(serverResourcesMeta =>
             {
                 if (!ResourceManager.HasFreeSpaceForNewResources(serverResourcesMeta))
