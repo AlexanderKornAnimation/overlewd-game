@@ -355,9 +355,10 @@ namespace Overlewd
         }
 
         // /i18n
-        public static IEnumerator i18n(Action<LocalizationDictionary> success, Action<string> error = null)
+        public static IEnumerator i18n(string locale, Action<LocalizationDictionary> success, Action<string> error = null)
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/i18n", tokens.accessToken, (downloadHandler) =>
+            var url = String.Format("https://overlude-api.herokuapp.com/i18n?locale={0}", locale);
+            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
             {
                 var dictionaryJson = "{ \"items\" : " + downloadHandler.text + " }";
                 var dictionary = JsonUtility.FromJson<LocalizationDictionary>(dictionaryJson);

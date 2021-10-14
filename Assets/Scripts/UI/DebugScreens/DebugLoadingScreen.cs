@@ -27,7 +27,7 @@ namespace Overlewd
                 }));*/
             }));
 
-            StartCoroutine(AdminBRO.i18n((dict) =>
+            StartCoroutine(AdminBRO.i18n("en", (dict) =>
             {
                 var d = dict;
             }));
