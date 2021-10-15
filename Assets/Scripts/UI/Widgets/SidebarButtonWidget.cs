@@ -9,12 +9,7 @@ namespace Overlewd
     {
         private void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-            screenRectTransform.Find("Canvas").Find("SidebarMenu").GetComponent<Button>().onClick.AddListener(() => 
+            transform.Find("Canvas").Find("SidebarMenu").GetComponent<Button>().onClick.AddListener(() => 
             {
                 if (!UIManager.ShowingOverlay<SidebarMenuOverlay>())
                 {
@@ -30,6 +25,16 @@ namespace Overlewd
         void Update()
         {
 
+        }
+
+        public static SidebarButtonWidget CreateInstance(Transform parent)
+        {
+            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"));
+            prefab.name = nameof(SidebarButtonWidget);
+            var rectTransform = prefab.GetComponent<RectTransform>();
+            rectTransform.SetParent(parent, false);
+            UIManager.SetStretch(rectTransform);
+            return prefab.AddComponent<SidebarButtonWidget>();
         }
     }
 

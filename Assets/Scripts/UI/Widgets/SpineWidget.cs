@@ -31,9 +31,9 @@ namespace Overlewd
 
         }
 
-        public static SpineWidget Attacht(string name, Transform parent)
+        public static SpineWidget CreateInstance(string name, Transform parent)
         {
-            var spineGO = new GameObject(name);
+            var spineGO = new GameObject(nameof(SpineWidget) + "_" + name);
             var spineGO_rt = spineGO.AddComponent<RectTransform>();
             spineGO_rt.SetParent(parent, false);
             return spineGO.AddComponent<SpineWidget>();

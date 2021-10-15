@@ -44,9 +44,9 @@ namespace Overlewd
                 UIManager.ShowScreen<EventMapScreen>();
             });
 
-            gameObject.AddComponent<EventsWidget>();
-            gameObject.AddComponent<QuestsWidget>();
-            gameObject.AddComponent<SidebarButtonWidget>();
+            EventsWidget.CreateInstance(transform);
+            QuestsWidget.CreateInstance(transform);
+            SidebarButtonWidget.CreateInstance(transform);
         }
 
         void Update()

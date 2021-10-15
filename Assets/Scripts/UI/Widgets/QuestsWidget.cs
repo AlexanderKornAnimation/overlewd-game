@@ -9,25 +9,35 @@ namespace Overlewd
     {
         void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-            screenRectTransform.Find("Canvas").Find("Quest1").GetComponent<Button>().onClick.AddListener(() =>
+            transform.Find("Canvas").Find("Quest1").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowOverlay<QuestOverlay>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Quest2").GetComponent<Button>().onClick.AddListener(() =>
+            transform.Find("Canvas").Find("Quest2").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowOverlay<QuestOverlay>();
             });
         }
 
+        void Start()
+        {
+            
+        }
+
         void Update()
         {
 
+        }
+
+        public static QuestsWidget CreateInstance(Transform parent)
+        {
+            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"));
+            prefab.name = nameof(QuestsWidget);
+            var rectTransform = prefab.GetComponent<RectTransform>();
+            rectTransform.SetParent(parent, false);
+            UIManager.SetStretch(rectTransform);
+            return prefab.AddComponent<QuestsWidget>();
         }
     }
 }
