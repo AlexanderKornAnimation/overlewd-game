@@ -20,7 +20,7 @@ namespace Overlewd
 
             public static EventDescription GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventOverlay/EventDescription"), parent);
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventDescription"), parent);
                 newItem.name = nameof(EventDescription);
                 return newItem.AddComponent<EventDescription>();
             }

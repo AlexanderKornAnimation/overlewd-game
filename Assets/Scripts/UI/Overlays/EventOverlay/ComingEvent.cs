@@ -20,7 +20,7 @@ namespace Overlewd
 
             public static ComingEvent GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventOverlay/ComingEvent"), parent);
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/ComingEvent"), parent);
                 newItem.name = nameof(ComingEvent);
                 return newItem.AddComponent<ComingEvent>();
             }
