@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class EventOverlay : BaseOverlay
+    public class EventOverlayDebug : BaseOverlay
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventsOverlay"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventOverlayDebug"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);

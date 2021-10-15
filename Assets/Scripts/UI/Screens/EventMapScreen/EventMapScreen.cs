@@ -29,34 +29,6 @@ namespace Overlewd
                 UIManager.ShowScreen<EventMarketScreen>();
             });
 
-
-            ///
-            /*screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<MapScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("Dialog").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<DialogScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("Sex").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<SexScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("PrepareBattle").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<PrepareBattleScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("PrepapreBossFight").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<PrepareBossFightScreen>();
-            });*/
-
-
             EventsWidget.CreateInstance(transform);
             QuestsWidget.CreateInstance(transform);
             SidebarButtonWidget.CreateInstance(transform);

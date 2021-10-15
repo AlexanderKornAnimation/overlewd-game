@@ -4,23 +4,26 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class BossFightButton : MonoBehaviour
+    namespace NSEventMapScreen
     {
-        void Start()
+        public class BossFightButton : MonoBehaviour
         {
+            void Start()
+            {
 
-        }
+            }
 
-        void Update()
-        {
+            void Update()
+            {
 
-        }
+            }
 
-        public static BossFightButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/BossFightButton"), parent);
-            newItem.name = nameof(BossFightButton);
-            return newItem.AddComponent<BossFightButton>();
+            public static BossFightButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/BossFightButton"), parent);
+                newItem.name = nameof(BossFightButton);
+                return newItem.AddComponent<BossFightButton>();
+            }
         }
     }
 }
