@@ -4,23 +4,16 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public abstract class UIAnimationBase : MonoBehaviour
+    public class ImmediateShow : BaseScreenTrasition
     {
-    
         void Awake()
         {
             
         }
 
-        void Start()
-        {
-
-        }
-
         void Update()
         {
-           
+            Destroy(this);
         }
     }
-
 }

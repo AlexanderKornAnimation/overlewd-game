@@ -4,15 +4,9 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ImmediatelyHide : UIAnimationBase
+    public class ImmediateHide : BaseScreenTrasition
     {
-
         void Awake()
-        {
-            
-        }
-
-        void Start()
         {
 
         }
@@ -22,5 +16,4 @@ namespace Overlewd
             Destroy(gameObject);
         }
     }
-
 }
