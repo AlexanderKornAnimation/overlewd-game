@@ -7,18 +7,18 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class BossFightButton : MonoBehaviour
+        public class DialogeButton : MonoBehaviour
         {
             void Start()
             {
                 transform.Find("Canvas").Find("Button").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    UIManager.ShowScreen<PrepareBossFightScreen>();
+                    UIManager.ShowScreen<DialogScreen>();
                 });
 
                 var rectTransform = GetComponent<RectTransform>();
                 rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 400.0f, rectTransform.rect.width);
-                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 200.0f, rectTransform.rect.height);
+                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 400.0f, rectTransform.rect.height);
             }
 
             void Update()
@@ -26,11 +26,11 @@ namespace Overlewd
 
             }
 
-            public static BossFightButton GetInstance(Transform parent)
+            public static DialogeButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/BossFightButton"), parent);
-                newItem.name = nameof(BossFightButton);
-                return newItem.AddComponent<BossFightButton>();
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/DialogueButton"), parent);
+                newItem.name = nameof(DialogeButton);
+                return newItem.AddComponent<DialogeButton>();
             }
         }
     }

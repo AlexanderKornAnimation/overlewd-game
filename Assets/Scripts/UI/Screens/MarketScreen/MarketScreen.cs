@@ -12,21 +12,27 @@ namespace Overlewd
         private List<AdminBRO.MarketProductItem> products = new List<AdminBRO.MarketProductItem>();
         private List<AdminBRO.CurrencyItem> currencies = new List<AdminBRO.CurrencyItem>();
 
-        IEnumerator Start()
+        void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/Market"));
-            screenPrefab.SetActive(false);
+            //screenPrefab.SetActive(false);
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
 
-            screenRectTransform.Find("CanvasRoot").Find("ToThroneRoom").GetComponent<Button>().onClick.AddListener(() => 
+            screenRectTransform.Find("CanvasRoot").Find("MainMenuButton").GetComponent<Button>().onClick.AddListener(() => 
             {
                 UIManager.ShowScreen<CastleScreen>();
             });
 
-            screenRectTransform.Find("CanvasRoot").Find("EventMarket").GetComponent<Button>().onClick.AddListener(() =>
+            var bundlesGrid = screenRectTransform.Find("CanvasRoot").Find("BottomGrid");
+            NSMarketScreen.BundleTypeA.GetInstance(bundlesGrid);
+            NSMarketScreen.BundleTypeB.GetInstance(bundlesGrid);
+            NSMarketScreen.BundleTypeC.GetInstance(bundlesGrid);
+            NSMarketScreen.BundleTypeD.GetInstance(bundlesGrid);
+
+            /*screenRectTransform.Find("CanvasRoot").Find("EventMarket").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<EventMarketScreen>();
             });
@@ -91,7 +97,7 @@ namespace Overlewd
             }
 
             //activate screen
-            screenPrefab.SetActive(true);
+            screenPrefab.SetActive(true);*/
         }
 
         private void AddResourceToGrid(Texture2D texture, Transform grid, string name = "")

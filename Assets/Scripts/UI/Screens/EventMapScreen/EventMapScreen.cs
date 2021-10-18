@@ -32,6 +32,11 @@ namespace Overlewd
             EventsWidget.CreateInstance(transform);
             QuestsWidget.CreateInstance(transform);
             SidebarButtonWidget.CreateInstance(transform);
+
+            NSEventMapScreen.BossFightButton.GetInstance(screenRectTransform.Find("Canvas"));
+            NSEventMapScreen.FightButton.GetInstance(screenRectTransform.Find("Canvas"));
+            NSEventMapScreen.SexButton.GetInstance(screenRectTransform.Find("Canvas"));
+            NSEventMapScreen.DialogeButton.GetInstance(screenRectTransform.Find("Canvas"));
         }
 
         void Update()
