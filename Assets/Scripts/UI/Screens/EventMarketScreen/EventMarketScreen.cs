@@ -18,6 +18,15 @@ namespace Overlewd
             {
                 UIManager.ShowScreen<EventMapScreen>();
             });
+
+            var scrollViewContent = screenRectTransform.Find("Canvas").Find("Scroll View").Find("Viewport").Find("Content");
+
+            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
+            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
+            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
+            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
+            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
+            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
         }
 
         void Update()
