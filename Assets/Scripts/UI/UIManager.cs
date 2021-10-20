@@ -33,7 +33,7 @@ namespace Overlewd
             layerGO_aspectRatioFitter.aspectRatio = 1.777778f;
 
             //cut screen content outside FullHD 
-            var layerGO_rectMask2D = layerGO.AddComponent<RectMask2D>();
+            //var layerGO_rectMask2D = layerGO.AddComponent<RectMask2D>();
 
             layerGO.transform.SetSiblingIndex(siblingIndex);
         }

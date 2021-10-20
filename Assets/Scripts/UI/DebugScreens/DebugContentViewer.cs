@@ -74,6 +74,10 @@ namespace Overlewd
             var anim_ui = SpineWidget.CreateInstance("spine_test_ui", transform);
             anim_ui.skeletonDataPath = "Spine/Ulvi/ui/idle_SkeletonData";
             anim_ui.animName = "idle";
+
+            var anim_emotion = SpineWidget.CreateInstance("spine_test_emotion", transform);
+            anim_emotion.skeletonDataPath = "Spine/Ulvi/emotions/idle_SkeletonData";
+            anim_emotion.animName = "idle";
         }
 
         private void SetSprite()
