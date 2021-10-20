@@ -11,12 +11,15 @@ namespace Overlewd
     {
         private static GameObject currentScreenGO;
         private static GameObject currentOverlayGO;
+        private static GameObject currentNotificationGO;
         private static GameObject currentDialogBoxGO;
 
         private static GameObject uiRootCanvasGO;
         private static GameObject uiScreenLayerGO;
         private static GameObject uiOverlayLayerGO;
+        private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
+
         private static GameObject uiEventSystem;
 
         private static void ConfigureLayer(out GameObject layerGO, string name, int siblingIndex)
@@ -33,7 +36,7 @@ namespace Overlewd
             layerGO_aspectRatioFitter.aspectRatio = 1.777778f;
 
             //cut screen content outside FullHD 
-            //var layerGO_rectMask2D = layerGO.AddComponent<RectMask2D>();
+            var layerGO_rectMask2D = layerGO.AddComponent<RectMask2D>();
 
             layerGO.transform.SetSiblingIndex(siblingIndex);
         }
@@ -62,7 +65,8 @@ namespace Overlewd
 
             ConfigureLayer(out uiScreenLayerGO, "UIScreenLayer", 0);
             ConfigureLayer(out uiOverlayLayerGO, "UIOverlayLayer", 1);
-            ConfigureLayer(out uiDialogLayerGO, "UIDialogLayer", 2);
+            ConfigureLayer(out uiNotificationLayerGO, "UINotificationLayer", 2);
+            ConfigureLayer(out uiDialogLayerGO, "UIDialogLayer", 3);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             var uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
@@ -117,6 +121,27 @@ namespace Overlewd
         public static bool ShowingOverlay<T>() where T : BaseOverlay
         {
             return (currentOverlayGO?.GetComponent<T>() != null);
+        }
+
+        public static void ShowNotification<T>() where T : BaseNotification
+        {
+            if (currentNotificationGO?.GetComponent<T>() == null)
+            {
+                HideNotification();
+
+                currentNotificationGO = new GameObject(typeof(T).Name);
+                currentNotificationGO.layer = 5;
+                var currentNotificationGO_rectTransform = currentNotificationGO.AddComponent<RectTransform>();
+                currentNotificationGO_rectTransform.SetParent(uiNotificationLayerGO.transform, false);
+                SetStretch(currentNotificationGO_rectTransform);
+                currentNotificationGO.AddComponent<T>().Show();
+            }
+        }
+
+        public static void HideNotification()
+        {
+            currentNotificationGO?.GetComponent<BaseNotification>().Hide();
+            currentNotificationGO = null;
         }
 
         public static void ShowDialogBox(string title, string message, Action yes, Action no = null)
