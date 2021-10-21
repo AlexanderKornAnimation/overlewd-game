@@ -31,12 +31,26 @@ namespace Overlewd
 
         }
 
-        public static SpineWidget CreateInstance(string name, Transform parent)
+        public SpineWidget SetAnimationName(string animationName)
         {
-            var spineGO = new GameObject(nameof(SpineWidget) + "_" + name);
+            animName = animationName;
+            return this;
+        }
+
+        public SpineWidget SetMultipleRenderCanvas(bool multiple_rc)
+        {
+            multipleRenderCanvas = multiple_rc;
+            return this;
+        }
+
+        public static SpineWidget CreateInstance(string skeletonDataPath, Transform parent)
+        {
+            var spineGO = new GameObject(nameof(SpineWidget));
             var spineGO_rt = spineGO.AddComponent<RectTransform>();
             spineGO_rt.SetParent(parent, false);
-            return spineGO.AddComponent<SpineWidget>();
+            var spineWidgetInst = spineGO.AddComponent<SpineWidget>();
+            spineWidgetInst.skeletonDataPath = skeletonDataPath;
+            return spineWidgetInst;
         }
     }
 }

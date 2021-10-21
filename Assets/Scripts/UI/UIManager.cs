@@ -15,6 +15,8 @@ namespace Overlewd
         private static GameObject currentDialogBoxGO;
 
         private static GameObject uiRootCanvasGO;
+        private static GameObject uiRootScreenLayerGO;
+
         private static GameObject uiScreenLayerGO;
         private static GameObject uiOverlayLayerGO;
         private static GameObject uiNotificationLayerGO;
@@ -22,21 +24,30 @@ namespace Overlewd
 
         private static GameObject uiEventSystem;
 
+        private static void ConfigureRootScreenLayer()
+        {
+            uiRootScreenLayerGO = new GameObject("UIRootScreenLayer");
+            uiRootScreenLayerGO.layer = 5;
+            var uiRootScreenLayerGO_rectTransform = uiRootScreenLayerGO.AddComponent<RectTransform>();
+            uiRootScreenLayerGO_rectTransform.SetParent(uiRootCanvasGO.transform, false);
+            SetStretch(uiRootScreenLayerGO_rectTransform);
+
+            //FullHD fixed aspect
+            var uiRootScreenLayerGO_aspectRatioFitter = uiRootScreenLayerGO.AddComponent<AspectRatioFitter>();
+            uiRootScreenLayerGO_aspectRatioFitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            uiRootScreenLayerGO_aspectRatioFitter.aspectRatio = 1.777778f;
+
+            //cut screen content outside FullHD 
+            var uiRootScreenLayerGO_rectMask2D = uiRootScreenLayerGO.AddComponent<RectMask2D>();
+        }
+
         private static void ConfigureLayer(out GameObject layerGO, string name, int siblingIndex)
         {
             layerGO = new GameObject(name);
             layerGO.layer = 5;
             var layerGO_rectTransform = layerGO.AddComponent<RectTransform>();
-            layerGO_rectTransform.SetParent(uiRootCanvasGO.transform, false);
+            layerGO_rectTransform.SetParent(uiRootScreenLayerGO.transform, false);
             SetStretch(layerGO_rectTransform);
-
-            //FullHD fixed aspect
-            var layerGO_aspectRatioFitter = layerGO.AddComponent<AspectRatioFitter>();
-            layerGO_aspectRatioFitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
-            layerGO_aspectRatioFitter.aspectRatio = 1.777778f;
-
-            //cut screen content outside FullHD 
-            var layerGO_rectMask2D = layerGO.AddComponent<RectMask2D>();
 
             layerGO.transform.SetSiblingIndex(siblingIndex);
         }
@@ -62,6 +73,8 @@ namespace Overlewd
             uiRootCanvasGO_canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             uiRootCanvasGO_canvasScaler.referenceResolution = new Vector2(1920, 1080);
             var uiRootCanvasGO_graphicRaycaster = uiRootCanvasGO.AddComponent<GraphicRaycaster>();
+
+            ConfigureRootScreenLayer();
 
             ConfigureLayer(out uiScreenLayerGO, "UIScreenLayer", 0);
             ConfigureLayer(out uiOverlayLayerGO, "UIOverlayLayer", 1);
