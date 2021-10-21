@@ -32,11 +32,11 @@ RectTransform:
   m_Father: {fileID: 1236175446360481055}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 11.000122, y: -34.601074}
-  m_SizeDelta: {x: -21.999878, y: -70.90729}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 818, y: 225.5}
+  m_SizeDelta: {x: 1614.0001, y: 619}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &8408159994635632476
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -107,11 +107,11 @@ RectTransform:
   m_Father: {fileID: 1236175446360481055}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -602.57227, y: -251.85498}
-  m_SizeDelta: {x: 1130.5122, y: 323.36096}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -349.82837, y: 298.1}
+  m_SizeDelta: {x: 1130.5122, y: 280.1974}
+  m_Pivot: {x: 0, y: 0}
 --- !u!222 &5597694827403483041
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -147,17 +147,21 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Master, the neighboring villagers came to the keep late last\nnight and
-    asked for our help. They told me a gang of rabid\ncatgirls ravaged their village.
-    Catgirls! Can you believe this shit? \nWhat's next? Dragondudes? Hogbabies?\n\nAnyway,
-    they said some evil overlord is trying to take over the\nrealm and wiping village
-    after village. But... You're the evil"
+  m_Text: 'Master, some villagers came to the keep last night and asked for help.
+    A gang of rabid catgirls ravaged their village. Catgirls! Can you believe this
+    shit? What''s next? Dragondudes? Hogbabies?
+
+
+    They say the catgirls have
+    been migrating through
+
+    their village for the past couple of months.'
 --- !u!1 &2813407960726424703
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,13 +192,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1236175446360481055}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 282.29785, y: -222.84375}
-  m_SizeDelta: {x: 290.04114, y: 321.5749}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -680.7, y: 336}
+  m_SizeDelta: {x: 290, y: 322}
+  m_Pivot: {x: 0, y: 0}
 --- !u!222 &1195208113874172663
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -266,89 +270,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 811.7001, y: -2553.3672}
-  m_SizeDelta: {x: 1623.4, y: 802.7346}
+  m_AnchoredPosition: {x: 960, y: -540}
+  m_SizeDelta: {x: 1636, y: 787}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &5615276968529305926
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2509742986508227025}
-  - component: {fileID: 2959863794280387545}
-  - component: {fileID: 2567462083416072457}
-  m_Layer: 5
-  m_Name: TopText (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2509742986508227025
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5615276968529305926}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1236175446360481055}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -803.01416, y: -674.0552}
-  m_SizeDelta: {x: 1368.2163, y: 110.9715}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &2959863794280387545
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5615276968529305926}
-  m_CullTransparentMesh: 1
---- !u!114 &2567462083416072457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5615276968529305926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: dbc2ec2d1a21b23478d6470e83bf6009, type: 3}
-    m_FontSize: 38
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
-    m_Alignment: 3
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: If cats are ever going to be on top of anything, it better be my dinner
-    plate. Let's kick some ass and sell their ugly ears for profit!
 --- !u!1 &7231913382194565507
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,7 +306,6 @@ RectTransform:
   - {fileID: 7243390619448212217}
   - {fileID: 1982776741936163970}
   - {fileID: 4592406761200152572}
-  - {fileID: 2509742986508227025}
   - {fileID: 8144650353254262672}
   m_Father: {fileID: 2232265142402888130}
   m_RootOrder: 0
@@ -465,7 +388,7 @@ GameObject:
   - component: {fileID: 8044952569047009071}
   - component: {fileID: 5222266925072478265}
   m_Layer: 5
-  m_Name: TopText (1)
+  m_Name: BottomText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -485,11 +408,11 @@ RectTransform:
   m_Father: {fileID: 1236175446360481055}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -764.1721, y: -494.55518}
-  m_SizeDelta: {x: 1445.8999, y: 190.64124}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -680.69995, y: 36}
+  m_SizeDelta: {x: 1445.8999, y: 268}
+  m_Pivot: {x: 0, y: 0}
 --- !u!222 &8044952569047009071
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -525,13 +448,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 3
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "overlord! What villages are you wiping out when I'm not watching?! And
-    using \nCATS! Ugh. I know it's not you, but it means we have a big problem on
-    our hands \u2014 \nsome impostor is trying to beat you to the punch and enslave
-    the whole world. We \ncan't let that happen.\n "
+  m_Text: 'I smell something fishy here, and it''s not cat treats!
+
+
+    If cats
+    are ever going to be on top of anything, it better be my dinner plate. Let''s
+    kick some cat ass and sell their ugly ears for profit!evil '
