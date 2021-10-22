@@ -7,7 +7,9 @@ namespace Overlewd
 {
     public class EventOverlay : BaseOverlay
     {
-        private Transform scrollViewContent;
+        private Transform[] scrollView = new Transform[5];
+        private Transform[] scrollViewContent = new Transform[5];
+        private Transform[] eventButton = new Transform[5];
 
         void Start()
         {
@@ -21,14 +23,37 @@ namespace Overlewd
                 UIManager.HideOverlay();
             });
 
-            scrollViewContent = screenRectTransform.Find("Canvas").Find("Scroll View").Find("Viewport").Find("Content");
+            for (int i = 0; i < 5; i++)
+            {
+                scrollView[i] = screenRectTransform.Find("Canvas").Find("ScrollView" + (i + 1).ToString());
+                scrollViewContent[i] = scrollView[i].Find("Viewport").Find("Content");
+                eventButton[i] = screenRectTransform.Find("Canvas").Find("EventButton" + (i + 1).ToString());
 
-            NSEventOverlay.Banner.GetInstance(scrollViewContent);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent);
-            NSEventOverlay.EventDescription.GetInstance(scrollViewContent);
+                var tabId = i;
+                eventButton[i].GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    TabClick(tabId);
+                });
+            }
+
+            NSEventOverlay.Banner.GetInstance(scrollViewContent[0]);
+            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
+            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
+            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
+            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
+            NSEventOverlay.EventDescription.GetInstance(scrollViewContent[0]);
+
+            NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[4]);
+
+            TabClick(0);
+        }
+
+        private void TabClick(int tabId)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                scrollView[i].gameObject.SetActive(i == tabId);
+            }
         }
 
         void Update()
