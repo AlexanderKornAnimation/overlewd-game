@@ -27,7 +27,7 @@ namespace Overlewd
                 if (localResourcesMeta != null)
                 {
                     ResourceManager.runtimeResourcesMeta = localResourcesMeta;
-                    UIManager.ShowScreen<DebugContentViewer>();
+                    UIManager.ShowScreen<CastleScreen>();
                 }
                 else
                 {
