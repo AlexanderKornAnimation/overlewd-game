@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -10,7 +11,10 @@ namespace Overlewd
         {
             void Start()
             {
-
+                transform.Find("Canvas").Find("MapButton").GetComponent<Button>().onClick.AddListener(() => 
+                {
+                    UIManager.ShowScreen<EventMapScreen>();
+                });
             }
 
             void Update()

@@ -15,10 +15,6 @@ namespace Overlewd
                 {
                     UIManager.ShowScreen<DialogScreen>();
                 });
-
-                var rectTransform = GetComponent<RectTransform>();
-                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, 400.0f, rectTransform.rect.width);
-                rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 400.0f, rectTransform.rect.height);
             }
 
             void Update()

@@ -14,14 +14,19 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
+            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<MapScreen>();
+                UIManager.ShowScreen<EventMapScreen>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Battle").GetComponent<Button>().onClick.AddListener(() =>
+            screenRectTransform.Find("Canvas").Find("BattleButton").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<BattleScreen>();
+            });
+
+            screenRectTransform.Find("Canvas").Find("PrepareBattle").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                UIManager.ShowOverlay<BottlesOverlay>();
             });
         }
 
