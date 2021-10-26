@@ -13,7 +13,7 @@ namespace Overlewd
             {
                 transform.Find("Canvas").Find("Button").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    UIManager.ShowScreen<PrepareBossFightScreen>();
+                    UIManager.ShowPopup<PrepareBossFightPopup>();
                 });
             }
 

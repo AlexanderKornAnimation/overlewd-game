@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class PrepareBattleScreen : BaseScreen
+    public class PrepareBattlePopup : BasePopup
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PrepareBattleScreen/PrepareBattle"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/PrepareBattlePopup/PrepareBattlePopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
             screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<EventMapScreen>();
+                UIManager.HidePopup();
             });
 
             screenRectTransform.Find("Canvas").Find("BattleButton").GetComponent<Button>().onClick.AddListener(() =>
@@ -26,7 +26,7 @@ namespace Overlewd
 
             screenRectTransform.Find("Canvas").Find("PrepareBattle").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowOverlay<BottlesOverlay>();
+                UIManager.ShowSubPopup<BottlesSubPopup>();
             });
         }
 

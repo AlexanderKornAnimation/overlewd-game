@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class PrepareBossFightScreen : BaseScreen
+    public class PrepareBossFightPopup : BasePopup
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PrepareBossFightScreen/PrepareBossFight"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);

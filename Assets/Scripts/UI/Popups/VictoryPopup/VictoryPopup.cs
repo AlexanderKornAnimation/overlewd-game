@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class VictoryOverlay : BaseOverlay
+    public class VictoryPopup : BasePopup
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/VictoryOverlay/VictoryOverlay"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/VictoryPopup/VictoryPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
@@ -23,16 +23,6 @@ namespace Overlewd
         void Update()
         {
 
-        }
-
-        public override void Show()
-        {
-            gameObject.AddComponent<ImmediateShow>();
-        }
-
-        public override void Hide()
-        {
-            gameObject.AddComponent<ImmediateHide>();
         }
     }
 }

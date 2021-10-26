@@ -9,20 +9,24 @@ namespace Overlewd
 {
     public static class UIManager
     {
-        private static GameObject currentScreenGO;
-        private static GameObject currentOverlayGO;
-        private static GameObject currentNotificationGO;
-        private static GameObject currentDialogBoxGO;
-
         private static GameObject uiRootCanvasGO;
         private static GameObject uiRootScreenLayerGO;
 
+        private static GameObject uiEventSystem;
+
         private static GameObject uiScreenLayerGO;
+        private static GameObject uiPopupLayerGO;
+        private static GameObject uiSubPopupLayerGO;
         private static GameObject uiOverlayLayerGO;
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
 
-        private static GameObject uiEventSystem;
+        private static GameObject currentScreenGO;
+        private static GameObject currentPopupGO;
+        private static GameObject currentSubPopupGO;
+        private static GameObject currentOverlayGO;
+        private static GameObject currentNotificationGO;
+        private static GameObject currentDialogBoxGO;
 
         private static void ConfigureRootScreenLayer()
         {
@@ -77,9 +81,11 @@ namespace Overlewd
             ConfigureRootScreenLayer();
 
             ConfigureLayer(out uiScreenLayerGO, "UIScreenLayer", 0);
-            ConfigureLayer(out uiOverlayLayerGO, "UIOverlayLayer", 1);
-            ConfigureLayer(out uiNotificationLayerGO, "UINotificationLayer", 2);
-            ConfigureLayer(out uiDialogLayerGO, "UIDialogLayer", 3);
+            ConfigureLayer(out uiPopupLayerGO, "UIPopupLayer", 1);
+            ConfigureLayer(out uiSubPopupLayerGO, "UISubPopupLayer", 2);
+            ConfigureLayer(out uiOverlayLayerGO, "UIOverlayLayer", 3);
+            ConfigureLayer(out uiNotificationLayerGO, "UINotificationLayer", 4);
+            ConfigureLayer(out uiDialogLayerGO, "UIDialogLayer", 5);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             var uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
@@ -100,14 +106,70 @@ namespace Overlewd
                 SetStretch(currentScreenGO_rectTransform);
                 currentScreenGO.AddComponent<T>().Show();
             }
-
-            HideOverlay();
+            else
+            {
+                HidePopup();
+                HideSubPopup();
+                HideOverlay();
+            }
         }
 
         public static void HideScreen()
         {
             currentScreenGO?.GetComponent<BaseScreen>().Hide();
             currentScreenGO = null;
+
+            HidePopup();
+            HideSubPopup();
+            HideOverlay();
+        }
+
+        public static void ShowPopup<T>() where T : BasePopup
+        {
+            if (currentPopupGO?.GetComponent<T>() == null)
+            {
+                HidePopup();
+
+                currentPopupGO = new GameObject(typeof(T).Name);
+                currentPopupGO.layer = 5;
+                var currentPopupGO_rectTransform = currentPopupGO.AddComponent<RectTransform>();
+                currentPopupGO_rectTransform.SetParent(uiPopupLayerGO.transform, false);
+                SetStretch(currentPopupGO_rectTransform);
+                currentPopupGO.AddComponent<T>().Show();
+            }
+            else
+            {
+                HideSubPopup();
+            }
+        }
+
+        public static void HidePopup()
+        {
+            currentPopupGO?.GetComponent<BasePopup>().Hide();
+            currentPopupGO = null;
+
+            HideSubPopup();
+        }
+
+        public static void ShowSubPopup<T>() where T : BaseSubPopup
+        {
+            if (currentSubPopupGO?.GetComponent<T>() == null)
+            {
+                HideSubPopup();
+
+                currentSubPopupGO = new GameObject(typeof(T).Name);
+                currentSubPopupGO.layer = 5;
+                var currentSubPopupGO_rectTransform = currentSubPopupGO.AddComponent<RectTransform>();
+                currentSubPopupGO_rectTransform.SetParent(uiSubPopupLayerGO.transform, false);
+                SetStretch(currentSubPopupGO_rectTransform);
+                currentSubPopupGO.AddComponent<T>().Show();
+            }
+        }
+
+        public static void HideSubPopup()
+        {
+            currentSubPopupGO?.GetComponent<BaseSubPopup>().Hide();
+            currentSubPopupGO = null;
         }
 
         public static void ShowOverlay<T>() where T : BaseOverlay

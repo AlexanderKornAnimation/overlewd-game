@@ -31,7 +31,7 @@ namespace Overlewd
 
             screenRectTransform.Find("Canvas").Find("PrepareBattle").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<PrepareBattleScreen>();
+                UIManager.ShowPopup<PrepareBattlePopup>();
             });
 
             screenRectTransform.Find("Canvas").Find("Event1").GetComponent<Button>().onClick.AddListener(() =>

@@ -5,34 +5,24 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BottlesOverlay : BaseOverlay
+    public class BottlesSubPopup : BaseSubPopup
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/BottlesOverlay/BottlesOverlay"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/SubPopups/BottlesSubPopup/BottlesSubPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
             screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.HideOverlay();
+                UIManager.HideSubPopup();
             });
         }
 
         void Update()
         {
 
-        }
-
-        public override void Show()
-        {
-            gameObject.AddComponent<ImmediateShow>();
-        }
-
-        public override void Hide()
-        {
-            gameObject.AddComponent<ImmediateHide>();
         }
     }
 }
