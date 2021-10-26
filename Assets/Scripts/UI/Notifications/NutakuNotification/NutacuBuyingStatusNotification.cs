@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BattleScreen : BaseScreen
+    public class NutacuBuyingStatusNotification : BaseNotification
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BattleScreen/BattleScreen"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/NutakuNotification/BuyingStatusNotification"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() => 
             {
-                UIManager.ShowScreen<MapScreen>();
+                UIManager.HideNotification();
             });
         }
 
