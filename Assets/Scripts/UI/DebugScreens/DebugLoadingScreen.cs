@@ -10,27 +10,27 @@ namespace Overlewd
         private string loadingLabel;
         private Texture2D screenTexture;
 
+        private bool meRouteEnd;
+        private bool i18nRouteEnd;
+        private bool eventsRouteEnd;
+        private bool questsRouteEnd;
+        private bool marketsRouteEnd;
+        private bool marketProductsRouteEnd;
+        private bool currenciesRouteEnd;
+
         void Awake()
         {
             screenTexture = Resources.Load<Texture2D>("Ulvi");
         }
 
-        void Start()
+        private IEnumerator LoadResources()
         {
-            StartCoroutine(AdminBRO.me(e =>
+            while (!meRouteEnd || !i18nRouteEnd || !eventsRouteEnd ||
+                   !questsRouteEnd || !marketsRouteEnd || !marketProductsRouteEnd ||
+                   !currenciesRouteEnd)
             {
-                Player.playerInfo = e;
-
-                /*StartCoroutine(AdminBRO.me("NewName", e =>
-                {
-
-                }));*/
-            }));
-
-            StartCoroutine(AdminBRO.i18n("en", (dict) =>
-            {
-                var d = dict;
-            }));
+                yield return new WaitForSeconds(0.5f);
+            }
 
             StartCoroutine(AdminBRO.resources(serverResourcesMeta =>
             {
@@ -60,6 +60,87 @@ namespace Overlewd
             {
                 UIManager.ShowDialogBox("Server error", errorMsg, () => Game.Quit());
             }));
+        }
+
+        private IEnumerator LoadMarketProducts()
+        {
+            while (!marketsRouteEnd)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            var productRoutes = 0;
+            foreach (var market in PlayerData.markets)
+            {
+                productRoutes++;
+                StartCoroutine(AdminBRO.markets(market.id, (products) =>
+                {
+                    var marketProducts = new PlayerData.MarketProducts { marketId = market.id, products = products.items };
+                    PlayerData.marketProducts.Add(marketProducts);
+                    productRoutes--;
+                }));
+            }
+
+            while (productRoutes > 0)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            marketProductsRouteEnd = true;
+        }
+
+        void Start()
+        {
+            StartCoroutine(AdminBRO.me(e =>
+            {
+                PlayerData.playerInfo = e;
+
+                /*StartCoroutine(AdminBRO.me("NewName", e =>
+                {
+
+                }));*/
+
+                meRouteEnd = true;
+            }));
+
+            StartCoroutine(AdminBRO.i18n("en", (dict) =>
+            {
+                var d = dict;
+
+                i18nRouteEnd = true;
+            }));
+
+            StartCoroutine(AdminBRO.events((events) =>
+            {
+                PlayerData.events = events.items;
+
+                eventsRouteEnd = true;
+            }));
+
+            StartCoroutine(AdminBRO.quests((quests) =>
+            {
+                PlayerData.quests = quests.items;
+
+                questsRouteEnd = true;
+            }));
+
+            StartCoroutine(AdminBRO.markets((markets) =>
+            {
+                PlayerData.markets = markets.items;
+
+                marketsRouteEnd = true;
+            }));
+
+            StartCoroutine(AdminBRO.currencies((currencies) => 
+            {
+                PlayerData.currenies = currencies.items;
+
+                currenciesRouteEnd = true;
+            }));
+
+            StartCoroutine(LoadMarketProducts());
+
+            StartCoroutine(LoadResources());
         }
 
         void OnGUI()

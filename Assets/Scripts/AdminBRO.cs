@@ -301,6 +301,15 @@ namespace Overlewd
         }
 
         [Serializable]
+        public class EventStageItem
+        {
+            public int id;
+            public string type;
+            public int? dialogId;
+            public List<int> nextStages;
+        }
+
+        [Serializable]
         public class EventItem
         {
             public int id;
@@ -315,6 +324,7 @@ namespace Overlewd
             public List<int> quests;
             public string createdAt;
             public string updatedAt;
+            public List<EventStageItem> stages;
         }
 
         [Serializable]
