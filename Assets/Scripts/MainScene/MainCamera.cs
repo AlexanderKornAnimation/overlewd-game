@@ -18,7 +18,7 @@ namespace Overlewd
             {
                 StartCoroutine(AdminBRO.auth_login(() =>
                 {
-                    UIManager.ShowScreen<DebugLoadingScreen>();
+                    UIManager.ShowScreen<LoadingScreen>();
                 }));
             }
             else

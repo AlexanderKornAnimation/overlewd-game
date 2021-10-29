@@ -17,7 +17,7 @@ namespace Overlewd
             UIManager.SetStretch(screenRectTransform);
 
 
-            screenRectTransform.Find("CanvasRoot").Find("MainMenuButton").GetComponent<Button>().onClick.AddListener(() => 
+            screenRectTransform.Find("CanvasRoot").Find("MainMenuButton").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<CastleScreen>();
             });
@@ -27,17 +27,6 @@ namespace Overlewd
             NSMarketScreen.BundleTypeB.GetInstance(bundlesGrid);
             NSMarketScreen.BundleTypeC.GetInstance(bundlesGrid);
             NSMarketScreen.BundleTypeD.GetInstance(bundlesGrid);
-        }
-
-        private void AddResourceToGrid(Texture2D texture, Transform grid, string name = "")
-        {
-            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-            var resPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/ResourceItem"));
-            var image = resPrefab.transform.Find("RootCanvas").Find("Image").GetComponent<Image>();
-            image.sprite = sprite;
-            var text = resPrefab.transform.Find("RootCanvas").Find("Image").Find("Text").GetComponent<Text>();
-            text.text = name;
-            resPrefab.transform.SetParent(grid, false);
         }
 
         void Update()

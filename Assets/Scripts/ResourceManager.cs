@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 namespace Overlewd
 {
@@ -286,7 +287,7 @@ namespace Overlewd
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                var meta = JsonUtility.FromJson<AdminBRO.ResourcesMeta>(metaJson);
+                var meta = JsonConvert.DeserializeObject<AdminBRO.ResourcesMeta>(metaJson);
                 return meta;
             }
 
@@ -298,7 +299,7 @@ namespace Overlewd
             if (meta != null)
             {
                 var metaFilePath = GetRootFilePath("ResourcesMeta");
-                var metaJson = JsonUtility.ToJson(meta);
+                var metaJson = JsonConvert.SerializeObject(meta);
                 WriteText(metaFilePath, metaJson);
             }
         }

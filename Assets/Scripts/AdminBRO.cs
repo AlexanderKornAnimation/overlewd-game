@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace Overlewd
 {
@@ -14,7 +15,7 @@ namespace Overlewd
             postData.AddField("deviceId", GetDeviceId());
             yield return NetworkHelper.Post("https://overlude-api.herokuapp.com/auth/login", postData, downloadHandler =>
             {
-                tokens = JsonUtility.FromJson<Tokens>(downloadHandler.text);
+                tokens = JsonConvert.DeserializeObject<Tokens>(downloadHandler.text);
                 success?.Invoke();
             },
             (msg) =>
@@ -28,7 +29,7 @@ namespace Overlewd
             var postData = new WWWForm();
             yield return NetworkHelper.Post("https://overlude-api.herokuapp.com/auth/refresh", postData, downloadHandler =>
             {
-                tokens = JsonUtility.FromJson<Tokens>(downloadHandler.text);
+                tokens = JsonConvert.DeserializeObject<Tokens>(downloadHandler.text);
                 success?.Invoke();
             },
             (msg) =>
@@ -56,7 +57,7 @@ namespace Overlewd
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/me", tokens.accessToken, downloadHandler =>
             {
-                var playerInfo = JsonUtility.FromJson<PlayerInfo>(downloadHandler.text);
+                var playerInfo = JsonConvert.DeserializeObject<PlayerInfo>(downloadHandler.text);
                 success?.Invoke(playerInfo);
             },
             (msg) =>
@@ -71,7 +72,7 @@ namespace Overlewd
             formMe.AddField("name", name);
             yield return NetworkHelper.PostWithToken("https://overlude-api.herokuapp.com/me", formMe, tokens.accessToken, downloadHandler =>
             {
-                var playerInfo = JsonUtility.FromJson<PlayerInfo>(downloadHandler.text);
+                var playerInfo = JsonConvert.DeserializeObject<PlayerInfo>(downloadHandler.text);
                 success?.Invoke(playerInfo);
             },
             (msg) =>
@@ -115,6 +116,7 @@ namespace Overlewd
             public string sortPriority;
         }
 
+
         [Serializable]
         public class WalletItem
         {
@@ -126,12 +128,11 @@ namespace Overlewd
         }
 
         // /markets; /markets/{id}
-        public static IEnumerator markets(Action<Markets> success, Action error = null)
+        public static IEnumerator markets(Action<List<MarketItem>> success, Action error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", tokens.accessToken, (downloadHandler) =>
             {
-                var marketsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var markets = JsonUtility.FromJson<Markets>(marketsJson);
+                var markets = JsonConvert.DeserializeObject<List<MarketItem>>(downloadHandler.text);
                 success?.Invoke(markets);
             },
             (errorMsg) => {
@@ -139,12 +140,12 @@ namespace Overlewd
             });
         }
 
-        public static IEnumerator markets(int id, Action<MarketProducts> success, Action error = null)
+        public static IEnumerator markets(int id, Action<List<MarketProductItem>> success, Action error = null)
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets/" + id.ToString(),
-            tokens.accessToken, (downloadHandler) => {
-                var marketProductsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var marketProducts = JsonUtility.FromJson<MarketProducts>(marketProductsJson);
+            var url = "https://overlude-api.herokuapp.com/markets/" + id.ToString();
+            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) => 
+            {
+                var marketProducts = JsonConvert.DeserializeObject<List<MarketProductItem>>(downloadHandler.text);
                 success?.Invoke(marketProducts);
             },
             (errorMsg) =>
@@ -164,12 +165,6 @@ namespace Overlewd
             public string dateEnd;
             public string createdAt;
             public string updatedAt;
-        }
-
-        [Serializable]
-        public class Markets
-        {
-            public List<MarketItem> items;
         }
 
         [Serializable]
@@ -197,19 +192,12 @@ namespace Overlewd
             public string sortPriority;
         }
 
-        [Serializable]
-        public class MarketProducts
-        {
-            public List<MarketProductItem> items;
-        }
-
         // /currencies
-        public static IEnumerator currencies(Action<Currenies> success, Action error = null)
+        public static IEnumerator currencies(Action<List<CurrencyItem>> success, Action error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/currencies", tokens.accessToken, (downloadHandler) =>
             {
-                var currenciesJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var currencies = JsonUtility.FromJson<Currenies>(currenciesJson);
+                var currencies = JsonConvert.DeserializeObject<List<CurrencyItem>>(downloadHandler.text);
                 success?.Invoke(currencies);
             },
             (errorMsg) =>
@@ -228,18 +216,12 @@ namespace Overlewd
             public string updatedAt;
         }
 
-        [Serializable]
-        public class Currenies
-        {
-            public List<CurrencyItem> items;
-        }
-
         // /resources
         public static IEnumerator resources(Action<ResourcesMeta> success, Action<string> error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", tokens.accessToken, downloadHandler =>
             {
-                var resources = JsonUtility.FromJson<ResourcesMeta>(downloadHandler.text);
+                var resources = JsonConvert.DeserializeObject<ResourcesMeta>(downloadHandler.text);
                 success?.Invoke(resources);
             },
             (msg) =>
@@ -271,7 +253,7 @@ namespace Overlewd
             var form = new WWWForm();
             yield return NetworkHelper.PostWithToken(String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id), form, tokens.accessToken, downloadHandler =>
             {
-                var status = JsonUtility.FromJson<TradableBuyStatus>(downloadHandler.text);
+                var status = JsonConvert.DeserializeObject<TradableBuyStatus>(downloadHandler.text);
                 success?.Invoke(status);
             },
             (msg) =>
@@ -287,17 +269,24 @@ namespace Overlewd
         }
 
         // /events
-        public static IEnumerator events(Action<Events> success, Action<string> error = null)
+        public static IEnumerator events(Action<List<EventItem>> success, Action<string> error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/events", tokens.accessToken, (downloadHandler) =>
             {
-                var eventsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var events = JsonUtility.FromJson<Events>(eventsJson);
+                var events = JsonConvert.DeserializeObject<List<EventItem>>(downloadHandler.text);
                 success?.Invoke(events);
             },
             (errorMsg) => {
                 error?.Invoke(errorMsg);
             });
+        }
+
+        public class EventStageType
+        {
+            public static string Battle = "battle";
+            public static string Boss = "boss";
+            public static string Dialog = "dialog";
+            public static string SexDialog = "act";
         }
 
         [Serializable]
@@ -313,6 +302,7 @@ namespace Overlewd
         public class EventItem
         {
             public int id;
+            public string type;
             public string name;
             public string description;
             public string dateStart;
@@ -327,20 +317,12 @@ namespace Overlewd
             public List<EventStageItem> stages;
         }
 
-        [Serializable]
-        public class Events
-        {
-            public List<EventItem> items;
-        }
-
-
         // /quests
-        public static IEnumerator quests(Action<Quests> success, Action<string> error = null)
+        public static IEnumerator quests(Action<List<QuestItem>> success, Action<string> error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/quests", tokens.accessToken, (downloadHandler) =>
             {
-                var questsJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var quests = JsonUtility.FromJson<Quests>(questsJson);
+                var quests = JsonConvert.DeserializeObject<List<QuestItem>>(downloadHandler.text);
                 success?.Invoke(quests);
             },
             (errorMsg) => {
@@ -358,20 +340,13 @@ namespace Overlewd
             public string updatedAt;
         }
 
-        [Serializable]
-        public class Quests
-        {
-            public List<QuestItem> items;
-        }
-
         // /i18n
-        public static IEnumerator i18n(string locale, Action<LocalizationDictionary> success, Action<string> error = null)
+        public static IEnumerator i18n(string locale, Action<List<LocalizationItem>> success, Action<string> error = null)
         {
             var url = String.Format("https://overlude-api.herokuapp.com/i18n?locale={0}", locale);
             yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
             {
-                var dictionaryJson = "{ \"items\" : " + downloadHandler.text + " }";
-                var dictionary = JsonUtility.FromJson<LocalizationDictionary>(dictionaryJson);
+                var dictionary = JsonConvert.DeserializeObject<List<LocalizationItem>>(downloadHandler.text);
                 success?.Invoke(dictionary);
             },
             (errorMsg) => {
@@ -392,10 +367,35 @@ namespace Overlewd
             public string updatedAt;
         }
 
-        [Serializable]
-        public class LocalizationDictionary
+        // /dialog/{id}
+        public static IEnumerator dialog(int id, Action<Dialog> success, Action<string> error = null)
         {
-            public List<LocalizationItem> items;
+            var url = String.Format("https://overlude-api.herokuapp.com/dialog/{0}", id);
+            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
+            {
+                var dialog = JsonConvert.DeserializeObject<Dialog>(downloadHandler.text);
+                success?.Invoke(dialog);
+            },
+            (errorMsg) => {
+                error?.Invoke(errorMsg);
+            });
+        }
+
+        [Serializable]
+        public class DialogReplica
+        {
+            public int id;
+            public int sort;
+            public string characterName;
+            public string message;
+            public string sceneOverlayImage;
+        }
+
+        [Serializable]
+        public class Dialog
+        {
+            public int id;
+            public List<DialogReplica> replicas;
         }
 
     }

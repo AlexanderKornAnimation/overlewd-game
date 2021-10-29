@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public class EventMapScreen : BaseScreen
     {
-        GameObject screenPrefab;
+        private GameObject screenPrefab;
 
         void Start()
         {
