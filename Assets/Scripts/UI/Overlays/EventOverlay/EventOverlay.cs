@@ -7,9 +7,20 @@ namespace Overlewd
 {
     public class EventOverlay : BaseOverlay
     {
-        private Transform[] scrollView = new Transform[5];
-        private Transform[] scrollViewContent = new Transform[5];
-        private Transform[] eventButton = new Transform[5];
+        private static int TabWeekly = 0;
+        private static int TabMonthly = 1;
+        private static int TabDecade = 2;
+        private static int TabActive = 3;
+        private static int TabComingSoon = 4;
+        private static int TabsCount = 5;
+
+        private int[] tabIds = { TabWeekly, TabMonthly, TabDecade, TabActive, TabComingSoon };
+        private string[] tabNames = { "Weekly", "Monthly", "Decade", "Active", "ComingSoon" };
+        private Transform[] scrollView = new Transform[TabsCount];
+        private Transform[] scrollViewContent = new Transform[TabsCount];
+        private Button[] eventButton = new Button[TabsCount];
+        private Image[] eventButtonImage = new Image[TabsCount];
+        private Sprite[] eventButtonDefaultSprite = new Sprite[TabsCount];
 
         void Start()
         {
@@ -23,16 +34,18 @@ namespace Overlewd
                 UIManager.HideOverlay();
             });
 
-            for (int i = 0; i < 5; i++)
+            foreach (var tabId in tabIds)
             {
-                scrollView[i] = screenRectTransform.Find("Canvas").Find("ScrollView" + (i + 1).ToString());
-                scrollViewContent[i] = scrollView[i].Find("Viewport").Find("Content");
-                eventButton[i] = screenRectTransform.Find("Canvas").Find("EventButton" + (i + 1).ToString());
+                scrollView[tabId] = screenRectTransform.Find("Canvas").Find("ScrollView_" + tabNames[tabId]);
+                scrollViewContent[tabId] = scrollView[tabId].Find("Viewport").Find("Content");
+                eventButton[tabId] = screenRectTransform.Find("Canvas").Find("EventButton_" + tabNames[tabId]).GetComponent<Button>();
+                eventButtonImage[tabId] = screenRectTransform.Find("Canvas").Find("EventButton_" + tabNames[tabId]).GetComponent<Image>();
+                eventButtonDefaultSprite[tabId] = eventButtonImage[tabId].sprite;
 
-                var tabId = i;
-                eventButton[i].GetComponent<Button>().onClick.AddListener(() =>
+                var tabId_delegate = tabId;
+                eventButton[tabId].onClick.AddListener(() =>
                 {
-                    TabClick(tabId);
+                    TabClick(tabId_delegate);
                 });
             }
 
@@ -45,15 +58,27 @@ namespace Overlewd
 
             NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[4]);
 
-            TabClick(0);
+            eventButton[TabWeekly].onClick.Invoke();
+
+            InitWeeklyTab();
         }
 
         private void TabClick(int tabId)
         {
-            for (int i = 0; i < 5; i++)
+            foreach (var _tabId in tabIds)
             {
-                scrollView[i].gameObject.SetActive(i == tabId);
+                scrollView[_tabId].gameObject.SetActive(_tabId == tabId);
+                eventButtonImage[_tabId].sprite = (_tabId == tabId) ? 
+                                                     eventButton[_tabId].spriteState.selectedSprite :
+                                                     eventButtonDefaultSprite[_tabId];
+
             }
+        }
+
+        private void InitWeeklyTab()
+        {
+            var q = GameData.quests;
+            var e = GameData.events;
         }
 
         void Update()
