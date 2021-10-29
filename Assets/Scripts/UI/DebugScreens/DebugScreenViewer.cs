@@ -10,7 +10,7 @@ namespace Overlewd
         
         void Start()
         {
-            string prefabPath = "Prefabs/UI/Screens/EventMapScreen/EventMap";
+            string prefabPath = "Prefabs/UI/Screens/DialogScreen/DialogScreen";
             //prefabPath = "Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer";
             var screenPrefab = (GameObject)Instantiate(Resources.Load(prefabPath));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
