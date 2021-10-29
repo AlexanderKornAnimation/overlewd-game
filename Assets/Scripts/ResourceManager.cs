@@ -12,7 +12,7 @@ namespace Overlewd
 
     public static class ResourceManager
     {
-        public static AdminBRO.ResourcesMeta runtimeResourcesMeta { get; set; }
+        public static List<AdminBRO.NetworkResource> runtimeResourcesMeta { get; set; }
         private static Dictionary<string, Texture2D> loadTextures = new Dictionary<string, Texture2D>();
         private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
         private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
@@ -135,7 +135,7 @@ namespace Overlewd
 
         public static AdminBRO.NetworkResource GetResourceMetaById(string id)
         {
-            return runtimeResourcesMeta.items.Find(item => item.id == id);
+            return runtimeResourcesMeta.Find(item => item.id == id);
         }
 
         public static IEnumerator LoadTextureByFileName(string fileName, Action<Texture2D> doLoad = null)
@@ -281,20 +281,20 @@ namespace Overlewd
             }
         }
 
-        public static AdminBRO.ResourcesMeta GetLocalResourcesMeta()
+        public static List<AdminBRO.NetworkResource> GetLocalResourcesMeta()
         {
             var metaFilePath = GetRootFilePath("ResourcesMeta");
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                var meta = JsonConvert.DeserializeObject<AdminBRO.ResourcesMeta>(metaJson);
+                var meta = JsonConvert.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson);
                 return meta;
             }
 
             return null;
         }
 
-        public static void SaveLocalResourcesMeta(AdminBRO.ResourcesMeta meta)
+        public static void SaveLocalResourcesMeta(List<AdminBRO.NetworkResource> meta)
         {
             if (meta != null)
             {
@@ -304,21 +304,21 @@ namespace Overlewd
             }
         }
 
-        public static bool HasFreeSpaceForNewResources(AdminBRO.ResourcesMeta serverResourcesMeta)
+        public static bool HasFreeSpaceForNewResources(List<AdminBRO.NetworkResource> serverResourcesMeta)
         {
             var existingFiles = GetResourcesFileNames();
 
             long deleteSize = 0;
             foreach (var localItemHash in existingFiles)
             {
-                if (!serverResourcesMeta.items.Exists(serverItem => serverItem.hash == localItemHash))
+                if (!serverResourcesMeta.Exists(serverItem => serverItem.hash == localItemHash))
                 {
                     deleteSize += Size(GetResourcesFilePath(localItemHash));
                 }
             }
 
             long downloadSize = 0;
-            foreach (var serverItem in serverResourcesMeta.items)
+            foreach (var serverItem in serverResourcesMeta)
             {
                 if (!existingFiles.Exists(localItemHash => serverItem.hash == localItemHash))
                 {
@@ -329,14 +329,14 @@ namespace Overlewd
             return (GetSpaceFreeBytes() + deleteSize - downloadSize) > 0;
         }
 
-        public static IEnumerator ActualizeResources(AdminBRO.ResourcesMeta resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem, Action done)
+        public static IEnumerator ActualizeResources(List<AdminBRO.NetworkResource> resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem, Action done)
         {
             var existingFiles = GetResourcesFileNames();
 
             //DeleteNotRelevantResources
             foreach (var fileName in existingFiles)
             {
-                if (!resourcesMeta.items.Exists(item => item.hash == fileName))
+                if (!resourcesMeta.Exists(item => item.hash == fileName))
                 {
                     Delete(GetResourcesFilePath(fileName));
                 }
@@ -344,7 +344,7 @@ namespace Overlewd
             }
 
             //DownloadMissingResources
-            foreach (var resourceMeta in resourcesMeta.items)
+            foreach (var resourceMeta in resourcesMeta)
             {
                 if (!existingFiles.Exists(item => item == resourceMeta.hash))
                 {

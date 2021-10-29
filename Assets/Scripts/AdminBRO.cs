@@ -217,12 +217,12 @@ namespace Overlewd
         }
 
         // /resources
-        public static IEnumerator resources(Action<ResourcesMeta> success, Action<string> error = null)
+        public static IEnumerator resources(Action<List<NetworkResource>> success, Action<string> error = null)
         {
             yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", tokens.accessToken, downloadHandler =>
             {
-                var resources = JsonConvert.DeserializeObject<ResourcesMeta>(downloadHandler.text);
-                success?.Invoke(resources);
+                var resources = JsonConvert.DeserializeObject<ResourcesMetaResponse>(downloadHandler.text);
+                success?.Invoke(resources.items);
             },
             (msg) =>
             {
@@ -242,7 +242,7 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class ResourcesMeta
+        public class ResourcesMetaResponse
         {
             public List<NetworkResource> items;
         }
