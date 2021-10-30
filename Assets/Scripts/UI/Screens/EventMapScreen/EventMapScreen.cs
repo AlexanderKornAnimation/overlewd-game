@@ -6,17 +6,20 @@ using UnityEngine.UI;
 namespace Overlewd
 {
     public class EventMapScreen : BaseScreen
-    {
-        private GameObject screenPrefab;
+    { 
+        private Transform map;
 
         void Start()
         {
-            screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/EventMap"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/EventMap"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            var canvas = screenRectTransform.Find("Canvas");
+            map = canvas.Find("Map");
+
+            canvas.Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<CastleScreen>();
             });
@@ -25,43 +28,43 @@ namespace Overlewd
             QuestsWidget.CreateInstance(transform);
             SidebarButtonWidget.CreateInstance(transform);
 
-            NSEventMapScreen.MapButton.GetInstance(screenRectTransform.Find("Canvas").Find("eventMap"));
+            NSEventMapScreen.MapButton.GetInstance(map.Find("eventMap"));
 
-            foreach (Transform node in GetAllNodes("eventShop_"))
+            foreach (Transform node in GetSpawnNodes("eventShop_"))
             {
                 NSEventMapScreen.EventShopButton.GetInstance(node);
             }
 
-            foreach (Transform node in GetAllNodes("fight_"))
+            foreach (Transform node in GetSpawnNodes("fight_"))
             {
                 NSEventMapScreen.FightButton.GetInstance(node);
             }
 
-            foreach (Transform node in GetAllNodes("bossFight_"))
+            foreach (Transform node in GetSpawnNodes("bossFight_"))
             {
                 NSEventMapScreen.BossFightButton.GetInstance(node);
             }
-
-            foreach (Transform node in GetAllNodes("dialogue_"))
+            
+            foreach (Transform node in GetSpawnNodes("dialogue_"))
             {
                 NSEventMapScreen.DialogeButton.GetInstance(node);
             }
 
-            foreach (Transform node in GetAllNodes("sexDialogue_"))
+            foreach (Transform node in GetSpawnNodes("sexDialogue_"))
             {
                 NSEventMapScreen.SexButton.GetInstance(node);
             }
         }
 
-        private IEnumerable GetAllNodes(string nodeName)
+        private IEnumerable GetSpawnNodes(string nodeName)
         {
             var nodeId = 1;
-            var node = screenPrefab.transform.Find("Canvas").Find(nodeName + nodeId.ToString());
+            var node = map.Find(nodeName + nodeId.ToString());
             while (node != null)
             {
                 yield return node;
                 nodeId++;
-                node = screenPrefab.transform.Find("Canvas").Find(nodeName + nodeId.ToString());
+                node = map.Find(nodeName + nodeId.ToString());
             }
             yield break;
         }

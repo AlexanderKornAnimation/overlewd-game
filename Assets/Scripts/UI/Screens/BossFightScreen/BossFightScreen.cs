@@ -7,17 +7,33 @@ namespace Overlewd
 {
     public class BossFightScreen : BaseScreen
     {
+        private Button startBattleButton;
+        private Button backButton;
+
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BossFightScreen/BossFight"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BossFightScreen/BossFightScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<MapScreen>();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+
+            startBattleButton = canvas.Find("StartBattleButton").GetComponent<Button>();
+            startBattleButton.onClick.AddListener(StartBattleButtonClick);
+
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+        }
+
+        private void StartBattleButtonClick()
+        {
+            UIManager.ShowPopup<VictoryPopup>();
+        }
+
+        private void BackButtonClick()
+        {
+            UIManager.ShowScreen<EventMapScreen>();
         }
 
         void Update()

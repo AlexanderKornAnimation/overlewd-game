@@ -9,17 +9,29 @@ namespace Overlewd
     {
         public class EventShopButton : MonoBehaviour
         {
+            private Button button;
+            private Text title;
+            private Text description;
+
             void Start()
             {
-                transform.GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    UIManager.ShowScreen<EventMarketScreen>();
-                });
+                var canvas = transform.Find("Canvas");
+
+                button = canvas.Find("Button").GetComponent<Button>();
+                button.onClick.AddListener(ButtonClick);
+
+                title = button.transform.Find("Title").GetComponent<Text>();
+                description = button.transform.Find("Description").GetComponent<Text>();
             }
 
             void Update()
             {
 
+            }
+
+            private void ButtonClick()
+            {
+                UIManager.ShowScreen<EventMarketScreen>();
             }
 
             public static EventShopButton GetInstance(Transform parent)

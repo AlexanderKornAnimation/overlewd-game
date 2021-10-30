@@ -7,6 +7,9 @@ namespace Overlewd
 {
     public class VictoryPopup : BasePopup
     {
+        private Button nextButton;
+        private Button repeatButton;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/VictoryPopup/VictoryPopup"));
@@ -14,10 +17,23 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("NextButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.HideOverlay();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+
+            nextButton = canvas.Find("NextButton").GetComponent<Button>();
+            nextButton.onClick.AddListener(NextButtonClick);
+
+            repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
+            repeatButton.onClick.AddListener(RepeatButtonClick);
+        }
+
+        private void NextButtonClick()
+        {
+            UIManager.ShowScreen<EventMapScreen>();
+        }
+
+        private void RepeatButtonClick()
+        {
+
         }
 
         void Update()

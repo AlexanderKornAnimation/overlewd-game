@@ -7,6 +7,10 @@ namespace Overlewd
 {
     public class PrepareBossFightPopup : BasePopup
     {
+        private Button backButton;
+        private Button battleButton;
+        private Button prepareButton;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup"));
@@ -14,15 +18,31 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<MapScreen>();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
 
-            screenRectTransform.Find("Canvas").Find("BossFight").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<BossFightScreen>();
-            });
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+
+            battleButton = canvas.Find("BattleButton").GetComponent<Button>();
+            battleButton.onClick.AddListener(BattleButtonClick);
+
+            prepareButton = canvas.Find("PrepareBattle").GetComponent<Button>();
+            prepareButton.onClick.AddListener(PrepareButtonClick);
+        }
+
+        private void BackButtonClick()
+        {
+            UIManager.HidePopup();
+        }
+
+        private void BattleButtonClick()
+        {
+            UIManager.ShowScreen<BossFightScreen>();
+        }
+
+        private void PrepareButtonClick()
+        {
+            UIManager.ShowSubPopup<BottlesSubPopup>();
         }
 
         void Update()

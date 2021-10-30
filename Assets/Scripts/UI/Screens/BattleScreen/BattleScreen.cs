@@ -7,6 +7,9 @@ namespace Overlewd
 {
     public class BattleScreen : BaseScreen
     {
+        private Button startBattleButton;
+        private Button backButton;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BattleScreen/BattleScreen"));
@@ -14,10 +17,23 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<MapScreen>();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+
+            startBattleButton = canvas.Find("StartBattleButton").GetComponent<Button>();
+            startBattleButton.onClick.AddListener(StartBattleButtonClick);
+
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+        }
+
+        private void StartBattleButtonClick()
+        {
+            UIManager.ShowPopup<VictoryPopup>();
+        }
+
+        private void BackButtonClick()
+        {
+            UIManager.ShowScreen<EventMapScreen>();
         }
 
         void Update()
