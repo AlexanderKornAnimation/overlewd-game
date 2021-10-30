@@ -9,12 +9,39 @@ namespace Overlewd
     {
         public class EventItem : MonoBehaviour
         {
+            public int eventId { get; set; }
+            public int questId { get; set; }
+
+            private Button mapButton;
+
+            private Text eventName;
+            private Text title;
+            private Text description;
+
             void Start()
             {
-                transform.Find("Canvas").Find("MapButton").GetComponent<Button>().onClick.AddListener(() => 
-                {
-                    UIManager.ShowScreen<EventMapScreen>();
-                });
+                var canvas = transform.Find("Canvas");
+
+                eventName = canvas.Find("EventName").GetComponent<Text>();
+                title = canvas.Find("Title").GetComponent<Text>();
+                description = canvas.Find("Description").GetComponent<Text>();
+
+                mapButton = canvas.Find("MapButton").GetComponent<Button>();
+                mapButton.onClick.AddListener(ToMapClick);
+
+                CustomizeItem();
+            }
+
+            private void CustomizeItem()
+            {
+                eventName.text = GameData.GetEventById(eventId)?.name;
+                title.text = GameData.GetQuestById(questId)?.name;
+                description.text = GameData.GetQuestById(questId)?.description;
+            }
+
+            private void ToMapClick()
+            {
+                UIManager.ShowScreen<EventMapScreen>();
             }
 
             void Update()

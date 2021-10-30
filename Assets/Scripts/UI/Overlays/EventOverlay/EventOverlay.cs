@@ -49,18 +49,9 @@ namespace Overlewd
                 });
             }
 
-            NSEventOverlay.Banner.GetInstance(scrollViewContent[0]);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
-            NSEventOverlay.EventItem.GetInstance(scrollViewContent[0]);
-            NSEventOverlay.EventDescription.GetInstance(scrollViewContent[0]);
-
-            NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[4]);
-
             eventButton[TabWeekly].onClick.Invoke();
 
-            InitWeeklyTab();
+            InitTabs();
         }
 
         private void TabClick(int tabId)
@@ -75,10 +66,23 @@ namespace Overlewd
             }
         }
 
-        private void InitWeeklyTab()
+        private void InitTabs()
         {
-            var q = GameData.quests;
-            var e = GameData.events;
+            NSEventOverlay.Banner.GetInstance(scrollViewContent[TabWeekly]);
+
+            foreach (var e in GameData.events)
+            {
+                foreach (var questId in e.quests)
+                {
+                    var eventItem = NSEventOverlay.EventItem.GetInstance(scrollViewContent[TabWeekly]);
+                    eventItem.eventId = e.id;
+                    eventItem.questId = questId;
+                }
+            }
+
+            NSEventOverlay.EventDescription.GetInstance(scrollViewContent[TabWeekly]);
+
+            NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[TabComingSoon]);
         }
 
         void Update()

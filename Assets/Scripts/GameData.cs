@@ -9,7 +9,15 @@ namespace Overlewd
     {
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
         public static List<AdminBRO.EventItem> events { get; set; }
+        public static AdminBRO.EventItem GetEventById(int id)
+        {
+            return events.Find(e => e.id == id);
+        }
         public static List<AdminBRO.QuestItem> quests { get; set; }
+        public static AdminBRO.QuestItem GetQuestById(int id)
+        {
+            return quests.Find(q => q.id == id);
+        }
         public static List<AdminBRO.MarketItem> markets { get; set; }
 
         public class MarketProducts
