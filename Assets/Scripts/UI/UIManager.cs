@@ -93,7 +93,7 @@ namespace Overlewd
             var uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
-        public static void ShowScreen<T>() where T : BaseScreen
+        public static T ShowScreen<T>() where T : BaseScreen
         {
             if (currentScreenGO?.GetComponent<T>() == null)
             {
@@ -112,6 +112,8 @@ namespace Overlewd
                 HideSubPopup();
                 HideOverlay();
             }
+
+            return currentScreenGO.AddComponent<T>();
         }
 
         public static void HideScreen()
@@ -124,7 +126,7 @@ namespace Overlewd
             HideOverlay();
         }
 
-        public static void ShowPopup<T>() where T : BasePopup
+        public static T ShowPopup<T>() where T : BasePopup
         {
             if (currentPopupGO?.GetComponent<T>() == null)
             {
@@ -141,6 +143,8 @@ namespace Overlewd
             {
                 HideSubPopup();
             }
+
+            return currentPopupGO.AddComponent<T>();
         }
 
         public static void HidePopup()
@@ -151,7 +155,7 @@ namespace Overlewd
             HideSubPopup();
         }
 
-        public static void ShowSubPopup<T>() where T : BaseSubPopup
+        public static T ShowSubPopup<T>() where T : BaseSubPopup
         {
             if (currentSubPopupGO?.GetComponent<T>() == null)
             {
@@ -164,6 +168,8 @@ namespace Overlewd
                 SetStretch(currentSubPopupGO_rectTransform);
                 currentSubPopupGO.AddComponent<T>().Show();
             }
+
+            return currentSubPopupGO.AddComponent<T>();
         }
 
         public static void HideSubPopup()
@@ -172,7 +178,7 @@ namespace Overlewd
             currentSubPopupGO = null;
         }
 
-        public static void ShowOverlay<T>() where T : BaseOverlay
+        public static T ShowOverlay<T>() where T : BaseOverlay
         {
             if (currentOverlayGO?.GetComponent<T>() == null)
             {
@@ -185,6 +191,8 @@ namespace Overlewd
                 SetStretch(currentOverlayGO_rectTransform);
                 currentOverlayGO.AddComponent<T>().Show();
             }
+
+            return currentOverlayGO.AddComponent<T>();
         }
 
         public static void HideOverlay()
@@ -198,7 +206,7 @@ namespace Overlewd
             return (currentOverlayGO?.GetComponent<T>() != null);
         }
 
-        public static void ShowNotification<T>() where T : BaseNotification
+        public static T ShowNotification<T>() where T : BaseNotification
         {
             if (currentNotificationGO?.GetComponent<T>() == null)
             {
@@ -211,6 +219,8 @@ namespace Overlewd
                 SetStretch(currentNotificationGO_rectTransform);
                 currentNotificationGO.AddComponent<T>().Show();
             }
+
+            return currentNotificationGO.AddComponent<T>();
         }
 
         public static void HideNotification()
