@@ -19,6 +19,10 @@ namespace Overlewd
             return quests.Find(q => q.id == id);
         }
         public static List<AdminBRO.MarketItem> markets { get; set; }
+        public static AdminBRO.MarketItem GetMarketById(int id)
+        {
+            return markets.Find(m => m.id == id);
+        }
 
         public class MarketProducts
         {
@@ -29,6 +33,10 @@ namespace Overlewd
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }
         public static List<AdminBRO.Dialog> dialogs { get; set; } = new List<AdminBRO.Dialog>();
+        public static AdminBRO.Dialog GetDialogById(int id)
+        {
+            return dialogs.Find(d => d.id == id);
+        }
     }
 
 }

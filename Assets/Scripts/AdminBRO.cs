@@ -283,10 +283,10 @@ namespace Overlewd
 
         public class EventStageType
         {
-            public static string Battle = "battle";
-            public static string Boss = "boss";
-            public static string Dialog = "dialog";
-            public static string SexDialog = "act";
+            public const string Battle = "battle";
+            public const string Boss = "boss";
+            public const string Dialog = "dialog";
+            public const string SexDialog = "act";
         }
 
         [Serializable]

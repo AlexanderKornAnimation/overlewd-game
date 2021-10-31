@@ -7,7 +7,13 @@ namespace Overlewd
 {
     public static class GameGlobalStates
     {
-        public static AdminBRO.EventItem eventMapScreenEventData { get; set; }
+        public static AdminBRO.EventItem eventMapScreen_EventData { get; set; }
+        public static AdminBRO.EventStageItem bossFight_EventStageData { get; set; }
+        public static AdminBRO.EventStageItem battle_EventStageData { get; set; }
+        public static AdminBRO.EventStageItem dialog_EventStageData { get; set; }
+        public static AdminBRO.EventStageItem sex_EventStageData { get; set; }
+        public static AdminBRO.MarketItem eventShop_MarketData { get; set; }
+
     }
 
 }

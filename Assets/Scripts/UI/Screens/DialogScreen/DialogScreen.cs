@@ -7,6 +7,15 @@ namespace Overlewd
 {
     public class DialogScreen : BaseScreen
     {
+        private Button nextButton;
+        private Text personageName;
+        private Text text;
+
+        private Button skipButton;
+
+        private AdminBRO.Dialog dialogData;
+        private int currentReplicaId;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/DialogScreen/DialogScreen"));
@@ -14,15 +23,51 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("SkipButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<GirlScreen>();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+            var textContainer = canvas.Find("TextContainer");
+
+            nextButton = textContainer.Find("NextButton").GetComponent<Button>();
+            nextButton.onClick.AddListener(NextButtonClick);
+
+            personageName = textContainer.Find("PersonageName").GetComponent<Text>();
+            text = textContainer.Find("Text").GetComponent<Text>();
+
+            skipButton = canvas.Find("SkipButton").GetComponent<Button>();
+            skipButton.onClick.AddListener(SkipButtonClick);
+
+            dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
+
+            ShowCurrentReplica();
         }
 
         void Update()
         {
 
+        }
+
+        private void SkipButtonClick()
+        {
+            UIManager.ShowScreen<EventMapScreen>();
+        }
+
+        private void NextButtonClick()
+        {
+            currentReplicaId++;
+            if (currentReplicaId < dialogData.replicas.Count)
+            {
+                ShowCurrentReplica();
+            }
+            else
+            {
+                UIManager.ShowScreen<EventMapScreen>();
+            }
+        }
+
+        private void ShowCurrentReplica()
+        {
+            var replica = dialogData.replicas[currentReplicaId];
+            personageName.text = replica.characterName;
+            text.text = replica.message;
         }
     }
 }

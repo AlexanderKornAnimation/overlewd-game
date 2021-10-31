@@ -7,13 +7,13 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class EventShopButton : MonoBehaviour
+        public class DialogButton : MonoBehaviour
         {
-            public AdminBRO.MarketItem marketData { get; set; }
+            public AdminBRO.EventStageItem eventStageData { get; set; }
 
             private Button button;
+            private Transform dialogDone;
             private Text title;
-            private Text description;
 
             void Start()
             {
@@ -22,8 +22,8 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
+                dialogDone = button.transform.Find("DialogueDone");
                 title = button.transform.Find("Title").GetComponent<Text>();
-                description = button.transform.Find("Description").GetComponent<Text>();
             }
 
             void Update()
@@ -33,15 +33,15 @@ namespace Overlewd
 
             private void ButtonClick()
             {
-                GameGlobalStates.eventShop_MarketData = marketData;
-                UIManager.ShowScreen<EventMarketScreen>();
+                GameGlobalStates.dialog_EventStageData = eventStageData;
+                UIManager.ShowScreen<DialogScreen>();
             }
 
-            public static EventShopButton GetInstance(Transform parent)
+            public static DialogButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/EventShopButton"), parent);
-                newItem.name = nameof(EventShopButton);
-                return newItem.AddComponent<EventShopButton>();
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/DialogButton"), parent);
+                newItem.name = nameof(DialogButton);
+                return newItem.AddComponent<DialogButton>();
             }
         }
     }

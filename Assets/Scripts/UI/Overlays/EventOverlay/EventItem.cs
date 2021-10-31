@@ -41,7 +41,7 @@ namespace Overlewd
 
             private void ToMapClick()
             {
-                GameGlobalStates.eventMapScreenEventData = eventData;
+                GameGlobalStates.eventMapScreen_EventData = eventData;
                 UIManager.ShowScreen<EventMapScreen>();
             }
 

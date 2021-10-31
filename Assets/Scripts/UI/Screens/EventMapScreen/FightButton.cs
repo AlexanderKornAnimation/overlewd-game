@@ -9,17 +9,30 @@ namespace Overlewd
     {
         public class FightButton : MonoBehaviour
         {
+            public AdminBRO.EventStageItem eventStageData { get; set; }
+
+            private Button button;
+            private Transform fightDone;
+
             void Start()
             {
-                transform.Find("Canvas").Find("Button").GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    UIManager.ShowPopup<PrepareBattlePopup>();
-                });
+                var canvas = transform.Find("Canvas");
+
+                button = canvas.Find("Button").GetComponent<Button>();
+                button.onClick.AddListener(ButtonClick);
+
+                fightDone = button.transform.Find("FightDone");
             }
 
             void Update()
             {
 
+            }
+
+            private void ButtonClick()
+            {
+                GameGlobalStates.battle_EventStageData = eventStageData;
+                UIManager.ShowPopup<PrepareBattlePopup>();
             }
 
             public static FightButton GetInstance(Transform parent)
