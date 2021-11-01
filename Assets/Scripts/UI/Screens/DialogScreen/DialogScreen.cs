@@ -10,6 +10,8 @@ namespace Overlewd
         private Button nextButton;
         private Text personageName;
         private Text text;
+        private Transform girlEmotion;
+        private Text girlName;
 
         private Button skipButton;
 
@@ -31,6 +33,8 @@ namespace Overlewd
 
             personageName = textContainer.Find("PersonageName").GetComponent<Text>();
             text = textContainer.Find("Text").GetComponent<Text>();
+            girlEmotion = textContainer.Find("GirlEmotion");
+            girlName = textContainer.Find("GirlName").GetComponent<Text>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
@@ -66,7 +70,20 @@ namespace Overlewd
         private void ShowCurrentReplica()
         {
             var replica = dialogData.replicas[currentReplicaId];
-            personageName.text = replica.characterName;
+            if (replica.characterName == "Ulvi")
+            {
+                personageName.gameObject.SetActive(false);
+                girlEmotion.gameObject.SetActive(true);
+                girlName.gameObject.SetActive(true);
+                girlName.text = replica.characterName;
+            }
+            else
+            {
+                personageName.gameObject.SetActive(true);
+                girlEmotion.gameObject.SetActive(false);
+                girlName.gameObject.SetActive(false);
+                personageName.text = replica.characterName;
+            }
             text.text = replica.message;
         }
     }
