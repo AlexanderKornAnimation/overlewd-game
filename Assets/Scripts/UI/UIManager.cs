@@ -113,7 +113,7 @@ namespace Overlewd
                 HideOverlay();
             }
 
-            return currentScreenGO.AddComponent<T>();
+            return currentScreenGO.GetComponent<T>();
         }
 
         public static void HideScreen()
@@ -144,7 +144,7 @@ namespace Overlewd
                 HideSubPopup();
             }
 
-            return currentPopupGO.AddComponent<T>();
+            return currentPopupGO.GetComponent<T>();
         }
 
         public static void HidePopup()
@@ -169,7 +169,7 @@ namespace Overlewd
                 currentSubPopupGO.AddComponent<T>().Show();
             }
 
-            return currentSubPopupGO.AddComponent<T>();
+            return currentSubPopupGO.GetComponent<T>();
         }
 
         public static void HideSubPopup()
@@ -192,7 +192,7 @@ namespace Overlewd
                 currentOverlayGO.AddComponent<T>().Show();
             }
 
-            return currentOverlayGO.AddComponent<T>();
+            return currentOverlayGO.GetComponent<T>();
         }
 
         public static void HideOverlay()
@@ -220,7 +220,7 @@ namespace Overlewd
                 currentNotificationGO.AddComponent<T>().Show();
             }
 
-            return currentNotificationGO.AddComponent<T>();
+            return currentNotificationGO.GetComponent<T>();
         }
 
         public static void HideNotification()
