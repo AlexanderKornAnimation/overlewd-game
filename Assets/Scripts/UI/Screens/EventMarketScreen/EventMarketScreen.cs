@@ -7,6 +7,16 @@ namespace Overlewd
 {
     public class EventMarketScreen : BaseScreen
     {
+        private Button backButton;
+        private Button portalButton;
+        private Button marketButton;
+
+        private Button moneyBackButton;
+        private Text moneyBackValue;
+        private Image eventMoneyImage;
+
+        private Transform scrollViewContent;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/EventMarket"));
@@ -14,24 +24,57 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
+            var canvas = screenRectTransform.Find("Canvas");
+
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+
+            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
+            portalButton.onClick.AddListener(PortalButtonClick);
+
+            marketButton = canvas.Find("MarketButton").GetComponent<Button>();
+            marketButton.onClick.AddListener(MarketButtonClick);
+
+            moneyBackButton = canvas.Find("MoneyBack").GetComponent<Button>();
+            moneyBackButton.onClick.AddListener(MoneyBackButtonClick);
+            moneyBackValue = moneyBackButton.transform.Find("Value").GetComponent<Text>();
+            eventMoneyImage = moneyBackButton.transform.Find("EventMoney").GetComponent<Image>();
+
+            scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
+
+            var marketId = GameGlobalStates.eventShop_MarketData.id;
+            var marketProducts = GameData.GetMarketProductsByMarketId(marketId);
+            foreach (var marketProductData in marketProducts)
             {
-                UIManager.ShowScreen<EventMapScreen>();
-            });
+                var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
+                eventMarketItem.marketProductData = marketProductData;
+            }
 
-            var scrollViewContent = screenRectTransform.Find("Canvas").Find("ScrollView").Find("Viewport").Find("Content");
-
-            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-            NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
         }
 
         void Update()
         {
 
+        }
+
+        private void BackButtonClick()
+        {
+            UIManager.ShowScreen<EventMapScreen>();
+        }
+
+        private void PortalButtonClick()
+        {
+            UIManager.ShowScreen<PortalScreen>();
+        }
+
+        private void MarketButtonClick()
+        {
+            UIManager.ShowScreen<MarketScreen>();
+        }
+
+        private void MoneyBackButtonClick()
+        {
+            UIManager.ShowNotification<BannerNotification>();
         }
     }
 }

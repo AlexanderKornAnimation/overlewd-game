@@ -118,15 +118,7 @@ namespace Overlewd
             return fileInfo.Length;
         }
 
-        /*private static Texture2D LoadTexture(string fileName)
-        {
-            var filePath = Path.Combine(GetResourcesPath(), fileName);
-            var texture = new Texture2D(1, 1);
-            var data = File.ReadAllBytes(filePath);
-            texture.LoadImage(data, true);
-            return texture;
-        }
-
+        /*
         private static AssetBundle LoadAssetBundle(string fileName)
         {
             var filePath = Path.Combine(GetResourcesPath(), fileName);
@@ -138,7 +130,7 @@ namespace Overlewd
             return runtimeResourcesMeta.Find(item => item.id == id);
         }
 
-        public static IEnumerator LoadTextureByFileName(string fileName, Action<Texture2D> doLoad = null)
+        public static IEnumerator LoadTextureByFileName(string fileName, Action<Texture2D> doLoad)
         {
             if (loadTextures.ContainsKey(fileName))
             {
@@ -152,6 +144,7 @@ namespace Overlewd
                 yield return request.SendWebRequest();
                 if (request.result != UnityWebRequest.Result.Success)
                 {
+                    doLoad?.Invoke(null);
                     yield break;
                 }
                 var texture = DownloadHandlerTexture.GetContent(request);
@@ -160,15 +153,54 @@ namespace Overlewd
             }
         }
 
-        public static IEnumerator LoadTextureById(string id, Action<Texture2D> doLoad = null)
+        public static IEnumerator LoadTextureById(string id, Action<Texture2D> doLoad)
         {
             var resourceMeta = GetResourceMetaById(id);
             if (resourceMeta == null)
             {
+                doLoad?.Invoke(null);
                 yield break;
             }
 
             yield return LoadTextureByFileName(resourceMeta.hash, doLoad);
+        }
+
+        public static Texture2D LoadTextureByFileName(string fileName)
+        {
+            if (loadTextures.ContainsKey(fileName))
+            {
+                return loadTextures[fileName];
+            }
+
+            var filePath = GetResourcesFilePath(fileName);
+            var texture = new Texture2D(1, 1);
+            var data = File.ReadAllBytes(filePath);
+            texture.LoadImage(data, true);
+            return texture;
+        }
+
+        public static Texture2D LoadTextureById(string id)
+        {
+            var resourceMeta = GetResourceMetaById(id);
+            if (resourceMeta == null)
+            {
+                return null;
+            }
+
+            return LoadTextureByFileName(resourceMeta.hash);
+        }
+
+        public static Sprite LoadTextureAsSpriteById(string id)
+        {
+            var texture = LoadTextureById(id);
+            if (texture == null)
+            {
+                return null;
+            }
+            var sprite = Sprite.Create(texture,
+                            new Rect(0.0f, 0.0f, texture.width, texture.height),
+                            new Vector2(0.5f, 0.5f));
+            return sprite;
         }
 
         public static IEnumerator LoadTexture(string fileName, string bundleName, Action<Texture2D> doLoad = null)

@@ -14,15 +14,13 @@ namespace Overlewd
         private Button nextBtn;
         private Image image;
 
-        IEnumerator Start()
+        void Start()
         {
             var resources = ResourceManager.GetResourcesFileNames();
             foreach (var resName in resources)
             {
-                yield return ResourceManager.LoadTextureByFileName(resName, texture =>
-                {
-                    loadedTextures.Add(texture);
-                });
+                var texture = ResourceManager.LoadTextureByFileName(resName);
+                loadedTextures.Add(texture);
             }
 
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer"));

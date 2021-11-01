@@ -7,6 +7,9 @@ namespace Overlewd
 {
     public class BannerNotification : BaseNotification
     {
+        private Button closeButton;
+        private Button buyButton;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/BannerNotification/BannerNotification"));
@@ -14,15 +17,28 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("CloseButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.HideNotification();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+
+            closeButton = canvas.Find("CloseButton").GetComponent<Button>();
+            closeButton.onClick.AddListener(CloseButtonClick);
+
+            buyButton = canvas.Find("BuyButton").GetComponent<Button>();
+            buyButton.onClick.AddListener(BuyButtonClick);
         }
 
         void Update()
         {
 
+        }
+
+        private void CloseButtonClick()
+        {
+            UIManager.HideNotification();
+        }
+
+        private void BuyButtonClick()
+        {
+            UIManager.ShowNotification<NutakuBuyingNotification>();
         }
     }
 }

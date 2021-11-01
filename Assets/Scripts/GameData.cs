@@ -30,8 +30,16 @@ namespace Overlewd
             public List<AdminBRO.MarketProductItem> marketProducts;
         }
         public static List<MarketProducts> marketProducts { get; set; } = new List<MarketProducts>();
+        public static List<AdminBRO.MarketProductItem> GetMarketProductsByMarketId(int marketId)
+        {
+            return marketProducts.Find(mp => mp.marketId == marketId).marketProducts;
+        }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }
+        public static AdminBRO.CurrencyItem GetCurrencyById(int id)
+        {
+            return currenies.Find(c => c.id == id);
+        }
         public static List<AdminBRO.Dialog> dialogs { get; set; } = new List<AdminBRO.Dialog>();
         public static AdminBRO.Dialog GetDialogById(int id)
         {

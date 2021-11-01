@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class NutacuBuyingStatusNotification : BaseNotification
+    public class NutakuBuyingStatusNotification : BaseNotification
     {
+        private Button backButton;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/NutakuNotification/BuyingStatusNotification"));
@@ -14,15 +16,20 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() => 
-            {
-                UIManager.HideNotification();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
         }
 
         void Update()
         {
 
+        }
+
+        private void BackButtonClick()
+        {
+            UIManager.ShowNotification<BuyingNotification>();
         }
     }
 }
