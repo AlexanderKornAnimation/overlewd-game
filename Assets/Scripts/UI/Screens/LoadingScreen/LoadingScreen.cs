@@ -10,7 +10,6 @@ namespace Overlewd
         private string loadingLabel;
         private Texture2D screenTexture;
 
-        private bool marketRouteEnd;
         private bool eventsRouteEnd;
         private int runningRoutesCount;
         private float waitTime = 0.1f;
@@ -69,35 +68,6 @@ namespace Overlewd
             }));
         }
 
-        private IEnumerator LoadMarketProducts()
-        {
-            while (!marketRouteEnd)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount++;
-
-            var productRoutes = 0;
-            foreach (var market in GameData.markets)
-            {
-                productRoutes++;
-                StartCoroutine(AdminBRO.markets(market.id, (products) =>
-                {
-                    var marketProducts = new GameData.MarketProducts { marketId = market.id, marketProducts = products };
-                    GameData.marketProducts.Add(marketProducts);
-                    productRoutes--;
-                }));
-            }
-
-            while (productRoutes > 0)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount--;
-        }
-
         private IEnumerator LoadDialogs()
         {
             while (!eventsRouteEnd)
@@ -108,18 +78,18 @@ namespace Overlewd
             runningRoutesCount++;
 
             var dialogRoutes = 0;
-            var loadDialogId = new List<int>();
+            var loadDialogsId = new List<int>();
             foreach (var eventItem in GameData.events)
             {
                 foreach (var stage in eventItem.stages)
                 {
-                    if (stage.dialogId.HasValue)
+                    if (stage.dialog != null)
                     {
-                        if (!loadDialogId.Exists(item => item == stage.dialogId.Value))
+                        if (!loadDialogsId.Exists(item => item == stage.dialog.id))
                         {
                             dialogRoutes++;
-                            loadDialogId.Add(stage.dialogId.Value);
-                            StartCoroutine(AdminBRO.dialog(stage.dialogId.Value, (dialog) =>
+                            loadDialogsId.Add(stage.dialog.id);
+                            StartCoroutine(AdminBRO.dialog(stage.dialog.id, (dialog) =>
                             {
                                 GameData.dialogs.Add(dialog);
                                 dialogRoutes--;
@@ -130,6 +100,76 @@ namespace Overlewd
             }
 
             while (dialogRoutes > 0)
+            {
+                yield return new WaitForSeconds(waitTime);
+            }
+
+            runningRoutesCount--;
+        }
+
+        private IEnumerator LoadQuests()
+        {
+            while (!eventsRouteEnd)
+            {
+                yield return new WaitForSeconds(waitTime);
+            }
+
+            runningRoutesCount++;
+
+            var questsRoutes = 0;
+            foreach (var eventItem in GameData.events)
+            {
+                questsRoutes++;
+                StartCoroutine(AdminBRO.quests(eventItem.id, (quests) =>
+                {
+                    foreach (var quest in quests)
+                    {
+                        if (!GameData.quests.Exists(q => q.id == quest.id))
+                        {
+                            GameData.quests.Add(quest);
+                        }
+                    }
+                    questsRoutes--;
+                }));
+            }
+
+            while (questsRoutes > 0)
+            {
+                yield return new WaitForSeconds(waitTime);
+            }
+
+            runningRoutesCount--;
+        }
+
+        private IEnumerator LoadMarkets()
+        {
+            while (!eventsRouteEnd)
+            {
+                yield return new WaitForSeconds(waitTime);
+            }
+
+            runningRoutesCount++;
+
+            var marketRoutes = 0;
+            var loadMarketsId = new List<int>();
+            foreach (var eventItem in GameData.events)
+            {
+                foreach (var marketId in eventItem.markets)
+                {
+                    if (!loadMarketsId.Exists(m_id => m_id == marketId))
+                    {
+                        marketRoutes++;
+                        loadMarketsId.Add(marketId);
+                        StartCoroutine(AdminBRO.markets(marketId, (market) =>
+                        {
+                            GameData.markets.Add(market);
+                            marketRoutes--;
+                        }));
+                    }
+                }
+            }
+
+            while (marketRoutes > 0)
             {
                 yield return new WaitForSeconds(waitTime);
             }
@@ -170,23 +210,6 @@ namespace Overlewd
             }));
 
             runningRoutesCount++;
-            StartCoroutine(AdminBRO.quests((quests) =>
-            {
-                GameData.quests = quests;
-
-                runningRoutesCount--;
-            }));
-
-            runningRoutesCount++;
-            StartCoroutine(AdminBRO.markets((markets) =>
-            {
-                GameData.markets = markets;
-
-                marketRouteEnd = true;
-                runningRoutesCount--;
-            }));
-
-            runningRoutesCount++;
             StartCoroutine(AdminBRO.currencies((currencies) => 
             {
                 GameData.currenies = currencies;
@@ -194,7 +217,9 @@ namespace Overlewd
                 runningRoutesCount--;
             }));
 
-            StartCoroutine(LoadMarketProducts());
+            StartCoroutine(LoadMarkets());
+
+            StartCoroutine(LoadQuests());
 
             StartCoroutine(LoadDialogs());
 

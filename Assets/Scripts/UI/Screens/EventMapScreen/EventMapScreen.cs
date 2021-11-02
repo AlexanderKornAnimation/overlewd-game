@@ -104,9 +104,13 @@ namespace Overlewd
             {
                 if (dialogId < dialogStages.Count)
                 {
-                    var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
-                    dialogButton.eventStageData = dialogStages[dialogId];
-                    dialogButtons.Add(dialogButton);
+                    var eventStageData = dialogStages[dialogId];
+                    if (eventStageData.dialog != null)
+                    {
+                        var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
+                        dialogButton.eventStageData = eventStageData;
+                        dialogButtons.Add(dialogButton);
+                    }
                 }
                 dialogId++;
             }
@@ -116,9 +120,13 @@ namespace Overlewd
             {
                 if (sexId < sexStages.Count)
                 {
-                    var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
-                    sexButton.eventStageData = sexStages[sexId];
-                    sexButtons.Add(sexButton);
+                    var eventStageData = sexStages[sexId];
+                    if (eventStageData.dialog != null)
+                    {
+                        var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
+                        sexButton.eventStageData = eventStageData;
+                        sexButtons.Add(sexButton);
+                    }
                 }
                 sexId++;
             }

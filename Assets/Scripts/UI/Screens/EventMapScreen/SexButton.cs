@@ -24,12 +24,19 @@ namespace Overlewd
 
                 sceneDone = button.transform.Find("SceneDone");
                 title = button.transform.Find("Title").GetComponent<Text>();
+
+                Customize();
             }
 
             void Update()
             {
 
             }
+
+            private void Customize()
+            {
+                title.text = eventStageData.title;
+            } 
 
             private void ButtonClick()
             {

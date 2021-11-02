@@ -13,26 +13,15 @@ namespace Overlewd
         {
             return events.Find(e => e.id == id);
         }
-        public static List<AdminBRO.QuestItem> quests { get; set; }
+        public static List<AdminBRO.QuestItem> quests { get; set; } = new List<AdminBRO.QuestItem>();
         public static AdminBRO.QuestItem GetQuestById(int id)
         {
             return quests.Find(q => q.id == id);
         }
-        public static List<AdminBRO.MarketItem> markets { get; set; }
+        public static List<AdminBRO.MarketItem> markets { get; set; } = new List<AdminBRO.MarketItem>();
         public static AdminBRO.MarketItem GetMarketById(int id)
         {
             return markets.Find(m => m.id == id);
-        }
-
-        public class MarketProducts
-        {
-            public int marketId;
-            public List<AdminBRO.MarketProductItem> marketProducts;
-        }
-        public static List<MarketProducts> marketProducts { get; set; } = new List<MarketProducts>();
-        public static List<AdminBRO.MarketProductItem> GetMarketProductsByMarketId(int marketId)
-        {
-            return marketProducts.Find(mp => mp.marketId == marketId).marketProducts;
         }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }

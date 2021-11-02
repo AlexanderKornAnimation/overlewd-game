@@ -127,44 +127,19 @@ namespace Overlewd
             public CurrencyItem currency;
         }
 
-        // /markets; /markets/{id}
-        public static IEnumerator markets(Action<List<MarketItem>> success, Action error = null)
+        // /markets/{id}
+        public static IEnumerator markets(int id, Action<MarketItem> success, Action error = null)
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/markets", tokens.accessToken, (downloadHandler) =>
-            {
-                var markets = JsonConvert.DeserializeObject<List<MarketItem>>(downloadHandler.text);
-                success?.Invoke(markets);
-            },
-            (errorMsg) => {
-                error?.Invoke();
-            });
-        }
-
-        public static IEnumerator markets(int id, Action<List<MarketProductItem>> success, Action error = null)
-        {
-            var url = "https://overlude-api.herokuapp.com/markets/" + id.ToString();
+            var url = String.Format("https://overlude-api.herokuapp.com/markets/{0}", id);
             yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) => 
             {
-                var marketProducts = JsonConvert.DeserializeObject<List<MarketProductItem>>(downloadHandler.text);
-                success?.Invoke(marketProducts);
+                var market = JsonConvert.DeserializeObject<MarketItem>(downloadHandler.text);
+                success?.Invoke(market);
             },
             (errorMsg) =>
             {
                 error?.Invoke();
             });
-        }
-
-        [Serializable]
-        public class MarketItem
-        {
-            public int id;
-            public string name;
-            public string backgroundUrl;
-            public string bannerUrl;
-            public string dateStart;
-            public string dateEnd;
-            public string createdAt;
-            public string updatedAt;
         }
 
         [Serializable]
@@ -190,6 +165,19 @@ namespace Overlewd
             public string discountStart;
             public string discountEnd;
             public string sortPriority;
+        }
+
+        [Serializable]
+        public class MarketItem
+        {
+            public int id;
+            public string name;
+            public string description;
+            public string bannerImage;
+            public string createdAt;
+            public string updatedAt;
+            public List<MarketProductItem> tradable;
+            public List<int> currencies;
         }
 
         // /currencies
@@ -290,12 +278,29 @@ namespace Overlewd
         }
 
         [Serializable]
+        public class EventStageDialogInfo
+        {
+            public int id;
+            public string title;
+        }
+
+        [Serializable]
+        public class EventStageBattleInfo
+        {
+            public int id;
+            public string title;
+            public int? gachaId;
+        }
+
+        [Serializable]
         public class EventStageItem
         {
             public int id;
+            public string title;
             public string type;
-            public int? dialogId;
             public List<int> nextStages;
+            public EventStageDialogInfo dialog;
+            public EventStageBattleInfo battle;
         }
 
         [Serializable]
@@ -317,10 +322,11 @@ namespace Overlewd
             public List<EventStageItem> stages;
         }
 
-        // /quests
-        public static IEnumerator quests(Action<List<QuestItem>> success, Action<string> error = null)
+        // /events/{id}/quests
+        public static IEnumerator quests(int eventId, Action<List<QuestItem>> success, Action<string> error = null)
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/quests", tokens.accessToken, (downloadHandler) =>
+            var url = String.Format("https://overlude-api.herokuapp.com/events/{0}/quests", eventId);
+            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
             {
                 var quests = JsonConvert.DeserializeObject<List<QuestItem>>(downloadHandler.text);
                 success?.Invoke(quests);
@@ -335,7 +341,10 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public string type;
             public string description;
+            public int goalCount;
+            public string reward;
             public string createdAt;
             public string updatedAt;
         }
@@ -395,6 +404,7 @@ namespace Overlewd
         public class Dialog
         {
             public int id;
+            public string title;
             public List<DialogReplica> replicas;
         }
 

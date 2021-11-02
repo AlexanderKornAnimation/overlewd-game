@@ -31,6 +31,11 @@ namespace Overlewd
 
             }
 
+            private void Customize()
+            {
+                title.text = marketData.name;
+            }
+
             private void ButtonClick()
             {
                 GameGlobalStates.eventShop_MarketData = marketData;

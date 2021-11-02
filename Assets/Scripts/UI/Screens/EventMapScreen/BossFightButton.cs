@@ -13,6 +13,7 @@ namespace Overlewd
 
             private Button button;
             private Transform fightDone;
+            private Text title;
 
             void Start()
             {
@@ -22,11 +23,19 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
 
                 fightDone = button.transform.Find("FightDone");
+                title = button.transform.Find("Title").GetComponent<Text>();
+
+                Customize();
             }
 
             void Update()
             {
 
+            }
+
+            private void Customize()
+            {
+                title.text = eventStageData.title;
             }
 
             private void ButtonClick()
