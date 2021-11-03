@@ -3,44 +3,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using UnityEngine.Networking;
 
 namespace Overlewd
 {
     public static class AdminBRO
     {
-        // auth/login; auth/refresh
-        public static IEnumerator auth_login(Action success, Action error = null)
+        private static bool RequestCheckError(UnityWebRequest request)
         {
-            var postData = new WWWForm();
-            postData.AddField("deviceId", GetDeviceId());
-            yield return NetworkHelper.Post("https://overlude-api.herokuapp.com/auth/login", postData, downloadHandler =>
+            if (request.result != UnityWebRequest.Result.ProtocolError &&
+                request.result != UnityWebRequest.Result.ConnectionError)
             {
-                tokens = JsonConvert.DeserializeObject<Tokens>(downloadHandler.text);
-                success?.Invoke();
-            },
-            (msg) =>
-            {
-                error?.Invoke();
-            });
-        }
-
-        public static IEnumerator auth_refresh(Action success, Action error = null)
-        {
-            var postData = new WWWForm();
-            yield return NetworkHelper.Post("https://overlude-api.herokuapp.com/auth/refresh", postData, downloadHandler =>
-            {
-                tokens = JsonConvert.DeserializeObject<Tokens>(downloadHandler.text);
-                success?.Invoke();
-            },
-            (msg) =>
-            {
-                error?.Invoke();
-            });
+                return false;
+            }
+            return true;
         }
 
         public static string GetDeviceId()
         {
             return SystemInfo.deviceUniqueIdentifier;
+        }
+
+        // auth/login; auth/refresh
+        public static async Task<Tokens> authLoginAsync()
+        {
+            var postData = new WWWForm();
+            postData.AddField("deviceId", GetDeviceId());
+            using (var request = await NetworkHelper.PostAsync("https://overlude-api.herokuapp.com/auth/login", postData))
+            {
+                if (!RequestCheckError(request))
+                {
+                    tokens = JsonConvert.DeserializeObject<Tokens>(request.downloadHandler.text);
+                    return tokens;
+                }
+                return null;
+            }
+        }
+
+        public static async Task<Tokens> authRefreshAsync()
+        {
+            var postData = new WWWForm();
+            using (var request = await NetworkHelper.PostAsync("https://overlude-api.herokuapp.com/auth/refresh", postData))
+            {
+                if (!RequestCheckError(request))
+                {
+                    tokens = JsonConvert.DeserializeObject<Tokens>(request.downloadHandler.text);
+                    return tokens;
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -53,32 +65,30 @@ namespace Overlewd
         public static Tokens tokens;
 
         // GET /me; POST /me
-        public static IEnumerator me(Action<PlayerInfo> success, Action error = null)
+        public static async Task<PlayerInfo> meAsync()
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/me", tokens.accessToken, downloadHandler =>
+            using (var request = await NetworkHelper.GetAsync("https://overlude-api.herokuapp.com/me", tokens.accessToken))
             {
-                var playerInfo = JsonConvert.DeserializeObject<PlayerInfo>(downloadHandler.text);
-                success?.Invoke(playerInfo);
-            },
-            (msg) =>
-            {
-                error?.Invoke();
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
+                }
+                return null;   
+            }
         }
 
-        public static IEnumerator me(string name, Action<PlayerInfo> success, Action error = null)
+        public static async Task<PlayerInfo> meAsync(string name)
         {
             var formMe = new WWWForm();
             formMe.AddField("name", name);
-            yield return NetworkHelper.PostWithToken("https://overlude-api.herokuapp.com/me", formMe, tokens.accessToken, downloadHandler =>
+            using (var request = await NetworkHelper.PostAsync("https://overlude-api.herokuapp.com/me", formMe))
             {
-                var playerInfo = JsonConvert.DeserializeObject<PlayerInfo>(downloadHandler.text);
-                success?.Invoke(playerInfo);
-            },
-            (msg) =>
-            {
-                error?.Invoke();
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -128,18 +138,17 @@ namespace Overlewd
         }
 
         // /markets/{id}
-        public static IEnumerator markets(int id, Action<MarketItem> success, Action error = null)
+        public static async Task<MarketItem> marketsAsync(int id)
         {
             var url = String.Format("https://overlude-api.herokuapp.com/markets/{0}", id);
-            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) => 
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
-                var market = JsonConvert.DeserializeObject<MarketItem>(downloadHandler.text);
-                success?.Invoke(market);
-            },
-            (errorMsg) =>
-            {
-                error?.Invoke();
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<MarketItem>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -181,17 +190,16 @@ namespace Overlewd
         }
 
         // /currencies
-        public static IEnumerator currencies(Action<List<CurrencyItem>> success, Action error = null)
+        public static async Task<List<CurrencyItem>> currenciesAsync()
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/currencies", tokens.accessToken, (downloadHandler) =>
+            using (var request = await NetworkHelper.GetAsync("https://overlude-api.herokuapp.com/currencies", tokens.accessToken))
             {
-                var currencies = JsonConvert.DeserializeObject<List<CurrencyItem>>(downloadHandler.text);
-                success?.Invoke(currencies);
-            },
-            (errorMsg) =>
-            {
-                error?.Invoke();
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -205,17 +213,16 @@ namespace Overlewd
         }
 
         // /resources
-        public static IEnumerator resources(Action<List<NetworkResource>> success, Action<string> error = null)
+        public static async Task<List<NetworkResource>> resourcesAsync()
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/resources", tokens.accessToken, downloadHandler =>
+            using (var request = await NetworkHelper.GetAsync("https://overlude-api.herokuapp.com/resources", tokens.accessToken))
             {
-                var resources = JsonConvert.DeserializeObject<ResourcesMetaResponse>(downloadHandler.text);
-                success?.Invoke(resources.items);
-            },
-            (msg) =>
-            {
-                error?.Invoke(msg);
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -236,18 +243,18 @@ namespace Overlewd
         }
 
         // /tradable/{id}/buy
-        public static IEnumerator tradable_buy(int tradable_id, Action<TradableBuyStatus> success, Action<string> error = null)
+        public static async Task<TradableBuyStatus> tradableBuyAsync(int tradable_id)
         {
             var form = new WWWForm();
-            yield return NetworkHelper.PostWithToken(String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id), form, tokens.accessToken, downloadHandler =>
+            var url = String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id);
+            using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
             {
-                var status = JsonConvert.DeserializeObject<TradableBuyStatus>(downloadHandler.text);
-                success?.Invoke(status);
-            },
-            (msg) =>
-            {
-                error?.Invoke(msg);
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -257,16 +264,16 @@ namespace Overlewd
         }
 
         // /events
-        public static IEnumerator events(Action<List<EventItem>> success, Action<string> error = null)
+        public static async Task<List<EventItem>> eventsAsync()
         {
-            yield return NetworkHelper.GetWithToken("https://overlude-api.herokuapp.com/events", tokens.accessToken, (downloadHandler) =>
+            using (var request = await NetworkHelper.GetAsync("https://overlude-api.herokuapp.com/events", tokens.accessToken))
             {
-                var events = JsonConvert.DeserializeObject<List<EventItem>>(downloadHandler.text);
-                success?.Invoke(events);
-            },
-            (errorMsg) => {
-                error?.Invoke(errorMsg);
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<List<EventItem>>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         public class EventStageType
@@ -323,17 +330,17 @@ namespace Overlewd
         }
 
         // /events/{id}/quests
-        public static IEnumerator quests(int eventId, Action<List<QuestItem>> success, Action<string> error = null)
+        public static async Task<List<QuestItem>> questsAsync(int eventId)
         {
             var url = String.Format("https://overlude-api.herokuapp.com/events/{0}/quests", eventId);
-            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
-                var quests = JsonConvert.DeserializeObject<List<QuestItem>>(downloadHandler.text);
-                success?.Invoke(quests);
-            },
-            (errorMsg) => {
-                error?.Invoke(errorMsg);
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<List<QuestItem>>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         [Serializable]
@@ -350,17 +357,17 @@ namespace Overlewd
         }
 
         // /i18n
-        public static IEnumerator i18n(string locale, Action<List<LocalizationItem>> success, Action<string> error = null)
+        public static async Task<List<LocalizationItem>> localizationAsync(string locale)
         {
             var url = String.Format("https://overlude-api.herokuapp.com/i18n?locale={0}", locale);
-            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
-                var dictionary = JsonConvert.DeserializeObject<List<LocalizationItem>>(downloadHandler.text);
-                success?.Invoke(dictionary);
-            },
-            (errorMsg) => {
-                error?.Invoke(errorMsg);
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<List<LocalizationItem>>(request.downloadHandler.text);
+                }
+                return null;                
+            }
         }
 
         [Serializable]
@@ -377,17 +384,17 @@ namespace Overlewd
         }
 
         // /dialog/{id}
-        public static IEnumerator dialog(int id, Action<Dialog> success, Action<string> error = null)
+        public static async Task<Dialog> dialogAsync(int id)
         {
             var url = String.Format("https://overlude-api.herokuapp.com/dialog/{0}", id);
-            yield return NetworkHelper.GetWithToken(url, tokens.accessToken, (downloadHandler) =>
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
-                var dialog = JsonConvert.DeserializeObject<Dialog>(downloadHandler.text);
-                success?.Invoke(dialog);
-            },
-            (errorMsg) => {
-                error?.Invoke(errorMsg);
-            });
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<Dialog>(request.downloadHandler.text);
+                }
+                return null;
+            }
         }
 
         [Serializable]

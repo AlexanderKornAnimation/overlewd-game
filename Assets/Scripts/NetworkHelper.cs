@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +11,24 @@ namespace Overlewd
 {
     public static class NetworkHelper
     {
+        private static async Task WaitRequestDoneAsync(UnityWebRequest request)
+        {
+            while (!request.isDone)
+            {
+                await Task.Delay(10);
+            }
+        }
+
+        private static bool RequestCheckError(UnityWebRequest request)
+        {
+            if (request.result != UnityWebRequest.Result.ProtocolError &&
+                request.result != UnityWebRequest.Result.ConnectionError)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static bool HasNetworkConection()
         {
             return Application.internetReachability != NetworkReachability.NotReachable;
@@ -23,154 +42,80 @@ namespace Overlewd
             return Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
         }
 
-        private static bool RequestCheckError(UnityWebRequest request)
+        public static async Task<UnityWebRequest> GetAsync(string url, string token = null)
         {
-            if (request.result != UnityWebRequest.Result.ProtocolError &&
-                request.result != UnityWebRequest.Result.ConnectionError)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public static IEnumerator Get(string url, Action<DownloadHandler> successResponse, Action<string> errorResponse = null)
-        {
-            using (var request = UnityWebRequest.Get(url))
-            {
-                yield return request.SendWebRequest();
-
-                if (!RequestCheckError(request))
-                {
-                    successResponse?.Invoke(request.downloadHandler);
-                }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
-            }
-        }
-
-        public static IEnumerator GetWithToken(string url, string token, Action<DownloadHandler> successResponse, Action<string> errorResponse = null)
-        {
-            using (var request = UnityWebRequest.Get(url))
+            var request = UnityWebRequest.Get(url);
+            if (token != null)
             {
                 request.SetRequestHeader("Authorization", "Bearer " + token);
-
-                yield return request.SendWebRequest();
-
-                if (!RequestCheckError(request))
-                {
-                    successResponse?.Invoke(request.downloadHandler);
-                }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
             }
+            request.SendWebRequest();
+
+            await WaitRequestDoneAsync(request);
+
+            return request;
         }
 
-        public static IEnumerator Post(string url, WWWForm form, Action<DownloadHandler> successResponse, Action<string> errorResponse = null)
+        public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, string token = null)
         {
-            using (var request = UnityWebRequest.Post(url, form))
-            {
-                yield return request.SendWebRequest();
-
-                if (!RequestCheckError(request))
-                {
-                    successResponse?.Invoke(request.downloadHandler);
-                }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
-            }
-        }
-
-        public static IEnumerator PostWithToken(string url, WWWForm form, string token, Action<DownloadHandler> successResponse,
-            Action<string> errorResponse = null)
-        {
-            using (var request = UnityWebRequest.Post(url, form))
+            var request = UnityWebRequest.Post(url, form);
+            if (token != null)
             {
                 request.SetRequestHeader("Authorization", "Bearer " + token);
-
-                yield return request.SendWebRequest();
-
-                if (!RequestCheckError(request))
-                {
-                    successResponse?.Invoke(request.downloadHandler);
-                }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
             }
+            request.SendWebRequest();
+
+            await WaitRequestDoneAsync(request);
+
+            return request;
         }
 
-        public static IEnumerator LoadAudioFromServer(string url, AudioType audioType, Action<AudioClip, byte[]> successResponse, Action<string> errorResponse = null)
+        public static async Task<AudioClip> LoadAudioClipAsync(string url, AudioType audioType)
         {
             using (var request = UnityWebRequestMultimedia.GetAudioClip(url, audioType))
             {
-                yield return request.SendWebRequest();
+                request.SendWebRequest();
+
+                await WaitRequestDoneAsync(request);
 
                 if (!RequestCheckError(request))
                 {
-                    successResponse?.Invoke(DownloadHandlerAudioClip.GetContent(request), request.downloadHandler.data);
+                    return DownloadHandlerAudioClip.GetContent(request);
                 }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
+                return null;
             }
         }
 
-        public static IEnumerator LoadTextureFromServer(string url, Action<Texture2D, byte[]> successResponse, Action<string> errorResponse = null)
+        public static async Task<Texture2D> LoadTexture2DAsync(string url)
         {
             using (var request = UnityWebRequestTexture.GetTexture(url))
             {
-                yield return request.SendWebRequest();
+                request.SendWebRequest();
+
+                await WaitRequestDoneAsync(request);
 
                 if (!RequestCheckError(request))
                 {
-                    successResponse?.Invoke(DownloadHandlerTexture.GetContent(request), request.downloadHandler.data);
+                    return DownloadHandlerTexture.GetContent(request);
                 }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
+                return null;
             }
         }
 
-        public static IEnumerator LoadAssetBundleFromServer(string url, Action<AssetBundle, byte[]> successResponse, Action<string> errorResponse = null)
+        public static async Task<AssetBundle> LoadAssetBundleAsync(string url)
         {
             using (var request = UnityWebRequestAssetBundle.GetAssetBundle(url))
             {
-                yield return request.SendWebRequest();
+                request.SendWebRequest();
+
+                await WaitRequestDoneAsync(request);
 
                 if (!RequestCheckError(request))
                 {
-                    successResponse?.Invoke(DownloadHandlerAssetBundle.GetContent(request), request.downloadHandler.data);
+                    return DownloadHandlerAssetBundle.GetContent(request);
                 }
-                else
-                {
-                    var errorMsg = String.Format("error request [{0}, {1}]", url, request.error);
-                    Debug.LogErrorFormat(errorMsg);
-                    errorResponse?.Invoke(errorMsg);
-                }
+                return null;
             }
         }
     }
-
 }

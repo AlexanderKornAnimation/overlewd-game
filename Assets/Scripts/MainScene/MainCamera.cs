@@ -8,7 +8,7 @@ namespace Overlewd
 {
     public class MainCamera : MonoBehaviour
     {
-        void Start()
+        async void Start()
         {
             UIManager.Initialize();
 
@@ -16,10 +16,8 @@ namespace Overlewd
 
             if (NetworkHelper.HasNetworkConection())
             {
-                StartCoroutine(AdminBRO.auth_login(() =>
-                {
-                    UIManager.ShowScreen<LoadingScreen>();
-                }));
+                await AdminBRO.authLoginAsync();
+                UIManager.ShowScreen<LoadingScreen>();
             }
             else
             {

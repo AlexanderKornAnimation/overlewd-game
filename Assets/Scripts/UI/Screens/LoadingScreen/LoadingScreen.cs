@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -10,35 +11,15 @@ namespace Overlewd
         private string loadingLabel;
         private Texture2D screenTexture;
 
-        private bool eventsRouteEnd;
-        private int runningRoutesCount;
-        private float waitTime = 0.1f;
-
         void Awake()
         {
             screenTexture = Resources.Load<Texture2D>("Ulvi");
         }
 
-        private IEnumerator WaitAllRoutes()
+        private async Task LoadResourcesAsync()
         {
-            while (runningRoutesCount > 0)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            UIManager.ShowScreen<CastleScreen>();
-        }
-
-        private IEnumerator LoadResources()
-        {
-            while (runningRoutesCount > 0)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount++;
-
-            StartCoroutine(AdminBRO.resources(serverResourcesMeta =>
+            var serverResourcesMeta = await AdminBRO.resourcesAsync();
+            if (serverResourcesMeta != null)
             {
                 if (!ResourceManager.HasFreeSpaceForNewResources(serverResourcesMeta))
                 {
@@ -49,35 +30,22 @@ namespace Overlewd
                     ResourceManager.SaveLocalResourcesMeta(serverResourcesMeta);
                     ResourceManager.runtimeResourcesMeta = serverResourcesMeta;
 
-                    StartCoroutine(ResourceManager.ActualizeResources(
-                        serverResourcesMeta,
+                    await ResourceManager.ActualizeResourcesAsync(serverResourcesMeta,
                         (resourceItemMeta) =>
                         {
                             loadingLabel = "Download: " + resourceItemMeta.url;
-                        },
-                        () =>
-                        {
-                            runningRoutesCount--;
-                        }
-                    ));
+                        });
                 }
-            },
-            (errorMsg) =>
+            }
+            else
             {
-                UIManager.ShowDialogBox("Server error", errorMsg, () => Game.Quit());
-            }));
+                UIManager.ShowDialogBox("Server error", "No load resources", () => Game.Quit());
+            }
         }
 
-        private IEnumerator LoadDialogs()
+        private async Task LoadDialogsAsync()
         {
-            while (!eventsRouteEnd)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount++;
-
-            var dialogRoutes = 0;
+            var dialogTasks = new List<Task<AdminBRO.Dialog>>();
             var loadDialogsId = new List<int>();
             foreach (var eventItem in GameData.events)
             {
@@ -87,70 +55,52 @@ namespace Overlewd
                     {
                         if (!loadDialogsId.Exists(item => item == stage.dialog.id))
                         {
-                            dialogRoutes++;
                             loadDialogsId.Add(stage.dialog.id);
-                            StartCoroutine(AdminBRO.dialog(stage.dialog.id, (dialog) =>
-                            {
-                                GameData.dialogs.Add(dialog);
-                                dialogRoutes--;
-                            }));
+                            dialogTasks.Add(AdminBRO.dialogAsync(stage.dialog.id));
                         }
                     }
                 }
             }
 
-            while (dialogRoutes > 0)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
+            await Task.WhenAll(dialogTasks);
 
-            runningRoutesCount--;
+            await Task.Run(() =>
+            {
+                foreach (var dialog in dialogTasks)
+                {
+                    GameData.dialogs.Add(dialog.Result);
+                }
+            });
         }
 
-        private IEnumerator LoadQuests()
+        private async Task LoadQuestsAsync()
         {
-            while (!eventsRouteEnd)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount++;
-
-            var questsRoutes = 0;
+            var questsTasks = new List<Task<List<AdminBRO.QuestItem>>>();
             foreach (var eventItem in GameData.events)
             {
-                questsRoutes++;
-                StartCoroutine(AdminBRO.quests(eventItem.id, (quests) =>
+                questsTasks.Add(AdminBRO.questsAsync(eventItem.id));
+            }
+
+            await Task.WhenAll(questsTasks);
+
+            await Task.Run(() =>
+            {
+                foreach (var quests in questsTasks)
                 {
-                    foreach (var quest in quests)
+                    foreach (var quest in quests.Result)
                     {
                         if (!GameData.quests.Exists(q => q.id == quest.id))
                         {
                             GameData.quests.Add(quest);
                         }
                     }
-                    questsRoutes--;
-                }));
-            }
-
-            while (questsRoutes > 0)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount--;
+                }
+            });
         }
 
-        private IEnumerator LoadMarkets()
+        private async Task LoadMarketsAsync()
         {
-            while (!eventsRouteEnd)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            runningRoutesCount++;
-
-            var marketRoutes = 0;
+            var marketTasks = new List<Task<AdminBRO.MarketItem>>();
             var loadMarketsId = new List<int>();
             foreach (var eventItem in GameData.events)
             {
@@ -158,74 +108,49 @@ namespace Overlewd
                 {
                     if (!loadMarketsId.Exists(m_id => m_id == marketId))
                     {
-                        marketRoutes++;
                         loadMarketsId.Add(marketId);
-                        StartCoroutine(AdminBRO.markets(marketId, (market) =>
-                        {
-                            GameData.markets.Add(market);
-                            marketRoutes--;
-                        }));
+                        marketTasks.Add(AdminBRO.marketsAsync(marketId));
                     }
                 }
             }
 
-            while (marketRoutes > 0)
-            {
-                yield return new WaitForSeconds(waitTime);
-            }
+            await Task.WhenAll(marketTasks);
 
-            runningRoutesCount--;
+            await Task.Run(() => 
+            {
+                foreach (var task in marketTasks)
+                {
+                    GameData.markets.Add(task.Result);
+                }
+            });
         }
 
-        void Start()
+        async void Start()
         {
-            runningRoutesCount++;
-            StartCoroutine(AdminBRO.me(e =>
-            {
-                GameData.playerInfo = e;
+            var tasks = new List<Task>();
 
-                /*StartCoroutine(AdminBRO.me("NewName", e =>
-                {
+            var taskMe = AdminBRO.meAsync();
+            tasks.Add(taskMe);
 
-                }));*/
+            var taskLocale = AdminBRO.localizationAsync("en");
+            tasks.Add(taskLocale);
 
-                runningRoutesCount--;
-            }));
+            var taskCurrencies = AdminBRO.currenciesAsync();
+            tasks.Add(taskCurrencies);
 
-            runningRoutesCount++;
-            StartCoroutine(AdminBRO.i18n("en", (dict) =>
-            {
-                var d = dict;
+            GameData.events = await AdminBRO.eventsAsync();
 
-                runningRoutesCount--;
-            }));
+            tasks.Add(LoadMarketsAsync());
+            tasks.Add(LoadQuestsAsync());
+            tasks.Add(LoadDialogsAsync());
+            tasks.Add(LoadResourcesAsync());
 
-            runningRoutesCount++;
-            StartCoroutine(AdminBRO.events((events) =>
-            {
-                GameData.events = events;
+            await Task.WhenAll(tasks);
 
-                eventsRouteEnd = true;
-                runningRoutesCount--;
-            }));
+            GameData.playerInfo = taskMe.Result;
+            GameData.currenies = taskCurrencies.Result;
 
-            runningRoutesCount++;
-            StartCoroutine(AdminBRO.currencies((currencies) => 
-            {
-                GameData.currenies = currencies;
-
-                runningRoutesCount--;
-            }));
-
-            StartCoroutine(LoadMarkets());
-
-            StartCoroutine(LoadQuests());
-
-            StartCoroutine(LoadDialogs());
-
-            StartCoroutine(LoadResources());
-
-            StartCoroutine(WaitAllRoutes());
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         void OnGUI()

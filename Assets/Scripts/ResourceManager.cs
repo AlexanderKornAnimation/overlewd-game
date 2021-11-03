@@ -19,7 +19,7 @@ namespace Overlewd
 
         public static string GetRootPath()
         {
-            return Caching.currentCacheForWriting.path;
+            return Caching.currentCacheForWriting.path; ;
         }
 
         public static string GetRootFilePath(string fileName)
@@ -361,7 +361,7 @@ namespace Overlewd
             return (GetSpaceFreeBytes() + deleteSize - downloadSize) > 0;
         }
 
-        public static IEnumerator ActualizeResources(List<AdminBRO.NetworkResource> resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem, Action done)
+        public static async Task ActualizeResourcesAsync(List<AdminBRO.NetworkResource> resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem)
         {
             var existingFiles = GetResourcesFileNames();
 
@@ -372,7 +372,6 @@ namespace Overlewd
                 {
                     Delete(GetResourcesFilePath(fileName));
                 }
-                yield return fileName;
             }
 
             //DownloadMissingResources
@@ -381,14 +380,17 @@ namespace Overlewd
                 if (!existingFiles.Exists(item => item == resourceMeta.hash))
                 {
                     downloadItem?.Invoke(resourceMeta);
-                    yield return NetworkHelper.Get(resourceMeta.url, downloadHandler =>
+                    using (var request = await NetworkHelper.GetAsync(resourceMeta.url))
                     {
-                        WriteBinary(GetResourcesFilePath(resourceMeta.hash), downloadHandler.data);
-                    });
+                        var fileData = request.downloadHandler.data;
+                        var filePath = GetResourcesFilePath(resourceMeta.hash);
+                        await Task.Run(() => 
+                        {
+                            WriteBinary(filePath, fileData);
+                        });
+                    }
                 }
             }
-
-            done?.Invoke();
         }
     }
 
