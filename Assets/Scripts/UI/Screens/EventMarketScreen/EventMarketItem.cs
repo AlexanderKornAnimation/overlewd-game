@@ -12,6 +12,7 @@ namespace Overlewd
             public AdminBRO.MarketProductItem marketProductData { get; set; }
 
             private Image girlImage;
+            private Image itemBack;
             private Image itemImage;
             private Text description;
 
@@ -31,7 +32,8 @@ namespace Overlewd
                 var canvas = transform.Find("Canvas");
 
                 girlImage = canvas.Find("GirlImage").GetComponent<Image>();
-                itemImage = canvas.Find("ItemImage").GetComponent<Image>();
+                itemBack = canvas.Find("Item").Find("NormalRare").GetComponent<Image>();
+                itemImage = canvas.Find("Item").Find("Icon").GetComponent<Image>();
                 description = canvas.Find("Description").GetComponent<Text>();
 
                 buyButton = canvas.Find("Buy").GetComponent<Button>();
