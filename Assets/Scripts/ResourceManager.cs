@@ -17,6 +17,33 @@ namespace Overlewd
         private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
         private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
 
+        private static async Task WaitRequestDoneAsync(UnityWebRequest request)
+        {
+            while (!request.isDone)
+            {
+                await Task.Delay(5);
+            }
+        }
+
+        private static async Task WaitBundleRequestDoneAsync(AssetBundleRequest request)
+        {
+            while (!request.isDone)
+            {
+                await Task.Delay(5);
+            }
+        }
+
+        private static Sprite TextureToSprite(Texture2D texture)
+        {
+            if (texture != null)
+            {
+                return Sprite.Create(texture,
+                    new Rect(0.0f, 0.0f, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
+            }
+            return null;
+        }
+
         public static string GetRootPath()
         {
             return Caching.currentCacheForWriting.path; ;
@@ -118,54 +145,57 @@ namespace Overlewd
             return fileInfo.Length;
         }
 
-        /*
-        private static AssetBundle LoadAssetBundle(string fileName)
-        {
-            var filePath = Path.Combine(GetResourcesPath(), fileName);
-            return AssetBundle.LoadFromFile(filePath);
-        }*/
-
         public static AdminBRO.NetworkResource GetResourceMetaById(string id)
         {
             return runtimeResourcesMeta.Find(item => item.id == id);
         }
 
-        public static IEnumerator LoadTextureByFileName(string fileName, Action<Texture2D> doLoad)
+        public static async Task<Texture2D> LoadTextureAsync(string fileName)
         {
             if (loadTextures.ContainsKey(fileName))
             {
-                doLoad?.Invoke(loadTextures[fileName]);
-                yield break;
+                return loadTextures[fileName];
             }
 
             var filePath = "file://" + GetResourcesFilePath(fileName);
             using (var request = UnityWebRequestTexture.GetTexture(filePath))
             {
-                yield return request.SendWebRequest();
+                request.SendWebRequest();
+
+                await WaitRequestDoneAsync(request);
+
+                if (loadTextures.ContainsKey(fileName))
+                {
+                    return loadTextures[fileName];
+                }
+
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    doLoad?.Invoke(null);
-                    yield break;
+                    return null;
                 }
+
                 var texture = DownloadHandlerTexture.GetContent(request);
                 loadTextures.Add(fileName, texture);
-                doLoad?.Invoke(texture);
+                return texture;
             }
         }
 
-        public static IEnumerator LoadTextureById(string id, Action<Texture2D> doLoad)
+        public static async Task<Texture2D> LoadTextureByIdAsync(string id)
         {
             var resourceMeta = GetResourceMetaById(id);
             if (resourceMeta == null)
             {
-                doLoad?.Invoke(null);
-                yield break;
+                return null;
             }
-
-            yield return LoadTextureByFileName(resourceMeta.hash, doLoad);
+            return await LoadTextureAsync(resourceMeta.hash);
         }
 
-        public static Texture2D LoadTextureByFileName(string fileName)
+        public static async Task<Sprite> LoadSpriteByIdAsync(string id)
+        {
+            return TextureToSprite(await LoadTextureByIdAsync(id));
+        }
+
+        public static Texture2D LoadTexture(string fileName)
         {
             if (loadTextures.ContainsKey(fileName))
             {
@@ -186,130 +216,202 @@ namespace Overlewd
             {
                 return null;
             }
-
-            return LoadTextureByFileName(resourceMeta.hash);
+            return LoadTexture(resourceMeta.hash);
         }
 
-        public static Sprite LoadTextureAsSpriteById(string id)
+        public static Sprite LoadSpriteById(string id)
         {
-            var texture = LoadTextureById(id);
+            return TextureToSprite(LoadTextureById(id));
+        }
+
+        public static Texture2D LoadTexture(string bundleFilePath, string bundleName)
+        {
+            var textureKey = Path.Combine(bundleName, bundleFilePath);
+            if (loadTextures.ContainsKey(textureKey))
+            {
+                return loadTextures[textureKey];
+            }
+
+            AssetBundle assetBundle = LoadAssetBundle(bundleName);
+
+            if (assetBundle == null)
+            {
+                return null;
+            }
+
+            var texture = assetBundle.LoadAsset<Texture2D>(bundleFilePath);
+
             if (texture == null)
             {
                 return null;
             }
-            var sprite = Sprite.Create(texture,
-                            new Rect(0.0f, 0.0f, texture.width, texture.height),
-                            new Vector2(0.5f, 0.5f));
-            return sprite;
+
+            loadTextures.Add(textureKey, texture);
+            return texture;
         }
 
-        public static IEnumerator LoadTexture(string fileName, string bundleName, Action<Texture2D> doLoad = null)
+        public static async Task<Texture2D> LoadTextureAsync(string bundleFilePath, string bundleName)
         {
-            var textureKey = Path.Combine(bundleName, fileName);
+            var textureKey = Path.Combine(bundleName, bundleFilePath);
             if (loadTextures.ContainsKey(textureKey))
             {
-                doLoad?.Invoke(loadTextures[textureKey]);
-                yield break;
+                return loadTextures[textureKey];
             }
 
-            AssetBundle assetBundle = null;
-            yield return LoadAssetBundle(bundleName, (_assetBundle) => { assetBundle = _assetBundle; });
+            var assetBundle = await LoadAssetBundleAsync(bundleName);
 
             if (assetBundle == null)
             {
-                doLoad?.Invoke(null);
-                yield break;
+                return null;
             }
 
-            var request = assetBundle.LoadAssetAsync<Texture2D>(fileName);
-            yield return request;
+            var request = assetBundle.LoadAssetAsync<Texture2D>(bundleFilePath);
+            await WaitBundleRequestDoneAsync(request);
+
+            if (loadTextures.ContainsKey(textureKey))
+            {
+                return loadTextures[textureKey];
+            }
 
             if (request.asset == null)
             {
-                doLoad?.Invoke(null);
-                yield break;
+                return null;
             }
 
             var texture = (Texture2D)(request.asset);
             loadTextures.Add(textureKey, texture);
-            doLoad?.Invoke(texture);
+            return texture;
         }
 
-        public static IEnumerator LoadAudioClip(string fileName, AudioType audioType, Action<AudioClip> doLoad = null)
+        public static async Task<AudioClip> LoadAudioClipAsync(string fileName, AudioType audioType)
         {
             if (loadSounds.ContainsKey(fileName))
             {
-                doLoad?.Invoke(loadSounds[fileName]);
-                yield break;
+                return loadSounds[fileName];
             }
 
             var filePath = "file://" + GetResourcesFilePath(fileName);
             using (var request = UnityWebRequestMultimedia.GetAudioClip(filePath, audioType))
             {
-                yield return request.SendWebRequest();
+                request.SendWebRequest();
+
+                await WaitRequestDoneAsync(request);
+
+                if (loadSounds.ContainsKey(fileName))
+                {
+                    return loadSounds[fileName];
+                }
+
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    doLoad?.Invoke(null);
-                    yield break;
+                    return null;
                 }
+
                 var sound = DownloadHandlerAudioClip.GetContent(request);
                 loadSounds.Add(fileName, sound);
-                doLoad?.Invoke(sound);
+                return sound;
             }
         }
 
-        public static IEnumerator LoadAudioClip(string fileName, string bundleName, Action<AudioClip> doLoad = null)
+        public static AudioClip LoadAudioClip(string bundleFilePath, string bundleName)
         {
-            var soundKey = Path.Combine(bundleName, fileName);
+            var soundKey = Path.Combine(bundleName, bundleFilePath);
             if (loadSounds.ContainsKey(soundKey))
             {
-                doLoad?.Invoke(loadSounds[soundKey]);
-                yield break;
+                return loadSounds[soundKey];
             }
 
-            AssetBundle assetBundle = null;
-            yield return LoadAssetBundle(bundleName, (_assetBundle) => { assetBundle = _assetBundle; });
+            AssetBundle assetBundle = LoadAssetBundle(bundleName);
 
             if (assetBundle == null)
             {
-                doLoad?.Invoke(null);
-                yield break;
+                return null;
             }
 
-            var request = assetBundle.LoadAssetAsync<AudioClip>(fileName);
-            yield return request;
+            var sound = assetBundle.LoadAsset<AudioClip>(bundleFilePath);
+
+            if (sound == null)
+            {
+                return null;
+            }
+
+            loadSounds.Add(soundKey, sound);
+            return sound;
+        }
+
+        public static async Task<AudioClip> LoadAudioClipAsync(string bundleFilePath, string bundleName)
+        {
+            var soundKey = Path.Combine(bundleName, bundleFilePath);
+            if (loadSounds.ContainsKey(soundKey))
+            {
+                return loadSounds[soundKey];
+            }
+
+            AssetBundle assetBundle = await LoadAssetBundleAsync(bundleName);
+
+            if (assetBundle == null)
+            {
+                return null;
+            }
+
+            var request = assetBundle.LoadAssetAsync<AudioClip>(bundleFilePath);
+            await WaitBundleRequestDoneAsync(request);
+
+            if (loadSounds.ContainsKey(soundKey))
+            {
+                return loadSounds[soundKey];
+            }
 
             if (request.asset == null)
             {
-                doLoad?.Invoke(null);
-                yield break;
+                return null;
             }
 
             var sound = (AudioClip)(request.asset);
             loadSounds.Add(soundKey, sound);
-            doLoad?.Invoke(sound);
+            return sound;
         }
 
-        public static IEnumerator LoadAssetBundle(string fileName, Action<AssetBundle> doLoad = null)
+        public static AssetBundle LoadAssetBundle(string fileName)
         {
             if (loadAssetBundles.ContainsKey(fileName))
             {
-                doLoad?.Invoke(loadAssetBundles[fileName]);
-                yield break;
+                return loadAssetBundles[fileName];
+            }
+
+            var filePath = Path.Combine(GetResourcesPath(), fileName);
+            var assetBundle = AssetBundle.LoadFromFile(filePath);
+            loadAssetBundles.Add(fileName, assetBundle);
+            return assetBundle;
+        }
+
+        public static async Task<AssetBundle> LoadAssetBundleAsync(string fileName)
+        {
+            if (loadAssetBundles.ContainsKey(fileName))
+            {
+                return loadAssetBundles[fileName];
             }
 
             var filePath = "file://" + GetResourcesFilePath(fileName);
             using (var request = UnityWebRequestAssetBundle.GetAssetBundle(filePath))
             {
-                yield return request.SendWebRequest();
+                request.SendWebRequest();
+
+                await WaitRequestDoneAsync(request);
+
+                if (loadAssetBundles.ContainsKey(fileName))
+                {
+                    return loadAssetBundles[fileName];
+                }
+
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    doLoad?.Invoke(null);
-                    yield break;
+                    return null;
                 }
+
                 var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
                 loadAssetBundles.Add(fileName, assetBundle);
-                doLoad?.Invoke(assetBundle);
+                return assetBundle;
             }
         }
 

@@ -61,12 +61,12 @@ namespace Overlewd
                 buyButton.gameObject.SetActive(false);
                 girlImage.gameObject.SetActive(false);
 
-                itemImage.sprite = ResourceManager.LoadTextureAsSpriteById(marketProductData.imageUrl);
+                itemImage.sprite = ResourceManager.LoadSpriteById(marketProductData.imageUrl);
 
                 buyWithCountPrice.text = marketProductData.price[0].amount.ToString();
                 var currencyId = marketProductData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
-                buyWithCountCurrency.sprite = ResourceManager.LoadTextureAsSpriteById(currencyData.iconUrl);
+                buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
 
                 description.text = marketProductData.description;
             }
