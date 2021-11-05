@@ -9,8 +9,13 @@ namespace Overlewd
 {
     public static class UIManager
     {
+        private static Vector2 currentResolution;
+        private static float currentAspectRatio;
+
         private static GameObject uiRootCanvasGO;
+        private static CanvasScaler uiRootCanvasGO_canvasScaler;
         private static GameObject uiRootScreenLayerGO;
+        private static AspectRatioFitter uiRootScreenLayerGO_aspectRatioFitter;
 
         private static GameObject uiEventSystem;
 
@@ -28,6 +33,31 @@ namespace Overlewd
         private static GameObject currentNotificationGO;
         private static GameObject currentDialogBoxGO;
 
+        private static Vector2 SelectResolution()
+        {
+            var aspectRatio = (float)Screen.width / (float)Screen.height;
+
+            //1920:1080
+            var aspectDeltaFullHD = Mathf.Abs(1920.0f / 1080.0f - aspectRatio);
+            //2160:1080
+            var aspectDeltaWideHD = Mathf.Abs(2160.0f / 1080.0f - aspectRatio);
+
+            if (aspectDeltaFullHD < aspectDeltaWideHD)
+            {
+                return new Vector2(1920, 1080);
+            }
+            return new Vector2(2160, 1080);
+        }
+
+        public static void ChangeResolution()
+        {
+            currentResolution = SelectResolution();
+            currentAspectRatio = currentResolution.x / currentResolution.y;
+
+            uiRootCanvasGO_canvasScaler.referenceResolution = currentResolution;
+            uiRootScreenLayerGO_aspectRatioFitter.aspectRatio = currentAspectRatio;
+        }
+
         private static void ConfigureRootScreenLayer()
         {
             uiRootScreenLayerGO = new GameObject("UIRootScreenLayer");
@@ -36,12 +66,12 @@ namespace Overlewd
             uiRootScreenLayerGO_rectTransform.SetParent(uiRootCanvasGO.transform, false);
             SetStretch(uiRootScreenLayerGO_rectTransform);
 
-            //FullHD fixed aspect
-            var uiRootScreenLayerGO_aspectRatioFitter = uiRootScreenLayerGO.AddComponent<AspectRatioFitter>();
+            //resolution fixed aspect
+            uiRootScreenLayerGO_aspectRatioFitter = uiRootScreenLayerGO.AddComponent<AspectRatioFitter>();
             uiRootScreenLayerGO_aspectRatioFitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
-            uiRootScreenLayerGO_aspectRatioFitter.aspectRatio = 1.777778f;
+            uiRootScreenLayerGO_aspectRatioFitter.aspectRatio = currentAspectRatio;
 
-            //cut screen content outside FullHD 
+            //cut screen content outside
             var uiRootScreenLayerGO_rectMask2D = uiRootScreenLayerGO.AddComponent<RectMask2D>();
         }
 
@@ -67,15 +97,18 @@ namespace Overlewd
 
         public static void Initialize()
         {
+            currentResolution = SelectResolution();
+            currentAspectRatio = currentResolution.x / currentResolution.y;
+
             uiRootCanvasGO = new GameObject("UIManagerRootCanvas");
             uiRootCanvasGO.layer = 5;
             var uiRootCanvasGO_rectTransform = uiRootCanvasGO.AddComponent<RectTransform>();
             var uiRootCanvasGO_canvas = uiRootCanvasGO.AddComponent<Canvas>();
             uiRootCanvasGO_canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            var uiRootCanvasGO_canvasScaler = uiRootCanvasGO.AddComponent<CanvasScaler>();
+            uiRootCanvasGO_canvasScaler = uiRootCanvasGO.AddComponent<CanvasScaler>();
             uiRootCanvasGO_canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             uiRootCanvasGO_canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-            uiRootCanvasGO_canvasScaler.referenceResolution = new Vector2(1920, 1080);
+            uiRootCanvasGO_canvasScaler.referenceResolution = currentResolution;
             var uiRootCanvasGO_graphicRaycaster = uiRootCanvasGO.AddComponent<GraphicRaycaster>();
 
             ConfigureRootScreenLayer();

@@ -15,7 +15,9 @@ namespace Overlewd
 
             void Start()
             {
-                button = transform.GetComponent<Button>();
+                var canvas = transform.Find("Canvas");
+
+                button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
                 title = button.transform.Find("Title").GetComponent<Text>();

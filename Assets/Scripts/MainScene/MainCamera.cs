@@ -8,6 +8,10 @@ namespace Overlewd
 {
     public class MainCamera : MonoBehaviour
     {
+#if UNITY_EDITOR
+        private Vector2 resolution;
+#endif
+
         async void Start()
         {
             UIManager.Initialize();
@@ -35,9 +39,23 @@ namespace Overlewd
 
         }
 
+        void Awake()
+        {
+#if UNITY_EDITOR
+            resolution = new Vector2(Screen.width, Screen.height);
+#endif
+        }
+
         void Update()
         {
-
+#if UNITY_EDITOR
+            if (resolution.x != Screen.width || resolution.y != Screen.height)
+            {
+                resolution.x = Screen.width;
+                resolution.y = Screen.height;
+                UIManager.ChangeResolution();
+            }
+#endif
         }
     }
 
