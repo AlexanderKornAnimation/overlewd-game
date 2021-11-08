@@ -7,6 +7,9 @@ namespace Overlewd
 {
     public class QuestOverlay : BaseOverlay
     {
+        private Button backButton;
+        private Text backButtonText;
+
         private Transform questScrollView;
 
         private Transform mainQuestGrid;
@@ -36,6 +39,10 @@ namespace Overlewd
 
             var canvas = screenRectTransform.Find("Canvas");
 
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+            backButtonText = backButton.transform.Find("Text").GetComponent<Text>();
+
             questScrollView = canvas.Find("QuestScrollView");
             var questScrollView_content = questScrollView.Find("Viewport").Find("Content");
 
@@ -60,6 +67,11 @@ namespace Overlewd
         }
 
         void Update()
+        {
+
+        }
+
+        private void BackButtonClick()
         {
 
         }
