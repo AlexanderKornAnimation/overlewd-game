@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MagicGuildScreen : BaseScreen
+    public class ForgePopup : BasePopup
     {
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/ForgePopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
@@ -21,4 +21,5 @@ namespace Overlewd
 
         }
     }
+
 }

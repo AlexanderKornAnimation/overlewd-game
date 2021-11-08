@@ -7,6 +7,26 @@ namespace Overlewd
 {
     public class QuestOverlay : BaseOverlay
     {
+        private Transform questScrollView;
+
+        private Transform mainQuestGrid;
+        private Text mainQuestGridTitle;
+        private GameObject mainQuestGridMark;
+
+        private Transform matriarchQuestGrid;
+        private Text matriarchQuestGridTitle;
+        private GameObject matriarchQuestGridMark;
+
+        private Transform sideQuestGrid;
+        private Text sideQuestGridTitle;
+        private GameObject sideQuestGridMark;
+
+        private Text headlineTitle;
+        private GameObject headlineMainQuestMark;
+        private GameObject headlineSideQuestMark;
+
+        private Transform windowScrollViewContent;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestOverlay"));
@@ -14,10 +34,29 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("Back").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.HideOverlay();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
+
+            questScrollView = canvas.Find("QuestScrollView");
+            var questScrollView_content = questScrollView.Find("Viewport").Find("Content");
+
+            mainQuestGrid = questScrollView_content.Find("MainQuestGrid");
+            mainQuestGridTitle = mainQuestGrid.Find("QuestHead").Find("Title").GetComponent<Text>();
+            mainQuestGridMark = mainQuestGrid.Find("QuestHead").Find("MainQuestMark").gameObject;
+
+            matriarchQuestGrid = questScrollView_content.Find("MatriarchQuestGrid");
+            matriarchQuestGridTitle = matriarchQuestGrid.Find("QuestHead").Find("Title").GetComponent<Text>();
+            matriarchQuestGridMark = matriarchQuestGrid.Find("QuestHead").Find("SideQuestMark").gameObject;
+
+            sideQuestGrid = questScrollView_content.Find("SideQuestGrid");
+            sideQuestGridTitle = sideQuestGrid.Find("QuestHead").Find("Title").GetComponent<Text>();
+            sideQuestGridMark = sideQuestGrid.Find("QuestHead").Find("SideQuestMark").gameObject;
+
+            var headline = canvas.Find("Headline");
+            headlineTitle = headline.Find("Title").GetComponent<Text>();
+            headlineMainQuestMark = headline.Find("MainQuestMark").gameObject;
+            headlineSideQuestMark = headline.Find("SideQuestMark").gameObject;
+
+            windowScrollViewContent = canvas.Find("WindowScrollView").Find("Viewport").Find("Content");
         }
 
         void Update()
