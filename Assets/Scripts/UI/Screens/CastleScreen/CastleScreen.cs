@@ -21,7 +21,7 @@ namespace Overlewd
 
             screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<MapScreen>();
+                UIManager.ShowScreen<NewMapScreen>();
             });
 
             screenRectTransform.Find("Canvas").Find("Harem").GetComponent<Button>().onClick.AddListener(() =>

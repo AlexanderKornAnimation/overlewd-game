@@ -32,7 +32,7 @@ namespace Overlewd
             personageName = textContainer.Find("Name").GetComponent<Text>();
             text = textContainer.Find("Text").GetComponent<Text>();
 
-            skipButton = canvas.Find("Skip").GetComponent<Button>();
+            skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
 
             dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialog.id);
