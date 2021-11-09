@@ -21,7 +21,7 @@ namespace Overlewd
 
             screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<NewMapScreen>();
+                UIManager.ShowScreen<MapScreen>();
             });
 
             screenRectTransform.Find("Canvas").Find("Harem").GetComponent<Button>().onClick.AddListener(() =>
@@ -51,7 +51,7 @@ namespace Overlewd
 
             screenRectTransform.Find("Canvas").Find("MagicGuild").GetComponent<Button>().onClick.AddListener(() =>
             {
-                UIManager.ShowScreen<NewMagicGuildScreen>();
+                UIManager.ShowScreen<MagicGuildScreen>();
             });
 
             screenRectTransform.Find("Canvas").Find("ContentViewer").GetComponent<Button>().onClick.AddListener(() =>

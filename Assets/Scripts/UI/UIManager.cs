@@ -33,6 +33,11 @@ namespace Overlewd
         private static GameObject currentNotificationGO;
         private static GameObject currentDialogBoxGO;
 
+        private static OverlayMissclick overlayMissclick;
+        private static PopupMissclick popupMissclick;
+        private static SubPopupMissclick subPopupMissclick;
+        private static NotificationMissclick notificationMissclick;
+
         private static Vector2 SelectResolution()
         {
             var aspectRatio = (float)Screen.width / (float)Screen.height;
@@ -159,6 +164,20 @@ namespace Overlewd
             HideOverlay();
         }
 
+        public static PopupMissclick ShowPopupMissclick()
+        {
+            HidePopupMissclick();
+            popupMissclick = PopupMissclick.GetInstance(uiPopupLayerGO.transform);
+            popupMissclick?.Show();
+            return popupMissclick;
+        }
+
+        public static void HidePopupMissclick()
+        {
+            popupMissclick?.Hide();
+            popupMissclick = null;
+        }
+
         public static T ShowPopup<T>() where T : BasePopup
         {
             if (currentPopupGO?.GetComponent<T>() == null)
@@ -188,6 +207,20 @@ namespace Overlewd
             HideSubPopup();
         }
 
+        public static SubPopupMissclick ShowSubPopupMissclick()
+        {
+            HideSubPopupMissclick();
+            subPopupMissclick = SubPopupMissclick.GetInstance(uiSubPopupLayerGO.transform);
+            subPopupMissclick?.Show();
+            return subPopupMissclick;
+        }
+
+        public static void HideSubPopupMissclick()
+        {
+            subPopupMissclick?.Hide();
+            subPopupMissclick = null;
+        }
+
         public static T ShowSubPopup<T>() where T : BaseSubPopup
         {
             if (currentSubPopupGO?.GetComponent<T>() == null)
@@ -209,6 +242,20 @@ namespace Overlewd
         {
             currentSubPopupGO?.GetComponent<BaseSubPopup>().Hide();
             currentSubPopupGO = null;
+        }
+
+        public static OverlayMissclick ShowOverlayMissclick()
+        {
+            HideOverlayMissclick();
+            overlayMissclick = OverlayMissclick.GetInstance(uiOverlayLayerGO.transform);
+            overlayMissclick?.Show();
+            return overlayMissclick;
+        }
+
+        public static void HideOverlayMissclick()
+        {
+            overlayMissclick?.Hide();
+            overlayMissclick = null;
         }
 
         public static T ShowOverlay<T>() where T : BaseOverlay
@@ -237,6 +284,20 @@ namespace Overlewd
         public static bool ShowingOverlay<T>() where T : BaseOverlay
         {
             return (currentOverlayGO?.GetComponent<T>() != null);
+        }
+
+        public static NotificationMissclick ShowNotificationMissclick()
+        {
+            HideNotificationMissclick();
+            notificationMissclick = NotificationMissclick.GetInstance(uiNotificationLayerGO.transform);
+            notificationMissclick?.Show();
+            return notificationMissclick;
+        }
+
+        public static void HideNotificationMissclick()
+        {
+            notificationMissclick?.Hide();
+            notificationMissclick = null;
         }
 
         public static T ShowNotification<T>() where T : BaseNotification

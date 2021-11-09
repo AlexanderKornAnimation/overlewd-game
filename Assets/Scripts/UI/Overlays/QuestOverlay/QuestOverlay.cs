@@ -73,7 +73,7 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-
+            UIManager.HideOverlay();
         }
     }
 }

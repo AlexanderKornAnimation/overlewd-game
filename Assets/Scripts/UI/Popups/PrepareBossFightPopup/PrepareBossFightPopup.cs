@@ -26,7 +26,7 @@ namespace Overlewd
             battleButton = canvas.Find("BattleButton").GetComponent<Button>();
             battleButton.onClick.AddListener(BattleButtonClick);
 
-            prepareButton = canvas.Find("PrepareBattle").GetComponent<Button>();
+            prepareButton = canvas.Find("PrepareBattleButton").GetComponent<Button>();
             prepareButton.onClick.AddListener(PrepareButtonClick);
         }
 
