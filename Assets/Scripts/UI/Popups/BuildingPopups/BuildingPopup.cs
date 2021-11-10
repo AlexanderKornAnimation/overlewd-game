@@ -51,9 +51,9 @@ namespace Overlewd
             description = canvas.Find("Description").GetComponent<Text>();
 
             resourcesGrid = canvas.Find("Grid");
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < resource.Length; i++)
             {
-                resource[i] = resourcesGrid.Find("Recource" + (i + 1).ToString());
+                resource[i] = resourcesGrid.Find($"Recource{i + 1}");
 
                 notEnough[i] = resource[i].Find("NotEnough").gameObject;
                 count[i] = resource[i].Find("Count").GetComponent<Text>();

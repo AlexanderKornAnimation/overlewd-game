@@ -11,8 +11,7 @@ namespace Overlewd
         protected override void Start()
         {
             base.Start();
-            var imagePrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/CavePopup"));
-            imagePrefab.transform.SetParent(imageSpawnPoint);
+            Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/CavePopup"), imageSpawnPoint);
         }
     }
 

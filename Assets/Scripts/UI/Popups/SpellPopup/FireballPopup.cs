@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Resharper disable All
+
 namespace Overlewd
 {
-    public class ForgePopup : BuildingPopup
+    public class FireballPopup : SpellPopup
     {
         protected override void Start()
         {
             base.Start();
-            Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/ForgePopup"), imageSpawnPoint);
+            Instantiate(Resources.Load("Prefabs/UI/Popups/SpellPopup/FireballImage"), spawnPoint);
         }
-    }
 
+    }
 }

@@ -9,19 +9,22 @@ namespace Overlewd
 {
     public class SpellPopup : BasePopup
     {
-        private List<Transform> recources = new List<Transform>(4);
+        protected List<Transform> recources = new List<Transform>(4);
+        protected List<GameObject> notEnough = new List<GameObject>(4);
+        protected List<Text> count = new List<Text>(4);
+        protected List<Image> recourceIcon = new List<Image>(4);
 
-        private Transform spawnPoint;
+        protected Transform spawnPoint;
 
-        private Text spellName;
-        private Text description;
-        private Text fullPotentialDescription;
+        protected Text spellName;
+        protected Text description;
+        protected Text fullPotentialDescription;
 
-        private Button paidBuildButton;
-        private Button freeBuildButton;
-        private Button backButton;
+        protected Button paidBuildButton;
+        protected Button freeBuildButton;
+        protected Button backButton;
 
-        private void Start()
+        protected virtual void Start()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/SpellPopup/SpellPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -31,7 +34,6 @@ namespace Overlewd
             var canvas = screenRectTransform.Find("Canvas");
 
             spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
-            SpawnImage(spawnPoint, "Prefabs/UI/Popups/SpellPopup/FireballImage");
 
             spellName = canvas.Find("SpellName").GetComponent<Text>();
             description = canvas.Find("Description").GetComponent<Text>();
@@ -50,21 +52,23 @@ namespace Overlewd
 
         private void TakeRecources(Transform canvas)
         {
+            var grid = canvas.Find("Grid");
             for (int i = 1; i <= recources.Capacity; i++)
-                recources.Add(canvas.Find("Grid").Find($"Recource{i}").GetComponent<Transform>());
-        }
-        
-        private void SpawnImage(Transform parent, string path)
-        {
-            Instantiate(Resources.Load(path), parent);
+            {
+                var resource = grid.Find($"Recource{i}");
+                recources.Add(resource);
+                notEnough.Add(resource.Find("NotEnough").gameObject);
+                count.Add(resource.Find("Count").GetComponent<Text>());
+                recourceIcon.Add(resource.Find("RecourceIcon").GetComponent<Image>());
+            }
         }
 
-        private void PaidBuildButtonClick()
+        protected virtual void PaidBuildButtonClick()
         {
             UIManager.HidePopup();
         }
 
-        private void FreeBuildButtonClick()
+        protected virtual void FreeBuildButtonClick()
         {
             UIManager.HidePopup();
         }
