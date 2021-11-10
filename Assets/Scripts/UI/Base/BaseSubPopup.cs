@@ -18,13 +18,11 @@ namespace Overlewd
 
         public override void Show()
         {
-            UIManager.ShowSubPopupMissclick();
             gameObject.AddComponent<ImmediateShow>();
         }
 
         public override void Hide()
         {
-            UIManager.HideSubPopupMissclick();
             gameObject.AddComponent<ImmediateHide>();
         }
     }
