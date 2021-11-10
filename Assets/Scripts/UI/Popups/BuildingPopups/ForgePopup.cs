@@ -5,20 +5,13 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class ForgePopup : BasePopup
+    public class ForgePopup : BuildingPopup
     {
-        void Start()
+        protected override void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/ForgePopup"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-        }
-
-        void Update()
-        {
-
+            base.Start();
+            var imagePrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/ForgePopup"));
+            imagePrefab.transform.SetParent(imageSpawnPoint);
         }
     }
 

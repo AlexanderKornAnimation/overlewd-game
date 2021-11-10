@@ -5,20 +5,14 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CavePopup : BasePopup
+    public class CavePopup : BuildingPopup
     {
-        void Start()
+
+        protected override void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/CavePopup"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-        }
-
-        void Update()
-        {
-
+            base.Start();
+            var imagePrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/CavePopup"));
+            imagePrefab.transform.SetParent(imageSpawnPoint);
         }
     }
 
