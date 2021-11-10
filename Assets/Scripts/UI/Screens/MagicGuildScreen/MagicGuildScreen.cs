@@ -38,8 +38,14 @@ namespace Overlewd
             mainTitle = canvas.Find("Window").Find("MainTitle").GetComponent<Text>();
 
             backButton.onClick.AddListener(BackButtonClick);
+            activeSpell.onClick.AddListener(ActiveSpellClick);
         }
 
+        private void ActiveSpellClick()
+        {
+            UIManager.ShowPopup<SpellPopup>();
+        }        
+        
         private void BackButtonClick()
         {
             UIManager.ShowScreen<CastleScreen>();
