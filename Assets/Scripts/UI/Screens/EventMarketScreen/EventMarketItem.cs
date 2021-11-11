@@ -73,14 +73,22 @@ namespace Overlewd
                 description.text = marketProductData.description;
             }
 
-            private void BuyButtonClick()
+            private async void BuyButtonClick()
             {
-                UIManager.ShowNotification<BuyingNotification>();
+                if (GameData.CanEventMarketItemBuy(marketProductData))
+                {
+                    await GameData.BuyEventMarketItem(marketProductData);
+                    UIManager.ShowNotification<BuyingNotification>();
+                }
             }
 
-            private void BuyWithCountButtonClick()
+            private async void BuyWithCountButtonClick()
             {
-                UIManager.ShowNotification<BuyingNotification>();
+                if (GameData.CanEventMarketItemBuy(marketProductData))
+                {
+                    await GameData.BuyEventMarketItem(marketProductData);
+                    UIManager.ShowNotification<BuyingNotification>();
+                }
             }
 
             public static EventMarketItem GetInstance(Transform parent)

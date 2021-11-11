@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -8,6 +9,31 @@ namespace Overlewd
     public static class GameData
     {
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
+        public static bool CanEventMarketItemBuy(AdminBRO.MarketProductItem marketItem)
+        {
+            foreach (var priceItem in marketItem.price)
+            {
+                var walletCurrency = playerInfo.wallet.Find(item => item.currency.id == priceItem.currencyId);
+
+                if (walletCurrency == null)
+                {
+                    return false;
+                }
+
+                if (walletCurrency.amount < priceItem.amount)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static async Task BuyEventMarketItem(AdminBRO.MarketProductItem marketItem)
+        {
+            await AdminBRO.tradableBuyAsync(marketItem.id);
+            GameData.playerInfo = await AdminBRO.meAsync();
+        }
+
         public static List<AdminBRO.EventItem> events { get; set; }
         public static AdminBRO.EventItem GetEventById(int id)
         {
