@@ -35,7 +35,7 @@ namespace Overlewd
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
 
-            dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialog.id);
+            dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
 
             ShowCurrentReplica();
         }

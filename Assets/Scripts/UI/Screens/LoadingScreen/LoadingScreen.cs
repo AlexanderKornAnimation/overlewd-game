@@ -51,12 +51,12 @@ namespace Overlewd
             {
                 foreach (var stage in eventItem.stages)
                 {
-                    if (stage.dialog != null)
+                    if (stage.dialogId.HasValue)
                     {
-                        if (!loadDialogsId.Exists(item => item == stage.dialog.id))
+                        if (!loadDialogsId.Exists(item => item == stage.dialogId.Value))
                         {
-                            loadDialogsId.Add(stage.dialog.id);
-                            dialogTasks.Add(AdminBRO.dialogAsync(stage.dialog.id));
+                            loadDialogsId.Add(stage.dialogId.Value);
+                            dialogTasks.Add(AdminBRO.dialogAsync(stage.dialogId.Value));
                         }
                     }
                 }
@@ -69,6 +69,36 @@ namespace Overlewd
                 foreach (var dialog in dialogTasks)
                 {
                     GameData.dialogs.Add(dialog.Result);
+                }
+            });
+        }
+
+        private static async Task LoadBattlesAsync()
+        {
+            var battleTasks = new List<Task<AdminBRO.Battle>>();
+            var loadBattlesId = new List<int>();
+            foreach (var eventItem in GameData.events)
+            {
+                foreach (var stage in eventItem.stages)
+                {
+                    if (stage.battleId.HasValue)
+                    {
+                        if (!loadBattlesId.Exists(item => item == stage.battleId.Value))
+                        {
+                            loadBattlesId.Add(stage.battleId.Value);
+                            battleTasks.Add(AdminBRO.battleAsync(stage.battleId.Value));
+                        }
+                    }
+                }
+            }
+
+            await Task.WhenAll(battleTasks);
+
+            await Task.Run(() =>
+            {
+                foreach (var battle in battleTasks)
+                {
+                    GameData.battles.Add(battle.Result);
                 }
             });
         }
@@ -143,6 +173,7 @@ namespace Overlewd
             tasks.Add(LoadMarketsAsync());
             tasks.Add(LoadQuestsAsync());
             tasks.Add(LoadDialogsAsync());
+            tasks.Add(LoadBattlesAsync());
             tasks.Add(LoadResourcesAsync());
 
             await Task.WhenAll(tasks);

@@ -105,7 +105,7 @@ namespace Overlewd
                 if (dialogId < dialogStages.Count)
                 {
                     var eventStageData = dialogStages[dialogId];
-                    if (eventStageData.dialog != null)
+                    if (eventStageData.dialogId.HasValue)
                     {
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
                         dialogButton.eventStageData = eventStageData;
@@ -121,7 +121,7 @@ namespace Overlewd
                 if (sexId < sexStages.Count)
                 {
                     var eventStageData = sexStages[sexId];
-                    if (eventStageData.dialog != null)
+                    if (eventStageData.dialogId.HasValue)
                     {
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
                         sexButton.eventStageData = eventStageData;

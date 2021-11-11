@@ -285,29 +285,14 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class EventStageDialogInfo
-        {
-            public int id;
-            public string title;
-        }
-
-        [Serializable]
-        public class EventStageBattleInfo
-        {
-            public int id;
-            public string title;
-            public int? gachaId;
-        }
-
-        [Serializable]
         public class EventStageItem
         {
             public int id;
             public string title;
             public string type;
+            public int? dialogId;
+            public int? battleId;
             public List<int> nextStages;
-            public EventStageDialogInfo dialog;
-            public EventStageBattleInfo battle;
         }
 
         [Serializable]
@@ -403,7 +388,10 @@ namespace Overlewd
             public int id;
             public int sort;
             public string characterName;
+            public string characterPosition;
+            public string cutIn;
             public string message;
+            public string animation;
             public string sceneOverlayImage;
         }
 
@@ -415,5 +403,25 @@ namespace Overlewd
             public List<DialogReplica> replicas;
         }
 
+        // /battle/{id}
+        public static async Task<Battle> battleAsync(int id)
+        {
+            var url = String.Format("https://overlude-api.herokuapp.com/battle/{0}", id);
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonConvert.DeserializeObject<Battle>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+        [Serializable]
+        public class Battle
+        {
+            public int id;
+            public string title;
+            public int? gachaId;
+        }
     }
 }

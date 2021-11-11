@@ -34,6 +34,11 @@ namespace Overlewd
         {
             return dialogs.Find(d => d.id == id);
         }
+        public static List<AdminBRO.Battle> battles { get; set; } = new List<AdminBRO.Battle>();
+        public static AdminBRO.Battle GetBattleById(int id)
+        {
+            return battles.Find(d => d.id == id);
+        }
     }
 
 }
