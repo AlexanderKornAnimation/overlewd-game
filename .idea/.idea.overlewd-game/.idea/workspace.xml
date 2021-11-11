@@ -5,6 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.overlewd-game/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.overlewd-game/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/UI/Screens/DialogScreen/DialogScreen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/UI/Screens/DialogScreen/DialogScreen.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/UI/Screens/SexScreen/SexScreen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/UI/Screens/SexScreen/SexScreen.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Screens/DialogScreen/DialogScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Screens/DialogScreen/DialogScreen.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +17,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Image.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/Button.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/af218701fe324032b521ddd91f13662b13b600/a9/74ea5298/Color.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/af218701fe324032b521ddd91f13662b13b600/3a/37046756/GameObject.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/Screens/MapScreen/EventButton.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/Screens/MapScreen/FightButton.cs" root0="FORCE_HIGHLIGHTING" />
@@ -38,9 +41,11 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.splitter.proportion" value="0.20795107" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor &amp; Play">
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
