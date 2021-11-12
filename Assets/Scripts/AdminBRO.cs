@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 
@@ -10,6 +11,27 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
+        private static T DeserializeObject<T>(string json)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
+                {
+                    Error = delegate (object sender, ErrorEventArgs args)
+                    {
+                        Debug.LogError($"Deserealize entity \"{typeof(T).Name}\" error:  {args.ErrorContext.Error.Message}");
+                        args.ErrorContext.Handled = true;
+                    },
+                    MissingMemberHandling = MissingMemberHandling.Error,
+                });
+            }
+            catch (JsonSerializationException ex)
+            {
+                Debug.LogError($"Deserealize Error: {ex.Message}");
+                return default(T);
+            }
+        }
+
         private static bool RequestCheckError(UnityWebRequest request)
         {
             if (request.result != UnityWebRequest.Result.ProtocolError &&
@@ -34,7 +56,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    tokens = JsonConvert.DeserializeObject<Tokens>(request.downloadHandler.text);
+                    tokens = DeserializeObject<Tokens>(request.downloadHandler.text);
                     return tokens;
                 }
                 return null;
@@ -48,7 +70,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    tokens = JsonConvert.DeserializeObject<Tokens>(request.downloadHandler.text);
+                    tokens = DeserializeObject<Tokens>(request.downloadHandler.text);
                     return tokens;
                 }
                 return null;
@@ -71,7 +93,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
+                    return DeserializeObject<PlayerInfo>(request.downloadHandler.text);
                 }
                 return null;   
             }
@@ -85,7 +107,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
+                    return DeserializeObject<PlayerInfo>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -96,6 +118,7 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public string locale;
             public List<InventoryItem> inventory;
             public List<WalletItem> wallet;
         }
@@ -104,6 +127,7 @@ namespace Overlewd
         public class InventoryItem
         {
             public int id;
+            public int amount;
             public string createdAt;
             public string updatedAt;
             public TradableItem tradable;
@@ -145,7 +169,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<MarketItem>(request.downloadHandler.text);
+                    return DeserializeObject<MarketItem>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -196,7 +220,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -219,7 +243,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
+                    return DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
                 }
                 return null;
             }
@@ -251,7 +275,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
+                    return DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -270,7 +294,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<List<EventItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -306,9 +330,13 @@ namespace Overlewd
             public string dateEnd;
             public string backgroundUrl;
             public List<int> currencies;
-            public string mapBackgroundUrl;
+            public string mapBackgroundImage;
+            public string mapBannerImage;
+            public string eventListBannerImage;
+            public string bannerOverlayText;
             public List<int> markets;
             public List<int> quests;
+            public int? buyLimit;
             public string createdAt;
             public string updatedAt;
             public List<EventStageItem> stages;
@@ -322,7 +350,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<List<QuestItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<QuestItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -349,7 +377,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<List<LocalizationItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<LocalizationItem>>(request.downloadHandler.text);
                 }
                 return null;                
             }
@@ -376,7 +404,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<Dialog>(request.downloadHandler.text);
+                    return DeserializeObject<Dialog>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -411,7 +439,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonConvert.DeserializeObject<Battle>(request.downloadHandler.text);
+                    return DeserializeObject<Battle>(request.downloadHandler.text);
                 }
                 return null;
             }
