@@ -16,6 +16,7 @@ namespace Overlewd
         private Button skipButton;
         private Button autoplayButton;
         private Text autoplayStatus;
+        private Image autoplayButtonPressed;
 
         private AdminBRO.Dialog dialogData;
         private int currentReplicaId;
@@ -43,6 +44,7 @@ namespace Overlewd
 
             autoplayButton = canvas.Find("AutoplayButton").GetComponent<Button>();
             autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<Text>();
+            autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
 
             dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
@@ -52,15 +54,22 @@ namespace Overlewd
 
         private void AutoplayButtonClick()
         {
+            var defaultColor = Color.black;
+            var redColor = Color.HSVToRGB(0.9989f, 1.00000f, 0.6118f);
+            
             if (isAutoplayButtonPressed == false)
             {
                 isAutoplayButtonPressed = true;
+                autoplayButtonPressed.enabled = true;
+                autoplayStatus.color = redColor;
                 autoplayStatus.text = "ON";
                 autoplayCoroutine = StartCoroutine(Autoplay());
             }
             else
             {
                 isAutoplayButtonPressed = false;
+                autoplayButtonPressed.enabled = false;
+                autoplayStatus.color = defaultColor;
                 autoplayStatus.text = "OFF";
                 
                 if (autoplayCoroutine != null)
