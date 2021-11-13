@@ -7,18 +7,18 @@ namespace Overlewd
 {
     namespace NSQuestOverlay
     {
-        public class SideQuest : MonoBehaviour
+        public class SideQuestInfo : MonoBehaviour
         {
             private Text title;
             private Text progress;
 
-            private Image[] revardRecource = new Image[6];
+            private Image[] revardResource = new Image[6];
             private Text[] revardCount = new Text[6];
 
             private Button toQuestButton;
             private Text toQuestButtonText;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -30,8 +30,8 @@ namespace Overlewd
                 var rewardGrid = rewardWindow.Find("RewardGrid");
                 for (int i = 0; i < 6; i++)
                 {
-                    var reward = rewardGrid.Find("Reward" + i.ToString());
-                    revardRecource[i] = reward.Find("Recource").GetComponent<Image>();
+                    var reward = rewardGrid.Find($"Reward{i + 1}");
+                    revardResource[i] = reward.Find("Resource").GetComponent<Image>();
                     revardCount[i] = reward.Find("Count").GetComponent<Text>();
                 }
 
@@ -40,21 +40,16 @@ namespace Overlewd
                 toQuestButtonText = toQuestButton.transform.Find("Text").GetComponent<Text>();
             }
 
-            void Update()
-            {
-
-            }
-
             private void ToQuestButtonClick()
             {
 
             }
 
-            public static SideQuest GetInstance(Transform parent)
+            public static SideQuestInfo GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/SideQuest"), parent);
-                newItem.name = nameof(SideQuest);
-                return newItem.AddComponent<SideQuest>();
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/SideQuestInfo"), parent);
+                newItem.name = nameof(SideQuestInfo);
+                return newItem.AddComponent<SideQuestInfo>();
             }
         }
     }

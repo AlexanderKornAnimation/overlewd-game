@@ -7,46 +7,66 @@ namespace Overlewd
 {
     namespace NSQuestOverlay
     {
-        public class QuestButton : MonoBehaviour
+        public abstract class QuestButton : MonoBehaviour
         {
-            private Button blueButton;
-            private Text blueButtonText;
-            private Button darkButton;
-            private Text darkButtonText;
-            private GameObject newQuestMark;
-            private GameObject questDoneMark;
+            public QuestOverlay questOverlay { get; set; }
+            public QuestContentScrollView contentScrollView { get; set; }
 
-            void Start()
+            protected Button blueButton;
+            protected Text blueButtonText;
+            protected Image blueButtonImage;
+            protected Button darkButton;
+            protected Text darkButtonText;
+            protected Image darkButtonImage;
+            protected GameObject newQuestMark;
+            protected GameObject questDoneMark;
+
+            private Sprite blueButtonDefaultSprite;
+            private Sprite darkButtonDefaultSprite;
+
+            protected virtual void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
                 blueButton = canvas.Find("BlueButton").GetComponent<Button>();
                 blueButton.onClick.AddListener(ButtonClick);
                 blueButtonText = blueButton.transform.Find("Text").GetComponent<Text>();
+                blueButtonImage = blueButton.GetComponent<Image>();
 
                 darkButton = canvas.Find("DarkButton").GetComponent<Button>();
                 darkButton.onClick.AddListener(ButtonClick);
                 darkButtonText = darkButton.transform.Find("Text").GetComponent<Text>();
+                darkButtonImage = darkButton.GetComponent<Image>();
 
                 newQuestMark = canvas.Find("NewQuestMark").gameObject;
                 questDoneMark = canvas.Find("QuestDoneMark").gameObject;
+
+                blueButtonDefaultSprite = blueButtonImage.sprite;
+                darkButtonDefaultSprite = darkButtonImage.sprite;
             }
 
-            void Update()
+            protected virtual void ButtonClick()
             {
-
+                questOverlay.SelectQuest(this);
             }
 
-            private void ButtonClick()
+            public void Select()
             {
-
+                blueButtonImage.sprite = blueButton.spriteState.selectedSprite;
+                darkButtonImage.sprite = darkButton.spriteState.selectedSprite;
+                contentScrollView?.Show();
             }
 
-            public static QuestButton GetInstance(Transform parent)
+            public void Deselect()
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestButton"), parent);
-                newItem.name = nameof(QuestButton);
-                return newItem.AddComponent<QuestButton>();
+                blueButtonImage.sprite = blueButtonDefaultSprite;
+                darkButtonImage.sprite = darkButtonDefaultSprite;
+                contentScrollView?.Hide();
+            }
+
+            protected static GameObject LoadPrefab(Transform parent)
+            {
+                return (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestButton"), parent);
             }
         }
     }

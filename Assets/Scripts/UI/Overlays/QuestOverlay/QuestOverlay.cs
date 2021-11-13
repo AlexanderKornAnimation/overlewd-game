@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,7 +29,10 @@ namespace Overlewd
         private GameObject headlineMainQuestMark;
         private GameObject headlineSideQuestMark;
 
-        private Transform windowScrollViewContent;
+        private Transform questContentScrollViewPos;
+
+        private NSQuestOverlay.QuestButton selectedQuest;
+        private List<NSQuestOverlay.QuestButton> quests = new List<NSQuestOverlay.QuestButton>();
 
         void Start()
         {
@@ -63,12 +67,64 @@ namespace Overlewd
             headlineMainQuestMark = headline.Find("MainQuestMark").gameObject;
             headlineSideQuestMark = headline.Find("SideQuestMark").gameObject;
 
-            windowScrollViewContent = canvas.Find("WindowScrollView").Find("Viewport").Find("Content");
+            questContentScrollViewPos = canvas.Find("QuestContentScrollViewPos");
+
+            Customize();
         }
 
-        void Update()
+        private void Customize()
         {
+            AddMainQuest();
+            AddMainQuest();
 
+            AddMatriarchQuest();
+            AddMatriarchQuest();
+            AddMatriarchQuest();
+
+            AddSideQuest();
+            AddSideQuest();
+
+            if (quests.Any())
+            {
+                SelectQuest(quests.First());
+            }
+        }
+
+        private void AddMainQuest()
+        {
+            var newQuest = NSQuestOverlay.MainQuestButton.GetInstance(mainQuestGrid);
+            newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
+                GetInstance(questContentScrollViewPos);
+            newQuest.questOverlay = this;
+
+            quests.Add(newQuest);
+        }
+
+        private void AddMatriarchQuest()
+        {
+            var newQuest = NSQuestOverlay.MatriarchQuestButton.GetInstance(matriarchQuestGrid);
+            newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
+                GetInstance(questContentScrollViewPos);
+            newQuest.questOverlay = this;
+
+            quests.Add(newQuest);
+        }
+
+        private void AddSideQuest()
+        {
+            var newQuest = NSQuestOverlay.SideQuestButton.GetInstance(sideQuestGrid);
+            newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
+                GetInstance(questContentScrollViewPos);
+            newQuest.questOverlay = this;
+
+            quests.Add(newQuest);
+        }
+
+        public void SelectQuest(NSQuestOverlay.QuestButton quest)
+        {
+            selectedQuest?.Deselect();
+            selectedQuest = quest;
+            selectedQuest?.Select();
         }
 
         private void BackButtonClick()

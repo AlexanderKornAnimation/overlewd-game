@@ -7,14 +7,14 @@ namespace Overlewd
 {
     namespace NSQuestOverlay
     {
-        public class Description : MonoBehaviour
+        public class QuestDescription : MonoBehaviour
         {
             private Text topText;
             private Image girlEmotion1;
             private Text bottomText;
             private Image girlEmotion2;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -24,16 +24,11 @@ namespace Overlewd
                 girlEmotion2 = canvas.Find("GirlEmotion2").GetComponent<Image>();
             }
 
-            void Update()
+            public static QuestDescription GetInstance(Transform parent)
             {
-
-            }
-
-            public static Description GetInstance(Transform parent)
-            {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/Description"), parent);
-                newItem.name = nameof(Description);
-                return newItem.AddComponent<Description>();
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestDescription"), parent);
+                newItem.name = nameof(QuestDescription);
+                return newItem.AddComponent<QuestDescription>();
             }
         }
     }
