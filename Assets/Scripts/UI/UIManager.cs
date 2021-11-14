@@ -26,11 +26,11 @@ namespace Overlewd
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
 
-        private static GameObject currentScreenGO;
-        private static GameObject currentPopupGO;
-        private static GameObject currentSubPopupGO;
-        private static GameObject currentOverlayGO;
-        private static GameObject currentNotificationGO;
+        private static BaseScreen currentScreen;
+        private static BasePopup currentPopup;
+        private static BaseSubPopup currentSubPopup;
+        private static BaseOverlay currentOverlay;
+        private static BaseNotification currentNotification;
         private static GameObject currentDialogBoxGO;
 
         private static BaseMissclick overlayMissclick;
@@ -100,6 +100,26 @@ namespace Overlewd
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
 
+        private static T GetMissclickInstance<T>(Transform parent) where T : BaseMissclick
+        {
+            var missclickGO = new GameObject(typeof(T).Name);
+            var missclickGO_screenRectTransform = missclickGO.AddComponent<RectTransform>();
+            missclickGO_screenRectTransform.SetParent(parent, false);
+            missclickGO_screenRectTransform.SetAsFirstSibling();
+            SetStretch(missclickGO_screenRectTransform);
+            return missclickGO.AddComponent<T>();
+        }
+
+        private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen
+        {
+            var screenGO = new GameObject(typeof(T).Name);
+            screenGO.layer = 5;
+            var screenGO_rectTransform = screenGO.AddComponent<RectTransform>();
+            screenGO_rectTransform.SetParent(parent, false);
+            SetStretch(screenGO_rectTransform);
+            return screenGO.AddComponent<T>();
+        }
+
         public static void Initialize()
         {
             currentResolution = SelectResolution();
@@ -132,18 +152,24 @@ namespace Overlewd
         }
 
         //Screen Layer
+        public static T GetScreen<T>() where T : BaseScreen
+        {
+            return currentScreen as T;
+        }
+
+        public static bool HasScreen<T>() where T : BaseScreen
+        {
+            return currentScreen is T;
+        }
+
         public static T ShowScreen<T>() where T : BaseScreen
         {
-            if (currentScreenGO?.GetComponent<T>() == null)
+            if (!HasScreen<T>())
             {
                 HideScreen();
 
-                currentScreenGO = new GameObject(typeof(T).Name);
-                currentScreenGO.layer = 5;
-                var currentScreenGO_rectTransform = currentScreenGO.AddComponent<RectTransform>();
-                currentScreenGO_rectTransform.SetParent(uiScreenLayerGO.transform, false);
-                SetStretch(currentScreenGO_rectTransform);
-                currentScreenGO.AddComponent<T>().Show();
+                currentScreen = GetScreenInstance<T>(uiScreenLayerGO.transform);
+                currentScreen?.Show();
             }
             else
             {
@@ -151,14 +177,13 @@ namespace Overlewd
                 HideSubPopup();
                 HideOverlay();
             }
-
-            return currentScreenGO.GetComponent<T>();
+            return currentScreen as T;
         }
 
         public static void HideScreen()
         {
-            currentScreenGO?.GetComponent<BaseScreen>().Hide();
-            currentScreenGO = null;
+            currentScreen?.Hide();
+            currentScreen = null;
 
             HidePopup();
             HideSubPopup();
@@ -182,7 +207,7 @@ namespace Overlewd
             {
                 HidePopupMissclick();
 
-                popupMissclick = BaseMissclick.GetInstance<T>(uiPopupLayerGO.transform);
+                popupMissclick = GetMissclickInstance<T>(uiPopupLayerGO.transform);
                 popupMissclick?.Show();
             }
             return popupMissclick as T;
@@ -194,31 +219,36 @@ namespace Overlewd
             popupMissclick = null;
         }
 
+        public static T GetPopup<T>() where T : BasePopup
+        {
+            return currentPopup as T;
+        }
+
+        public static bool HasPopup<T>() where T : BasePopup
+        {
+            return currentPopup is T;
+        }
+
         public static T ShowPopup<T>() where T : BasePopup
         {
-            if (currentPopupGO?.GetComponent<T>() == null)
+            if (!HasPopup<T>())
             {
                 HidePopup();
 
-                currentPopupGO = new GameObject(typeof(T).Name);
-                currentPopupGO.layer = 5;
-                var currentPopupGO_rectTransform = currentPopupGO.AddComponent<RectTransform>();
-                currentPopupGO_rectTransform.SetParent(uiPopupLayerGO.transform, false);
-                SetStretch(currentPopupGO_rectTransform);
-                currentPopupGO.AddComponent<T>().Show();
+                currentPopup = GetScreenInstance<T>(uiPopupLayerGO.transform);
+                currentPopup?.Show();
             }
             else
             {
                 HideSubPopup();
             }
-
-            return currentPopupGO.GetComponent<T>();
+            return currentPopup as T;
         }
 
         public static void HidePopup()
         {
-            currentPopupGO?.GetComponent<BasePopup>().Hide();
-            currentPopupGO = null;
+            currentPopup?.Hide();
+            currentPopup = null;
 
             HideSubPopup();
         }
@@ -240,7 +270,7 @@ namespace Overlewd
             {
                 HideSubPopupMissclick();
 
-                subPopupMissclick = BaseMissclick.GetInstance<T>(uiSubPopupLayerGO.transform);
+                subPopupMissclick = GetMissclickInstance<T>(uiSubPopupLayerGO.transform);
                 subPopupMissclick?.Show();
             }
             return subPopupMissclick as T;
@@ -252,27 +282,32 @@ namespace Overlewd
             subPopupMissclick = null;
         }
 
+        public static T GetSubPopup<T>() where T : BaseSubPopup
+        {
+            return currentSubPopup as T;
+        }
+
+        public static bool HasSubPopup<T>() where T : BaseSubPopup
+        {
+            return currentSubPopup is T;
+        }
+
         public static T ShowSubPopup<T>() where T : BaseSubPopup
         {
-            if (currentSubPopupGO?.GetComponent<T>() == null)
+            if (!HasSubPopup<T>())
             {
                 HideSubPopup();
 
-                currentSubPopupGO = new GameObject(typeof(T).Name);
-                currentSubPopupGO.layer = 5;
-                var currentSubPopupGO_rectTransform = currentSubPopupGO.AddComponent<RectTransform>();
-                currentSubPopupGO_rectTransform.SetParent(uiSubPopupLayerGO.transform, false);
-                SetStretch(currentSubPopupGO_rectTransform);
-                currentSubPopupGO.AddComponent<T>().Show();
+                currentSubPopup = GetScreenInstance<T>(uiSubPopupLayerGO.transform);
+                currentSubPopup?.Show();
             }
-
-            return currentSubPopupGO.GetComponent<T>();
+            return currentSubPopup as T;
         }
 
         public static void HideSubPopup()
         {
-            currentSubPopupGO?.GetComponent<BaseSubPopup>().Hide();
-            currentSubPopupGO = null;
+            currentSubPopup?.Hide();
+            currentSubPopup = null;
         }
 
         //Overlay Layer
@@ -292,7 +327,7 @@ namespace Overlewd
             {
                 HideOverlayMissclick();
 
-                overlayMissclick = BaseMissclick.GetInstance<T>(uiOverlayLayerGO.transform);
+                overlayMissclick = GetMissclickInstance<T>(uiOverlayLayerGO.transform);
                 overlayMissclick?.Show();
             }
             return overlayMissclick as T;
@@ -304,32 +339,32 @@ namespace Overlewd
             overlayMissclick = null;
         }
 
+        public static T GetOverlay<T>() where T : BaseOverlay
+        {
+            return currentOverlay as T;
+        }
+
         public static bool HasOverlay<T>() where T : BaseOverlay
         {
-            return (currentOverlayGO?.GetComponent<T>() != null);
+            return currentOverlay is T;
         }
 
         public static T ShowOverlay<T>() where T : BaseOverlay
         {
-            if (currentOverlayGO?.GetComponent<T>() == null)
+            if (!HasOverlay<T>())
             {
                 HideOverlay();
 
-                currentOverlayGO = new GameObject(typeof(T).Name);
-                currentOverlayGO.layer = 5;
-                var currentOverlayGO_rectTransform = currentOverlayGO.AddComponent<RectTransform>();
-                currentOverlayGO_rectTransform.SetParent(uiOverlayLayerGO.transform, false);
-                SetStretch(currentOverlayGO_rectTransform);
-                currentOverlayGO.AddComponent<T>().Show();
+                currentOverlay = GetScreenInstance<T>(uiOverlayLayerGO.transform);
+                currentOverlay?.Show();
             }
-
-            return currentOverlayGO.GetComponent<T>();
+            return currentOverlay as T;
         }
 
         public static void HideOverlay()
         {
-            currentOverlayGO?.GetComponent<BaseOverlay>().Hide();
-            currentOverlayGO = null;
+            currentOverlay?.Hide();
+            currentOverlay = null;
         }
 
         //Notification Layer
@@ -348,7 +383,7 @@ namespace Overlewd
             {
                 HideNotificationMissclick();
 
-                notificationMissclick = BaseMissclick.GetInstance<T>(uiNotificationLayerGO.transform);
+                notificationMissclick = GetMissclickInstance<T>(uiNotificationLayerGO.transform);
                 notificationMissclick?.Show();
             }
             return notificationMissclick as T;
@@ -360,27 +395,32 @@ namespace Overlewd
             notificationMissclick = null;
         }
 
+        public static T GetNotification<T>() where T : BaseNotification
+        {
+            return currentNotification as T;
+        }
+
+        public static bool HasNotification<T>() where T : BaseNotification
+        {
+            return currentNotification is T;
+        }
+
         public static T ShowNotification<T>() where T : BaseNotification
         {
-            if (currentNotificationGO?.GetComponent<T>() == null)
+            if (!HasNotification<T>())
             {
                 HideNotification();
 
-                currentNotificationGO = new GameObject(typeof(T).Name);
-                currentNotificationGO.layer = 5;
-                var currentNotificationGO_rectTransform = currentNotificationGO.AddComponent<RectTransform>();
-                currentNotificationGO_rectTransform.SetParent(uiNotificationLayerGO.transform, false);
-                SetStretch(currentNotificationGO_rectTransform);
-                currentNotificationGO.AddComponent<T>().Show();
+                currentNotification = GetScreenInstance<T>(uiNotificationLayerGO.transform);
+                currentNotification?.Show();
             }
-
-            return currentNotificationGO.GetComponent<T>();
+            return currentNotification as T;
         }
 
         public static void HideNotification()
         {
-            currentNotificationGO?.GetComponent<BaseNotification>().Hide();
-            currentNotificationGO = null;
+            currentNotification?.Hide();
+            currentNotification = null;
         }
 
         //Dialog Layer

@@ -56,16 +56,5 @@ namespace Overlewd
         {
 
         }
-
-        public static T GetInstance<T>(Transform parent) where T : BaseMissclick
-        {
-            var newItem = new GameObject(typeof(T).Name);
-            var screenRectTransform = newItem.AddComponent<RectTransform>();
-            screenRectTransform.SetParent(parent, false);
-            screenRectTransform.SetAsFirstSibling();
-            UIManager.SetStretch(screenRectTransform);
-
-            return newItem.AddComponent<T>();
-        }
     }
 }
