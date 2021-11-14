@@ -6,25 +6,42 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class PopupMissclick : BaseMissclick
+    public abstract class PopupMissclick : BaseMissclick
     {
-        protected override void OnClick(BaseEventData data)
+        protected override void OnClick()
         {
-            if (missClickEnabled)
-            {
-                UIManager.HidePopup();
-            }
+            UIManager.HidePopup();
+        }
+    }
+
+    public class PopupMissclickTransparency : PopupMissclick
+    {
+
+
+    }
+
+    public class PopupMissclickColored : PopupMissclick
+    {
+        private float alphaMax = 0.8f;
+
+        public override void Show()
+        {
+            gameObject.AddComponent<MissclickShow>();
         }
 
-        public static PopupMissclick GetInstance(Transform parent)
+        public override void Hide()
         {
-            var newItem = new GameObject(nameof(PopupMissclick));
-            var screenRectTransform = newItem.AddComponent<RectTransform>();
-            screenRectTransform.SetParent(parent, false);
-            screenRectTransform.SetAsFirstSibling();
-            UIManager.SetStretch(screenRectTransform);
-            
-            return newItem.AddComponent<PopupMissclick>();
+            gameObject.AddComponent<MissclickHide>();
+        }
+
+        public override void UpdateShow(float showPercent)
+        {
+            image.color = new Color(0.0f, 0.0f, 0.0f, alphaMax * showPercent);
+        }
+
+        public override void UpdateHide(float hidePercent)
+        {
+            image.color = new Color(0.0f, 0.0f, 0.0f, alphaMax * (1.0f - hidePercent));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Overlewd
         {
             transform.Find("Canvas").Find("SidebarMenu").GetComponent<Button>().onClick.AddListener(() => 
             {
-                if (!UIManager.ShowingOverlay<SidebarMenuOverlay>())
+                if (!UIManager.HasOverlay<SidebarMenuOverlay>())
                 {
                     UIManager.ShowOverlay<SidebarMenuOverlay>();
                 }

@@ -33,10 +33,10 @@ namespace Overlewd
         private static GameObject currentNotificationGO;
         private static GameObject currentDialogBoxGO;
 
-        public static OverlayMissclick overlayMissclick { get; private set; }
-        public static PopupMissclick popupMissclick { get; private set; }
-        public static SubPopupMissclick subPopupMissclick { get; private set; }
-        public static NotificationMissclick notificationMissclick { get; private set; }
+        private static BaseMissclick overlayMissclick;
+        private static BaseMissclick popupMissclick;
+        private static BaseMissclick subPopupMissclick;
+        private static BaseMissclick notificationMissclick;
 
         private static Vector2 SelectResolution()
         {
@@ -131,6 +131,7 @@ namespace Overlewd
             var uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
+        //Screen Layer
         public static T ShowScreen<T>() where T : BaseScreen
         {
             if (currentScreenGO?.GetComponent<T>() == null)
@@ -164,16 +165,30 @@ namespace Overlewd
             HideOverlay();
         }
 
-        private static void ShowPopupMissclick()
+        //Popup Layer
+        public static T GetPopupMissclick<T>() where T : PopupMissclick
         {
-            if (popupMissclick == null)
-            {
-                popupMissclick = PopupMissclick.GetInstance(uiPopupLayerGO.transform);
-                popupMissclick?.Show();
-            }
+            return popupMissclick as T;
         }
 
-        private static void HidePopupMissclick()
+        public static bool HasPopupMissclick<T>() where T : PopupMissclick
+        {
+            return popupMissclick is T;
+        }
+
+        public static T ShowPopupMissclick<T>() where T : PopupMissclick
+        {
+            if (!HasPopupMissclick<T>())
+            {
+                HidePopupMissclick();
+
+                popupMissclick = BaseMissclick.GetInstance<T>(uiPopupLayerGO.transform);
+                popupMissclick?.Show();
+            }
+            return popupMissclick as T;
+        }
+
+        public static void HidePopupMissclick()
         {
             popupMissclick?.Hide();
             popupMissclick = null;
@@ -184,8 +199,6 @@ namespace Overlewd
             if (currentPopupGO?.GetComponent<T>() == null)
             {
                 HidePopup();
-
-                ShowPopupMissclick();
 
                 currentPopupGO = new GameObject(typeof(T).Name);
                 currentPopupGO.layer = 5;
@@ -204,24 +217,36 @@ namespace Overlewd
 
         public static void HidePopup()
         {
-            HidePopupMissclick();
-
             currentPopupGO?.GetComponent<BasePopup>().Hide();
             currentPopupGO = null;
 
             HideSubPopup();
         }
 
-        private static void ShowSubPopupMissclick()
+        //SubPopup Layer
+        public static T GetSubPopupMissclick<T>() where T : SubPopupMissclick
         {
-            if (subPopupMissclick == null)
-            {
-                subPopupMissclick = SubPopupMissclick.GetInstance(uiSubPopupLayerGO.transform);
-                subPopupMissclick?.Show();
-            }
+            return subPopupMissclick as T;
         }
 
-        private static void HideSubPopupMissclick()
+        public static bool HasSubPopupMissclick<T>() where T : SubPopupMissclick
+        {
+            return subPopupMissclick is T;
+        }
+
+        public static T ShowSubPopupMissclick<T>() where T : SubPopupMissclick
+        {
+            if (!HasSubPopupMissclick<T>())
+            {
+                HideSubPopupMissclick();
+
+                subPopupMissclick = BaseMissclick.GetInstance<T>(uiSubPopupLayerGO.transform);
+                subPopupMissclick?.Show();
+            }
+            return subPopupMissclick as T;
+        }
+
+        public static void HideSubPopupMissclick()
         {
             subPopupMissclick?.Hide();
             subPopupMissclick = null;
@@ -232,8 +257,6 @@ namespace Overlewd
             if (currentSubPopupGO?.GetComponent<T>() == null)
             {
                 HideSubPopup();
-
-                ShowSubPopupMissclick();
 
                 currentSubPopupGO = new GameObject(typeof(T).Name);
                 currentSubPopupGO.layer = 5;
@@ -248,25 +271,42 @@ namespace Overlewd
 
         public static void HideSubPopup()
         {
-            HideSubPopupMissclick();
-
             currentSubPopupGO?.GetComponent<BaseSubPopup>().Hide();
             currentSubPopupGO = null;
         }
 
-        private static void ShowOverlayMissclick()
+        //Overlay Layer
+        public static T GetOverlayMissclick<T>() where T : OverlayMissclick
         {
-            if (overlayMissclick == null)
-            {
-                overlayMissclick = OverlayMissclick.GetInstance(uiOverlayLayerGO.transform);
-                overlayMissclick?.Show();
-            }
+            return overlayMissclick as T;
         }
 
-        private static void HideOverlayMissclick()
+        public static bool HasOverlayMissclick<T>() where T : OverlayMissclick
+        {
+            return overlayMissclick is T;
+        }
+
+        public static T ShowOverlayMissclick<T>() where T : OverlayMissclick
+        {
+            if (!HasOverlayMissclick<T>())
+            {
+                HideOverlayMissclick();
+
+                overlayMissclick = BaseMissclick.GetInstance<T>(uiOverlayLayerGO.transform);
+                overlayMissclick?.Show();
+            }
+            return overlayMissclick as T;
+        }
+
+        public static void HideOverlayMissclick()
         {
             overlayMissclick?.Hide();
             overlayMissclick = null;
+        }
+
+        public static bool HasOverlay<T>() where T : BaseOverlay
+        {
+            return (currentOverlayGO?.GetComponent<T>() != null);
         }
 
         public static T ShowOverlay<T>() where T : BaseOverlay
@@ -274,8 +314,6 @@ namespace Overlewd
             if (currentOverlayGO?.GetComponent<T>() == null)
             {
                 HideOverlay();
-
-                ShowOverlayMissclick();
 
                 currentOverlayGO = new GameObject(typeof(T).Name);
                 currentOverlayGO.layer = 5;
@@ -290,27 +328,33 @@ namespace Overlewd
 
         public static void HideOverlay()
         {
-            HideOverlayMissclick();
-
             currentOverlayGO?.GetComponent<BaseOverlay>().Hide();
             currentOverlayGO = null;
         }
 
-        public static bool ShowingOverlay<T>() where T : BaseOverlay
+        //Notification Layer
+        public static T GetNotificationMissclick<T>() where T : NotificationMissclick
         {
-            return (currentOverlayGO?.GetComponent<T>() != null);
+            return notificationMissclick as T;
+        }
+        public static bool HasNotificationMissclick<T>() where T : NotificationMissclick
+        {
+            return notificationMissclick is T;
         }
 
-        private static void ShowNotificationMissclick()
+        public static T ShowNotificationMissclick<T>() where T : NotificationMissclick
         {
-            if (notificationMissclick == null) 
+            if (!HasNotificationMissclick<T>())
             {
-                notificationMissclick = NotificationMissclick.GetInstance(uiNotificationLayerGO.transform);
+                HideNotificationMissclick();
+
+                notificationMissclick = BaseMissclick.GetInstance<T>(uiNotificationLayerGO.transform);
                 notificationMissclick?.Show();
             }
+            return notificationMissclick as T;
         }
 
-        private static void HideNotificationMissclick()
+        public static void HideNotificationMissclick()
         {
             notificationMissclick?.Hide();
             notificationMissclick = null;
@@ -321,8 +365,6 @@ namespace Overlewd
             if (currentNotificationGO?.GetComponent<T>() == null)
             {
                 HideNotification();
-
-                ShowNotificationMissclick();
 
                 currentNotificationGO = new GameObject(typeof(T).Name);
                 currentNotificationGO.layer = 5;
@@ -337,12 +379,11 @@ namespace Overlewd
 
         public static void HideNotification()
         {
-            HideNotificationMissclick();
-
             currentNotificationGO?.GetComponent<BaseNotification>().Hide();
             currentNotificationGO = null;
         }
 
+        //Dialog Layer
         public static void ShowDialogBox(string title, string message, Action yes, Action no = null)
         {
             GameObject.Destroy(currentDialogBoxGO);

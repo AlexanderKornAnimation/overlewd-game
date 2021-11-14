@@ -9,49 +9,63 @@ namespace Overlewd
     public abstract class BaseMissclick : MonoBehaviour
     {
         public bool missClickEnabled { get; set; } = true;
-
-        private float alphaMax = 0.8f;
-        private Image image;
+        
+        protected Image image;
 
         void Awake()
         {
             image = gameObject.AddComponent<Image>();
-            image.color = Color.black;
+            image.color = Color.clear;
 
             var eventTrigger = gameObject.AddComponent<EventTrigger>();
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerDown;
-            entry.callback.AddListener(OnClick);
+            entry.callback.AddListener(ImageClick);
             eventTrigger.triggers.Add(entry);
         }
 
-        protected virtual void OnClick(BaseEventData data)
+        private void ImageClick(BaseEventData data)
+        {
+            if (missClickEnabled)
+            {
+                OnClick();
+            }
+        }
+
+        protected virtual void OnClick()
         {
             
         }
 
-        public void Show()
+        public virtual void Show()
         {
-            gameObject.AddComponent<MissclickShow>();
+
         }
 
-        public void Hide()
+        public virtual void Hide()
         {
-            gameObject.AddComponent<MissclickHide>();
+            Destroy(gameObject);
         }
 
-        public void UpdateShow(float showPercent)
+        public virtual void UpdateShow(float showPercent)
         {
-            var newColor = Color.black;
-            newColor.a = alphaMax * showPercent;
-            image.color = newColor;
+
         }
 
-        public void UpdateHide(float hidePercent)
+        public virtual void UpdateHide(float hidePercent)
         {
-            var newColor = Color.black;
-            newColor.a = alphaMax * (1.0f - hidePercent);
-            image.color = newColor;
+
+        }
+
+        public static T GetInstance<T>(Transform parent) where T : BaseMissclick
+        {
+            var newItem = new GameObject(typeof(T).Name);
+            var screenRectTransform = newItem.AddComponent<RectTransform>();
+            screenRectTransform.SetParent(parent, false);
+            screenRectTransform.SetAsFirstSibling();
+            UIManager.SetStretch(screenRectTransform);
+
+            return newItem.AddComponent<T>();
         }
     }
 }
