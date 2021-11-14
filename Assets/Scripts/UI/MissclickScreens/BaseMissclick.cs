@@ -46,15 +46,5 @@ namespace Overlewd
         {
             Destroy(gameObject);
         }
-
-        public virtual void UpdateShow(float showPercent)
-        {
-
-        }
-
-        public virtual void UpdateHide(float hidePercent)
-        {
-
-        }
     }
 }

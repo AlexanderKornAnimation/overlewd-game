@@ -14,34 +14,21 @@ namespace Overlewd
         }
     }
 
-    public class OverlayMissclickTransparency : OverlayMissclick
+    public class OverlayMissclickClear : OverlayMissclick
     {
 
-        
     }
 
     public class OverlayMissclickColored : OverlayMissclick
     {
-        private float alphaMax = 0.8f;
-
         public override void Show()
         {
-            gameObject.AddComponent<MissclickShow>();
+            gameObject.AddComponent<MissclickColoredShow>();
         }
 
         public override void Hide()
         {
-            gameObject.AddComponent<MissclickHide>();
-        }
-
-        public override void UpdateShow(float showPercent)
-        {
-            image.color = new Color(0.0f, 0.0f, 0.0f, alphaMax * showPercent);
-        }
-
-        public override void UpdateHide(float hidePercent)
-        {
-            image.color = new Color(0.0f, 0.0f, 0.0f, alphaMax * (1.0f - hidePercent));
+            gameObject.AddComponent<MissclickColoredHide>();
         }
     }
 }
