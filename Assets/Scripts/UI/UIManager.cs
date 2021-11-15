@@ -100,6 +100,7 @@ namespace Overlewd
             rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
 
+        //Missclick Instantiate
         private static T GetMissclickInstance<T>(Transform parent) where T : BaseMissclick
         {
             var missclickGO = new GameObject(typeof(T).Name);
@@ -110,6 +111,27 @@ namespace Overlewd
             return missclickGO.AddComponent<T>();
         }
 
+        public static T GetPopupMissclickInstance<T>() where T : PopupMissclick
+        {
+            return GetMissclickInstance<T>(uiPopupLayerGO.transform);
+        }
+
+        public static T GetSubPopupMissclickInstance<T>() where T : SubPopupMissclick
+        {
+            return GetMissclickInstance<T>(uiSubPopupLayerGO.transform);
+        }
+
+        public static T GetOverlayMissclickInstance<T>() where T : OverlayMissclick
+        {
+            return GetMissclickInstance<T>(uiOverlayLayerGO.transform);
+        }
+
+        public static T GetNotificationMissclickInstance<T>() where T : NotificationMissclick
+        {
+            return GetMissclickInstance<T>(uiNotificationLayerGO.transform);
+        }
+
+        //Screen Instantiate
         private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen
         {
             var screenGO = new GameObject(typeof(T).Name);
@@ -118,6 +140,31 @@ namespace Overlewd
             screenGO_rectTransform.SetParent(parent, false);
             SetStretch(screenGO_rectTransform);
             return screenGO.AddComponent<T>();
+        }
+
+        public static T GetScreenInstance<T>() where T : BaseScreen
+        {
+            return GetScreenInstance<T>(uiScreenLayerGO.transform);
+        }
+
+        public static T GetPopupInstance<T>() where T : BasePopup
+        {
+            return GetScreenInstance<T>(uiPopupLayerGO.transform); 
+        }
+
+        public static T GetSubPopupInstance<T>() where T : BaseSubPopup
+        {
+            return GetScreenInstance<T>(uiSubPopupLayerGO.transform);
+        }
+
+        public static T GetOverlayInstance<T>() where T : BaseOverlay
+        {
+            return GetScreenInstance<T>(uiOverlayLayerGO.transform);
+        }
+
+        public static T GetNotificationInstance<T>() where T : BaseNotification
+        {
+            return GetScreenInstance<T>(uiNotificationLayerGO.transform);
         }
 
         public static void Initialize()
@@ -168,7 +215,7 @@ namespace Overlewd
             {
                 HideScreen();
 
-                currentScreen = GetScreenInstance<T>(uiScreenLayerGO.transform);
+                currentScreen = GetScreenInstance<T>();
                 currentScreen?.Show();
             }
             else
@@ -207,7 +254,7 @@ namespace Overlewd
             {
                 HidePopupMissclick();
 
-                popupMissclick = GetMissclickInstance<T>(uiPopupLayerGO.transform);
+                popupMissclick = GetPopupMissclickInstance<T>();
                 popupMissclick?.Show();
             }
             return popupMissclick as T;
@@ -235,7 +282,7 @@ namespace Overlewd
             {
                 HidePopup();
 
-                currentPopup = GetScreenInstance<T>(uiPopupLayerGO.transform);
+                currentPopup = GetPopupInstance<T>();
                 currentPopup?.Show();
             }
             else
@@ -270,7 +317,7 @@ namespace Overlewd
             {
                 HideSubPopupMissclick();
 
-                subPopupMissclick = GetMissclickInstance<T>(uiSubPopupLayerGO.transform);
+                subPopupMissclick = GetSubPopupMissclickInstance<T>();
                 subPopupMissclick?.Show();
             }
             return subPopupMissclick as T;
@@ -298,7 +345,7 @@ namespace Overlewd
             {
                 HideSubPopup();
 
-                currentSubPopup = GetScreenInstance<T>(uiSubPopupLayerGO.transform);
+                currentSubPopup = GetSubPopupInstance<T>();
                 currentSubPopup?.Show();
             }
             return currentSubPopup as T;
@@ -327,7 +374,7 @@ namespace Overlewd
             {
                 HideOverlayMissclick();
 
-                overlayMissclick = GetMissclickInstance<T>(uiOverlayLayerGO.transform);
+                overlayMissclick = GetOverlayMissclickInstance<T>();
                 overlayMissclick?.Show();
             }
             return overlayMissclick as T;
@@ -355,7 +402,7 @@ namespace Overlewd
             {
                 HideOverlay();
 
-                currentOverlay = GetScreenInstance<T>(uiOverlayLayerGO.transform);
+                currentOverlay = GetOverlayInstance<T>();
                 currentOverlay?.Show();
             }
             return currentOverlay as T;
@@ -383,7 +430,7 @@ namespace Overlewd
             {
                 HideNotificationMissclick();
 
-                notificationMissclick = GetMissclickInstance<T>(uiNotificationLayerGO.transform);
+                notificationMissclick = GetNotificationMissclickInstance<T>();
                 notificationMissclick?.Show();
             }
             return notificationMissclick as T;
@@ -411,7 +458,7 @@ namespace Overlewd
             {
                 HideNotification();
 
-                currentNotification = GetScreenInstance<T>(uiNotificationLayerGO.transform);
+                currentNotification = GetNotificationInstance<T>();
                 currentNotification?.Show();
             }
             return currentNotification as T;
