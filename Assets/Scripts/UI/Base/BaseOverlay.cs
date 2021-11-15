@@ -16,15 +16,19 @@ namespace Overlewd
 
         }
 
-        public override void Show()
+        protected override void ShowMissclick()
         {
             UIManager.ShowOverlayMissclick<OverlayMissclickColored>();
+        }
+
+        public override void Show()
+        {
+            ShowMissclick();
             gameObject.AddComponent<OverlayShow>();
         }
 
         public override void Hide()
         {
-            UIManager.HideOverlayMissclick();
             gameObject.AddComponent<OverlayHide>();
         }
     }

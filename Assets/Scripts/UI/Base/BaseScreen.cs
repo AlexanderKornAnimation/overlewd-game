@@ -16,6 +16,11 @@ namespace Overlewd
 
         }
 
+        protected virtual void ShowMissclick()
+        {
+
+        }
+
         public virtual void Show()
         {
             gameObject.AddComponent<ScreenShow>();

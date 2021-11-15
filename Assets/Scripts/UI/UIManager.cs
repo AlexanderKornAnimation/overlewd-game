@@ -280,7 +280,8 @@ namespace Overlewd
         {
             if (!HasPopup<T>())
             {
-                HidePopup();
+                currentPopup?.Hide();
+                HideSubPopup();
 
                 currentPopup = GetPopupInstance<T>();
                 currentPopup?.Show();
@@ -294,6 +295,8 @@ namespace Overlewd
 
         public static void HidePopup()
         {
+            HidePopupMissclick();
+
             currentPopup?.Hide();
             currentPopup = null;
 
@@ -343,7 +346,7 @@ namespace Overlewd
         {
             if (!HasSubPopup<T>())
             {
-                HideSubPopup();
+                currentSubPopup?.Hide();
 
                 currentSubPopup = GetSubPopupInstance<T>();
                 currentSubPopup?.Show();
@@ -353,6 +356,8 @@ namespace Overlewd
 
         public static void HideSubPopup()
         {
+            HideSubPopupMissclick();
+
             currentSubPopup?.Hide();
             currentSubPopup = null;
         }
@@ -400,7 +405,7 @@ namespace Overlewd
         {
             if (!HasOverlay<T>())
             {
-                HideOverlay();
+                currentOverlay?.Hide();
 
                 currentOverlay = GetOverlayInstance<T>();
                 currentOverlay?.Show();
@@ -410,6 +415,8 @@ namespace Overlewd
 
         public static void HideOverlay()
         {
+            HideOverlayMissclick();
+
             currentOverlay?.Hide();
             currentOverlay = null;
         }
@@ -456,7 +463,7 @@ namespace Overlewd
         {
             if (!HasNotification<T>())
             {
-                HideNotification();
+                currentNotification?.Hide();
 
                 currentNotification = GetNotificationInstance<T>();
                 currentNotification?.Show();
@@ -466,6 +473,8 @@ namespace Overlewd
 
         public static void HideNotification()
         {
+            HideNotificationMissclick();
+
             currentNotification?.Hide();
             currentNotification = null;
         }
