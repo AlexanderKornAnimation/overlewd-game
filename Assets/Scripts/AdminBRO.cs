@@ -207,6 +207,7 @@ namespace Overlewd
             public string name;
             public string description;
             public string bannerImage;
+            public string eventMapNodeName;
             public string createdAt;
             public string updatedAt;
             public List<MarketProductItem> tradable;
@@ -316,6 +317,7 @@ namespace Overlewd
             public string type;
             public int? dialogId;
             public int? battleId;
+            public string eventMapNodeName;
             public List<int> nextStages;
         }
 
