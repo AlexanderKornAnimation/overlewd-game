@@ -10,8 +10,13 @@ namespace Overlewd
         private Button backButton;
         private Button battleButton;
         private Button prepareButton;
-
-        void Start()
+        
+        private Image firstTimeReward;
+        private Image reward1;
+        private Image reward2;
+        private Image reward3;
+        
+       private void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -28,8 +33,18 @@ namespace Overlewd
 
             prepareButton = canvas.Find("PrepareBattleButton").GetComponent<Button>();
             prepareButton.onClick.AddListener(PrepareButtonClick);
+            
+            firstTimeReward = canvas.Find("FirstTimeReward").Find("Resource").GetComponent<Image>();
+            reward1 = canvas.Find("Reward1").Find("Resource").GetComponent<Image>();
+            reward2 = canvas.Find("Reward2").Find("Resource").GetComponent<Image>();
+            reward3 = canvas.Find("Reward3").Find("Resource").GetComponent<Image>();
+            
+            firstTimeReward.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
+            reward1.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
+            reward2.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
+            reward3.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
         }
-
+        
         private void BackButtonClick()
         {
             UIManager.HidePopup();
@@ -44,11 +59,5 @@ namespace Overlewd
         {
             UIManager.ShowSubPopup<BottlesSubPopup>();
         }
-
-        void Update()
-        {
-
-        }
     }
-
 }

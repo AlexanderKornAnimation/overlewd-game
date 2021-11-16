@@ -10,12 +10,12 @@ namespace Overlewd
 {
     public class VictoryPopup : BasePopup
     {
-        private List<Image> resources;
-
         private Button nextButton;
         private Button repeatButton;
 
-        private int resourcesCount = 3;
+        private Image reward1;
+        private Image reward2;
+        private Image reward3;
 
         private void Start()
         {
@@ -26,29 +26,21 @@ namespace Overlewd
 
             var canvas = screenRectTransform.Find("Canvas");
 
-            resources = new List<Image>(resourcesCount);
-
             nextButton = canvas.Find("NextButton").GetComponent<Button>();
             nextButton.onClick.AddListener(NextButtonClick);
 
             repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
             repeatButton.onClick.AddListener(RepeatButtonClick);
 
-            TakeResources(canvas);
+            reward1 = canvas.Find("Reward1").Find("Resource").GetComponent<Image>();
+            reward2 = canvas.Find("Reward2").Find("Resource").GetComponent<Image>();
+            reward3 = canvas.Find("Reward3").Find("Resource").GetComponent<Image>();
             
-            resources[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
-            resources[1].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
-            resources[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
+            reward1.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
+            reward2.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
+            reward3.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
         }
 
-        private void TakeResources(Transform canvas)
-        {
-            for (int i = 1; i <= resources.Capacity; i++)
-            {
-                resources.Add(canvas.Find($"Reward{i}").Find("ResourceIcon").GetComponent<Image>());
-            }
-        }
-        
         private void NextButtonClick()
         {
             UIManager.ShowScreen<EventMapScreen>();
