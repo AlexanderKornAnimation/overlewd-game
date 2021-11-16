@@ -130,11 +130,11 @@ namespace Overlewd
             public int amount;
             public string createdAt;
             public string updatedAt;
-            public TradableItem tradable;
+            public InventoryTradableItem tradable;
         }
 
         [Serializable]
-        public class TradableItem
+        public class InventoryTradableItem
         {
             public int id;
             public string name;
@@ -161,47 +161,22 @@ namespace Overlewd
             public CurrencyItem currency;
         }
 
-        // /markets/{id}
-        public static async Task<MarketItem> marketsAsync(int id)
+        // /markets
+        public static async Task<List<EventMarketItem>> eventMarketsAsync()
         {
-            var url = String.Format("https://overlude-api.herokuapp.com/markets/{0}", id);
+            var url = "https://overlude-api.herokuapp.com/markets";
             using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
-                    return DeserializeObject<MarketItem>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventMarketItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
         }
 
         [Serializable]
-        public class PriceItem
-        {
-            public int currencyId;
-            public int amount;
-        }
-
-        [Serializable]
-        public class MarketProductItem
-        {
-            public int id;
-            public string name;
-            public string imageUrl;
-            public string description;
-            public List<PriceItem> price;
-            public string discount;
-            public string specialOfferLabel;
-            public string itemPack;
-            public string dateStart;
-            public string dateEnd;
-            public string discountStart;
-            public string discountEnd;
-            public string sortPriority;
-        }
-
-        [Serializable]
-        public class MarketItem
+        public class EventMarketItem
         {
             public int id;
             public string name;
@@ -210,7 +185,8 @@ namespace Overlewd
             public string eventMapNodeName;
             public string createdAt;
             public string updatedAt;
-            public List<MarketProductItem> tradable;
+            public List<TradableItem> tradable;
+            public List<int> tradableIds;
             public List<int> currencies;
         }
 
@@ -235,6 +211,66 @@ namespace Overlewd
             public string iconUrl;
             public string createdAt;
             public string updatedAt;
+        }
+
+        // /tradables
+        public static async Task<List<TradableItem>> tradablesAsync()
+        {
+            var url = "https://overlude-api.herokuapp.com/tradable";
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<List<TradableItem>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class PriceItem
+        {
+            public int currencyId;
+            public int amount;
+        }
+
+        [Serializable]
+        public class TradableItem
+        {
+            public int id;
+            public string name;
+            public string imageUrl;
+            public string description;
+            public List<PriceItem> price;
+            public string discount;
+            public string specialOfferLabel;
+            public string itemPack;
+            public string dateStart;
+            public string dateEnd;
+            public string discountStart;
+            public string discountEnd;
+            public string sortPriority;
+        }
+
+        // /tradable/{id}/buy
+        public static async Task<TradableBuyStatus> tradableBuyAsync(int tradable_id)
+        {
+            var form = new WWWForm();
+            var url = String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id);
+            using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class TradableBuyStatus
+        {
+            public bool status;
         }
 
         // /resources
@@ -267,27 +303,6 @@ namespace Overlewd
             public List<NetworkResource> items;
         }
 
-        // /tradable/{id}/buy
-        public static async Task<TradableBuyStatus> tradableBuyAsync(int tradable_id)
-        {
-            var form = new WWWForm();
-            var url = String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id);
-            using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
-            {
-                if (!RequestCheckError(request))
-                {
-                    return DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
-                }
-                return null;
-            }
-        }
-
-        [Serializable]
-        public class TradableBuyStatus
-        {
-            public bool status;
-        }
-
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
@@ -301,24 +316,11 @@ namespace Overlewd
             }
         }
 
-        public class EventStageType
+        public class EventType
         {
-            public const string Battle = "battle";
-            public const string Boss = "boss";
-            public const string Dialog = "dialog";
-            public const string SexDialog = "act";
-        }
-
-        [Serializable]
-        public class EventStageItem
-        {
-            public int id;
-            public string title;
-            public string type;
-            public int? dialogId;
-            public int? battleId;
-            public string eventMapNodeName;
-            public List<int> nextStages;
+            public const string Quarterly = "quarterly";
+            public const string Monthly = "monthly";
+            public const string Weekly = "weekly";
         }
 
         [Serializable]
@@ -341,25 +343,102 @@ namespace Overlewd
             public int? buyLimit;
             public string createdAt;
             public string updatedAt;
-            public List<EventStageItem> stages;
+            public List<int> stages;
         }
 
-        // /events/{id}/quests
-        public static async Task<List<QuestItem>> questsAsync(int eventId)
+        // /event-stages
+        public static async Task<List<EventStageItem>> eventStagesAsync()
         {
-            var url = String.Format("https://overlude-api.herokuapp.com/events/{0}/quests", eventId);
+            var url = "https://overlude-api.herokuapp.com/event-stages";
             using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
-                    return DeserializeObject<List<QuestItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventStageItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
         }
 
+        // //event-stages/{id}/start
+        public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
+        {
+            var form = new WWWForm();
+            var url = $"https://overlude-api.herokuapp.com/event-stages/{eventStageId}/start";
+            using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<EventStageItem>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        // /event-stages/{id}/end
+        public static async Task<EventStageItem> eventStageEndAsync(int eventStageId)
+        {
+            var form = new WWWForm();
+            var url = $"https://overlude-api.herokuapp.com/event-stages/{eventStageId}/end";
+            using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<EventStageItem>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        public class EventStageType
+        {
+            public const string Battle = "battle";
+            public const string Dialog = "dialog";
+        }
+
+        public class EventStageStatus
+        {
+            public const string Open = "open";
+            public const string Started = "started";
+            public const string Complete = "complete";
+        }
+
         [Serializable]
-        public class QuestItem
+        public class EventStageItem
+        {
+            public int id;
+            public string title;
+            public string type;
+            public int? dialogId;
+            public int? battleId;
+            public string eventMapNodeName;
+            public List<int> nextStages;
+            public string status;
+        }
+
+        // /event-quests
+        public static async Task<List<EventQuestItem>> eventQuestsAsync()
+        {
+            var url = "https://overlude-api.herokuapp.com/event-quests";
+            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<List<EventQuestItem>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        public class EventQuestType
+        {
+            public const string StandartHunt = "standart_hunt";
+            public const string QuickQuest = "quick_quest";
+            public const string UniversalAdventure = "universal_adventure";
+        }
+
+        [Serializable]
+        public class EventQuestItem
         {
             public int id;
             public string name;
@@ -398,15 +477,15 @@ namespace Overlewd
             public string updatedAt;
         }
 
-        // /dialog/{id}
-        public static async Task<Dialog> dialogAsync(int id)
+        // /dialogs
+        public static async Task<List<Dialog>> dialogsAsync()
         {
-            var url = String.Format("https://overlude-api.herokuapp.com/dialog/{0}", id);
+            var url = "https://overlude-api.herokuapp.com/dialogs";
             using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
-                    return DeserializeObject<Dialog>(request.downloadHandler.text);
+                    return DeserializeObject<List<Dialog>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -425,33 +504,48 @@ namespace Overlewd
             public string sceneOverlayImage;
         }
 
+        public class DialogType 
+        {
+            public const string Dialog = "dialog";
+            public const string Sex = "sex";
+        }
+
         [Serializable]
         public class Dialog
         {
             public int id;
             public string title;
+            public string type;
             public List<DialogReplica> replicas;
         }
 
-        // /battle/{id}
-        public static async Task<Battle> battleAsync(int id)
+        // /battles
+        public static async Task<List<Battle>> battlesAsync()
         {
-            var url = String.Format("https://overlude-api.herokuapp.com/battle/{0}", id);
+            var url = "https://overlude-api.herokuapp.com/battles";
             using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
-                    return DeserializeObject<Battle>(request.downloadHandler.text);
+                    return DeserializeObject<List<Battle>>(request.downloadHandler.text);
                 }
                 return null;
             }
         }
+
+        public class BattleType
+        {
+            public const string Battle = "battle";
+            public const string Boss = "boss";
+        }
+
         [Serializable]
         public class Battle
         {
             public int id;
             public string title;
-            public int? gachaId;
+            public string type;
+            public string rewards;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Overlewd
     {
         public class EventMarketItem : MonoBehaviour
         {
-            public AdminBRO.MarketProductItem marketProductData { get; set; }
+            public AdminBRO.TradableItem tradableData { get; set; }
 
             private Image girlImage;
             private Image itemBack;
@@ -63,30 +63,30 @@ namespace Overlewd
                 buyButton.gameObject.SetActive(false);
                 girlImage.gameObject.SetActive(false);
 
-                itemImage.sprite = ResourceManager.LoadSpriteById(marketProductData.imageUrl);
+                itemImage.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
 
-                buyWithCountPrice.text = marketProductData.price[0].amount.ToString();
-                var currencyId = marketProductData.price[0].currencyId;
+                buyWithCountPrice.text = tradableData.price[0].amount.ToString();
+                var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
                 buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
 
-                description.text = marketProductData.description;
+                description.text = tradableData.description;
             }
 
             private async void BuyButtonClick()
             {
-                if (GameData.CanEventMarketItemBuy(marketProductData))
+                if (GameData.CanTradableBuy(tradableData))
                 {
-                    await GameData.BuyEventMarketItem(marketProductData);
+                    await GameData.BuyTradableAsync(tradableData);
                     UIManager.ShowNotification<BuyingNotification>();
                 }
             }
 
             private async void BuyWithCountButtonClick()
             {
-                if (GameData.CanEventMarketItemBuy(marketProductData))
+                if (GameData.CanTradableBuy(tradableData))
                 {
-                    await GameData.BuyEventMarketItem(marketProductData);
+                    await GameData.BuyTradableAsync(tradableData);
                     UIManager.ShowNotification<BuyingNotification>();
                 }
             }

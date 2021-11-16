@@ -43,143 +43,29 @@ namespace Overlewd
             }
         }
 
-        private async Task LoadDialogsAsync()
-        {
-            var dialogTasks = new List<Task<AdminBRO.Dialog>>();
-            var loadDialogsId = new List<int>();
-            foreach (var eventItem in GameData.events)
-            {
-                foreach (var stage in eventItem.stages)
-                {
-                    if (stage.dialogId.HasValue)
-                    {
-                        if (!loadDialogsId.Exists(item => item == stage.dialogId.Value))
-                        {
-                            loadDialogsId.Add(stage.dialogId.Value);
-                            dialogTasks.Add(AdminBRO.dialogAsync(stage.dialogId.Value));
-                        }
-                    }
-                }
-            }
-
-            await Task.WhenAll(dialogTasks);
-
-            await Task.Run(() =>
-            {
-                foreach (var dialog in dialogTasks)
-                {
-                    GameData.dialogs.Add(dialog.Result);
-                }
-            });
-        }
-
-        private static async Task LoadBattlesAsync()
-        {
-            var battleTasks = new List<Task<AdminBRO.Battle>>();
-            var loadBattlesId = new List<int>();
-            foreach (var eventItem in GameData.events)
-            {
-                foreach (var stage in eventItem.stages)
-                {
-                    if (stage.battleId.HasValue)
-                    {
-                        if (!loadBattlesId.Exists(item => item == stage.battleId.Value))
-                        {
-                            loadBattlesId.Add(stage.battleId.Value);
-                            battleTasks.Add(AdminBRO.battleAsync(stage.battleId.Value));
-                        }
-                    }
-                }
-            }
-
-            await Task.WhenAll(battleTasks);
-
-            await Task.Run(() =>
-            {
-                foreach (var battle in battleTasks)
-                {
-                    GameData.battles.Add(battle.Result);
-                }
-            });
-        }
-
-        private async Task LoadQuestsAsync()
-        {
-            var questsTasks = new List<Task<List<AdminBRO.QuestItem>>>();
-            foreach (var eventItem in GameData.events)
-            {
-                questsTasks.Add(AdminBRO.questsAsync(eventItem.id));
-            }
-
-            await Task.WhenAll(questsTasks);
-
-            await Task.Run(() =>
-            {
-                foreach (var quests in questsTasks)
-                {
-                    foreach (var quest in quests.Result)
-                    {
-                        if (!GameData.quests.Exists(q => q.id == quest.id))
-                        {
-                            GameData.quests.Add(quest);
-                        }
-                    }
-                }
-            });
-        }
-
-        private async Task LoadMarketsAsync()
-        {
-            var marketTasks = new List<Task<AdminBRO.MarketItem>>();
-            var loadMarketsId = new List<int>();
-            foreach (var eventItem in GameData.events)
-            {
-                foreach (var marketId in eventItem.markets)
-                {
-                    if (!loadMarketsId.Exists(m_id => m_id == marketId))
-                    {
-                        loadMarketsId.Add(marketId);
-                        marketTasks.Add(AdminBRO.marketsAsync(marketId));
-                    }
-                }
-            }
-
-            await Task.WhenAll(marketTasks);
-
-            await Task.Run(() => 
-            {
-                foreach (var task in marketTasks)
-                {
-                    GameData.markets.Add(task.Result);
-                }
-            });
-        }
-
         async void Start()
         {
-            var tasks = new List<Task>();
+            GameData.playerInfo = await AdminBRO.meAsync();
 
-            var taskMe = AdminBRO.meAsync();
-            tasks.Add(taskMe);
+            var locale = await AdminBRO.localizationAsync("en");
 
-            var taskLocale = AdminBRO.localizationAsync("en");
-            tasks.Add(taskLocale);
-
-            var taskCurrencies = AdminBRO.currenciesAsync();
-            tasks.Add(taskCurrencies);
+            GameData.currenies = await AdminBRO.currenciesAsync();
 
             GameData.events = await AdminBRO.eventsAsync();
 
-            tasks.Add(LoadMarketsAsync());
-            tasks.Add(LoadQuestsAsync());
-            tasks.Add(LoadDialogsAsync());
-            tasks.Add(LoadBattlesAsync());
-            tasks.Add(LoadResourcesAsync());
+            GameData.eventMarkets = await AdminBRO.eventMarketsAsync();
 
-            await Task.WhenAll(tasks);
+            GameData.tradables = await AdminBRO.tradablesAsync();
 
-            GameData.playerInfo = taskMe.Result;
-            GameData.currenies = taskCurrencies.Result;
+            GameData.eventQuests = await AdminBRO.eventQuestsAsync();
+
+            GameData.eventStages = await AdminBRO.eventStagesAsync();
+
+            GameData.dialogs = await AdminBRO.dialogsAsync();
+
+            GameData.battles = await AdminBRO.battlesAsync();
+
+            await LoadResourcesAsync();
 
             UIManager.ShowScreen<CastleScreen>();
         }

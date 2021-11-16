@@ -76,7 +76,7 @@ namespace Overlewd
                 {
                     var eventItem = NSEventOverlay.EventItem.GetInstance(scrollViewContent[TabWeekly]);
                     eventItem.eventData = eventData;
-                    eventItem.questData = GameData.GetQuestById(questId);
+                    eventItem.eventQuestData = GameData.GetEventQuestById(questId);
                 }
             }
 

@@ -38,45 +38,62 @@ namespace Overlewd
             mapButton = NSEventMapScreen.MapButton.GetInstance(stages.Find("eventMap"));
 
             var eventData = GameGlobalStates.eventMapScreen_EventData;
-            foreach (var stage in eventData.stages)
+            foreach (var stageId in eventData.stages)
             {
-                var node = stages.Find(stage.eventMapNodeName);
+                var stageData = GameData.GetEventStageById(stageId);
+
+                var node = stages.Find(stageData.eventMapNodeName ?? "");
                 if (node != null)
                 {
-                    switch (stage.type)
+                    if (stageData.type == AdminBRO.EventStageType.Battle)
                     {
-                        case AdminBRO.EventStageType.Battle:
-                            var fightButton = NSEventMapScreen.FightButton.GetInstance(node);
-                            fightButton.eventStageData = stage;
-                            fightButtons.Add(fightButton);
-                            break;
-                        case AdminBRO.EventStageType.Boss:
-                            var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(node);
-                            bossFightButton.eventStageData = stage;
-                            bossFightButtons.Add(bossFightButton);
-                            break;
-                        case AdminBRO.EventStageType.Dialog:
-                            var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
-                            dialogButton.eventStageData = stage;
-                            dialogButtons.Add(dialogButton);
-                            break;
-                        case AdminBRO.EventStageType.SexDialog:
-                            var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
-                            sexButton.eventStageData = stage;
-                            sexButtons.Add(sexButton);
-                            break;
+                        if (stageData.battleId.HasValue)
+                        {
+                            var battleData = GameData.GetBattleById(stageData.battleId.Value);
+                            if (battleData.type == AdminBRO.BattleType.Battle)
+                            {
+                                var fightButton = NSEventMapScreen.FightButton.GetInstance(node);
+                                fightButton.eventStageData = stageData;
+                                fightButtons.Add(fightButton);
+                            }
+                            else if (battleData.type == AdminBRO.BattleType.Boss)
+                            {
+                                var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(node);
+                                bossFightButton.eventStageData = stageData;
+                                bossFightButtons.Add(bossFightButton);
+                            }
+                        }
+                    }
+                    else if (stageData.type == AdminBRO.EventStageType.Dialog)
+                    {
+                        if (stageData.dialogId.HasValue)
+                        {
+                            var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+                            if (dialogData.type == AdminBRO.DialogType.Dialog)
+                            {
+                                var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
+                                dialogButton.eventStageData = stageData;
+                                dialogButtons.Add(dialogButton);
+                            }
+                            else if (dialogData.type == AdminBRO.DialogType.Sex)
+                            {
+                                var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
+                                sexButton.eventStageData = stageData;
+                                sexButtons.Add(sexButton);
+                            }
+                        }
                     }
                 }
             }
 
-            foreach (var marketId in eventData.markets)
+            foreach (var eventMarketId in eventData.markets)
             {
-                var marketData = GameData.GetMarketById(marketId);
-                var node = stages.Find(marketData.eventMapNodeName);
+                var eventMarketData = GameData.GetEventMarketById(eventMarketId);
+                var node = stages.Find(eventMarketData.eventMapNodeName);
                 if (node != null)
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(node);
-                    shopButton.marketData = marketData;
+                    shopButton.eventMarketData = eventMarketData;
                     shopButtons.Add(shopButton);
                 }
             }            

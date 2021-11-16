@@ -10,7 +10,7 @@ namespace Overlewd
         public class EventItem : MonoBehaviour
         {
             public AdminBRO.EventItem eventData { get; set; }
-            public AdminBRO.QuestItem questData { get; set; }
+            public AdminBRO.EventQuestItem eventQuestData { get; set; }
 
             private Button mapButton;
 
@@ -35,8 +35,8 @@ namespace Overlewd
             private void CustomizeItem()
             {
                 eventName.text = eventData?.name;
-                title.text = questData?.name;
-                description.text = questData?.description;
+                title.text = eventQuestData?.name;
+                description.text = eventQuestData?.description;
             }
 
             private void ToMapClick()

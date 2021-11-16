@@ -9,9 +9,9 @@ namespace Overlewd
     public static class GameData
     {
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
-        public static bool CanEventMarketItemBuy(AdminBRO.MarketProductItem marketItem)
+        public static bool CanTradableBuy(AdminBRO.TradableItem tradable)
         {
-            foreach (var priceItem in marketItem.price)
+            foreach (var priceItem in tradable.price)
             {
                 var walletCurrency = playerInfo.wallet.Find(item => item.currency.id == priceItem.currencyId);
 
@@ -28,9 +28,9 @@ namespace Overlewd
             return true;
         }
 
-        public static async Task BuyEventMarketItem(AdminBRO.MarketProductItem marketItem)
+        public static async Task BuyTradableAsync(AdminBRO.TradableItem tradable)
         {
-            await AdminBRO.tradableBuyAsync(marketItem.id);
+            await AdminBRO.tradableBuyAsync(tradable.id);
             GameData.playerInfo = await AdminBRO.meAsync();
         }
 
@@ -39,15 +39,23 @@ namespace Overlewd
         {
             return events.Find(e => e.id == id);
         }
-        public static List<AdminBRO.QuestItem> quests { get; set; } = new List<AdminBRO.QuestItem>();
-        public static AdminBRO.QuestItem GetQuestById(int id)
+
+        public static List<AdminBRO.EventQuestItem> eventQuests { get; set; } = new List<AdminBRO.EventQuestItem>();
+        public static AdminBRO.EventQuestItem GetEventQuestById(int id)
         {
-            return quests.Find(q => q.id == id);
+            return eventQuests.Find(q => q.id == id);
         }
-        public static List<AdminBRO.MarketItem> markets { get; set; } = new List<AdminBRO.MarketItem>();
-        public static AdminBRO.MarketItem GetMarketById(int id)
+
+        public static List<AdminBRO.EventMarketItem> eventMarkets { get; set; } = new List<AdminBRO.EventMarketItem>();
+        public static AdminBRO.EventMarketItem GetEventMarketById(int id)
         {
-            return markets.Find(m => m.id == id);
+            return eventMarkets.Find(m => m.id == id);
+        }
+
+        public static List<AdminBRO.TradableItem> tradables { get; set; } = new List<AdminBRO.TradableItem>();
+        public static AdminBRO.TradableItem GetTradableById(int id)
+        {
+            return tradables.Find(t => t.id == id);
         }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }
@@ -55,11 +63,19 @@ namespace Overlewd
         {
             return currenies.Find(c => c.id == id);
         }
+
+        public static List<AdminBRO.EventStageItem> eventStages { get; set; } = new List<AdminBRO.EventStageItem>();
+        public static AdminBRO.EventStageItem GetEventStageById(int id)
+        {
+            return eventStages.Find(s => s.id == id);
+        }
+
         public static List<AdminBRO.Dialog> dialogs { get; set; } = new List<AdminBRO.Dialog>();
         public static AdminBRO.Dialog GetDialogById(int id)
         {
             return dialogs.Find(d => d.id == id);
         }
+
         public static List<AdminBRO.Battle> battles { get; set; } = new List<AdminBRO.Battle>();
         public static AdminBRO.Battle GetBattleById(int id)
         {

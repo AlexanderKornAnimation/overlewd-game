@@ -43,10 +43,10 @@ namespace Overlewd
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
 
             var marketData = GameGlobalStates.eventShop_MarketData;
-            foreach (var marketProductData in marketData.tradable)
+            foreach (var tradableData in marketData.tradable)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-                eventMarketItem.marketProductData = marketProductData;
+                eventMarketItem.tradableData = tradableData;
             }
 
         }

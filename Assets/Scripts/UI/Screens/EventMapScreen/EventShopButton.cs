@@ -9,7 +9,7 @@ namespace Overlewd
     {
         public class EventShopButton : MonoBehaviour
         {
-            public AdminBRO.MarketItem marketData { get; set; }
+            public AdminBRO.EventMarketItem eventMarketData { get; set; }
 
             private Button button;
             private Text title;
@@ -33,12 +33,12 @@ namespace Overlewd
 
             private void Customize()
             {
-                title.text = marketData.name;
+                title.text = eventMarketData.name;
             }
 
             private void ButtonClick()
             {
-                GameGlobalStates.eventShop_MarketData = marketData;
+                GameGlobalStates.eventShop_MarketData = eventMarketData;
                 UIManager.ShowScreen<EventMarketScreen>();
             }
 
