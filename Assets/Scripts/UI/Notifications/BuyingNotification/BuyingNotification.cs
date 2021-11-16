@@ -7,9 +7,9 @@ namespace Overlewd
 {
     public class BuyingNotification : BaseNotification
     {
-        private Button button;
+        protected Button button;
 
-        void Start()
+        protected virtual void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/BuyingNotification/BuyingNotification"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -20,11 +20,6 @@ namespace Overlewd
 
             button = canvas.Find("Button").GetComponent<Button>();
             button.onClick.AddListener(ButtonClick);
-        }
-
-        void Update()
-        {
-
         }
 
         private void ButtonClick()
