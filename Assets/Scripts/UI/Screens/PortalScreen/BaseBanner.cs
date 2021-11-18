@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,9 @@ namespace Overlewd
     {
         public abstract class BaseBanner : MonoBehaviour
         {
-            public PortalScreen portalScreen { get; set; }
             public TierButtonsScroll tierButtonsScroll { get; set; }
+
+            public event Action<BaseBanner> selectBanner;
 
             protected virtual void Awake()
             {
@@ -19,7 +21,7 @@ namespace Overlewd
 
             protected virtual void BannerClick()
             {
-                portalScreen?.SelectBanner(this);
+                selectBanner?.Invoke(this);
             }
 
             public virtual void Select()

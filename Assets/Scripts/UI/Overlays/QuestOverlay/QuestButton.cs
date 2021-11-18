@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,9 @@ namespace Overlewd
     {
         public abstract class QuestButton : MonoBehaviour
         {
-            public QuestOverlay questOverlay { get; set; }
             public QuestContentScrollView contentScrollView { get; set; }
+
+            public event Action<QuestButton> buttonPressed;
 
             protected Button blueButton;
             protected Text blueButtonText;
@@ -47,7 +49,7 @@ namespace Overlewd
 
             protected virtual void ButtonClick()
             {
-                questOverlay.SelectQuest(this);
+                buttonPressed?.Invoke(this);
             }
 
             public void Select()

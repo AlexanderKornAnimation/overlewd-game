@@ -66,7 +66,7 @@ namespace Overlewd
 
         private void AddBanner(NSPortalScreen.BaseBanner newBanner)
         {
-            newBanner.portalScreen = this;
+            newBanner.selectBanner += SelectBanner;
             newBanner.tierButtonsScroll = NSPortalScreen.TierButtonsScroll.GetInstance(tierButtonsScrollPos);
 
             banners.Add(newBanner);
@@ -128,7 +128,7 @@ namespace Overlewd
             equipScroll.SetActive(true);
         }
 
-        public void SelectBanner(NSPortalScreen.BaseBanner banner)
+        private void SelectBanner(NSPortalScreen.BaseBanner banner)
         {
             selectedBanner?.Deselect();
             selectedBanner = banner;

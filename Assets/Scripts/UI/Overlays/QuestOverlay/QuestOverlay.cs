@@ -95,7 +95,7 @@ namespace Overlewd
             var newQuest = NSQuestOverlay.MainQuestButton.GetInstance(mainQuestGrid);
             newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
                 GetInstance(questContentScrollViewPos);
-            newQuest.questOverlay = this;
+            newQuest.buttonPressed += SelectQuest;
 
             quests.Add(newQuest);
         }
@@ -105,7 +105,7 @@ namespace Overlewd
             var newQuest = NSQuestOverlay.MatriarchQuestButton.GetInstance(matriarchQuestGrid);
             newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
                 GetInstance(questContentScrollViewPos);
-            newQuest.questOverlay = this;
+            newQuest.buttonPressed += SelectQuest;
 
             quests.Add(newQuest);
         }
@@ -115,7 +115,7 @@ namespace Overlewd
             var newQuest = NSQuestOverlay.SideQuestButton.GetInstance(sideQuestGrid);
             newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
                 GetInstance(questContentScrollViewPos);
-            newQuest.questOverlay = this;
+            newQuest.buttonPressed += SelectQuest;
 
             quests.Add(newQuest);
         }
