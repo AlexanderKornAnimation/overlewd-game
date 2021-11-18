@@ -401,11 +401,13 @@ namespace Overlewd
             public const string Open = "open";
             public const string Started = "started";
             public const string Complete = "complete";
+            public const string Closed =  "closed";
         }
 
         [Serializable]
         public class EventStageItem
         {
+            public int index;
             public int id;
             public string title;
             public string type;
