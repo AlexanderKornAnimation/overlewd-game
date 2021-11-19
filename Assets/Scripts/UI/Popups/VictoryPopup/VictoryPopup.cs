@@ -17,7 +17,7 @@ namespace Overlewd
         private Image reward2;
         private Image reward3;
 
-        private void Start()
+        void Start()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/VictoryPopup/VictoryPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();

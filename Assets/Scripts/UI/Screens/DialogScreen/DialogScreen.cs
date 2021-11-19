@@ -25,7 +25,7 @@ namespace Overlewd
 
         private bool isAutoplayButtonPressed = false;
 
-        void Start()
+        async void Start()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/DialogScreen/DialogScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -54,6 +54,8 @@ namespace Overlewd
             dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
 
             ShowCurrentReplica();
+
+            await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
         }
 
         private void AutoplayButtonClick()
@@ -96,12 +98,14 @@ namespace Overlewd
             }
         }
 
-        private void SkipButtonClick()
+        private async void SkipButtonClick()
         {
+            await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
+
             UIManager.ShowScreen<EventMapScreen>();
         }
 
-        private void NextButtonClick()
+        private async void NextButtonClick()
         {
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
@@ -110,6 +114,8 @@ namespace Overlewd
             }
             else
             {
+                await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
+
                 UIManager.ShowScreen<EventMapScreen>();
             }
         }

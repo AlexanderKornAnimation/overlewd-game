@@ -9,7 +9,7 @@ namespace Overlewd
     {
         public class EventMarketItem : MonoBehaviour
         {
-            public AdminBRO.TradableItem tradableData { get; set; }
+            public int tradableId;
 
             private Image girlImage;
             private Image itemBack;
@@ -52,13 +52,10 @@ namespace Overlewd
                 CustomizeItem();
             }
 
-            void Update()
-            {
-
-            }
-
             private void CustomizeItem()
             {
+                var tradableData = GameData.GetTradableById(tradableId);
+
                 soldOut.gameObject.SetActive(false);
                 buyButton.gameObject.SetActive(false);
                 girlImage.gameObject.SetActive(false);
@@ -75,6 +72,8 @@ namespace Overlewd
 
             private async void BuyButtonClick()
             {
+                var tradableData = GameData.GetTradableById(tradableId);
+
                 if (GameData.CanTradableBuy(tradableData))
                 {
                     await GameData.BuyTradableAsync(tradableData);
@@ -84,6 +83,8 @@ namespace Overlewd
 
             private async void BuyWithCountButtonClick()
             {
+                var tradableData = GameData.GetTradableById(tradableId);
+
                 if (GameData.CanTradableBuy(tradableData))
                 {
                     await GameData.BuyTradableAsync(tradableData);

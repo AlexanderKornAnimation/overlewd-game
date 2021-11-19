@@ -9,8 +9,8 @@ namespace Overlewd
     {
         public class EventItem : MonoBehaviour
         {
-            public AdminBRO.EventItem eventData { get; set; }
-            public AdminBRO.EventQuestItem eventQuestData { get; set; }
+            public int eventId;
+            public int eventQuestId;
 
             private Button mapButton;
 
@@ -34,6 +34,9 @@ namespace Overlewd
 
             private void CustomizeItem()
             {
+                var eventData = GameData.GetEventById(eventId);
+                var eventQuestData = GameData.GetEventQuestById(eventQuestId);
+
                 eventName.text = eventData?.name;
                 title.text = eventQuestData?.name;
                 description.text = eventQuestData?.description;
@@ -41,7 +44,7 @@ namespace Overlewd
 
             private void ToMapClick()
             {
-                GameGlobalStates.eventMapScreen_EventData = eventData;
+                GameGlobalStates.eventMapScreen_EventId = eventId;
                 UIManager.ShowScreen<EventMapScreen>();
             }
 

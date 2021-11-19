@@ -10,7 +10,7 @@ namespace Overlewd
         private Button startBattleButton;
         private Button backButton;
 
-        void Start()
+        async void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BossFightScreen/BossFightScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -24,10 +24,14 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
+
+            await GameData.EventStageStartAsync(GameGlobalStates.bossFight_EventStageData);
         }
 
-        private void StartBattleButtonClick()
+        private async void StartBattleButtonClick()
         {
+            await GameData.EventStageEndAsync(GameGlobalStates.bossFight_EventStageData);
+
             UIManager.ShowPopup<VictoryPopup>();
         }
 

@@ -9,38 +9,39 @@ namespace Overlewd
     {
         public class DialogButton : MonoBehaviour
         {
-            public AdminBRO.EventStageItem eventStageData { get; set; }
+            public int eventStageId;
 
             private Button button;
-            private Transform dialogDone;
+            private GameObject dialogDone;
             private Text title;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                dialogDone = button.transform.Find("DialogueDone");
+                dialogDone = button.transform.Find("DialogueDone").gameObject;
                 title = button.transform.Find("Title").GetComponent<Text>();
-
-                Customize();
             }
 
-            void Update()
+            void Start()
             {
-
+                Customize();
             }
 
             private void Customize()
             {
+                var eventStageData = GameData.GetEventStageById(eventStageId);
+
                 title.text = eventStageData.title;
+                dialogDone.SetActive(eventStageData.status == AdminBRO.EventStageStatus.Complete);
             }
 
             private void ButtonClick()
             {
-                GameGlobalStates.dialog_EventStageData = eventStageData;
+                GameGlobalStates.dialog_EventStageId = eventStageId;
                 UIManager.ShowScreen<DialogScreen>();
             }
 

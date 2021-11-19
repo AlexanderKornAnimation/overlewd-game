@@ -41,6 +41,10 @@ namespace Overlewd
             foreach (var stageId in eventData.stages)
             {
                 var stageData = GameData.GetEventStageById(stageId);
+                if (stageData.status == AdminBRO.EventStageStatus.Closed)
+                {
+                    continue;
+                }
 
                 var node = stages.Find(stageData.eventMapNodeName ?? "");
                 if (node != null)
@@ -53,13 +57,13 @@ namespace Overlewd
                             if (battleData.type == AdminBRO.BattleType.Battle)
                             {
                                 var fightButton = NSEventMapScreen.FightButton.GetInstance(node);
-                                fightButton.eventStageData = stageData;
+                                fightButton.eventStageId = stageId;
                                 fightButtons.Add(fightButton);
                             }
                             else if (battleData.type == AdminBRO.BattleType.Boss)
                             {
                                 var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(node);
-                                bossFightButton.eventStageData = stageData;
+                                bossFightButton.eventStageId = stageId;
                                 bossFightButtons.Add(bossFightButton);
                             }
                         }
@@ -72,13 +76,13 @@ namespace Overlewd
                             if (dialogData.type == AdminBRO.DialogType.Dialog)
                             {
                                 var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
-                                dialogButton.eventStageData = stageData;
+                                dialogButton.eventStageId = stageId;
                                 dialogButtons.Add(dialogButton);
                             }
                             else if (dialogData.type == AdminBRO.DialogType.Sex)
                             {
                                 var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
-                                sexButton.eventStageData = stageData;
+                                sexButton.eventStageId = stageId;
                                 sexButtons.Add(sexButton);
                             }
                         }
@@ -93,7 +97,7 @@ namespace Overlewd
                 if (node != null)
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(node);
-                    shopButton.eventMarketData = eventMarketData;
+                    shopButton.eventMarketId = eventMarketData.id;
                     shopButtons.Add(shopButton);
                 }
             }            

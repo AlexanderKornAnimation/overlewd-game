@@ -46,13 +46,8 @@ namespace Overlewd
             foreach (var tradableData in marketData.tradable)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
-                eventMarketItem.tradableData = tradableData;
+                eventMarketItem.tradableId = tradableData.id;
             }
-
-        }
-
-        void Update()
-        {
 
         }
 

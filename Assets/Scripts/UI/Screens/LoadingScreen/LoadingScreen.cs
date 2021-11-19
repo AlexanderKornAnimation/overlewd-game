@@ -45,6 +45,9 @@ namespace Overlewd
 
         async void Start()
         {
+            await AdminBRO.eventStagesResetAsync();
+            
+            //
             GameData.playerInfo = await AdminBRO.meAsync();
 
             var locale = await AdminBRO.localizationAsync("en");

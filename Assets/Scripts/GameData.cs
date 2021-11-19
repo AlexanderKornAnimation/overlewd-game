@@ -69,6 +69,24 @@ namespace Overlewd
         {
             return eventStages.Find(s => s.id == id);
         }
+        public static void SetEventStage(AdminBRO.EventStageItem stageData)
+        {
+            var stageIndex = eventStages.FindIndex(s => s.id == stageData.id);
+            if (stageIndex != -1)
+            {
+                eventStages[stageIndex] = stageData;
+            }
+        }
+        public static async Task EventStageStartAsync(AdminBRO.EventStageItem stage)
+        {
+            var newEventStageData = await AdminBRO.eventStageStartAsync(stage.id);
+            eventStages = await AdminBRO.eventStagesAsync();
+        }
+        public static async Task EventStageEndAsync(AdminBRO.EventStageItem stage)
+        {
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stage.id);
+            eventStages = await AdminBRO.eventStagesAsync();
+        }
 
         public static List<AdminBRO.Dialog> dialogs { get; set; } = new List<AdminBRO.Dialog>();
         public static AdminBRO.Dialog GetDialogById(int id)

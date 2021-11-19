@@ -9,38 +9,39 @@ namespace Overlewd
     {
         public class BossFightButton : MonoBehaviour
         {
-            public AdminBRO.EventStageItem eventStageData { get; set; }
+            public int eventStageId;
 
             private Button button;
-            private Transform fightDone;
+            private GameObject fightDone;
             private Text title;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                fightDone = button.transform.Find("FightDone");
+                fightDone = button.transform.Find("FightDone").gameObject;
                 title = button.transform.Find("Title").GetComponent<Text>();
-
-                Customize();
             }
 
-            void Update()
+            void Start()
             {
-
+                Customize();
             }
 
             private void Customize()
             {
+                var eventStageData = GameData.GetEventStageById(eventStageId);
+
                 title.text = eventStageData.title;
+                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageStatus.Complete);
             }
 
             private void ButtonClick()
             {
-                GameGlobalStates.bossFight_EventStageData = eventStageData;
+                GameGlobalStates.bossFight_EventStageId = eventStageId;
                 UIManager.ShowPopup<PrepareBossFightPopup>();
             }
 

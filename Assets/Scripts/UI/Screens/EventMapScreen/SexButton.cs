@@ -9,38 +9,39 @@ namespace Overlewd
     {
         public class SexButton : MonoBehaviour
         {
-            public AdminBRO.EventStageItem eventStageData { get; set; }
+            public int eventStageId;
 
             private Button button;
-            private Transform sceneDone;
+            private GameObject sceneDone;
             private Text title;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                sceneDone = button.transform.Find("SceneDone");
+                sceneDone = button.transform.Find("SceneDone").gameObject;
                 title = button.transform.Find("Title").GetComponent<Text>();
-
-                Customize();
             }
 
-            void Update()
+            void Start()
             {
-
+                Customize();
             }
 
             private void Customize()
             {
+                var eventStageData = GameData.GetEventStageById(eventStageId);
+
                 title.text = eventStageData.title;
+                sceneDone.SetActive(eventStageData.status == AdminBRO.EventStageStatus.Complete);
             } 
 
             private void ButtonClick()
             {
-                GameGlobalStates.sex_EventStageData = eventStageData;
+                GameGlobalStates.sex_EventStageId = eventStageId;
                 UIManager.ShowScreen<SexScreen>();
             }
 

@@ -360,6 +360,20 @@ namespace Overlewd
             }
         }
 
+        // /event-stages/reset
+        public static async Task eventStagesResetAsync()
+        {
+            var form = new WWWForm();
+            var url = "https://overlude-api.herokuapp.com/event-stages/reset";
+            using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    
+                }
+            }
+        }
+
         // //event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
