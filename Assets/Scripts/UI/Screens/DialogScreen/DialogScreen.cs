@@ -80,6 +80,94 @@ namespace Overlewd
             await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
         }
 
+        private void HideCharacterByName(string keyName)
+        {
+            if (keyName == null)
+                return;
+            if (!characters.ContainsKey(keyName))
+                return;
+
+            Destroy(characters[keyName]);
+            characters[keyName] = null;
+            var keyPos = character_slot[keyName];
+            character_slot[keyName] = null;
+            if (keyPos != null)
+            {
+                slot_character[keyPos] = null;
+            }
+        }
+
+        private void HideCharacterBySlot(string keyPos)
+        {
+            if (keyPos == null)
+                return;
+            if (!slots.ContainsKey(keyPos))
+                return;
+
+            var keyName = slot_character[keyPos];
+            HideCharacterByName(keyName);
+        }
+
+        private void ShowCharacter(string keyName, string keyPos)
+        {
+            if (keyName == null || keyPos == null)
+                return;
+            if (!characters.ContainsKey(keyName))
+                return;
+            if (!slots.ContainsKey(keyPos))
+                return;
+
+            if (character_slot[keyName] == keyPos)
+                return;
+
+            if (slot_character[keyPos] != null)
+            {
+                HideCharacterBySlot(keyPos);
+            }
+
+            if (characters[keyName] == null)
+            {
+                var slot = slots[keyPos];
+                var prefabPath = characterPrefabPath[keyName];
+                characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
+
+                slot_character[keyPos] = keyName;
+                character_slot[keyName] = keyPos;
+            }
+            else
+            {
+                var curKeyPos = character_slot[keyName];
+                slot_character[curKeyPos] = null;
+                character_slot[keyName] = null;
+
+                var slot = slots[keyPos];
+                characters[keyName].transform.SetParent(slot, false);
+
+                slot_character[keyPos] = keyName;
+                character_slot[keyName] = keyPos;
+            }
+        }
+
+        private void CharacterSelect(string keyName)
+        {
+            if (keyName == null)
+                return;
+            if (!characters.ContainsKey(keyName))
+                return;
+
+            characters[keyName]?.Select();
+        }
+
+        private void CharacterDeselect(string keyName)
+        {
+            if (keyName == null)
+                return;
+            if (!characters.ContainsKey(keyName))
+                return;
+
+            characters[keyName]?.Deselect();
+        }
+
         private void Initialize()
         {
             slots[AdminBRO.DialogCharacterPosition.Left] = leftCharacterPos;
@@ -98,6 +186,7 @@ namespace Overlewd
                 if (!characters.ContainsKey(keyName))
                 {
                     characters[keyName] = null;
+                    character_slot[keyName] = null;
                     addKeyName = true;
                 }
 
@@ -107,12 +196,7 @@ namespace Overlewd
                     {
                         if (slot_character[keyPos] == null)
                         {
-                            var slot = slots[keyPos];
-                            var prefabPath = characterPrefabPath[keyName];
-                            characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
-
-                            slot_character[keyPos] = keyName;
-                            character_slot[keyName] = keyPos;
+                            ShowCharacter(keyName, keyPos);
                         }
                     }
                 }
@@ -191,18 +275,11 @@ namespace Overlewd
 
                 if (keyPos == null)
                 {
-                    Destroy(characters[keyName]);
-                    characters[keyName] = null;
-                    var prevKeyPos = character_slot[keyName];
-                    character_slot[keyName] = null;
-                    if (prevKeyPos != null)
-                    {
-                        slot_character[prevKeyPos] = null;
-                    }
+                    HideCharacterByName(keyName);
                 }
                 else
                 {
-                    characters[keyName].Deselect();
+                    CharacterDeselect(keyName);
                 }
             }
 
@@ -216,31 +293,8 @@ namespace Overlewd
                 var keyName = replica.characterName;
                 var keyPos = replica.characterPosition;
 
-                if (keyPos != null)
-                {
-                    var prevKeyPos = character_slot[keyName];
-                    if (prevKeyPos == null)
-                    {
-                        var slot = slots[keyPos];
-                        var prefabPath = characterPrefabPath[keyName];
-                        characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
-
-                        slot_character[keyPos] = keyName;
-                        character_slot[keyName] = keyPos;
-                    }
-                    else if (prevKeyPos != keyPos)
-                    {
-                        slot_character[prevKeyPos] = null;
-                        character_slot[keyName] = null;
-
-                        var slot = slots[keyPos];
-                        characters[keyName].transform.SetParent(slot, false);
-
-                        slot_character[keyPos] = keyName;
-                        character_slot[keyName] = keyPos;
-                    }
-                }
-                characters[keyName].Select();
+                ShowCharacter(keyName, keyPos);
+                CharacterSelect(keyName);
             }
         }
     }
