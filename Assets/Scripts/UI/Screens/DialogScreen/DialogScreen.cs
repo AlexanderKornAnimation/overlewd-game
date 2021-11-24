@@ -9,7 +9,11 @@ namespace Overlewd
     public class DialogScreen : BaseScreen
     {
         private Coroutine autoplayCoroutine;
-        
+
+        private Transform leftCharacterPos;
+        private Transform midCharacterPos;
+        private Transform rightCharacterPos;
+
         private Button nextButton;
         private Text personageName;
         private Image personageHead;
@@ -25,6 +29,18 @@ namespace Overlewd
 
         private bool isAutoplayButtonPressed = false;
 
+        private Dictionary<string, string> characterPrefabPath = new Dictionary<string, string>
+        {
+            ["Overlord"] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            ["Ulvi"] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            ["Faye"] = "Prefabs/UI/Screens/DialogScreen/Faye"
+        };
+        private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
+            new Dictionary<string, NSDialogScreen.DialogCharacter>();
+        private Dictionary<string, Transform> slots = new Dictionary<string, Transform>();
+        private Dictionary<string, string> slot_character = new Dictionary<string, string>();
+        private Dictionary<string, string> character_slot = new Dictionary<string, string>();
+
         async void Start()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/DialogScreen/DialogScreen"));
@@ -33,6 +49,11 @@ namespace Overlewd
             UIManager.SetStretch(screenRectTransform);
 
             var canvas = screenRectTransform.Find("Canvas");
+
+            leftCharacterPos = canvas.Find("LeftCharacterPos");
+            midCharacterPos = canvas.Find("MidCharacterPos");
+            rightCharacterPos = canvas.Find("RightCharacterPos");
+
             var textContainer = canvas.Find("TextContainer");
 
             nextButton = textContainer.Find("NextButton").GetComponent<Button>();
@@ -53,9 +74,49 @@ namespace Overlewd
             
             dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
 
+            Initialize();
             ShowCurrentReplica();
 
             await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
+        }
+
+        private void Initialize()
+        {
+            slots[AdminBRO.DialogCharacterPosition.Left] = leftCharacterPos;
+            slots[AdminBRO.DialogCharacterPosition.Right] = rightCharacterPos;
+            slots[AdminBRO.DialogCharacterPosition.Middle] = midCharacterPos;
+            slot_character[AdminBRO.DialogCharacterPosition.Left] = null;
+            slot_character[AdminBRO.DialogCharacterPosition.Right] = null;
+            slot_character[AdminBRO.DialogCharacterPosition.Middle] = null;
+
+            foreach (var replica in dialogData.replicas)
+            {
+                var keyName = replica.characterName;
+                var keyPos = replica.characterPosition;
+
+                bool addKeyName = false;
+                if (!characters.ContainsKey(keyName))
+                {
+                    characters[keyName] = null;
+                    addKeyName = true;
+                }
+
+                if (characters[keyName] == null)
+                {
+                    if (keyPos != null && addKeyName) 
+                    {
+                        if (slot_character[keyPos] == null)
+                        {
+                            var slot = slots[keyPos];
+                            var prefabPath = characterPrefabPath[keyName];
+                            characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
+
+                            slot_character[keyPos] = keyName;
+                            character_slot[keyName] = keyPos;
+                        }
+                    }
+                }
+            }
         }
 
         private void AutoplayButtonClick()
@@ -122,9 +183,65 @@ namespace Overlewd
 
         private void ShowCurrentReplica()
         {
+            var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
+            if (prevReplica != null)
+            {
+                var keyName = prevReplica.characterName;
+                var keyPos = prevReplica.characterPosition;
+
+                if (keyPos == null)
+                {
+                    Destroy(characters[keyName]);
+                    characters[keyName] = null;
+                    var prevKeyPos = character_slot[keyName];
+                    character_slot[keyName] = null;
+                    if (prevKeyPos != null)
+                    {
+                        slot_character[prevKeyPos] = null;
+                    }
+                }
+                else
+                {
+                    characters[keyName].Deselect();
+                }
+            }
+
+        
             var replica = dialogData.replicas[currentReplicaId];
-            personageName.text = replica.characterName;
-            text.text = replica.message;
+            if (replica != null)
+            {
+                personageName.text = replica.characterName;
+                text.text = replica.message;
+
+                var keyName = replica.characterName;
+                var keyPos = replica.characterPosition;
+
+                if (keyPos != null)
+                {
+                    var prevKeyPos = character_slot[keyName];
+                    if (prevKeyPos == null)
+                    {
+                        var slot = slots[keyPos];
+                        var prefabPath = characterPrefabPath[keyName];
+                        characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
+
+                        slot_character[keyPos] = keyName;
+                        character_slot[keyName] = keyPos;
+                    }
+                    else if (prevKeyPos != keyPos)
+                    {
+                        slot_character[prevKeyPos] = null;
+                        character_slot[keyName] = null;
+
+                        var slot = slots[keyPos];
+                        characters[keyName].transform.SetParent(slot, false);
+
+                        slot_character[keyPos] = keyName;
+                        character_slot[keyName] = keyPos;
+                    }
+                }
+                characters[keyName].Select();
+            }
         }
     }
 }

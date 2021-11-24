@@ -507,6 +507,13 @@ namespace Overlewd
             }
         }
 
+        public class DialogCharacterPosition 
+        {
+            public const string Left = "left";
+            public const string Right = "right";
+            public const string Middle = "middle";
+        }
+
         [Serializable]
         public class DialogReplica
         {
