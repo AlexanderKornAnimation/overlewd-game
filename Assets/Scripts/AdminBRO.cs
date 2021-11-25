@@ -138,11 +138,17 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public string type;
+            public bool promo;
+            public bool donat;
             public string imageUrl;
             public string description;
             public string discount;
             public string specialOfferLabel;
-            public string itemPack;
+            public List<int> itemPack;
+            public int? currencyId;
+            public int? currencyAmount;
+            public int? limit;
             public string dateStart;
             public string dateEnd;
             public string discountStart;
@@ -209,6 +215,7 @@ namespace Overlewd
             public int id;
             public string name;
             public string iconUrl;
+            public bool nutaku;
             public string createdAt;
             public string updatedAt;
         }
@@ -239,17 +246,24 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public string type;
+            public bool promo;
+            public bool donat;
             public string imageUrl;
             public string description;
             public List<PriceItem> price;
             public string discount;
             public string specialOfferLabel;
-            public string itemPack;
+            public List<int> itemPack;
+            public int? currencyId;
+            public int? currencyAmount;
+            public int? limit;
             public string dateStart;
             public string dateEnd;
             public string discountStart;
             public string discountEnd;
             public string sortPriority;
+            public bool soldOut;
         }
 
         // /tradable/{id}/buy
