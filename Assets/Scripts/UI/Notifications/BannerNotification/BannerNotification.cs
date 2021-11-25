@@ -7,10 +7,12 @@ namespace Overlewd
 {
     public class BannerNotification : BaseNotification
     {
-        private Button closeButton;
+        private List<Image> goods = new List<Image>();
+        private List<Image> currency = new List<Image>();
+
         private Button buyButton;
 
-        void Start()
+        private void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/BannerNotification/BannerNotification"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -19,23 +21,39 @@ namespace Overlewd
 
             var canvas = screenRectTransform.Find("Canvas");
 
-            closeButton = canvas.Find("CloseButton").GetComponent<Button>();
-            closeButton.onClick.AddListener(CloseButtonClick);
-
             buyButton = canvas.Find("BuyButton").GetComponent<Button>();
             buyButton.onClick.AddListener(BuyButtonClick);
+            
+            FindResources(canvas);
+
+            goods[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Goods/Sword");
+            goods[1].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Goods/Shards");
+            goods[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
+
+            currency[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/EventCurrency/CatgirlMigration");
+            currency[1].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
+            currency[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
+            currency[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Copper");
+            currency[4].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
+            currency[5].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
         }
 
-        void Update()
+        private void FindResources(Transform canvas)
         {
+            var goodsCount = canvas.Find("GridForGoods").childCount;
+            var currencyCount = canvas.Find("GridForCurrency").childCount;
 
+            for (int i = 1; i <= goodsCount; i++)
+            {
+                goods.Add(canvas.Find("GridForGoods").Find($"Goods{i}").Find("Icon").GetComponent<Image>());
+            }
+            
+            for (int i = 1; i <= currencyCount; i++)
+            {
+                currency.Add(canvas.Find("GridForCurrency").Find($"Currency{i}").Find("Icon").GetComponent<Image>());
+            }
         }
-
-        private void CloseButtonClick()
-        {
-            UIManager.HideNotification();
-        }
-
+        
         private void BuyButtonClick()
         {
             UIManager.ShowNotification<NutakuBuyingNotification>();
