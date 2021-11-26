@@ -44,12 +44,18 @@ namespace Overlewd
 
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
 
+            Customize();
+        }
+
+        public void Customize()
+        {
             var marketData = GameGlobalStates.eventShop_MarketData;
             var tradables = new List<AdminBRO.TradableItem>(marketData.tradable);
+
             tradables.Sort((x, y) =>
-                {
-                    return x.promo ? -1 : 1;
-                }
+            {
+                return x.promo ? -1 : 1;
+            }
             );
             foreach (var tradableData in tradables)
             {
@@ -58,6 +64,9 @@ namespace Overlewd
             }
 
             promoTradable = tradables.Find(t => t.promo);
+
+            moneyBackValue.text = GameData.GetCurencyCatEarsCount().ToString();
+            eventMoneyImage.sprite = ResourceManager.LoadSpriteById(GameData.GetCurencyCatEars().iconUrl);
         }
 
         private void BackButtonClick()

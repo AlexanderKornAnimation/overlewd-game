@@ -27,6 +27,12 @@ namespace Overlewd
             }
             return true;
         }
+        public static int GetCurencyCatEarsCount()
+        {
+            var currency = GetCurencyCatEars();
+            var walletCurrency = playerInfo.wallet.Find(item => item.currency.id == currency.id);
+            return walletCurrency?.amount ?? 0;
+        }
 
         public static async Task BuyTradableAsync(AdminBRO.TradableItem tradable)
         {
@@ -62,6 +68,10 @@ namespace Overlewd
         public static AdminBRO.CurrencyItem GetCurrencyById(int id)
         {
             return currenies.Find(c => c.id == id);
+        }
+        public static AdminBRO.CurrencyItem GetCurencyCatEars()
+        {
+            return currenies.Find(c => c.name == "Cat Ears");
         }
 
         public static List<AdminBRO.EventStageItem> eventStages { get; set; } = new List<AdminBRO.EventStageItem>();
