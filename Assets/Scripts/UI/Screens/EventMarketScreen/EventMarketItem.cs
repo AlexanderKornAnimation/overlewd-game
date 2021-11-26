@@ -77,7 +77,7 @@ namespace Overlewd
                     buyWithCountPrice.text = tradableData.price[0].amount.ToString();
                     buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
 
-                    buyWithCountCount.text = $"{tradableData.limit.Value}";
+                    buyWithCountCount.text = $"{tradableData.limit.Value}/{tradableData.limit.Value}";
                 }
                 else
                 {
