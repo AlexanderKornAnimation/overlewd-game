@@ -62,6 +62,14 @@ namespace Overlewd
             } 
         }
 
+        public static int bannerNotifcation_TradableId;
+        public static AdminBRO.TradableItem bannerNotifcation_TradableData
+        {
+            get
+            {
+                return GameData.GetTradableById(bannerNotifcation_TradableId);
+            }
+        }
     }
 
 }

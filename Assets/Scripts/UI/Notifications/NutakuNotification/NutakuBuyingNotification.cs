@@ -22,11 +22,6 @@ namespace Overlewd
             buyButton.onClick.AddListener(BuyButtonClick);
         }
 
-        void Update()
-        {
-
-        }
-
         private void BuyButtonClick()
         {
             UIManager.ShowNotification<NutakuBuyingStatusNotification>();

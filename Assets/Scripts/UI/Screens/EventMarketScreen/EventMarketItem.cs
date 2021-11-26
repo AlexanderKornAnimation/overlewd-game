@@ -10,10 +10,13 @@ namespace Overlewd
         public class EventMarketItem : MonoBehaviour
         {
             public int tradableId;
+            private AdminBRO.TradableItem tradableData;
+            private AdminBRO.CurrencyItem currencyData;
 
-            private Image girlImage;
+            private Image promoIcon;
+            private Transform item;
             private Image itemBack;
-            private Image itemImage;
+            private Image itemIcon;
             private Text description;
 
             private Button buyButton;
@@ -31,9 +34,10 @@ namespace Overlewd
             {
                 var canvas = transform.Find("Canvas");
 
-                girlImage = canvas.Find("GirlImage").GetComponent<Image>();
-                itemBack = canvas.Find("Item").Find("NormalRare").GetComponent<Image>();
-                itemImage = canvas.Find("Item").Find("Icon").GetComponent<Image>();
+                promoIcon = canvas.Find("PromoIcon").GetComponent<Image>();
+                item = canvas.Find("Item");
+                itemBack = item.Find("Back").GetComponent<Image>();
+                itemIcon = item.Find("Icon").GetComponent<Image>();
                 description = canvas.Find("Description").GetComponent<Text>();
 
                 buyButton = canvas.Find("Buy").GetComponent<Button>();
@@ -44,51 +48,96 @@ namespace Overlewd
                 buyWithCountButton = canvas.Find("BuyWithCount").GetComponent<Button>();
                 buyWithCountButton.onClick.AddListener(BuyWithCountButtonClick);
                 buyWithCountPrice = buyWithCountButton.transform.Find("Price").GetComponent<Text>();
-                buyWithCountCurrency = buyWithCountButton.transform.Find("Currency").GetComponent<Image>(); ;
+                buyWithCountCurrency = buyWithCountButton.transform.Find("Currency").GetComponent<Image>();
                 buyWithCountCount = buyWithCountButton.transform.Find("Count").GetComponent<Text>();
 
                 soldOut = canvas.Find("SoldOut");
+
+                tradableData = GameData.GetTradableById(tradableId);
+                var currencyId = tradableData.price[0].currencyId;
+                currencyData = GameData.GetCurrencyById(currencyId);
 
                 CustomizeItem();
             }
 
             private void CustomizeItem()
             {
-                var tradableData = GameData.GetTradableById(tradableId);
+                if (tradableData.soldOut)
+                {
+                    soldOut.gameObject.SetActive(true);
+                    buyButton.gameObject.SetActive(false);
+                    buyWithCountButton.gameObject.SetActive(false);
+                }
+                else if (tradableData.limit.HasValue)
+                {
+                    soldOut.gameObject.SetActive(false);
+                    buyButton.gameObject.SetActive(false);
+                    buyWithCountButton.gameObject.SetActive(true);
 
-                soldOut.gameObject.SetActive(false);
-                buyButton.gameObject.SetActive(false);
-                girlImage.gameObject.SetActive(false);
+                    buyWithCountPrice.text = tradableData.price[0].amount.ToString();
+                    buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
 
-                itemImage.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
+                    buyWithCountCount.text = $"{tradableData.limit.Value}";
+                }
+                else
+                {
+                    soldOut.gameObject.SetActive(false);
+                    buyButton.gameObject.SetActive(true);
+                    buyWithCountButton.gameObject.SetActive(false);
 
-                buyWithCountPrice.text = tradableData.price[0].amount.ToString();
-                var currencyId = tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
-                buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
+                    buyPrice.text = tradableData.price[0].amount.ToString();
+                    buyCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
+                }
+
+                if (tradableData.promo)
+                {
+                    item.gameObject.SetActive(false);
+                    promoIcon.gameObject.SetActive(true);
+
+                    promoIcon.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
+                }
+                else
+                {
+                    item.gameObject.SetActive(true);
+                    promoIcon.gameObject.SetActive(false);
+
+                    itemIcon.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
+                }
 
                 description.text = tradableData.description;
             }
 
             private async void BuyButtonClick()
             {
-                var tradableData = GameData.GetTradableById(tradableId);
-
                 if (GameData.CanTradableBuy(tradableData))
                 {
-                    await GameData.BuyTradableAsync(tradableData);
-                    UIManager.ShowNotification<BuyingNotification>();
+                    if (!currencyData.nutaku)
+                    {
+                        await GameData.BuyTradableAsync(tradableData);
+                        UIManager.ShowNotification<BuyingNotification>();
+                    }
+                    else
+                    {
+                        GameGlobalStates.bannerNotifcation_TradableId = tradableId;
+                        UIManager.ShowNotification<BannerNotification>();
+                    }
                 }
             }
 
             private async void BuyWithCountButtonClick()
             {
-                var tradableData = GameData.GetTradableById(tradableId);
-
                 if (GameData.CanTradableBuy(tradableData))
                 {
-                    await GameData.BuyTradableAsync(tradableData);
-                    UIManager.ShowNotification<BuyingNotification>();
+                    if (!currencyData.nutaku)
+                    {
+                        await GameData.BuyTradableAsync(tradableData);
+                        UIManager.ShowNotification<BuyingNotification>();
+                    }
+                    else
+                    {
+                        GameGlobalStates.bannerNotifcation_TradableId = tradableId;
+                        UIManager.ShowNotification<BannerNotification>();
+                    }
                 }
             }
 

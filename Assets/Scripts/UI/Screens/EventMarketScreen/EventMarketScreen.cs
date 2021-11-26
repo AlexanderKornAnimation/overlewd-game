@@ -17,6 +17,8 @@ namespace Overlewd
 
         private Transform scrollViewContent;
 
+        private AdminBRO.TradableItem promoTradable;
+
         void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/EventMarket"));
@@ -43,12 +45,19 @@ namespace Overlewd
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
 
             var marketData = GameGlobalStates.eventShop_MarketData;
-            foreach (var tradableData in marketData.tradable)
+            var tradables = new List<AdminBRO.TradableItem>(marketData.tradable);
+            tradables.Sort((x, y) =>
+                {
+                    return x.promo ? -1 : 1;
+                }
+            );
+            foreach (var tradableData in tradables)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
                 eventMarketItem.tradableId = tradableData.id;
             }
 
+            promoTradable = tradables.Find(t => t.promo);
         }
 
         private void BackButtonClick()
@@ -68,7 +77,14 @@ namespace Overlewd
 
         private void MoneyBackButtonClick()
         {
-            UIManager.ShowNotification<BannerNotification>();
+            if (promoTradable != null)
+            {
+                if (GameData.CanTradableBuy(promoTradable))
+                {
+                    GameGlobalStates.bannerNotifcation_TradableId = promoTradable.id;
+                    UIManager.ShowNotification<BannerNotification>();
+                }
+            }
         }
     }
 }

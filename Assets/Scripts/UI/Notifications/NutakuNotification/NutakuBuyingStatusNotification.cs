@@ -22,11 +22,6 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
         }
 
-        void Update()
-        {
-
-        }
-
         private void BackButtonClick()
         {
             UIManager.ShowNotification<BuyingNotification>();

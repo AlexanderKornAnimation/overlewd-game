@@ -12,6 +12,8 @@ namespace Overlewd
 
         private Button buyButton;
 
+        private AdminBRO.TradableItem tradableData;
+
         private void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/BannerNotification/BannerNotification"));
@@ -36,6 +38,8 @@ namespace Overlewd
             currency[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Copper");
             currency[4].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
             currency[5].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
+
+            tradableData = GameGlobalStates.bannerNotifcation_TradableData;
         }
 
         private void FindResources(Transform canvas)
@@ -54,8 +58,10 @@ namespace Overlewd
             }
         }
         
-        private void BuyButtonClick()
+        private async void BuyButtonClick()
         {
+            await GameData.BuyTradableAsync(tradableData);
+
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }
     }
