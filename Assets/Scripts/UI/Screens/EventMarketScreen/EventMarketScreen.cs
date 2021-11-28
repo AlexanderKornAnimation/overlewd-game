@@ -88,7 +88,7 @@ namespace Overlewd
         {
             if (promoTradable != null)
             {
-                if (GameData.CanTradableBuy(promoTradable))
+                //if (GameData.CanTradableBuy(promoTradable))
                 {
                     GameGlobalStates.bannerNotifcation_TradableId = promoTradable.id;
                     UIManager.ShowNotification<BannerNotification>();
