@@ -79,6 +79,8 @@ namespace Overlewd
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(resourcesGrid.GetComponent<RectTransform>());
+
+            resourceIcons.Add(resourceIcon);
         }
         
         private async void BuyButtonClick()

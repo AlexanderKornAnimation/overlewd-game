@@ -8,7 +8,7 @@ namespace Overlewd
 {
     public class ResourceIcon : MonoBehaviour
     {
-        public enum Type 
+        public enum Type
         {
             ResourceTypeA,
             ResourceTypeB,
@@ -32,6 +32,8 @@ namespace Overlewd
             }
         }
 
+        public Type type { get; private set; }
+
         private RectTransform rectTransform;
         private Image resourceIcon;
         private Text resourceCount;
@@ -54,9 +56,11 @@ namespace Overlewd
                 _ => ""
             };
 
-            var newIcon = (GameObject)Instantiate(Resources.Load(prefabPath), parent);
-            newIcon.name = nameof(ResourceIcon);
-            return newIcon.AddComponent<ResourceIcon>();
+            var newIconGO = (GameObject)Instantiate(Resources.Load(prefabPath), parent);
+            newIconGO.name = nameof(ResourceIcon);
+            var newIcon = newIconGO.AddComponent<ResourceIcon>();
+            newIcon.type = iconType;
+            return newIcon;
         }
     }
 }
