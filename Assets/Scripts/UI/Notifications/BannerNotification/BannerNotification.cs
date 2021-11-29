@@ -85,7 +85,9 @@ namespace Overlewd
         
         private async void BuyButtonClick()
         {
-            await GameData.BuyTradableAsync(tradableData);
+            var marketId = GameGlobalStates.bannerNotification_EventMarketId;
+            var tradableId = GameGlobalStates.bannerNotification_TradableId;
+            await GameData.BuyTradableAsync(marketId, tradableId);
 
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }

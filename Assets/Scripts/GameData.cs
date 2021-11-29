@@ -34,9 +34,9 @@ namespace Overlewd
             return walletCurrency?.amount ?? 0;
         }
 
-        public static async Task BuyTradableAsync(AdminBRO.TradableItem tradable)
+        public static async Task BuyTradableAsync(int marketId, int tradableId)
         {
-            await AdminBRO.tradableBuyAsync(tradable.id);
+            await AdminBRO.tradableBuyAsync(marketId, tradableId);
             GameData.playerInfo = await AdminBRO.meAsync();
         }
 
@@ -57,11 +57,9 @@ namespace Overlewd
         {
             return eventMarkets.Find(m => m.id == id);
         }
-
-        public static List<AdminBRO.TradableItem> tradables { get; set; } = new List<AdminBRO.TradableItem>();
-        public static AdminBRO.TradableItem GetTradableById(int id)
+        public static AdminBRO.TradableItem GetTradableById(int marketId, int tradableId)
         {
-            return tradables.Find(t => t.id == id);
+            return eventMarkets.Find(m => m.id == marketId)?.tradable.Find(t => t.id == tradableId);
         }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }

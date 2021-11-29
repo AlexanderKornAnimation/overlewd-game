@@ -9,6 +9,7 @@ namespace Overlewd
     {
         public class EventMarketItem : MonoBehaviour
         {
+            public int eventMarketId;
             public int tradableId;
             private AdminBRO.TradableItem tradableData;
             private AdminBRO.CurrencyItem currencyData;
@@ -53,7 +54,7 @@ namespace Overlewd
 
                 soldOut = canvas.Find("SoldOut");
 
-                tradableData = GameData.GetTradableById(tradableId);
+                tradableData = GameData.GetTradableById(eventMarketId, tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 currencyData = GameData.GetCurrencyById(currencyId);
 
@@ -113,12 +114,13 @@ namespace Overlewd
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.BuyTradableAsync(tradableData);
+                        await GameData.BuyTradableAsync(eventMarketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
                     {
-                        GameGlobalStates.bannerNotifcation_TradableId = tradableId;
+                        GameGlobalStates.bannerNotification_EventMarketId = eventMarketId;
+                        GameGlobalStates.bannerNotification_TradableId = tradableId;
                         UIManager.ShowNotification<BannerNotification>();
                     }
                 }
@@ -130,12 +132,13 @@ namespace Overlewd
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.BuyTradableAsync(tradableData);
+                        await GameData.BuyTradableAsync(eventMarketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
                     {
-                        GameGlobalStates.bannerNotifcation_TradableId = tradableId;
+                        GameGlobalStates.bannerNotification_EventMarketId = eventMarketId;
+                        GameGlobalStates.bannerNotification_TradableId = tradableId;
                         UIManager.ShowNotification<BannerNotification>();
                     }
                 }

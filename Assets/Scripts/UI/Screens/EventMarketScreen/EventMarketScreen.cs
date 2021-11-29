@@ -61,6 +61,7 @@ namespace Overlewd
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
                 eventMarketItem.tradableId = tradableData.id;
+                eventMarketItem.eventMarketId = marketData.id;
             }
 
             promoTradable = tradables.Find(t => t.promo);
@@ -88,9 +89,10 @@ namespace Overlewd
         {
             if (promoTradable != null)
             {
-                //if (GameData.CanTradableBuy(promoTradable))
+                if (GameData.CanTradableBuy(promoTradable))
                 {
-                    GameGlobalStates.bannerNotifcation_TradableId = promoTradable.id;
+                    GameGlobalStates.bannerNotification_EventMarketId = GameGlobalStates.eventShop_MarketId;
+                    GameGlobalStates.bannerNotification_TradableId = promoTradable.id;
                     UIManager.ShowNotification<BannerNotification>();
                 }
             }

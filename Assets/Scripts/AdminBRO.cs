@@ -182,59 +182,6 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class EventMarketItem
-        {
-            public int id;
-            public string name;
-            public string description;
-            public string bannerImage;
-            public string eventMapNodeName;
-            public string createdAt;
-            public string updatedAt;
-            public List<TradableItem> tradable;
-            public List<int> tradableIds;
-            public List<int> currencies;
-        }
-
-        // /currencies
-        public static async Task<List<CurrencyItem>> currenciesAsync()
-        {
-            using (var request = await NetworkHelper.GetAsync("https://overlude-api.herokuapp.com/currencies", tokens.accessToken))
-            {
-                if (!RequestCheckError(request))
-                {
-                    return DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
-                }
-                return null;
-            }
-        }
-
-        [Serializable]
-        public class CurrencyItem
-        {
-            public int id;
-            public string name;
-            public string iconUrl;
-            public bool nutaku;
-            public string createdAt;
-            public string updatedAt;
-        }
-
-        // /tradables
-        public static async Task<List<TradableItem>> tradablesAsync()
-        {
-            var url = "https://overlude-api.herokuapp.com/tradable";
-            using (var request = await NetworkHelper.GetAsync(url, tokens.accessToken))
-            {
-                if (!RequestCheckError(request))
-                {
-                    return DeserializeObject<List<TradableItem>>(request.downloadHandler.text);
-                }
-                return null;
-            }
-        }
-
-        [Serializable]
         public class PriceItem
         {
             public int currencyId;
@@ -263,14 +210,53 @@ namespace Overlewd
             public string discountStart;
             public string discountEnd;
             public string sortPriority;
+            public int currentCount;
             public bool soldOut;
         }
 
-        // /tradable/{id}/buy
-        public static async Task<TradableBuyStatus> tradableBuyAsync(int tradable_id)
+        [Serializable]
+        public class EventMarketItem
+        {
+            public int id;
+            public string name;
+            public string description;
+            public string bannerImage;
+            public string eventMapNodeName;
+            public string createdAt;
+            public string updatedAt;
+            public List<TradableItem> tradable;
+            public List<int> currencies;
+        }
+
+        // /currencies
+        public static async Task<List<CurrencyItem>> currenciesAsync()
+        {
+            using (var request = await NetworkHelper.GetAsync("https://overlude-api.herokuapp.com/currencies", tokens.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class CurrencyItem
+        {
+            public int id;
+            public string name;
+            public string iconUrl;
+            public bool nutaku;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        // /markets/{marketId}/tradable/{tradableId}/buy
+        public static async Task<TradableBuyStatus> tradableBuyAsync(int marketId, int tradableId)
         {
             var form = new WWWForm();
-            var url = String.Format("https://overlude-api.herokuapp.com/tradable/{0}/buy", tradable_id);
+            var url = $"https://overlude-api.herokuapp.com/markets/{marketId}/tradable/{tradableId}/buy";
             using (var request = await NetworkHelper.PostAsync(url, form, tokens.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -460,6 +446,13 @@ namespace Overlewd
             }
         }
 
+        [Serializable]
+        public class EventQuestReward
+        {
+            public int currencyId;
+            public int amount;
+        }
+
         public class EventQuestType
         {
             public const string StandartHunt = "standart_hunt";
@@ -475,7 +468,7 @@ namespace Overlewd
             public string type;
             public string description;
             public int goalCount;
-            public string reward;
+            public List<EventQuestReward> rewards;
             public string createdAt;
             public string updatedAt;
         }
@@ -570,6 +563,13 @@ namespace Overlewd
             }
         }
 
+        [Serializable]
+        public class BattleReward
+        {
+            public int currencyId;
+            public int amount;
+        }
+
         public class BattleType
         {
             public const string Battle = "battle";
@@ -582,7 +582,8 @@ namespace Overlewd
             public int id;
             public string title;
             public string type;
-            public string rewards;
+            public List<BattleReward> rewards;
+            public List<BattleReward> firstRewards;
         }
     }
 }
