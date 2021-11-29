@@ -9,7 +9,7 @@ namespace Overlewd
     {
         private Button buyButton;
 
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/NutakuNotification/BuyingNotification"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();

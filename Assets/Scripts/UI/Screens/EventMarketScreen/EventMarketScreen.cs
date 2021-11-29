@@ -17,9 +17,10 @@ namespace Overlewd
 
         private Transform scrollViewContent;
 
-        private AdminBRO.TradableItem promoTradable;
+        private List<NSEventMarketScreen.EventMarketItem> marketItems = 
+            new List<NSEventMarketScreen.EventMarketItem>();
 
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/EventMarket"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -43,29 +44,50 @@ namespace Overlewd
             eventMoneyImage = moneyBackButton.transform.Find("EventMoney").GetComponent<Image>();
 
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
-
-            Customize();
         }
 
-        public void Customize()
+        void Start()
         {
             var marketData = GameGlobalStates.eventShop_MarketData;
             var tradables = new List<AdminBRO.TradableItem>(marketData.tradable);
 
             tradables.Sort((x, y) =>
-            {
-                return x.promo ? -1 : 1;
-            }
+                {
+                    return x.promo ? -1 : 1;
+                }
             );
+
             foreach (var tradableData in tradables)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
                 eventMarketItem.tradableId = tradableData.id;
                 eventMarketItem.eventMarketId = marketData.id;
+
+                marketItems.Add(eventMarketItem);
             }
 
-            promoTradable = tradables.Find(t => t.promo);
+            Customize();
 
+            GameData.gameDataUpdateListeners += GameDataUpdate;
+        }
+
+        void OnDestroy()
+        {
+            GameData.gameDataUpdateListeners -= GameDataUpdate;
+        }
+
+        private void GameDataUpdate()
+        {
+            Customize();
+
+            foreach (var marketItem in marketItems)
+            {
+                marketItem.Customize();
+            }
+        }
+
+        private void Customize()
+        {
             moneyBackValue.text = GameData.GetCurencyCatEarsCount().ToString();
             eventMoneyImage.sprite = ResourceManager.LoadSpriteById(GameData.GetCurencyCatEars().iconUrl);
         }
@@ -87,6 +109,7 @@ namespace Overlewd
 
         private void MoneyBackButtonClick()
         {
+            var promoTradable = GameGlobalStates.eventShop_MarketData.tradable.Find(t => t.promo);
             if (promoTradable != null)
             {
                 if (GameData.CanTradableBuy(promoTradable))

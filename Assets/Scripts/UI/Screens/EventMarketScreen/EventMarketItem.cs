@@ -11,8 +11,6 @@ namespace Overlewd
         {
             public int eventMarketId;
             public int tradableId;
-            private AdminBRO.TradableItem tradableData;
-            private AdminBRO.CurrencyItem currencyData;
 
             private Image promoIcon;
             private Transform item;
@@ -31,7 +29,7 @@ namespace Overlewd
 
             private Transform soldOut;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -53,16 +51,19 @@ namespace Overlewd
                 buyWithCountCount = buyWithCountButton.transform.Find("Count").GetComponent<Text>();
 
                 soldOut = canvas.Find("SoldOut");
-
-                tradableData = GameData.GetTradableById(eventMarketId, tradableId);
-                var currencyId = tradableData.price[0].currencyId;
-                currencyData = GameData.GetCurrencyById(currencyId);
-
-                CustomizeItem();
             }
 
-            private void CustomizeItem()
+            void Start()
             {
+                Customize();
+            }
+
+            public void Customize()
+            {
+                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var currencyId = tradableData.price[0].currencyId;
+                var currencyData = GameData.GetCurrencyById(currencyId);
+
                 if (tradableData.soldOut)
                 {
                     soldOut.gameObject.SetActive(true);
@@ -78,7 +79,7 @@ namespace Overlewd
                     buyWithCountPrice.text = tradableData.price[0].amount.ToString();
                     buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
 
-                    buyWithCountCount.text = $"{tradableData.limit.Value}/{tradableData.limit.Value}";
+                    buyWithCountCount.text = $"{tradableData.currentCount}/{tradableData.limit.Value}";
                 }
                 else
                 {
@@ -110,6 +111,10 @@ namespace Overlewd
 
             private async void BuyButtonClick()
             {
+                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var currencyId = tradableData.price[0].currencyId;
+                var currencyData = GameData.GetCurrencyById(currencyId);
+
                 if (GameData.CanTradableBuy(tradableData))
                 {
                     if (!currencyData.nutaku)
@@ -128,6 +133,10 @@ namespace Overlewd
 
             private async void BuyWithCountButtonClick()
             {
+                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var currencyId = tradableData.price[0].currencyId;
+                var currencyData = GameData.GetCurrencyById(currencyId);
+
                 if (GameData.CanTradableBuy(tradableData))
                 {
                     if (!currencyData.nutaku)

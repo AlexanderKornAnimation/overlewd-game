@@ -13,7 +13,7 @@ namespace Overlewd
 
         private VideoPlayer battleVideo;
 
-        async void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BattleScreen/BattleScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -30,6 +30,11 @@ namespace Overlewd
 
             battleVideo = canvas.Find("TestVideo").GetComponent<VideoPlayer>();
 
+            battleVideo.gameObject.SetActive(false);
+        }
+
+        async void Start()
+        {
             await GameData.EventStageStartAsync(GameGlobalStates.battle_EventStageData);
         }
 
@@ -37,6 +42,7 @@ namespace Overlewd
         {
             backButton.gameObject.SetActive(true);
             startBattleButton.gameObject.SetActive(true);
+            battleVideo.gameObject.SetActive(false);
 
             await GameData.EventStageEndAsync(GameGlobalStates.battle_EventStageData);
 
@@ -50,6 +56,7 @@ namespace Overlewd
 
             backButton.gameObject.SetActive(false);
             startBattleButton.gameObject.SetActive(false);
+            battleVideo.gameObject.SetActive(true);
         }
 
         private void BackButtonClick()

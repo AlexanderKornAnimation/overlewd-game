@@ -84,10 +84,5 @@ namespace Overlewd
 
             NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[TabComingSoon]);
         }
-
-        void Update()
-        {
-
-        }
     }
 }

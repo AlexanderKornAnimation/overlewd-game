@@ -17,7 +17,8 @@ namespace Overlewd
 
         private AdminBRO.TradableItem tradableData;
 
-        private List<ResourceIcon> resourceIcons = new List<ResourceIcon>();
+        private List<NSBannerNotification.ResourceIcon> resourceIcons = 
+            new List<NSBannerNotification.ResourceIcon>();
 
         private void Start()
         {
@@ -43,21 +44,17 @@ namespace Overlewd
 
         private void Customize()
         {
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeA, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeB, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeB, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeB, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeB, null));
-
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeC, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeD, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeD, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeD, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeD, null));
-            AddResourceIcon(ResourceIcon.GetInstance(ResourceIcon.Type.ResourceTypeD, null));
+            for (int i = 0; i < 7; i++)
+            {
+                var rIcon = NSBannerNotification.ResourceIcon.GetInstance(null);
+                rIcon.icon = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Backgrounds/BattleGirlLegendary");
+                rIcon.caption = "_";
+                AddResourceIcon(rIcon);
+            }
+            
         }
 
-        private void AddResourceIcon(ResourceIcon resourceIcon)
+        private void AddResourceIcon(NSBannerNotification.ResourceIcon resourceIcon)
         {
             var iconWidth = resourceIcon.GetComponent<RectTransform>().rect.width;
             var hGrid2Width = hGrid2.GetComponent<RectTransform>().rect.width;
@@ -72,10 +69,12 @@ namespace Overlewd
             if (hGrid1Width + iconWidth < 1150.0f)
             {
                 resourceIcon.transform.SetParent(hGrid1.transform, false);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(hGrid1.GetComponent<RectTransform>());
             }
             else
             {
                 resourceIcon.transform.SetParent(hGrid2.transform, false);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(hGrid2.GetComponent<RectTransform>());
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(resourcesGrid.GetComponent<RectTransform>());
