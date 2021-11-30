@@ -51,12 +51,12 @@ namespace Overlewd
 
         private void StartBattleButtonClick()
         {
-            battleVideo.Play();
-            battleVideo.loopPointReached += EndBattleVideo;
-
             backButton.gameObject.SetActive(false);
             startBattleButton.gameObject.SetActive(false);
             battleVideo.gameObject.SetActive(true);
+
+            battleVideo.Play();
+            battleVideo.loopPointReached += EndBattleVideo;
         }
 
         private void BackButtonClick()

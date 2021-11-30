@@ -169,6 +169,10 @@ namespace Overlewd
 
         public static void Initialize()
         {
+#if UNITY_ANDROID
+            Application.targetFrameRate = 60;
+#endif
+
             currentResolution = SelectResolution();
             currentAspectRatio = currentResolution.x / currentResolution.y;
 
