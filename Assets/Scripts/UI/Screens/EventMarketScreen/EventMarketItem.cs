@@ -12,10 +12,7 @@ namespace Overlewd
             public int eventMarketId;
             public int tradableId;
 
-            private Image promoIcon;
-            private Transform item;
-            private Image itemBack;
-            private Image itemIcon;
+            private Image item;
             private Text description;
 
             private Button buyButton;
@@ -33,10 +30,7 @@ namespace Overlewd
             {
                 var canvas = transform.Find("Canvas");
 
-                promoIcon = canvas.Find("PromoIcon").GetComponent<Image>();
-                item = canvas.Find("Item");
-                itemBack = item.Find("Back").GetComponent<Image>();
-                itemIcon = item.Find("Icon").GetComponent<Image>();
+                item = canvas.Find("Item").GetComponent<Image>();
                 description = canvas.Find("Description").GetComponent<Text>();
 
                 buyButton = canvas.Find("Buy").GetComponent<Button>();
@@ -91,21 +85,8 @@ namespace Overlewd
                     buyCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
                 }
 
-                if (tradableData.promo)
-                {
-                    item.gameObject.SetActive(false);
-                    promoIcon.gameObject.SetActive(true);
-
-                    promoIcon.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
-                }
-                else
-                {
-                    item.gameObject.SetActive(true);
-                    promoIcon.gameObject.SetActive(false);
-
-                    itemIcon.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
-                }
-
+                item.gameObject.SetActive(true);
+                item.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
                 description.text = tradableData.description;
             }
 
@@ -155,7 +136,7 @@ namespace Overlewd
 
             public static EventMarketItem GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/Item"), parent);
+                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/Item"), parent);
                 newItem.name = nameof(EventMarketItem);
                 return newItem.AddComponent<EventMarketItem>();
             }
