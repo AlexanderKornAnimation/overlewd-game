@@ -7,29 +7,31 @@ namespace Overlewd
 {
     public class QuestsWidget : BaseWidget
     {
-        void Awake()
+        private Button mainQuestButton;
+        private Button sideQuestButton1;
+        private Button sideQuestButton2;
+        private Button sideQuestButton3;
+    
+        private void Awake()
         {
-            transform.Find("Canvas").Find("Quest1").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowOverlay<QuestOverlay>();
-            });
+            var canvas = transform.Find("Canvas");
 
-            transform.Find("Canvas").Find("Quest2").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowOverlay<QuestOverlay>();
-            });
-        }
-
-        void Start()
-        {
+            mainQuestButton = canvas.Find("MainQuest").GetComponent<Button>();
+            sideQuestButton1 = canvas.Find("SideQuest1").GetComponent<Button>();
+            sideQuestButton2 = canvas.Find("SideQuest2").GetComponent<Button>();
+            sideQuestButton3 = canvas.Find("SideQuest3").GetComponent<Button>();
             
+            mainQuestButton.onClick.AddListener(OnQuestButtonClick);
+            sideQuestButton1.onClick.AddListener(OnQuestButtonClick);
+            sideQuestButton2.onClick.AddListener(OnQuestButtonClick);
+            sideQuestButton3.onClick.AddListener(OnQuestButtonClick);
         }
 
-        void Update()
+        private void OnQuestButtonClick()
         {
-
+            UIManager.ShowOverlay<QuestOverlay>();
         }
-
+        
         public static QuestsWidget CreateInstance(Transform parent)
         {
             var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"));

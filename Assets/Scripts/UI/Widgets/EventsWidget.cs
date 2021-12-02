@@ -7,32 +7,25 @@ namespace Overlewd
 {
     public class EventsWidget : BaseWidget
     {
-        void Awake()
-        {
-            transform.Find("Canvas").Find("Event1").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowOverlay<EventOverlay>();
-            });
+        private Button eventsButton;
 
-            transform.Find("Canvas").Find("Event2").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowOverlay<EventOverlay>();
-            });
+        private void Awake()
+        {
+            var canvas = transform.Find("Canvas");
+
+            eventsButton = canvas.Find("EventsButton").GetComponent<Button>();
+            
+            eventsButton.onClick.AddListener(OnEventButtonClick);
         }
 
-        void Start()
+        private void OnEventButtonClick()
         {
-
+            UIManager.ShowOverlay<EventOverlay>();
         }
-
-        void Update()
-        {
-
-        }
-
+        
         public static EventsWidget CreateInstance(Transform parent)
         {
-            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"));
+            var prefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"));
             prefab.name = nameof(EventsWidget);
             var rectTransform = prefab.GetComponent<RectTransform>();
             rectTransform.SetParent(parent, false);
