@@ -68,7 +68,7 @@ namespace Overlewd
 
             await LoadResourcesAsync();
 
-            UIManager.ShowScreen<CastleScreen>();
+            UIManager.ShowScreen<StartingScreen>();
         }
 
         void OnGUI()

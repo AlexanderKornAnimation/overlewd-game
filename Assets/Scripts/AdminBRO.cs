@@ -521,6 +521,13 @@ namespace Overlewd
             public const string Middle = "middle";
         }
 
+        public class DialogCharacterName
+        {
+            public const string Overlord = "Overlord";
+            public const string Ulvi = "Ulvi";
+            public const string Faye = "Faye";
+        }
+
         [Serializable]
         public class DialogReplica
         {

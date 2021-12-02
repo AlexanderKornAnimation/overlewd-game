@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,26 +9,26 @@ namespace Overlewd
 {
     public class DialogScreen : BaseScreen
     {
-        private Coroutine autoplayCoroutine;
+        protected Coroutine autoplayCoroutine;
 
-        private Transform leftCharacterPos;
-        private Transform midCharacterPos;
-        private Transform rightCharacterPos;
+        protected Transform leftCharacterPos;
+        protected Transform midCharacterPos;
+        protected Transform rightCharacterPos;
 
-        private Button nextButton;
-        private Text personageName;
-        private Image personageHead;
-        private Text text;
+        protected Button nextButton;
+        protected Text personageName;
+        protected Image personageHead;
+        protected Text text;
 
-        private Button skipButton;
-        private Button autoplayButton;
-        private Image autoplayButtonPressed;
-        private Text autoplayStatus;
+        protected Button skipButton;
+        protected Button autoplayButton;
+        protected Image autoplayButtonPressed;
+        protected Text autoplayStatus;
 
-        private AdminBRO.Dialog dialogData;
-        private int currentReplicaId;
+        protected AdminBRO.Dialog dialogData;
+        protected int currentReplicaId;
 
-        private bool isAutoplayButtonPressed = false;
+        protected bool isAutoplayButtonPressed = false;
 
         private Dictionary<string, string> characterPrefabPath = new Dictionary<string, string>
         {
@@ -41,7 +42,7 @@ namespace Overlewd
         private Dictionary<string, string> slot_character = new Dictionary<string, string>();
         private Dictionary<string, string> character_slot = new Dictionary<string, string>();
 
-        async void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/DialogScreen/DialogScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -70,13 +71,21 @@ namespace Overlewd
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
             autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<Text>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
-            autoplayButtonPressed.enabled = false;
-            
-            dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
+            autoplayButtonPressed.enabled = false; 
+        }
+
+        async void Start()
+        {
+            await EnterScreen();
 
             Initialize();
-            ShowCurrentReplica();
+            ClearReplica();
+            AutoplayButtonCustomize();
+        }
 
+        protected virtual async Task EnterScreen()
+        {
+            dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
             await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
         }
 
@@ -168,7 +177,7 @@ namespace Overlewd
             characters[keyName]?.Deselect();
         }
 
-        private void Initialize()
+        protected void Initialize()
         {
             slots[AdminBRO.DialogCharacterPosition.Left] = leftCharacterPos;
             slots[AdminBRO.DialogCharacterPosition.Right] = rightCharacterPos;
@@ -203,18 +212,17 @@ namespace Overlewd
             }
         }
 
-        private void AutoplayButtonClick()
+        protected void AutoplayButtonCustomize()
         {
             var defaultColor = Color.black;
             var redColor = Color.HSVToRGB(0.9989f, 1.00000f, 0.6118f);
-            
-            if (isAutoplayButtonPressed == false)
+
+            if (isAutoplayButtonPressed)
             {
                 isAutoplayButtonPressed = true;
                 autoplayButtonPressed.enabled = true;
                 autoplayStatus.color = redColor;
                 autoplayStatus.text = "ON";
-                autoplayCoroutine = StartCoroutine(Autoplay());
             }
             else
             {
@@ -222,50 +230,71 @@ namespace Overlewd
                 autoplayButtonPressed.enabled = false;
                 autoplayStatus.color = defaultColor;
                 autoplayStatus.text = "OFF";
-                
+            }
+        }
+
+        private void AutoplayButtonClick()
+        {
+            if (isAutoplayButtonPressed == false)
+            {
+                isAutoplayButtonPressed = true;
+                autoplayCoroutine = StartCoroutine(Autoplay());
+            }
+            else
+            {
+                isAutoplayButtonPressed = false;
                 if (autoplayCoroutine != null)
                 {
                     StopCoroutine(autoplayCoroutine);
                 }
             }
+
+            AutoplayButtonCustomize();
         }
 
         private IEnumerator Autoplay()
         {
-            for (int i = 0; i < dialogData.replicas.Count; i++)
+            while (currentReplicaId < dialogData.replicas.Count)
             {
+                ShowCurrentReplica();
+                yield return new WaitForSeconds(1f);
                 currentReplicaId++;
-                if (currentReplicaId < dialogData.replicas.Count)
-                {
-                    ShowCurrentReplica();
-                    yield return new WaitForSeconds(1f);
-                }
             }
+            AutoplayButtonClick();
         }
 
-        private async void SkipButtonClick()
+        protected virtual async void LeaveScreen()
         {
             await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
 
             UIManager.ShowScreen<EventMapScreen>();
         }
 
-        private async void NextButtonClick()
+        private void SkipButtonClick()
         {
-            currentReplicaId++;
+            LeaveScreen();
+        }
+
+        private void NextButtonClick()
+        {
             if (currentReplicaId < dialogData.replicas.Count)
             {
                 ShowCurrentReplica();
+                currentReplicaId++;
             }
             else
             {
-                await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
-
-                UIManager.ShowScreen<EventMapScreen>();
+                LeaveScreen();
             }
         }
 
-        private void ShowCurrentReplica()
+        protected void ClearReplica()
+        {
+            personageName.text = "";
+            text.text = "";
+        }
+
+        protected void ShowCurrentReplica()
         {
             var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
             if (prevReplica != null)
