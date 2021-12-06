@@ -14,6 +14,14 @@ namespace Overlewd
             {
                 dialogData = GameGlobalStates.sexScreen_DialogData;
                 await Task.CompletedTask;
+
+                var animBack = SpineWidget.CreateInstance(transform);
+                animBack.Initialize("FTUE/UlviSexScene1/Cut_in2/back_SkeletonData", false);
+                animBack.PlayAnimation("back", true);
+
+                var anim = SpineWidget.CreateInstance(transform);
+                anim.Initialize("FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData", false);
+                anim.PlayAnimation("idle", true);
             }
 
             protected override void LeaveScreen()

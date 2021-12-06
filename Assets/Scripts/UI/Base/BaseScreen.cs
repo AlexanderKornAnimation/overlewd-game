@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -11,14 +12,29 @@ namespace Overlewd
 
         }
 
-        void Update()
+        protected virtual void ShowMissclick()
         {
 
         }
 
-        protected virtual void ShowMissclick()
+        public virtual async Task PrepareShow()
         {
+            await Task.CompletedTask;
+        }
 
+        public virtual async Task AfterShow()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async Task PrepareHide()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async void AfterHide()
+        {
+            await Task.CompletedTask;
         }
 
         public virtual void Show()

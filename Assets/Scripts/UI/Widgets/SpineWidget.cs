@@ -2,55 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Spine.Unity;
+using System;
+using Spine;
 
 namespace Overlewd
 {
     public class SpineWidget : BaseWidget
     {
-        public string skeletonDataPath { get; set; }
-        public string animName { get; set; }
-        public bool multipleRenderCanvas { get; set; }
+        public event Action startListeners;
+        public event Action completeListeners;
 
-        void Awake()
+        private SkeletonDataAsset skeletonDataAsset;
+        private SkeletonGraphic skeletonGraphic;
+
+        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas)
         {
-            
+            skeletonDataAsset = Resources.Load<SkeletonDataAsset>(skeletonDataPath);
+            skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
+            skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
+            skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
+            skeletonGraphic.Initialize(false);
+
+            skeletonGraphic.AnimationState.Start += StartListener;
+            skeletonGraphic.AnimationState.Complete += CompleteListener;
         }
 
-        void Start()
+        private void StartListener(TrackEntry e)
         {
-            var skeletonDataAsset = Resources.Load<Spine.Unity.SkeletonDataAsset>(skeletonDataPath);
-            var spineGO_sg = gameObject.AddComponent<Spine.Unity.SkeletonGraphic>();
-            spineGO_sg.allowMultipleCanvasRenderers = multipleRenderCanvas;
-            spineGO_sg.skeletonDataAsset = skeletonDataAsset;
-            spineGO_sg.Initialize(false);
-            spineGO_sg.AnimationState.SetAnimation(0, animName, true);
+            startListeners?.Invoke();
         }
 
-        void Update()
+        private void CompleteListener(TrackEntry e)
         {
-
+            completeListeners?.Invoke();
         }
 
-        public SpineWidget SetAnimationName(string animationName)
+        public void PlayAnimation(string animationName, bool loop)
         {
-            animName = animationName;
-            return this;
+            skeletonGraphic.AnimationState.SetAnimation(0, animationName, loop);
         }
 
-        public SpineWidget SetMultipleRenderCanvas(bool multiple_rc)
-        {
-            multipleRenderCanvas = multiple_rc;
-            return this;
-        }
-
-        public static SpineWidget CreateInstance(string skeletonDataPath, Transform parent)
+        public static SpineWidget CreateInstance(Transform parent)
         {
             var spineGO = new GameObject(nameof(SpineWidget));
             var spineGO_rt = spineGO.AddComponent<RectTransform>();
             spineGO_rt.SetParent(parent, false);
-            var spineWidgetInst = spineGO.AddComponent<SpineWidget>();
-            spineWidgetInst.skeletonDataPath = skeletonDataPath;
-            return spineWidgetInst;
+            return spineGO.AddComponent<SpineWidget>();
         }
     }
 }

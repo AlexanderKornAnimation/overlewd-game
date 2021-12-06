@@ -4,56 +4,33 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class OverlayHideTransition : MonoBehaviour
+    public class OverlayHide : BaseScreenTrasition
     {
-        public AnimationCurve curveTransition;
-        public float duration;
+        private RectTransform screenRectTransform;
 
-        private float time;
-        private RectTransform slaveRectTransform;
+        private float duration = 0.3f;
+        private float time = 0.0f;
 
-        void Start()
+        void Awake()
         {
-            slaveRectTransform = GetComponentInParent<RectTransform>();
+            screenRectTransform = GetComponent<RectTransform>();
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                0.0f, screenRectTransform.rect.width);
         }
 
         void Update()
         {
             time += Time.deltaTime;
-            float transitionProgressPrecent = time / duration;
-            slaveRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
-                -slaveRectTransform.rect.width * curveTransition.Evaluate(transitionProgressPrecent),
-                slaveRectTransform.rect.width);
+            float transitionProgressPercent = time / duration;
+            float transitionOffsetPercent = EasingFunction.easeInExpo(transitionProgressPercent);
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                -screenRectTransform.rect.width * transitionOffsetPercent,
+                screenRectTransform.rect.width);
 
             if (time > duration)
             {
-                UIManager.SetStretch(slaveRectTransform);
-                Destroy(slaveRectTransform.gameObject);
+                Destroy(gameObject);
             }
-        }
-
-        public static OverlayHideTransition GetInstance(Transform slave)
-        {
-            var screenTransition = (GameObject)Instantiate(Resources.Load("Prefabs/UI/AnimationTransitions/HideOverlayTransition"), slave);
-            screenTransition.transform.SetParent(slave, false);
-            return screenTransition.GetComponent<OverlayHideTransition>();
-        }
-    }
-
-    public class OverlayHide : BaseScreenTrasition
-    {
-        void Awake()
-        {
-            var screenRectTransform = GetComponent<RectTransform>();
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
-                0.0f, screenRectTransform.rect.width);
-
-            OverlayHideTransition.GetInstance(screenRectTransform);
-        }
-
-        void Update()
-        {
-            Destroy(this);
         }
     }
 }

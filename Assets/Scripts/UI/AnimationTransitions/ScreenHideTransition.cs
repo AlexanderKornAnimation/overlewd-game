@@ -4,56 +4,33 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ScreenHideTransition : MonoBehaviour
+    public class ScreenHide : BaseScreenTrasition
     {
-        public AnimationCurve curveTransition;
-        public float duration;
+        private RectTransform screenRectTransform;
 
-        private float time;
-        private RectTransform slaveRectTransform;
+        private float duration = 0.3f;
+        private float time = 0.0f;
 
-        void Start()
+        void Awake()
         {
-            slaveRectTransform = GetComponentInParent<RectTransform>();
+            screenRectTransform = GetComponent<RectTransform>();
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                0.0f, screenRectTransform.rect.height);
         }
 
         void Update()
         {
             time += Time.deltaTime;
-            float transitionProgressPrecent = time / duration;
-            slaveRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -slaveRectTransform.rect.height * curveTransition.Evaluate(transitionProgressPrecent),
-                slaveRectTransform.rect.height);
+            float transitionProgressPercent = time / duration;
+            float transitionOffsetPercent = EasingFunction.easeInExpo(transitionProgressPercent);
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                -screenRectTransform.rect.height * transitionOffsetPercent,
+                screenRectTransform.rect.height);
 
             if (time > duration)
             {
-                UIManager.SetStretch(slaveRectTransform);
-                Destroy(slaveRectTransform.gameObject);
+                Destroy(gameObject);
             }
-        }
-
-        public static ScreenHideTransition GetInstance(Transform slave)
-        {
-            var screenTransition = (GameObject)Instantiate(Resources.Load("Prefabs/UI/AnimationTransitions/HideScreenTransition"), slave);
-            screenTransition.transform.SetParent(slave, false);
-            return screenTransition.GetComponent<ScreenHideTransition>();
-        }
-    }
-
-    public class ScreenHide : BaseScreenTrasition
-    {
-        void Awake()
-        {
-            var screenRectTransform = GetComponent<RectTransform>();
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                0.0f, screenRectTransform.rect.height);
-
-            ScreenHideTransition.GetInstance(screenRectTransform);
-        }
-
-        void Update()
-        {
-            Destroy(this);
         }
     }
 }

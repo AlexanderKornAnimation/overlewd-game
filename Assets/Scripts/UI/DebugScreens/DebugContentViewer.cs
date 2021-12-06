@@ -64,12 +64,17 @@ namespace Overlewd
             CheckButtons();
 
             //spine test
-            var anim_sex = SpineWidget.CreateInstance("Spine/Ulvi/sex/idle01_SkeletonData", transform)
-                .SetAnimationName("idle").SetMultipleRenderCanvas(true);
-            var anim_ui = SpineWidget.CreateInstance("Spine/Ulvi/ui/idle_SkeletonData", transform)
-                .SetAnimationName("idle");
-            var anim_emotion = SpineWidget.CreateInstance("Spine/Ulvi/emotions/idle_SkeletonData", transform)
-                .SetAnimationName("idle");
+            var anim_sex = SpineWidget.CreateInstance(transform);
+            anim_sex.Initialize("Spine/Ulvi/sex/idle01_SkeletonData", true);
+            anim_sex.PlayAnimation("idle", true);
+
+            var anim_ui = SpineWidget.CreateInstance(transform);
+            anim_ui.Initialize("Spine/Ulvi/ui/idle_SkeletonData", false);
+            anim_ui.PlayAnimation("idle", true);
+
+            var anim_emotion = SpineWidget.CreateInstance(transform);
+            anim_emotion.Initialize("Spine/Ulvi/emotions/idle_SkeletonData", false);
+            anim_emotion.PlayAnimation("idle", true);
         }
 
         private void SetSprite()

@@ -525,7 +525,18 @@ namespace Overlewd
         {
             public const string Overlord = "Overlord";
             public const string Ulvi = "Ulvi";
+            public const string UlviWolf = "UlviWolf";
             public const string Faye = "Faye";
+            public const string Adriel = "Adriel";
+        }
+
+        public class DialogCharacterAnimation
+        {
+            public const string Idle = "idle";
+            public const string Surprised = "surprised";
+            public const string Happy = "happy";
+            public const string Love = "love";
+            public const string Angry = "angry";
         }
 
         [Serializable]

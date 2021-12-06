@@ -4,56 +4,34 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ScreenShowTransition : MonoBehaviour
+    public class ScreenShow : BaseScreenTrasition
     {
-        public AnimationCurve curveTransition;
-        public float duration;
+        private RectTransform screenRectTransform;
 
-        private float time;
-        private RectTransform slaveRectTransform;
+        private float duration = 0.5f;
+        private float time = 0.0f;
 
-        void Start()
+        void Awake()
         {
-            slaveRectTransform = GetComponentInParent<RectTransform>();
+            screenRectTransform = GetComponent<RectTransform>();
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                -screenRectTransform.rect.height, screenRectTransform.rect.height);
         }
 
         void Update()
         {
             time += Time.deltaTime;
-            float transitionProgressPrecent = time / duration;
-            slaveRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -slaveRectTransform.rect.height * curveTransition.Evaluate(transitionProgressPrecent),
-                slaveRectTransform.rect.height);
+            float transitionProgressPercent = time / duration;
+            float transitionOffsetPercent = 1.0f - EasingFunction.easeOutBack(transitionProgressPercent);
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                -screenRectTransform.rect.height * transitionOffsetPercent,
+                screenRectTransform.rect.height);
 
             if (time > duration)
             {
-                UIManager.SetStretch(slaveRectTransform);
-                Destroy(gameObject);
+                UIManager.SetStretch(screenRectTransform);
+                Destroy(this);
             }
-        }
-
-        public static ScreenShowTransition GetInstance(Transform slave)
-        {
-            var screenTransition = (GameObject)Instantiate(Resources.Load("Prefabs/UI/AnimationTransitions/ShowScreenTransition"), slave);
-            screenTransition.transform.SetParent(slave, false);
-            return screenTransition.GetComponent<ScreenShowTransition>();
-        }
-    }
-
-    public class ScreenShow : BaseScreenTrasition
-    {
-        void Awake()
-        {
-            var screenRectTransform = GetComponent<RectTransform>();
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -screenRectTransform.rect.height, screenRectTransform.rect.height);
-
-            ScreenShowTransition.GetInstance(screenRectTransform);
-        }
-
-        void Update()
-        {
-            Destroy(this);
         }
     }
 }

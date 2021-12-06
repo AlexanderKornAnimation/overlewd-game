@@ -11,11 +11,6 @@ namespace Overlewd
 
         }
 
-        void Update()
-        {
-
-        }
-
         protected override void ShowMissclick()
         {
             UIManager.ShowOverlayMissclick<OverlayMissclickColored>();
