@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,21 +14,21 @@ namespace Overlewd
         public class EventButton : MonoBehaviour
         {
             private Button button;
-            private Text title;
-            private Text description;
+            private TextMeshProUGUI title;
+            private TextMeshProUGUI description;
             private Image icon;
             private Image arrowTop;
             private Image arrowLeft;
             private Image arrowBot;
-            
-            private void Start()
+
+            private void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 
-                title = button.transform.Find("Title").GetComponent<Text>();
-                description = button.transform.Find("Description").GetComponent<Text>();
+                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
                 
                 icon = button.transform.Find("Icon").GetComponent<Image>();
                 arrowTop = button.transform.Find("ArrowTop").GetComponent<Image>();
@@ -43,7 +45,7 @@ namespace Overlewd
 
             public static EventButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/Event"), parent);
+                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/EventButton"), parent);
                 newItem.name = nameof(EventButton);
 
                 return newItem.AddComponent<EventButton>();

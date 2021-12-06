@@ -33,23 +33,11 @@ namespace Overlewd
             SidebarButtonWidget.CreateInstance(transform);
 
             map = canvas.Find("Map");
-        }
 
+            EventButton.GetInstance(map.Find("event_1"));
+            FightButton.GetInstance(map.Find("fight_1"));
+            DialogButton.GetInstance(map.Find("dialogue_1"));
 
-        private IEnumerable GetSpawnNodes(string nodeName)
-        {
-            int nodeId = 1;
-            var node = map.Find(nodeName + nodeId.ToString());
-
-            while (node != null)
-            {
-                yield return node;
-
-                nodeId++;
-                node = map.Find(nodeName + nodeId.ToString());
-            }
-
-            yield break;
         }
 
         private void ChapterButtonClick()
