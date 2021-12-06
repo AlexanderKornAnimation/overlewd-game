@@ -19,12 +19,12 @@ namespace Overlewd
         public override void Show()
         {
             ShowMissclick();
-            gameObject.AddComponent<ImmediateShow>();
+            gameObject.AddComponent<FadeShow>();
         }
 
         public override void Hide()
         {
-            gameObject.AddComponent<ImmediateHide>();
+            gameObject.AddComponent<FadeHide>();
         }
     }
 }

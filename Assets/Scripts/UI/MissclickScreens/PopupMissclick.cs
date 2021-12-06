@@ -21,14 +21,21 @@ namespace Overlewd
 
     public class PopupMissclickColored : PopupMissclick
     {
+        protected override void Awake()
+        {
+            base.Awake();
+
+            image.color = new Color(0.0f, 0.0f, 0.0f, 0.8f);
+        }
+
         public override void Show()
         {
-            gameObject.AddComponent<MissclickColoredShow>();
+            gameObject.AddComponent<FadeShow>();
         }
 
         public override void Hide()
         {
-            gameObject.AddComponent<MissclickColoredHide>();
+            gameObject.AddComponent<FadeHide>();
         }
     }
 }

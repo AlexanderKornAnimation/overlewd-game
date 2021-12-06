@@ -12,7 +12,7 @@ namespace Overlewd
         
         protected Image image;
 
-        void Awake()
+        protected virtual void Awake()
         {
             image = gameObject.AddComponent<Image>();
             image.color = Color.clear;
