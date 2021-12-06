@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Schema;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,15 +13,15 @@ namespace Overlewd
         {
             private Button button;
             private Transform dialogueDone;
-            private TextMeshProUGUI title;
+            private Text title;
 
-            private void Awake()
+            private void Start()
             {
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 dialogueDone = button.transform.Find("DialogueDone");
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                title = button.transform.Find("Title").GetComponent<Text>();
 
                 button.onClick.AddListener(ButtonClick);
             }
