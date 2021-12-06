@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Overlewd.NSMapScreen;
@@ -11,9 +12,9 @@ namespace Overlewd
     public class MapScreen : BaseScreen
     {
         private Transform map;
-        private Button buffButton;
         private Button chapterButton;
-
+        private Button backbutton;
+        
         private void Start()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/MapScreen"));
@@ -22,43 +23,30 @@ namespace Overlewd
             UIManager.SetStretch(screenRectTransform);
 
             var canvas = screenRectTransform.Find("Canvas");
-            buffButton = canvas.Find("BuffButton").GetComponent<Button>();
             chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
+            backbutton = canvas.Find("BackButton").GetComponent<Button>();
 
-            buffButton.onClick.AddListener(BuffButtonClick);
             chapterButton.onClick.AddListener(ChapterButtonClick);
+            backbutton.onClick.AddListener(BackButtonClick);
 
             EventsWidget.CreateInstance(transform);
             QuestsWidget.CreateInstance(transform);
-            SidebarButtonWidget.CreateInstance(transform);
+            BuffWidget.CreateInstance(transform);
 
             map = canvas.Find("Map");
+
+            DialogButton.GetInstance(map.Find("dialogue_1"));
+            FightButton.GetInstance(map.Find("fight_1"));
+            EventButton.GetInstance(map.Find("event_1"));
         }
 
-
-        private IEnumerable GetSpawnNodes(string nodeName)
+        private void BackButtonClick()
         {
-            int nodeId = 1;
-            var node = map.Find(nodeName + nodeId.ToString());
-
-            while (node != null)
-            {
-                yield return node;
-
-                nodeId++;
-                node = map.Find(nodeName + nodeId.ToString());
-            }
-
-            yield break;
+            UIManager.ShowScreen<CastleScreen>();
         }
-
+        
         private void ChapterButtonClick()
         {
-        }
-
-        private void BuffButtonClick()
-        {
-            UIManager.ShowScreen<GirlScreen>();
         }
     }
 }
