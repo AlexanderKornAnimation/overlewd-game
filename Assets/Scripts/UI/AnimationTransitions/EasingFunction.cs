@@ -11,7 +11,13 @@ namespace Overlewd
             return Mathf.Clamp01(x);
         }
 
-        public static float easeInExpo(float x)
+        public static float easeInOutQuad(float x)
+        {
+            float cx = Mathf.Clamp01(x);
+            return cx < 0.5f ? 2.0f * cx * cx : 1.0f - Mathf.Pow(-2.0f * cx + 2.0f, 2.0f) / 2.0f;
+        }
+
+    public static float easeInExpo(float x)
         {
             float cx = Mathf.Clamp01(x);
             return cx == 0.0f ? 0.0f : Mathf.Pow(2.0f, 10.0f * cx - 10.0f);

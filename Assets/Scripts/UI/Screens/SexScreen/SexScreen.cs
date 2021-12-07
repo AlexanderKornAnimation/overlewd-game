@@ -49,7 +49,12 @@ namespace Overlewd
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
         }
 
-        async void Start()
+        void Start()
+        {
+            
+        }
+
+        protected override async Task PrepareShowOperationsAsync()
         {
             await EnterScreen();
 
@@ -57,10 +62,22 @@ namespace Overlewd
             AutoplayButtonCustomize();
         }
 
+        protected override async Task PrepareHideOperationsAsync()
+        {
+            await Task.CompletedTask;
+        }
+
         protected virtual async Task EnterScreen()
         {
             dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
             await GameData.EventStageStartAsync(GameGlobalStates.sex_EventStageData);
+        }
+
+        protected virtual async void LeaveScreen()
+        {
+            await GameData.EventStageEndAsync(GameGlobalStates.sex_EventStageData);
+
+            UIManager.ShowScreen<EventMapScreen>();
         }
 
         protected void AutoplayButtonCustomize()
@@ -100,14 +117,6 @@ namespace Overlewd
 
             AutoplayButtonCustomize();
         }
-
-        protected virtual async void LeaveScreen()
-        {
-            await GameData.EventStageEndAsync(GameGlobalStates.sex_EventStageData);
-
-            UIManager.ShowScreen<EventMapScreen>();
-        }
-        
         
         private void SkipButtonClick()
         {

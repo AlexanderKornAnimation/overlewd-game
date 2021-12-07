@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class CutInPopup : BasePopup
+    public class CutInAnimationPopup : BasePopup
     {
         private Transform cutInNode;
 
         private void Awake()
         {
-            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/CutInAnimationPopup/CutInPopup"));
+            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/CutInAnimationPopup/CutInAnimationPopup"));
             var screenRectTransform = prefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);

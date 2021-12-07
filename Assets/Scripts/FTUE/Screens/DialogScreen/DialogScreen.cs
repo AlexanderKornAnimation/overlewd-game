@@ -10,6 +10,11 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
+            protected override async Task PrepareHideOperationsAsync()
+            {
+                await Task.CompletedTask;
+            }
+
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.dialogScreen_DialogData;

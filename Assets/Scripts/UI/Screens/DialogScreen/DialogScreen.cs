@@ -74,7 +74,12 @@ namespace Overlewd
             autoplayButtonPressed.enabled = false; 
         }
 
-        async void Start()
+        void Start()
+        {
+            
+        }
+
+        protected override async Task PrepareShowOperationsAsync()
         {
             await EnterScreen();
 
@@ -83,10 +88,22 @@ namespace Overlewd
             AutoplayButtonCustomize();
         }
 
+        protected override async Task PrepareHideOperationsAsync()
+        {
+            await Task.CompletedTask;
+        }
+
         protected virtual async Task EnterScreen()
         {
             dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
             await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
+        }
+
+        protected virtual async void LeaveScreen()
+        {
+            await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
+
+            UIManager.ShowScreen<EventMapScreen>();
         }
 
         private void HideCharacterByName(string keyName)
@@ -261,13 +278,6 @@ namespace Overlewd
                 currentReplicaId++;
             }
             AutoplayButtonClick();
-        }
-
-        protected virtual async void LeaveScreen()
-        {
-            await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
-
-            UIManager.ShowScreen<EventMapScreen>();
         }
 
         private void SkipButtonClick()

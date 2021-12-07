@@ -10,6 +10,11 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
+            protected override async Task PrepareHideOperationsAsync()
+            {
+                await Task.CompletedTask;
+            }
+
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.sexScreen_DialogData;
