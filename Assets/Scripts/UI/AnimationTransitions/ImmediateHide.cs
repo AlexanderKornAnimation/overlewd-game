@@ -6,13 +6,23 @@ namespace Overlewd
 {
     public class ImmediateHide : BaseScreenTrasition
     {
-        void Awake()
+        protected override void Awake()
         {
-
+            base.Awake();
         }
 
-        void Update()
+        async void Start()
         {
+            await WaitPrepareHideAsync();
+        }
+
+        async void Update()
+        {
+            if (!prepared)
+                return;
+
+            await WaitAfterHideAsync();
+
             Destroy(gameObject);
         }
     }

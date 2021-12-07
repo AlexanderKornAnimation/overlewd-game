@@ -6,13 +6,23 @@ namespace Overlewd
 {
     public class ImmediateShow : BaseScreenTrasition
     {
-        void Awake()
+        protected override void Awake()
         {
-            
+            base.Awake();
         }
 
-        void Update()
+        async void Start()
         {
+            await WaitPrepareShowAsync();
+        }
+
+        async void Update()
+        {
+            if (!prepared)
+                return;
+
+            await WaitAfterShowAsync();
+
             Destroy(this);
         }
     }

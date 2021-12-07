@@ -7,20 +7,24 @@ namespace Overlewd
 
     public class OverlayShow : BaseScreenTrasition
     {
-        private RectTransform screenRectTransform;
-
-        private float duration = 0.3f;
-        private float time = 0.0f;
-
-        void Awake()
+        protected override void Awake()
         {
-            screenRectTransform = GetComponent<RectTransform>();
+            base.Awake();
+
             screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
                 -screenRectTransform.rect.width, screenRectTransform.rect.width);
         }
 
-        void Update()
+        async void Start()
         {
+            await WaitPrepareShowAsync();
+        }
+
+        async void Update()
+        {
+            if (!prepared)
+                return;
+
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
             float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
@@ -30,6 +34,8 @@ namespace Overlewd
 
             if (time > duration)
             {
+                await WaitAfterShowAsync();
+
                 UIManager.SetStretch(screenRectTransform);
                 Destroy(this);
             }

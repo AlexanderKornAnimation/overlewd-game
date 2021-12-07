@@ -18,7 +18,6 @@ namespace Overlewd
 
         public override void Show()
         {
-            ShowMissclick();
             gameObject.AddComponent<ImmediateShow>();
         }
 

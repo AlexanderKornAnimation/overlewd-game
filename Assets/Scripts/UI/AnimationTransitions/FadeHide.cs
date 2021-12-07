@@ -8,17 +8,24 @@ namespace Overlewd
     {
         private CanvasGroup canvasGroup;
 
-        private float duration = 0.3f;
-        private float time = 0.0f;
-
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
             canvasGroup.alpha = 1.0f;
         }
 
-        void Update()
+        async void Start()
         {
+            await WaitPrepareHideAsync();
+        }
+
+        async void Update()
+        {
+            if (!prepared)
+                return;
+
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
             float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
@@ -27,6 +34,8 @@ namespace Overlewd
 
             if (time > duration)
             {
+                await WaitAfterHideAsync();
+
                 Destroy(gameObject);
             }
         }

@@ -6,20 +6,24 @@ namespace Overlewd
 {
     public class OverlayHide : BaseScreenTrasition
     {
-        private RectTransform screenRectTransform;
-
-        private float duration = 0.3f;
-        private float time = 0.0f;
-
-        void Awake()
+        protected override void Awake()
         {
-            screenRectTransform = GetComponent<RectTransform>();
+            base.Awake();
+
             screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
                 0.0f, screenRectTransform.rect.width);
         }
 
-        void Update()
+        async void Start()
         {
+            await WaitPrepareHideAsync();
+        }
+
+        async void Update()
+        {
+            if (!prepared)
+                return;
+
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
             float transitionOffsetPercent = EasingFunction.easeInExpo(transitionProgressPercent);
@@ -29,6 +33,8 @@ namespace Overlewd
 
             if (time > duration)
             {
+                await WaitAfterHideAsync();
+
                 Destroy(gameObject);
             }
         }
