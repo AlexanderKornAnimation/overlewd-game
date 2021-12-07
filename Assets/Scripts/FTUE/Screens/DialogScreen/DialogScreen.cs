@@ -23,7 +23,20 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                UIManager.ShowScreen<StartingScreen>();
+                if (GameGlobalStates.dialogScreen_DialogId == 3)
+                {
+                    GameGlobalStates.dialogScreen_DialogId = 4;
+                    UIManager.ShowScreen<DialogScreen>();
+                }
+                else if (GameGlobalStates.dialogScreen_DialogId == 4)
+                {
+                    GameGlobalStates.dialogScreen_DialogId = 5;
+                    UIManager.ShowScreen<DialogScreen>();
+                }
+                else if (GameGlobalStates.dialogScreen_DialogId == 5)
+                {
+                    UIManager.ShowScreen<StartingScreen>();
+                }
             }
         }
     }

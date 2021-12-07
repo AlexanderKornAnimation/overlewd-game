@@ -64,15 +64,15 @@ namespace Overlewd
             CheckButtons();
 
             //spine test
-            var anim_sex = SpineWidget.CreateInstance(transform);
+            var anim_sex = SpineWidget.GetInstance(transform);
             anim_sex.Initialize("Spine/Ulvi/sex/idle01_SkeletonData", true);
             anim_sex.PlayAnimation("idle", true);
 
-            var anim_ui = SpineWidget.CreateInstance(transform);
+            var anim_ui = SpineWidget.GetInstance(transform);
             anim_ui.Initialize("Spine/Ulvi/ui/idle_SkeletonData", false);
             anim_ui.PlayAnimation("idle", true);
 
-            var anim_emotion = SpineWidget.CreateInstance(transform);
+            var anim_emotion = SpineWidget.GetInstance(transform);
             anim_emotion.Initialize("Spine/Ulvi/emotions/idle_SkeletonData", false);
             anim_emotion.PlayAnimation("idle", true);
         }

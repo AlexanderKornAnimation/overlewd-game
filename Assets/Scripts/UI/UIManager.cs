@@ -215,19 +215,11 @@ namespace Overlewd
 
         public static T ShowScreen<T>() where T : BaseScreen
         {
-            if (!HasScreen<T>())
-            {
-                HideScreen();
+            HideScreen();
 
-                currentScreen = GetScreenInstance<T>();
-                currentScreen?.Show();
-            }
-            else
-            {
-                HidePopup();
-                HideSubPopup();
-                HideOverlay();
-            }
+            currentScreen = GetScreenInstance<T>();
+            currentScreen?.Show();
+
             return currentScreen as T;
         }
 
@@ -282,18 +274,12 @@ namespace Overlewd
 
         public static T ShowPopup<T>() where T : BasePopup
         {
-            if (!HasPopup<T>())
-            {
-                currentPopup?.Hide();
-                HideSubPopup();
+            currentPopup?.Hide();
+            HideSubPopup();
 
-                currentPopup = GetPopupInstance<T>();
-                currentPopup?.Show();
-            }
-            else
-            {
-                HideSubPopup();
-            }
+            currentPopup = GetPopupInstance<T>();
+            currentPopup?.Show();
+
             return currentPopup as T;
         }
 
@@ -348,13 +334,11 @@ namespace Overlewd
 
         public static T ShowSubPopup<T>() where T : BaseSubPopup
         {
-            if (!HasSubPopup<T>())
-            {
-                currentSubPopup?.Hide();
+            currentSubPopup?.Hide();
 
-                currentSubPopup = GetSubPopupInstance<T>();
-                currentSubPopup?.Show();
-            }
+            currentSubPopup = GetSubPopupInstance<T>();
+            currentSubPopup?.Show();
+
             return currentSubPopup as T;
         }
 
@@ -407,13 +391,11 @@ namespace Overlewd
 
         public static T ShowOverlay<T>() where T : BaseOverlay
         {
-            if (!HasOverlay<T>())
-            {
-                currentOverlay?.Hide();
+            currentOverlay?.Hide();
 
-                currentOverlay = GetOverlayInstance<T>();
-                currentOverlay?.Show();
-            }
+            currentOverlay = GetOverlayInstance<T>();
+            currentOverlay?.Show();
+
             return currentOverlay as T;
         }
 
@@ -465,13 +447,11 @@ namespace Overlewd
 
         public static T ShowNotification<T>() where T : BaseNotification
         {
-            if (!HasNotification<T>())
-            {
-                currentNotification?.Hide();
+            currentNotification?.Hide();
 
-                currentNotification = GetNotificationInstance<T>();
-                currentNotification?.Show();
-            }
+            currentNotification = GetNotificationInstance<T>();
+            currentNotification?.Show();
+
             return currentNotification as T;
         }
 

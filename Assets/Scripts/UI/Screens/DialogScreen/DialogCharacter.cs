@@ -15,10 +15,6 @@ namespace Overlewd
             void Awake()
             {
                 persImageAdditive = transform.Find("PersImageAdditive").gameObject;
-            }
-
-            void Start()
-            {
                 persImageAdditive.SetActive(false);
             }
 

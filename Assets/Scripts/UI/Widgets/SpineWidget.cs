@@ -43,7 +43,7 @@ namespace Overlewd
             skeletonGraphic.AnimationState.SetAnimation(0, animationName, loop);
         }
 
-        public static SpineWidget CreateInstance(Transform parent)
+        public static SpineWidget GetInstance(Transform parent)
         {
             var spineGO = new GameObject(nameof(SpineWidget));
             var spineGO_rt = spineGO.AddComponent<RectTransform>();

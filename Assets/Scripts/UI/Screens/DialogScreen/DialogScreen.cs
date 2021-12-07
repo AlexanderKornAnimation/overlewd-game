@@ -11,6 +11,7 @@ namespace Overlewd
     {
         protected Coroutine autoplayCoroutine;
 
+        protected Transform charactersPos;
         protected Transform leftCharacterPos;
         protected Transform midCharacterPos;
         protected Transform rightCharacterPos;
@@ -25,6 +26,10 @@ namespace Overlewd
         protected Image autoplayButtonPressed;
         protected Text autoplayStatus;
 
+        protected Transform mainAnimPos;
+        protected GameObject cutIn;
+        protected Transform cutInAnimPos;
+
         protected AdminBRO.Dialog dialogData;
         protected int currentReplicaId;
 
@@ -32,9 +37,11 @@ namespace Overlewd
 
         private Dictionary<string, string> characterPrefabPath = new Dictionary<string, string>
         {
-            ["Overlord"] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            ["Ulvi"] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            ["Faye"] = "Prefabs/UI/Screens/DialogScreen/Faye"
+            [AdminBRO.DialogCharacterName.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            [AdminBRO.DialogCharacterName.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogCharacterName.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogCharacterName.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
+            [AdminBRO.DialogCharacterName.Adriel] = "Prefabs/UI/Screens/DialogScreen/Faye"
         };
         private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
             new Dictionary<string, NSDialogScreen.DialogCharacter>();
@@ -51,9 +58,10 @@ namespace Overlewd
 
             var canvas = screenRectTransform.Find("Canvas");
 
-            leftCharacterPos = canvas.Find("LeftCharacterPos");
-            midCharacterPos = canvas.Find("MidCharacterPos");
-            rightCharacterPos = canvas.Find("RightCharacterPos");
+            charactersPos = canvas.Find("CharactersPos");
+            leftCharacterPos = charactersPos.Find("LeftCharacterPos");
+            midCharacterPos = charactersPos.Find("MidCharacterPos");
+            rightCharacterPos = charactersPos.Find("RightCharacterPos");
 
             var textContainer = canvas.Find("TextContainer");
 
@@ -71,7 +79,12 @@ namespace Overlewd
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
             autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<Text>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
-            autoplayButtonPressed.enabled = false; 
+            autoplayButtonPressed.enabled = false;
+
+            mainAnimPos = canvas.Find("MainAnimPos");
+            cutIn = canvas.Find("CutIn").gameObject;
+            cutInAnimPos = cutIn.transform.Find("AnimPos");
+            cutIn.SetActive(false);
         }
 
         void Start()
@@ -84,7 +97,7 @@ namespace Overlewd
             await EnterScreen();
 
             Initialize();
-            ClearReplica();
+            ShowCurrentReplica();
             AutoplayButtonCustomize();
         }
 
@@ -113,7 +126,7 @@ namespace Overlewd
             if (!characters.ContainsKey(keyName))
                 return;
 
-            Destroy(characters[keyName]);
+            Destroy(characters[keyName].gameObject);
             characters[keyName] = null;
             var keyPos = character_slot[keyName];
             character_slot[keyName] = null;
@@ -159,6 +172,7 @@ namespace Overlewd
 
                 slot_character[keyPos] = keyName;
                 character_slot[keyName] = keyPos;
+                slot.SetAsLastSibling();
             }
             else
             {
@@ -171,6 +185,7 @@ namespace Overlewd
 
                 slot_character[keyPos] = keyName;
                 character_slot[keyName] = keyPos;
+                slot.SetAsLastSibling();
             }
         }
 
@@ -287,21 +302,15 @@ namespace Overlewd
 
         private void NextButtonClick()
         {
+            currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {
                 ShowCurrentReplica();
-                currentReplicaId++;
             }
             else
             {
                 LeaveScreen();
             }
-        }
-
-        protected void ClearReplica()
-        {
-            personageName.text = "";
-            text.text = "";
         }
 
         protected void ShowCurrentReplica()

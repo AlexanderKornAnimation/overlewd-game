@@ -19,6 +19,10 @@ namespace Overlewd
         protected Text autoplayStatus;
         protected Image autoplayButtonPressed;
 
+        protected Transform mainAnimPos;
+        protected GameObject cutIn;
+        protected Transform cutInAnimPos;
+
         protected AdminBRO.Dialog dialogData;
         protected int currentReplicaId;
 
@@ -47,6 +51,11 @@ namespace Overlewd
             autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<Text>();
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
+
+            mainAnimPos = canvas.Find("MainAnimPos");
+            cutIn = canvas.Find("CutIn").gameObject;
+            cutInAnimPos = cutIn.transform.Find("AnimPos");
+            cutIn.SetActive(false);
         }
 
         void Start()
@@ -58,7 +67,7 @@ namespace Overlewd
         {
             await EnterScreen();
 
-            ClearReplica();
+            ShowCurrentReplica();
             AutoplayButtonCustomize();
         }
 
@@ -125,10 +134,10 @@ namespace Overlewd
 
         private void NextButtonClick()
         {
+            currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {
                 ShowCurrentReplica();
-                currentReplicaId++;
             }
             else
             {
@@ -141,12 +150,6 @@ namespace Overlewd
             var replica = dialogData.replicas[currentReplicaId];
             personageName.text = replica.characterName;
             text.text = replica.message;
-        }
-
-        protected void ClearReplica()
-        {
-            personageName.text = "";
-            text.text = "";
         }
         
         private IEnumerator Autoplay()

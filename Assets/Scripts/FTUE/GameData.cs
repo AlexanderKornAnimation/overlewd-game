@@ -55,7 +55,7 @@ namespace Overlewd
                     }
                 });
 
-                //Intro
+                //Intro Sex1
                 dialogs.Add(new AdminBRO.Dialog
                 {
                     id = 2,
@@ -346,7 +346,7 @@ namespace Overlewd
                 //Sex3
                 dialogs.Add(new AdminBRO.Dialog
                 {
-                    id = 6,
+                    id = 7,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica {
