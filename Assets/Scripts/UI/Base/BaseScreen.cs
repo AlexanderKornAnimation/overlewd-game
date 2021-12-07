@@ -7,6 +7,9 @@ namespace Overlewd
 {
     public abstract class BaseScreen : MonoBehaviour
     {
+        protected bool preparedShow = false;
+        protected bool preparedHide = false;
+
         void Start()
         {
 
@@ -40,6 +43,7 @@ namespace Overlewd
         public async Task PrepareShowAsync()
         {
             await PrepareShowOperationsAsync();
+            preparedShow = true;
             ShowMissclick();
         }
 
@@ -51,11 +55,28 @@ namespace Overlewd
         public async Task PrepareHideAsync()
         {
             await PrepareHideOperationsAsync();
+            preparedHide = true;
         }
 
         public async Task AfterHideAsync()
         {
             await AfterHideOperationsAsync();
+        }
+
+        public async Task WaitPreparedShowAsync()
+        {
+            while (!preparedShow)
+            {
+                await Task.Delay(10);
+            }
+        }
+
+        public async Task WaitPreparedHideAsync()
+        {
+            while (!preparedHide)
+            {
+                await Task.Delay(10);
+            }
         }
 
         public virtual void Show()
