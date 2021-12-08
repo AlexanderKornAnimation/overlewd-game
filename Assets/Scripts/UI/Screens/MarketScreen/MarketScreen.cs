@@ -17,12 +17,12 @@ namespace Overlewd
             UIManager.SetStretch(screenRectTransform);
 
 
-            screenRectTransform.Find("CanvasRoot").Find("MainMenuButton").GetComponent<Button>().onClick.AddListener(() =>
+            screenRectTransform.Find("Canvas").Find("MainMenuButton").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<CastleScreen>();
             });
 
-            var bundlesGrid = screenRectTransform.Find("CanvasRoot").Find("BottomGrid");
+            var bundlesGrid = screenRectTransform.Find("Canvas").Find("BottomGrid");
             NSMarketScreen.BundleTypeA.GetInstance(bundlesGrid);
             NSMarketScreen.BundleTypeB.GetInstance(bundlesGrid);
             NSMarketScreen.BundleTypeC.GetInstance(bundlesGrid);

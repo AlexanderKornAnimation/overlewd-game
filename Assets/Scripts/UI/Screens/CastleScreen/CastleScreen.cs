@@ -7,53 +7,51 @@ namespace Overlewd
 {
     public class CastleScreen : BaseScreen
     {
-        void Start()
+        private Transform cave;
+        private Transform stable;
+        private Transform crunch;
+        private Transform tower;
+        private Transform source;
+        private Transform market;
+        private Transform forge;
+        private Transform magicGuild;
+        private Transform portal;
+        private Transform capitol;
+        private Transform castleBuilding;
+        
+        private void Start()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/Castle"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenRectTransform.Find("Canvas").Find("Market").GetComponent<Button>().onClick.AddListener(() => 
-            {
-                UIManager.ShowScreen<MarketScreen>();
-            });
+            var canvas = screenRectTransform.Find("Canvas");
 
-            screenRectTransform.Find("Canvas").Find("GlobalMap").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<MapScreen>();
-            });
+            cave = canvas.Find("Cave");
+            stable = canvas.Find("Stable");
+            crunch = canvas.Find("Crunch");
+            tower = canvas.Find("Tower");
+            source = canvas.Find("Source");
+            market = canvas.Find("Market");
+            forge = canvas.Find("Forge");
+            magicGuild = canvas.Find("MagicGuild");
+            portal = canvas.Find("Portal");
+            capitol = canvas.Find("Capitol");
+            castleBuilding = canvas.Find("Castle");
 
-            screenRectTransform.Find("Canvas").Find("Harem").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<HaremScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("UserSettings").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<UserSettingsScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("Inventory").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<InventoryAndUserScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("Forge").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<ForgeScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("Portal").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<PortalScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("MagicGuild").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<MagicGuildScreen>();
-            });
-
+            HaremButton.GetInstance(cave);
+            HaremButton.GetInstance(stable);
+            HaremButton.GetInstance(crunch);
+            HaremButton.GetInstance(tower);
+            HaremButton.GetInstance(source);
+            MarketButton.GetInstance(market);
+            ForgeButton.GetInstance(forge);
+            MagicGuildButton.GetInstance(magicGuild);
+            PortalButton.GetInstance(portal);
+            CapitolButton.GetInstance(capitol);
+            CastleBuildingButton.GetInstance(castleBuilding);
+            
             screenRectTransform.Find("Canvas").Find("ContentViewer").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<DebugContentViewer>();
@@ -61,12 +59,8 @@ namespace Overlewd
 
             EventsWidget.CreateInstance(transform);
             QuestsWidget.CreateInstance(transform);
+            BuffWidget.CreateInstance(transform);
             SidebarButtonWidget.CreateInstance(transform);
-        }
-
-        void Update()
-        {
-            
         }
     }
 }
