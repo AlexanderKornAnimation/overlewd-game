@@ -8,10 +8,10 @@ namespace Overlewd
 {
     public class BattleScreen : BaseScreen
     {
-        private Button startBattleButton;
-        private Button backButton;
+        protected Button startBattleButton;
+        protected Button backButton;
 
-        private VideoPlayer battleVideo;
+        protected VideoPlayer battleVideo;
 
         void Awake()
         {
@@ -62,11 +62,6 @@ namespace Overlewd
         private void BackButtonClick()
         {
             UIManager.ShowScreen<EventMapScreen>();
-        }
-
-        void Update()
-        {
-
         }
     }
 }

@@ -7,32 +7,33 @@ namespace Overlewd
 {
     public class SidebarButtonWidget : BaseWidget
     {
+        protected Button sidebarMenuButton;
+
         private void Awake()
         {
-            transform.Find("Canvas").Find("SidebarMenu").GetComponent<Button>().onClick.AddListener(() => 
+            var canvas = transform.Find("Canvas");
+
+            sidebarMenuButton = canvas.Find("SidebarMenu").GetComponent<Button>();
+            sidebarMenuButton.onClick.AddListener(SidebarMenuButtonClick);
+        }
+
+        protected virtual void SidebarMenuButtonClick()
+        {
+            if (!UIManager.HasOverlay<SidebarMenuOverlay>())
             {
-                if (!UIManager.HasOverlay<SidebarMenuOverlay>())
-                {
-                    UIManager.ShowOverlay<SidebarMenuOverlay>();
-                }
-                else
-                {
-                    UIManager.HideOverlay();
-                }
-            });
+                UIManager.ShowOverlay<SidebarMenuOverlay>();
+            }
+            else
+            {
+                UIManager.HideOverlay();
+            }
         }
 
-        void Update()
+        public static SidebarButtonWidget GetInstance(Transform parent)
         {
-
-        }
-
-        public static SidebarButtonWidget CreateInstance(Transform parent)
-        {
-            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"));
+            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"), parent);
             prefab.name = nameof(SidebarButtonWidget);
             var rectTransform = prefab.GetComponent<RectTransform>();
-            rectTransform.SetParent(parent, false);
             UIManager.SetStretch(rectTransform);
             return prefab.AddComponent<SidebarButtonWidget>();
         }

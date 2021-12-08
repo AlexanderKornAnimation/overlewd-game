@@ -23,12 +23,11 @@ namespace Overlewd
             UIManager.ShowOverlay<EventOverlay>();
         }
         
-        public static EventsWidget CreateInstance(Transform parent)
+        public static EventsWidget GetInstance(Transform parent)
         {
-            var prefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"));
+            var prefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"), parent);
             prefab.name = nameof(EventsWidget);
             var rectTransform = prefab.GetComponent<RectTransform>();
-            rectTransform.SetParent(parent, false);
             UIManager.SetStretch(rectTransform);
             return prefab.AddComponent<EventsWidget>();
         }

@@ -25,9 +25,9 @@ namespace Overlewd
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            EventsWidget.CreateInstance(transform);
-            QuestsWidget.CreateInstance(transform);
-            SidebarButtonWidget.CreateInstance(transform);
+            EventsWidget.GetInstance(transform);
+            QuestsWidget.GetInstance(transform);
+            SidebarButtonWidget.GetInstance(transform);
 
             var canvas = screenRectTransform.Find("Canvas");
             stages = canvas.Find("Stages");

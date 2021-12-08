@@ -29,9 +29,9 @@ namespace Overlewd
             chapterButton.onClick.AddListener(ChapterButtonClick);
             backbutton.onClick.AddListener(BackButtonClick);
 
-            EventsWidget.CreateInstance(transform);
-            QuestsWidget.CreateInstance(transform);
-            BuffWidget.CreateInstance(transform);
+            EventsWidget.GetInstance(transform);
+            QuestsWidget.GetInstance(transform);
+            BuffWidget.GetInstance(transform);
 
             map = canvas.Find("Map");
 

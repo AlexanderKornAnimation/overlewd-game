@@ -29,12 +29,11 @@ namespace Overlewd
             UIManager.ShowScreen<HaremScreen>();
         }
         
-        public static BuffWidget CreateInstance(Transform parent)
+        public static BuffWidget GetInstance(Transform parent)
         {
-            var prefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/BuffWidget/BuffWidget"));
+            var prefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/BuffWidget/BuffWidget"), parent);
             prefab.name = nameof(BuffWidget);
             var rectTransform = prefab.GetComponent<RectTransform>();
-            rectTransform.SetParent(parent, false);
             UIManager.SetStretch(rectTransform);
             return prefab.AddComponent<BuffWidget>();
         }

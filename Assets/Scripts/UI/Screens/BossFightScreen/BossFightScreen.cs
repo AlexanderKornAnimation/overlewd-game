@@ -63,10 +63,5 @@ namespace Overlewd
         {
             UIManager.ShowScreen<EventMapScreen>();
         }
-
-        void Update()
-        {
-
-        }
     }
 }

@@ -32,12 +32,11 @@ namespace Overlewd
             UIManager.ShowOverlay<QuestOverlay>();
         }
         
-        public static QuestsWidget CreateInstance(Transform parent)
+        public static QuestsWidget GetInstance(Transform parent)
         {
-            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"));
+            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"), parent);
             prefab.name = nameof(QuestsWidget);
             var rectTransform = prefab.GetComponent<RectTransform>();
-            rectTransform.SetParent(parent, false);
             UIManager.SetStretch(rectTransform);
             return prefab.AddComponent<QuestsWidget>();
         }

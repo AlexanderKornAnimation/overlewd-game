@@ -57,7 +57,7 @@ namespace Overlewd
 
             tierButtonsScrollPos = canvas.Find("TierButtonsScrollPos");
 
-            SidebarButtonWidget.CreateInstance(transform);
+            SidebarButtonWidget.GetInstance(transform);
 
             Customize();
 

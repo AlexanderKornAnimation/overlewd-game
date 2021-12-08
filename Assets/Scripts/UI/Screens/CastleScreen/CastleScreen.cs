@@ -21,7 +21,7 @@ namespace Overlewd
         
         private void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/Castle"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
@@ -57,10 +57,10 @@ namespace Overlewd
                 UIManager.ShowScreen<DebugContentViewer>();
             });
 
-            EventsWidget.CreateInstance(transform);
-            QuestsWidget.CreateInstance(transform);
-            BuffWidget.CreateInstance(transform);
-            SidebarButtonWidget.CreateInstance(transform);
+            EventsWidget.GetInstance(transform);
+            QuestsWidget.GetInstance(transform);
+            BuffWidget.GetInstance(transform);
+            SidebarButtonWidget.GetInstance(transform);
         }
     }
 }
