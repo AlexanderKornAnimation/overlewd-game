@@ -2,32 +2,35 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class HaremButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform grabRewardNotification;
-        private Transform memoryAvailableNotification;
-
-        private void Awake()
+        public class HaremButton : BaseButton
         {
-            base.Awake();
-            
-            var notificationsGrid = transform.Find("NotificationGrid");
-            
-            grabRewardNotification = notificationsGrid.Find("GrabRewardNotification");
-            memoryAvailableNotification = notificationsGrid.Find("MemoryAvailableNotification");
-        }
+            private Transform grabRewardNotification;
+            private Transform memoryAvailableNotification;
 
-        protected override void ButtonClick()
-        {
-            UIManager.ShowScreen<HaremScreen>();
-        }
+            protected override void Awake()
+            {
+                base.Awake();
 
-        public static HaremButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/HaremButton"), parent);
-            newItem.name = nameof(HaremButton);
+                var notificationsGrid = transform.Find("NotificationGrid");
 
-            return newItem.AddComponent<HaremButton>();
+                grabRewardNotification = notificationsGrid.Find("GrabRewardNotification");
+                memoryAvailableNotification = notificationsGrid.Find("MemoryAvailableNotification");
+            }
+
+            protected override void ButtonClick()
+            {
+                UIManager.ShowScreen<HaremScreen>();
+            }
+
+            public static HaremButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/HaremButton"), parent);
+                newItem.name = nameof(HaremButton);
+
+                return newItem.AddComponent<HaremButton>();
+            }
         }
     }
 }

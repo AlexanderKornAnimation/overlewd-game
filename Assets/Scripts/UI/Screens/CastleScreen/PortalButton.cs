@@ -4,28 +4,31 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class PortalButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform freeSummonNotification;
-
-        private void Awake()
+        public class PortalButton : BaseButton
         {
-            base.Awake();
+            private Transform freeSummonNotification;
 
-            freeSummonNotification = transform.Find("FreeSummonNotification");
-        }
-        
-        protected override void ButtonClick()
-        {
-            UIManager.ShowScreen<PortalScreen>();
-        }
-        
-        public static PortalButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/PortalButton"), parent);
-            newItem.name = nameof(PortalButton);
+            protected override void Awake()
+            {
+                base.Awake();
 
-            return newItem.AddComponent<PortalButton>();
+                freeSummonNotification = transform.Find("FreeSummonNotification");
+            }
+
+            protected override void ButtonClick()
+            {
+                UIManager.ShowScreen<PortalScreen>();
+            }
+
+            public static PortalButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/PortalButton"), parent);
+                newItem.name = nameof(PortalButton);
+
+                return newItem.AddComponent<PortalButton>();
+            }
         }
     }
 }

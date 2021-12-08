@@ -6,42 +6,45 @@ using UnityEngine.PlayerLoop;
 
 namespace Overlewd
 {
-    public class MagicGuildButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform learnInProgressNotification;
-        private Transform learnAvailableNotification;
-
-        private void Awake()
+        public class MagicGuildButton : BaseButton
         {
-            base.Awake();
+            private Transform learnInProgressNotification;
+            private Transform learnAvailableNotification;
 
-            var notificationsGrid = transform.Find("NotificationGrid");
-            
-            learnInProgressNotification = notificationsGrid.Find("LearnInProgressNotification");
-            learnAvailableNotification = notificationsGrid.Find("LearnAvailableNotification");
-        }
-        
-        private void Start()
-        {
-            Customize();
-        }
-        
-        protected override void ButtonClick()
-        {
-            UIManager.ShowScreen<MagicGuildScreen>();
-        }
+            protected override void Awake()
+            {
+                base.Awake();
 
-        protected override void Customize()
-        {
-            title.name = "Magic guild";
-        }
+                var notificationsGrid = transform.Find("NotificationGrid");
 
-        public static MagicGuildButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MagicGuildButton"), parent);
-            newItem.name = nameof(MagicGuildButton);
+                learnInProgressNotification = notificationsGrid.Find("LearnInProgressNotification");
+                learnAvailableNotification = notificationsGrid.Find("LearnAvailableNotification");
+            }
 
-            return newItem.AddComponent<MagicGuildButton>();
+            private void Start()
+            {
+                Customize();
+            }
+
+            protected override void ButtonClick()
+            {
+                UIManager.ShowScreen<MagicGuildScreen>();
+            }
+
+            protected override void Customize()
+            {
+                title.name = "Magic guild";
+            }
+
+            public static MagicGuildButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MagicGuildButton"), parent);
+                newItem.name = nameof(MagicGuildButton);
+
+                return newItem.AddComponent<MagicGuildButton>();
+            }
         }
     }
 }

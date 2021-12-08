@@ -40,17 +40,17 @@ namespace Overlewd
             capitol = canvas.Find("Capitol");
             castleBuilding = canvas.Find("Castle");
 
-            HaremButton.GetInstance(cave);
-            HaremButton.GetInstance(stable);
-            HaremButton.GetInstance(crunch);
-            HaremButton.GetInstance(tower);
-            HaremButton.GetInstance(source);
-            MarketButton.GetInstance(market);
-            ForgeButton.GetInstance(forge);
-            MagicGuildButton.GetInstance(magicGuild);
-            PortalButton.GetInstance(portal);
-            CapitolButton.GetInstance(capitol);
-            CastleBuildingButton.GetInstance(castleBuilding);
+            NSCastleScreen.HaremButton.GetInstance(cave);
+            NSCastleScreen.HaremButton.GetInstance(stable);
+            NSCastleScreen.HaremButton.GetInstance(crunch);
+            NSCastleScreen.HaremButton.GetInstance(tower);
+            NSCastleScreen.HaremButton.GetInstance(source);
+            NSCastleScreen.MarketButton.GetInstance(market);
+            NSCastleScreen.ForgeButton.GetInstance(forge);
+            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+            NSCastleScreen.PortalButton.GetInstance(portal);
+            NSCastleScreen.CapitolButton.GetInstance(capitol);
+            NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
             
             screenRectTransform.Find("Canvas").Find("ContentViewer").GetComponent<Button>().onClick.AddListener(() =>
             {

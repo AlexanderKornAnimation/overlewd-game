@@ -5,32 +5,35 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ForgeButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform craftInProgressNotification;
-        private Transform craftAvailableNotification;
-
-        private void Awake()
+        public class ForgeButton : BaseButton
         {
-            base.Awake();
+            private Transform craftInProgressNotification;
+            private Transform craftAvailableNotification;
 
-            var notificationsGrid = transform.Find("NotificationGrid");
-            
-            craftInProgressNotification = notificationsGrid.Find("CraftInProgressNotification");
-            craftAvailableNotification = notificationsGrid.Find("CraftAvailableNotification");
-        }
-        
-        protected override void ButtonClick()
-        {
-            UIManager.ShowScreen<ForgeScreen>();
-        }
-        
-        public static ForgeButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/ForgeButton"), parent);
-            newItem.name = nameof(ForgeButton);
+            protected override void Awake()
+            {
+                base.Awake();
 
-            return newItem.AddComponent<ForgeButton>();
+                var notificationsGrid = transform.Find("NotificationGrid");
+
+                craftInProgressNotification = notificationsGrid.Find("CraftInProgressNotification");
+                craftAvailableNotification = notificationsGrid.Find("CraftAvailableNotification");
+            }
+
+            protected override void ButtonClick()
+            {
+                UIManager.ShowScreen<ForgeScreen>();
+            }
+
+            public static ForgeButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/ForgeButton"), parent);
+                newItem.name = nameof(ForgeButton);
+
+                return newItem.AddComponent<ForgeButton>();
+            }
         }
     }
 }

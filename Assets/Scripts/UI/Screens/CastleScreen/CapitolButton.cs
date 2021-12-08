@@ -4,28 +4,31 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class CapitolButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform notification;
-
-        private void Awake()
+        public class CapitolButton : BaseButton
         {
-            base.Awake();
+            private Transform notification;
 
-            notification = transform.Find("CollectCrystalsNotification");
-        }        
-        
-        protected override void ButtonClick()
-        {
-            
-        }
-        
-        public static CapitolButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CapitolButton"), parent);
-            newItem.name = nameof(CapitolButton);
+            protected override void Awake()
+            {
+                base.Awake();
 
-            return newItem.AddComponent<CapitolButton>();
+                notification = transform.Find("CollectCrystalsNotification");
+            }
+
+            protected override void ButtonClick()
+            {
+
+            }
+
+            public static CapitolButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CapitolButton"), parent);
+                newItem.name = nameof(CapitolButton);
+
+                return newItem.AddComponent<CapitolButton>();
+            }
         }
     }
 }

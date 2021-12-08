@@ -4,35 +4,37 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class MarketButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform saleNotification;
-        private Transform timeLimitNotification;
-        private Transform newOfferNotification;
-
-        private void Awake()
+        public class MarketButton : BaseButton
         {
-            base.Awake();
+            private Transform saleNotification;
+            private Transform timeLimitNotification;
+            private Transform newOfferNotification;
 
-            var notificationGrid = transform.Find("NotificationGrid");
+            protected override void Awake()
+            {
+                base.Awake();
 
-            saleNotification = notificationGrid.Find("SaleNotification");
-            timeLimitNotification = notificationGrid.Find("TimeLimitNotification");
-            newOfferNotification = notificationGrid.Find("NewOfferNotification");
-        }
+                var notificationGrid = transform.Find("NotificationGrid");
 
-        protected override void ButtonClick()
-        {
-            UIManager.ShowScreen<MarketScreen>();
-        }
+                saleNotification = notificationGrid.Find("SaleNotification");
+                timeLimitNotification = notificationGrid.Find("TimeLimitNotification");
+                newOfferNotification = notificationGrid.Find("NewOfferNotification");
+            }
 
-        public static MarketButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MarketButton"), parent);
-            newItem.name = nameof(MarketButton);
+            protected override void ButtonClick()
+            {
+                UIManager.ShowScreen<MarketScreen>();
+            }
 
-            return newItem.AddComponent<MarketButton>();
+            public static MarketButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MarketButton"), parent);
+                newItem.name = nameof(MarketButton);
+
+                return newItem.AddComponent<MarketButton>();
+            }
         }
     }
-
 }

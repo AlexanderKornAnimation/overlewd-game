@@ -4,32 +4,35 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class CastleBuildingButton : BaseButton
+    namespace NSCastleScreen
     {
-        private Transform buildInProgressNotification;
-        private Transform buildAvailableNotification;
-
-        private void Awake()
+        public class CastleBuildingButton : BaseButton
         {
-            base.Awake();
+            private Transform buildInProgressNotification;
+            private Transform buildAvailableNotification;
 
-            var notificationGrid = transform.Find("NotificationGrid");
+            protected override void Awake()
+            {
+                base.Awake();
 
-            buildInProgressNotification = notificationGrid.Find("BuildInProgressNotification");
-            buildAvailableNotification = notificationGrid.Find("BuildAvailableNotification");
-        }
+                var notificationGrid = transform.Find("NotificationGrid");
 
-        protected override void ButtonClick()
-        {
-            UIManager.ShowScreen<BuildingScreen>();
-        }
+                buildInProgressNotification = notificationGrid.Find("BuildInProgressNotification");
+                buildAvailableNotification = notificationGrid.Find("BuildAvailableNotification");
+            }
 
-        public static CastleBuildingButton GetInstance(Transform parent)
-        {
-            var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleBuildingButton"), parent);
-            newItem.name = nameof(CastleBuildingButton);
+            protected override void ButtonClick()
+            {
+                UIManager.ShowScreen<BuildingScreen>();
+            }
 
-            return newItem.AddComponent<CastleBuildingButton>();
+            public static CastleBuildingButton GetInstance(Transform parent)
+            {
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleBuildingButton"), parent);
+                newItem.name = nameof(CastleBuildingButton);
+
+                return newItem.AddComponent<CastleBuildingButton>();
+            }
         }
     }
 }
