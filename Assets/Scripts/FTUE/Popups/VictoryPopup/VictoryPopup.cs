@@ -14,7 +14,8 @@ namespace Overlewd
         {
             protected override void NextButtonClick()
             {
-                UIManager.ShowScreen<BossFightScreen>();
+                UIManager.ShowPopup<PrepareBossFightPopup>();
+                //UIManager.ShowScreen<BossFightScreen>();
             }
 
             protected override void RepeatButtonClick()

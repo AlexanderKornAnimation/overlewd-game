@@ -10,18 +10,18 @@ namespace Overlewd
     public class PrepareBattlePopup : BasePopup
     {
         
-        private Button backButton;
-        private Button battleButton;
-        private Button prepareButton;
-        
-        private Image firstTimeReward;
-        private Image reward1;
-        private Image reward2;
-        private Image reward3;
-        private Text firstTimeRewardCount;
-        private Text reward1Count;
-        private Text reward2Count;
-        private Text reward3Count;
+        protected Button backButton;
+        protected Button battleButton;
+        protected Button prepareButton;
+
+        protected Image firstTimeReward;
+        protected Image reward1;
+        protected Image reward2;
+        protected Image reward3;
+        protected Text firstTimeRewardCount;
+        protected Text reward1Count;
+        protected Text reward2Count;
+        protected Text reward3Count;
 
         private void Awake()
         {
@@ -56,7 +56,7 @@ namespace Overlewd
             Customize();
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
             if (!GameGlobalStates.battle_EventStageData.battleId.HasValue)
                 return;
@@ -84,17 +84,17 @@ namespace Overlewd
             reward3Count.text = $"{battleData.rewards[2].amount}";
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             UIManager.HidePopup();
-        } 
+        }
 
-        private void BattleButtonClick()
+        protected virtual void BattleButtonClick()
         {
             UIManager.ShowScreen<BattleScreen>();
         }
 
-        private void PrepareButtonClick()
+        protected virtual void PrepareButtonClick()
         {
             UIManager.ShowSubPopup<BottlesSubPopup>();
         }

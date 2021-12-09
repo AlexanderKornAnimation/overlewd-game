@@ -16,7 +16,7 @@ namespace Overlewd
 
                 if (GameGlobalStates.dialogNotification_DialogId == 3)
                 {
-                    UIManager.ShowScreen<BattleScreen>();
+                    UIManager.ShowPopup<PrepareBattlePopup>();
                 }
             }
         }

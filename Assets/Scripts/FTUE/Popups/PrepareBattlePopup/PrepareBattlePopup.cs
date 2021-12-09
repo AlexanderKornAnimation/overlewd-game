@@ -10,8 +10,20 @@ namespace Overlewd
     {
         public class PrepareBattlePopup : Overlewd.PrepareBattlePopup
         {
+            protected override void Customize()
+            {
+                
+            }
 
+            protected override void BattleButtonClick()
+            {
+                UIManager.ShowScreen<BattleScreen>();
+            }
 
+            protected override void PrepareButtonClick()
+            {
+
+            }
         }
     }
 }
