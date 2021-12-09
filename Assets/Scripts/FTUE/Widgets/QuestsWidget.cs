@@ -9,7 +9,11 @@ namespace Overlewd
     {
         public class QuestsWidget : Overlewd.QuestsWidget
         {
-          
+            protected override void OnQuestButtonClick()
+            {
+
+            }
+
             public new static QuestsWidget GetInstance(Transform parent)
             {
                 var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"), parent);

@@ -7,10 +7,10 @@ namespace Overlewd
 {
     public class QuestsWidget : BaseWidget
     {
-        private Button mainQuestButton;
-        private Button sideQuestButton1;
-        private Button sideQuestButton2;
-        private Button sideQuestButton3;
+        protected Button mainQuestButton;
+        protected Button sideQuestButton1;
+        protected Button sideQuestButton2;
+        protected Button sideQuestButton3;
     
         private void Awake()
         {
@@ -27,7 +27,7 @@ namespace Overlewd
             sideQuestButton3.onClick.AddListener(OnQuestButtonClick);
         }
 
-        private void OnQuestButtonClick()
+        protected virtual void OnQuestButtonClick()
         {
             UIManager.ShowOverlay<QuestOverlay>();
         }

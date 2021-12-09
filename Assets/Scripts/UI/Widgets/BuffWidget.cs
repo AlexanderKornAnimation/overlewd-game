@@ -7,10 +7,10 @@ namespace Overlewd
 {
     public class BuffWidget : MonoBehaviour
     {
-        private Image icon;
-        private Button button;
-        private Text description;
-        private Text timer;
+        protected Image icon;
+        protected Button button;
+        protected Text description;
+        protected Text timer;
         
         private void Awake()
         {
@@ -24,7 +24,7 @@ namespace Overlewd
             button.onClick.AddListener(ButtonClick);
         }
 
-        private void ButtonClick()
+        protected virtual void ButtonClick()
         {
             UIManager.ShowScreen<HaremScreen>();
         }

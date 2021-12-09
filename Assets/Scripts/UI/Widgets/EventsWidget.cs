@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public class EventsWidget : BaseWidget
     {
-        private Button eventsButton;
+        protected Button eventsButton;
 
         private void Awake()
         {
@@ -18,7 +18,7 @@ namespace Overlewd
             eventsButton.onClick.AddListener(OnEventButtonClick);
         }
 
-        private void OnEventButtonClick()
+        protected virtual void OnEventButtonClick()
         {
             UIManager.ShowOverlay<EventOverlay>();
         }

@@ -9,6 +9,11 @@ namespace Overlewd
     {
         public class BuffWidget : Overlewd.BuffWidget
         {
+            protected override void ButtonClick()
+            {
+
+            }
+
             public new static BuffWidget GetInstance(Transform parent)
             {
                 var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/BuffWidget/BuffWidget"), parent);

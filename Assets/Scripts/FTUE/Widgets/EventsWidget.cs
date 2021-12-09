@@ -9,7 +9,11 @@ namespace Overlewd
     {
         public class EventsWidget : Overlewd.EventsWidget
         {
-            
+            protected override void OnEventButtonClick()
+            {
+
+            }
+
             public new static EventsWidget GetInstance(Transform parent)
             {
                 var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"), parent);

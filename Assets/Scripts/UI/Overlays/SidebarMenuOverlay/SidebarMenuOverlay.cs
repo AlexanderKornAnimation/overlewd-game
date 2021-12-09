@@ -7,77 +7,77 @@ namespace Overlewd
 {
     public class SidebarMenuOverlay : BaseOverlay
     {
-        private Button castleButton;
-        private Transform castleButton_MainQuestMark;
-        private Transform castleButton_SideQuestMark;
-        private Transform castleButton_EventMark1;
-        private Transform castleButton_EventMark2;
-        private Transform castleButton_EventMark3;
-        private Text castleButton_Title;
-        private Image castleButton_Icon;
+        protected Button castleButton;
+        protected Transform castleButton_MainQuestMark;
+        protected Transform castleButton_SideQuestMark;
+        protected Transform castleButton_EventMark1;
+        protected Transform castleButton_EventMark2;
+        protected Transform castleButton_EventMark3;
+        protected Text castleButton_Title;
+        protected Image castleButton_Icon;
 
-        private Button portalButton;
-        private Transform portalButton_MainQuestMark;
-        private Transform portalButton_SideQuestMark;
-        private Transform portalButton_EventMark1;
-        private Transform portalButton_EventMark2;
-        private Transform portalButton_EventMark3;
-        private Text portalButton_Title;
-        private Image portalButton_Icon;
+        protected Button portalButton;
+        protected Transform portalButton_MainQuestMark;
+        protected Transform portalButton_SideQuestMark;
+        protected Transform portalButton_EventMark1;
+        protected Transform portalButton_EventMark2;
+        protected Transform portalButton_EventMark3;
+        protected Text portalButton_Title;
+        protected Image portalButton_Icon;
 
-        private Button globalMapButton;
-        private Transform globalMapButton_MainQuestMark;
-        private Transform globalMapButton_SideQuestMark;
-        private Transform globalMapButton_EventMark1;
-        private Transform globalMapButton_EventMark2;
-        private Transform globalMapButton_EventMark3;
-        private Text globalMapButton_Title;
-        private Image globalMapButton_Icon;
+        protected Button globalMapButton;
+        protected Transform globalMapButton_MainQuestMark;
+        protected Transform globalMapButton_SideQuestMark;
+        protected Transform globalMapButton_EventMark1;
+        protected Transform globalMapButton_EventMark2;
+        protected Transform globalMapButton_EventMark3;
+        protected Text globalMapButton_Title;
+        protected Image globalMapButton_Icon;
 
-        private Button haremButton;
-        private Transform haremButton_MainQuestMark;
-        private Transform haremButton_SideQuestMark;
-        private Transform haremButton_EventMark1;
-        private Transform haremButton_EventMark2;
-        private Transform haremButton_EventMark3;
-        private Text haremButton_Title;
-        private Image haremButton_Icon;
+        protected Button haremButton;
+        protected Transform haremButton_MainQuestMark;
+        protected Transform haremButton_SideQuestMark;
+        protected Transform haremButton_EventMark1;
+        protected Transform haremButton_EventMark2;
+        protected Transform haremButton_EventMark3;
+        protected Text haremButton_Title;
+        protected Image haremButton_Icon;
 
-        private Button castleBuildingButton;
-        private Transform castleBuildingButton_MainQuestMark;
-        private Transform castleBuildingButton_SideQuestMark;
-        private Transform castleBuildingButton_EventMark1;
-        private Transform castleBuildingButton_EventMark2;
-        private Transform castleBuildingButton_EventMark3;
-        private Text castleBuildingButton_Title;
-        private Image castleBuildingButton_Icon;
+        protected Button castleBuildingButton;
+        protected Transform castleBuildingButton_MainQuestMark;
+        protected Transform castleBuildingButton_SideQuestMark;
+        protected Transform castleBuildingButton_EventMark1;
+        protected Transform castleBuildingButton_EventMark2;
+        protected Transform castleBuildingButton_EventMark3;
+        protected Text castleBuildingButton_Title;
+        protected Image castleBuildingButton_Icon;
 
-        private Button magicGuildButton;
-        private Transform magicGuildButton_MainQuestMark;
-        private Transform magicGuildButton_SideQuestMark;
-        private Transform magicGuildButton_EventMark1;
-        private Transform magicGuildButton_EventMark2;
-        private Transform magicGuildButton_EventMark3;
-        private Text magicGuildButton_Title;
-        private Image magicGuildButton_Icon;
+        protected Button magicGuildButton;
+        protected Transform magicGuildButton_MainQuestMark;
+        protected Transform magicGuildButton_SideQuestMark;
+        protected Transform magicGuildButton_EventMark1;
+        protected Transform magicGuildButton_EventMark2;
+        protected Transform magicGuildButton_EventMark3;
+        protected Text magicGuildButton_Title;
+        protected Image magicGuildButton_Icon;
 
-        private Button marketButton;
-        private Transform marketButton_TimeLimitMark;
-        private Transform marketButton_NewItemMark;
-        private Transform marketButton_SaleMark;
-        private Text marketButton_Title;
-        private Image marketButton_Icon;
+        protected Button marketButton;
+        protected Transform marketButton_TimeLimitMark;
+        protected Transform marketButton_NewItemMark;
+        protected Transform marketButton_SaleMark;
+        protected Text marketButton_Title;
+        protected Image marketButton_Icon;
 
-        private Button forgeButton;
-        private Transform forgeButton_MainQuestMark;
-        private Transform forgeButton_SideQuestMark;
-        private Transform forgeButton_EventMark1;
-        private Transform forgeButton_EventMark2;
-        private Transform forgeButton_EventMark3;
-        private Text forgeButton_Title;
-        private Image forgeButton_Icon;
+        protected Button forgeButton;
+        protected Transform forgeButton_MainQuestMark;
+        protected Transform forgeButton_SideQuestMark;
+        protected Transform forgeButton_EventMark1;
+        protected Transform forgeButton_EventMark2;
+        protected Transform forgeButton_EventMark3;
+        protected Text forgeButton_Title;
+        protected Image forgeButton_Icon;
 
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/SidebarMenuOverlay/SidebarMenuOverlay"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -171,51 +171,54 @@ namespace Overlewd
             forgeButton_EventMark3 = forgeButton_Markers.Find("EventMark3");
             forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<Text>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
+        }
 
+        private void Start()
+        {
             Customize();
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
 
         }
 
-        private void CastleButtonClick()
+        protected virtual void CastleButtonClick()
         {
             UIManager.ShowScreen<CastleScreen>();
         }
 
-        private void PortalButtonClick()
+        protected virtual void PortalButtonClick()
         {
             UIManager.ShowScreen<PortalScreen>();
         }
 
-        private void GlobalMapButtonClick()
+        protected virtual void GlobalMapButtonClick()
         {
             UIManager.ShowScreen<MapScreen>();
         }
 
-        private void HaremButtonClick()
+        protected virtual void HaremButtonClick()
         {
             UIManager.ShowScreen<HaremScreen>();
         }
 
-        private void CastleBuildingButtonClick()
+        protected virtual void CastleBuildingButtonClick()
         {
             UIManager.ShowScreen<BuildingScreen>();
         }
 
-        private void MagicGuildButtonClick()
+        protected virtual void MagicGuildButtonClick()
         {
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
-        private void MarketButtonClick()
+        protected virtual void MarketButtonClick()
         {
             UIManager.ShowScreen<MarketScreen>();
         }
 
-        private void ForgeButtonClick()
+        protected virtual void ForgeButtonClick()
         {
             UIManager.ShowScreen<ForgeScreen>();
         }
