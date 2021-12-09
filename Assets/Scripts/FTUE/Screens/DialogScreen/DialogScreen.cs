@@ -35,7 +35,8 @@ namespace Overlewd
                 }
                 else if (GameGlobalStates.dialogScreen_DialogId == 5)
                 {
-                    UIManager.ShowScreen<StartingScreen>();
+                    UIManager.ShowNotification<DialogNotification>();
+                    //UIManager.ShowScreen<StartingScreen>();
                 }
             }
         }

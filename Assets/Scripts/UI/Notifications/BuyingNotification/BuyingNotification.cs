@@ -8,6 +8,7 @@ namespace Overlewd
     public class BuyingNotification : BaseNotification
     {
         protected Button button;
+        protected Text text;
 
         protected virtual void Awake()
         {
@@ -20,9 +21,11 @@ namespace Overlewd
 
             button = canvas.Find("Button").GetComponent<Button>();
             button.onClick.AddListener(ButtonClick);
+
+            text = canvas.Find("Banner").Find("Text").GetComponent<Text>();
         }
 
-        private void ButtonClick()
+        protected virtual void ButtonClick()
         {
             UIManager.HideNotification();
         }

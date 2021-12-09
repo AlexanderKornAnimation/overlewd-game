@@ -210,7 +210,7 @@ namespace Overlewd
 
         public static bool HasScreen<T>() where T : BaseScreen
         {
-            return currentScreen.GetType() == typeof(T);
+            return currentScreen?.GetType() == typeof(T);
         }
 
         public static T ShowScreen<T>() where T : BaseScreen
@@ -241,7 +241,7 @@ namespace Overlewd
 
         public static bool HasPopupMissclick<T>() where T : PopupMissclick
         {
-            return popupMissclick.GetType() == typeof(T);
+            return popupMissclick?.GetType() == typeof(T);
         }
 
         public static T ShowPopupMissclick<T>() where T : PopupMissclick
@@ -269,7 +269,7 @@ namespace Overlewd
 
         public static bool HasPopup<T>() where T : BasePopup
         {
-            return currentPopup.GetType() == typeof(T);
+            return currentPopup?.GetType() == typeof(T);
         }
 
         public static T ShowPopup<T>() where T : BasePopup
@@ -301,7 +301,7 @@ namespace Overlewd
 
         public static bool HasSubPopupMissclick<T>() where T : SubPopupMissclick
         {
-            return subPopupMissclick.GetType() == typeof(T);
+            return subPopupMissclick?.GetType() == typeof(T);
         }
 
         public static T ShowSubPopupMissclick<T>() where T : SubPopupMissclick
@@ -329,7 +329,7 @@ namespace Overlewd
 
         public static bool HasSubPopup<T>() where T : BaseSubPopup
         {
-            return currentSubPopup.GetType() == typeof(T);
+            return currentSubPopup?.GetType() == typeof(T);
         }
 
         public static T ShowSubPopup<T>() where T : BaseSubPopup
@@ -358,7 +358,7 @@ namespace Overlewd
 
         public static bool HasOverlayMissclick<T>() where T : OverlayMissclick
         {
-            return overlayMissclick.GetType() == typeof(T);
+            return overlayMissclick?.GetType() == typeof(T);
         }
 
         public static T ShowOverlayMissclick<T>() where T : OverlayMissclick
@@ -386,7 +386,7 @@ namespace Overlewd
 
         public static bool HasOverlay<T>() where T : BaseOverlay
         {
-            return currentOverlay.GetType() == typeof(T);
+            return currentOverlay?.GetType() == typeof(T);
         }
 
         public static T ShowOverlay<T>() where T : BaseOverlay
@@ -414,7 +414,7 @@ namespace Overlewd
         }
         public static bool HasNotificationMissclick<T>() where T : NotificationMissclick
         {
-            return notificationMissclick.GetType() == typeof(T);
+            return notificationMissclick?.GetType() == typeof(T);
         }
 
         public static T ShowNotificationMissclick<T>() where T : NotificationMissclick
@@ -442,7 +442,7 @@ namespace Overlewd
 
         public static bool HasNotification<T>() where T : BaseNotification
         {
-            return currentNotification.GetType() == typeof(T);
+            return currentNotification?.GetType() == typeof(T);
         }
 
         public static T ShowNotification<T>() where T : BaseNotification
