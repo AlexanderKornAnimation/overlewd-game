@@ -10,11 +10,11 @@ namespace Overlewd
 {
     public class DefeatPopup : BasePopup
     {
-        private Button magicGuildButton;
-        private Button inventoryButton;
-        private Button haremButton;
+        protected Button magicGuildButton;
+        protected Button inventoryButton;
+        protected Button haremButton;
 
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/DefeatPopup/DefeatPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -31,17 +31,23 @@ namespace Overlewd
             haremButton.onClick.AddListener(HaremButtonClick);
         }
 
-        private void MagicGuildButtonClick()
+        protected override void ShowMissclick()
+        {
+            var missClick = UIManager.ShowPopupMissclick<PopupMissclickColored>();
+            missClick.missClickEnabled = false;
+        }
+
+        protected virtual void MagicGuildButtonClick()
         {
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
-        private void InventoryButtonClick()
+        protected virtual void InventoryButtonClick()
         {
             UIManager.ShowScreen<InventoryAndUserScreen>();
         }
 
-        private void HaremButtonClick()
+        protected virtual void HaremButtonClick()
         {
             UIManager.ShowScreen<HaremScreen>();
         }

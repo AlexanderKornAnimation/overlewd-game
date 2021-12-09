@@ -12,7 +12,20 @@ namespace Overlewd
     {
         public class DefeatPopup : Overlewd.DefeatPopup
         {
+            protected override void MagicGuildButtonClick()
+            {
+                UIManager.ShowScreen<StartingScreen>();
+            }
 
+            protected override void InventoryButtonClick()
+            {
+
+            }
+
+            protected override void HaremButtonClick()
+            {
+
+            }
         }
     }
 }

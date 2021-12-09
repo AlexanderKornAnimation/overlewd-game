@@ -8,10 +8,10 @@ namespace Overlewd
 {
     public class BossFightScreen : BaseScreen
     {
-        private Button startBattleButton;
-        private Button backButton;
+        protected Button startBattleButton;
+        protected Button backButton;
 
-        private VideoPlayer battleVideo;
+        protected VideoPlayer battleVideo;
 
         void Awake()
         {
@@ -33,12 +33,12 @@ namespace Overlewd
             battleVideo.gameObject.SetActive(false);
         }
 
-        async void Start()
+        protected virtual async void Start()
         {
             await GameData.EventStageStartAsync(GameGlobalStates.bossFight_EventStageData);
         }
 
-        private async void EndBattleVideo(VideoPlayer vp)
+        protected virtual async void EndBattleVideo(VideoPlayer vp)
         {
             backButton.gameObject.SetActive(true);
             startBattleButton.gameObject.SetActive(true);
@@ -49,7 +49,7 @@ namespace Overlewd
             UIManager.ShowPopup<VictoryPopup>();
         }
 
-        private void StartBattleButtonClick()
+        protected virtual void StartBattleButtonClick()
         {
             backButton.gameObject.SetActive(false);
             startBattleButton.gameObject.SetActive(false);
@@ -59,7 +59,7 @@ namespace Overlewd
             battleVideo.loopPointReached += EndBattleVideo;
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             UIManager.ShowScreen<EventMapScreen>();
         }

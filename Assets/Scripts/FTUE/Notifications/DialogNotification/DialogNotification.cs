@@ -14,7 +14,10 @@ namespace Overlewd
             {
                 base.OnClick();
 
-                UIManager.ShowScreen<StartingScreen>();
+                if (GameGlobalStates.dialogNotification_DialogId == 3)
+                {
+                    UIManager.ShowScreen<BattleScreen>();
+                }
             }
         }
 
@@ -27,7 +30,8 @@ namespace Overlewd
 
             protected override async Task PrepareShowOperationsAsync()
             {
-                text.text = "TextText";
+                var dialogData = GameGlobalStates.dialogNotification_DialogData;
+                text.text = dialogData.replicas[0].message;
 
                 await Task.CompletedTask;
             }

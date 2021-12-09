@@ -10,11 +10,6 @@ namespace Overlewd
         protected bool preparedShow = false;
         protected bool preparedHide = false;
 
-        void Start()
-        {
-
-        }
-
         protected virtual void ShowMissclick()
         {
 

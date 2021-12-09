@@ -26,6 +26,15 @@ namespace Overlewd
                     return GameData.GetDialogById(dialogScreen_DialogId);
                 }
             }
+
+            public static int dialogNotification_DialogId;
+            public static AdminBRO.Dialog dialogNotification_DialogData
+            {
+                get
+                {
+                    return GameData.GetDialogById(dialogNotification_DialogId);
+                }
+            }
         }
     }
 }

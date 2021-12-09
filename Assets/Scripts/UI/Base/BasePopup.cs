@@ -6,11 +6,6 @@ namespace Overlewd
 {
     public abstract class BasePopup : BaseScreen
     {
-        void Start()
-        {
-
-        }
-
         protected override void ShowMissclick()
         {
             UIManager.ShowPopupMissclick<PopupMissclickColored>();

@@ -10,14 +10,14 @@ namespace Overlewd
 {
     public class VictoryPopup : BasePopup
     {
-        private Button nextButton;
-        private Button repeatButton;
+        protected Button nextButton;
+        protected Button repeatButton;
 
-        private Image reward1;
-        private Image reward2;
-        private Image reward3;
+        protected Image reward1;
+        protected Image reward2;
+        protected Image reward3;
 
-        void Start()
+        void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/VictoryPopup/VictoryPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -41,12 +41,18 @@ namespace Overlewd
             reward3.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
         }
 
-        private void NextButtonClick()
+        protected override void ShowMissclick()
+        {
+            var missClick = UIManager.ShowPopupMissclick<PopupMissclickColored>();
+            missClick.missClickEnabled = false;
+        }
+
+        protected virtual void NextButtonClick()
         {
             UIManager.ShowScreen<EventMapScreen>();
         }
 
-        private void RepeatButtonClick()
+        protected virtual void RepeatButtonClick()
         {
             UIManager.ShowScreen<BattleScreen>();
         }

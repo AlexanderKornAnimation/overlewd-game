@@ -38,17 +38,17 @@ namespace Overlewd
             {
                 if (GameGlobalStates.sexScreen_DialogId == 2)
                 {
-                    GameGlobalStates.sexScreen_DialogId = 6;
+                    GameGlobalStates.sexScreen_DialogId = 8;
                     UIManager.ShowScreen<SexScreen>();
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 6)
+                else if (GameGlobalStates.sexScreen_DialogId == 8)
                 {
-                    GameGlobalStates.sexScreen_DialogId = 7;
+                    GameGlobalStates.sexScreen_DialogId = 16;
                     UIManager.ShowScreen<SexScreen>();
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 7)
+                else if (GameGlobalStates.sexScreen_DialogId == 16)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 3;
+                    GameGlobalStates.dialogScreen_DialogId = 10;
                     UIManager.ShowScreen<DialogScreen>();
                 }
             }
