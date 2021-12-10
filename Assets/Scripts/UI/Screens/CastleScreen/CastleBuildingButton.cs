@@ -8,8 +8,8 @@ namespace Overlewd
     {
         public class CastleBuildingButton : BaseButton
         {
-            private Transform buildInProgressNotification;
-            private Transform buildAvailableNotification;
+            protected Transform buildInProgressNotification;
+            protected Transform buildAvailableNotification;
 
             protected override void Awake()
             {

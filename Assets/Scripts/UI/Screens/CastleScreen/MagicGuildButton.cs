@@ -10,8 +10,8 @@ namespace Overlewd
     {
         public class MagicGuildButton : BaseButton
         {
-            private Transform learnInProgressNotification;
-            private Transform learnAvailableNotification;
+            protected Transform learnInProgressNotification;
+            protected Transform learnAvailableNotification;
 
             protected override void Awake()
             {
@@ -21,11 +21,6 @@ namespace Overlewd
 
                 learnInProgressNotification = notificationsGrid.Find("LearnInProgressNotification");
                 learnAvailableNotification = notificationsGrid.Find("LearnAvailableNotification");
-            }
-
-            private void Start()
-            {
-                Customize();
             }
 
             protected override void ButtonClick()

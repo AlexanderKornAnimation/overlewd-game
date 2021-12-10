@@ -8,9 +8,9 @@ namespace Overlewd
     {
         public class MarketButton : BaseButton
         {
-            private Transform saleNotification;
-            private Transform timeLimitNotification;
-            private Transform newOfferNotification;
+            protected Transform saleNotification;
+            protected Transform timeLimitNotification;
+            protected Transform newOfferNotification;
 
             protected override void Awake()
             {

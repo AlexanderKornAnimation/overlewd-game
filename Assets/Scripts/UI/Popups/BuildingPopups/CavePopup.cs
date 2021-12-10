@@ -8,25 +8,13 @@ namespace Overlewd
 {
     public class CavePopup : BuildingPopup
     {
-        public static bool isBuilded { get; private set; } = false;
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/CaveImage"), imageSpawnPoint);
         }
-        
-        protected override void FreeBuildButtonClick()
-        {
-            base.FreeBuildButtonClick();
-            isBuilded = true;
-        }
 
-        protected override void PaidBuildingButtonClick()
-        {
-            base.FreeBuildButtonClick();
-            isBuilded = true;
-        }
     }
 
 }

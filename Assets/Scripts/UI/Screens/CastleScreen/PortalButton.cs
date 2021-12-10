@@ -8,7 +8,7 @@ namespace Overlewd
     {
         public class PortalButton : BaseButton
         {
-            private Transform freeSummonNotification;
+            protected Transform freeSummonNotification;
 
             protected override void Awake()
             {

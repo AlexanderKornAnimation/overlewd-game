@@ -10,7 +10,17 @@ namespace Overlewd
         {
             public class PortalButton : Overlewd.NSCastleScreen.PortalButton
             {
-               
+                protected override void ButtonClick()
+                {
+
+                }
+
+                protected override void Customize()
+                {
+                    base.Customize();
+
+                }
+
                 public new static PortalButton GetInstance(Transform parent)
                 {
                     var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/PortalButton"), parent);

@@ -8,7 +8,7 @@ namespace Overlewd
     {
         public class CapitolButton : BaseButton
         {
-            private Transform notification;
+            protected Transform notification;
 
             protected override void Awake()
             {

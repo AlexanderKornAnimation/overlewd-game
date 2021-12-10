@@ -33,10 +33,9 @@ namespace Overlewd
         protected Text paidBuildingButtonText;
         protected Image paidBuildingButtonIcon;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
-            var screenPrefab =
-                (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/BuildingPopup"));
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/BuildingPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
@@ -74,7 +73,10 @@ namespace Overlewd
             paidBuildingButton.onClick.AddListener(PaidBuildingButtonClick);
             paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<Text>();
             paidBuildingButtonIcon = paidBuildingButton.transform.Find("Icon").GetComponent<Image>();
+        }
 
+        private void Start()
+        {
             Customize();
         }
 
@@ -86,8 +88,9 @@ namespace Overlewd
             recourceIcon[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
+            UIManager.HidePopup();
         }
 
         protected virtual void FreeBuildButtonClick()

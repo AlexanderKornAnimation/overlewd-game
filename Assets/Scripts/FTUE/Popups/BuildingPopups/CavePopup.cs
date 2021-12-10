@@ -10,7 +10,15 @@ namespace Overlewd
     {
         public class CavePopup : Overlewd.CavePopup
         {
-            
+            protected override void FreeBuildButtonClick()
+            {
+
+            }
+
+            protected override void PaidBuildingButtonClick()
+            {
+
+            }
         }
     }
 }

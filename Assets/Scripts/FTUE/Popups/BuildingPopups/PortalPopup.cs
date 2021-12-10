@@ -9,7 +9,15 @@ namespace Overlewd
     {
         public class PortalPopup : Overlewd.PortalPopup
         {
-            
+            protected override void FreeBuildButtonClick()
+            {
+
+            }
+
+            protected override void PaidBuildingButtonClick()
+            {
+
+            }
         }
     }
 }

@@ -10,19 +10,20 @@ namespace Overlewd
     public class CastleScreen : BaseScreen
     {
         protected Transform cave;
+        protected Transform stable;
+        protected Transform crunch;
+        protected Transform tower;
+        protected Transform source;
+        protected Transform market;
+        protected Transform forge;
+        protected Transform magicGuild;
         protected Transform portal;
+        protected Transform capitol;
+        protected Transform castleBuilding;
 
-        private Transform stable;
-        private Transform crunch;
-        private Transform tower;
-        private Transform source;
-        private Transform market;
-        private Transform forge;
-        private Transform magicGuild;
-        private Transform capitol;
-        private Transform castleBuilding;
-
-        protected virtual void Start()
+        protected Button contenViewerButton;
+        
+        private void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -43,22 +44,31 @@ namespace Overlewd
             capitol = canvas.Find("Capitol");
             castleBuilding = canvas.Find("Castle");
 
-            NSCastleScreen.HaremButton.GetInstance(cave);
-            NSCastleScreen.PortalButton.GetInstance(portal);
-            NSCastleScreen.HaremButton.GetInstance(stable);
-            NSCastleScreen.HaremButton.GetInstance(crunch);
-            NSCastleScreen.HaremButton.GetInstance(tower);
-            NSCastleScreen.HaremButton.GetInstance(source);
-            NSCastleScreen.MarketButton.GetInstance(market);
-            NSCastleScreen.ForgeButton.GetInstance(forge);
-            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
-            NSCastleScreen.CapitolButton.GetInstance(capitol);
-            NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
-
-            screenRectTransform.Find("Canvas").Find("ContentViewer").GetComponent<Button>().onClick.AddListener(() =>
+            contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
+            contenViewerButton.onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<DebugContentViewer>();
             });
+        }
+
+        private void Start()
+        {
+            Customize();
+        }
+
+        protected virtual void Customize()
+        {
+            NSCastleScreen.GirlBuildingButton.GetInstance(cave);
+            NSCastleScreen.GirlBuildingButton.GetInstance(stable);
+            NSCastleScreen.GirlBuildingButton.GetInstance(crunch);
+            NSCastleScreen.GirlBuildingButton.GetInstance(tower);
+            NSCastleScreen.GirlBuildingButton.GetInstance(source);
+            NSCastleScreen.MarketButton.GetInstance(market);
+            NSCastleScreen.ForgeButton.GetInstance(forge);
+            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+            NSCastleScreen.PortalButton.GetInstance(portal);
+            NSCastleScreen.CapitolButton.GetInstance(capitol);
+            NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);

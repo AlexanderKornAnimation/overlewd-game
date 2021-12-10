@@ -10,7 +10,17 @@ namespace Overlewd
         {
             public class MarketButton : Overlewd.NSCastleScreen.MarketButton
             {
-                
+                protected override void ButtonClick()
+                {
+                    
+                }
+
+                protected override void Customize()
+                {
+                    base.Customize();
+
+                }
+
                 public new static MarketButton GetInstance(Transform parent)
                 {
                     var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MarketButton"), parent);

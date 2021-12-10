@@ -9,8 +9,8 @@ namespace Overlewd
     {
         public class ForgeButton : BaseButton
         {
-            private Transform craftInProgressNotification;
-            private Transform craftAvailableNotification;
+            protected Transform craftInProgressNotification;
+            protected Transform craftAvailableNotification;
 
             protected override void Awake()
             {

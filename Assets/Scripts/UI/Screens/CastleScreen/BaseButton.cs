@@ -15,11 +15,11 @@ namespace Overlewd
             protected Button button;
             protected TextMeshProUGUI title;
 
-            private Image quarterlyEventMark;
-            private Image monthlyEventMark;
-            private Image weeklyEventMark;
-            private Image mainQuestMark;
-            private Image sideQuestMark;
+            protected Image quarterlyEventMark;
+            protected Image monthlyEventMark;
+            protected Image weeklyEventMark;
+            protected Image mainQuestMark;
+            protected Image sideQuestMark;
 
             protected virtual void Awake()
             {
@@ -38,7 +38,10 @@ namespace Overlewd
                 title.text = transform.parent.name;
             }
 
-            protected abstract void ButtonClick();
+            protected virtual void ButtonClick()
+            {
+
+            }
         }
     }
 }

@@ -4,10 +4,10 @@ namespace Overlewd
 {
     namespace NSCastleScreen
     {
-        public class HaremButton : BaseButton
+        public class GirlBuildingButton : BaseButton
         {
-            private Transform grabRewardNotification;
-            private Transform memoryAvailableNotification;
+            protected Transform grabRewardNotification;
+            protected Transform memoryAvailableNotification;
 
             protected override void Awake()
             {
@@ -24,12 +24,12 @@ namespace Overlewd
                 UIManager.ShowScreen<HaremScreen>();
             }
 
-            public static HaremButton GetInstance(Transform parent)
+            public static GirlBuildingButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/HaremButton"), parent);
-                newItem.name = nameof(HaremButton);
+                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/GirlBuildingButton"), parent);
+                newItem.name = nameof(GirlBuildingButton);
 
-                return newItem.AddComponent<HaremButton>();
+                return newItem.AddComponent<GirlBuildingButton>();
             }
         }
     }

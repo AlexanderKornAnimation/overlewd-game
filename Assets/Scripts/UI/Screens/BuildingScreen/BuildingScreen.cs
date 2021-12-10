@@ -9,23 +9,23 @@ namespace Overlewd
 {
     public class BuildingScreen : BaseScreen
     {
-        private Button municipalityButton;
-        private Button forgeButton;
-        private Button magicGuildButton;
-        private Button marketButton;
-        private Button portalButton;
-        private Button ulviCaveButton;
-        private Button fayeCaveButton;
-        private Button fionaCaveButton;
-        private Button jadeCaveButton;
-        private Button yuiCaveButton;
-        private Button backButton;
+        protected Button municipalityButton;
+        protected Button forgeButton;
+        protected Button magicGuildButton;
+        protected Button marketButton;
+        protected Button portalButton;
+        protected Button ulviCaveButton;
+        protected Button fayeCaveButton;
+        protected Button fionaCaveButton;
+        protected Button jadeCaveButton;
+        protected Button yuiCaveButton;
+        protected Button backButton;
 
-        private Image maxLevelImage;
-        private Image unaviableImage;
-        private Image buildingImage;
+        protected Image maxLevelImage;
+        protected Image unaviableImage;
+        protected Image buildingImage;
 
-        private void Start()
+        private void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/BuildingScreen/BuildingScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -60,51 +60,67 @@ namespace Overlewd
             yuiCaveButton.onClick.AddListener(YuiCaveButtonClick);
         }
 
-        private void MunicipalityButtonClick()
+        private void Start()
+        {
+            Customize();
+        }
+
+        protected virtual void Customize()
+        {
+
+        }
+
+        protected virtual void MunicipalityButtonClick()
         {
             
         }
 
-        private void ForgeButtonClick()
+        protected virtual void ForgeButtonClick()
         {
             UIManager.ShowPopup<ForgePopup>();
         }
 
-        private void MagicGuildButtonClick()
+        protected virtual void MagicGuildButtonClick()
         {
+
         }
 
-        private void MarketButtonClick()
+        protected virtual void MarketButtonClick()
         {
+
         }
 
-        private void PortalButtonClick()
+        protected virtual void PortalButtonClick()
         {
             UIManager.ShowPopup<PortalPopup>();
         }
 
-        private void UlviCaveButtonClick()
+        protected virtual void UlviCaveButtonClick()
         {
             UIManager.ShowPopup<CavePopup>();
         }
 
-        private void FayeCaveButtonClick()
+        protected virtual void FayeCaveButtonClick()
         {
+
         }
 
-        private void FionaCaveButtonClick()
+        protected virtual void FionaCaveButtonClick()
         {
+
         }
 
-        private void JadeCaveButtonClick()
+        protected virtual void JadeCaveButtonClick()
         {
+
         }
 
-        private void YuiCaveButtonClick()
+        protected virtual void YuiCaveButtonClick()
         {
+
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             UIManager.ShowScreen<CastleScreen>();
         }

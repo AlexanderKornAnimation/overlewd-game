@@ -7,9 +7,9 @@ namespace Overlewd
 {
     public class ForgePopup : BuildingPopup
     {
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/ForgePopup"), imageSpawnPoint);
         }
     }

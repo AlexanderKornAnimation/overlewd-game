@@ -12,6 +12,16 @@ namespace Overlewd
         {
             public class MagicGuildButton : Overlewd.NSCastleScreen.MagicGuildButton
             {
+                protected override void ButtonClick()
+                {
+
+                }
+
+                protected override void Customize()
+                {
+                    base.Customize();
+
+                }
 
                 public new static MagicGuildButton GetInstance(Transform parent)
                 {
