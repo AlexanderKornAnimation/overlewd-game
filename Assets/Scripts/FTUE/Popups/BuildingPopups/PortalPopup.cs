@@ -7,9 +7,9 @@ namespace Overlewd
 {
     namespace FTUE
     {
-        public class PortalPopup : Overlewd.CavePopup
+        public class PortalPopup : Overlewd.PortalPopup
         {
-
+            
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +35,8 @@ namespace Overlewd
 
         protected virtual void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/BuildingPopup"));
+            var screenPrefab =
+                (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/BuildingPopup"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
@@ -60,34 +62,42 @@ namespace Overlewd
                 recourceIcon[i] = resource[i].Find("RecourceIcon").GetComponent<Image>();
             }
 
-            backButton = canvas.Find("").GetComponent<Button>();
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
             backButtonText = backButton.transform.Find("Text").GetComponent<Text>();
 
-            freeBuildButton = canvas.Find("").GetComponent<Button>();
+            freeBuildButton = canvas.Find("FreeBuildButton").GetComponent<Button>();
             freeBuildButton.onClick.AddListener(FreeBuildButtonClick);
             freeBuildButtonText = freeBuildButton.transform.Find("Text").GetComponent<Text>();
 
-            paidBuildingButton = canvas.Find("").GetComponent<Button>();
+            paidBuildingButton = canvas.Find("PaidBuildingButton").GetComponent<Button>();
             paidBuildingButton.onClick.AddListener(PaidBuildingButtonClick);
             paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<Text>();
             paidBuildingButtonIcon = paidBuildingButton.transform.Find("Icon").GetComponent<Image>();
+
+            Customize();
+        }
+
+        protected virtual void Customize()
+        {
+            recourceIcon[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
+            recourceIcon[1].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
+            recourceIcon[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
+            recourceIcon[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
         }
 
         private void BackButtonClick()
         {
-
         }
 
         protected virtual void FreeBuildButtonClick()
         {
-
+            UIManager.HidePopup();
         }
 
         protected virtual void PaidBuildingButtonClick()
         {
-
+            UIManager.HidePopup();
         }
     }
-
 }

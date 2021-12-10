@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Overlewd.FTUE;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +10,9 @@ namespace Overlewd
 {
     public class CastleScreen : BaseScreen
     {
-        private Transform cave;
+        protected Transform cave;
+        protected Transform portal;
+
         private Transform stable;
         private Transform crunch;
         private Transform tower;
@@ -15,13 +20,12 @@ namespace Overlewd
         private Transform market;
         private Transform forge;
         private Transform magicGuild;
-        private Transform portal;
         private Transform capitol;
         private Transform castleBuilding;
-        
-        private void Start()
+
+        protected virtual void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreen"));
+            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
@@ -29,6 +33,7 @@ namespace Overlewd
             var canvas = screenRectTransform.Find("Canvas");
 
             cave = canvas.Find("Cave");
+            portal = canvas.Find("Portal");
             stable = canvas.Find("Stable");
             crunch = canvas.Find("Crunch");
             tower = canvas.Find("Tower");
@@ -36,11 +41,11 @@ namespace Overlewd
             market = canvas.Find("Market");
             forge = canvas.Find("Forge");
             magicGuild = canvas.Find("MagicGuild");
-            portal = canvas.Find("Portal");
             capitol = canvas.Find("Capitol");
             castleBuilding = canvas.Find("Castle");
 
             NSCastleScreen.HaremButton.GetInstance(cave);
+            NSCastleScreen.PortalButton.GetInstance(portal);
             NSCastleScreen.HaremButton.GetInstance(stable);
             NSCastleScreen.HaremButton.GetInstance(crunch);
             NSCastleScreen.HaremButton.GetInstance(tower);
@@ -48,10 +53,9 @@ namespace Overlewd
             NSCastleScreen.MarketButton.GetInstance(market);
             NSCastleScreen.ForgeButton.GetInstance(forge);
             NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
-            NSCastleScreen.PortalButton.GetInstance(portal);
             NSCastleScreen.CapitolButton.GetInstance(capitol);
             NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
-            
+
             screenRectTransform.Find("Canvas").Find("ContentViewer").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<DebugContentViewer>();

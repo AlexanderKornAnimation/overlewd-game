@@ -12,7 +12,10 @@ namespace Overlewd
         {
             protected override void Customize()
             {
-                
+                firstTimeReward.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
+                reward1.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
+                reward2.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
+                reward3.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
             }
 
             protected override void BattleButtonClick()

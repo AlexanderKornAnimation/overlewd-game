@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Overlewd.FTUE;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,6 +63,7 @@ namespace Overlewd
 
         private void MunicipalityButtonClick()
         {
+            
         }
 
         private void ForgeButtonClick()
@@ -79,6 +81,7 @@ namespace Overlewd
 
         private void PortalButtonClick()
         {
+            UIManager.ShowPopup<PortalPopup>();
         }
 
         private void UlviCaveButtonClick()

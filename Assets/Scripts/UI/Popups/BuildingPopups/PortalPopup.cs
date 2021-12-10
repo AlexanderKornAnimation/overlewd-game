@@ -1,19 +1,23 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CavePopup : BuildingPopup
+    public class PortalPopup : BuildingPopup
     {
         public static bool isBuilded { get; private set; } = false;
 
         protected override void Start()
         {
             base.Start();
-            Instantiate(Resources.Load("Prefabs/UI/Popups/BuildingPopups/CaveImage"), imageSpawnPoint);
+            Customize();
+        }
+
+        protected override void Customize()
+        {
+            base.Customize();
+            buildingName.text = "Portal";
         }
         
         protected override void FreeBuildButtonClick()
@@ -28,5 +32,4 @@ namespace Overlewd
             isBuilded = true;
         }
     }
-
 }
