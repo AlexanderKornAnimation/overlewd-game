@@ -13,13 +13,13 @@ namespace Overlewd
     {
         public class EventButton : MonoBehaviour
         {
-            private Button button;
-            private TextMeshProUGUI title;
-            private TextMeshProUGUI description;
-            private Image icon;
-            private Image arrowTop;
-            private Image arrowLeft;
-            private Image arrowBot;
+            protected Button button;
+            protected TextMeshProUGUI title;
+            protected TextMeshProUGUI description;
+            protected Image icon;
+            protected Image arrowTop;
+            protected Image arrowLeft;
+            protected Image arrowBot;
 
             private void Awake()
             {
@@ -38,7 +38,7 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
             }
 
-            private void ButtonClick()
+            protected virtual void ButtonClick()
             {
                 UIManager.ShowScreen<EventMapScreen>();
             }

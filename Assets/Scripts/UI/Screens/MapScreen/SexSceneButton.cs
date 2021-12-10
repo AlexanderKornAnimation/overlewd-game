@@ -13,9 +13,9 @@ namespace Overlewd
     {
         public class SexSceneButton : MonoBehaviour
         {
-            private Button button;
-            private Transform sceneDone;
-            private TextMeshProUGUI title;
+            protected Button button;
+            protected Transform sceneDone;
+            protected TextMeshProUGUI title;
 
             private void Awake()
             {
@@ -28,7 +28,7 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
             }
 
-            private void ButtonClick()
+            protected virtual void ButtonClick()
             {
                 UIManager.ShowScreen<SexScreen>();
             }

@@ -15,6 +15,11 @@ namespace Overlewd
         {
             public class FightButton : Overlewd.NSMapScreen.FightButton
             {
+                protected override void ButtonClick()
+                {
+                    
+                }
+
                 public new static FightButton GetInstance(Transform parent)
                 {
                     var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/FightButton"), parent);

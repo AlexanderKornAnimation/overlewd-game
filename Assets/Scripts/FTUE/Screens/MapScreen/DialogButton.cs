@@ -16,6 +16,11 @@ namespace Overlewd
         {
             public class DialogButton : Overlewd.NSMapScreen.DialogButton
             {
+                protected override void ButtonClick()
+                {
+
+                }
+
                 public new static DialogButton GetInstance(Transform parent)
                 {
                     var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/DialogButton"), parent);

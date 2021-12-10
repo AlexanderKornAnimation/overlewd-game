@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Overlewd.NSMapScreen;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,11 +10,11 @@ namespace Overlewd
 {
     public class MapScreen : BaseScreen
     {
-        private Transform map;
-        private Button chapterButton;
-        private Button backbutton;
+        protected Transform map;
+        protected Button chapterButton;
+        protected Button backbutton;
         
-        private void Start()
+        private void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/MapScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
@@ -29,24 +28,33 @@ namespace Overlewd
             chapterButton.onClick.AddListener(ChapterButtonClick);
             backbutton.onClick.AddListener(BackButtonClick);
 
+            map = canvas.Find("Map");            
+        }
+
+        private void Start()
+        {
+            Customize();
+        }
+
+        protected virtual void Customize()
+        {
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
 
-            map = canvas.Find("Map");
-
-            DialogButton.GetInstance(map.Find("dialogue_1"));
-            FightButton.GetInstance(map.Find("fight_1"));
-            EventButton.GetInstance(map.Find("event_1"));
+            NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_1"));
+            NSMapScreen.FightButton.GetInstance(map.Find("fight_1"));
+            NSMapScreen.EventButton.GetInstance(map.Find("event_1"));
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             UIManager.ShowScreen<CastleScreen>();
         }
         
-        private void ChapterButtonClick()
+        protected virtual void ChapterButtonClick()
         {
+
         }
     }
 }

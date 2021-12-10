@@ -15,7 +15,11 @@ namespace Overlewd
         {
             public class EventButton : Overlewd.NSMapScreen.EventButton
             {
-           
+                protected override void ButtonClick()
+                {
+                    
+                }
+
                 public new static EventButton GetInstance(Transform parent)
                 {
                     var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/EventButton"), parent);

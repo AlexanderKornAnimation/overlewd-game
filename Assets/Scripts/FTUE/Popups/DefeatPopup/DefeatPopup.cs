@@ -14,7 +14,8 @@ namespace Overlewd
         {
             protected override void MagicGuildButtonClick()
             {
-                UIManager.ShowScreen<StartingScreen>();
+                UIManager.ShowScreen<MapScreen>();
+                //UIManager.ShowScreen<StartingScreen>();
             }
 
             protected override void InventoryButtonClick()

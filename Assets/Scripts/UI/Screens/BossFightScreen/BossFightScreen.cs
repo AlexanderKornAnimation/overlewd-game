@@ -36,6 +36,7 @@ namespace Overlewd
         protected virtual async void Start()
         {
             await GameData.EventStageStartAsync(GameGlobalStates.bossFight_EventStageData);
+            battleVideo.loopPointReached += EndBattleVideo;
         }
 
         protected virtual async void EndBattleVideo(VideoPlayer vp)
@@ -56,7 +57,6 @@ namespace Overlewd
             battleVideo.gameObject.SetActive(true);
 
             battleVideo.Play();
-            battleVideo.loopPointReached += EndBattleVideo;
         }
 
         protected virtual void BackButtonClick()

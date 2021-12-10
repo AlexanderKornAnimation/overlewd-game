@@ -15,6 +15,11 @@ namespace Overlewd
         {
             public class SexSceneButton : Overlewd.NSMapScreen.SexSceneButton
             {
+                protected override void ButtonClick()
+                {
+                    
+                }
+
                 public new static SexSceneButton GetInstance(Transform parent)
                 {
                     var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/SexSceneButton"), parent);

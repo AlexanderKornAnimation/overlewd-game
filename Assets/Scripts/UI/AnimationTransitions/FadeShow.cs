@@ -12,7 +12,11 @@ namespace Overlewd
         {
             base.Awake();
 
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            canvasGroup = gameObject.GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
             canvasGroup.alpha = 0.0f;
         }
 

@@ -13,11 +13,11 @@ namespace Overlewd
     {
         public class FightButton : MonoBehaviour
         {
-            private Button button;
-            private Transform fightDone;
-            
-            private TextMeshProUGUI title;
-            private TextMeshProUGUI loot;
+            protected Button button;
+            protected Transform fightDone;
+
+            protected TextMeshProUGUI title;
+            protected TextMeshProUGUI loot;
 
             private void Awake()
             {
@@ -33,7 +33,7 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
             }
 
-            private void ButtonClick()
+            protected virtual void ButtonClick()
             {
                 UIManager.ShowScreen<PrepareBattlePopup>();
             }

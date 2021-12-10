@@ -13,7 +13,7 @@ namespace Overlewd
         {
             protected override void Start()
             {
-
+                battleVideo.loopPointReached += EndBattleVideo;
             }
 
             protected override async Task PrepareShowOperationsAsync()
@@ -37,7 +37,6 @@ namespace Overlewd
                 battleVideo.gameObject.SetActive(true);
 
                 battleVideo.Play();
-                battleVideo.loopPointReached += EndBattleVideo;
             }
         }
     }
