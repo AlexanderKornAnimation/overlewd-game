@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Overlewd.FTUE;
 using UnityEngine;
 using UnityEngine.UI;
 
