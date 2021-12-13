@@ -19,6 +19,7 @@ namespace Overlewd
         protected Button nextButton;
         protected Text personageName;
         protected Image personageHead;
+        protected Transform personageEmotionPos;
         protected Text text;
 
         protected Button skipButton;
@@ -39,9 +40,9 @@ namespace Overlewd
         {
             [AdminBRO.DialogCharacterName.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
             [AdminBRO.DialogCharacterName.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterName.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogCharacterName.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
             [AdminBRO.DialogCharacterName.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterName.Adriel] = "Prefabs/UI/Screens/DialogScreen/Faye"
+            [AdminBRO.DialogCharacterName.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
         private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
             new Dictionary<string, NSDialogScreen.DialogCharacter>();
@@ -70,6 +71,7 @@ namespace Overlewd
 
             personageName = textContainer.Find("PersonageName").GetComponent<Text>();
             personageHead = textContainer.Find("PersonageHead").GetComponent<Image>();
+            personageEmotionPos = textContainer.Find("PersonageEmotionPos");
             text = textContainer.Find("Text").GetComponent<Text>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
@@ -85,11 +87,6 @@ namespace Overlewd
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
             cutIn.SetActive(false);
-        }
-
-        void Start()
-        {
-            
         }
 
         protected override async Task PrepareShowOperationsAsync()
@@ -289,7 +286,7 @@ namespace Overlewd
             while (currentReplicaId < dialogData.replicas.Count)
             {
                 ShowCurrentReplica();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2f);
                 currentReplicaId++;
             }
             AutoplayButtonClick();
@@ -313,7 +310,7 @@ namespace Overlewd
             }
         }
 
-        protected void ShowCurrentReplica()
+        protected virtual void ShowCurrentReplica()
         {
             var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
             if (prevReplica != null)

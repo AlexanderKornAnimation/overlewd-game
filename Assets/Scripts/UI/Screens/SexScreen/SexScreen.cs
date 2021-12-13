@@ -58,11 +58,6 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
-        void Start()
-        {
-            
-        }
-
         protected override async Task PrepareShowOperationsAsync()
         {
             await EnterScreen();
@@ -157,7 +152,7 @@ namespace Overlewd
             while (currentReplicaId < dialogData.replicas.Count)
             {
                 ShowCurrentReplica();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2f);
                 currentReplicaId++;
             }
             AutoplayButtonClick();

@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 873, y: 1024}
+  m_SizeDelta: {x: 804, y: 1024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6843338596942935065
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c732ffad9454ee74cbf6be6a3dfff4b9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 308f1461b6bd9e54c9853dfa35001f0f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6276318659619267112}
   m_Layer: 5
-  m_Name: Ulvi
+  m_Name: UlviFurry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 873, y: 1024}
+  m_AnchoredPosition: {x: 0, y: -80}
+  m_SizeDelta: {x: 804, y: 1024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6480112263672465667
 GameObject:
@@ -147,7 +147,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 873, y: 1024}
+  m_SizeDelta: {x: 804, y: 1024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6165599535377778236
 CanvasRenderer:
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c732ffad9454ee74cbf6be6a3dfff4b9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 308f1461b6bd9e54c9853dfa35001f0f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
