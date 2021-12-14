@@ -8,12 +8,13 @@ namespace Overlewd
 {
     public class LoadingScreen : BaseScreen
     {
-        private string loadingLabel;
-        private Texture2D screenTexture;
-
         void Awake()
         {
-            screenTexture = Resources.Load<Texture2D>("Ulvi");
+            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/LoadingScreen/LoadingScreen"));
+            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+            screenRectTransform.SetParent(transform, false);
+            UIManager.SetStretch(screenRectTransform);
+
         }
 
         private async Task LoadResourcesAsync()
@@ -33,7 +34,7 @@ namespace Overlewd
                     await ResourceManager.ActualizeResourcesAsync(serverResourcesMeta,
                         (resourceItemMeta) =>
                         {
-                            loadingLabel = "Download: " + resourceItemMeta.url;
+                            //loadingLabel = "Download: " + resourceItemMeta.url;
                         });
                 }
             }
@@ -69,20 +70,6 @@ namespace Overlewd
             await LoadResourcesAsync();
 
             UIManager.ShowScreen<StartingScreen>();
-        }
-
-        void OnGUI()
-        {
-            GUI.depth = 2;
-            var rect = new Rect(0, 0, Screen.width, Screen.height);
-            GUI.DrawTexture(rect, screenTexture);
-
-            GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
-            labelStyle.fontSize = (int)(Screen.height * 0.08);
-            labelStyle.alignment = TextAnchor.MiddleCenter;
-            labelStyle.normal.textColor = Color.black;
-            int labelHeight = (int)(labelStyle.fontSize * 1.5);
-            GUI.Label(new Rect(0, Screen.height - labelHeight, Screen.width, labelHeight), loadingLabel, labelStyle);
         }
     }
 }
