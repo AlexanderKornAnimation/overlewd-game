@@ -17,6 +17,70 @@ namespace Overlewd
             }
             public static List<AdminBRO.Dialog> dialogs = new List<AdminBRO.Dialog>();
 
+            public static Dictionary<string, Dictionary<string, string>> sexSceneMainAnimations = new Dictionary<string, Dictionary<string, string>>
+            {
+                ["sexScene1"] = new Dictionary<string, string>
+                { 
+                    ["back"] = "FTUE/UlviSexScene1/MainScene/back_SkeletonData",
+                    ["idle"] = "FTUE/UlviSexScene1/MainScene/idle01_SkeletonData"
+                },
+
+            };
+
+            public static Dictionary<string, Dictionary<string, string>> cutInAnimations = new Dictionary<string, Dictionary<string, string>>
+            {
+                ["cutIn1"] = new Dictionary<string, string>
+                {
+                    ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
+                    ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
+                },
+                
+            };
+
+            public static Dictionary<string, Dictionary<string, string>> emotionsAnim = new Dictionary<string, Dictionary<string, string>>
+            {
+                [AdminBRO.DialogCharacterName.Overlord] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+                [AdminBRO.DialogCharacterName.Ulvi] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/UlviEmotions/angry_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/UlviEmotions/happy_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/UlviEmotions/idle_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/UlviEmotions/love_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/UlviEmotions/surprised_SkeletonData",
+                },
+                [AdminBRO.DialogCharacterName.UlviWolf] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/UlviEmotions/angry_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/UlviEmotions/happy_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/UlviEmotions/idle_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/UlviEmotions/love_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/UlviEmotions/surprised_SkeletonData",
+                },
+                [AdminBRO.DialogCharacterName.Faye] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+                [AdminBRO.DialogCharacterName.Adriel] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+            };
+
             public static void Initialization()
             {
                 //test dialog 0

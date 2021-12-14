@@ -10,10 +10,8 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
-            private SpineWidget backMainAnim;
-            private SpineWidget mainAnim;
-            private SpineWidget backCutInAnim;
-            private SpineWidget cutInAnim;
+            private List<SpineWidget> mainAnimations = new List<SpineWidget>();
+            private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
 
             protected override async Task PrepareHideOperationsAsync()
             {
@@ -25,13 +23,16 @@ namespace Overlewd
                 dialogData = GameGlobalStates.sexScreen_DialogData;
                 await Task.CompletedTask;
 
-                backMainAnim = SpineWidget.GetInstance(mainAnimPos);
-                backMainAnim.Initialize("FTUE/UlviSexScene1/MainScene/back_SkeletonData", false);
-                backMainAnim.PlayAnimation("back", true);
-
-                mainAnim = SpineWidget.GetInstance(mainAnimPos);
-                mainAnim.Initialize("FTUE/UlviSexScene1/MainScene/idle01_SkeletonData", false);
-                mainAnim.PlayAnimation("idle", true);
+                foreach (var animData in GameData.sexSceneMainAnimations["sexScene1"])
+                {
+                    if (animData.Value != null)
+                    {
+                        var anim = SpineWidget.GetInstance(mainAnimPos);
+                        anim.Initialize(animData.Value, false);
+                        anim.PlayAnimation(animData.Key, true);
+                        mainAnimations.Add(anim);
+                    }
+                }
             }
 
             protected override void LeaveScreen()
@@ -53,25 +54,26 @@ namespace Overlewd
                 }
             }
 
-            protected override void ShowCurrentReplica()
+            private void ShowCutIn(AdminBRO.DialogReplica replica)
             {
-                base.ShowCurrentReplica();
-
-                var replica = dialogData.replicas[currentReplicaId];
                 if (replica.cutIn != null)
                 {
-                    Destroy(backCutInAnim?.gameObject);
-                    Destroy(cutInAnim?.gameObject);
-                    backCutInAnim = null;
-                    cutInAnim = null;
+                    foreach (var anim in cutInAnimations)
+                    {
+                        Destroy(anim?.gameObject);
+                    }
+                    cutInAnimations.Clear();
 
-                    backCutInAnim = SpineWidget.GetInstance(cutInAnimPos);
-                    backCutInAnim.Initialize("FTUE/UlviSexScene1/Cut_in2/back_SkeletonData", false);
-                    backCutInAnim.PlayAnimation("back", true);
-
-                    cutInAnim = SpineWidget.GetInstance(cutInAnimPos);
-                    cutInAnim.Initialize("FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData", false);
-                    cutInAnim.PlayAnimation("idle", true);
+                    foreach (var animData in GameData.cutInAnimations["cutIn1"])
+                    {
+                        if (animData.Value != null)
+                        {
+                            var anim = SpineWidget.GetInstance(cutInAnimPos);
+                            anim.Initialize(animData.Value, false);
+                            anim.PlayAnimation(animData.Key, true);
+                            cutInAnimations.Add(anim);
+                        }
+                    }
 
                     cutIn.SetActive(true);
                 }
@@ -79,11 +81,20 @@ namespace Overlewd
                 {
                     cutIn.SetActive(false);
 
-                    Destroy(backCutInAnim?.gameObject);
-                    Destroy(cutInAnim?.gameObject);
-                    backCutInAnim = null;
-                    cutInAnim = null;
+                    foreach (var anim in cutInAnimations)
+                    {
+                        Destroy(anim?.gameObject);
+                    }
+                    cutInAnimations.Clear();
                 }
+            }
+
+            protected override void ShowCurrentReplica()
+            {
+                base.ShowCurrentReplica();
+
+                var replica = dialogData.replicas[currentReplicaId];
+                ShowCutIn(replica);
             }
         }
     }
