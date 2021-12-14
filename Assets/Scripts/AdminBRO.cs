@@ -545,6 +545,7 @@ namespace Overlewd
             public int id;
             public int sort;
             public string characterName;
+            public string characterSkin;
             public string characterPosition;
             public string cutIn;
             public string message;
