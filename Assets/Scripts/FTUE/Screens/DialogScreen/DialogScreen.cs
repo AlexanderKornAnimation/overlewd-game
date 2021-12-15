@@ -10,60 +10,6 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            private Dictionary<string, Dictionary<string, string>> emotionsAnim = new Dictionary<string, Dictionary<string, string>>
-            {
-                [AdminBRO.DialogCharacterKey.Overlord] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-                [AdminBRO.DialogCharacterKey.Ulvi] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-                [AdminBRO.DialogCharacterKey.UlviWolf] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/UlviFurry/angry_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/UlviFurry/happy_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/Emotions/UlviFurry/idle_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/UlviFurry/love_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/UlviFurry/surprised_SkeletonData",
-                },
-                [AdminBRO.DialogCharacterKey.Faye] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-                [AdminBRO.DialogCharacterKey.Adriel] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-            };
-
-            private Dictionary<string, Dictionary<string, string>> cutInAnim = new Dictionary<string, Dictionary<string, string>>
-            {
-                ["dialogCutIn1"] = new Dictionary<string, string>
-                {
-                    ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
-                    ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
-                },
-
-            };
-
             private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
             private SpineWidget emotionAnimation;
 
@@ -111,7 +57,7 @@ namespace Overlewd
                     }
                     cutInAnimations.Clear();
 
-                    foreach (var animData in cutInAnim["dialogCutIn1"])
+                    foreach (var animData in GameLocalResources.dialogCutInAnimPath["dialogCutIn1"])
                     {
                         if (animData.Value != null)
                         {
@@ -143,9 +89,9 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    if (emotionsAnim.ContainsKey(replica.characterKey))
+                    if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterKey))
                     {
-                        var persEmotions = emotionsAnim[replica.characterKey];
+                        var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterKey];
                         if (persEmotions.ContainsKey(replica.animation))
                         {
                             var headPath = persEmotions[replica.animation];
