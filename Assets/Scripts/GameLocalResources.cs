@@ -74,11 +74,11 @@ namespace Overlewd
             },
             [AdminBRO.DialogCharacterKey.Adriel] = new Dictionary<string, string>
             {
-                [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                [AdminBRO.DialogCharacterAnimation.Love] = null,
-                [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/Adriel/angry_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/Adriel/happy_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/Emotions/Adriel/idle_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/Adriel/love_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/Adriel/surprised_SkeletonData",
             },
         };
         //

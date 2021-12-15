@@ -23,7 +23,21 @@ namespace Overlewd
                 dialogData = GameGlobalStates.sexScreen_DialogData;
                 await Task.CompletedTask;
 
-                foreach (var animData in GameLocalResources.sexMainAnimPath["sexMainScene1"])
+                var sexSceneKey = "sexMainScene1";
+                if (GameGlobalStates.sexScreen_DialogId == 2)
+                {
+                    sexSceneKey = "sexMainScene1";
+                }
+                else if (GameGlobalStates.sexScreen_DialogId == 8)
+                {
+                    sexSceneKey = "sexMainScene1";
+                }
+                else if (GameGlobalStates.sexScreen_DialogId == 16)
+                {
+                    sexSceneKey = "sexMainScene1";
+                }
+
+                foreach (var animData in GameLocalResources.sexMainAnimPath[sexSceneKey])
                 {
                     if (animData.Value != null)
                     {
