@@ -37,15 +37,6 @@ namespace Overlewd
 
         protected bool isAutoplayButtonPressed = false;
 
-        private Dictionary<string, string> characterPrefabPath = new Dictionary<string, string>
-        {
-            [AdminBRO.DialogCharacterKey.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogCharacterKey.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterKey.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogCharacterKey.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterKey.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
-        };
-
         private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
             new Dictionary<string, NSDialogScreen.DialogCharacter>();
         private Dictionary<string, Transform> slots = new Dictionary<string, Transform>();
@@ -167,7 +158,7 @@ namespace Overlewd
             if (characters[keyName] == null)
             {
                 var slot = slots[keyPos];
-                var prefabPath = characterPrefabPath[keyName];
+                var prefabPath = GameLocalResources.dialogCharacterPrefabPath[keyName];
                 characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
 
                 slot_character[keyPos] = keyName;
