@@ -50,11 +50,11 @@ namespace Overlewd
             },
             [AdminBRO.DialogCharacterKey.Ulvi] = new Dictionary<string, string>
             {
-                [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                [AdminBRO.DialogCharacterAnimation.Love] = null,
-                [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/Ulvi/angry_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/Ulvi/happy_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/Emotions/Ulvi/idle_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/Ulvi/love_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/Ulvi/surprised_SkeletonData",
             },
             [AdminBRO.DialogCharacterKey.UlviWolf] = new Dictionary<string, string>
             {
