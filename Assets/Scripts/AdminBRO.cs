@@ -525,6 +525,19 @@ namespace Overlewd
         {
             public const string Overlord = "Overlord";
             public const string Ulvi = "Ulvi";
+            public const string Faye = "Faye";
+            public const string Adriel = "Adriel";
+        }
+
+        public class DialogCharacterSkin
+        {
+            public const string Wolf = "wolf";
+        }
+
+        public class DialogCharacterKey
+        {
+            public const string Overlord = "Overlord";
+            public const string Ulvi = "Ulvi";
             public const string UlviWolf = "UlviWolf";
             public const string Faye = "Faye";
             public const string Adriel = "Adriel";
@@ -551,6 +564,38 @@ namespace Overlewd
             public string message;
             public string animation;
             public string sceneOverlayImage;
+
+            public string characterKey
+            {
+                get
+                {
+                    return characterName switch
+                    {
+                        DialogCharacterName.Overlord => characterSkin switch
+                        {
+                            _ => DialogCharacterKey.Overlord
+                        },
+
+                        DialogCharacterName.Ulvi => characterSkin switch
+                        {
+                            DialogCharacterSkin.Wolf => DialogCharacterKey.UlviWolf,
+                            _ => DialogCharacterKey.Ulvi
+                        },
+
+                        DialogCharacterName.Faye => characterSkin switch
+                        {
+                            _ => DialogCharacterKey.Faye
+                        },
+
+                        DialogCharacterName.Adriel => characterSkin switch
+                        {
+                            _ => DialogCharacterKey.Adriel
+                        },
+
+                        _ => characterName
+                    };
+                }
+            }
         }
 
         public class DialogType 

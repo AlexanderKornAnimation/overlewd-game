@@ -10,6 +10,26 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
+            private Dictionary<string, Dictionary<string, string>> sexMainAnim = new Dictionary<string, Dictionary<string, string>>
+            {
+                ["sexMainScene1"] = new Dictionary<string, string>
+                {
+                    ["back"] = "FTUE/UlviSexScene1/MainScene/back_SkeletonData",
+                    ["idle"] = "FTUE/UlviSexScene1/MainScene/idle01_SkeletonData"
+                },
+
+            };
+
+            private Dictionary<string, Dictionary<string, string>> cutInAnim = new Dictionary<string, Dictionary<string, string>>
+            {
+                ["sexCutIn1"] = new Dictionary<string, string>
+                {
+                    ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
+                    ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
+                },
+
+            };
+
             private List<SpineWidget> mainAnimations = new List<SpineWidget>();
             private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
 
@@ -23,7 +43,7 @@ namespace Overlewd
                 dialogData = GameGlobalStates.sexScreen_DialogData;
                 await Task.CompletedTask;
 
-                foreach (var animData in GameData.sexSceneMainAnimations["sexScene1"])
+                foreach (var animData in sexMainAnim["sexMainScene1"])
                 {
                     if (animData.Value != null)
                     {
@@ -64,7 +84,7 @@ namespace Overlewd
                     }
                     cutInAnimations.Clear();
 
-                    foreach (var animData in GameData.cutInAnimations["cutIn1"])
+                    foreach (var animData in cutInAnim["sexCutIn1"])
                     {
                         if (animData.Value != null)
                         {

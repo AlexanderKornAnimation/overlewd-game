@@ -10,10 +10,62 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            private SpineWidget persEmotionBackAnim;
-            private SpineWidget curPersEmotionAnim;
+            private Dictionary<string, Dictionary<string, string>> emotionsAnim = new Dictionary<string, Dictionary<string, string>>
+            {
+                [AdminBRO.DialogCharacterKey.Overlord] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+                [AdminBRO.DialogCharacterKey.Ulvi] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+                [AdminBRO.DialogCharacterKey.UlviWolf] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/UlviFurry/angry_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/UlviFurry/happy_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/Emotions/UlviFurry/idle_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/UlviFurry/love_SkeletonData",
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/UlviFurry/surprised_SkeletonData",
+                },
+                [AdminBRO.DialogCharacterKey.Faye] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+                [AdminBRO.DialogCharacterKey.Adriel] = new Dictionary<string, string>
+                {
+                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
+                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
+                    [AdminBRO.DialogCharacterAnimation.Love] = null,
+                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
+                },
+            };
+
+            private Dictionary<string, Dictionary<string, string>> cutInAnim = new Dictionary<string, Dictionary<string, string>>
+            {
+                ["dialogCutIn1"] = new Dictionary<string, string>
+                {
+                    ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
+                    ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
+                },
+
+            };
 
             private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
+            private SpineWidget emotionAnimation;
 
             protected override async Task PrepareHideOperationsAsync()
             {
@@ -23,11 +75,9 @@ namespace Overlewd
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.dialogScreen_DialogData;
-                personageHead.gameObject.SetActive(false);
 
-                persEmotionBackAnim = SpineWidget.GetInstance(personageEmotionPos);
-                persEmotionBackAnim.Initialize("FTUE/UlviEmotions/back_SkeletonData", false);
-                persEmotionBackAnim.PlayAnimation("back", true);
+                personageHead.gameObject.SetActive(false);
+                emotionBack.gameObject.SetActive(true);
 
                 await Task.CompletedTask;
             }
@@ -61,7 +111,7 @@ namespace Overlewd
                     }
                     cutInAnimations.Clear();
 
-                    foreach (var animData in GameData.cutInAnimations["cutIn1"])
+                    foreach (var animData in cutInAnim["dialogCutIn1"])
                     {
                         if (animData.Value != null)
                         {
@@ -90,28 +140,28 @@ namespace Overlewd
             {
                 if (replica.animation != null)
                 {
-                    Destroy(curPersEmotionAnim?.gameObject);
-                    curPersEmotionAnim = null;
+                    Destroy(emotionAnimation?.gameObject);
+                    emotionAnimation = null;
 
-                    if (GameData.emotionsAnim.ContainsKey(replica.characterName))
+                    if (emotionsAnim.ContainsKey(replica.characterKey))
                     {
-                        var persEmotions = GameData.emotionsAnim[replica.characterName];
+                        var persEmotions = emotionsAnim[replica.characterKey];
                         if (persEmotions.ContainsKey(replica.animation))
                         {
-                            var path = persEmotions[replica.animation];
-                            if (path != null)
+                            var headPath = persEmotions[replica.animation];
+                            if (headPath != null)
                             {
-                                curPersEmotionAnim = SpineWidget.GetInstance(personageEmotionPos);
-                                curPersEmotionAnim.Initialize(path, false);
-                                curPersEmotionAnim.PlayAnimation(replica.animation, true);
+                                emotionAnimation = SpineWidget.GetInstance(emotionPos);
+                                emotionAnimation.Initialize(headPath, false);
+                                emotionAnimation.PlayAnimation(replica.animation, true);
                             }
                         }
                     }
                 }
                 else
                 {
-                    Destroy(curPersEmotionAnim?.gameObject);
-                    curPersEmotionAnim = null;
+                    Destroy(emotionAnimation?.gameObject);
+                    emotionAnimation = null;
                 }
             }
 

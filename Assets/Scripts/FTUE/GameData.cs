@@ -17,112 +17,8 @@ namespace Overlewd
             }
             public static List<AdminBRO.Dialog> dialogs = new List<AdminBRO.Dialog>();
 
-            public static Dictionary<string, Dictionary<string, string>> sexSceneMainAnimations = new Dictionary<string, Dictionary<string, string>>
-            {
-                ["sexScene1"] = new Dictionary<string, string>
-                { 
-                    ["back"] = "FTUE/UlviSexScene1/MainScene/back_SkeletonData",
-                    ["idle"] = "FTUE/UlviSexScene1/MainScene/idle01_SkeletonData"
-                },
-
-            };
-
-            public static Dictionary<string, Dictionary<string, string>> cutInAnimations = new Dictionary<string, Dictionary<string, string>>
-            {
-                ["cutIn1"] = new Dictionary<string, string>
-                {
-                    ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
-                    ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
-                },
-                
-            };
-
-            public static Dictionary<string, Dictionary<string, string>> emotionsAnim = new Dictionary<string, Dictionary<string, string>>
-            {
-                [AdminBRO.DialogCharacterName.Overlord] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-                [AdminBRO.DialogCharacterName.Ulvi] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/UlviEmotions/angry_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/UlviEmotions/happy_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/UlviEmotions/idle_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/UlviEmotions/love_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/UlviEmotions/surprised_SkeletonData",
-                },
-                [AdminBRO.DialogCharacterName.UlviWolf] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/UlviEmotions/angry_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/UlviEmotions/happy_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/UlviEmotions/idle_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/UlviEmotions/love_SkeletonData",
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/UlviEmotions/surprised_SkeletonData",
-                },
-                [AdminBRO.DialogCharacterName.Faye] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-                [AdminBRO.DialogCharacterName.Adriel] = new Dictionary<string, string>
-                {
-                    [AdminBRO.DialogCharacterAnimation.Angry] = null,
-                    [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                    [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                    [AdminBRO.DialogCharacterAnimation.Love] = null,
-                    [AdminBRO.DialogCharacterAnimation.Surprised] = null,
-                },
-            };
-
             public static void Initialization()
             {
-                //test dialog 0
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 0,
-                    replicas = new List<AdminBRO.DialogReplica>
-                    {
-                        new AdminBRO.DialogReplica {characterName = "PersName1", message = "Message 1"},
-                        new AdminBRO.DialogReplica {characterName = "PersName2", message = "Message 2"},
-                        new AdminBRO.DialogReplica {characterName = "PersName1", message = "Message 3"},
-                        new AdminBRO.DialogReplica {characterName = "PersName2", message = "Message 4"},
-                    }
-                });
-
-                //test dialog 1
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 1,
-                    replicas = new List<AdminBRO.DialogReplica>
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Overlord,
-                            message = "Message Owerlord",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        },
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            message = "Message Ulvi",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Right
-                        },
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Faye,
-                            message = "Message Faye",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Middle
-                        },
-                    }
-                });
-
                 //Intro/sex scene SEX 1 STORY 1
                 dialogs.Add(new AdminBRO.Dialog
                 {
@@ -582,7 +478,8 @@ namespace Overlewd
                             cutIn = "Cut-in 5: Adriel kissing Overlord's helmet"
                         },
                         new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.UlviWolf,
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            characterSkin = AdminBRO.DialogCharacterSkin.Wolf,
                             animation = AdminBRO.DialogCharacterAnimation.Angry,
                             message = "Listen, you big titty bitch. You're not fooling anyone with those melons. I can see that you have a dick.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right

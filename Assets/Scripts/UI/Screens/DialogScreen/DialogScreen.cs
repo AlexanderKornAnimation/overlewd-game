@@ -19,7 +19,8 @@ namespace Overlewd
         protected Button nextButton;
         protected Text personageName;
         protected Image personageHead;
-        protected Transform personageEmotionPos;
+        protected Transform emotionBack;
+        protected Transform emotionPos;
         protected Text text;
 
         protected Button skipButton;
@@ -38,12 +39,13 @@ namespace Overlewd
 
         private Dictionary<string, string> characterPrefabPath = new Dictionary<string, string>
         {
-            [AdminBRO.DialogCharacterName.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogCharacterName.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterName.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogCharacterName.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterName.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
+            [AdminBRO.DialogCharacterKey.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            [AdminBRO.DialogCharacterKey.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogCharacterKey.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
+            [AdminBRO.DialogCharacterKey.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
+            [AdminBRO.DialogCharacterKey.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
+
         private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
             new Dictionary<string, NSDialogScreen.DialogCharacter>();
         private Dictionary<string, Transform> slots = new Dictionary<string, Transform>();
@@ -71,7 +73,8 @@ namespace Overlewd
 
             personageName = textContainer.Find("PersonageName").GetComponent<Text>();
             personageHead = textContainer.Find("PersonageHead").GetComponent<Image>();
-            personageEmotionPos = textContainer.Find("PersonageEmotionPos");
+            emotionBack = textContainer.Find("EmotionBack");
+            emotionPos = emotionBack.Find("EmotionPos");
             text = textContainer.Find("Text").GetComponent<Text>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
@@ -217,7 +220,7 @@ namespace Overlewd
 
             foreach (var replica in dialogData.replicas)
             {
-                var keyName = replica.characterName;
+                var keyName = replica.characterKey;
                 var keyPos = replica.characterPosition;
 
                 bool addKeyName = false;
@@ -335,7 +338,7 @@ namespace Overlewd
                 personageName.text = replica.characterName;
                 text.text = replica.message;
 
-                var keyName = replica.characterName;
+                var keyName = replica.characterKey;
                 var keyPos = replica.characterPosition;
 
                 ShowCharacter(keyName, keyPos);
