@@ -585,7 +585,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "That was pretty hot, huh? The more memories of others you watch, the faster you'll regain your own memories! Pretty sure my memories are the best — I savor all the dirty details.",
+                            message = "<size=90%>That was pretty hot, huh? The more memories of others you watch, the faster you'll regain your own memories! Pretty sure my memories are the best — I savor all the dirty details.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                     }
