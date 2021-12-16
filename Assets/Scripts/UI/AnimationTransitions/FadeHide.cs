@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class FadeHide : BaseScreenTrasition
+    public class FadeHide : BaseHideTrasition
     {
         private CanvasGroup canvasGroup;
+        private bool localCanvasGroup = false;
 
         protected override void Awake()
         {
@@ -16,6 +17,7 @@ namespace Overlewd
             if (canvasGroup == null)
             {
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
+                localCanvasGroup = true;
             }
             canvasGroup.alpha = 1.0f;
         }
@@ -41,6 +43,13 @@ namespace Overlewd
                 await WaitAfterHideAsync();
 
                 Destroy(gameObject);
+            }
+        }
+        void OnDestroy()
+        {
+            if (localCanvasGroup)
+            {
+                Destroy(canvasGroup);
             }
         }
     }

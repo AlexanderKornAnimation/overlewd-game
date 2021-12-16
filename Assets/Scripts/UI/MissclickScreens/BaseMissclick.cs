@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public abstract class BaseMissclick : MonoBehaviour
+    public abstract class BaseMissclick : TransitionSynchronizer
     {
         public bool missClickEnabled { get; set; } = true;
         
@@ -27,6 +27,9 @@ namespace Overlewd
 
         private void ImageClick(BaseEventData data)
         {
+            if (IsTransitionState())
+                return;
+
             if (missClickEnabled)
             {
                 OnClick();
@@ -35,14 +38,12 @@ namespace Overlewd
 
         protected virtual void OnClick()
         {
-            
-        }
 
+        }
         public virtual void Show()
         {
 
         }
-
         public virtual void Hide()
         {
             Destroy(gameObject);

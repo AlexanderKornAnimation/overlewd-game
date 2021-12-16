@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ScreenShow : BaseScreenTrasition
+    public class ScreenShow : BaseShowTrasition
     {
         protected override void Awake()
         {
