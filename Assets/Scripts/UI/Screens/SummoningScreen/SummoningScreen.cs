@@ -38,7 +38,7 @@ namespace Overlewd
             for (int i = 1; i <= shardPositions.childCount; i++)
             {
                 var pos = shardPositions.Find($"Shard{i}");
-                Shard.GetInstance(pos);
+                NSSummoningScreen.Shard.GetInstance(pos);
             }
         }
         

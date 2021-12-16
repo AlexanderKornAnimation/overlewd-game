@@ -6,32 +6,35 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class Shard : MonoBehaviour
+    namespace NSSummoningScreen
     {
-        private Image shardBackground;
-        private Image girl;
-
-        private void Awake()
+        public class Shard : MonoBehaviour
         {
-            shardBackground = transform.Find("ShardBackground").GetComponent<Image>();
-            girl = shardBackground.transform.Find("Girl").GetComponent<Image>();
-        }
+            private Image shardBackground;
+            private Image girl;
 
-        private void Start()
-        {
-            Customize();
-        }
+            private void Awake()
+            {
+                shardBackground = transform.Find("ShardBackground").GetComponent<Image>();
+                girl = shardBackground.transform.Find("Girl").GetComponent<Image>();
+            }
 
-        private void Customize()
-        {
-    
-        }
+            private void Start()
+            {
+                Customize();
+            }
 
-        public static Shard GetInstance(Transform parent)
-        {
-            var shard = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/SummoningScreen/Shard"), parent);
-            shard.name = nameof(Shard);
-            return shard.AddComponent<Shard>();
+            private void Customize()
+            {
+
+            }
+
+            public static Shard GetInstance(Transform parent)
+            {
+                var shard = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/SummoningScreen/Shard"), parent);
+                shard.name = nameof(Shard);
+                return shard.AddComponent<Shard>();
+            }
         }
     }
 }
