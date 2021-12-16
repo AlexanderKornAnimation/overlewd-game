@@ -27,7 +27,7 @@ namespace Overlewd
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
-            SidebarButtonWidget.GetInstance(transform);
+            BuffWidget.GetInstance(transform);
 
             var canvas = screenRectTransform.Find("Canvas");
             stages = canvas.Find("Stages");

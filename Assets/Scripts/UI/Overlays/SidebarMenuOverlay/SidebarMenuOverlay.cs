@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ namespace Overlewd
         protected Transform castleButton_EventMark1;
         protected Transform castleButton_EventMark2;
         protected Transform castleButton_EventMark3;
-        protected Text castleButton_Title;
+        protected TextMeshProUGUI castleButton_Title;
         protected Image castleButton_Icon;
 
         protected Button portalButton;
@@ -22,7 +23,7 @@ namespace Overlewd
         protected Transform portalButton_EventMark1;
         protected Transform portalButton_EventMark2;
         protected Transform portalButton_EventMark3;
-        protected Text portalButton_Title;
+        protected TextMeshProUGUI portalButton_Title;
         protected Image portalButton_Icon;
 
         protected Button globalMapButton;
@@ -31,7 +32,7 @@ namespace Overlewd
         protected Transform globalMapButton_EventMark1;
         protected Transform globalMapButton_EventMark2;
         protected Transform globalMapButton_EventMark3;
-        protected Text globalMapButton_Title;
+        protected TextMeshProUGUI globalMapButton_Title;
         protected Image globalMapButton_Icon;
 
         protected Button haremButton;
@@ -40,7 +41,7 @@ namespace Overlewd
         protected Transform haremButton_EventMark1;
         protected Transform haremButton_EventMark2;
         protected Transform haremButton_EventMark3;
-        protected Text haremButton_Title;
+        protected TextMeshProUGUI haremButton_Title;
         protected Image haremButton_Icon;
 
         protected Button castleBuildingButton;
@@ -49,7 +50,7 @@ namespace Overlewd
         protected Transform castleBuildingButton_EventMark1;
         protected Transform castleBuildingButton_EventMark2;
         protected Transform castleBuildingButton_EventMark3;
-        protected Text castleBuildingButton_Title;
+        protected TextMeshProUGUI castleBuildingButton_Title;
         protected Image castleBuildingButton_Icon;
 
         protected Button magicGuildButton;
@@ -58,14 +59,14 @@ namespace Overlewd
         protected Transform magicGuildButton_EventMark1;
         protected Transform magicGuildButton_EventMark2;
         protected Transform magicGuildButton_EventMark3;
-        protected Text magicGuildButton_Title;
+        protected TextMeshProUGUI magicGuildButton_Title;
         protected Image magicGuildButton_Icon;
 
         protected Button marketButton;
         protected Transform marketButton_TimeLimitMark;
         protected Transform marketButton_NewItemMark;
         protected Transform marketButton_SaleMark;
-        protected Text marketButton_Title;
+        protected TextMeshProUGUI marketButton_Title;
         protected Image marketButton_Icon;
 
         protected Button forgeButton;
@@ -74,7 +75,7 @@ namespace Overlewd
         protected Transform forgeButton_EventMark1;
         protected Transform forgeButton_EventMark2;
         protected Transform forgeButton_EventMark3;
-        protected Text forgeButton_Title;
+        protected TextMeshProUGUI forgeButton_Title;
         protected Image forgeButton_Icon;
 
         void Awake()
@@ -94,7 +95,7 @@ namespace Overlewd
             castleButton_EventMark1 = castleButton_Markers.Find("EventMark1");
             castleButton_EventMark2 = castleButton_Markers.Find("EventMark2");
             castleButton_EventMark3 = castleButton_Markers.Find("EventMark3");
-            castleButton_Title = castleButton.transform.Find("Title").GetComponent<Text>();
+            castleButton_Title = castleButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             castleButton_Icon = castleButton.transform.Find("Icon").GetComponent<Image>();
 
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
@@ -105,7 +106,7 @@ namespace Overlewd
             portalButton_EventMark1 = portalButton_Markers.Find("EventMark1");
             portalButton_EventMark2 = portalButton_Markers.Find("EventMark2");
             portalButton_EventMark3 = portalButton_Markers.Find("EventMark3");
-            portalButton_Title = portalButton.transform.Find("Title").GetComponent<Text>();
+            portalButton_Title = portalButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             portalButton_Icon = portalButton.transform.Find("Icon").GetComponent<Image>();
 
             globalMapButton = canvas.Find("GlobalMapButton").GetComponent<Button>();
@@ -116,7 +117,7 @@ namespace Overlewd
             globalMapButton_EventMark1 = globalMapButton_Markers.Find("EventMark1");
             globalMapButton_EventMark2 = globalMapButton_Markers.Find("EventMark2");
             globalMapButton_EventMark3 = globalMapButton_Markers.Find("EventMark3");
-            globalMapButton_Title = globalMapButton.transform.Find("Title").GetComponent<Text>();
+            globalMapButton_Title = globalMapButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             globalMapButton_Icon = globalMapButton.transform.Find("Icon").GetComponent<Image>();
 
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
@@ -127,7 +128,7 @@ namespace Overlewd
             haremButton_EventMark1 = haremButton_Markers.Find("EventMark1");
             haremButton_EventMark2 = haremButton_Markers.Find("EventMark2");
             haremButton_EventMark3 = haremButton_Markers.Find("EventMark3");
-            haremButton_Title = haremButton.transform.Find("Title").GetComponent<Text>();
+            haremButton_Title = haremButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             haremButton_Icon = haremButton.transform.Find("Icon").GetComponent<Image>();
 
             castleBuildingButton = canvas.Find("CastleBuildingButton").GetComponent<Button>();
@@ -138,7 +139,7 @@ namespace Overlewd
             castleBuildingButton_EventMark1 = castleBuildingButton_Markers.Find("EventMark1");
             castleBuildingButton_EventMark2 = castleBuildingButton_Markers.Find("EventMark2");
             castleBuildingButton_EventMark3 = castleBuildingButton_Markers.Find("EventMark3");
-            castleBuildingButton_Title = castleBuildingButton.transform.Find("Title").GetComponent<Text>();
+            castleBuildingButton_Title = castleBuildingButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             castleBuildingButton_Icon = castleBuildingButton.transform.Find("Icon").GetComponent<Image>();
 
             magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
@@ -149,7 +150,7 @@ namespace Overlewd
             magicGuildButton_EventMark1 = magicGuildButton_Markers.Find("EventMark1");
             magicGuildButton_EventMark2 = magicGuildButton_Markers.Find("EventMark2");
             magicGuildButton_EventMark3 = magicGuildButton_Markers.Find("EventMark3");
-            magicGuildButton_Title = magicGuildButton.transform.Find("Title").GetComponent<Text>();
+            magicGuildButton_Title = magicGuildButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             magicGuildButton_Icon = magicGuildButton.transform.Find("Icon").GetComponent<Image>();
 
             marketButton = canvas.Find("MarketButton").GetComponent<Button>();
@@ -158,7 +159,7 @@ namespace Overlewd
             marketButton_TimeLimitMark = marketButton_Markers.Find("TimeLimitMark");
             marketButton_NewItemMark = marketButton_Markers.Find("NewItemMark");
             marketButton_SaleMark = marketButton_Markers.Find("SaleMark");
-            marketButton_Title = marketButton.transform.Find("Title").GetComponent<Text>();
+            marketButton_Title = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             marketButton_Icon = marketButton.transform.Find("Icon").GetComponent<Image>();
 
             forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
@@ -169,7 +170,7 @@ namespace Overlewd
             forgeButton_EventMark1 = forgeButton_Markers.Find("EventMark1");
             forgeButton_EventMark2 = forgeButton_Markers.Find("EventMark2");
             forgeButton_EventMark3 = forgeButton_Markers.Find("EventMark3");
-            forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<Text>();
+            forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
         }
 

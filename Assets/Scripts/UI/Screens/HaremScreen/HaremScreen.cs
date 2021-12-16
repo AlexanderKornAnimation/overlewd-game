@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,31 +13,31 @@ namespace Overlewd
         private Button ulviButton;
         private Image ulviGirl;
         private Image ulviBuff;
-        private Text ulviDescription;
-        private Text ulviName;
+        private TextMeshProUGUI ulviDescription;
+        private TextMeshProUGUI ulviName;
 
         private Button adrielButton;
         private Image adrielGirl;
         private Image adrielBuff;
-        private Text adrielDescription;
-        private Text adrielName;
+        private TextMeshProUGUI adrielDescription;
+        private TextMeshProUGUI adrielName;
         private Transform adrielNotActive;
 
         private Button ingieButton;
-        private Text ingieName;
+        private TextMeshProUGUI ingieName;
         private Transform ingieNotActive;
 
         private Button fayeButton;
-        private Text fayeName;
+        private TextMeshProUGUI fayeName;
         private Transform fayeNotActive;
 
         private Button liliButton;
-        private Text liliName;
+        private TextMeshProUGUI liliName;
         private Transform liliNotActive;
 
         private Button battleGirlsButton;
         private Image battleGirlsGirl;
-        private Text battleGirlsTitle;
+        private TextMeshProUGUI battleGirlsTitle;
 
         void Start()
         {
@@ -54,36 +55,36 @@ namespace Overlewd
             ulviButton.onClick.AddListener(UlviButtonClick);
             ulviGirl = ulviButton.transform.Find("Girl").GetComponent<Image>();
             ulviBuff = ulviButton.transform.Find("Buff").GetComponent<Image>();
-            ulviDescription = ulviButton.transform.Find("Description").GetComponent<Text>();
-            ulviName = ulviButton.transform.Find("Name").GetComponent<Text>();
+            ulviDescription = ulviButton.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+            ulviName = ulviButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             adrielButton = canvas.Find("AdrielButton").GetComponent<Button>();
             adrielButton.onClick.AddListener(AdrielButtonClick);
             adrielGirl = adrielButton.transform.Find("Girl").GetComponent<Image>();
             adrielBuff = adrielButton.transform.Find("Buff").GetComponent<Image>();
-            adrielDescription = adrielButton.transform.Find("Description").GetComponent<Text>();
-            adrielName = adrielButton.transform.Find("Name").GetComponent<Text>();
+            adrielDescription = adrielButton.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+            adrielName = adrielButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             adrielNotActive = adrielButton.transform.Find("NotActive");
 
             ingieButton = canvas.Find("IngieButton").GetComponent<Button>();
             ingieButton.onClick.AddListener(IngieButtonClick);
-            ingieName = ingieButton.transform.Find("Name").GetComponent<Text>();
+            ingieName = ingieButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             ingieNotActive = ingieButton.transform.Find("NotActive");
 
             fayeButton = canvas.Find("FayeButton").GetComponent<Button>();
             fayeButton.onClick.AddListener(FayeButtonClick);
-            fayeName = fayeButton.transform.Find("Name").GetComponent<Text>();
+            fayeName = fayeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             fayeNotActive = fayeButton.transform.Find("NotActive");
 
             liliButton = canvas.Find("LiliButton").GetComponent<Button>();
             liliButton.onClick.AddListener(LiliButtonClick);
-            liliName = liliButton.transform.Find("Name").GetComponent<Text>();
+            liliName = liliButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             liliNotActive = liliButton.transform.Find("NotActive");
 
             battleGirlsButton = canvas.Find("BattleGirlsButton").GetComponent<Button>();
             battleGirlsButton.onClick.AddListener(BattleGirlsButtonClick);
             battleGirlsGirl = battleGirlsButton.transform.Find("Girl").GetComponent<Image>();
-            battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<Text>();
+            battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
             Customize();
         }

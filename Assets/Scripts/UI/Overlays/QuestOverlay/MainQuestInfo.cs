@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,15 +10,15 @@ namespace Overlewd
     {
         public class MainQuestInfo : MonoBehaviour
         {
-            protected Text title;
-            protected Text progress;
+            protected TextMeshProUGUI title;
+            protected TextMeshProUGUI progress;
 
             protected virtual void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
-                title = canvas.Find("QuestHead").Find("Title").GetComponent<Text>();
-                progress = canvas.Find("QuestHead").Find("Progress").GetComponent<Text>();
+                title = canvas.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
+                progress = canvas.Find("QuestHead").Find("Progress").GetComponent<TextMeshProUGUI>();
             }
 
             protected static GameObject LoadPrefab(Transform parent)

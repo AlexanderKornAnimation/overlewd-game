@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Overlewd
 {
@@ -12,8 +13,7 @@ namespace Overlewd
         private Button marketButton;
 
         private Button moneyBackButton;
-        private Text moneyBackValue;
-        private Image eventMoneyImage;
+        private TextMeshProUGUI moneyBackValue;
 
         private Transform scrollViewContent;
 
@@ -40,8 +40,7 @@ namespace Overlewd
 
             moneyBackButton = canvas.Find("MoneyBack").GetComponent<Button>();
             moneyBackButton.onClick.AddListener(MoneyBackButtonClick);
-            moneyBackValue = moneyBackButton.transform.Find("Value").GetComponent<Text>();
-            eventMoneyImage = moneyBackButton.transform.Find("EventMoney").GetComponent<Image>();
+            moneyBackValue = moneyBackButton.transform.Find("EventCurrency").GetComponent<TextMeshProUGUI>();
 
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
         }
@@ -89,7 +88,6 @@ namespace Overlewd
         private void Customize()
         {
             moneyBackValue.text = GameData.GetCurencyCatEarsCount().ToString();
-            eventMoneyImage.sprite = ResourceManager.LoadSpriteById(GameData.GetCurencyCatEars().iconUrl);
         }
 
         private void BackButtonClick()

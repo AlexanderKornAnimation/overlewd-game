@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,26 +12,23 @@ namespace Overlewd
         protected Transform background;
         protected Transform imageSpawnPoint;
 
-        protected Text recourcesNeeded;
-        protected Text fullPotentialTitle;
-        protected Text fullPotentialDescription;
-        protected Text buildingName;
-        protected Text description;
+        protected TextMeshProUGUI fullPotentialDescription;
+        protected TextMeshProUGUI buildingName;
+        protected TextMeshProUGUI description;
 
         protected Transform resourcesGrid;
         protected Transform[] resource = new Transform[4];
         protected GameObject[] notEnough = new GameObject[4];
-        protected Text[] count = new Text[4];
+        protected TextMeshProUGUI[] count = new TextMeshProUGUI[4];
         protected Image[] recourceIcon = new Image[4];
 
         protected Button backButton;
-        protected Text backButtonText;
 
         protected Button freeBuildButton;
-        protected Text freeBuildButtonText;
+        protected TextMeshProUGUI freeBuildButtonText;
 
         protected Button paidBuildingButton;
-        protected Text paidBuildingButtonText;
+        protected TextMeshProUGUI paidBuildingButtonText;
         protected Image paidBuildingButtonIcon;
 
         protected virtual void Awake()
@@ -45,11 +43,9 @@ namespace Overlewd
             background = canvas.Find("Background");
             imageSpawnPoint = background.Find("ImageSpawnPoint");
 
-            recourcesNeeded = canvas.Find("RecourcesNeeded").GetComponent<Text>();
-            fullPotentialTitle = canvas.Find("FullPotentialTitle").GetComponent<Text>();
-            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<Text>();
-            buildingName = canvas.Find("BuildingName").GetComponent<Text>();
-            description = canvas.Find("Description").GetComponent<Text>();
+            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<TextMeshProUGUI>();
+            buildingName = canvas.Find("BuildingName").GetComponent<TextMeshProUGUI>();
+            description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
             resourcesGrid = canvas.Find("Grid");
             for (var i = 0; i < resource.Length; i++)
@@ -57,21 +53,20 @@ namespace Overlewd
                 resource[i] = resourcesGrid.Find($"Recource{i + 1}");
 
                 notEnough[i] = resource[i].Find("NotEnough").gameObject;
-                count[i] = resource[i].Find("Count").GetComponent<Text>();
+                count[i] = resource[i].Find("Count").GetComponent<TextMeshProUGUI>();
                 recourceIcon[i] = resource[i].Find("RecourceIcon").GetComponent<Image>();
             }
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-            backButtonText = backButton.transform.Find("Text").GetComponent<Text>();
 
             freeBuildButton = canvas.Find("FreeBuildButton").GetComponent<Button>();
             freeBuildButton.onClick.AddListener(FreeBuildButtonClick);
-            freeBuildButtonText = freeBuildButton.transform.Find("Text").GetComponent<Text>();
+            freeBuildButtonText = freeBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
             paidBuildingButton = canvas.Find("PaidBuildingButton").GetComponent<Button>();
             paidBuildingButton.onClick.AddListener(PaidBuildingButtonClick);
-            paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<Text>();
+            paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             paidBuildingButtonIcon = paidBuildingButton.transform.Find("Icon").GetComponent<Image>();
         }
 

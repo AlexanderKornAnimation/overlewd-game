@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
-  m_Name: CurrensyNResources
+  m_Name: CurrencyNResources
   m_EditorClassIdentifier: 
   hashCode: 1718534240
   material: {fileID: 8500921079457040039}
@@ -128,8 +128,8 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 50
       m_Height: 50
-      m_HorizontalBearingX: 0
-      m_HorizontalBearingY: 39.5
+      m_HorizontalBearingX: -4
+      m_HorizontalBearingY: 39
       m_HorizontalAdvance: 50
     m_GlyphRect:
       m_X: 111

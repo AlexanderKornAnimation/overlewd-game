@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,9 +18,9 @@ namespace Overlewd
 
             private Button button;
             private GameObject buttonSelected;
-            private Text buttonText;
+            private TextMeshProUGUI buttonText;
             private GameObject currentTierCheck;
-            private Text tierTitle;
+            private TextMeshProUGUI tierTitle;
 
             void Awake()
             {
@@ -32,9 +33,9 @@ namespace Overlewd
                 var button = transform.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
                 buttonSelected = button.transform.Find("ButtonSelected").gameObject;
-                buttonText = button.transform.Find("Text").GetComponent<Text>();
+                buttonText = button.transform.Find("Text").GetComponent<TextMeshProUGUI>();
                 currentTierCheck = button.transform.Find("CurrentTierCheck").gameObject;
-                tierTitle = button.transform.Find("TierBack").Find("Text").GetComponent<Text>();
+                tierTitle = button.transform.Find("TierBack").Find("Tier").GetComponent<TextMeshProUGUI>();
             }
 
             void Start()

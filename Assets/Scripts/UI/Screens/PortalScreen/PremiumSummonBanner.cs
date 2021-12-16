@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ namespace Overlewd
             private Button button;
             private GameObject buttonSelected;
             private Image image;
-            private Text title;
+            private TextMeshProUGUI title;
 
             protected override void Awake()
             {
@@ -23,7 +24,7 @@ namespace Overlewd
 
                 buttonSelected = button.transform.Find("ButtonSelected").gameObject;
                 image = button.transform.Find("Image").GetComponent<Image>();
-                title = button.transform.Find("Title").GetComponent<Text>();
+                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 buttonSelected.SetActive(false);
             }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,18 +10,18 @@ namespace Overlewd
     {
         public class QuestDescription : MonoBehaviour
         {
-            private Text topText;
+            private TextMeshProUGUI topText;
             private Image girlEmotion1;
-            private Text bottomText;
+            private TextMeshProUGUI bottomText;
             private Image girlEmotion2;
 
             void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
-                topText = canvas.Find("TopText").GetComponent<Text>();
+                topText = canvas.Find("TopText").GetComponent<TextMeshProUGUI>();
                 girlEmotion1 = canvas.Find("GirlEmotion1").GetComponent<Image>();
-                bottomText = canvas.Find("BottomText").GetComponent<Text>();
+                bottomText = canvas.Find("BottomText").GetComponent<TextMeshProUGUI>();
                 girlEmotion2 = canvas.Find("GirlEmotion2").GetComponent<Image>();
             }
 

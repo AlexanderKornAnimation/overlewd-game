@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,23 +10,22 @@ namespace Overlewd
     public class QuestOverlay : BaseOverlay
     {
         private Button backButton;
-        private Text backButtonText;
 
         private Transform questScrollView;
 
         private Transform mainQuestGrid;
-        private Text mainQuestGridTitle;
+        private TextMeshProUGUI mainQuestGridTitle;
         private GameObject mainQuestGridMark;
 
         private Transform matriarchQuestGrid;
-        private Text matriarchQuestGridTitle;
+        private TextMeshProUGUI matriarchQuestGridTitle;
         private GameObject matriarchQuestGridMark;
 
         private Transform sideQuestGrid;
-        private Text sideQuestGridTitle;
+        private TextMeshProUGUI sideQuestGridTitle;
         private GameObject sideQuestGridMark;
 
-        private Text headlineTitle;
+        private TextMeshProUGUI headlineTitle;
         private GameObject headlineMainQuestMark;
         private GameObject headlineSideQuestMark;
 
@@ -45,25 +45,24 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-            backButtonText = backButton.transform.Find("Text").GetComponent<Text>();
 
             questScrollView = canvas.Find("QuestScrollView");
             var questScrollView_content = questScrollView.Find("Viewport").Find("Content");
 
             mainQuestGrid = questScrollView_content.Find("MainQuestGrid");
-            mainQuestGridTitle = mainQuestGrid.Find("QuestHead").Find("Title").GetComponent<Text>();
+            mainQuestGridTitle = mainQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
             mainQuestGridMark = mainQuestGrid.Find("QuestHead").Find("MainQuestMark").gameObject;
 
             matriarchQuestGrid = questScrollView_content.Find("MatriarchQuestGrid");
-            matriarchQuestGridTitle = matriarchQuestGrid.Find("QuestHead").Find("Title").GetComponent<Text>();
+            matriarchQuestGridTitle = matriarchQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
             matriarchQuestGridMark = matriarchQuestGrid.Find("QuestHead").Find("SideQuestMark").gameObject;
 
             sideQuestGrid = questScrollView_content.Find("SideQuestGrid");
-            sideQuestGridTitle = sideQuestGrid.Find("QuestHead").Find("Title").GetComponent<Text>();
+            sideQuestGridTitle = sideQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
             sideQuestGridMark = sideQuestGrid.Find("QuestHead").Find("SideQuestMark").gameObject;
 
             var headline = canvas.Find("Headline");
-            headlineTitle = headline.Find("Title").GetComponent<Text>();
+            headlineTitle = headline.Find("Title").GetComponent<TextMeshProUGUI>();
             headlineMainQuestMark = headline.Find("MainQuestMark").gameObject;
             headlineSideQuestMark = headline.Find("SideQuestMark").gameObject;
 

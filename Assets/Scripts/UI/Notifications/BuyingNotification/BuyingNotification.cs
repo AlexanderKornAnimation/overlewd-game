@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,8 @@ namespace Overlewd
     public class BuyingNotification : BaseNotification
     {
         protected Button button;
-        protected Text text;
+        protected Image girlEmotion;
+        protected TextMeshProUGUI text;
 
         protected virtual void Awake()
         {
@@ -18,11 +20,12 @@ namespace Overlewd
             UIManager.SetStretch(screenRectTransform);
 
             var canvas = screenRectTransform.Find("Canvas");
-
+            
             button = canvas.Find("Button").GetComponent<Button>();
             button.onClick.AddListener(ButtonClick);
 
-            text = canvas.Find("Banner").Find("Text").GetComponent<Text>();
+            text = canvas.Find("Banner").Find("Text").GetComponent<TextMeshProUGUI>();
+            girlEmotion = canvas.Find("Banner").Find("GirlEmotion").GetComponent<Image>();
         }
 
         protected virtual void ButtonClick()

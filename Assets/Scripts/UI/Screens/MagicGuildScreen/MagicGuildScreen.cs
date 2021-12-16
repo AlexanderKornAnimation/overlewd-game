@@ -17,7 +17,6 @@ namespace Overlewd
 
         private Image spellUnknown;
        
-
         private Text mainTitle;
 
         private void Start()
@@ -38,10 +37,10 @@ namespace Overlewd
             mainTitle = canvas.Find("Window").Find("MainTitle").GetComponent<Text>();
 
             backButton.onClick.AddListener(BackButtonClick);
-            activeSpell.onClick.AddListener(ActiveSpellClick);
+            activeSpell.onClick.AddListener(ActiveSpellButtonClick);
         }
 
-        private void ActiveSpellClick()
+        private void ActiveSpellButtonClick()
         {
             UIManager.ShowPopup<SpellPopup>();
         }        

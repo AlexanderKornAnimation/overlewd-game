@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,12 +38,12 @@ namespace Overlewd
             }
 
             private Image resourceIcon;
-            private Text resourceCount;
+            private TextMeshProUGUI resourceCount;
 
             void Awake()
             {
                 resourceIcon = transform.GetComponent<Image>();
-                resourceCount = transform.Find("Count").GetComponent<Text>();
+                resourceCount = transform.Find("Count").GetComponent<TextMeshProUGUI>();
             }
 
             public static ResourceIcon GetInstance(Transform parent)

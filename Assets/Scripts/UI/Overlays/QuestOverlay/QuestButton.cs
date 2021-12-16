@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,10 +16,9 @@ namespace Overlewd
             public event Action<QuestButton> buttonPressed;
 
             protected Button blueButton;
-            protected Text blueButtonText;
             protected Image blueButtonImage;
             protected Button darkButton;
-            protected Text darkButtonText;
+            protected TextMeshProUGUI title;
             protected Image darkButtonImage;
             protected GameObject newQuestMark;
             protected GameObject questDoneMark;
@@ -32,12 +32,11 @@ namespace Overlewd
 
                 blueButton = canvas.Find("BlueButton").GetComponent<Button>();
                 blueButton.onClick.AddListener(ButtonClick);
-                blueButtonText = blueButton.transform.Find("Text").GetComponent<Text>();
                 blueButtonImage = blueButton.GetComponent<Image>();
 
                 darkButton = canvas.Find("DarkButton").GetComponent<Button>();
                 darkButton.onClick.AddListener(ButtonClick);
-                darkButtonText = darkButton.transform.Find("Text").GetComponent<Text>();
+                title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 darkButtonImage = darkButton.GetComponent<Image>();
 
                 newQuestMark = canvas.Find("NewQuestMark").gameObject;

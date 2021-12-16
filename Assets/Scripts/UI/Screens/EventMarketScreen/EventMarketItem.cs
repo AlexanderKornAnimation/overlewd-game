@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,16 +14,14 @@ namespace Overlewd
             public int tradableId;
 
             private Image item;
-            private Text description;
+            private TextMeshProUGUI description;
 
             private Button buyButton;
-            private Text buyPrice;
-            private Image buyCurrency;
+            private TextMeshProUGUI buyPrice;
 
             private Button buyWithCountButton;
-            private Text buyWithCountPrice;
-            private Image buyWithCountCurrency;
-            private Text buyWithCountCount;
+            private TextMeshProUGUI buyWithCountPrice;
+            private TextMeshProUGUI buyWithCountCount;
 
             private Transform soldOut;
 
@@ -31,18 +30,16 @@ namespace Overlewd
                 var canvas = transform.Find("Canvas");
 
                 item = canvas.Find("Item").GetComponent<Image>();
-                description = canvas.Find("Description").GetComponent<Text>();
+                description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
                 buyButton = canvas.Find("Buy").GetComponent<Button>();
                 buyButton.onClick.AddListener(BuyButtonClick);
-                buyPrice = buyButton.transform.Find("Price").GetComponent<Text>();
-                buyCurrency = buyButton.transform.Find("Currency").GetComponent<Image>();
+                buyPrice = buyButton.transform.Find("Price").GetComponent<TextMeshProUGUI>();
 
                 buyWithCountButton = canvas.Find("BuyWithCount").GetComponent<Button>();
                 buyWithCountButton.onClick.AddListener(BuyWithCountButtonClick);
-                buyWithCountPrice = buyWithCountButton.transform.Find("Price").GetComponent<Text>();
-                buyWithCountCurrency = buyWithCountButton.transform.Find("Currency").GetComponent<Image>();
-                buyWithCountCount = buyWithCountButton.transform.Find("Count").GetComponent<Text>();
+                buyWithCountPrice = buyWithCountButton.transform.Find("Price").GetComponent<TextMeshProUGUI>();
+                buyWithCountCount = buyWithCountButton.transform.Find("Count").GetComponent<TextMeshProUGUI>();
 
                 soldOut = canvas.Find("SoldOut");
             }
@@ -71,7 +68,6 @@ namespace Overlewd
                     buyWithCountButton.gameObject.SetActive(true);
 
                     buyWithCountPrice.text = tradableData.price[0].amount.ToString();
-                    buyWithCountCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
 
                     buyWithCountCount.text = $"{tradableData.currentCount}/{tradableData.limit.Value}";
                 }
@@ -82,7 +78,6 @@ namespace Overlewd
                     buyWithCountButton.gameObject.SetActive(false);
 
                     buyPrice.text = tradableData.price[0].amount.ToString();
-                    buyCurrency.sprite = ResourceManager.LoadSpriteById(currencyData.iconUrl);
                 }
 
                 item.gameObject.SetActive(true);

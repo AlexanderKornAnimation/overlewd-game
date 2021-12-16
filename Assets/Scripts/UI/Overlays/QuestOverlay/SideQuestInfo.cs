@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,14 +11,14 @@ namespace Overlewd
     {
         public class SideQuestInfo : MonoBehaviour
         {
-            private Text title;
-            private Text progress;
+            private TextMeshProUGUI title;
+            private TextMeshProUGUI progress;
 
-            private Image[] revardResource = new Image[6];
-            private Text[] revardCount = new Text[6];
+            private Image[] rewardResource = new Image[6];
+            private TextMeshProUGUI[] rewardCount = new TextMeshProUGUI[6];
 
             private Button toQuestButton;
-            private Text toQuestButtonText;
+            private TextMeshProUGUI toQuestButtonText;
 
             void Awake()
             {
@@ -24,22 +26,38 @@ namespace Overlewd
 
                 var rewardWindow = canvas.Find("RewardWindow");
 
-                title = rewardWindow.Find("Title").GetComponent<Text>();
-                progress = rewardWindow.Find("Progress").GetComponent<Text>();
+                title = rewardWindow.Find("Title").GetComponent<TextMeshProUGUI>();
+                progress = rewardWindow.Find("Progress").GetComponent<TextMeshProUGUI>();
 
                 var rewardGrid = rewardWindow.Find("RewardGrid");
                 for (int i = 0; i < 6; i++)
                 {
                     var reward = rewardGrid.Find($"Reward{i + 1}");
-                    revardResource[i] = reward.Find("Resource").GetComponent<Image>();
-                    revardCount[i] = reward.Find("Count").GetComponent<Text>();
+                    rewardResource[i] = reward.Find("Resource").GetComponent<Image>();
+                    rewardCount[i] = reward.Find("Count").GetComponent<TextMeshProUGUI>();
                 }
 
                 toQuestButton = rewardWindow.Find("ToQuestButton").GetComponent<Button>();
                 toQuestButton.onClick.AddListener(ToQuestButtonClick);
-                toQuestButtonText = toQuestButton.transform.Find("Text").GetComponent<Text>();
+                toQuestButtonText = toQuestButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             }
 
+            private void Start()
+            {
+                    Customize();
+            }
+
+            private void Customize()
+            {
+                rewardResource[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
+                rewardResource[1].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
+                rewardResource[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
+                rewardResource[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
+                rewardResource[4].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Copper");
+                rewardResource[5].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
+
+            }
+            
             private void ToQuestButtonClick()
             {
 

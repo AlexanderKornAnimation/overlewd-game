@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,10 +16,10 @@ namespace Overlewd
         protected Image reward1;
         protected Image reward2;
         protected Image reward3;
-        protected Text firstTimeRewardCount;
-        protected Text reward1Count;
-        protected Text reward2Count;
-        protected Text reward3Count;
+        protected TextMeshProUGUI firstTimeRewardCount;
+        protected TextMeshProUGUI reward1Count;
+        protected TextMeshProUGUI reward2Count;
+        protected TextMeshProUGUI reward3Count;
 
         void Awake()
         {
@@ -42,10 +43,10 @@ namespace Overlewd
             reward1 = canvas.Find("Reward1").Find("Resource").GetComponent<Image>();
             reward2 = canvas.Find("Reward2").Find("Resource").GetComponent<Image>();
             reward3 = canvas.Find("Reward3").Find("Resource").GetComponent<Image>();
-            firstTimeRewardCount = canvas.Find("FirstTimeReward").Find("Count").GetComponent<Text>();
-            reward1Count = canvas.Find("Reward1").Find("Count").GetComponent<Text>();
-            reward2Count = canvas.Find("Reward2").Find("Count").GetComponent<Text>();
-            reward3Count = canvas.Find("Reward3").Find("Count").GetComponent<Text>();
+            firstTimeRewardCount = canvas.Find("FirstTimeReward").Find("Count").GetComponent<TextMeshProUGUI>();
+            reward1Count = canvas.Find("Reward1").Find("Count").GetComponent<TextMeshProUGUI>();
+            reward2Count = canvas.Find("Reward2").Find("Count").GetComponent<TextMeshProUGUI>();
+            reward3Count = canvas.Find("Reward3").Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
         void Start()

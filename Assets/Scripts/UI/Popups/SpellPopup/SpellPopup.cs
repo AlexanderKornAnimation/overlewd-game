@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,16 +11,16 @@ namespace Overlewd
 {
     public class SpellPopup : BasePopup
     {
-        protected List<Transform> recources = new List<Transform>(4);
-        protected List<GameObject> notEnough = new List<GameObject>(4);
-        protected List<Text> count = new List<Text>(4);
-        protected List<Image> recourceIcon = new List<Image>(4);
+        protected List<Transform> resources = new List<Transform>();
+        protected List<GameObject> notEnough = new List<GameObject>();
+        protected List<TextMeshProUGUI> count = new List<TextMeshProUGUI>();
+        protected List<Image> resourceIcon = new List<Image>();
 
         protected Transform spawnPoint;
 
-        protected Text spellName;
-        protected Text description;
-        protected Text fullPotentialDescription;
+        protected TextMeshProUGUI spellName;
+        protected TextMeshProUGUI description;
+        protected TextMeshProUGUI fullPotentialDescription;
 
         protected Button paidBuildButton;
         protected Button freeBuildButton;
@@ -35,32 +37,37 @@ namespace Overlewd
 
             spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
 
-            spellName = canvas.Find("SpellName").GetComponent<Text>();
-            description = canvas.Find("Description").GetComponent<Text>();
-            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<Text>();
+            spellName = canvas.Find("SpellName").GetComponent<TextMeshProUGUI>();
+            description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
+            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<TextMeshProUGUI>();
 
             paidBuildButton = canvas.Find("PaidBuildButton").GetComponent<Button>();
             freeBuildButton = canvas.Find("FreeBuildButton").GetComponent<Button>();
             backButton = canvas.Find("BackButton").GetComponent<Button>();
-
+            
             paidBuildButton.onClick.AddListener(PaidBuildButtonClick);
             freeBuildButton.onClick.AddListener(FreeBuildButtonClick);
             backButton.onClick.AddListener(BackButtonClick);
             
-            TakeRecources(canvas);
+            CustomizeResources(canvas);
         }
 
-        private void TakeRecources(Transform canvas)
+        private void CustomizeResources(Transform canvas)
         {
             var grid = canvas.Find("Grid");
-            for (int i = 1; i <= recources.Capacity; i++)
+            for (int i = 1; i <= grid.childCount; i++)
             {
                 var resource = grid.Find($"Recource{i}");
-                recources.Add(resource);
+                resources.Add(resource);
                 notEnough.Add(resource.Find("NotEnough").gameObject);
-                count.Add(resource.Find("Count").GetComponent<Text>());
-                recourceIcon.Add(resource.Find("RecourceIcon").GetComponent<Image>());
+                count.Add(resource.Find("Count").GetComponent<TextMeshProUGUI>());
+                resourceIcon.Add(resource.Find("RecourceIcon").GetComponent<Image>());
             }
+
+            resourceIcon[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gem");
+            resourceIcon[1].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
+            resourceIcon[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
+            resourceIcon[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
         }
 
         protected virtual void PaidBuildButtonClick()

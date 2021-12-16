@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +10,8 @@ namespace Overlewd
     {
         protected Image icon;
         protected Button button;
-        protected Text description;
-        protected Text timer;
+        protected TextMeshProUGUI description;
+        protected TextMeshProUGUI timer;
         
         private void Awake()
         {
@@ -18,8 +19,8 @@ namespace Overlewd
             
             button = canvas.Find("Button").GetComponent<Button>();
             icon = button.transform.Find("Icon").GetComponent<Image>();
-            description = button.transform.Find("Description").GetComponent<Text>();
-            timer = button.transform.Find("Timer").GetComponent<Text>();
+            description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+            timer = button.transform.Find("Timer").GetComponent<TextMeshProUGUI>();
             
             button.onClick.AddListener(ButtonClick);
         }
