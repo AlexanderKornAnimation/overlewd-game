@@ -25,6 +25,19 @@ namespace Overlewd
                 personageHead.gameObject.SetActive(false);
                 emotionBack.gameObject.SetActive(true);
 
+                if (GameGlobalStates.dialogScreen_DialogId == 10)
+                {
+
+                }
+                else if (GameGlobalStates.dialogScreen_DialogId == 13)
+                {
+
+                }
+                else if (GameGlobalStates.dialogScreen_DialogId == 14)
+                {
+
+                }
+
                 await Task.CompletedTask;
             }
 
@@ -57,18 +70,22 @@ namespace Overlewd
                     }
                     cutInAnimations.Clear();
 
-                    foreach (var animData in GameLocalResources.dialogCutInAnimPath["dialogCutIn1"])
+                    if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
                     {
-                        if (animData.Value != null)
+                        var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                        foreach (var animData in cutInData)
                         {
-                            var anim = SpineWidget.GetInstance(cutInAnimPos);
-                            anim.Initialize(animData.Value, false);
-                            anim.PlayAnimation(animData.Key, true);
-                            cutInAnimations.Add(anim);
+                            if (animData.Value != null)
+                            {
+                                var anim = SpineWidget.GetInstance(cutInAnimPos);
+                                anim.Initialize(animData.Value, false);
+                                anim.PlayAnimation(animData.Key, true);
+                                cutInAnimations.Add(anim);
+                            }
                         }
                     }
 
-                    cutIn.SetActive(true);
+                    cutIn.SetActive(cutInAnimations.Count > 0);
                 }
                 else
                 {

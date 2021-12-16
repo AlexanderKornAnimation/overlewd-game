@@ -54,14 +54,14 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "I can lick your cock for hours. It feels so smooth and silky...",
-                            cutIn = "Cut-in 1: licking"
+                            cutIn = "CutIn1"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "You're so big. I can barely fit you inside my tight mouth.",
-                            cutIn = "Cut-in 1: licking"
+                            cutIn = "CutIn1"
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -74,7 +74,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Surprised,
                             message = "You taste exactly how I imagined. After all those years searching for you…",
-                            cutIn = "Cut-in 2: cumshot"
+                            cutIn = "CutIn2"
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -187,7 +187,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Ah~ You pulled my tail out! I'm so embarrassed… But it feels so good!",
-                            cutIn = "Cut-in 8: taking the tail out"
+                            cutIn = "CutIn8"
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -195,35 +195,35 @@ namespace Overlewd
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message =
                                 "I've been preparing all my holes for you to fill. I think I'm addicted to your cock.",
-                            cutIn = "Cut-in 8: taking the tail out"
+                            cutIn = "CutIn8"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Ummh~ I want to take your hot load… Cum with me, Master!",
-                            cutIn = "Cut-in 8: taking the tail out"
+                            cutIn = "CutIn8"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Aahh~ Aahh! Just like that!",
-                            cutIn = "Cut-in 9: creampie"
+                            cutIn = "CutIn9"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Mmm~ Fuck yes!",
-                            cutIn = "Cut-in 9: creampie"
+                            cutIn = "CutIn9"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Your load feels so hot on my pussy… Thank you for treating me, Master.",
-                            cutIn = "Cut-in 9: creampie"
+                            cutIn = "CutIn9"
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -286,7 +286,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Overlord,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message = "You're a good girl, Ulvi.",
-                            cutIn = "Cut-in 3: Ulvi scratch",
+                            cutIn = "CutIn3",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                         new AdminBRO.DialogReplica
@@ -294,7 +294,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
                             message = "A hundred years of searching for you has been worth it.",
-                            cutIn = "Cut-in 3: Ulvi scratch",
+                            cutIn = "CutIn3",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica
@@ -303,7 +303,7 @@ namespace Overlewd
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message =
                                 "A hundred years? Sheesh. I don't even remember anything that happened before I fell asleep.",
-                            cutIn = "Cut-in 3: Ulvi scratch",
+                            cutIn = "CutIn3",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                         new AdminBRO.DialogReplica
@@ -407,21 +407,21 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message = "You just raided one of the rival camps and were coming back to your stronghold with all the heavy equipment. So the old bridge across the moat broke under your weight.",
-                            cutIn = "Cut-in 4: Overlord's drowning",
+                            cutIn = "CutIn4",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message = "Your camp was destroyed and you were captured. Unconcious and covered in sludge. The Empress' people brushed you off a bit and transported to the castle. I wish it was more flattering... ",
-                            cutIn = "Cut-in 4: Overlord's drowning",
+                            cutIn = "CutIn4",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Overlord,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message = "At least that explains the fishy smell.",
-                            cutIn = "Cut-in 4: Overlord's drowning",
+                            cutIn = "CutIn4",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                     }
@@ -468,14 +468,14 @@ namespace Overlewd
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "How's this for a reminder?",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right,
-                            cutIn = "Cut-in 5: Adriel kissing Overlord's helmet"
+                            cutIn = "CutIn5"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Angry,
                             message = "What. The fuck. Are you doing?!",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right,
-                            cutIn = "Cut-in 5: Adriel kissing Overlord's helmet"
+                            cutIn = "CutIn5"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
@@ -536,37 +536,37 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Is this what the touch of a Master feels like?",
-                            cutIn = "Cut-in 6: pussy rubbing"
+                            cutIn = "CutIn6"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "My clit is throbbing under your touch, it feels so good!",
-                            cutIn = "Cut-in 6: pussy rubbing"
+                            cutIn = "CutIn6"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Ahh~ I wish you'd fuck me already and make me yours forever.",
-                            cutIn = "Cut-in 6: pussy rubbing"
+                            cutIn = "CutIn6"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Umm~ I've creamed all over your fingers, oops.",
-                            cutIn = "Cut-in 7: Ulvi's orgasm"
+                            cutIn = "CutIn7"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "Now your cock will slide in so easily… And you can be my Master.",
-                            cutIn = "Cut-in 7: Ulvi's orgasm"
+                            cutIn = "CutIn7"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Surprised,
                             message = "What do you mean you're not ready? I was ready! I was a good girl! I… Wasn't I?",
-                            cutIn = "Cut-in 7: Ulvi's orgasm"
+                            cutIn = "CutIn7"
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,

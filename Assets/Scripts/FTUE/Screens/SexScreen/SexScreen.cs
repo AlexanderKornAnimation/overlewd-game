@@ -23,21 +23,21 @@ namespace Overlewd
                 dialogData = GameGlobalStates.sexScreen_DialogData;
                 await Task.CompletedTask;
 
-                var sexSceneKey = "sexMainScene1";
+                var mainSexKey = "MainSex1";
                 if (GameGlobalStates.sexScreen_DialogId == 2)
                 {
-                    sexSceneKey = "sexMainScene1";
+                    mainSexKey = "MainSex1";
                 }
                 else if (GameGlobalStates.sexScreen_DialogId == 8)
                 {
-                    sexSceneKey = "sexMainScene1";
+                    mainSexKey = "MainSex1";
                 }
                 else if (GameGlobalStates.sexScreen_DialogId == 16)
                 {
-                    sexSceneKey = "sexMainScene1";
+                    mainSexKey = "MainSex1";
                 }
 
-                foreach (var animData in GameLocalResources.sexMainAnimPath[sexSceneKey])
+                foreach (var animData in GameLocalResources.mainSexAnimPath[mainSexKey])
                 {
                     if (animData.Value != null)
                     {
@@ -78,18 +78,22 @@ namespace Overlewd
                     }
                     cutInAnimations.Clear();
 
-                    foreach (var animData in GameLocalResources.sexCutInAnimPath["sexCutIn1"])
+                    if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
                     {
-                        if (animData.Value != null)
+                        var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                        foreach (var animData in cutInData)
                         {
-                            var anim = SpineWidget.GetInstance(cutInAnimPos);
-                            anim.Initialize(animData.Value, false);
-                            anim.PlayAnimation(animData.Key, true);
-                            cutInAnimations.Add(anim);
+                            if (animData.Value != null)
+                            {
+                                var anim = SpineWidget.GetInstance(cutInAnimPos);
+                                anim.Initialize(animData.Value, false);
+                                anim.PlayAnimation(animData.Key, true);
+                                cutInAnimations.Add(anim);
+                            }
                         }
                     }
 
-                    cutIn.SetActive(true);
+                    cutIn.SetActive(cutInAnimations.Count > 0);
                 }
                 else
                 {

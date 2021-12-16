@@ -8,34 +8,37 @@ namespace Overlewd
     public static class GameLocalResources
     {
         //FTUE
-        public static Dictionary<string, Dictionary<string, string>> sexMainAnimPath = new Dictionary<string, Dictionary<string, string>>
+        public static Dictionary<string, Dictionary<string, string>> mainSexAnimPath = new Dictionary<string, Dictionary<string, string>>
         {
-            ["sexMainScene1"] = new Dictionary<string, string>
+            ["MainSex1"] = new Dictionary<string, string>
             {
-                ["back"] = "FTUE/UlviSexScene1/MainScene/back_SkeletonData",
-                ["idle"] = "FTUE/UlviSexScene1/MainScene/idle01_SkeletonData"
+                ["back"] = "FTUE/MainSexAnims/MainSex1/back_SkeletonData",
+                ["idle"] = "FTUE/MainSexAnims/MainSex1/idle01_SkeletonData"
             },
 
         };
 
-        public static Dictionary<string, Dictionary<string, string>> sexCutInAnimPath = new Dictionary<string, Dictionary<string, string>>
+        public static Dictionary<string, Dictionary<string, string>> cutInAnimPath = new Dictionary<string, Dictionary<string, string>>
         {
-            ["sexCutIn1"] = new Dictionary<string, string>
+            ["CutIn1"] = new Dictionary<string, string>
             {
-                ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
-                ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
+                ["back"] = "FTUE/CutInAnims/CutIn1/back_SkeletonData",
+                ["idle"] = "FTUE/CutInAnims/CutIn1/idle01_SkeletonData"
             },
-
-        };
-
-        public static Dictionary<string, Dictionary<string, string>> dialogCutInAnimPath = new Dictionary<string, Dictionary<string, string>>
-        {
-            ["dialogCutIn1"] = new Dictionary<string, string>
+            ["CutIn2"] = new Dictionary<string, string>
             {
-                ["back"] = "FTUE/UlviSexScene1/Cut_in2/back_SkeletonData",
-                ["idle"] = "FTUE/UlviSexScene1/Cut_in2/idle01_SkeletonData"
+                ["back"] = "FTUE/CutInAnims/CutIn2/back_SkeletonData",
+                ["idle"] = "FTUE/CutInAnims/CutIn2/idle01_SkeletonData"
             },
-
+            ["CutIn3"] = new Dictionary<string, string>
+            {
+                ["back"] = "FTUE/CutInAnims/CutIn3/back_SkeletonData",
+                ["idle"] = "FTUE/CutInAnims/CutIn3/idle_SkeletonData"
+            },
+            ["CutIn4"] = new Dictionary<string, string>
+            {
+                ["back"] = "FTUE/CutInAnims/CutIn4/back_overlord_SkeletonData"
+            },
         };
 
         public static Dictionary<string, Dictionary<string, string>> emotionsAnimPath = new Dictionary<string, Dictionary<string, string>>
