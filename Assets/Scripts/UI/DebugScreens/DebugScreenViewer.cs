@@ -10,14 +10,14 @@ namespace Overlewd
         
         void Start()
         {
-            string prefabPath = "Prefabs/UI/Popups/BuildingPopups/BuildingPopup";
+            string prefabPath = "Prefabs/UI/Screens/SummoningScreen/SummoningScreen";
             //prefabPath = "Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer";
             var screenPrefab = (GameObject)Instantiate(Resources.Load(prefabPath));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
             screenRectTransform.SetParent(transform, false);
             UIManager.SetStretch(screenRectTransform);
 
-            screenPrefab.AddComponent<FTUE.CavePopup>();
+            screenPrefab.AddComponent<SummoningScreen>();
         }
 
         void Update()
