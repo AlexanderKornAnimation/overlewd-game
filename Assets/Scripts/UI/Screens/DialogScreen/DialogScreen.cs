@@ -309,7 +309,7 @@ namespace Overlewd
             var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
             if (prevReplica != null)
             {
-                var keyName = prevReplica.characterName;
+                var keyName = prevReplica.characterKey;
                 var keyPos = prevReplica.characterPosition;
 
                 if (keyPos == null)
