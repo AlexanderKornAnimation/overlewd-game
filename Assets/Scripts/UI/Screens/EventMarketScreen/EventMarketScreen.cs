@@ -102,7 +102,7 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.ShowScreen<MarketScreen>();
+            // UIManager.ShowScreen<MarketScreen>();
         }
 
         private void MoneyBackButtonClick()

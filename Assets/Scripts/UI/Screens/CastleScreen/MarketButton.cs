@@ -25,7 +25,7 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
-                UIManager.ShowScreen<MarketScreen>();
+                // UIManager.ShowScreen<MarketScreen>();
             }
 
             public static MarketButton GetInstance(Transform parent)

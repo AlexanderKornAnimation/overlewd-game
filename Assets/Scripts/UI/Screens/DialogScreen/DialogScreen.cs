@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,16 +18,16 @@ namespace Overlewd
         protected Transform rightCharacterPos;
 
         protected Button nextButton;
-        protected Text personageName;
+        protected TextMeshProUGUI personageName;
         protected Image personageHead;
         protected Transform emotionBack;
         protected Transform emotionPos;
-        protected Text text;
+        protected TextMeshProUGUI text;
 
         protected Button skipButton;
         protected Button autoplayButton;
         protected Image autoplayButtonPressed;
-        protected Text autoplayStatus;
+        protected TextMeshProUGUI autoplayStatus;
 
         protected Transform mainAnimPos;
         protected GameObject cutIn;
@@ -62,18 +63,18 @@ namespace Overlewd
             nextButton = textContainer.Find("NextButton").GetComponent<Button>();
             nextButton.onClick.AddListener(NextButtonClick);
 
-            personageName = textContainer.Find("PersonageName").GetComponent<Text>();
+            personageName = textContainer.Find("PersonageName").GetComponent<TextMeshProUGUI>();
             personageHead = textContainer.Find("PersonageHead").GetComponent<Image>();
             emotionBack = textContainer.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-            text = textContainer.Find("Text").GetComponent<Text>();
+            text = textContainer.Find("Text").GetComponent<TextMeshProUGUI>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
 
             autoplayButton = canvas.Find("AutoplayButton").GetComponent<Button>();
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
-            autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<Text>();
+            autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<TextMeshProUGUI>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
             autoplayButtonPressed.enabled = false;
 
@@ -237,21 +238,16 @@ namespace Overlewd
 
         protected void AutoplayButtonCustomize()
         {
-            var defaultColor = Color.black;
-            var redColor = Color.HSVToRGB(0.9989f, 1.00000f, 0.6118f);
-
             if (isAutoplayButtonPressed)
             {
                 isAutoplayButtonPressed = true;
                 autoplayButtonPressed.enabled = true;
-                autoplayStatus.color = redColor;
                 autoplayStatus.text = "ON";
             }
             else
             {
                 isAutoplayButtonPressed = false;
                 autoplayButtonPressed.enabled = false;
-                autoplayStatus.color = defaultColor;
                 autoplayStatus.text = "OFF";
             }
         }

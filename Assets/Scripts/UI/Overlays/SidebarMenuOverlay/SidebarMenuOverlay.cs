@@ -216,7 +216,7 @@ namespace Overlewd
 
         protected virtual void MarketButtonClick()
         {
-            UIManager.ShowScreen<MarketScreen>();
+            // UIManager.ShowScreen<MarketScreen>();
         }
 
         protected virtual void ForgeButtonClick()

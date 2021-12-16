@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,8 @@ namespace Overlewd
 
             private Button button;
             private GameObject fightDone;
-            private Text title;
+            private TextMeshProUGUI title;
+            private TextMeshProUGUI loot;
 
             void Awake()
             {
@@ -23,7 +25,8 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
 
                 fightDone = button.transform.Find("FightDone").gameObject;
-                title = button.transform.Find("Title").GetComponent<Text>();
+                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
             }
 
             void Start()

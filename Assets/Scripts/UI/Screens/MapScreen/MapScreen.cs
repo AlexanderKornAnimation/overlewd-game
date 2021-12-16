@@ -41,10 +41,6 @@ namespace Overlewd
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
-
-            NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_1"));
-            NSMapScreen.FightButton.GetInstance(map.Find("fight_1"));
-            NSMapScreen.EventButton.GetInstance(map.Find("event_1"));
         }
 
         protected virtual void BackButtonClick()

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,8 @@ namespace Overlewd
         public class MapButton : MonoBehaviour
         {
             private Button button;
-            private Text title;
-            private Text description;
+            private TextMeshProUGUI title;
+            private TextMeshProUGUI description;
 
             void Start()
             {
@@ -20,8 +21,8 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                title = button.transform.Find("Title").GetComponent<Text>();
-                description = button.transform.Find("Description").GetComponent<Text>();
+                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
             }
 
             private void ButtonClick()
