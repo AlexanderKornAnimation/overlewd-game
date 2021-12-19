@@ -10,7 +10,7 @@ namespace Overlewd
             {
                 protected override void ButtonClick()
                 {
-                    UIManager.ShowScreen<PortalScreen>();
+                    
                 }
 
                 protected override void Customize()

@@ -13,8 +13,8 @@ namespace Overlewd
         protected Transform map;
         protected Button chapterButton;
         protected Button backbutton;
-        
-        private void Awake()
+
+        protected virtual void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/MapScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();

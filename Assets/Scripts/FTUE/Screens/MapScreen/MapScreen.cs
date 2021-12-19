@@ -12,6 +12,27 @@ namespace Overlewd
     {
         public class MapScreen : Overlewd.MapScreen
         {
+            private NSMapScreen.DialogButton dialog_1;
+            private NSMapScreen.DialogButton dialog_2;
+            private NSMapScreen.DialogButton dialog_3;
+
+            protected override void Awake()
+            {
+                var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/MapScreenFTUE"));
+                var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
+                screenRectTransform.SetParent(transform, false);
+                UIManager.SetStretch(screenRectTransform);
+
+                var canvas = screenRectTransform.Find("Canvas");
+                chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
+                backbutton = canvas.Find("BackButton").GetComponent<Button>();
+
+                chapterButton.onClick.AddListener(ChapterButtonClick);
+                backbutton.onClick.AddListener(BackButtonClick);
+
+                map = canvas.Find("Map");
+            }
+
             protected override void Customize()
             {
                 backbutton.gameObject.SetActive(false);
@@ -21,18 +42,15 @@ namespace Overlewd
                 QuestsWidget.GetInstance(transform);
                 BuffWidget.GetInstance(transform);
 
-                NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_1"));
-                NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_2"));
+                dialog_1 = NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_1"));
+                dialog_1.dialogId = 1;
+                dialog_2 = NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_2"));
+                dialog_2.dialogId = 2;
+                dialog_3 = NSMapScreen.DialogButton.GetInstance(map.Find("dialogue_3"));
+                dialog_3.dialogId = 3;
                 NSMapScreen.FightButton.GetInstance(map.Find("fight_1"));
                 NSMapScreen.FightButton.GetInstance(map.Find("fight_2"));
                 NSMapScreen.FightButton.GetInstance(map.Find("fight_3"));
-                NSMapScreen.FightButton.GetInstance(map.Find("fight_4"));
-                NSMapScreen.FightButton.GetInstance(map.Find("fight_5"));
-                NSMapScreen.FightButton.GetInstance(map.Find("fight_6"));
-                NSMapScreen.EventButton.GetInstance(map.Find("event_1"));
-                NSMapScreen.EventButton.GetInstance(map.Find("event_2"));
-                NSMapScreen.EventButton.GetInstance(map.Find("event_3"));
-                NSMapScreen.SexSceneButton.GetInstance(map.Find("sexDialogue"));
             }
 
             protected override void BackButtonClick()

@@ -17,7 +17,7 @@ namespace Overlewd
             {
                 protected override void ButtonClick()
                 {
-                    UIManager.ShowScreen<CastleScreen>();
+                    
                 }
 
                 public new static SexSceneButton GetInstance(Transform parent)

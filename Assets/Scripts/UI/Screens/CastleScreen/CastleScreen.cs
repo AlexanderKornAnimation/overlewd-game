@@ -23,7 +23,7 @@ namespace Overlewd
 
         protected Button contenViewerButton;
         
-        private void Awake()
+        protected virtual void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreen"));
             var screenRectTransform = screenPrefab.GetComponent<RectTransform>();

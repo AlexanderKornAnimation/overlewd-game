@@ -16,9 +16,13 @@ namespace Overlewd
         {
             public class DialogButton : Overlewd.NSMapScreen.DialogButton
             {
+                public int dialogId { get; set; }
                 protected override void ButtonClick()
                 {
-
+                    if (dialogId == 3)
+                    {
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
                 }
 
                 public new static DialogButton GetInstance(Transform parent)
