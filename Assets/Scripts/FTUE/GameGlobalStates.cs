@@ -14,7 +14,7 @@ namespace Overlewd
             {
                 get
                 {
-                    return GameData.GetDialogById(sexScreen_DialogId);
+                    return GameData.GetSexById(sexScreen_DialogId);
                 }
             }
 
@@ -32,7 +32,7 @@ namespace Overlewd
             {
                 get
                 {
-                    return GameData.GetDialogById(dialogNotification_DialogId);
+                    return GameData.GetNotificationById(dialogNotification_DialogId);
                 }
             }
         }

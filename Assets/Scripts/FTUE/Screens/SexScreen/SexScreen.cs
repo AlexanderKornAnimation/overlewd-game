@@ -24,15 +24,15 @@ namespace Overlewd
                 await Task.CompletedTask;
 
                 var mainSexKey = "MainSex1";
-                if (GameGlobalStates.sexScreen_DialogId == 2)
+                if (GameGlobalStates.sexScreen_DialogId == 1)
                 {
                     mainSexKey = "MainSex1";
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 8)
+                else if (GameGlobalStates.sexScreen_DialogId == 2)
                 {
                     mainSexKey = "MainSex1";
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 16)
+                else if (GameGlobalStates.sexScreen_DialogId == 3)
                 {
                     mainSexKey = "MainSex1";
                 }
@@ -51,19 +51,19 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                if (GameGlobalStates.sexScreen_DialogId == 2)
+                if (GameGlobalStates.sexScreen_DialogId == 1)
                 {
-                    GameGlobalStates.sexScreen_DialogId = 8;
+                    GameGlobalStates.sexScreen_DialogId = 2;
                     UIManager.ShowScreen<SexScreen>();
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 8)
+                else if (GameGlobalStates.sexScreen_DialogId == 2)
                 {
-                    GameGlobalStates.sexScreen_DialogId = 16;
+                    GameGlobalStates.sexScreen_DialogId = 3;
                     UIManager.ShowScreen<SexScreen>();
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 16)
+                else if (GameGlobalStates.sexScreen_DialogId == 3)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 10;
+                    GameGlobalStates.dialogScreen_DialogId = 1;
                     UIManager.ShowScreen<DialogScreen>();
                 }
             }

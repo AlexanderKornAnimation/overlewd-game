@@ -25,15 +25,15 @@ namespace Overlewd
                 personageHead.gameObject.SetActive(false);
                 emotionBack.gameObject.SetActive(true);
 
-                if (GameGlobalStates.dialogScreen_DialogId == 10)
+                if (GameGlobalStates.dialogScreen_DialogId == 1)
                 {
 
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 13)
+                else if (GameGlobalStates.dialogScreen_DialogId == 2)
                 {
 
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 14)
+                else if (GameGlobalStates.dialogScreen_DialogId == 3)
                 {
 
                 }
@@ -43,19 +43,19 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                if (GameGlobalStates.dialogScreen_DialogId == 10)
+                if (GameGlobalStates.dialogScreen_DialogId == 1)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 13;
+                    GameGlobalStates.dialogScreen_DialogId = 2;
                     UIManager.ShowScreen<DialogScreen>();
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 13)
+                else if (GameGlobalStates.dialogScreen_DialogId == 2)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 14;
+                    GameGlobalStates.dialogScreen_DialogId = 3;
                     UIManager.ShowScreen<DialogScreen>();
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 14)
+                else if (GameGlobalStates.dialogScreen_DialogId == 3)
                 {
-                    GameGlobalStates.dialogNotification_DialogId = 3;
+                    GameGlobalStates.dialogNotification_DialogId = 1;
                     UIManager.ShowNotification<DialogNotification>();
                 }
             }

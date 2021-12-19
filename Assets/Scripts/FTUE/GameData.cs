@@ -11,18 +11,31 @@ namespace Overlewd
 
         public static class GameData
         {
+            public static AdminBRO.Dialog GetSexById(int id)
+            {
+                return sexs.Find(d => d.id == id);
+            }
+            public static List<AdminBRO.Dialog> sexs = new List<AdminBRO.Dialog>();
+
             public static AdminBRO.Dialog GetDialogById(int id) 
             {
                 return dialogs.Find(d => d.id == id);
             }
             public static List<AdminBRO.Dialog> dialogs = new List<AdminBRO.Dialog>();
 
+            public static AdminBRO.Dialog GetNotificationById(int id)
+            {
+                return notifications.Find(d => d.id == id);
+            }
+            public static List<AdminBRO.Dialog> notifications = new List<AdminBRO.Dialog>();
+
             public static void Initialization()
             {
-                //Intro/sex scene SEX 1 STORY 1
-                dialogs.Add(new AdminBRO.Dialog
+                //sexs
+                //SEX 1
+                sexs.Add(new AdminBRO.Dialog
                 {
-                    id = 2,
+                    id = 1,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica
@@ -85,95 +98,10 @@ namespace Overlewd
                     }
                 });
 
-                //Battle tutorial 1
-                dialogs.Add(new AdminBRO.Dialog
+                //SEX 2
+                sexs.Add(new AdminBRO.Dialog
                 {
-                    id = 3,
-                    replicas = new List<AdminBRO.DialogReplica>()
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message =
-                                "Let's see if you still have what it takes to kick some ass! A hundred years of sleep can make you a little rusty.",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-
-                //After battle 1
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 4,
-                    replicas = new List<AdminBRO.DialogReplica>()
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
-                            message =
-                                "Whoa, you are good! But this was a pretty easy fight. Let's see how we can make you even stronger.",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-
-                //Map tutorial
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 5,
-                    replicas = new List<AdminBRO.DialogReplica>()
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Idle,
-                            message =
-                                "This is your map. Here you can beat up some cheeky fuckers or hang out with anyone you fancy and immerse yourself in their story. It’s all up to you!",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-
-                //Battle tutorial 2
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 6,
-                    replicas = new List<AdminBRO.DialogReplica>()
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message =
-                                "Alright, there are some enemies lurking about and looking for trouble. Let's get them!",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-
-                //Buff tutorial after a failed battle
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 7,
-                    replicas = new List<AdminBRO.DialogReplica>()
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
-                            message =
-                                "Huh… Looks like they are a bit tougher this time. Don't worry, and I have a solution! Let's get you a nifty boost. All you have to do is fuck me.",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-
-                //Buff sex scene SEX 2
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 8,
+                    id = 2,
                     replicas = new List<AdminBRO.DialogReplica>()
                     {
                         new AdminBRO.DialogReplica
@@ -235,27 +163,66 @@ namespace Overlewd
                     }
                 });
 
-                //Post-buff dialogue
-                dialogs.Add(new AdminBRO.Dialog
+                //SEX 3
+                sexs.Add(new AdminBRO.Dialog
                 {
-                    id = 9,
-                    replicas = new List<AdminBRO.DialogReplica>()
+                    id = 3,
+                    replicas = new List<AdminBRO.DialogReplica>
                     {
-                        new AdminBRO.DialogReplica
-                        {
+                        new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message =
-                                "Did you like it as much as I did, Master? Enjoy your boost and come back for more!",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
+                            message = "Your nimble fingers playing with my pussy make me so horny…"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
+                            message = "Is this what the touch of a Master feels like?",
+                            cutIn = "CutIn6"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
+                            message = "My clit is throbbing under your touch, it feels so good!",
+                            cutIn = "CutIn6"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
+                            message = "Ahh~ I wish you'd fuck me already and make me yours forever.",
+                            cutIn = "CutIn6"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
+                            message = "Umm~ I've creamed all over your fingers, oops.",
+                            cutIn = "CutIn7"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
+                            message = "Now your cock will slide in so easily… And you can be my Master.",
+                            cutIn = "CutIn7"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
+                            message = "What do you mean you're not ready? I was ready! I was a good girl! I… Wasn't I?",
+                            cutIn = "CutIn7"
+                        },
+                        new AdminBRO.DialogReplica {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Angry,
+                            message = "Fine! Walk away. No — fuck off forever! I know how my Master will feel like. He'd fuck me so much better!"
+                        },
                     }
                 });
 
-                //Story dialogue STORY 2
+                //dialogs
+                //STORY 1
                 dialogs.Add(new AdminBRO.Dialog
                 {
-                    id = 10,
+                    id = 1,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica
@@ -317,42 +284,10 @@ namespace Overlewd
                     }
                 });
 
-                //Pre-battle dialogue (before getting the castle)
+                //STORY 2
                 dialogs.Add(new AdminBRO.Dialog
                 {
-                    id = 11,
-                    replicas = new List<AdminBRO.DialogReplica>
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "We’re almost at the Castle’s threshold! Let’s crack some skulls and make it our base.",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-            
-                //Castle tutorial
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 12,
-                    replicas = new List<AdminBRO.DialogReplica>
-                    {
-                        new AdminBRO.DialogReplica
-                        {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "This is your base, the Castle. It's not much to look at now, but we'll make it the stronghold you deserve!",
-                            characterPosition = AdminBRO.DialogCharacterPosition.Left
-                        }
-                    }
-                });
-                
-                //Story dialogue STORY 3
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 13,
+                    id = 2,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica {
@@ -427,10 +362,10 @@ namespace Overlewd
                     }
                 });
 
-                //Story dialogue regarding the portal STORY 4
+                //STORY 3 //Story dialogue regarding the portal
                 dialogs.Add(new AdminBRO.Dialog
                 {
-                    id = 14,
+                    id = 3,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica {
@@ -505,10 +440,161 @@ namespace Overlewd
                     }
                 });
 
-                //Ulvi explains the purpose of memories
-                dialogs.Add(new AdminBRO.Dialog
+                //notifications
+                //Battle tutorial 1
+                notifications.Add(new AdminBRO.Dialog
                 {
-                    id = 15,
+                    id = 1,
+                    replicas = new List<AdminBRO.DialogReplica>()
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            message =
+                                "Let's see if you still have what it takes to kick some ass! A hundred years of sleep can make you a little rusty.",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //After battle 1
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 2,
+                    replicas = new List<AdminBRO.DialogReplica>()
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
+                            message =
+                                "Whoa, you are good! But this was a pretty easy fight. Let's see how we can make you even stronger.",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Map tutorial
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 3,
+                    replicas = new List<AdminBRO.DialogReplica>()
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Idle,
+                            message =
+                                "This is your map. Here you can beat up some cheeky fuckers or hang out with anyone you fancy and immerse yourself in their story. It’s all up to you!",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Battle tutorial 2
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 4,
+                    replicas = new List<AdminBRO.DialogReplica>()
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            message =
+                                "Alright, there are some enemies lurking about and looking for trouble. Let's get them!",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Buff tutorial after a failed battle
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 5,
+                    replicas = new List<AdminBRO.DialogReplica>()
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
+                            message =
+                                "Huh… Looks like they are a bit tougher this time. Don't worry, and I have a solution! Let's get you a nifty boost. All you have to do is fuck me.",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Post-buff dialogue
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 6,
+                    replicas = new List<AdminBRO.DialogReplica>()
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
+                            message =
+                                "Did you like it as much as I did, Master? Enjoy your boost and come back for more!",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Pre-battle dialogue (before getting the castle)
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 7,
+                    replicas = new List<AdminBRO.DialogReplica>
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            message = "We’re almost at the Castle’s threshold! Let’s crack some skulls and make it our base.",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Castle tutorial
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 8,
+                    replicas = new List<AdminBRO.DialogReplica>
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            message = "This is your base, the Castle. It's not much to look at now, but we'll make it the stronghold you deserve!",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Ulvi thanking the Overlord for finishing her unique building
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 9,
+                    replicas = new List<AdminBRO.DialogReplica>
+                    {
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            message = "You've built this for me? That's so sweet! I don't even know how to thank you. Just kidding! Whip your dick out and I’ll get on my knees…",
+                            characterPosition = AdminBRO.DialogCharacterPosition.Left
+                        }
+                    }
+                });
+
+                //Ulvi explains the purpose of memories
+                notifications.Add(new AdminBRO.Dialog
+                {
+                    id = 10,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica
@@ -520,66 +606,11 @@ namespace Overlewd
                         }
                     }
                 });
-                
-                //Memory sex scene SEX 3
-                dialogs.Add(new AdminBRO.Dialog
-                {
-                    id = 16,
-                    replicas = new List<AdminBRO.DialogReplica>
-                    {
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Your nimble fingers playing with my pussy make me so horny…"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Is this what the touch of a Master feels like?",
-                            cutIn = "CutIn6"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "My clit is throbbing under your touch, it feels so good!",
-                            cutIn = "CutIn6"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Ahh~ I wish you'd fuck me already and make me yours forever.",
-                            cutIn = "CutIn6"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Umm~ I've creamed all over your fingers, oops.",
-                            cutIn = "CutIn7"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Now your cock will slide in so easily… And you can be my Master.",
-                            cutIn = "CutIn7"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
-                            message = "What do you mean you're not ready? I was ready! I was a good girl! I… Wasn't I?",
-                            cutIn = "CutIn7"
-                        },
-                        new AdminBRO.DialogReplica {
-                            characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Angry,
-                            message = "Fine! Walk away. No — fuck off forever! I know how my Master will feel like. He'd fuck me so much better!"
-                        },
-                    }
-                });
 
                 //Post-memory dialogue
-                dialogs.Add(new AdminBRO.Dialog
+                notifications.Add(new AdminBRO.Dialog
                 {
-                    id = 17,
+                    id = 11,
                     replicas = new List<AdminBRO.DialogReplica>
                     {
                         new AdminBRO.DialogReplica {
