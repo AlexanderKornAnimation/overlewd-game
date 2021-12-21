@@ -17,6 +17,8 @@ namespace Overlewd
                 {
                     base.Customize();
 
+                    notificationsGrid.gameObject.SetActive(false);
+                    markers.gameObject.SetActive(false);
                 }
 
                 public new static GirlBuildingButton GetInstance(Transform parent)

@@ -16,12 +16,41 @@ namespace Overlewd
         {
             public class DialogButton : Overlewd.NSMapScreen.DialogButton
             {
+                private string[] dialogNames = {
+                    "empty",
+                    "Evil's Little Helper",
+                    "Overlord’s Inception",
+                    "Hot&Unbothered"
+                };
+
+                public int stageId { get; set; }
                 public int dialogId { get; set; }
+
+                private void Customize()
+                {
+                    title.text = dialogNames[dialogId];
+                    markers.SetActive(false);
+                    dialogueDone.gameObject.SetActive(false);
+                }
+
+                private void Start()
+                {
+                    Customize();
+                }
+
                 protected override void ButtonClick()
                 {
-                    if (dialogId == 3)
+                    if (dialogId == 1)
                     {
-                        UIManager.ShowScreen<CastleScreen>();
+
+                    }
+                    else if (dialogId == 2)
+                    {
+
+                    }
+                    else if (dialogId == 3)
+                    {
+                        
                     }
                 }
 

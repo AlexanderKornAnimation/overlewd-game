@@ -19,6 +19,8 @@ namespace Overlewd
                 {
                     base.Customize();
 
+                    freeSummonNotification.gameObject.SetActive(false);
+                    markers.gameObject.SetActive(false);
                 }
 
                 public new static PortalButton GetInstance(Transform parent)

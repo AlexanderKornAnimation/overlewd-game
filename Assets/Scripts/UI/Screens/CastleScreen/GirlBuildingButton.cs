@@ -6,6 +6,9 @@ namespace Overlewd
     {
         public class GirlBuildingButton : BaseButton
         {
+            protected Transform markers;
+
+            protected Transform notificationsGrid;
             protected Transform grabRewardNotification;
             protected Transform memoryAvailableNotification;
 
@@ -13,8 +16,9 @@ namespace Overlewd
             {
                 base.Awake();
 
-                var notificationsGrid = transform.Find("NotificationGrid");
+                markers = transform.Find("Markers");
 
+                notificationsGrid = transform.Find("NotificationGrid");
                 grabRewardNotification = notificationsGrid.Find("GrabRewardNotification");
                 memoryAvailableNotification = notificationsGrid.Find("MemoryAvailableNotification");
             }

@@ -7,16 +7,12 @@ namespace Overlewd
 {
     namespace FTUE
     {
-        public class QuestsWidget : Overlewd.QuestsWidget
+        public class QuestsWidget : Overlewd.BaseWidget
         {
-            protected override void OnQuestButtonClick()
-            {
-
-            }
 
             public new static QuestsWidget GetInstance(Transform parent)
             {
-                var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"), parent);
+                var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidgetFTUE"), parent);
                 prefab.name = nameof(QuestsWidget);
                 var rectTransform = prefab.GetComponent<RectTransform>();
                 UIManager.SetStretch(rectTransform);

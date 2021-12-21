@@ -24,7 +24,7 @@ namespace Overlewd
             {
                 if (!ResourceManager.HasFreeSpaceForNewResources(serverResourcesMeta))
                 {
-                    UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
+                    UIManager.ShowDialogBox("Not enough free space", "", /*() => Game.Quit()*/ null);
                 }
                 else
                 {
@@ -40,7 +40,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.ShowDialogBox("Server error", "No load resources", () => Game.Quit());
+                UIManager.ShowDialogBox("Server error", "No load resources", /*() => Game.Quit()*/ null);
             }
         }
 

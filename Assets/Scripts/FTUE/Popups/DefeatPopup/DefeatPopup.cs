@@ -12,9 +12,24 @@ namespace Overlewd
     {
         public class DefeatPopup : Overlewd.DefeatPopup
         {
+            protected override void Customize()
+            {
+                magicGuildButton.interactable = false;
+                foreach (var cr in magicGuildButton.GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.gray);
+                }
+
+                inventoryButton.interactable = false;
+                foreach (var cr in inventoryButton.GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.gray);
+                }
+            }
+
             protected override void MagicGuildButtonClick()
             {
-                UIManager.ShowScreen<MapScreen>();
+                
             }
 
             protected override void InventoryButtonClick()
@@ -24,7 +39,7 @@ namespace Overlewd
 
             protected override void HaremButtonClick()
             {
-
+                UIManager.ShowScreen<MapScreen>();
             }
         }
     }

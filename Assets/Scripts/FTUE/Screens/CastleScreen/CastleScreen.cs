@@ -37,21 +37,21 @@ namespace Overlewd
             {
                 contenViewerButton.gameObject.SetActive(false);
 
-                NSCastleScreen.GirlBuildingButton.GetInstance(cave);
-                //NSCastleScreen.GirlBuildingButton.GetInstance(stable);
-                //NSCastleScreen.GirlBuildingButton.GetInstance(crunch);
-                //NSCastleScreen.GirlBuildingButton.GetInstance(tower);
-                //NSCastleScreen.GirlBuildingButton.GetInstance(source);
-                //NSCastleScreen.MarketButton.GetInstance(market);
-                //NSCastleScreen.ForgeButton.GetInstance(forge);
-                //NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
-                NSCastleScreen.PortalButton.GetInstance(portal);
-                //NSCastleScreen.CapitolButton.GetInstance(capitol);
+                if (GameGlobalStates.ulviCaveIsBuild)
+                {
+                    NSCastleScreen.GirlBuildingButton.GetInstance(cave);
+                }
+
+                if (GameGlobalStates.portalIsBuild)
+                {
+                    NSCastleScreen.PortalButton.GetInstance(portal);
+                }
+
                 NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
 
-                EventsWidget.GetInstance(transform);
-                QuestsWidget.GetInstance(transform);
-                BuffWidget.GetInstance(transform);
+                //EventsWidget.GetInstance(transform);
+                //QuestsWidget.GetInstance(transform);
+                //BuffWidget.GetInstance(transform);
                 SidebarButtonWidget.GetInstance(transform);
             }
         }

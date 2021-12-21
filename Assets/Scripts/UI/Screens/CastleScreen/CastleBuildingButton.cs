@@ -8,6 +8,9 @@ namespace Overlewd
     {
         public class CastleBuildingButton : BaseButton
         {
+            protected Transform markers;
+
+            protected Transform notificationGrid;
             protected Transform buildInProgressNotification;
             protected Transform buildAvailableNotification;
 
@@ -15,8 +18,9 @@ namespace Overlewd
             {
                 base.Awake();
 
-                var notificationGrid = transform.Find("NotificationGrid");
+                markers = transform.Find("Markers");
 
+                notificationGrid = transform.Find("NotificationGrid");
                 buildInProgressNotification = notificationGrid.Find("BuildInProgressNotification");
                 buildAvailableNotification = notificationGrid.Find("BuildAvailableNotification");
             }

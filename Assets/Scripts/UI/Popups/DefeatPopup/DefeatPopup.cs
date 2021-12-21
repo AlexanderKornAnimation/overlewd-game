@@ -25,10 +25,22 @@ namespace Overlewd
 
             magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
+
             inventoryButton = canvas.Find("InventoryButton").GetComponent<Button>();
             inventoryButton.onClick.AddListener(InventoryButtonClick);
+
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
+        }
+
+        void Start()
+        {
+            Customize();
+        }
+
+        protected virtual void Customize()
+        {
+
         }
 
         protected override void ShowMissclick()

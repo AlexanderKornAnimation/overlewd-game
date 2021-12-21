@@ -19,6 +19,8 @@ namespace Overlewd
                 {
                     base.Customize();
 
+                    notificationGrid.gameObject.SetActive(false);
+                    markers.gameObject.SetActive(false);
                 }
 
                 public new static CastleBuildingButton GetInstance(Transform parent)

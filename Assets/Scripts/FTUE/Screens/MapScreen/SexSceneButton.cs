@@ -15,9 +15,40 @@ namespace Overlewd
         {
             public class SexSceneButton : Overlewd.NSMapScreen.SexSceneButton
             {
+                private string[] sexNames = {
+                    "empty",
+                    "empty",
+                    "Harder, Stronger",
+                    "Lustful Memories"
+                };
+
+                public int stageId { get; set; }
+                public int sexId { get; set; }
+
+                private void Customize()
+                {
+                    title.text = sexNames[sexId];
+                    markers.SetActive(false);
+                    sceneDone.gameObject.SetActive(false);
+                }
+
+                private void Start()
+                {
+                    Customize();
+                }
+
                 protected override void ButtonClick()
                 {
-                    
+                    if (sexId == 2)
+                    {
+
+                    }
+                    else if (sexId == 3)
+                    {
+                        GameGlobalStates.portalCanBuild = true;
+                        GameGlobalStates.ulviCaveCanBuild = true;
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
                 }
 
                 public new static SexSceneButton GetInstance(Transform parent)
