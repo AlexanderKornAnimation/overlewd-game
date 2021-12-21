@@ -48,8 +48,6 @@ namespace Overlewd
                     }
                     else if (sexId == 3)
                     {
-                        GameGlobalStates.portalCanBuild = true;
-                        GameGlobalStates.ulviCaveCanBuild = true;
                         UIManager.ShowScreen<CastleScreen>();
                     }
                 }
