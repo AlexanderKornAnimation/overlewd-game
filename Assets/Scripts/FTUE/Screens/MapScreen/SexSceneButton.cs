@@ -27,9 +27,12 @@ namespace Overlewd
 
                 private void Customize()
                 {
+                    gameObject.SetActive(stageId <= GameGlobalStates.currentStageId);
+
                     title.text = sexNames[sexId];
                     markers.SetActive(false);
-                    sceneDone.gameObject.SetActive(false);
+                    sceneDone.gameObject.SetActive(GameGlobalStates.currentStageId > stageId);
+                    button.interactable = GameGlobalStates.currentStageId == stageId;
                 }
 
                 private void Start()

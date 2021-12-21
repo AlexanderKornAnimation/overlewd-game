@@ -35,9 +35,12 @@ namespace Overlewd
 
                 private void Customize()
                 {
+                    gameObject.SetActive(stageId <= GameGlobalStates.currentStageId);
+
                     title.text = battleNames[battleId];
                     markers.SetActive(false);
-                    fightDone.gameObject.SetActive(false);
+                    fightDone.gameObject.SetActive(GameGlobalStates.currentStageId > stageId);
+                    button.interactable = GameGlobalStates.currentStageId == stageId;
 
                     if (battleId == 11)
                     {

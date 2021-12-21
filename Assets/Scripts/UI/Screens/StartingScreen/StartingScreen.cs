@@ -18,6 +18,7 @@ namespace Overlewd
             {
                 FTUE.GameData.Initialization();
 
+                FTUE.GameGlobalStates.currentStageId = 15;
                 FTUE.GameGlobalStates.sexScreen_DialogId = 1;
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });

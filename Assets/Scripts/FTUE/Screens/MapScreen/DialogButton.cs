@@ -28,9 +28,12 @@ namespace Overlewd
 
                 private void Customize()
                 {
+                    gameObject.SetActive(stageId <= GameGlobalStates.currentStageId);
+
                     title.text = dialogNames[dialogId];
                     markers.SetActive(false);
-                    dialogueDone.gameObject.SetActive(false);
+                    dialogueDone.gameObject.SetActive(GameGlobalStates.currentStageId > stageId);
+                    button.interactable = GameGlobalStates.currentStageId == stageId;
                 }
 
                 private void Start()
