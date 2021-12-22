@@ -45,15 +45,21 @@ namespace Overlewd
                 {
                     if (dialogId == 1)
                     {
-
+                        GameGlobalStates.dialogScreen_StageId = stageId;
+                        GameGlobalStates.dialogScreen_DialogId = dialogId;
+                        UIManager.ShowScreen<DialogScreen>();
                     }
                     else if (dialogId == 2)
                     {
-
+                        GameGlobalStates.dialogScreen_StageId = stageId;
+                        GameGlobalStates.dialogScreen_DialogId = dialogId;
+                        UIManager.ShowScreen<DialogScreen>();
                     }
                     else if (dialogId == 3)
                     {
-                        
+                        GameGlobalStates.dialogScreen_StageId = stageId;
+                        GameGlobalStates.dialogScreen_DialogId = dialogId;
+                        UIManager.ShowScreen<DialogScreen>();
                     }
                 }
 

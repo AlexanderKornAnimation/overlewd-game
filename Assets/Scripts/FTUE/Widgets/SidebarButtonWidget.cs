@@ -9,6 +9,19 @@ namespace Overlewd
     {
         public class SidebarButtonWidget : Overlewd.SidebarButtonWidget
         {
+            void Start()
+            {
+                Customize();
+            }
+
+            private void Customize()
+            {
+                if (GameGlobalStates.castle_SideMenuLock)
+                {
+                    Lock();
+                }
+            }
+
             protected override void SidebarMenuButtonClick()
             {
                 if (!UIManager.HasOverlay<SidebarMenuOverlay>())
@@ -18,6 +31,15 @@ namespace Overlewd
                 else
                 {
                     UIManager.HideOverlay();
+                }
+            }
+
+            public void Lock()
+            {
+                sidebarMenuButton.interactable = false;
+                foreach (var cr in GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.gray);
                 }
             }
 

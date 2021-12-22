@@ -23,12 +23,26 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
+            protected override async Task PrepareHideOperationsAsync()
+            {
+
+
+                await Task.CompletedTask;
+            }
+
             protected override void EndBattleVideo(VideoPlayer vp)
             {
                 startBattleButton.gameObject.SetActive(true);
                 battleVideo.gameObject.SetActive(false);
 
-                UIManager.ShowPopup<VictoryPopup>();
+                if (GameGlobalStates.battleScreen_BattleId == 2)
+                {
+                    UIManager.ShowPopup<DefeatPopup>();
+                }
+                else
+                {
+                    UIManager.ShowPopup<VictoryPopup>();
+                }
             }
 
             protected override void StartBattleButtonClick()

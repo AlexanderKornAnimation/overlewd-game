@@ -10,7 +10,7 @@ namespace Overlewd
             {
                 protected override void ButtonClick()
                 {
-                    
+                    UIManager.ShowScreen<MapScreen>();
                 }
 
                 protected override void Customize()
@@ -19,6 +19,20 @@ namespace Overlewd
 
                     notificationsGrid.gameObject.SetActive(false);
                     markers.gameObject.SetActive(false);
+
+                    if (GameGlobalStates.castle_CaveLock)
+                    {
+                        Lock();
+                    }
+                }
+
+                public void Lock()
+                {
+                    button.interactable = false;
+                    foreach (var cr in GetComponentsInChildren<CanvasRenderer>())
+                    {
+                        cr.SetColor(Color.gray);
+                    }
                 }
 
                 public new static GirlBuildingButton GetInstance(Transform parent)

@@ -48,7 +48,9 @@ namespace Overlewd
             
             private void NextButtonClick()
             {
-                UIManager.ShowScreen<StartingScreen>();
+                GameGlobalStates.sexScreen_StageId = 15;
+                GameGlobalStates.sexScreen_DialogId = 3;
+                UIManager.ShowScreen<SexScreen>();
             }
         }
     }

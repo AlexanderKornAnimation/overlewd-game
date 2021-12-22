@@ -47,7 +47,11 @@ namespace Overlewd
                     NSCastleScreen.PortalButton.GetInstance(portal);
                 }
 
-                NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
+                if (GameGlobalStates.ulviCaveCanBuilded || GameGlobalStates.portalCanBuilded ||
+                    GameGlobalStates.ulviCaveBuilded || GameGlobalStates.portalBuilded)
+                {
+                    NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
+                }
 
                 //EventsWidget.GetInstance(transform);
                 //QuestsWidget.GetInstance(transform);

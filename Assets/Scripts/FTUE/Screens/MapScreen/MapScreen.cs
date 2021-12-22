@@ -49,7 +49,7 @@ namespace Overlewd
             protected override void Customize()
             {
                 backbutton.gameObject.SetActive(false);
-                chapterButton.gameObject.SetActive(false);
+                chapterButton.gameObject.SetActive(GameGlobalStates.completeFTUE);
 
                 //EventsWidget.GetInstance(transform);
                 QuestsWidget.GetInstance(transform);
@@ -65,7 +65,7 @@ namespace Overlewd
 
                 stage_3_sex_2 = NSMapScreen.SexSceneButton.GetInstance(map.Find("stage_3_sex_2"));
                 stage_3_sex_2.stageId = 3;
-                stage_3_sex_2.stageId = 2;
+                stage_3_sex_2.sexId = 2;
 
                 stage_4_fight_3 = NSMapScreen.FightButton.GetInstance(map.Find("stage_4_fight_3"));
                 stage_4_fight_3.stageId = 4;
@@ -127,7 +127,7 @@ namespace Overlewd
 
             protected override void ChapterButtonClick()
             {
-
+                UIManager.ShowScreen<Overlewd.StartingScreen>();
             }
         }
     }

@@ -98,14 +98,12 @@ namespace Overlewd
 
             protected override void PortalButtonClick()
             {
-                GameGlobalStates.PortalBuild();
-                Customize();
+                UIManager.ShowPopup<PortalPopup>();
             }
 
             protected override void UlviCaveButtonClick()
             {
-                GameGlobalStates.UlviCaveBuild();
-                Customize();
+                UIManager.ShowPopup<CavePopup>();
             }
 
             protected override void FayeCaveButtonClick()

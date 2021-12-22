@@ -29,8 +29,13 @@ namespace Overlewd
             }
             public static List<AdminBRO.Dialog> notifications = new List<AdminBRO.Dialog>();
 
+            private static bool _initialization = false;
             public static void Initialization()
             {
+                if (_initialization)
+                    return;
+                _initialization = true;
+
                 //sexs
                 //SEX 1
                 sexs.Add(new AdminBRO.Dialog

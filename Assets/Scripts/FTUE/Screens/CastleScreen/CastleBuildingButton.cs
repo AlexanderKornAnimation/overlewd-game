@@ -21,6 +21,20 @@ namespace Overlewd
 
                     notificationGrid.gameObject.SetActive(false);
                     markers.gameObject.SetActive(false);
+
+                    if (GameGlobalStates.castle_BuildingButtonLock)
+                    {
+                        Lock();
+                    }
+                }
+
+                public void Lock()
+                {
+                    button.interactable = false;
+                    foreach (var cr in GetComponentsInChildren<CanvasRenderer>())
+                    {
+                        cr.SetColor(Color.gray);
+                    }
                 }
 
                 public new static CastleBuildingButton GetInstance(Transform parent)

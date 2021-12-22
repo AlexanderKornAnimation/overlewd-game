@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ namespace Overlewd
             screenRectTransform.Find("Canvas").Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
                 FTUE.GameData.Initialization();
+                FTUE.GameGlobalStates.Reset();
 
                 FTUE.GameGlobalStates.sexScreen_DialogId = 1;
                 UIManager.ShowScreen<FTUE.SexScreen>();

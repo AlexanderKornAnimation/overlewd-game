@@ -63,11 +63,22 @@ namespace Overlewd
                 {
                     if (battleId == 11)
                     {
-
+                        GameGlobalStates.battleScreen_StageId = stageId;
+                        GameGlobalStates.battleScreen_BattleId = battleId;
+                        UIManager.ShowPopup<PrepareBossFightPopup>();
                     }
                     else
                     {
-
+                        GameGlobalStates.battleScreen_StageId = stageId;
+                        GameGlobalStates.battleScreen_BattleId = battleId;
+                        if (GameGlobalStates.battleScreen_BattleId < 6)
+                        {
+                            UIManager.ShowScreen<BattleScreen>();
+                        }
+                        else
+                        {
+                            UIManager.ShowPopup<PrepareBattlePopup>();
+                        }
                     }
                 }
 

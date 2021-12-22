@@ -28,7 +28,7 @@ namespace Overlewd
                 startBattleButton.gameObject.SetActive(true);
                 battleVideo.gameObject.SetActive(false);
 
-                UIManager.ShowPopup<DefeatPopup>();
+                UIManager.ShowPopup<VictoryPopup>();
             }
 
             protected override void StartBattleButtonClick()

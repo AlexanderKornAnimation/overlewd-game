@@ -53,18 +53,19 @@ namespace Overlewd
             {
                 if (GameGlobalStates.sexScreen_DialogId == 1)
                 {
-                    GameGlobalStates.sexScreen_DialogId = 2;
-                    UIManager.ShowScreen<SexScreen>();
+                    GameGlobalStates.battleScreen_StageId = 1;
+                    GameGlobalStates.battleScreen_BattleId = 1;
+                    UIManager.ShowScreen<BattleScreen>();
                 }
                 else if (GameGlobalStates.sexScreen_DialogId == 2)
                 {
-                    GameGlobalStates.sexScreen_DialogId = 3;
-                    UIManager.ShowScreen<SexScreen>();
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
                 }
                 else if (GameGlobalStates.sexScreen_DialogId == 3)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 1;
-                    UIManager.ShowScreen<DialogScreen>();
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
                 }
             }
 

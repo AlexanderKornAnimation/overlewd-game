@@ -45,18 +45,22 @@ namespace Overlewd
             {
                 if (GameGlobalStates.dialogScreen_DialogId == 1)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 2;
-                    UIManager.ShowScreen<DialogScreen>();
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
                 }
                 else if (GameGlobalStates.dialogScreen_DialogId == 2)
                 {
-                    GameGlobalStates.dialogScreen_DialogId = 3;
-                    UIManager.ShowScreen<DialogScreen>();
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
                 }
                 else if (GameGlobalStates.dialogScreen_DialogId == 3)
                 {
-                    GameGlobalStates.dialogNotification_DialogId = 1;
-                    UIManager.ShowNotification<DialogNotification>();
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                    GameGlobalStates.PortalCanBuilded();
+                    GameGlobalStates.ResetStateCastleButtons();
+                    GameGlobalStates.castle_SideMenuLock = true;
+                    GameGlobalStates.castle_CaveLock = true;
+                    UIManager.ShowScreen<CastleScreen>();
                 }
             }
 

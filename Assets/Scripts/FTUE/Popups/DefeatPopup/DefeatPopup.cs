@@ -39,7 +39,11 @@ namespace Overlewd
 
             protected override void HaremButtonClick()
             {
-                UIManager.ShowScreen<MapScreen>();
+                GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+
+                GameGlobalStates.sexScreen_StageId = 3;
+                GameGlobalStates.sexScreen_DialogId = 2;
+                UIManager.ShowScreen<SexScreen>();
             }
         }
     }

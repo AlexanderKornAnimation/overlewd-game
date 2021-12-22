@@ -9,10 +9,40 @@ namespace Overlewd
     {
         public static class GameGlobalStates
         {
+            public static void Reset()
+            {
+                currentStageId = 0;
+
+                ulviCaveCanBuilded = false;
+                ulviCaveBuilded = false;
+
+                portalCanBuilded = false;
+                portalBuilded = false;
+
+                completeFTUE = false;
+
+                ResetStateCastleButtons();
+            }
+
+            public static bool completeFTUE { get; private set; } = false;
             public static int currentStageId { get; private set; }
             public static void CompleteStageId(int stageId)
             {
                 currentStageId = (stageId + 1) > currentStageId ? (stageId + 1) : currentStageId;
+                completeFTUE = currentStageId > 16;
+            }
+
+            //CastleScreen states
+            public static bool castle_SideMenuLock = false;
+            public static bool castle_CaveLock = false;
+            public static bool castle_PortalLock = false;
+            public static bool castle_BuildingButtonLock = false;
+            public static void ResetStateCastleButtons()
+            {
+                castle_SideMenuLock = false;
+                castle_CaveLock = false;
+                castle_PortalLock = false;
+                castle_BuildingButtonLock = false;
             }
 
             public static void UlviCaveCanBuilded()
@@ -45,6 +75,7 @@ namespace Overlewd
             public static bool portalCanBuilded { get; private set; } = false;
             public static bool portalBuilded { get; private set; } = false;
 
+            //stages state
             public static int battleScreen_BattleId = 0;
             public static int battleScreen_StageId = 0;
 

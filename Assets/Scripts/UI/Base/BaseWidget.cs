@@ -6,9 +6,6 @@ namespace Overlewd
 {
     public abstract class BaseWidget : MonoBehaviour
     {
-        void Start()
-        {
 
-        }
     }
 }

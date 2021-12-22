@@ -14,8 +14,59 @@ namespace Overlewd
         {
             protected override void NextButtonClick()
             {
-                UIManager.ShowPopup<PrepareBossFightPopup>();
-                //UIManager.ShowScreen<BossFightScreen>();
+                if (GameGlobalStates.battleScreen_BattleId == 1)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 3)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 4)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<CastleScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 5)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    GameGlobalStates.UlviCaveCanBuilded();
+                    GameGlobalStates.ResetStateCastleButtons();
+                    GameGlobalStates.castle_SideMenuLock = true;
+                    UIManager.ShowScreen<CastleScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 6)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 7)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 8)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 9)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 10)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 11)
+                {
+                    GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    UIManager.ShowScreen<MapScreen>();
+                }
             }
 
             protected override void RepeatButtonClick()
