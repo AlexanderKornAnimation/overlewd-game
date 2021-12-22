@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +13,8 @@ namespace Overlewd
         {
             public int eventId;
             public int eventQuestId;
+
+            private AdditiveHighlight additiveHighlight;
 
             private Button mapButton;
 
@@ -32,8 +35,8 @@ namespace Overlewd
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
 
-              
-                
+                additiveHighlight = AdditiveHighlight.GetInstance(canvas.Find("MapButton"));
+
                 CustomizeItem();
             }
 
@@ -45,10 +48,11 @@ namespace Overlewd
                 eventName.text = eventData?.name;
                 title.text = eventQuestData?.name;
                 description.text = eventQuestData?.description;
-                
+
                 for (int i = 1; i <= 5; i++)
                 {
-                    rewards.Add(transform.Find("Canvas").Find("BackWithClock").Find($"Reward{i}").Find("Item").GetComponent<Image>());
+                    rewards.Add(transform.Find("Canvas").Find("BackWithClock").Find($"Reward{i}").Find("Item")
+                        .GetComponent<Image>());
                 }
 
                 rewards[0].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Crystal");
@@ -60,13 +64,15 @@ namespace Overlewd
 
             private void ToMapClick()
             {
+                additiveHighlight.DestroySelf();
                 GameGlobalStates.eventMapScreen_EventId = eventId;
                 UIManager.ShowScreen<EventMapScreen>();
             }
-            
+
             public static EventItem GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventItem"), parent);
+                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventItem"),
+                    parent);
                 newItem.name = nameof(EventItem);
                 return newItem.AddComponent<EventItem>();
             }

@@ -29,17 +29,30 @@ namespace Overlewd
                 loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
             }
 
-            void Start()
+            private void Start()
             {
                 Customize();
             }
 
             private void Customize()
             {
+                AdditiveHighlight additiveHighlight;
+
                 var eventStageData = GameData.GetEventStageById(eventStageId);
 
                 title.text = eventStageData.title;
                 fightDone.SetActive(eventStageData.status == AdminBRO.EventStageStatus.Complete);
+                
+                if (eventStageId == 1)
+                {
+                    additiveHighlight = AdditiveHighlight.GetInstance(transform.Find("Canvas").Find("Button"));
+
+                    if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageStatus.Complete &&
+                        additiveHighlight != null)
+                    {
+                        additiveHighlight.DestroySelf();
+                    }
+                }
             }
 
             private void ButtonClick()
@@ -50,7 +63,8 @@ namespace Overlewd
 
             public static FightButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/FightButton"), parent);
+                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/FightButton"),
+                    parent);
                 newItem.name = nameof(FightButton);
                 return newItem.AddComponent<FightButton>();
             }

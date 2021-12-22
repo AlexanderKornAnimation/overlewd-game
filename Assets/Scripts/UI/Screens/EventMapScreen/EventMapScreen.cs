@@ -100,17 +100,12 @@ namespace Overlewd
                     shopButton.eventMarketId = eventMarketData.id;
                     shopButtons.Add(shopButton);
                 }
-            }            
+            }
         }
         
         private void BackButtonClick()
         {
             UIManager.ShowScreen<CastleScreen>();
-        }
-
-        void Update()
-        {
-
         }
     }
 }

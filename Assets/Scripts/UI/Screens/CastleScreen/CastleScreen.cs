@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +23,8 @@ namespace Overlewd
         protected Transform castleBuilding;
 
         protected Button contenViewerButton;
+
+        protected AdditiveHighlight additiveHighlight;
         
         protected virtual void Awake()
         {
@@ -55,7 +58,7 @@ namespace Overlewd
         {
             Customize();
         }
-
+        
         protected virtual void Customize()
         {
             NSCastleScreen.GirlBuildingButton.GetInstance(cave);
@@ -70,10 +73,14 @@ namespace Overlewd
             NSCastleScreen.CapitolButton.GetInstance(capitol);
             NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
 
-            EventsWidget.GetInstance(transform);
+            var eventWidget = EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
             SidebarButtonWidget.GetInstance(transform);
+            additiveHighlight = AdditiveHighlight.GetInstance(eventWidget.transform.Find("Canvas").Find("EventsButton"));
+            
+            eventWidget.transform.Find("Canvas").Find("EventsButton").GetComponent<Button>().onClick
+                .AddListener(additiveHighlight.DestroySelf);
         }
     }
 }
