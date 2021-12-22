@@ -37,12 +37,12 @@ namespace Overlewd
             {
                 contenViewerButton.gameObject.SetActive(false);
 
-                if (GameGlobalStates.ulviCaveIsBuild)
+                if (GameGlobalStates.ulviCaveBuilded)
                 {
                     NSCastleScreen.GirlBuildingButton.GetInstance(cave);
                 }
 
-                if (GameGlobalStates.portalIsBuild)
+                if (GameGlobalStates.portalBuilded)
                 {
                     NSCastleScreen.PortalButton.GetInstance(portal);
                 }

@@ -25,36 +25,42 @@ namespace Overlewd
                 marketUnaviable.SetActive(true);
                 marketMaxLevel.SetActive(false);
 
-                if (GameGlobalStates.portalCanBuild)
+                if (GameGlobalStates.portalCanBuilded)
                 {
                     portalUnaviable.SetActive(false);
                     portalMaxLevel.SetActive(false);
+                    portalButton.interactable = true;
                 }
-                else if (GameGlobalStates.portalIsBuild)
+                else if (GameGlobalStates.portalBuilded)
                 {
                     portalUnaviable.SetActive(false);
                     portalMaxLevel.SetActive(true);
+                    portalButton.interactable = false;
                 }
                 else
                 {
                     portalUnaviable.SetActive(true);
                     portalMaxLevel.SetActive(false);
+                    portalButton.interactable = false;
                 }
 
-                if (GameGlobalStates.ulviCaveCanBuild)
+                if (GameGlobalStates.ulviCaveCanBuilded)
                 {
                     ulviCaveUnaviable.SetActive(false);
                     ulviCaveMaxLevel.SetActive(false);
+                    ulviCaveButton.interactable = true;
                 }
-                else if (GameGlobalStates.ulviCaveIsBuild)
+                else if (GameGlobalStates.ulviCaveBuilded)
                 {
                     ulviCaveUnaviable.SetActive(false);
                     ulviCaveMaxLevel.SetActive(true);
+                    ulviCaveButton.interactable = false;
                 }
                 else
                 {
                     ulviCaveUnaviable.SetActive(true);
                     ulviCaveMaxLevel.SetActive(false);
+                    ulviCaveButton.interactable = false;
                 }
 
                 fayeCaveUnaviable.SetActive(true);
@@ -92,22 +98,14 @@ namespace Overlewd
 
             protected override void PortalButtonClick()
             {
-                if (GameGlobalStates.portalCanBuild)
-                {
-                    GameGlobalStates.portalCanBuild = false;
-                    GameGlobalStates.portalIsBuild = true;
-                    Customize();
-                }
+                GameGlobalStates.PortalBuild();
+                Customize();
             }
 
             protected override void UlviCaveButtonClick()
             {
-                if (GameGlobalStates.ulviCaveCanBuild)
-                {
-                    GameGlobalStates.ulviCaveCanBuild = false;
-                    GameGlobalStates.ulviCaveIsBuild = true;
-                    Customize();
-                }
+                GameGlobalStates.UlviCaveBuild();
+                Customize();
             }
 
             protected override void FayeCaveButtonClick()
