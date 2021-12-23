@@ -31,19 +31,13 @@ namespace Overlewd
 
                 await Task.CompletedTask;
 
-                var mainSexKey = "MainSex1";
-                if (GameGlobalStates.sexScreen_DialogId == 1)
+                var mainSexKey = GameGlobalStates.sexScreen_DialogId switch
                 {
-                    mainSexKey = "MainSex1";
-                }
-                else if (GameGlobalStates.sexScreen_DialogId == 2)
-                {
-                    mainSexKey = "MainSex1";
-                }
-                else if (GameGlobalStates.sexScreen_DialogId == 3)
-                {
-                    mainSexKey = "MainSex1";
-                }
+                    1 => "MainSex1",
+                    2 => "MainSex2",
+                    3 => "MainSex1",
+                    _ => "MainSex1"
+                };
 
                 foreach (var animData in GameLocalResources.mainSexAnimPath[mainSexKey])
                 {

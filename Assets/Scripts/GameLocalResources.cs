@@ -16,6 +16,11 @@ namespace Overlewd
                 ["idle"] = "FTUE/MainSexAnims/MainSex1/idle01_SkeletonData"
             },
 
+            ["MainSex2"] = new Dictionary<string, string>
+            {
+                ["back"] = "FTUE/MainSexAnims/MainSex2/back_SkeletonData",
+                ["idle"] = "FTUE/MainSexAnims/MainSex2/idle01_SkeletonData"
+            },
         };
 
         public static Dictionary<string, Dictionary<string, string>> cutInAnimPath = new Dictionary<string, Dictionary<string, string>>
@@ -38,6 +43,17 @@ namespace Overlewd
             ["CutIn4"] = new Dictionary<string, string>
             {
                 ["back"] = "FTUE/CutInAnims/CutIn4/back_overlord_SkeletonData"
+            },
+
+            ["CutIn8"] = new Dictionary<string, string>
+            {
+                ["back"] = "FTUE/CutInAnims/CutIn8/back_SkeletonData",
+                ["idle"] = "FTUE/CutInAnims/CutIn8/idle01_SkeletonData"
+            },
+            ["CutIn9"] = new Dictionary<string, string>
+            {
+                ["back"] = "FTUE/CutInAnims/CutIn9/back_SkeletonData",
+                ["idle"] = "FTUE/CutInAnims/CutIn9/idle01_SkeletonData"
             },
         };
 
