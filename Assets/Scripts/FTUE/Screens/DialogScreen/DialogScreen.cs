@@ -64,32 +64,35 @@ namespace Overlewd
                 }
             }
 
-            private void ShowCutIn(AdminBRO.DialogReplica replica)
+            private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
                 if (replica.cutIn != null)
                 {
-                    foreach (var anim in cutInAnimations)
+                    if (replica.cutIn != prevReplica?.cutIn)
                     {
-                        Destroy(anim?.gameObject);
-                    }
-                    cutInAnimations.Clear();
-
-                    if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
-                    {
-                        var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
-                        foreach (var animData in cutInData)
+                        foreach (var anim in cutInAnimations)
                         {
-                            if (animData.Value != null)
+                            Destroy(anim?.gameObject);
+                        }
+                        cutInAnimations.Clear();
+
+                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
+                        {
+                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                            foreach (var animData in cutInData)
                             {
-                                var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                anim.Initialize(animData.Value, false);
-                                anim.PlayAnimation(animData.Key, true);
-                                cutInAnimations.Add(anim);
+                                if (animData.Value != null)
+                                {
+                                    var anim = SpineWidget.GetInstance(cutInAnimPos);
+                                    anim.Initialize(animData.Value, false);
+                                    anim.PlayAnimation(animData.Key, true);
+                                    cutInAnimations.Add(anim);
+                                }
                             }
                         }
-                    }
 
-                    cutIn.SetActive(cutInAnimations.Count > 0);
+                        cutIn.SetActive(cutInAnimations.Count > 0);
+                    }
                 }
                 else
                 {
@@ -103,24 +106,28 @@ namespace Overlewd
                 }
             }
 
-            private void ShowPersEmotion(AdminBRO.DialogReplica replica)
+            private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
                 if (replica.animation != null)
                 {
-                    Destroy(emotionAnimation?.gameObject);
-                    emotionAnimation = null;
-
-                    if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterKey))
+                    if (replica.characterKey != prevReplica?.characterKey ||
+                        replica.animation != prevReplica?.animation)
                     {
-                        var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterKey];
-                        if (persEmotions.ContainsKey(replica.animation))
+                        Destroy(emotionAnimation?.gameObject);
+                        emotionAnimation = null;
+
+                        if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterKey))
                         {
-                            var headPath = persEmotions[replica.animation];
-                            if (headPath != null)
+                            var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterKey];
+                            if (persEmotions.ContainsKey(replica.animation))
                             {
-                                emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                emotionAnimation.Initialize(headPath, false);
-                                emotionAnimation.PlayAnimation(replica.animation, true);
+                                var headPath = persEmotions[replica.animation];
+                                if (headPath != null)
+                                {
+                                    emotionAnimation = SpineWidget.GetInstance(emotionPos);
+                                    emotionAnimation.Initialize(headPath, false);
+                                    emotionAnimation.PlayAnimation(replica.animation, true);
+                                }
                             }
                         }
                     }
@@ -136,9 +143,10 @@ namespace Overlewd
             {
                 base.ShowCurrentReplica();
 
+                var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
                 var replica = dialogData.replicas[currentReplicaId];
-                ShowCutIn(replica);
-                ShowPersEmotion(replica);
+                ShowCutIn(replica, prevReplica);
+                ShowPersEmotion(replica, prevReplica);
             }
         }
     }

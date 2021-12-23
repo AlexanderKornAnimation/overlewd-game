@@ -12,61 +12,7 @@ namespace Overlewd
         {
             protected override void OnClick()
             {
-                if (GameGlobalStates.dialogNotification_DialogId == 1)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 2;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 2)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 3;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 3)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 4;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 4)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 5;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 5)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 6;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 6)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 7;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 7)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 8;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 8)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 9;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 9)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 10;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 10)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 11;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.dialogNotification_DialogId == 11)
-                {
-                    UIManager.HideNotification();
-                    UIManager.ShowPopup<PrepareBattlePopup>();
-                }
+                
             }
         }
 
@@ -110,6 +56,19 @@ namespace Overlewd
                         }
                     }
                 }
+
+                await Task.CompletedTask;
+            }
+
+            private IEnumerator CloseByTimer()
+            {
+                yield return new WaitForSeconds(5.0f);
+                UIManager.HideNotification();
+            }
+
+            protected override async Task AfterShowOperationsAsync()
+            {
+                StartCoroutine(CloseByTimer());
 
                 await Task.CompletedTask;
             }

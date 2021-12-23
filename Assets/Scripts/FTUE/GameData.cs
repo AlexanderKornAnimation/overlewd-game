@@ -85,19 +85,26 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Thank you, Master. I'm so happy!"
+                            message = "Please, cum for me, Master! I want to taste you so bad…"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            message = "Thank you, Master. I'm so happy!",
+                            cutIn = "CutIn2"
+                        },
+                        new AdminBRO.DialogReplica
+                        {
+                            characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            animation = AdminBRO.DialogCharacterAnimation.Love,
                             message = "You taste exactly how I imagined. After all those years searching for you…",
                             cutIn = "CutIn2"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            animation = AdminBRO.DialogCharacterAnimation.Surprised,
+                            animation = AdminBRO.DialogCharacterAnimation.Happy,
                             message = "Now put your pants on, and let's get cracking! We have a realm to conquer."
                         },
                     }
