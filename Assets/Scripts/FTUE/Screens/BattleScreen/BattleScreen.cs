@@ -26,8 +26,6 @@ namespace Overlewd
 
             protected override async Task PrepareHideOperationsAsync()
             {
-
-
                 await Task.CompletedTask;
             }
 
@@ -57,7 +55,11 @@ namespace Overlewd
             protected override void StartBattleButtonClick()
             {
                 startBattleButton.gameObject.SetActive(false);
-                skipButton.gameObject.SetActive(true);
+                if (GameGlobalStates.battleScreen_BattleId >= 3)
+                {
+                    skipButton.gameObject.SetActive(true);
+                }
+
                 battleVideo.gameObject.SetActive(true);
 
                 battleVideo.Play();

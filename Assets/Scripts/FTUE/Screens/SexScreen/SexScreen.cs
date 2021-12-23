@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -21,6 +22,13 @@ namespace Overlewd
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.sexScreen_DialogData;
+
+                if (dialogData.id == 1 || dialogData.id == 3)
+                {
+                    blackScreenTop.gameObject.SetActive(true);
+                    blackScreenBot.gameObject.SetActive(true);
+                }
+
                 await Task.CompletedTask;
 
                 var mainSexKey = "MainSex1";
@@ -69,35 +77,33 @@ namespace Overlewd
                 }
             }
 
-            private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+            private void ShowCutIn(AdminBRO.DialogReplica replica)
             {
                 if (replica.cutIn != null)
                 {
-                    if (replica.cutIn != prevReplica?.cutIn)
+                    foreach (var anim in cutInAnimations)
                     {
-                        foreach (var anim in cutInAnimations)
-                        {
-                            Destroy(anim?.gameObject);
-                        }
-                        cutInAnimations.Clear();
+                        Destroy(anim?.gameObject);
+                    }
 
-                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
+                    cutInAnimations.Clear();
+
+                    if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
+                    {
+                        var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                        foreach (var animData in cutInData)
                         {
-                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
-                            foreach (var animData in cutInData)
+                            if (animData.Value != null)
                             {
-                                if (animData.Value != null)
-                                {
-                                    var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                    anim.Initialize(animData.Value, false);
-                                    anim.PlayAnimation(animData.Key, true);
-                                    cutInAnimations.Add(anim);
-                                }
+                                var anim = SpineWidget.GetInstance(cutInAnimPos);
+                                anim.Initialize(animData.Value, false);
+                                anim.PlayAnimation(animData.Key, true);
+                                cutInAnimations.Add(anim);
                             }
                         }
-
-                        cutIn.SetActive(cutInAnimations.Count > 0);
                     }
+
+                    cutIn.SetActive(cutInAnimations.Count > 0);
                 }
                 else
                 {
@@ -107,6 +113,7 @@ namespace Overlewd
                     {
                         Destroy(anim?.gameObject);
                     }
+
                     cutInAnimations.Clear();
                 }
             }
@@ -115,9 +122,51 @@ namespace Overlewd
             {
                 base.ShowCurrentReplica();
 
-                var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
                 var replica = dialogData.replicas[currentReplicaId];
-                ShowCutIn(replica, prevReplica);
+                
+                if (dialogData.id == 1 && currentReplicaId == 2)
+                {
+                   StartCoroutine(FadeOut());
+                }
+
+                if (dialogData.id == 3)
+                {
+                    blackScreenTop.fillAmount = 0;
+                    blackScreenBot.fillAmount = 0;
+                    
+                    if (currentReplicaId == 7)
+                    {
+                        StartCoroutine(FadeIn());
+                    }
+                }
+
+                ShowCutIn(replica);
+            }
+
+            private IEnumerator FadeIn()
+            {
+                blackScreenTop.fillMethod = Image.FillMethod.Horizontal;
+                blackScreenBot.fillMethod = Image.FillMethod.Horizontal;
+
+                blackScreenBot.fillOrigin = 0;
+                blackScreenTop.fillOrigin = 0;
+                
+                while (blackScreenTop.fillAmount != 1)
+                {
+                    yield return new WaitForSeconds(0.0005f);
+                    blackScreenTop.fillAmount += 0.07f;
+                    blackScreenBot.fillAmount += 0.07f;
+                }
+            }
+            
+            private IEnumerator FadeOut()
+            {
+                while (blackScreenTop.fillAmount != 0)
+                {
+                    yield return new WaitForSeconds(0.0005f);
+                    blackScreenTop.fillAmount -= 0.07f;
+                    blackScreenBot.fillAmount -= 0.07f;
+                }
             }
         }
     }
