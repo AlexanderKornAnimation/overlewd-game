@@ -29,6 +29,17 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
+            protected override async Task AfterShowOperationsAsync()
+            {
+                if (GameGlobalStates.battleScreen_BattleId == 1)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = 1;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
+
+                await Task.CompletedTask;
+            }
+
             protected override void EndBattleVideo(VideoPlayer vp)
             {
                 startBattleButton.gameObject.SetActive(true);

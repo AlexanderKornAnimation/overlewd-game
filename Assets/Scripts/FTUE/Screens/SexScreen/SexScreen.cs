@@ -21,6 +21,8 @@ namespace Overlewd
 
             protected override async Task EnterScreen()
             {
+                backImage.gameObject.SetActive(false);
+
                 dialogData = GameGlobalStates.sexScreen_DialogData;
 
                 if (dialogData.id == 1 || dialogData.id == 3)
@@ -35,7 +37,7 @@ namespace Overlewd
                 {
                     1 => "MainSex1",
                     2 => "MainSex2",
-                    3 => "MainSex1",
+                    3 => "MainSex3",
                     _ => "MainSex1"
                 };
 

@@ -11,6 +11,8 @@ namespace Overlewd
     {
         protected Coroutine autoplayCoroutine;
 
+        protected Image backImage;
+
         protected Button nextButton;
         protected TextMeshProUGUI personageName;
         protected TextMeshProUGUI text;
@@ -40,6 +42,8 @@ namespace Overlewd
 
             var canvas = screenRectTransform.Find("Canvas");
             var textContainer = canvas.Find("TextContainer");
+
+            backImage = canvas.Find("BackImage").GetComponent<Image>();
 
             nextButton = textContainer.Find("NextButton").GetComponent<Button>();
             nextButton.onClick.AddListener(NextButtonClick);

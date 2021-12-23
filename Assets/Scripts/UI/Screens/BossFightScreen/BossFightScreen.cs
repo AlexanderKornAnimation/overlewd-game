@@ -14,6 +14,7 @@ namespace Overlewd
         protected Button skipButton;
 
         protected VideoPlayer battleVideo;
+        protected RawImage renderTarget;
 
         void Awake()
         {
@@ -34,6 +35,7 @@ namespace Overlewd
             skipButton.onClick.AddListener(SkipButtonClick);
 
             battleVideo = canvas.Find("TestVideo").GetComponent<VideoPlayer>();
+            renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
 
             battleVideo.gameObject.SetActive(false);
             skipButton.gameObject.SetActive(false);

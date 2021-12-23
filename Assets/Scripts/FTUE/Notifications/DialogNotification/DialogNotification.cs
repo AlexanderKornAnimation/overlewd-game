@@ -57,6 +57,8 @@ namespace Overlewd
                     }
                 }
 
+                StartCoroutine(CloseByTimer());
+
                 await Task.CompletedTask;
             }
 
@@ -64,13 +66,6 @@ namespace Overlewd
             {
                 yield return new WaitForSeconds(5.0f);
                 UIManager.HideNotification();
-            }
-
-            protected override async Task AfterShowOperationsAsync()
-            {
-                StartCoroutine(CloseByTimer());
-
-                await Task.CompletedTask;
             }
         }
     }
