@@ -77,33 +77,35 @@ namespace Overlewd
                 }
             }
 
-            private void ShowCutIn(AdminBRO.DialogReplica replica)
+            private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
                 if (replica.cutIn != null)
                 {
-                    foreach (var anim in cutInAnimations)
+                    if (replica.cutIn != prevReplica?.cutIn)
                     {
-                        Destroy(anim?.gameObject);
-                    }
-
-                    cutInAnimations.Clear();
-
-                    if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
-                    {
-                        var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
-                        foreach (var animData in cutInData)
+                        foreach (var anim in cutInAnimations)
                         {
-                            if (animData.Value != null)
+                            Destroy(anim?.gameObject);
+                        }
+                        cutInAnimations.Clear();
+
+                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
+                        {
+                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                            foreach (var animData in cutInData)
                             {
-                                var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                anim.Initialize(animData.Value, false);
-                                anim.PlayAnimation(animData.Key, true);
-                                cutInAnimations.Add(anim);
+                                if (animData.Value != null)
+                                {
+                                    var anim = SpineWidget.GetInstance(cutInAnimPos);
+                                    anim.Initialize(animData.Value, false);
+                                    anim.PlayAnimation(animData.Key, true);
+                                    cutInAnimations.Add(anim);
+                                }
                             }
                         }
-                    }
 
-                    cutIn.SetActive(cutInAnimations.Count > 0);
+                        cutIn.SetActive(cutInAnimations.Count > 0);
+                    }
                 }
                 else
                 {
@@ -122,6 +124,7 @@ namespace Overlewd
             {
                 base.ShowCurrentReplica();
 
+                var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
                 var replica = dialogData.replicas[currentReplicaId];
                 
                 if (dialogData.id == 1 && currentReplicaId == 2)
@@ -140,7 +143,7 @@ namespace Overlewd
                     }
                 }
 
-                ShowCutIn(replica);
+                ShowCutIn(replica, prevReplica);
             }
 
             private IEnumerator FadeIn()
