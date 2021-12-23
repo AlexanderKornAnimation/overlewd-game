@@ -32,7 +32,40 @@ namespace Overlewd
                 completeFTUE = currentStageId > 16;
             }
 
-            //CastleScreen states
+            //screens dialogNotifications
+            private static int? _castle_DialogNotificationId;
+            public static int? castle_DialogNotificationId 
+            {
+                get
+                {
+                    var tmp = _castle_DialogNotificationId;
+                    _castle_DialogNotificationId = null;
+                    return tmp;
+                }
+
+                set
+                {
+                    _castle_DialogNotificationId = value;
+                }
+            }
+
+            private static int? _map_DialogNotificationId;
+            public static int? map_DialogNotificationId
+            {
+                get
+                {
+                    var tmp = _map_DialogNotificationId;
+                    _map_DialogNotificationId = null;
+                    return tmp;
+                }
+
+                set
+                {
+                    _map_DialogNotificationId = value;
+                }
+            }
+
+            //CastleMapScreen states
             public static bool castle_SideMenuLock = false;
             public static bool castle_CaveLock = false;
             public static bool castle_PortalLock = false;
