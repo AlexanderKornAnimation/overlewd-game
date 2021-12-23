@@ -24,7 +24,7 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
-                UIManager.ShowScreen<ForgeScreen>();
+                // UIManager.ShowScreen<ForgeScreen>();
             }
 
             public static ForgeButton GetInstance(Transform parent)

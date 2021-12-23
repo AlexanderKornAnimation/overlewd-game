@@ -229,7 +229,7 @@ namespace Overlewd
 
         protected virtual void ForgeButtonClick()
         {
-            UIManager.ShowScreen<ForgeScreen>();
+            // UIManager.ShowScreen<ForgeScreen>();
         }
     }
 }

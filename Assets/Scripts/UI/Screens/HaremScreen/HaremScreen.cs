@@ -101,12 +101,12 @@ namespace Overlewd
 
         private void UlviButtonClick()
         {
-            UIManager.ShowScreen<GirlScreen>();
+            // UIManager.ShowScreen<GirlScreen>();
         }
 
         private void AdrielButtonClick()
         {
-            UIManager.ShowScreen<GirlScreen>();
+            // UIManager.ShowScreen<GirlScreen>();
         }
 
         private void IngieButtonClick()

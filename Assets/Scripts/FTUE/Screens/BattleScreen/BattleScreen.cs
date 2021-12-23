@@ -13,6 +13,7 @@ namespace Overlewd
         {
             protected override void Start()
             {
+                skipButton.gameObject.SetActive(false);
                 battleVideo.loopPointReached += EndBattleVideo;
             }
 
@@ -33,6 +34,7 @@ namespace Overlewd
             protected override void EndBattleVideo(VideoPlayer vp)
             {
                 startBattleButton.gameObject.SetActive(true);
+                skipButton.gameObject.SetActive(false);
                 battleVideo.gameObject.SetActive(false);
 
                 if (GameGlobalStates.battleScreen_BattleId == 2)
@@ -45,9 +47,17 @@ namespace Overlewd
                 }
             }
 
+            protected override void SkipButtonClick()
+            {
+                battleVideo.Stop();
+                EndBattleVideo(battleVideo);
+            }
+
+
             protected override void StartBattleButtonClick()
             {
                 startBattleButton.gameObject.SetActive(false);
+                skipButton.gameObject.SetActive(true);
                 battleVideo.gameObject.SetActive(true);
 
                 battleVideo.Play();
