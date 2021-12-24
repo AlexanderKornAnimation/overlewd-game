@@ -259,7 +259,7 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Overlord,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
-                            message = "So why did you pick me?",
+                            message = "So why did you pick <b>me?</b>",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                         new AdminBRO.DialogReplica
@@ -300,7 +300,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message =
-                                "Oh, it's okay, Master. Magical slumber tends to have an amnesia-like effect. We�ll get your memories back!",
+                                "Oh, it's okay, Master. Magical slumber tends to have an amnesia-like effect. We'll get your memories back!",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                     }
@@ -321,13 +321,13 @@ namespace Overlewd
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Overlord,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
-                            message = "Are there legends about me? Sweet. Tell me more.",
+                            message = "Are there legends about me? <b>Sweet.</b> Tell me more.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "Oh, you were the Big Bad! When you approached with your armies, children cried, soldiers shat themselves. It was great! The Empress herself was involved. She became your main rival.",
+                            message = "Oh, you were <b>the Big Bad!</b> When you approached with your armies, children cried, soldiers shat themselves. It was great! The Empress herself was involved. She became your main rival.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
@@ -357,7 +357,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "Ah, you know I'm a sucker for punishment! Okay, so that's what I heard...",
+                            message = "Ah, you know I'm <b>a sucker</b> for punishment! Okay, so that's what I heard...",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
@@ -393,7 +393,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "Master, I think we�re ready to expand. This location would be perfect for a new camp!",
+                            message = "Master, I think we're ready to expand. This location would be <b>perfect</b> for a new camp!",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
@@ -438,7 +438,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             characterSkin = AdminBRO.DialogCharacterSkin.Wolf,
                             animation = AdminBRO.DialogCharacterAnimation.Angry,
-                            message = "Listen, you big titty bitch. You're not fooling anyone with those melons. I can see that you have a dick.",
+                            message = "Listen, you big titty bitch. I can see that you have <b>a dick!</b> You're not fooling anyone with those melons.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
@@ -450,13 +450,13 @@ namespace Overlewd
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Adriel,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
-                            message = "I'm an angel, little puppy. I can have a dick or I can get rid of it if I so desire. Or if anyone else desires.",
+                            message = "I'm an angel, little puppy. I can have a dick or I can get rid of it if I so desire. Or if <b>anyone else</b> desires.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Adriel,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
-                            message = "This is not why I'm here. Heed my warning, Overlord. I will not surrender to you easily. If you want to defeat me, you'd have to work very, very hard.",
+                            message = "This is not why I'm here. If you ever want to get all your memories back, you better build <b>a Portal</b> and quickly. Then talk to me. Oh~ and bring your mangy dog. She's cute.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                     }
@@ -508,7 +508,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message =
-                                "This is your map. Here you can beat up some cheeky fuckers or hang out with anyone you fancy and immerse yourself in their story. It’s all up to you!",
+                                "This is your map. Here you can <b>beat up</b> some cheeky fuckers or hang out with anyone you fancy and immerse yourself in their <b>story</b>. It’s all up to you!",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         }
                     }
@@ -591,7 +591,7 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "This is your base, the Castle. It's not much to look at now, but we'll make it the stronghold you deserve!",
+                            message = "This is your base, <b>the Castle</b>. It's not much to look at now, but we'll make it the stronghold you deserve!",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         }
                     }
@@ -638,7 +638,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
-                            message = "That was pretty hot, huh? The more memories of others you watch, the faster you'll regain your own memories! Pretty sure my memories are the best — I savor all the dirty details.",
+                            message = "That was pretty hot, huh? The more memories of others you watch, the faster you'll regain your own memories! Pretty sure my memories are the best — I savor <b>all</b> the dirty details.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         },
                     }
