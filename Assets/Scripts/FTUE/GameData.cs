@@ -542,7 +542,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Surprised,
                             message =
-                                "Huh… Looks like they are a bit tougher this time. Don't worry, and I have a solution! Let's get you a nifty boost. All you have to do is fuck me.",
+                                "Huh… Looks like they are a bit tougher this time. Don't worry, and I have a solution! Let's get you a nifty boost. All you have to do is <b>fuck me.</b>",
                             characterPosition = AdminBRO.DialogCharacterPosition.Left
                         }
                     }
