@@ -81,10 +81,10 @@ namespace Overlewd
         {
             [AdminBRO.DialogCharacterKey.Overlord] = new Dictionary<string, string>
             {
-                [AdminBRO.DialogCharacterAnimation.Angry] = null,
+                [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/Overlord/angry_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Happy] = null,
-                [AdminBRO.DialogCharacterAnimation.Idle] = null,
-                [AdminBRO.DialogCharacterAnimation.Love] = null,
+                [AdminBRO.DialogCharacterAnimation.Idle] = "FTUE/Emotions/Overlord/idle_SkeletonData",
+                [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/Overlord/love_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Surprised] = null,
             },
             [AdminBRO.DialogCharacterKey.Ulvi] = new Dictionary<string, string>
