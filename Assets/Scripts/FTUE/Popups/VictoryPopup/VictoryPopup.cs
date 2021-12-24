@@ -30,6 +30,7 @@ namespace Overlewd
                 {
                     GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
                     GameGlobalStates.castle_DialogNotificationId = 8;
+                    GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[1];
                     UIManager.ShowScreen<CastleScreen>();
                 }
                 else if (GameGlobalStates.battleScreen_BattleId == 5)
@@ -38,6 +39,7 @@ namespace Overlewd
                     GameGlobalStates.UlviCaveCanBuilded();
                     GameGlobalStates.ResetStateCastleButtons();
                     GameGlobalStates.castle_SideMenuLock = true;
+                    GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[2];
                     UIManager.ShowScreen<CastleScreen>();
                 }
                 else if (GameGlobalStates.battleScreen_BattleId == 6)

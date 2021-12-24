@@ -60,6 +60,7 @@ namespace Overlewd
                     GameGlobalStates.ResetStateCastleButtons();
                     GameGlobalStates.castle_SideMenuLock = true;
                     GameGlobalStates.castle_CaveLock = true;
+                    GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[4];
                     UIManager.ShowScreen<CastleScreen>();
                 }
             }

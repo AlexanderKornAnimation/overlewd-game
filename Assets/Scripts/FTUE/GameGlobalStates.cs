@@ -66,6 +66,22 @@ namespace Overlewd
             }
 
             //CastleMapScreen states
+            private static string _castle_HintMessage;
+            public static string castle_HintMessage
+            {
+                get
+                {
+                    var tmp = _castle_HintMessage;
+                    _castle_HintMessage = null;
+                    return tmp;
+                }
+
+                set
+                {
+                    _castle_HintMessage = value;
+                }
+            }
+
             public static bool castle_SideMenuLock = false;
             public static bool castle_CaveLock = false;
             public static bool castle_PortalLock = false;

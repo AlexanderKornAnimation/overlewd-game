@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,9 @@ namespace Overlewd
     {
         public class CastleScreen : Overlewd.CastleScreen
         {
+            private GameObject hint;
+            private TextMeshProUGUI hintText;
+
             protected override void Awake()
             {
                 var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreenFTUE"));
@@ -32,11 +36,18 @@ namespace Overlewd
                 castleBuilding = canvas.Find("Castle");
 
                 contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
+
+                hint = canvas.Find("Hint").gameObject;
+                hintText = hint.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             }
 
             protected override void Customize()
             {
                 contenViewerButton.gameObject.SetActive(false);
+
+                var hintMessage = GameGlobalStates.castle_HintMessage;
+                hintText.text = hintMessage;
+                hint.SetActive(hintMessage != null);
 
                 if (GameGlobalStates.ulviCaveBuilded)
                 {

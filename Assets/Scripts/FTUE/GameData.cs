@@ -29,6 +29,16 @@ namespace Overlewd
             }
             public static List<AdminBRO.Dialog> notifications = new List<AdminBRO.Dialog>();
 
+            public static string[] castleScreenHints =
+            { 
+                "empty",
+                "Stripping the castle surroundings",
+                "Build Ulvi's house",
+                "Enslave Lunaria Realm",
+                "Build Portal",
+                "Enslave Lunaria Realm"
+            };
+
             private static bool _initialization = false;
             public static void Initialization()
             {
