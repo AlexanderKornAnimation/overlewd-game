@@ -10,22 +10,23 @@ namespace Overlewd
     {
         public class CavePopup : Overlewd.CavePopup
         {
-            protected override void FreeBuildButtonClick()
+            private void Build()
             {
                 GameGlobalStates.UlviCaveBuild();
                 GameGlobalStates.ResetStateCastleButtons();
                 GameGlobalStates.castle_SideMenuLock = true;
                 GameGlobalStates.castle_BuildingButtonLock = true;
+                GameGlobalStates.castle_DialogNotificationId = 9;
                 UIManager.ShowScreen<CastleScreen>();
+            }
+            protected override void FreeBuildButtonClick()
+            {
+                Build();
             }
 
             protected override void PaidBuildingButtonClick()
             {
-                GameGlobalStates.UlviCaveBuild();
-                GameGlobalStates.ResetStateCastleButtons();
-                GameGlobalStates.castle_SideMenuLock = true;
-                GameGlobalStates.castle_BuildingButtonLock = true;
-                UIManager.ShowScreen<CastleScreen>();
+                Build();
             }
         }
     }

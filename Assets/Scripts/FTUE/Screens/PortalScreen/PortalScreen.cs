@@ -44,6 +44,9 @@ namespace Overlewd
             {
                 yield return new WaitForSeconds(10.5f);
                 nextButton.gameObject.SetActive(true);
+
+                GameGlobalStates.dialogNotification_DialogId = 10;
+                UIManager.ShowNotification<DialogNotification>();
             }
             
             private void NextButtonClick()

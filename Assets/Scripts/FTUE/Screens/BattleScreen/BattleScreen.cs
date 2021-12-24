@@ -36,6 +36,16 @@ namespace Overlewd
                     GameGlobalStates.dialogNotification_DialogId = 1;
                     UIManager.ShowNotification<DialogNotification>();
                 }
+                else if (GameGlobalStates.battleScreen_BattleId == 2)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = 4;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
+                else if (GameGlobalStates.battleScreen_BattleId == 4)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = 7;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
 
                 await Task.CompletedTask;
             }

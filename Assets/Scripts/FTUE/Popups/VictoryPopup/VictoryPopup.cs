@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ namespace Overlewd
                 if (GameGlobalStates.battleScreen_BattleId == 1)
                 {
                     GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    GameGlobalStates.map_DialogNotificationId = 3;
                     UIManager.ShowScreen<MapScreen>();
                 }
                 else if (GameGlobalStates.battleScreen_BattleId == 3)
@@ -27,6 +29,7 @@ namespace Overlewd
                 else if (GameGlobalStates.battleScreen_BattleId == 4)
                 {
                     GameGlobalStates.CompleteStageId(GameGlobalStates.battleScreen_StageId);
+                    GameGlobalStates.castle_DialogNotificationId = 8;
                     UIManager.ShowScreen<CastleScreen>();
                 }
                 else if (GameGlobalStates.battleScreen_BattleId == 5)
@@ -72,6 +75,17 @@ namespace Overlewd
             protected override void RepeatButtonClick()
             {
                 UIManager.ShowScreen<BattleScreen>();
+            }
+
+            protected override async Task AfterShowOperationsAsync()
+            {
+                if (GameGlobalStates.battleScreen_BattleId == 1)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = 2;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
+
+                await Task.CompletedTask;
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,17 @@ namespace Overlewd
     {
         public class DefeatPopup : Overlewd.DefeatPopup
         {
+            protected override async Task AfterShowOperationsAsync()
+            {
+                if (GameGlobalStates.battleScreen_BattleId == 2)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = 5;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
+
+                await Task.CompletedTask;
+            }
+
             protected override void Customize()
             {
                 magicGuildButton.interactable = false;

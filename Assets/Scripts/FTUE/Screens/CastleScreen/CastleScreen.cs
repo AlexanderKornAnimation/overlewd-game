@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,6 +58,18 @@ namespace Overlewd
                 //QuestsWidget.GetInstance(transform);
                 //BuffWidget.GetInstance(transform);
                 SidebarButtonWidget.GetInstance(transform);
+            }
+
+            protected override async Task AfterShowOperationsAsync()
+            {
+                var notification = GameGlobalStates.castle_DialogNotificationId;
+                if (notification.HasValue)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = notification.Value;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
+
+                await Task.CompletedTask;
             }
         }
     }

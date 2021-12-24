@@ -10,9 +10,16 @@ namespace Overlewd
     {
         public class NotificationMissclickColored : Overlewd.NotificationMissclickColored
         {
-            protected override void OnClick()
+            protected override async Task PrepareShowOperationsAsync()
             {
-                
+                StartCoroutine(EnableByTimer());
+                await Task.CompletedTask;
+            }
+
+            private IEnumerator EnableByTimer()
+            {
+                yield return new WaitForSeconds(2.0f);
+                missClickEnabled = true;
             }
         }
 
@@ -29,7 +36,8 @@ namespace Overlewd
 
             protected override void ShowMissclick()
             {
-                UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
+                var missclick = UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
+                missclick.missClickEnabled = false;
             }
 
             protected override async Task PrepareShowOperationsAsync()
@@ -64,7 +72,7 @@ namespace Overlewd
 
             private IEnumerator CloseByTimer()
             {
-                yield return new WaitForSeconds(5.0f);
+                yield return new WaitForSeconds(4.0f);
                 UIManager.HideNotification();
             }
         }

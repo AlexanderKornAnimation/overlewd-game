@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -128,6 +129,18 @@ namespace Overlewd
             protected override void ChapterButtonClick()
             {
                 UIManager.ShowScreen<Overlewd.StartingScreen>();
+            }
+
+            protected override async Task AfterShowOperationsAsync()
+            {
+                var notification = GameGlobalStates.map_DialogNotificationId;
+                if (notification.HasValue)
+                {
+                    GameGlobalStates.dialogNotification_DialogId = notification.Value;
+                    UIManager.ShowNotification<DialogNotification>();
+                }
+
+                await Task.CompletedTask;
             }
         }
     }

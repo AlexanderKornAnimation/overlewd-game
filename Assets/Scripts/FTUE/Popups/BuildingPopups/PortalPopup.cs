@@ -9,7 +9,7 @@ namespace Overlewd
     {
         public class PortalPopup : Overlewd.PortalPopup
         {
-            protected override void FreeBuildButtonClick()
+            private void Build()
             {
                 GameGlobalStates.PortalBuild();
                 GameGlobalStates.ResetStateCastleButtons();
@@ -19,14 +19,14 @@ namespace Overlewd
                 UIManager.ShowScreen<CastleScreen>();
             }
 
+            protected override void FreeBuildButtonClick()
+            {
+                Build();
+            }
+
             protected override void PaidBuildingButtonClick()
             {
-                GameGlobalStates.PortalBuild();
-                GameGlobalStates.ResetStateCastleButtons();
-                GameGlobalStates.castle_SideMenuLock = true;
-                GameGlobalStates.castle_CaveLock = true;
-                GameGlobalStates.castle_BuildingButtonLock = true;
-                UIManager.ShowScreen<CastleScreen>();
+                Build();
             }
         }
     }

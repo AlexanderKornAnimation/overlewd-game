@@ -64,11 +64,13 @@ namespace Overlewd
                 else if (GameGlobalStates.sexScreen_DialogId == 2)
                 {
                     GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
+                    GameGlobalStates.map_DialogNotificationId = 6;
                     UIManager.ShowScreen<MapScreen>();
                 }
                 else if (GameGlobalStates.sexScreen_DialogId == 3)
                 {
                     GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
+                    GameGlobalStates.map_DialogNotificationId = 11;
                     UIManager.ShowScreen<MapScreen>();
                 }
             }
