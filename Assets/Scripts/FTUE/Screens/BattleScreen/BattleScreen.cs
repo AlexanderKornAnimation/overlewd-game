@@ -50,9 +50,18 @@ namespace Overlewd
                     UIManager.ShowNotification<DialogNotification>();
                 }
 
-                StartBattleButtonClick();
+                StartCoroutine(WaitDialogNotificationHide());
 
                 await Task.CompletedTask;
+            }
+
+            private IEnumerator WaitDialogNotificationHide()
+            {
+                while (UIManager.HasNotification<DialogNotification>())
+                {
+                    yield return new WaitForSeconds(0.1f);
+                }
+                StartBattleButtonClick();
             }
 
             protected override void EndBattleVideo(VideoPlayer vp)
