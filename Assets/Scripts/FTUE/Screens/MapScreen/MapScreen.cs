@@ -128,7 +128,8 @@ namespace Overlewd
 
             protected override void ChapterButtonClick()
             {
-                UIManager.ShowScreen<Overlewd.StartingScreen>();
+                //UIManager.ShowScreen<Overlewd.StartingScreen>();
+                UIManager.ShowScreen<Overlewd.CastleScreen>();
             }
 
             protected override async Task AfterShowOperationsAsync()

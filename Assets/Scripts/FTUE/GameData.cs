@@ -300,7 +300,7 @@ namespace Overlewd
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Idle,
                             message =
-                                "Oh, it's okay, Master. Magical slumber tends to have an amnesia-like effect. We'll get your memories back!",
+                                "Oh, it's okay, Master. We'll get your memories back! Magical slumber tends to have an amnesia-like effect.",
                             characterPosition = AdminBRO.DialogCharacterPosition.Right
                         },
                     }

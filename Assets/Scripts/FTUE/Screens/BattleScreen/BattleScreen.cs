@@ -21,6 +21,9 @@ namespace Overlewd
             {
                 backButton.gameObject.SetActive(false);
 
+                startBattleButton.gameObject.SetActive(false);
+                battleVideo.gameObject.SetActive(true);
+
                 await Task.CompletedTask;
             }
 
@@ -47,14 +50,16 @@ namespace Overlewd
                     UIManager.ShowNotification<DialogNotification>();
                 }
 
+                StartBattleButtonClick();
+
                 await Task.CompletedTask;
             }
 
             protected override void EndBattleVideo(VideoPlayer vp)
             {
-                startBattleButton.gameObject.SetActive(true);
+                //startBattleButton.gameObject.SetActive(true);
                 skipButton.gameObject.SetActive(false);
-                battleVideo.gameObject.SetActive(false);
+                //battleVideo.gameObject.SetActive(false);
 
                 if (GameGlobalStates.battleScreen_BattleId == 2)
                 {
@@ -75,13 +80,13 @@ namespace Overlewd
 
             protected override void StartBattleButtonClick()
             {
-                startBattleButton.gameObject.SetActive(false);
+                //startBattleButton.gameObject.SetActive(false);
                 if (GameGlobalStates.battleScreen_BattleId >= 3)
                 {
                     skipButton.gameObject.SetActive(true);
                 }
 
-                battleVideo.gameObject.SetActive(true);
+                //battleVideo.gameObject.SetActive(true);
 
                 battleVideo.Play();
             }
