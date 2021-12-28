@@ -14,24 +14,13 @@ namespace Overlewd
             private List<SpineWidget> mainAnimations = new List<SpineWidget>();
             private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
 
-            protected override async Task PrepareHideOperationsAsync()
+            private void SetMainAnim()
             {
-                await Task.CompletedTask;
-            }
-
-            protected override async Task EnterScreen()
-            {
-                backImage.gameObject.SetActive(false);
-
-                dialogData = GameGlobalStates.sexScreen_DialogData;
-
-                if (dialogData.id == 1 || dialogData.id == 3)
+                foreach (var anim in mainAnimations)
                 {
-                    blackScreenTop.gameObject.SetActive(true);
-                    blackScreenBot.gameObject.SetActive(true);
+                    Destroy(anim?.gameObject);
                 }
-
-                await Task.CompletedTask;
+                mainAnimations.Clear();
 
                 var mainSexKey = GameGlobalStates.sexScreen_DialogId switch
                 {
@@ -51,6 +40,57 @@ namespace Overlewd
                         mainAnimations.Add(anim);
                     }
                 }
+            }
+
+            private void SetFinalMainAnim()
+            {
+                foreach (var anim in mainAnimations)
+                {
+                    Destroy(anim?.gameObject);
+                }
+                mainAnimations.Clear();
+
+                var mainFinalSexKey = GameGlobalStates.sexScreen_DialogId switch
+                {
+                    1 => "FinalSex1",
+                    2 => "FinalSex2",
+                    3 => "FinalSex3",
+                    _ => "FinalSex1"
+                };
+
+                foreach (var animData in GameLocalResources.mainSexAnimPath[mainFinalSexKey])
+                {
+                    if (animData.Value != null)
+                    {
+                        var anim = SpineWidget.GetInstance(mainAnimPos);
+                        anim.Initialize(animData.Value, false);
+                        anim.PlayAnimation(animData.Key, true);
+                        mainAnimations.Add(anim);
+                    }
+                }
+            }
+
+            protected override async Task PrepareHideOperationsAsync()
+            {
+                await Task.CompletedTask;
+            }
+
+            protected override async Task EnterScreen()
+            {
+                backImage.gameObject.SetActive(false);
+
+                dialogData = GameGlobalStates.sexScreen_DialogData;
+
+                if (GameGlobalStates.sexScreen_DialogId == 1/* || 
+                    GameGlobalStates.sexScreen_DialogId == 3*/)
+                {
+                    blackScreenTop.gameObject.SetActive(true);
+                    blackScreenBot.gameObject.SetActive(true);
+                }
+
+                SetMainAnim();
+
+                await Task.CompletedTask;
             }
 
             protected override void LeaveScreen()
@@ -125,12 +165,12 @@ namespace Overlewd
                 var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
                 var replica = dialogData.replicas[currentReplicaId];
                 
-                if (dialogData.id == 1 && currentReplicaId == 2)
+                if (GameGlobalStates.sexScreen_DialogId == 1 && currentReplicaId == 2)
                 {
-                   StartCoroutine(FadeOut());
+                    StartCoroutine(FadeOut());
                 }
 
-                if (dialogData.id == 3)
+                /*if (GameGlobalStates.sexScreen_DialogId == 3)
                 {
                     blackScreenTop.fillAmount = 0;
                     blackScreenBot.fillAmount = 0;
@@ -139,6 +179,11 @@ namespace Overlewd
                     {
                         StartCoroutine(FadeIn());
                     }
+                }*/
+
+                if (currentReplicaId == dialogData.replicas.Count - 1)//last replica
+                {
+                    SetFinalMainAnim();
                 }
 
                 ShowCutIn(replica, prevReplica);

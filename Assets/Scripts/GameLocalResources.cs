@@ -15,17 +15,29 @@ namespace Overlewd
                 ["back"] = "FTUE/MainSexAnims/MainSex1/back_SkeletonData",
                 ["idle"] = "FTUE/MainSexAnims/MainSex1/idle01_SkeletonData"
             },
+            ["FinalSex1"] = new Dictionary<string, string>
+            {
+                ["idle"] = "FTUE/MainSexAnims/FinalSex1/idle_SkeletonData"
+            },
 
             ["MainSex2"] = new Dictionary<string, string>
             {
                 ["back"] = "FTUE/MainSexAnims/MainSex2/back_SkeletonData",
                 ["idle"] = "FTUE/MainSexAnims/MainSex2/idle01_SkeletonData"
             },
+            ["FinalSex2"] = new Dictionary<string, string>
+            {
+                ["idle"] = "FTUE/MainSexAnims/FinalSex2/idle_SkeletonData"
+            },
 
             ["MainSex3"] = new Dictionary<string, string>
             {
                 ["back"] = "FTUE/MainSexAnims/MainSex3/back_SkeletonData",
                 ["idle"] = "FTUE/MainSexAnims/MainSex3/idle01_SkeletonData"
+            },
+            ["FinalSex3"] = new Dictionary<string, string>
+            {
+                ["idle"] = "FTUE/MainSexAnims/FinalSex3/idle_SkeletonData"
             },
         };
 
