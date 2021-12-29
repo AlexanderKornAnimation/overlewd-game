@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class PulseSelector : Selector
+    public class SizePulseSelector : Selector
     {
         private Vector3 startScale;
         private RectTransform rectTransform;

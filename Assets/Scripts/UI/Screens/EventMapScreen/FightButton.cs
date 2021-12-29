@@ -44,11 +44,11 @@ namespace Overlewd
                 
                 if (eventStageId == 1)
                 {
-                    button.gameObject.AddComponent<BlingSelector>();
+                    button.gameObject.AddComponent<BlendPulseSelector>();
                     
                     if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageStatus.Complete)
                     {
-                        Destroy(button.gameObject.GetComponent<BlingSelector>());
+                        Destroy(button.gameObject.GetComponent<Selector>());
                     }
                 }
             }

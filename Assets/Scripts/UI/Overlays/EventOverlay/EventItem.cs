@@ -33,7 +33,7 @@ namespace Overlewd
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
 
-                mapButton.gameObject.AddComponent<BlingSelector>();
+                mapButton.gameObject.AddComponent<BlendPulseSelector>();
                 
                 CustomizeItem();
             }
@@ -62,7 +62,7 @@ namespace Overlewd
 
             private void ToMapClick()
             {
-                Destroy(mapButton.gameObject.GetComponent<BlingSelector>());
+                Destroy(mapButton.gameObject.GetComponent<Selector>());
                 GameGlobalStates.eventMapScreen_EventId = eventId;
                 UIManager.ShowScreen<EventMapScreen>();
             }

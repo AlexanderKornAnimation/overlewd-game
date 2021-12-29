@@ -78,7 +78,7 @@ namespace Overlewd
             ShowCurrentReplica();
             AutoplayButtonCustomize();
 
-            nextButton.gameObject.AddComponent<Overlewd.PulseSelector>();
+            nextButton.gameObject.AddComponent<SizePulseSelector>();
         }
 
         protected override async Task PrepareHideOperationsAsync()

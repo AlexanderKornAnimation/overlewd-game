@@ -73,10 +73,10 @@ namespace Overlewd
             BuffWidget.GetInstance(transform);
             SidebarButtonWidget.GetInstance(transform);
 
-            eventWidgetButton.gameObject.AddComponent<BlingSelector>();
+            eventWidgetButton.gameObject.AddComponent<BlendPulseSelector>();
             eventWidgetButton.onClick.AddListener(() =>
             {
-                Destroy(eventWidgetButton.gameObject.GetComponent<BlingSelector>());
+                Destroy(eventWidgetButton.gameObject.GetComponent<Selector>());
             });
         }
     }
