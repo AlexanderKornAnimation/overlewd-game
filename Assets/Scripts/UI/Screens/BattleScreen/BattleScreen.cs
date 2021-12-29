@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -35,23 +36,28 @@ namespace Overlewd
             
             battleVideo = canvas.Find("TestVideo").GetComponent<VideoPlayer>();
             renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
+        }
 
-            battleVideo.gameObject.SetActive(false);
+        protected override async Task PrepareShowOperationsAsync()
+        {
+            backButton.gameObject.SetActive(false);
+            startBattleButton.gameObject.SetActive(false);
+
+            await GameData.EventStageStartAsync(GameGlobalStates.battle_EventStageData);
+            battleVideo.loopPointReached += EndBattleVideo;
+
             skipButton.gameObject.SetActive(false);
         }
 
-        protected virtual async void Start()
+        protected override async Task AfterShowOperationsAsync()
         {
-            await GameData.EventStageStartAsync(GameGlobalStates.battle_EventStageData);
-            battleVideo.loopPointReached += EndBattleVideo;
+            StartBattleButtonClick();
+            await Task.CompletedTask;
         }
 
         protected virtual async void EndBattleVideo(VideoPlayer vp)
         {
-            backButton.gameObject.SetActive(true);
             skipButton.gameObject.SetActive(false);
-            startBattleButton.gameObject.SetActive(true);
-            battleVideo.gameObject.SetActive(false);
 
             await GameData.EventStageEndAsync(GameGlobalStates.battle_EventStageData);
 
@@ -60,21 +66,17 @@ namespace Overlewd
 
         protected virtual void StartBattleButtonClick()
         {
-            backButton.gameObject.SetActive(false);
             skipButton.gameObject.SetActive(true);
-            startBattleButton.gameObject.SetActive(false);
-            battleVideo.gameObject.SetActive(true);
-
             battleVideo.Play();
         }
 
-        protected virtual void SkipButtonClick()
+        protected void SkipButtonClick()
         {
             battleVideo.Stop();
             EndBattleVideo(battleVideo);
         }
 
-        protected virtual void BackButtonClick()
+        protected void BackButtonClick()
         {
             UIManager.ShowScreen<EventMapScreen>();
         }
