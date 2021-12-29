@@ -14,8 +14,6 @@ namespace Overlewd
             public int eventId;
             public int eventQuestId;
 
-            private AdditiveHighlight additiveHighlight;
-
             private Button mapButton;
 
             private TextMeshProUGUI eventName;
@@ -35,8 +33,8 @@ namespace Overlewd
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
 
-                additiveHighlight = AdditiveHighlight.GetInstance(canvas.Find("MapButton"));
-
+                mapButton.gameObject.AddComponent<Bling>();
+                
                 CustomizeItem();
             }
 
@@ -64,7 +62,7 @@ namespace Overlewd
 
             private void ToMapClick()
             {
-                additiveHighlight.DestroySelf();
+                Destroy(mapButton.gameObject.GetComponent<Bling>());
                 GameGlobalStates.eventMapScreen_EventId = eventId;
                 UIManager.ShowScreen<EventMapScreen>();
             }

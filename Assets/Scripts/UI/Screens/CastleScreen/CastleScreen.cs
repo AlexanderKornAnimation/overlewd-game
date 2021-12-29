@@ -24,8 +24,6 @@ namespace Overlewd
 
         protected Button contenViewerButton;
 
-        protected AdditiveHighlight additiveHighlight;
-        
         protected virtual void Awake()
         {
             var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CastleScreen"));
@@ -48,17 +46,14 @@ namespace Overlewd
             castleBuilding = canvas.Find("Castle");
 
             contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
-            contenViewerButton.onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<DebugContentViewer>();
-            });
+            contenViewerButton.onClick.AddListener(() => { UIManager.ShowScreen<DebugContentViewer>(); });
         }
 
         private void Start()
         {
             Customize();
         }
-        
+
         protected virtual void Customize()
         {
             NSCastleScreen.GirlBuildingButton.GetInstance(cave);
@@ -73,14 +68,16 @@ namespace Overlewd
             NSCastleScreen.CapitolButton.GetInstance(capitol);
             NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
 
-            var eventWidget = EventsWidget.GetInstance(transform);
+            var eventWidgetButton = EventsWidget.GetInstance(transform).transform.Find("Canvas").Find("EventsButton").GetComponent<Button>();
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
             SidebarButtonWidget.GetInstance(transform);
-            additiveHighlight = AdditiveHighlight.GetInstance(eventWidget.transform.Find("Canvas").Find("EventsButton"));
-            
-            eventWidget.transform.Find("Canvas").Find("EventsButton").GetComponent<Button>().onClick
-                .AddListener(additiveHighlight.DestroySelf);
+
+            eventWidgetButton.gameObject.AddComponent<Bling>();
+            eventWidgetButton.onClick.AddListener(() =>
+            {
+                Destroy(eventWidgetButton.gameObject.GetComponent<Bling>());
+            });
         }
     }
 }

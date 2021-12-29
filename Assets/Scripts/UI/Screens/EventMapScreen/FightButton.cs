@@ -36,7 +36,6 @@ namespace Overlewd
 
             private void Customize()
             {
-                AdditiveHighlight additiveHighlight;
 
                 var eventStageData = GameData.GetEventStageById(eventStageId);
 
@@ -45,12 +44,11 @@ namespace Overlewd
                 
                 if (eventStageId == 1)
                 {
-                    additiveHighlight = AdditiveHighlight.GetInstance(transform.Find("Canvas").Find("Button"));
-
-                    if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageStatus.Complete &&
-                        additiveHighlight != null)
+                    button.gameObject.AddComponent<Bling>();
+                    
+                    if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageStatus.Complete)
                     {
-                        additiveHighlight.DestroySelf();
+                        Destroy(button.gameObject.GetComponent<Bling>());
                     }
                 }
             }
