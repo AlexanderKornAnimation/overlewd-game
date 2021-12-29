@@ -469,8 +469,8 @@ namespace Overlewd
             public string description;
             public int goalCount;
             public List<EventQuestReward> rewards;
-            public string createdAt;
-            public string updatedAt;
+            public string status;
+            public int progressCount;
         }
 
         // /i18n
