@@ -91,6 +91,8 @@ namespace Overlewd
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+
+            nextButton.gameObject.AddComponent<Overlewd.PulseSelector>();
         }
 
         protected override async Task PrepareHideOperationsAsync()
@@ -289,6 +291,12 @@ namespace Overlewd
 
         private void NextButtonClick()
         {
+            var nextButtonSelector = nextButton.gameObject.GetComponent<Selector>();
+            if (nextButtonSelector != null)
+            {
+                Destroy(nextButtonSelector);
+            }
+
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {
