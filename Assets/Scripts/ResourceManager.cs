@@ -17,6 +17,14 @@ namespace Overlewd
         private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
         private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
 
+        public static T InstantiateAsset<T>(string assetPath) where T : UnityEngine.Object
+        {
+            var tempAsset = Resources.Load<T>(assetPath);
+            var instAsset = UnityEngine.Object.Instantiate(tempAsset);
+            Resources.UnloadAsset(tempAsset);
+            return instAsset;
+        }
+
         private static async Task WaitRequestDoneAsync(UnityWebRequest request)
         {
             while (!request.isDone)

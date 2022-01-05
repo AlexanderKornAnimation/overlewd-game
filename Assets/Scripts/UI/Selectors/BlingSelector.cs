@@ -8,33 +8,30 @@ namespace Overlewd
 {
     public class BlingSelector : Selector
     {
+        private Material mtl;
+        private Image[] images;
+
+        void Awake()
+        {
+            images = GetComponentsInChildren<Image>();
+            mtl = ResourceManager.InstantiateAsset<Material>("ShadersAndMaterials/BlingMaterial");
+        }
+
         void Start()
         {
-            AddMaterial();
+            foreach (var image in images)
+            {
+                image.material = mtl;
+            }
         }
 
         void OnDestroy()
         {
-            TryRemoveMaterial();
-        }
-
-        private void AddMaterial()
-        {
-            foreach (var childImage in GetComponentsInChildren<Image>())
+            foreach (var image in images)
             {
-                childImage.material = Resources.Load<Material>("ShadersAndMaterials/BlingMaterial");
+                image.material = null;
             }
-        }
-
-        private void TryRemoveMaterial()
-        {
-            foreach (var childImage in GetComponentsInChildren<Image>())
-            {
-                if (childImage.material != null)
-                {
-                    childImage.material = null;
-                }
-            }
+            Destroy(mtl);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Overlewd
         void Awake()
         {
             images = GetComponentsInChildren<Image>();
-            mtl = Resources.Load<Material>("ShadersAndMaterials/BlendPulseMtl");
+            mtl = ResourceManager.InstantiateAsset<Material>("ShadersAndMaterials/BlendPulseMtl");
         }
 
         void Start()
@@ -38,6 +38,7 @@ namespace Overlewd
             {
                 image.material = null;
             }
+            Destroy(mtl);
         }
     }
 }

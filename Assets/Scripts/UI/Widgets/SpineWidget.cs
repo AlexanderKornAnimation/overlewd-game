@@ -16,9 +16,14 @@ namespace Overlewd
         private SkeletonDataAsset skeletonDataAsset;
         private SkeletonGraphic skeletonGraphic;
 
+        private void OnDestroy()
+        {
+            Destroy(skeletonDataAsset);
+        }
+
         public void Initialize(string skeletonDataPath, bool multipleRenderCanvas)
         {
-            skeletonDataAsset = Resources.Load<SkeletonDataAsset>(skeletonDataPath);
+            skeletonDataAsset = ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath);
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
