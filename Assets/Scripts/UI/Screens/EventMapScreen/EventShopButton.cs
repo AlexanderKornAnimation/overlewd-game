@@ -16,7 +16,7 @@ namespace Overlewd
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -27,9 +27,9 @@ namespace Overlewd
                 description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
             }
 
-            void Update()
+            void Start()
             {
-
+                Customize();
             }
 
             private void Customize()
@@ -47,9 +47,8 @@ namespace Overlewd
 
             public static EventShopButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/EventShopButton"), parent);
-                newItem.name = nameof(EventShopButton);
-                return newItem.AddComponent<EventShopButton>();
+                return ResourceManager.InstantiateWidgetPrefab<EventShopButton>
+                    ("Prefabs/UI/Screens/EventMapScreen/EventShopButton", parent);
             }
         }
     }

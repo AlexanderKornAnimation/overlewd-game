@@ -7,22 +7,16 @@ namespace Overlewd
 {
     public class UserSettingsScreen : BaseScreen
     {
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/UserSettingsScreen/UserSettings"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/UserSettingsScreen/UserSettings", transform);
 
-            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
+            var canvas = screenInst.transform.Find("Canvas");
+
+            canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<CastleScreen>();
             });
-        }
-
-        void Update()
-        {
-
         }
     }
 

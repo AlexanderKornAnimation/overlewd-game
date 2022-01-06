@@ -27,9 +27,8 @@ namespace Overlewd
 
             public static QuestDescription GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestDescription"), parent);
-                newItem.name = nameof(QuestDescription);
-                return newItem.AddComponent<QuestDescription>();
+                return ResourceManager.InstantiateWidgetPrefab<QuestDescription>
+                    ("Prefabs/UI/Overlays/QuestOverlay/QuestDescription", parent);
             }
         }
     }

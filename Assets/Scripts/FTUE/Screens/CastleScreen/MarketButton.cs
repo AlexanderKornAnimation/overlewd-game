@@ -23,10 +23,8 @@ namespace Overlewd
 
                 public new static MarketButton GetInstance(Transform parent)
                 {
-                    var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MarketButton"), parent);
-                    newItem.name = nameof(MarketButton);
-
-                    return newItem.AddComponent<MarketButton>();
+                    return ResourceManager.InstantiateWidgetPrefab<MarketButton>
+                        ("Prefabs/UI/Screens/CastleScreen/MarketButton", parent);
                 }
             }
         }

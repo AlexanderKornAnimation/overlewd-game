@@ -8,30 +8,37 @@ namespace Overlewd
 {
     public class MarketScreen : BaseScreen
     {
+        private Transform bottomGrid;
+        private Button mainMenuButton;
+
+        void Awake()
+        {
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MarketScreen/Market", transform);
+
+            var canvas = screenInst.transform.Find("Canvas");
+
+            mainMenuButton = canvas.Find("MainMenuButton").GetComponent<Button>();
+            mainMenuButton.onClick.AddListener(MainMenuButtonClick);
+
+            bottomGrid = canvas.Find("BottomGrid");
+        }
 
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MarketScreen/Market"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-
-            screenRectTransform.Find("Canvas").Find("MainMenuButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<CastleScreen>();
-            });
-
-            var bundlesGrid = screenRectTransform.Find("Canvas").Find("BottomGrid");
-            NSMarketScreen.BundleTypeA.GetInstance(bundlesGrid);
-            NSMarketScreen.BundleTypeB.GetInstance(bundlesGrid);
-            NSMarketScreen.BundleTypeC.GetInstance(bundlesGrid);
-            NSMarketScreen.BundleTypeD.GetInstance(bundlesGrid);
+            Customize();
         }
 
-        void Update()
+        private void Customize()
         {
+            NSMarketScreen.BundleTypeA.GetInstance(bottomGrid);
+            NSMarketScreen.BundleTypeB.GetInstance(bottomGrid);
+            NSMarketScreen.BundleTypeC.GetInstance(bottomGrid);
+            NSMarketScreen.BundleTypeD.GetInstance(bottomGrid);
+        }
 
+        private void MainMenuButtonClick()
+        {
+            UIManager.ShowScreen<CastleScreen>();
         }
     }
 }

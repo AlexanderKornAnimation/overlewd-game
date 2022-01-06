@@ -64,11 +64,6 @@ namespace Overlewd
                 darkButtonImage.sprite = darkButtonDefaultSprite;
                 contentScrollView?.Hide();
             }
-
-            protected static GameObject LoadPrefab(Transform parent)
-            {
-                return (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestButton"), parent);
-            }
         }
     }
 }

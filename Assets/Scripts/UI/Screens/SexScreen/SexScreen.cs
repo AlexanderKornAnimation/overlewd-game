@@ -35,12 +35,10 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/SexScreen/SexScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SexScreen/SexScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
+
             var textContainer = canvas.Find("TextContainer");
 
             backImage = canvas.Find("BackImage").GetComponent<Image>();

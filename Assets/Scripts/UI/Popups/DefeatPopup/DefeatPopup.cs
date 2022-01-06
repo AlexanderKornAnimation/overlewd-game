@@ -16,12 +16,9 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/DefeatPopup/DefeatPopup"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/DefeatPopup/DefeatPopup", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);

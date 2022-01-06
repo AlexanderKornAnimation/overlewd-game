@@ -48,9 +48,8 @@ namespace Overlewd
 
             public static ResourceIcon GetInstance(Transform parent)
             {
-                var newIcon = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/BannerNotification/ResourceIcon"), parent);
-                newIcon.name = nameof(ResourceIcon);
-                return newIcon.AddComponent<ResourceIcon>();
+                return ResourceManager.InstantiateWidgetPrefab<ResourceIcon>
+                    ("Prefabs/UI/Notifications/BannerNotification/ResourceIcon", parent);
             }
         }
     }

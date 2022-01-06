@@ -8,21 +8,10 @@ namespace Overlewd
     {
         public class ComingEvent : MonoBehaviour
         {
-            void Start()
-            {
-
-            }
-
-            void Update()
-            {
-
-            }
-
             public static ComingEvent GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/ComingEvent"), parent);
-                newItem.name = nameof(ComingEvent);
-                return newItem.AddComponent<ComingEvent>();
+                return ResourceManager.InstantiateWidgetPrefab<ComingEvent>
+                    ("Prefabs/UI/Overlays/EventOverlay/ComingEvent", parent);
             }
         }
     }

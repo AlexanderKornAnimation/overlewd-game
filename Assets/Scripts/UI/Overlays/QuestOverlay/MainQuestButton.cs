@@ -23,9 +23,8 @@ namespace Overlewd
 
             public static MainQuestButton GetInstance(Transform parent)
             {
-                var newItem = QuestButton.LoadPrefab(parent);
-                newItem.name = nameof(MainQuestButton);
-                return newItem.AddComponent<MainQuestButton>();
+                return ResourceManager.InstantiateWidgetPrefab<MainQuestButton>
+                    ("Prefabs/UI/Overlays/QuestOverlay/QuestButton", parent);
             }
         }
     }

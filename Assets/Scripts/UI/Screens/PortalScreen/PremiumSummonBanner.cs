@@ -55,9 +55,8 @@ namespace Overlewd
 
             public static PremiumSummonBanner GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/PremiumSummonBanner"), parent);
-                newItem.name = nameof(PremiumSummonBanner);
-                return newItem.AddComponent<PremiumSummonBanner>();
+                return ResourceManager.InstantiateWidgetPrefab<PremiumSummonBanner>
+                    ("Prefabs/UI/Screens/PortalScreen/PremiumSummonBanner", parent);
             }
         }
     }

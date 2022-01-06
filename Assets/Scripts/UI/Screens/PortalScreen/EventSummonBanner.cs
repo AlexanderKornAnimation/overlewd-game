@@ -57,9 +57,8 @@ namespace Overlewd
 
             public static EventSummonBanner GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/EventSummonBanner"), parent);
-                newItem.name = nameof(EventSummonBanner);
-                return newItem.AddComponent<EventSummonBanner>();
+                return ResourceManager.InstantiateWidgetPrefab<EventSummonBanner>
+                    ("Prefabs/UI/Screens/PortalScreen/EventSummonBanner", parent);
             }
         }
     }

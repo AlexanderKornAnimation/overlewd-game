@@ -35,10 +35,8 @@ namespace Overlewd
 
             public static MagicGuildButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/MagicGuildButton"), parent);
-                newItem.name = nameof(MagicGuildButton);
-
-                return newItem.AddComponent<MagicGuildButton>();
+                return ResourceManager.InstantiateWidgetPrefab<MagicGuildButton>
+                    ("Prefabs/UI/Screens/CastleScreen/MagicGuildButton", parent);
             }
         }
     }

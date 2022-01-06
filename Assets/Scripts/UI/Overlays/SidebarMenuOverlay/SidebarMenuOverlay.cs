@@ -88,12 +88,9 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/SidebarMenuOverlay/SidebarMenuOverlay"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/SidebarMenuOverlay/SidebarMenuOverlay", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             castleButton = canvas.Find("CastleButton").GetComponent<Button>();
             castleButton.onClick.AddListener(CastleButtonClick);

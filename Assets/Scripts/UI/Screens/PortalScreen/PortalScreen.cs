@@ -28,14 +28,11 @@ namespace Overlewd
 
         private List<NSPortalScreen.BaseBanner> banners = new List<NSPortalScreen.BaseBanner>();
 
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/PortalScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/PortalScreen/PortalScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
             var tabArea = canvas.Find("TabArea");
 
             memoriesButton = tabArea.Find("MemoriesButton").GetComponent<Button>();
@@ -56,7 +53,10 @@ namespace Overlewd
             equipScrollContent = equipScroll.transform.Find("Viewport").Find("Content");
 
             tierButtonsScrollPos = canvas.Find("TierButtonsScrollPos");
+        }
 
+        void Start()
+        {
             SidebarButtonWidget.GetInstance(transform);
 
             Customize();

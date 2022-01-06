@@ -48,9 +48,8 @@ namespace Overlewd
 
             public static DialogButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/DialogButton"), parent);
-                newItem.name = nameof(DialogButton);
-                return newItem.AddComponent<DialogButton>();
+                return ResourceManager.InstantiateWidgetPrefab<DialogButton>
+                    ("Prefabs/UI/Screens/EventMapScreen/DialogButton", parent);
             }
         }
     }

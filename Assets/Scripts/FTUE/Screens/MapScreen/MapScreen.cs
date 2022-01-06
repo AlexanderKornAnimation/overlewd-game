@@ -32,12 +32,9 @@ namespace Overlewd
 
             protected override void Awake()
             {
-                var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/MapScreenFTUE"));
-                var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-                screenRectTransform.SetParent(transform, false);
-                UIManager.SetStretch(screenRectTransform);
+                var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MapScreen/MapScreenFTUE", transform);
 
-                var canvas = screenRectTransform.Find("Canvas");
+                var canvas = screenInst.transform.Find("Canvas");
                 chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
                 backbutton = canvas.Find("BackButton").GetComponent<Button>();
 

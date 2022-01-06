@@ -16,11 +16,8 @@ namespace Overlewd
 
             public new static BuffWidget GetInstance(Transform parent)
             {
-                var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/BuffWidget/BuffWidget"), parent);
-                prefab.name = nameof(BuffWidget);
-                var rectTransform = prefab.GetComponent<RectTransform>();
-                UIManager.SetStretch(rectTransform);
-                return prefab.AddComponent<BuffWidget>();
+                return ResourceManager.InstantiateScreenPrefab<BuffWidget>
+                    ("Prefabs/UI/Widgets/BuffWidget/BuffWidget", parent);
             }
         }
     }

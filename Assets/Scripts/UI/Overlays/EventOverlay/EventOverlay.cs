@@ -22,24 +22,23 @@ namespace Overlewd
         private Image[] eventButtonImage = new Image[TabsCount];
         private Sprite[] eventButtonDefaultSprite = new Sprite[TabsCount];
 
+        private Button backButton;
+
         void Start()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventOverlay"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/EventOverlay/EventOverlay", transform);
 
-            screenRectTransform.Find("Canvas").Find("BackButton").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.HideOverlay();
-            });
+            var canvas = screenInst.transform.Find("Canvas");
+
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
 
             foreach (var tabId in tabIds)
             {
-                scrollView[tabId] = screenRectTransform.Find("Canvas").Find("ScrollView_" + tabNames[tabId]);
+                scrollView[tabId] = canvas.Find("ScrollView_" + tabNames[tabId]);
                 scrollViewContent[tabId] = scrollView[tabId].Find("Viewport").Find("Content");
-                eventButton[tabId] = screenRectTransform.Find("Canvas").Find("EventButton_" + tabNames[tabId]).GetComponent<Button>();
-                eventButtonImage[tabId] = screenRectTransform.Find("Canvas").Find("EventButton_" + tabNames[tabId]).GetComponent<Image>();
+                eventButton[tabId] = canvas.Find("EventButton_" + tabNames[tabId]).GetComponent<Button>();
+                eventButtonImage[tabId] = canvas.Find("EventButton_" + tabNames[tabId]).GetComponent<Image>();
                 eventButtonDefaultSprite[tabId] = eventButtonImage[tabId].sprite;
 
                 var tabId_delegate = tabId;
@@ -83,6 +82,11 @@ namespace Overlewd
             NSEventOverlay.EventDescription.GetInstance(scrollViewContent[TabWeekly]);
 
             NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[TabComingSoon]);
+        }
+
+        private void BackButtonClick()
+        {
+            UIManager.HideOverlay();
         }
     }
 }

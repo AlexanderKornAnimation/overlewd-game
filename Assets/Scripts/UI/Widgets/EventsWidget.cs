@@ -11,7 +11,7 @@ namespace Overlewd
     {
         protected Button eventsButton;
 
-        private void Awake()
+        void Awake()
         {
             var canvas = transform.Find("Canvas");
 
@@ -27,12 +27,8 @@ namespace Overlewd
         
         public static EventsWidget GetInstance(Transform parent)
         {
-            var prefab =
-                (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/EventsWidget/EventsWidget"), parent);
-            prefab.name = nameof(EventsWidget);
-            var rectTransform = prefab.GetComponent<RectTransform>();
-            UIManager.SetStretch(rectTransform);
-            return prefab.AddComponent<EventsWidget>();
+            return ResourceManager.InstantiateScreenPrefab<EventsWidget>
+                ("Prefabs/UI/Widgets/EventsWidget/EventsWidget", parent);
         }
     }
 }

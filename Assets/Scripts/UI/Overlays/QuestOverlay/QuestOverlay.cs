@@ -34,14 +34,11 @@ namespace Overlewd
         private NSQuestOverlay.QuestButton selectedQuest;
         private List<NSQuestOverlay.QuestButton> quests = new List<NSQuestOverlay.QuestButton>();
 
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestOverlay"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/QuestOverlay/QuestOverlay", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -67,7 +64,10 @@ namespace Overlewd
             headlineSideQuestMark = headline.Find("SideQuestMark").gameObject;
 
             questContentScrollViewPos = canvas.Find("QuestContentScrollViewPos");
+        }
 
+        void Start()
+        {
             Customize();
         }
 

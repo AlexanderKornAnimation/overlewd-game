@@ -29,7 +29,7 @@ namespace Overlewd
                 loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
             }
 
-            private void Start()
+            void Start()
             {
                 Customize();
             }
@@ -61,10 +61,8 @@ namespace Overlewd
 
             public static FightButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/FightButton"),
-                    parent);
-                newItem.name = nameof(FightButton);
-                return newItem.AddComponent<FightButton>();
+                return ResourceManager.InstantiateWidgetPrefab<FightButton>
+                    ("Prefabs/UI/Screens/EventMapScreen/FightButton", parent);
             }
         }
     }

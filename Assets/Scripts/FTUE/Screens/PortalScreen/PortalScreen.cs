@@ -19,13 +19,9 @@ namespace Overlewd
 
             void Awake()
             {
-                var screenPrefab =
-                    (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/PortalScreenFTUE"));
-                var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-                screenRectTransform.SetParent(transform, false);
-                UIManager.SetStretch(screenRectTransform);
+                var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/PortalScreen/PortalScreenFTUE", transform);
 
-                var canvas = screenRectTransform.Find("Canvas");
+                var canvas = screenInst.transform.Find("Canvas");
 
                 nextButton = canvas.Find("NextButton").GetComponent<Button>();
                 nextButton.onClick.AddListener(NextButtonClick);

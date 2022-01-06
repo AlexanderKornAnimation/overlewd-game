@@ -20,14 +20,11 @@ namespace Overlewd
         private List<NSBannerNotification.ResourceIcon> resourceIcons = 
             new List<NSBannerNotification.ResourceIcon>();
 
-        private void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/BannerNotification/BannerNotification"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Notifications/BannerNotification/BannerNotification", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             resourcesGrid = canvas.Find("ResourcesGrid").GetComponent<VerticalLayoutGroup>();
             vGrid = resourcesGrid.transform.Find("vGrid").GetComponent<VerticalLayoutGroup>();
@@ -38,7 +35,10 @@ namespace Overlewd
             buyButton.onClick.AddListener(BuyButtonClick);
 
             tradableData = GameGlobalStates.bannerNotifcation_TradableData;
+        }
 
+        void Start()
+        {
             Customize();
         }
 

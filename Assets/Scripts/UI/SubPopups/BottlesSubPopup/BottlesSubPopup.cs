@@ -20,14 +20,11 @@ namespace Overlewd
         private Button manaBottleButton;
         private Button healthBottleButton;
 
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/SubPopups/BottlesSubPopup/BottlesSubPopup"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/SubPopups/BottlesSubPopup/BottlesSubPopup", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
             var recourcePanel = canvas.Find("RecourcePanel");
 
             var stamina = recourcePanel.Find("Stamina");
@@ -91,11 +88,6 @@ namespace Overlewd
         void BackButtonClick()
         {
             UIManager.HideSubPopup();
-        }
-
-        void Update()
-        {
-
         }
     }
 }

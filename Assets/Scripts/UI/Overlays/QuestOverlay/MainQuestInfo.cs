@@ -21,16 +21,10 @@ namespace Overlewd
                 progress = canvas.Find("QuestHead").Find("Progress").GetComponent<TextMeshProUGUI>();
             }
 
-            protected static GameObject LoadPrefab(Transform parent)
-            {
-                return (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/MainQuestInfo"), parent);
-            }
-
             public static MainQuestInfo GetInstance(Transform parent)
             {
-                var newItem = LoadPrefab(parent);
-                newItem.name = nameof(MainQuestInfo);
-                return newItem.AddComponent<MainQuestInfo>();
+                return ResourceManager.InstantiateWidgetPrefab<MainQuestInfo>
+                    ("Prefabs/UI/Overlays/QuestOverlay/MainQuestInfo", parent);
             }
         }
     }

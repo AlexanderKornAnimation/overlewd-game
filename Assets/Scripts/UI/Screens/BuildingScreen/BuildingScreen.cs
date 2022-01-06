@@ -51,14 +51,11 @@ namespace Overlewd
 
         protected Button backButton;
 
-        private void Awake()
+        void Awake()
         {
-            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/BuildingScreen/BuildingScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BuildingScreen/BuildingScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
             var grid = canvas.Find("Grid");
 
             municipalityButton = grid.Find("MunicipalityButton").GetComponent<Button>();
@@ -116,7 +113,7 @@ namespace Overlewd
             yuiCaveButton.onClick.AddListener(YuiCaveButtonClick);
         }
 
-        private void Start()
+        void Start()
         {
             Customize();
         }

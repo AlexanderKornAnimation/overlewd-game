@@ -11,12 +11,9 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Notifications/NutakuNotification/BuyingNotification"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Notifications/NutakuNotification/BuyingNotification", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             buyButton = canvas.Find("BuyButton").GetComponent<Button>();
             buyButton.onClick.AddListener(BuyButtonClick);

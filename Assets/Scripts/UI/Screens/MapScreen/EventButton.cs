@@ -45,10 +45,8 @@ namespace Overlewd
 
             public static EventButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/EventButton"), parent);
-                newItem.name = nameof(EventButton);
-
-                return newItem.AddComponent<EventButton>();
+                return ResourceManager.InstantiateWidgetPrefab<EventButton>
+                    ("Prefabs/UI/Screens/MapScreen/EventButton", parent);
             }
         }
     }

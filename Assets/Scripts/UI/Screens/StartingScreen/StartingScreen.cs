@@ -10,12 +10,11 @@ namespace Overlewd
     {
         void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/StartingScreen/StartingScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/StartingScreen/StartingScreen", transform);
 
-            screenRectTransform.Find("Canvas").Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
+            var canvas = screenInst.transform.Find("Canvas");
+
+            canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
                 FTUE.GameData.Initialization();
                 FTUE.GameGlobalStates.Reset();
@@ -24,7 +23,7 @@ namespace Overlewd
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
+            canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<CastleScreen>();
             });

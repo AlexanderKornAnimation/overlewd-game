@@ -18,12 +18,9 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/BossFightScreen/BossFightScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BossFightScreen/BossFightScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             startBattleButton = canvas.Find("StartBattleButton").GetComponent<Button>();
             startBattleButton.onClick.AddListener(StartBattleButtonClick);

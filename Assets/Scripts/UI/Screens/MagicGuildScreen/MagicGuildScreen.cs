@@ -19,14 +19,11 @@ namespace Overlewd
        
         private Text mainTitle;
 
-        private void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             activeSpell = canvas.Find("ActiveSpell").GetComponent<Button>();
             ultimateSpell = canvas.Find("UltimateSpell").GetComponent<Button>();

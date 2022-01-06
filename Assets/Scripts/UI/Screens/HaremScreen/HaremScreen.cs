@@ -39,14 +39,11 @@ namespace Overlewd
         private Image battleGirlsGirl;
         private TextMeshProUGUI battleGirlsTitle;
 
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/HaremScreen/Harem"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/HaremScreen/Harem", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -85,7 +82,10 @@ namespace Overlewd
             battleGirlsButton.onClick.AddListener(BattleGirlsButtonClick);
             battleGirlsGirl = battleGirlsButton.transform.Find("Girl").GetComponent<Image>();
             battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+        }
 
+        void Start()
+        {
             Customize();
         }
 

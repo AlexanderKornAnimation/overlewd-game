@@ -46,12 +46,9 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/DialogScreen/DialogScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             charactersPos = canvas.Find("CharactersPos");
             leftCharacterPos = charactersPos.Find("LeftCharacterPos");

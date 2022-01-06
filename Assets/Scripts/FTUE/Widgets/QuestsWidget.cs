@@ -9,14 +9,10 @@ namespace Overlewd
     {
         public class QuestsWidget : Overlewd.BaseWidget
         {
-
             public static QuestsWidget GetInstance(Transform parent)
             {
-                var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidgetFTUE"), parent);
-                prefab.name = nameof(QuestsWidget);
-                var rectTransform = prefab.GetComponent<RectTransform>();
-                UIManager.SetStretch(rectTransform);
-                return prefab.AddComponent<QuestsWidget>();
+                return ResourceManager.InstantiateScreenPrefab<QuestsWidget>
+                    ("Prefabs/UI/Widgets/QuestsWidget/QuestWidgetFTUE", parent);
             }
         }
     }

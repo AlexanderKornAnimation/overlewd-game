@@ -14,7 +14,7 @@ namespace Overlewd
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -30,16 +30,10 @@ namespace Overlewd
                 UIManager.ShowScreen<MapScreen>();
             }
 
-            void Update()
-            {
-                
-            }
-
             public static MapButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/MapButton"), parent);
-                newItem.name = nameof(MapButton);
-                return newItem.AddComponent<MapButton>();
+                return ResourceManager.InstantiateWidgetPrefab<MapButton>
+                    ("Prefabs/UI/Screens/EventMapScreen/MapButton", parent);
             }
         }
     }

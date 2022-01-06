@@ -16,12 +16,9 @@ namespace Overlewd
 
         protected virtual void Awake()
         {
-            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/MapScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MapScreen/MapScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
             chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
             backbutton = canvas.Find("BackButton").GetComponent<Button>();
 
@@ -31,7 +28,7 @@ namespace Overlewd
             map = canvas.Find("Map");            
         }
 
-        private void Start()
+        void Start()
         {
             Customize();
         }

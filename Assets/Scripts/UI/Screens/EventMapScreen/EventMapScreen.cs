@@ -18,25 +18,25 @@ namespace Overlewd
         private List<NSEventMapScreen.DialogButton> dialogButtons = new List<NSEventMapScreen.DialogButton>();
         private List<NSEventMapScreen.SexButton> sexButtons = new List<NSEventMapScreen.SexButton>();
 
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/EventMap"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/EventMapScreen/EventMap", transform);
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
             stages = canvas.Find("Stages");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
             mapButton = NSEventMapScreen.MapButton.GetInstance(stages.Find("eventMap"));
+        }
 
+        void Start()
+        {
             var eventData = GameGlobalStates.eventMapScreen_EventData;
             foreach (var stageId in eventData.stages)
             {

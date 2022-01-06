@@ -65,9 +65,8 @@ namespace Overlewd
 
             public static SideQuestInfo GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/SideQuestInfo"), parent);
-                newItem.name = nameof(SideQuestInfo);
-                return newItem.AddComponent<SideQuestInfo>();
+                return ResourceManager.InstantiateWidgetPrefab<SideQuestInfo>
+                    ("Prefabs/UI/Overlays/QuestOverlay/SideQuestInfo", parent);
             }
         }
     }

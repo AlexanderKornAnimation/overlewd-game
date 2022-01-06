@@ -12,14 +12,15 @@ namespace Overlewd
         protected Button sideQuestButton2;
         protected Button sideQuestButton3;
     
-        private void Awake()
+        void Awake()
         {
             var canvas = transform.Find("Canvas");
+            var quests = canvas.Find("Quests");
 
-            mainQuestButton = canvas.Find("MainQuest").GetComponent<Button>();
-            sideQuestButton1 = canvas.Find("SideQuest1").GetComponent<Button>();
-            sideQuestButton2 = canvas.Find("SideQuest2").GetComponent<Button>();
-            sideQuestButton3 = canvas.Find("SideQuest3").GetComponent<Button>();
+            mainQuestButton = quests.Find("MainQuest").GetComponent<Button>();
+            sideQuestButton1 = quests.Find("SideQuest1").GetComponent<Button>();
+            sideQuestButton2 = quests.Find("SideQuest2").GetComponent<Button>();
+            sideQuestButton3 = quests.Find("SideQuest3").GetComponent<Button>();
             
             mainQuestButton.onClick.AddListener(OnQuestButtonClick);
             sideQuestButton1.onClick.AddListener(OnQuestButtonClick);
@@ -34,11 +35,8 @@ namespace Overlewd
         
         public static QuestsWidget GetInstance(Transform parent)
         {
-            var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/QuestsWidget/QuestWidget"), parent);
-            prefab.name = nameof(QuestsWidget);
-            var rectTransform = prefab.GetComponent<RectTransform>();
-            UIManager.SetStretch(rectTransform);
-            return prefab.AddComponent<QuestsWidget>();
+            return ResourceManager.InstantiateScreenPrefab<QuestsWidget>
+                ("Prefabs/UI/Widgets/QuestsWidget/QuestWidget", parent);
         }
     }
 }

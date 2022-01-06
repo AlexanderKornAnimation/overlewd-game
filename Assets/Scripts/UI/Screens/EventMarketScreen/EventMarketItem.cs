@@ -131,9 +131,8 @@ namespace Overlewd
 
             public static EventMarketItem GetInstance(Transform parent)
             {
-                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/EventMarketScreen/Item"), parent);
-                newItem.name = nameof(EventMarketItem);
-                return newItem.AddComponent<EventMarketItem>();
+                return ResourceManager.InstantiateWidgetPrefab<EventMarketItem>
+                    ("Prefabs/UI/Screens/EventMarketScreen/Item", parent);
             }
         }
     }

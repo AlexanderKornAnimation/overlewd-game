@@ -26,20 +26,34 @@ namespace Overlewd
             return instAsset;
         }
 
-        public static GameObject InstantiateScreenAsset(string assetPath, Transform parent)
+        public static GameObject InstantiateScreenPrefab(string prefabPath, Transform parent)
         {
-            var screenPrefab = Resources.Load<GameObject>(assetPath);
+            var screenPrefab = Resources.Load<GameObject>(prefabPath);
             var instScreen = UnityEngine.Object.Instantiate(screenPrefab, parent);
             var screenRectTransform = instScreen.GetComponent<RectTransform>();
             UIManager.SetStretch(screenRectTransform);
             return instScreen;
         }
 
-        public static GameObject InstantiateWidgetAsset(string assetPath, Transform parent)
+        public static T InstantiateScreenPrefab<T>(string prefabPath, Transform parent) where T : MonoBehaviour
         {
-            var widgetPrefab = Resources.Load<GameObject>(assetPath);
+            var instScreen = InstantiateScreenPrefab(prefabPath, parent);
+            instScreen.name = typeof(T).FullName;
+            return instScreen.AddComponent<T>();
+        }
+
+        public static GameObject InstantiateWidgetPrefab(string prefabPath, Transform parent)
+        {
+            var widgetPrefab = Resources.Load<GameObject>(prefabPath);
             var instWidget = UnityEngine.Object.Instantiate(widgetPrefab, parent);
             return instWidget;
+        }
+
+        public static T InstantiateWidgetPrefab<T>(string prefabPath, Transform parent) where T : MonoBehaviour
+        {
+            var instWidget = InstantiateWidgetPrefab(prefabPath, parent);
+            instWidget.name = typeof(T).FullName;
+            return instWidget.AddComponent<T>();
         }
 
         public static void UnloadUnusedAssets()

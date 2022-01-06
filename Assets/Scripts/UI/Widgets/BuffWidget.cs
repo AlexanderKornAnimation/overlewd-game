@@ -13,7 +13,7 @@ namespace Overlewd
         protected TextMeshProUGUI description;
         protected TextMeshProUGUI timer;
         
-        private void Awake()
+        void Awake()
         {
             var canvas = transform.Find("Canvas");
             
@@ -32,11 +32,8 @@ namespace Overlewd
         
         public static BuffWidget GetInstance(Transform parent)
         {
-            var prefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Widgets/BuffWidget/BuffWidget"), parent);
-            prefab.name = nameof(BuffWidget);
-            var rectTransform = prefab.GetComponent<RectTransform>();
-            UIManager.SetStretch(rectTransform);
-            return prefab.AddComponent<BuffWidget>();
+            return ResourceManager.InstantiateScreenPrefab<BuffWidget>
+                ("Prefabs/UI/Widgets/BuffWidget/BuffWidget", parent);
         }
     }
 }

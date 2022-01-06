@@ -55,9 +55,8 @@ namespace Overlewd
 
             public static TierButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/TierButton"), parent);
-                newItem.name = nameof(TierButton);
-                return newItem.AddComponent<TierButton>();
+                return ResourceManager.InstantiateWidgetPrefab<TierButton>
+                    ("Prefabs/UI/Screens/PortalScreen/TierButton", parent);
             }
         }
     }

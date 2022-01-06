@@ -7,18 +7,9 @@ namespace Overlewd
 {
     public class ChestPopup : BasePopup
     {
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Popups/ChestPopup/ChestPopup"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-        }
-
-        void Update()
-        {
-
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/ChestPopup/ChestPopup", transform);
         }
     }
 

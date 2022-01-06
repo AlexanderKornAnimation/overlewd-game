@@ -7,37 +7,31 @@ namespace Overlewd
 {
     public class GirlScreen : BaseScreen
     {
-        void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/GirlScreen/Girl"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/GirlScreen/Girl", transform);
 
-            screenRectTransform.Find("Canvas").Find("Harem").GetComponent<Button>().onClick.AddListener(() =>
+            var canvas = screenInst.transform.Find("Canvas");
+
+            canvas.Find("Harem").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<HaremScreen>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Memory").GetComponent<Button>().onClick.AddListener(() =>
+            canvas.Find("Memory").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<MemoryScreen>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Dialog").GetComponent<Button>().onClick.AddListener(() =>
+            canvas.Find("Dialog").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<DialogScreen>();
             });
 
-            screenRectTransform.Find("Canvas").Find("Portal").GetComponent<Button>().onClick.AddListener(() =>
+            canvas.Find("Portal").GetComponent<Button>().onClick.AddListener(() =>
             {
                 UIManager.ShowScreen<PortalScreen>();
             });
-        }
-
-        void Update()
-        {
-
         }
     }
 }

@@ -57,9 +57,8 @@ namespace Overlewd
 
             public static BattleGirlsBannerTypeA GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/BattleGirlsBannerTypeA"), parent);
-                newItem.name = nameof(BattleGirlsBannerTypeA);
-                return newItem.AddComponent<BattleGirlsBannerTypeA>();
+                return ResourceManager.InstantiateWidgetPrefab<BattleGirlsBannerTypeA>
+                    ("Prefabs/UI/Screens/PortalScreen/BattleGirlsBannerTypeA", parent);
             }
         }
     }

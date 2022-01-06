@@ -23,10 +23,8 @@ namespace Overlewd
 
                 public new static CapitolButton GetInstance(Transform parent)
                 {
-                    var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/CapitolButton"), parent);
-                    newItem.name = nameof(CapitolButton);
-
-                    return newItem.AddComponent<CapitolButton>();
+                    return ResourceManager.InstantiateWidgetPrefab<CapitolButton>
+                        ("Prefabs/UI/Screens/CastleScreen/CapitolButton", parent);
                 }
             }
         }

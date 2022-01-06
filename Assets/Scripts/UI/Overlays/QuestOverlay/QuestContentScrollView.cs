@@ -29,9 +29,8 @@ namespace Overlewd
 
             public static QuestContentScrollView GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/QuestOverlay/QuestContentScrollView"), parent);
-                newItem.name = nameof(QuestContentScrollView);
-                return newItem.AddComponent<QuestContentScrollView>();
+                return ResourceManager.InstantiateWidgetPrefab<QuestContentScrollView>
+                    ("Prefabs/UI/Overlays/QuestOverlay/QuestContentScrollView", parent);
             }
         }
     }

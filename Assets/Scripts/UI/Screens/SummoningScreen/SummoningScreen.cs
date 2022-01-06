@@ -11,14 +11,11 @@ namespace Overlewd
         private Button haremButton;
         private Button portalButton;
 
-        private void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/SummoningScreen/SummoningScreen"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
@@ -27,7 +24,10 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
             haremButton.onClick.AddListener(HaremButtonClick);
             portalButton.onClick.AddListener(PortalButtonClick);
-            
+        }
+
+        void Start()
+        {
             Customize();
         }
 

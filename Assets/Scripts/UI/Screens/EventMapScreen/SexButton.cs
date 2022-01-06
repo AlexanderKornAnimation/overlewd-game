@@ -48,9 +48,8 @@ namespace Overlewd
 
             public static SexButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/EventMapScreen/SexSceneButton"), parent);
-                newItem.name = nameof(SexButton);
-                return newItem.AddComponent<SexButton>();
+                return ResourceManager.InstantiateWidgetPrefab<SexButton>
+                    ("Prefabs/UI/Screens/EventMapScreen/SexSceneButton", parent);
             }
         }
     }

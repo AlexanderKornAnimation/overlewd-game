@@ -8,21 +8,10 @@ namespace Overlewd
     {
         public class EventDescription : MonoBehaviour
         {
-            void Start()
-            {
-
-            }
-
-            void Update()
-            {
-
-            }
-
             public static EventDescription GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Overlays/EventOverlay/EventDescription"), parent);
-                newItem.name = nameof(EventDescription);
-                return newItem.AddComponent<EventDescription>();
+                return ResourceManager.InstantiateWidgetPrefab<EventDescription>
+                    ("Prefabs/UI/Overlays/EventOverlay/EventDescription", parent);
             }
         }
     }

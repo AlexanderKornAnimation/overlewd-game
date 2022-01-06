@@ -29,9 +29,8 @@ namespace Overlewd
 
             public static TierButtonsScroll GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/PortalScreen/TierButtonsScroll"), parent);
-                newItem.name = nameof(TierButtonsScroll);
-                return newItem.AddComponent<TierButtonsScroll>();
+                return ResourceManager.InstantiateWidgetPrefab<TierButtonsScroll>
+                    ("Prefabs/UI/Screens/PortalScreen/TierButtonsScroll", parent);
             }
         }
     }

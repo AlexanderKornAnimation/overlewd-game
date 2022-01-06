@@ -22,9 +22,8 @@ namespace Overlewd
 
             public static MatriarchQuestButton GetInstance(Transform parent)
             {
-                var newItem = QuestButton.LoadPrefab(parent);
-                newItem.name = nameof(MatriarchQuestButton);
-                return newItem.AddComponent<MatriarchQuestButton>();
+                return ResourceManager.InstantiateWidgetPrefab<MatriarchQuestButton>
+                    ("Prefabs/UI/Overlays/QuestOverlay/QuestButton", parent);
             }
         }
     }

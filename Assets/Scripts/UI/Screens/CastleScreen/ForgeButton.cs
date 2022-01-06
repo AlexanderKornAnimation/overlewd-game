@@ -29,10 +29,8 @@ namespace Overlewd
 
             public static ForgeButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/ForgeButton"), parent);
-                newItem.name = nameof(ForgeButton);
-
-                return newItem.AddComponent<ForgeButton>();
+                return ResourceManager.InstantiateWidgetPrefab<ForgeButton>
+                    ("Prefabs/UI/Screens/CastleScreen/ForgeButton", parent);
             }
         }
     }

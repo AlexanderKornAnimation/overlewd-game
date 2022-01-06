@@ -31,9 +31,8 @@ namespace Overlewd
 
             public static Shard GetInstance(Transform parent)
             {
-                var shard = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/SummoningScreen/Shard"), parent);
-                shard.name = nameof(Shard);
-                return shard.AddComponent<Shard>();
+                return ResourceManager.InstantiateWidgetPrefab<Shard>
+                    ("Prefabs/UI/Screens/SummoningScreen/Shard", parent);
             }
         }
     }

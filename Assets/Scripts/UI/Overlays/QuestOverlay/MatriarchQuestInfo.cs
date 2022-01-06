@@ -16,9 +16,8 @@ namespace Overlewd
 
             public static new MatriarchQuestInfo GetInstance(Transform parent)
             {
-                var newItem = MainQuestInfo.LoadPrefab(parent);
-                newItem.name = nameof(MatriarchQuestInfo);
-                return newItem.AddComponent<MatriarchQuestInfo>();
+                return ResourceManager.InstantiateWidgetPrefab<MatriarchQuestInfo>
+                    ("Prefabs/UI/Overlays/QuestOverlay/MainQuestInfo", parent);
             }
         }
     }

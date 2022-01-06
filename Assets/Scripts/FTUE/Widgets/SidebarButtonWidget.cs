@@ -45,11 +45,8 @@ namespace Overlewd
 
             public new static SidebarButtonWidget GetInstance(Transform parent)
             {
-                var prefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget"), parent);
-                prefab.name = nameof(SidebarButtonWidget);
-                var rectTransform = prefab.GetComponent<RectTransform>();
-                UIManager.SetStretch(rectTransform);
-                return prefab.AddComponent<SidebarButtonWidget>();
+                return ResourceManager.InstantiateScreenPrefab<SidebarButtonWidget>
+                    ("Prefabs/UI/Widgets/SidebarButtonWidget/SidebarButtonWidget", parent);
             }
         }
     }

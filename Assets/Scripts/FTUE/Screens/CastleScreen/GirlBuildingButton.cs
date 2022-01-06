@@ -37,10 +37,8 @@ namespace Overlewd
 
                 public new static GirlBuildingButton GetInstance(Transform parent)
                 {
-                    var newItem = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/CastleScreen/GirlBuildingButton"), parent);
-                    newItem.name = nameof(GirlBuildingButton);
-
-                    return newItem.AddComponent<GirlBuildingButton>();
+                    return ResourceManager.InstantiateWidgetPrefab<GirlBuildingButton>
+                        ("Prefabs/UI/Screens/CastleScreen/GirlBuildingButton", parent);
                 }
             }
         }

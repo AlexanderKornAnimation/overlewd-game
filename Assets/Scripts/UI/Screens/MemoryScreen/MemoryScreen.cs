@@ -17,14 +17,11 @@ namespace Overlewd
         private TextMeshProUGUI rareShardsCount;
         private TextMeshProUGUI legendaryShardsCount;
         
-        private void Start()
+        void Awake()
         {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/MemoryScreen/Memory"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MemoryScreen/Memory", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent <Button>();
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
@@ -39,7 +36,10 @@ namespace Overlewd
             portalButton.onClick.AddListener(PortalButtonClick);
             forgeButton.onClick.AddListener(ForgeButtonClick);
             buyButton.onClick.AddListener(BuyButtonClick);
-            
+        }
+
+        void Start()
+        {
             Customize();
         }
 

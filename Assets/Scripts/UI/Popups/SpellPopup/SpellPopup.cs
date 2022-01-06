@@ -26,14 +26,11 @@ namespace Overlewd
         protected Button freeBuildButton;
         protected Button backButton;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
-            var screenPrefab = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Popups/SpellPopup/SpellPopup"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/SpellPopup/SpellPopup", transform);
 
-            var canvas = screenRectTransform.Find("Canvas");
+            var canvas = screenInst.transform.Find("Canvas");
 
             spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
 

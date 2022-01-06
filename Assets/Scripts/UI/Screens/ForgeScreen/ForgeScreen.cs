@@ -7,22 +7,21 @@ namespace Overlewd
 {
     public class ForgeScreen : BaseScreen
     {
-        void Start()
-        {
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/Screens/ForgeScreen/Forge"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
+        private Button castleBtn;
 
-            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<CastleScreen>();
-            });
+        void Awake()
+        {
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ForgeScreen/Forge", transform);
+
+            var canvas = screenInst.transform.Find("Canvas");
+
+            castleBtn = canvas.Find("Castle").GetComponent<Button>();
+            castleBtn.onClick.AddListener(CastleButtonClick);
         }
 
-        void Update()
+        private void CastleButtonClick()
         {
-
+            UIManager.ShowScreen<CastleScreen>();
         }
     }
 }

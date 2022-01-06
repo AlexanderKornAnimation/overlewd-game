@@ -58,10 +58,8 @@ namespace Overlewd
             
             public static FightButton GetInstance(Transform parent)
             {
-                var newItem = (GameObject) Instantiate(Resources.Load("Prefabs/UI/Screens/MapScreen/FightButton"), parent);
-                newItem.name = nameof(FightButton);
-                
-                return newItem.AddComponent<FightButton>();
+                return ResourceManager.InstantiateWidgetPrefab<FightButton>
+                    ("Prefabs/UI/Screens/MapScreen/FightButton", parent);
             }
         }
     }

@@ -9,10 +9,10 @@ namespace Overlewd
 {
     public class FireballPopup : SpellPopup
     {
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
-            Instantiate(Resources.Load("Prefabs/UI/Popups/SpellPopup/FireballImage"), spawnPoint);
+            base.Awake();
+            ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/SpellPopup/FireballImage", spawnPoint);
         }
 
     }

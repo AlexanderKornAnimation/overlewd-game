@@ -14,6 +14,29 @@ namespace Overlewd
         private Button nextBtn;
         private Image image;
 
+        private Button castleBtn;
+        private Button screenViewerBtn;
+
+        void Awake()
+        {
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer", transform);
+
+            var canvas = screenInst.transform.Find("Canvas");
+
+            image = canvas.Find("Image").GetComponent<Image>();
+
+            castleBtn = canvas.Find("Castle").GetComponent<Button>();
+            castleBtn.onClick.AddListener(CastleButtonClick);
+            screenViewerBtn = canvas.Find("ScreenViewer").GetComponent<Button>();
+            screenViewerBtn.onClick.AddListener(ScreenViewerButtonClick);
+
+            prevBtn = canvas.Find("PrevBtn").GetComponent<Button>();
+            prevBtn.onClick.AddListener(PrevButtonClick);
+
+            nextBtn = canvas.Find("NextBtn").GetComponent<Button>();
+            prevBtn.onClick.AddListener(NextButtonClick);
+        }
+
         void Start()
         {
             var resources = ResourceManager.GetResourcesFileNames();
@@ -23,43 +46,10 @@ namespace Overlewd
                 loadedTextures.Add(texture);
             }
 
-            var screenPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer"));
-            var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            screenRectTransform.SetParent(transform, false);
-            UIManager.SetStretch(screenRectTransform);
-
-            image = screenRectTransform.Find("Canvas").Find("Image").GetComponent<Image>();
-
-            screenRectTransform.Find("Canvas").Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<CastleScreen>();
-            });
-
-            screenRectTransform.Find("Canvas").Find("ScreenViewer").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                UIManager.ShowScreen<DebugScreenViewer>();
-            });
-
             if (loadedTextures.Count > 0)
             {
                 SetSprite();
             }
-
-            prevBtn = screenRectTransform.Find("Canvas").Find("PrevBtn").GetComponent<Button>();
-            prevBtn.onClick.AddListener(() =>
-            {
-                currentTextureId--;
-                CheckButtons();
-                SetSprite();
-            });
-
-            nextBtn = screenRectTransform.Find("Canvas").Find("NextBtn").GetComponent<Button>();
-            nextBtn.onClick.AddListener(() =>
-            {
-                currentTextureId++;
-                CheckButtons();
-                SetSprite();
-            });
 
             CheckButtons();
 
@@ -111,9 +101,28 @@ namespace Overlewd
             }
         }
 
-        void Update()
+        private void CastleButtonClick()
         {
+            UIManager.ShowScreen<CastleScreen>();
+        }
 
+        private void ScreenViewerButtonClick()
+        {
+            UIManager.ShowScreen<DebugScreenViewer>();
+        }
+
+        private void PrevButtonClick()
+        {
+            currentTextureId--;
+            CheckButtons();
+            SetSprite();
+        }
+
+        private void NextButtonClick()
+        {
+            currentTextureId++;
+            CheckButtons();
+            SetSprite();
         }
     }
 }
