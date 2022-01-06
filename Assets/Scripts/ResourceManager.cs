@@ -17,6 +17,7 @@ namespace Overlewd
         private static Dictionary<string, AudioClip> loadSounds = new Dictionary<string, AudioClip>();
         private static Dictionary<string, AssetBundle> loadAssetBundles = new Dictionary<string, AssetBundle>();
 
+        //
         public static T InstantiateAsset<T>(string assetPath) where T : UnityEngine.Object
         {
             var tempAsset = Resources.Load<T>(assetPath);
@@ -24,6 +25,28 @@ namespace Overlewd
             Resources.UnloadAsset(tempAsset);
             return instAsset;
         }
+
+        public static GameObject InstantiateScreenAsset(string assetPath, Transform parent)
+        {
+            var screenPrefab = Resources.Load<GameObject>(assetPath);
+            var instScreen = UnityEngine.Object.Instantiate(screenPrefab, parent);
+            var screenRectTransform = instScreen.GetComponent<RectTransform>();
+            UIManager.SetStretch(screenRectTransform);
+            return instScreen;
+        }
+
+        public static GameObject InstantiateWidgetAsset(string assetPath, Transform parent)
+        {
+            var widgetPrefab = Resources.Load<GameObject>(assetPath);
+            var instWidget = UnityEngine.Object.Instantiate(widgetPrefab, parent);
+            return instWidget;
+        }
+
+        public static void UnloadUnusedAssets()
+        {
+            Resources.UnloadUnusedAssets();
+        }
+        //
 
         private static async Task WaitRequestDoneAsync(UnityWebRequest request)
         {

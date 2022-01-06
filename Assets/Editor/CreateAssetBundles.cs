@@ -12,19 +12,11 @@ public class CreateAssetBundles
 		}
 	}
 
-	[MenuItem("Assets/Build AssetBundles For Windows")]
-	static void BuildAssetBundlesForWindows()
+	[MenuItem("Assets/Build AssetBundles")]
+	static void BuildAssetBundles()
 	{
-		var bundlesPath = "Assets/WindowsAssetsBundles";
+		var bundlesPath = "Assets/AssetsBundles";
 		CheckBundlesDirectory(bundlesPath);
-		BuildPipeline.BuildAssetBundles(bundlesPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
-	}
-
-	[MenuItem("Assets/Build AssetBundles For Android")]
-	static void BuildAssetBundlesForAndroid()
-	{
-		var bundlesPath = "Assets/AndoidAssetsBundles";
-		CheckBundlesDirectory(bundlesPath);
-		BuildPipeline.BuildAssetBundles(bundlesPath, BuildAssetBundleOptions.None, BuildTarget.Android);
+		BuildPipeline.BuildAssetBundles(bundlesPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
 	}
 }
