@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ImmediateShow : BaseShowTrasition
+    public class ImmediateShow : BaseShowTransition
     {
         protected override void Awake()
         {

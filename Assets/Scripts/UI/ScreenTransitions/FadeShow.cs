@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class FadeShow : BaseShowTrasition
+    public class FadeShow : BaseShowTransition
     {
         private CanvasGroup canvasGroup;
         private bool localCanvasGroup = false;

@@ -18,12 +18,12 @@ namespace Overlewd
 
         public override void Show()
         {
-            gameObject.AddComponent<OverlayShow>();
+            gameObject.AddComponent<RightShow>();
         }
 
         public override void Hide()
         {
-            gameObject.AddComponent<OverlayHide>();
+            gameObject.AddComponent<RightHide>();
         }
     }
 }

@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 namespace Overlewd
 {
-    public class ScreenShow : BaseShowTrasition
+
+    public class RightShow : BaseShowTransition
     {
         protected override void Awake()
         {
             base.Awake();
 
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -screenRectTransform.rect.height, screenRectTransform.rect.height);
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                -screenRectTransform.rect.width, screenRectTransform.rect.width);
         }
 
         async void Start()
@@ -28,9 +28,9 @@ namespace Overlewd
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
             float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -screenRectTransform.rect.height * transitionOffsetPercent,
-                screenRectTransform.rect.height);
+            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                -screenRectTransform.rect.width * transitionOffsetPercent,
+                screenRectTransform.rect.width);
 
             if (time > duration)
             {

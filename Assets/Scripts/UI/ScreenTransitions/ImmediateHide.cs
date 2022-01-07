@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ImmediateHide : BaseHideTrasition
+    public class ImmediateHide : BaseHideTransition
     {
         protected override void Awake()
         {

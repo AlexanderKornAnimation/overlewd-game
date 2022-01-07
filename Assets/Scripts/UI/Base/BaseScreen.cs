@@ -21,12 +21,12 @@ namespace Overlewd
 
         public virtual void Show()
         {
-            gameObject.AddComponent<ScreenShow>();
+            gameObject.AddComponent<BottomShow>();
         }
 
         public virtual void Hide()
         {
-            gameObject.AddComponent<ScreenHide>();
+            gameObject.AddComponent<BottomHide>();
         }
     }
 }

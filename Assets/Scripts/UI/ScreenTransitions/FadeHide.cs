@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class FadeHide : BaseHideTrasition
+    public class FadeHide : BaseHideTransition
     {
         private CanvasGroup canvasGroup;
         private bool localCanvasGroup = false;

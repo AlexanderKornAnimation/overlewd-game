@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ScreenHide : BaseHideTrasition
+    public class BottomHide : BaseHideTransition
     {
         protected override void Awake()
         {

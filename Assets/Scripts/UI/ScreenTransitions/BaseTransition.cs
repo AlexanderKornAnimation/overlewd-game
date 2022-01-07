@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public abstract class BaseTrasition : MonoBehaviour
+    public abstract class BaseTransition : MonoBehaviour
     {
         protected TransitionSynchronizer transitionSync;
         protected RectTransform screenRectTransform;
@@ -22,7 +22,7 @@ namespace Overlewd
         }
     }
 
-    public abstract class BaseShowTrasition : BaseTrasition
+    public abstract class BaseShowTransition : BaseTransition
     {
         protected async Task WaitPrepareShowAsync()
         {
@@ -35,7 +35,7 @@ namespace Overlewd
              await transitionSync.AfterShowAsync();
         }
     }
-    public abstract class BaseHideTrasition : BaseTrasition
+    public abstract class BaseHideTransition : BaseTransition
     {
         protected async Task WaitPrepareHideAsync()
         {
@@ -114,17 +114,17 @@ namespace Overlewd
 
         public bool IsTransitionState()
         {
-            return GetComponent<BaseTrasition>() != null;
+            return GetComponent<BaseTransition>() != null;
         }
 
         public bool IsShowTransitionState()
         {
-            return GetComponent<BaseShowTrasition>() != null;
+            return GetComponent<BaseShowTransition>() != null;
         }
 
         public bool IsHideTransitionState()
         {
-            return GetComponent<BaseHideTrasition>() != null;
+            return GetComponent<BaseHideTransition>() != null;
         }
     }
 }
