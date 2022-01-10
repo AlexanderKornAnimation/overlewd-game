@@ -13,15 +13,13 @@ namespace Overlewd
     {
         public class DefeatPopup : Overlewd.DefeatPopup
         {
-            protected override async Task AfterShowOperationsAsync()
+            public override void AfterShow()
             {
                 if (GameGlobalStates.battleScreen_BattleId == 2)
                 {
                     GameGlobalStates.dialogNotification_DialogId = 5;
                     UIManager.ShowNotification<DialogNotification>();
                 }
-
-                await Task.CompletedTask;
             }
 
             protected override void Customize()

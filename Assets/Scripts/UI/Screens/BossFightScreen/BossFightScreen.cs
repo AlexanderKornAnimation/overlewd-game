@@ -35,7 +35,7 @@ namespace Overlewd
             renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
         }
 
-        protected override async Task PrepareShowOperationsAsync()
+        public override async Task BeforeShowAsync()
         {
             backButton.gameObject.SetActive(false);
             startBattleButton.gameObject.SetActive(false);
@@ -46,10 +46,9 @@ namespace Overlewd
             skipButton.gameObject.SetActive(false);
         }
 
-        protected override async Task AfterShowOperationsAsync()
+        public override void AfterShow()
         {
             StartBattleButtonClick();
-            await Task.CompletedTask;
         }
 
         protected virtual async void EndBattleVideo(VideoPlayer vp)

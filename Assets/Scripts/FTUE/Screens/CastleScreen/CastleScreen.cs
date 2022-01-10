@@ -68,7 +68,7 @@ namespace Overlewd
                 SidebarButtonWidget.GetInstance(transform);
             }
 
-            protected override async Task AfterShowOperationsAsync()
+            public override void AfterShow()
             {
                 var notification = GameGlobalStates.castle_DialogNotificationId;
                 if (notification.HasValue)
@@ -76,8 +76,6 @@ namespace Overlewd
                     GameGlobalStates.dialogNotification_DialogId = notification.Value;
                     UIManager.ShowNotification<DialogNotification>();
                 }
-
-                await Task.CompletedTask;
             }
         }
     }

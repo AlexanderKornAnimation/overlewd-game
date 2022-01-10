@@ -5,28 +5,61 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public abstract class BaseScreen : TransitionSynchronizer
+    public abstract class BaseScreen : MonoBehaviour
     {
-        protected virtual void ShowMissclick()
+        public virtual void UpdateGameData()
         {
 
         }
 
-        public override async Task PrepareShowAsync()
+        public virtual void ShowMissclick()
         {
-            await PrepareShowOperationsAsync();
-            preparedShow = true;
-            ShowMissclick();
+
         }
 
-        public virtual void Show()
+        public virtual ScreenShow Show()
         {
-            gameObject.AddComponent<BottomShow>();
+            return gameObject.AddComponent<ScreenBottomShow>();
         }
 
-        public virtual void Hide()
+        public virtual ScreenHide Hide()
         {
-            gameObject.AddComponent<BottomHide>();
+            return gameObject.AddComponent<ScreenBottomHide>();
+        }
+
+        public virtual async Task BeforeShowAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual void AfterShow()
+        {
+
+        }
+
+        public virtual async Task BeforeHideAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual void AfterHide()
+        {
+
+        }
+
+        public bool IsTransitionState()
+        {
+            return GetComponent<ScreenTransition>() != null;
+        }
+
+        public bool IsShowTransitionState()
+        {
+            return GetComponent<ScreenShow>() != null;
+        }
+
+        public bool IsHideTransitionState()
+        {
+            return GetComponent<ScreenHide>() != null;
         }
     }
 }

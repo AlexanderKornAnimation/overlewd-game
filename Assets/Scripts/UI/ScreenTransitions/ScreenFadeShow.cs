@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class FadeHide : BaseHideTransition
+    public class ScreenFadeShow : ScreenShow
     {
         private CanvasGroup canvasGroup;
         private bool localCanvasGroup = false;
@@ -19,32 +19,36 @@ namespace Overlewd
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
                 localCanvasGroup = true;
             }
-            canvasGroup.alpha = 1.0f;
+            canvasGroup.alpha = 0.0f;
         }
 
         async void Start()
         {
-            await WaitPrepareHideAsync();
+            await screen.BeforeShowAsync();
+            prepared = true;
+            startTransitionListeners?.Invoke();
         }
 
-        async void Update()
+        void Update()
         {
-            if (!prepared)
+            if (!prepared || locked)
                 return;
 
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
-            float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
+            float transitionPercent = EasingFunction.easeOutBack(transitionProgressPercent);
 
             canvasGroup.alpha = transitionPercent;
 
             if (time > duration)
             {
-                await WaitAfterHideAsync();
-
-                Destroy(gameObject);
+                canvasGroup.alpha = 1.0f;
+                endTransitionListeners?.Invoke();
+                screen.AfterShow();
+                Destroy(this);
             }
         }
+
         void OnDestroy()
         {
             if (localCanvasGroup)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ImmediateShow : BaseShowTransition
+    public class ScreenImmediateShow : ScreenShow
     {
         protected override void Awake()
         {
@@ -13,16 +13,18 @@ namespace Overlewd
 
         async void Start()
         {
-            await WaitPrepareShowAsync();
+            await screen.BeforeShowAsync();
+            prepared = true;
+            startTransitionListeners?.Invoke();
         }
 
-        async void Update()
+        void Update()
         {
-            if (!prepared)
+            if (!prepared || locked)
                 return;
 
-            await WaitAfterShowAsync();
-
+            endTransitionListeners?.Invoke();
+            screen.AfterShow();
             Destroy(this);
         }
     }

@@ -63,16 +63,9 @@ namespace Overlewd
             }
 
             Customize();
-
-            GameData.gameDataUpdateListeners += GameDataUpdate;
         }
 
-        void OnDestroy()
-        {
-            GameData.gameDataUpdateListeners -= GameDataUpdate;
-        }
-
-        private void GameDataUpdate()
+        public override void UpdateGameData()
         {
             Customize();
 

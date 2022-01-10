@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class BottomShow : BaseShowTransition
+    public class ScreenBottomShow : ScreenShow
     {
         protected override void Awake()
         {
@@ -17,12 +17,14 @@ namespace Overlewd
 
         async void Start()
         {
-            await WaitPrepareShowAsync();
+            await screen.BeforeShowAsync();
+            prepared = true;
+            startTransitionListeners?.Invoke();
         }
 
-        async void Update()
+        void Update()
         {
-            if (!prepared)
+            if (!prepared || locked)
                 return;
 
             time += Time.deltaTime;
@@ -34,9 +36,9 @@ namespace Overlewd
 
             if (time > duration)
             {
-                await WaitAfterShowAsync();
-
                 UIManager.SetStretch(screenRectTransform);
+                endTransitionListeners?.Invoke();
+                screen.AfterShow();
                 Destroy(this);
             }
         }

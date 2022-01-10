@@ -38,7 +38,7 @@ namespace Overlewd
             reward3.sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Gold");
         }
 
-        protected override void ShowMissclick()
+        public override void ShowMissclick()
         {
             var missClick = UIManager.ShowPopupMissclick<PopupMissclickColored>();
             missClick.missClickEnabled = false;

@@ -28,14 +28,14 @@ namespace Overlewd
             image.color = new Color(0.0f, 0.0f, 0.0f, 0.8f);
         }
 
-        public override void Show()
+        public override MissclickShow Show()
         {
-            gameObject.AddComponent<FadeShow>();
+            return gameObject.AddComponent<MissclickFadeShow>();
         }
 
-        public override void Hide()
+        public override MissclickHide Hide()
         {
-            gameObject.AddComponent<FadeHide>();
+            return gameObject.AddComponent<MissclickFadeHide>();
         }
     }
 }

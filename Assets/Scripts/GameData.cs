@@ -8,8 +8,6 @@ namespace Overlewd
 {
     public static class GameData
     {
-        public static event Action gameDataUpdateListeners;
-
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
         public static bool CanTradableBuy(AdminBRO.TradableItem tradable)
         {
@@ -41,7 +39,7 @@ namespace Overlewd
             await AdminBRO.tradableBuyAsync(marketId, tradableId);
             GameData.playerInfo = await AdminBRO.meAsync();
 
-            gameDataUpdateListeners?.Invoke();
+            UIManager.UpdateGameData();
         }
 
         public static List<AdminBRO.EventItem> events { get; set; }

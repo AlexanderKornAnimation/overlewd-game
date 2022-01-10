@@ -40,7 +40,7 @@ namespace Overlewd
 
         }
 
-        protected override void ShowMissclick()
+        public override void ShowMissclick()
         {
             var missClick = UIManager.ShowPopupMissclick<PopupMissclickColored>();
             missClick.missClickEnabled = false;

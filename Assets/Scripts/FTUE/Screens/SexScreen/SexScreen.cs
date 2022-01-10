@@ -70,11 +70,6 @@ namespace Overlewd
                 }
             }
 
-            protected override async Task PrepareHideOperationsAsync()
-            {
-                await Task.CompletedTask;
-            }
-
             protected override async Task EnterScreen()
             {
                 backImage.gameObject.SetActive(false);

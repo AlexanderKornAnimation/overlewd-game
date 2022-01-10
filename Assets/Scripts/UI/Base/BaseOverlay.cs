@@ -6,24 +6,19 @@ namespace Overlewd
 {
     public abstract class BaseOverlay : BaseScreen
     {
-        void Start()
-        {
-
-        }
-
-        protected override void ShowMissclick()
+        public override void ShowMissclick()
         {
             UIManager.ShowOverlayMissclick<OverlayMissclickColored>();
         }
 
-        public override void Show()
+        public override ScreenShow Show()
         {
-            gameObject.AddComponent<RightShow>();
+            return gameObject.AddComponent<ScreenRightShow>();
         }
 
-        public override void Hide()
+        public override ScreenHide Hide()
         {
-            gameObject.AddComponent<RightHide>();
+            return gameObject.AddComponent<ScreenRightHide>();
         }
     }
 }

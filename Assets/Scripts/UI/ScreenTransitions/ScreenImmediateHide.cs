@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class ImmediateHide : BaseHideTransition
+    public class ScreenImmediateHide : ScreenHide
     {
         protected override void Awake()
         {
@@ -13,16 +13,18 @@ namespace Overlewd
 
         async void Start()
         {
-            await WaitPrepareHideAsync();
+            await screen.BeforeHideAsync();
+            prepared = true;
+            startTransitionListeners?.Invoke();
         }
 
-        async void Update()
+        void Update()
         {
-            if (!prepared)
+            if (!prepared || locked)
                 return;
 
-            await WaitAfterHideAsync();
-
+            endTransitionListeners?.Invoke();
+            screen.AfterHide();
             Destroy(gameObject);
         }
     }

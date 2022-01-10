@@ -11,7 +11,7 @@ namespace Overlewd
     {
         public class BattleScreen : Overlewd.BattleScreen
         {
-            protected override async Task PrepareShowOperationsAsync()
+            public override async Task BeforeShowAsync()
             {
                 startBattleButton.gameObject.SetActive(false);
                 backButton.gameObject.SetActive(false);
@@ -22,7 +22,7 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
-            protected override async Task AfterShowOperationsAsync()
+            public override void AfterShow()
             {
                 if (GameGlobalStates.battleScreen_BattleId == 1)
                 {
@@ -41,8 +41,6 @@ namespace Overlewd
                 }
 
                 StartCoroutine(WaitDialogNotificationHide());
-
-                await Task.CompletedTask;
             }
 
             private IEnumerator WaitDialogNotificationHide()

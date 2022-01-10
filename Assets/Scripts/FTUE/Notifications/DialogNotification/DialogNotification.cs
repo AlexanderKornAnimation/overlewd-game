@@ -10,10 +10,9 @@ namespace Overlewd
     {
         public class NotificationMissclickColored : Overlewd.NotificationMissclickColored
         {
-            protected override async Task PrepareShowOperationsAsync()
+            void Start()
             {
                 StartCoroutine(EnableByTimer());
-                await Task.CompletedTask;
             }
 
             private IEnumerator EnableByTimer()
@@ -34,13 +33,13 @@ namespace Overlewd
                 button.gameObject.SetActive(false);
             }
 
-            protected override void ShowMissclick()
+            public override void ShowMissclick()
             {
                 var missclick = UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
                 missclick.missClickEnabled = false;
             }
 
-            protected override async Task PrepareShowOperationsAsync()
+            public override async Task BeforeShowAsync()
             {
                 var dialogData = GameGlobalStates.dialogNotification_DialogData;
 

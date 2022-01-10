@@ -6,19 +6,19 @@ namespace Overlewd
 {
     public abstract class BasePopup : BaseScreen
     {
-        protected override void ShowMissclick()
+        public override void ShowMissclick()
         {
             UIManager.ShowPopupMissclick<PopupMissclickColored>();
         }
 
-        public override void Show()
+        public override ScreenShow Show()
         {
-            gameObject.AddComponent<FadeShow>();
+            return gameObject.AddComponent<ScreenFadeShow>();
         }
 
-        public override void Hide()
+        public override ScreenHide Hide()
         {
-            gameObject.AddComponent<FadeHide>();
+            return gameObject.AddComponent<ScreenFadeHide>();
         }
     }
 }

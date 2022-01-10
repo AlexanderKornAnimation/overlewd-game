@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public abstract class BaseMissclick : TransitionSynchronizer
+    public abstract class BaseMissclick : MonoBehaviour
     {
         public bool missClickEnabled { get; set; } = true;
         
@@ -40,13 +40,21 @@ namespace Overlewd
         {
 
         }
-        public virtual void Show()
-        {
 
+        public virtual MissclickShow Show()
+        {
+            return null;
         }
-        public virtual void Hide()
+
+        public virtual MissclickHide Hide()
         {
             Destroy(gameObject);
+            return null;
+        }
+
+        public bool IsTransitionState()
+        {
+            return GetComponent<MissclickTransition>() != null;
         }
     }
 }

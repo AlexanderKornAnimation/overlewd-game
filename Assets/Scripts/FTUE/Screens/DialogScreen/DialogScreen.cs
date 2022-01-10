@@ -13,11 +13,6 @@ namespace Overlewd
             private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
             private SpineWidget emotionAnimation;
 
-            protected override async Task PrepareHideOperationsAsync()
-            {
-                await Task.CompletedTask;
-            }
-
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.dialogScreen_DialogData;

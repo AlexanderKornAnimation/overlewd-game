@@ -81,7 +81,7 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
-        protected override async Task PrepareShowOperationsAsync()
+        public override async Task BeforeShowAsync()
         {
             await EnterScreen();
 
@@ -90,11 +90,6 @@ namespace Overlewd
             AutoplayButtonCustomize();
 
             nextButton.gameObject.AddComponent<SizePulseSelector>();
-        }
-
-        protected override async Task PrepareHideOperationsAsync()
-        {
-            await Task.CompletedTask;
         }
 
         protected virtual async Task EnterScreen()

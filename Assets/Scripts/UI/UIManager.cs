@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -202,6 +203,15 @@ namespace Overlewd
             var uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
+        public static void UpdateGameData()
+        {
+            currentScreen?.UpdateGameData();
+            currentPopup?.UpdateGameData();
+            currentSubPopup?.UpdateGameData();
+            currentOverlay?.UpdateGameData();
+            currentNotification?.UpdateGameData();
+        }
+
         //Screen Layer
         public static T GetScreen<T>() where T : BaseScreen
         {
@@ -219,6 +229,7 @@ namespace Overlewd
 
             currentScreen = GetScreenInstance<T>();
             currentScreen?.Show();
+            currentScreen?.ShowMissclick();
 
             return currentScreen as T;
         }
@@ -279,6 +290,7 @@ namespace Overlewd
 
             currentPopup = GetPopupInstance<T>();
             currentPopup?.Show();
+            currentPopup?.ShowMissclick();
 
             return currentPopup as T;
         }
@@ -338,6 +350,7 @@ namespace Overlewd
 
             currentSubPopup = GetSubPopupInstance<T>();
             currentSubPopup?.Show();
+            currentSubPopup?.ShowMissclick();
 
             return currentSubPopup as T;
         }
@@ -395,6 +408,7 @@ namespace Overlewd
 
             currentOverlay = GetOverlayInstance<T>();
             currentOverlay?.Show();
+            currentOverlay?.ShowMissclick();
 
             return currentOverlay as T;
         }
@@ -451,6 +465,7 @@ namespace Overlewd
 
             currentNotification = GetNotificationInstance<T>();
             currentNotification?.Show();
+            currentNotification?.ShowMissclick();
 
             return currentNotification as T;
         }

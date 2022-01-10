@@ -125,11 +125,10 @@ namespace Overlewd
 
             protected override void ChapterButtonClick()
             {
-                //UIManager.ShowScreen<Overlewd.StartingScreen>();
                 UIManager.ShowScreen<Overlewd.CastleScreen>();
             }
 
-            protected override async Task AfterShowOperationsAsync()
+            public override void AfterShow()
             {
                 var notification = GameGlobalStates.map_DialogNotificationId;
                 if (notification.HasValue)
@@ -137,8 +136,6 @@ namespace Overlewd
                     GameGlobalStates.dialogNotification_DialogId = notification.Value;
                     UIManager.ShowNotification<DialogNotification>();
                 }
-
-                await Task.CompletedTask;
             }
         }
     }

@@ -4,40 +4,40 @@ using UnityEngine;
 
 namespace Overlewd
 {
-
-    public class RightShow : BaseShowTransition
+    public class ScreenRightHide : ScreenHide
     {
         protected override void Awake()
         {
             base.Awake();
 
             screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
-                -screenRectTransform.rect.width, screenRectTransform.rect.width);
+                0.0f, screenRectTransform.rect.width);
         }
 
         async void Start()
         {
-            await WaitPrepareShowAsync();
+            await screen.BeforeHideAsync();
+            prepared = true;
+            startTransitionListeners?.Invoke();
         }
 
-        async void Update()
+        void Update()
         {
-            if (!prepared)
+            if (!prepared || locked)
                 return;
 
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
-            float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
+            float transitionOffsetPercent = EasingFunction.easeInOutQuad(transitionProgressPercent);
             screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
                 -screenRectTransform.rect.width * transitionOffsetPercent,
                 screenRectTransform.rect.width);
 
             if (time > duration)
             {
-                await WaitAfterShowAsync();
-
-                UIManager.SetStretch(screenRectTransform);
-                Destroy(this);
+                endTransitionListeners?.Invoke();
+                screen.AfterHide();
+                Destroy(gameObject);
             }
         }
     }

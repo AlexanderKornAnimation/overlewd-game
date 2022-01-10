@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class FadeShow : BaseShowTransition
+    public class MissclickFadeHide : MissclickHide
     {
         private CanvasGroup canvasGroup;
         private bool localCanvasGroup = false;
@@ -19,31 +19,20 @@ namespace Overlewd
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
                 localCanvasGroup = true;
             }
-            canvasGroup.alpha = 0.0f;
+            canvasGroup.alpha = 1.0f;
         }
 
-        async void Start()
+        void Update()
         {
-            await WaitPrepareShowAsync();
-        }
-
-        async void Update()
-        {
-            if (!prepared)
-                return;
-
             time += Time.deltaTime;
             float transitionProgressPercent = time / duration;
-            float transitionPercent = EasingFunction.easeOutBack(transitionProgressPercent);
+            float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
 
             canvasGroup.alpha = transitionPercent;
 
             if (time > duration)
             {
-                await WaitAfterShowAsync();
-
-                canvasGroup.alpha = 1.0f;
-                Destroy(this);
+                Destroy(gameObject);
             }
         }
 

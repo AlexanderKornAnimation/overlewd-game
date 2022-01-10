@@ -79,15 +79,13 @@ namespace Overlewd
                 UIManager.ShowScreen<BattleScreen>();
             }
 
-            protected override async Task AfterShowOperationsAsync()
+            public override void AfterShow()
             {
                 if (GameGlobalStates.battleScreen_BattleId == 1)
                 {
                     GameGlobalStates.dialogNotification_DialogId = 2;
                     UIManager.ShowNotification<DialogNotification>();
                 }
-
-                await Task.CompletedTask;
             }
         }
     }

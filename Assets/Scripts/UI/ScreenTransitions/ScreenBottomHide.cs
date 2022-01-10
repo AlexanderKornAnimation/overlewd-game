@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class BottomHide : BaseHideTransition
+    public class ScreenBottomHide : ScreenHide
     {
         protected override void Awake()
         {
@@ -16,12 +16,14 @@ namespace Overlewd
 
         async void Start()
         {
-            await WaitPrepareHideAsync();
+            await screen.BeforeHideAsync();
+            prepared = true;
+            startTransitionListeners?.Invoke();
         }
 
-        async void Update()
+        void Update()
         {
-            if (!prepared)
+            if (!prepared || locked)
                 return;
 
             time += Time.deltaTime;
@@ -33,8 +35,8 @@ namespace Overlewd
 
             if (time > duration)
             {
-                await WaitAfterHideAsync();
-
+                endTransitionListeners?.Invoke();
+                screen.AfterHide();
                 Destroy(gameObject);
             }
         }

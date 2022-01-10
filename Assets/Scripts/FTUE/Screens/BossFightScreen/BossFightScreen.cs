@@ -11,7 +11,7 @@ namespace Overlewd
     {
         public class BossFightScreen : Overlewd.BossFightScreen
         {
-            protected override async Task PrepareShowOperationsAsync()
+            public override async Task BeforeShowAsync()
             {
                 backButton.gameObject.SetActive(false);
                 startBattleButton.gameObject.SetActive(false);
@@ -22,10 +22,9 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
-            protected override async Task AfterShowOperationsAsync()
+            public override void AfterShow()
             {
                 StartBattleButtonClick();
-                await Task.CompletedTask;
             }
 
             protected override void EndBattleVideo(VideoPlayer vp)
