@@ -12,6 +12,13 @@ namespace Overlewd
         protected float duration = 0.3f;
         protected float time = 0.0f;
 
+        protected float deltaTimeInc { 
+            get 
+            {
+                return Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
+            } 
+        }
+
         protected virtual void Awake()
         {
             missclickRectTransform = GetComponent<RectTransform>();

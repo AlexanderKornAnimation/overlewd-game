@@ -20,6 +20,14 @@ namespace Overlewd
         public Action startTransitionListeners;
         public Action endTransitionListeners;
 
+        protected float deltaTimeInc
+        {
+            get
+            {
+                return Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
+            }
+        }
+
         protected virtual void Awake()
         {
             screenRectTransform = GetComponent<RectTransform>();

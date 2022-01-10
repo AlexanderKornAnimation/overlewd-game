@@ -27,7 +27,7 @@ namespace Overlewd
             if (!prepared || locked)
                 return;
 
-            time += Time.deltaTime;
+            time += deltaTimeInc;
             float transitionProgressPercent = time / duration;
             float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
             screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,

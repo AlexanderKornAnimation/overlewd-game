@@ -24,7 +24,7 @@ namespace Overlewd
 
         void Update()
         {
-            time += Time.deltaTime;
+            time += deltaTimeInc;
             float transitionProgressPercent = time / duration;
             float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
 

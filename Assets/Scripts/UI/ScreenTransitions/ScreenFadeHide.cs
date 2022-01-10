@@ -33,7 +33,7 @@ namespace Overlewd
             if (!prepared || locked)
                 return;
 
-            time += Time.deltaTime;
+            time += deltaTimeInc;
             float transitionProgressPercent = time / duration;
             float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
 
