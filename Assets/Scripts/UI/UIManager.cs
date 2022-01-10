@@ -27,10 +27,15 @@ namespace Overlewd
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
 
+        private static BaseScreen prevScreen;
         private static BaseScreen currentScreen;
+        private static BasePopup prevPopup;
         private static BasePopup currentPopup;
+        private static BaseSubPopup prevSubPopup;
         private static BaseSubPopup currentSubPopup;
+        private static BaseOverlay prevOverlay;
         private static BaseOverlay currentOverlay;
+        private static BaseNotification prevNotification;
         private static BaseNotification currentNotification;
         private static GameObject currentDialogBoxGO;
 
@@ -228,16 +233,17 @@ namespace Overlewd
             HideScreen();
 
             currentScreen = GetScreenInstance<T>();
-            currentScreen?.Show();
-            currentScreen?.ShowMissclick();
+            currentScreen.Show();
+            currentScreen.ShowMissclick();
 
             return currentScreen as T;
         }
 
         public static void HideScreen()
         {
-            currentScreen?.Hide();
+            prevScreen = currentScreen;
             currentScreen = null;
+            prevScreen?.Hide();
 
             HidePopup();
             HideSubPopup();
@@ -262,7 +268,7 @@ namespace Overlewd
                 HidePopupMissclick();
 
                 popupMissclick = GetPopupMissclickInstance<T>();
-                popupMissclick?.Show();
+                popupMissclick.Show();
             }
             return popupMissclick as T;
         }
@@ -285,12 +291,13 @@ namespace Overlewd
 
         public static T ShowPopup<T>() where T : BasePopup
         {
-            currentPopup?.Hide();
+            prevPopup = currentPopup;
+            prevPopup?.Hide();
             HideSubPopup();
 
             currentPopup = GetPopupInstance<T>();
-            currentPopup?.Show();
-            currentPopup?.ShowMissclick();
+            currentPopup.Show();
+            currentPopup.ShowMissclick();
 
             return currentPopup as T;
         }
@@ -299,8 +306,9 @@ namespace Overlewd
         {
             HidePopupMissclick();
 
-            currentPopup?.Hide();
+            prevPopup = currentPopup;
             currentPopup = null;
+            prevPopup?.Hide();
 
             HideSubPopup();
         }
@@ -323,7 +331,7 @@ namespace Overlewd
                 HideSubPopupMissclick();
 
                 subPopupMissclick = GetSubPopupMissclickInstance<T>();
-                subPopupMissclick?.Show();
+                subPopupMissclick.Show();
             }
             return subPopupMissclick as T;
         }
@@ -346,11 +354,12 @@ namespace Overlewd
 
         public static T ShowSubPopup<T>() where T : BaseSubPopup
         {
-            currentSubPopup?.Hide();
+            prevSubPopup = currentSubPopup;
+            prevSubPopup?.Hide();
 
             currentSubPopup = GetSubPopupInstance<T>();
-            currentSubPopup?.Show();
-            currentSubPopup?.ShowMissclick();
+            currentSubPopup.Show();
+            currentSubPopup.ShowMissclick();
 
             return currentSubPopup as T;
         }
@@ -359,8 +368,9 @@ namespace Overlewd
         {
             HideSubPopupMissclick();
 
-            currentSubPopup?.Hide();
+            prevSubPopup = currentSubPopup;
             currentSubPopup = null;
+            prevSubPopup?.Hide();
         }
 
         //Overlay Layer
@@ -381,7 +391,7 @@ namespace Overlewd
                 HideOverlayMissclick();
 
                 overlayMissclick = GetOverlayMissclickInstance<T>();
-                overlayMissclick?.Show();
+                overlayMissclick.Show();
             }
             return overlayMissclick as T;
         }
@@ -404,11 +414,12 @@ namespace Overlewd
 
         public static T ShowOverlay<T>() where T : BaseOverlay
         {
-            currentOverlay?.Hide();
+            prevOverlay = currentOverlay;
+            prevOverlay?.Hide();
 
             currentOverlay = GetOverlayInstance<T>();
-            currentOverlay?.Show();
-            currentOverlay?.ShowMissclick();
+            currentOverlay.Show();
+            currentOverlay.ShowMissclick();
 
             return currentOverlay as T;
         }
@@ -417,8 +428,9 @@ namespace Overlewd
         {
             HideOverlayMissclick();
 
-            currentOverlay?.Hide();
+            prevOverlay = currentOverlay;
             currentOverlay = null;
+            prevOverlay?.Hide();
         }
 
         //Notification Layer
@@ -438,7 +450,7 @@ namespace Overlewd
                 HideNotificationMissclick();
 
                 notificationMissclick = GetNotificationMissclickInstance<T>();
-                notificationMissclick?.Show();
+                notificationMissclick.Show();
             }
             return notificationMissclick as T;
         }
@@ -461,11 +473,12 @@ namespace Overlewd
 
         public static T ShowNotification<T>() where T : BaseNotification
         {
-            currentNotification?.Hide();
+            prevNotification = currentNotification;
+            prevNotification?.Hide();
 
             currentNotification = GetNotificationInstance<T>();
-            currentNotification?.Show();
-            currentNotification?.ShowMissclick();
+            currentNotification.Show();
+            currentNotification.ShowMissclick();
 
             return currentNotification as T;
         }
@@ -474,8 +487,9 @@ namespace Overlewd
         {
             HideNotificationMissclick();
 
-            currentNotification?.Hide();
+            prevNotification = currentNotification;
             currentNotification = null;
+            prevNotification?.Hide();
         }
 
         //Dialog Layer
