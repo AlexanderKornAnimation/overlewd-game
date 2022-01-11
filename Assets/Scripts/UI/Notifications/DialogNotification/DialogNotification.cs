@@ -32,5 +32,15 @@ namespace Overlewd
         {
             UIManager.HideNotification();
         }
+
+        public override ScreenShow Show()
+        {
+            return gameObject.AddComponent<ScreenLeftShow>();
+        }
+
+        public override ScreenHide Hide()
+        {
+            return gameObject.AddComponent<ScreenLeftHide>();
+        }
     }
 }

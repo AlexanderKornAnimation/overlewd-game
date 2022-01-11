@@ -13,12 +13,12 @@ namespace Overlewd
 
         public override ScreenShow Show()
         {
-            return gameObject.AddComponent<ScreenFadeShow>();
+            return gameObject.AddComponent<ScreenTopShow>();
         }
 
         public override ScreenHide Hide()
         {
-            return gameObject.AddComponent<ScreenFadeHide>();
+            return gameObject.AddComponent<ScreenTopHide>();
         }
     }
 }

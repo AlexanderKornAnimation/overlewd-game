@@ -15,10 +15,17 @@ namespace Overlewd
         protected float time = 0.0f;
 
         protected bool prepared { get; set; } = false;
-        public bool locked { get; set; } = false;
+        private List<ScreenTransition> lockers = new List<ScreenTransition>();
+        public bool locked
+        { 
+            get 
+            {
+                return lockers.Count > 0;
+            } 
+        }
 
-        public Action startTransitionListeners;
-        public Action endTransitionListeners;
+        protected Action preparedTransitionListeners;
+        protected Action endTransitionListeners;
 
         protected float deltaTimeInc
         {
@@ -32,6 +39,40 @@ namespace Overlewd
         {
             screenRectTransform = GetComponent<RectTransform>();
             screen = GetComponent<BaseScreen>();
+        }
+
+        public void AddLocker(ScreenTransition locker)
+        {
+            if (locker != null)
+            {
+                if (!lockers.Contains(locker))
+                {
+                    lockers.Add(locker);
+                }
+            }
+        }
+
+        public void RemoveLocker(ScreenTransition locker)
+        {
+            if (locker != null)
+            {
+                lockers.Remove(locker);
+            }
+        }
+
+        public void AddPreparedListener(Action listener)
+        {
+            preparedTransitionListeners += listener;
+        }
+
+        public void AddEndListener(Action listenter)
+        {
+            endTransitionListeners += listenter;
+        }
+
+        public void InitializerCall(Action initializer)
+        {
+            initializer?.Invoke();
         }
     }
 

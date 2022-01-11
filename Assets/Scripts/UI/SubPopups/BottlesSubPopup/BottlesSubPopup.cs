@@ -85,6 +85,16 @@ namespace Overlewd
 
         }
 
+        public override ScreenShow Show()
+        {
+            return gameObject.AddComponent<ScreenTopShow>();
+        }
+
+        public override ScreenHide Hide()
+        {
+            return gameObject.AddComponent<ScreenTopHide>();
+        }
+
         void BackButtonClick()
         {
             UIManager.HideSubPopup();

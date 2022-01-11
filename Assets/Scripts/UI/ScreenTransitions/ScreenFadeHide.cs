@@ -25,7 +25,7 @@ namespace Overlewd
         {
             await screen.BeforeHideAsync();
             prepared = true;
-            startTransitionListeners?.Invoke();
+            preparedTransitionListeners?.Invoke();
         }
 
         void Update()

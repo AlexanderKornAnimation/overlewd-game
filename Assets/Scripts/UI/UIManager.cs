@@ -236,6 +236,90 @@ namespace Overlewd
             currentScreen.Show();
             currentScreen.ShowMissclick();
 
+            var prevSubPopupTr = prevSubPopup?.GetTransition();
+            var prevPopupTr = prevPopup?.GetTransition();
+            var prevOverlayTr = prevOverlay?.GetTransition();
+            var prevScreenTr = prevScreen?.GetTransition();
+            var curScreenTr = currentScreen.GetTransition();
+
+            prevSubPopupTr?.InitializerCall(() => 
+            {
+                prevPopupTr?.AddLocker(prevSubPopupTr);
+                prevOverlayTr?.AddLocker(prevSubPopupTr);
+                prevScreenTr?.AddLocker(prevSubPopupTr);
+                curScreenTr.AddLocker(prevSubPopupTr);
+            });
+            prevSubPopupTr?.AddEndListener(() => 
+            {
+                prevPopupTr?.RemoveLocker(prevSubPopupTr);
+                prevOverlayTr?.RemoveLocker(prevSubPopupTr);
+                prevScreenTr?.RemoveLocker(prevSubPopupTr);
+                curScreenTr.RemoveLocker(prevSubPopupTr);
+            });
+
+            prevPopupTr?.InitializerCall(() => 
+            {
+                prevSubPopupTr?.AddLocker(prevPopupTr);
+                prevOverlayTr?.AddLocker(prevPopupTr);
+                prevScreenTr?.AddLocker(prevPopupTr);
+                curScreenTr.AddLocker(prevPopupTr);
+            });
+            prevPopupTr?.AddPreparedListener(() => 
+            {
+                prevSubPopupTr?.RemoveLocker(prevPopupTr);
+                prevOverlayTr?.RemoveLocker(prevPopupTr);
+                prevScreenTr?.RemoveLocker(prevPopupTr);
+                curScreenTr.RemoveLocker(prevPopupTr);
+            });
+
+            prevOverlayTr?.InitializerCall(() => 
+            {
+                prevSubPopupTr?.AddLocker(prevOverlayTr);
+                prevPopupTr?.AddLocker(prevOverlayTr);
+                prevScreenTr?.AddLocker(prevOverlayTr);
+                curScreenTr.AddLocker(prevOverlayTr);
+            });
+            prevOverlayTr?.AddPreparedListener(() =>
+            {
+                prevSubPopupTr?.RemoveLocker(prevOverlayTr);
+                prevPopupTr?.RemoveLocker(prevOverlayTr);
+                prevScreenTr?.RemoveLocker(prevOverlayTr);
+                curScreenTr.RemoveLocker(prevOverlayTr);
+            });
+
+            prevScreenTr?.InitializerCall(() => 
+            {
+                prevSubPopupTr?.AddLocker(prevScreenTr);
+                prevPopupTr?.AddLocker(prevScreenTr);
+                prevOverlayTr?.AddLocker(prevScreenTr);
+                curScreenTr.AddLocker(prevScreenTr);
+            });
+            prevScreenTr?.AddPreparedListener(() => 
+            {
+                prevSubPopupTr?.RemoveLocker(prevScreenTr);
+                prevPopupTr?.RemoveLocker(prevScreenTr);
+                prevOverlayTr?.RemoveLocker(prevScreenTr);
+            });
+            prevScreenTr?.AddEndListener(() => 
+            {
+                curScreenTr.RemoveLocker(prevScreenTr);
+            });
+
+            curScreenTr.InitializerCall(() => 
+            {
+                prevSubPopupTr?.AddLocker(curScreenTr);
+                prevPopupTr?.AddLocker(curScreenTr);
+                prevOverlayTr?.AddLocker(curScreenTr);
+                prevScreenTr?.AddLocker(curScreenTr);
+            });
+            curScreenTr.AddPreparedListener(() => 
+            {
+                prevSubPopupTr?.RemoveLocker(curScreenTr);
+                prevPopupTr?.RemoveLocker(curScreenTr);
+                prevOverlayTr?.RemoveLocker(curScreenTr);
+                prevScreenTr?.RemoveLocker(curScreenTr);
+            });
+
             return currentScreen as T;
         }
 
@@ -246,8 +330,64 @@ namespace Overlewd
             prevScreen?.Hide();
 
             HidePopup();
-            HideSubPopup();
             HideOverlay();
+
+            var prevSubPopupTr = prevSubPopup?.GetTransition();
+            var prevPopupTr = prevPopup?.GetTransition();
+            var prevOverlayTr = prevOverlay?.GetTransition();
+            var prevScreenTr = prevScreen?.GetTransition();
+
+            prevSubPopupTr?.InitializerCall(() =>
+            {
+                prevPopupTr?.AddLocker(prevSubPopupTr);
+                prevOverlayTr?.AddLocker(prevSubPopupTr);
+                prevScreenTr?.AddLocker(prevSubPopupTr);
+            });
+            prevSubPopupTr?.AddEndListener(() =>
+            {
+                prevPopupTr?.RemoveLocker(prevSubPopupTr);
+                prevOverlayTr?.RemoveLocker(prevSubPopupTr);
+                prevScreenTr?.RemoveLocker(prevSubPopupTr);
+            });
+
+            prevPopupTr?.InitializerCall(() =>
+            {
+                prevSubPopupTr?.AddLocker(prevPopupTr);
+                prevOverlayTr?.AddLocker(prevPopupTr);
+                prevScreenTr?.AddLocker(prevPopupTr);
+            });
+            prevPopupTr?.AddPreparedListener(() =>
+            {
+                prevSubPopupTr?.RemoveLocker(prevPopupTr);
+                prevOverlayTr?.RemoveLocker(prevPopupTr);
+                prevScreenTr?.RemoveLocker(prevPopupTr);
+            });
+
+            prevOverlayTr?.InitializerCall(() =>
+            {
+                prevSubPopupTr?.AddLocker(prevOverlayTr);
+                prevPopupTr?.AddLocker(prevOverlayTr);
+                prevScreenTr?.AddLocker(prevOverlayTr);
+            });
+            prevOverlayTr?.AddPreparedListener(() =>
+            {
+                prevSubPopupTr?.RemoveLocker(prevOverlayTr);
+                prevPopupTr?.RemoveLocker(prevOverlayTr);
+                prevScreenTr?.RemoveLocker(prevOverlayTr);
+            });
+
+            prevScreenTr?.InitializerCall(() =>
+            {
+                prevSubPopupTr?.AddLocker(prevScreenTr);
+                prevPopupTr?.AddLocker(prevScreenTr);
+                prevOverlayTr?.AddLocker(prevScreenTr);
+            });
+            prevScreenTr?.AddPreparedListener(() =>
+            {
+                prevSubPopupTr?.RemoveLocker(prevScreenTr);
+                prevPopupTr?.RemoveLocker(prevScreenTr);
+                prevOverlayTr?.RemoveLocker(prevScreenTr);
+            });
         }
 
         //Popup Layer
@@ -299,6 +439,46 @@ namespace Overlewd
             currentPopup.Show();
             currentPopup.ShowMissclick();
 
+            var prevSubPopupTr = prevSubPopup?.GetTransition();
+            var prevPopupTr = prevPopup?.GetTransition();
+            var curPopupTr = currentPopup.GetTransition();
+
+            prevSubPopupTr?.InitializerCall(() =>
+            {
+                prevPopupTr?.AddLocker(prevSubPopupTr);
+                curPopupTr.AddLocker(prevSubPopupTr);
+            });
+            prevSubPopupTr?.AddEndListener(() =>
+            {
+                prevPopupTr?.RemoveLocker(prevSubPopupTr);
+                curPopupTr.RemoveLocker(prevSubPopupTr);
+            });
+
+            prevPopupTr?.InitializerCall(() =>
+            {
+                prevSubPopupTr?.AddLocker(prevPopupTr);
+                curPopupTr.AddLocker(prevPopupTr);
+            });
+            prevPopupTr?.AddPreparedListener(() =>
+            {
+                prevSubPopupTr?.RemoveLocker(prevPopupTr);
+            });
+            prevPopupTr?.AddEndListener(() =>
+            {
+                curPopupTr?.RemoveLocker(prevPopupTr);
+            });
+
+            curPopupTr.InitializerCall(() => 
+            {
+                prevSubPopupTr?.AddLocker(curPopupTr);
+                prevPopupTr?.AddLocker(curPopupTr);
+            });
+            curPopupTr.AddPreparedListener(() => 
+            {
+                prevSubPopupTr?.RemoveLocker(curPopupTr);
+                prevPopupTr?.RemoveLocker(curPopupTr);
+            });
+
             return currentPopup as T;
         }
 
@@ -311,6 +491,27 @@ namespace Overlewd
             prevPopup?.Hide();
 
             HideSubPopup();
+
+            var prevSubPopupTr = prevSubPopup?.GetTransition();
+            var prevPopupTr = prevPopup?.GetTransition();
+
+            prevSubPopupTr?.InitializerCall(() =>
+            {
+                prevPopupTr?.AddLocker(prevSubPopupTr);
+            });
+            prevSubPopupTr?.AddEndListener(() =>
+            {
+                prevPopupTr?.RemoveLocker(prevSubPopupTr);
+            });
+
+            prevPopupTr?.InitializerCall(() =>
+            {
+                prevSubPopupTr?.AddLocker(prevPopupTr);
+            });
+            prevPopupTr?.AddPreparedListener(() =>
+            {
+                prevSubPopupTr?.RemoveLocker(prevPopupTr);
+            });
         }
 
         //SubPopup Layer
@@ -360,6 +561,27 @@ namespace Overlewd
             currentSubPopup = GetSubPopupInstance<T>();
             currentSubPopup.Show();
             currentSubPopup.ShowMissclick();
+
+            var prevSubPopupTr = prevSubPopup?.GetTransition();
+            var curSubPopupTr = currentSubPopup.GetTransition();
+
+            prevSubPopupTr?.InitializerCall(() => 
+            {
+                curSubPopupTr.AddLocker(prevSubPopupTr);
+            });
+            prevSubPopupTr?.AddEndListener(() => 
+            {
+                curSubPopupTr.RemoveLocker(prevSubPopupTr);
+            });
+
+            curSubPopupTr.InitializerCall(() => 
+            {
+                prevSubPopupTr?.AddLocker(curSubPopupTr);
+            });
+            curSubPopupTr.AddPreparedListener(() => 
+            {
+                prevSubPopupTr?.RemoveLocker(curSubPopupTr);
+            });
 
             return currentSubPopup as T;
         }
@@ -421,6 +643,27 @@ namespace Overlewd
             currentOverlay.Show();
             currentOverlay.ShowMissclick();
 
+            var prevOverlayTr = prevOverlay?.GetTransition();
+            var curOverlayTr = currentOverlay.GetTransition();
+
+            prevOverlayTr?.InitializerCall(() =>
+            {
+                curOverlayTr.AddLocker(prevOverlayTr);
+            });
+            prevOverlayTr?.AddEndListener(() =>
+            {
+                curOverlayTr.RemoveLocker(prevOverlayTr);
+            });
+
+            curOverlayTr.InitializerCall(() =>
+            {
+                prevOverlayTr?.AddLocker(curOverlayTr);
+            });
+            curOverlayTr.AddPreparedListener(() =>
+            {
+                prevOverlayTr?.RemoveLocker(curOverlayTr);
+            });
+
             return currentOverlay as T;
         }
 
@@ -479,6 +722,27 @@ namespace Overlewd
             currentNotification = GetNotificationInstance<T>();
             currentNotification.Show();
             currentNotification.ShowMissclick();
+
+            var prevNotificationTr = prevNotification?.GetTransition();
+            var curNotificationTr = currentNotification.GetTransition();
+
+            prevNotificationTr?.InitializerCall(() =>
+            {
+                curNotificationTr.AddLocker(prevNotificationTr);
+            });
+            prevNotificationTr?.AddEndListener(() =>
+            {
+                curNotificationTr.RemoveLocker(prevNotificationTr);
+            });
+
+            curNotificationTr.InitializerCall(() =>
+            {
+                prevNotificationTr?.AddLocker(curNotificationTr);
+            });
+            curNotificationTr.AddPreparedListener(() =>
+            {
+                prevNotificationTr?.RemoveLocker(curNotificationTr);
+            });
 
             return currentNotification as T;
         }

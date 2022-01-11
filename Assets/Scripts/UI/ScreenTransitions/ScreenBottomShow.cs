@@ -19,7 +19,7 @@ namespace Overlewd
         {
             await screen.BeforeShowAsync();
             prepared = true;
-            startTransitionListeners?.Invoke();
+            preparedTransitionListeners?.Invoke();
         }
 
         void Update()

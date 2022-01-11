@@ -61,5 +61,10 @@ namespace Overlewd
         {
             return GetComponent<ScreenHide>() != null;
         }
+
+        public ScreenTransition GetTransition()
+        {
+            return GetComponent<ScreenTransition>();
+        }
     }
 }

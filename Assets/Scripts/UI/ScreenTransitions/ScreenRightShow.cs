@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Overlewd
         {
             await screen.BeforeShowAsync();
             prepared = true;
-            startTransitionListeners?.Invoke();
+            preparedTransitionListeners?.Invoke();
         }
 
         void Update()
