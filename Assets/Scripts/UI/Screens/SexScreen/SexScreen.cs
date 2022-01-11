@@ -13,10 +13,10 @@ namespace Overlewd
 
         protected Image backImage;
 
-        protected Button nextButton;
         protected TextMeshProUGUI personageName;
         protected TextMeshProUGUI text;
 
+        protected Button textContainer;
         protected Button skipButton;
         protected Button autoplayButton;
         protected TextMeshProUGUI autoplayStatus;
@@ -39,15 +39,13 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            var textContainer = canvas.Find("TextContainer");
+            textContainer = canvas.Find("TextContainer").GetComponent<Button>();
+            textContainer.onClick.AddListener(TextContainerButtonClick);
 
             backImage = canvas.Find("BackImage").GetComponent<Image>();
 
-            nextButton = textContainer.Find("NextButton").GetComponent<Button>();
-            nextButton.onClick.AddListener(NextButtonClick);
-
-            personageName = textContainer.Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            text = textContainer.Find("Text").GetComponent<TextMeshProUGUI>();
+            personageName = textContainer.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
+            text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
@@ -75,8 +73,6 @@ namespace Overlewd
 
             ShowCurrentReplica();
             AutoplayButtonCustomize();
-
-            nextButton.gameObject.AddComponent<SizePulseSelector>();
         }
 
         protected virtual async Task EnterScreen()
@@ -132,14 +128,8 @@ namespace Overlewd
             LeaveScreen();
         }
 
-        private void NextButtonClick()
+        private void TextContainerButtonClick()
         {
-            var nextButtonSelector = nextButton.gameObject.GetComponent<Selector>();
-            if (nextButtonSelector != null)
-            {
-                Destroy(nextButtonSelector);
-            }
-
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {

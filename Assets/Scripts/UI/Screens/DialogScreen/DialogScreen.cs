@@ -17,7 +17,7 @@ namespace Overlewd
         protected Transform midCharacterPos;
         protected Transform rightCharacterPos;
 
-        protected Button nextButton;
+        protected Button textContainer;
         protected TextMeshProUGUI personageName;
         protected Image personageHead;
         protected Transform emotionBack;
@@ -55,16 +55,16 @@ namespace Overlewd
             midCharacterPos = charactersPos.Find("MidCharacterPos");
             rightCharacterPos = charactersPos.Find("RightCharacterPos");
 
-            var textContainer = canvas.Find("TextContainer");
+            textContainer = canvas.Find("TextContainer").GetComponent<Button>();
 
-            nextButton = textContainer.Find("NextButton").GetComponent<Button>();
-            nextButton.onClick.AddListener(NextButtonClick);
+            
+            textContainer.onClick.AddListener(TextContainerButtonClick);
 
-            personageName = textContainer.Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            personageHead = textContainer.Find("PersonageHead").GetComponent<Image>();
-            emotionBack = textContainer.Find("EmotionBack");
+            personageName = textContainer.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
+            personageHead = textContainer.transform.Find("PersonageHead").GetComponent<Image>();
+            emotionBack = textContainer.transform.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-            text = textContainer.Find("Text").GetComponent<TextMeshProUGUI>();
+            text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
@@ -88,8 +88,6 @@ namespace Overlewd
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
-
-            nextButton.gameObject.AddComponent<SizePulseSelector>();
         }
 
         protected virtual async Task EnterScreen()
@@ -281,14 +279,8 @@ namespace Overlewd
             LeaveScreen();
         }
 
-        private void NextButtonClick()
+        private void TextContainerButtonClick()
         {
-            var nextButtonSelector = nextButton.gameObject.GetComponent<Selector>();
-            if (nextButtonSelector != null)
-            {
-                Destroy(nextButtonSelector);
-            }
-
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {
