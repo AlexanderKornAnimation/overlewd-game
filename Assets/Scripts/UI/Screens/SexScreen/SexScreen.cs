@@ -44,7 +44,7 @@ namespace Overlewd
 
             backImage = canvas.Find("BackImage").GetComponent<Image>();
 
-            personageName = textContainer.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
+            personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();

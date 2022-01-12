@@ -60,7 +60,7 @@ namespace Overlewd
             
             textContainer.onClick.AddListener(TextContainerButtonClick);
 
-            personageName = textContainer.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
+            personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
             personageHead = textContainer.transform.Find("PersonageHead").GetComponent<Image>();
             emotionBack = textContainer.transform.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
