@@ -17,14 +17,15 @@ namespace Overlewd
         async void Start()
         {
             await screen.BeforeHideAsync();
-            prepared = true;
-            preparedTransitionListeners?.Invoke();
+            OnPrepared();
         }
 
         void Update()
         {
             if (!prepared || locked)
                 return;
+
+            OnStart();
 
             time += deltaTimeInc;
             float transitionProgressPercent = time / duration;
@@ -35,7 +36,7 @@ namespace Overlewd
 
             if (time > duration)
             {
-                endTransitionListeners?.Invoke();
+                OnEnd();
                 screen.AfterHide();
                 Destroy(gameObject);
             }

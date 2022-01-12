@@ -14,7 +14,8 @@ namespace Overlewd
         protected float duration = 0.3f;
         protected float time = 0.0f;
 
-        protected bool prepared { get; set; } = false;
+        protected bool prepared { get; private set; } = false;
+        protected bool started { get; private set; } = false;
         private List<ScreenTransition> lockers = new List<ScreenTransition>();
         public bool locked
         { 
@@ -23,9 +24,11 @@ namespace Overlewd
                 return lockers.Count > 0;
             } 
         }
-
-        protected Action preparedTransitionListeners;
-        protected Action endTransitionListeners;
+        private List<ScreenTransition> lockToPrepare = new List<ScreenTransition>();
+        private List<ScreenTransition> lockToEnd = new List<ScreenTransition>();
+        private Action preparedListeners;
+        private Action startListeners;
+        private Action endListeners;
 
         protected float deltaTimeInc
         {
@@ -41,7 +44,22 @@ namespace Overlewd
             screen = GetComponent<BaseScreen>();
         }
 
-        public void AddLocker(ScreenTransition locker)
+        public void AddPreparedListener(Action listener)
+        {
+            preparedListeners += listener;
+        }
+
+        public void AddStartListener(Action listener)
+        {
+            startListeners += listener;
+        }
+
+        public void AddEndListener(Action listenter)
+        {
+            endListeners += listenter;
+        }
+
+        private void AddLocker(ScreenTransition locker)
         {
             if (locker != null)
             {
@@ -52,7 +70,7 @@ namespace Overlewd
             }
         }
 
-        public void RemoveLocker(ScreenTransition locker)
+        private void RemoveLocker(ScreenTransition locker)
         {
             if (locker != null)
             {
@@ -60,19 +78,73 @@ namespace Overlewd
             }
         }
 
-        public void AddPreparedListener(Action listener)
+        public void LockToPrepare(ScreenTransition[] transitions)
         {
-            preparedTransitionListeners += listener;
+            foreach (var item in transitions)
+            {
+                if (item != null)
+                {
+                    if (!lockToPrepare.Contains(item))
+                    {
+                        lockToPrepare.Add(item);
+                    }
+                    item.AddLocker(this);
+                }
+            }
         }
 
-        public void AddEndListener(Action listenter)
+        private void FreeLockToPrepare()
         {
-            endTransitionListeners += listenter;
+            foreach (var item in lockToPrepare)
+            {
+                item.RemoveLocker(this);
+            }
+            lockToPrepare.Clear();
         }
 
-        public void InitializerCall(Action initializer)
+        public void LockToEnd(ScreenTransition[] transitions)
         {
-            initializer?.Invoke();
+            foreach (var item in transitions)
+            {
+                if (item != null)
+                {
+                    if (!lockToEnd.Contains(item))
+                    {
+                        lockToEnd.Add(item);
+                    }
+                    item.AddLocker(this);
+                }
+            }
+        }
+
+        private void FreeLockToEnd()
+        {
+            foreach (var item in lockToEnd)
+            {
+                item.RemoveLocker(this);
+            }
+            lockToEnd.Clear();
+        }
+
+        protected void OnPrepared()
+        {
+            prepared = true;
+            preparedListeners?.Invoke();
+            FreeLockToPrepare();
+        }
+
+        protected void OnStart()
+        {
+            if (started)
+                return;
+            startListeners?.Invoke();
+            started = true;
+        }
+
+        protected void OnEnd()
+        {
+            endListeners?.Invoke();
+            FreeLockToEnd();
         }
     }
 

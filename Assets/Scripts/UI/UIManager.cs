@@ -234,7 +234,6 @@ namespace Overlewd
 
             currentScreen = GetScreenInstance<T>();
             currentScreen.Show();
-            currentScreen.ShowMissclick();
 
             var prevSubPopupTr = prevSubPopup?.GetTransition();
             var prevPopupTr = prevPopup?.GetTransition();
@@ -242,83 +241,12 @@ namespace Overlewd
             var prevScreenTr = prevScreen?.GetTransition();
             var curScreenTr = currentScreen.GetTransition();
 
-            prevSubPopupTr?.InitializerCall(() => 
-            {
-                prevPopupTr?.AddLocker(prevSubPopupTr);
-                prevOverlayTr?.AddLocker(prevSubPopupTr);
-                prevScreenTr?.AddLocker(prevSubPopupTr);
-                curScreenTr.AddLocker(prevSubPopupTr);
-            });
-            prevSubPopupTr?.AddEndListener(() => 
-            {
-                prevPopupTr?.RemoveLocker(prevSubPopupTr);
-                prevOverlayTr?.RemoveLocker(prevSubPopupTr);
-                prevScreenTr?.RemoveLocker(prevSubPopupTr);
-                curScreenTr.RemoveLocker(prevSubPopupTr);
-            });
-
-            prevPopupTr?.InitializerCall(() => 
-            {
-                prevSubPopupTr?.AddLocker(prevPopupTr);
-                prevOverlayTr?.AddLocker(prevPopupTr);
-                prevScreenTr?.AddLocker(prevPopupTr);
-                curScreenTr.AddLocker(prevPopupTr);
-            });
-            prevPopupTr?.AddPreparedListener(() => 
-            {
-                prevSubPopupTr?.RemoveLocker(prevPopupTr);
-                prevOverlayTr?.RemoveLocker(prevPopupTr);
-                prevScreenTr?.RemoveLocker(prevPopupTr);
-                curScreenTr.RemoveLocker(prevPopupTr);
-            });
-
-            prevOverlayTr?.InitializerCall(() => 
-            {
-                prevSubPopupTr?.AddLocker(prevOverlayTr);
-                prevPopupTr?.AddLocker(prevOverlayTr);
-                prevScreenTr?.AddLocker(prevOverlayTr);
-                curScreenTr.AddLocker(prevOverlayTr);
-            });
-            prevOverlayTr?.AddPreparedListener(() =>
-            {
-                prevSubPopupTr?.RemoveLocker(prevOverlayTr);
-                prevPopupTr?.RemoveLocker(prevOverlayTr);
-                prevScreenTr?.RemoveLocker(prevOverlayTr);
-                curScreenTr.RemoveLocker(prevOverlayTr);
-            });
-
-            prevScreenTr?.InitializerCall(() => 
-            {
-                prevSubPopupTr?.AddLocker(prevScreenTr);
-                prevPopupTr?.AddLocker(prevScreenTr);
-                prevOverlayTr?.AddLocker(prevScreenTr);
-                curScreenTr.AddLocker(prevScreenTr);
-            });
-            prevScreenTr?.AddPreparedListener(() => 
-            {
-                prevSubPopupTr?.RemoveLocker(prevScreenTr);
-                prevPopupTr?.RemoveLocker(prevScreenTr);
-                prevOverlayTr?.RemoveLocker(prevScreenTr);
-            });
-            prevScreenTr?.AddEndListener(() => 
-            {
-                curScreenTr.RemoveLocker(prevScreenTr);
-            });
-
-            curScreenTr.InitializerCall(() => 
-            {
-                prevSubPopupTr?.AddLocker(curScreenTr);
-                prevPopupTr?.AddLocker(curScreenTr);
-                prevOverlayTr?.AddLocker(curScreenTr);
-                prevScreenTr?.AddLocker(curScreenTr);
-            });
-            curScreenTr.AddPreparedListener(() => 
-            {
-                prevSubPopupTr?.RemoveLocker(curScreenTr);
-                prevPopupTr?.RemoveLocker(curScreenTr);
-                prevOverlayTr?.RemoveLocker(curScreenTr);
-                prevScreenTr?.RemoveLocker(curScreenTr);
-            });
+            prevSubPopupTr?.LockToEnd(new[] { prevPopupTr, prevOverlayTr, prevScreenTr, curScreenTr });
+            prevPopupTr?.LockToPrepare(new[] { prevSubPopupTr, prevOverlayTr, prevScreenTr, curScreenTr });
+            prevOverlayTr?.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr, prevScreenTr, curScreenTr });
+            prevScreenTr?.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr, prevOverlayTr });
+            prevScreenTr?.LockToEnd(new[] { curScreenTr });
+            curScreenTr.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr, prevOverlayTr, prevScreenTr });
 
             return currentScreen as T;
         }
@@ -337,57 +265,10 @@ namespace Overlewd
             var prevOverlayTr = prevOverlay?.GetTransition();
             var prevScreenTr = prevScreen?.GetTransition();
 
-            prevSubPopupTr?.InitializerCall(() =>
-            {
-                prevPopupTr?.AddLocker(prevSubPopupTr);
-                prevOverlayTr?.AddLocker(prevSubPopupTr);
-                prevScreenTr?.AddLocker(prevSubPopupTr);
-            });
-            prevSubPopupTr?.AddEndListener(() =>
-            {
-                prevPopupTr?.RemoveLocker(prevSubPopupTr);
-                prevOverlayTr?.RemoveLocker(prevSubPopupTr);
-                prevScreenTr?.RemoveLocker(prevSubPopupTr);
-            });
-
-            prevPopupTr?.InitializerCall(() =>
-            {
-                prevSubPopupTr?.AddLocker(prevPopupTr);
-                prevOverlayTr?.AddLocker(prevPopupTr);
-                prevScreenTr?.AddLocker(prevPopupTr);
-            });
-            prevPopupTr?.AddPreparedListener(() =>
-            {
-                prevSubPopupTr?.RemoveLocker(prevPopupTr);
-                prevOverlayTr?.RemoveLocker(prevPopupTr);
-                prevScreenTr?.RemoveLocker(prevPopupTr);
-            });
-
-            prevOverlayTr?.InitializerCall(() =>
-            {
-                prevSubPopupTr?.AddLocker(prevOverlayTr);
-                prevPopupTr?.AddLocker(prevOverlayTr);
-                prevScreenTr?.AddLocker(prevOverlayTr);
-            });
-            prevOverlayTr?.AddPreparedListener(() =>
-            {
-                prevSubPopupTr?.RemoveLocker(prevOverlayTr);
-                prevPopupTr?.RemoveLocker(prevOverlayTr);
-                prevScreenTr?.RemoveLocker(prevOverlayTr);
-            });
-
-            prevScreenTr?.InitializerCall(() =>
-            {
-                prevSubPopupTr?.AddLocker(prevScreenTr);
-                prevPopupTr?.AddLocker(prevScreenTr);
-                prevOverlayTr?.AddLocker(prevScreenTr);
-            });
-            prevScreenTr?.AddPreparedListener(() =>
-            {
-                prevSubPopupTr?.RemoveLocker(prevScreenTr);
-                prevPopupTr?.RemoveLocker(prevScreenTr);
-                prevOverlayTr?.RemoveLocker(prevScreenTr);
-            });
+            prevSubPopupTr?.LockToEnd(new[] { prevPopupTr, prevOverlayTr, prevScreenTr });
+            prevPopupTr?.LockToPrepare(new[] { prevSubPopupTr, prevOverlayTr, prevScreenTr });
+            prevOverlayTr?.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr, prevScreenTr });
+            prevScreenTr?.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr, prevOverlayTr });
         }
 
         //Popup Layer
@@ -437,55 +318,26 @@ namespace Overlewd
 
             currentPopup = GetPopupInstance<T>();
             currentPopup.Show();
-            currentPopup.ShowMissclick();
 
             var prevSubPopupTr = prevSubPopup?.GetTransition();
             var prevPopupTr = prevPopup?.GetTransition();
             var curPopupTr = currentPopup.GetTransition();
 
-            prevSubPopupTr?.InitializerCall(() =>
+            curPopupTr.AddStartListener(() => 
             {
-                prevPopupTr?.AddLocker(prevSubPopupTr);
-                curPopupTr.AddLocker(prevSubPopupTr);
-            });
-            prevSubPopupTr?.AddEndListener(() =>
-            {
-                prevPopupTr?.RemoveLocker(prevSubPopupTr);
-                curPopupTr.RemoveLocker(prevSubPopupTr);
+                currentPopup.ShowMissclick();
             });
 
-            prevPopupTr?.InitializerCall(() =>
-            {
-                prevSubPopupTr?.AddLocker(prevPopupTr);
-                curPopupTr.AddLocker(prevPopupTr);
-            });
-            prevPopupTr?.AddPreparedListener(() =>
-            {
-                prevSubPopupTr?.RemoveLocker(prevPopupTr);
-            });
-            prevPopupTr?.AddEndListener(() =>
-            {
-                curPopupTr?.RemoveLocker(prevPopupTr);
-            });
-
-            curPopupTr.InitializerCall(() => 
-            {
-                prevSubPopupTr?.AddLocker(curPopupTr);
-                prevPopupTr?.AddLocker(curPopupTr);
-            });
-            curPopupTr.AddPreparedListener(() => 
-            {
-                prevSubPopupTr?.RemoveLocker(curPopupTr);
-                prevPopupTr?.RemoveLocker(curPopupTr);
-            });
+            prevSubPopupTr?.LockToEnd(new[] { prevPopupTr, curPopupTr });
+            prevPopupTr?.LockToPrepare(new[] { prevSubPopupTr });
+            prevPopupTr?.LockToEnd(new[] { curPopupTr });
+            curPopupTr.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr });
 
             return currentPopup as T;
         }
 
         public static void HidePopup()
         {
-            HidePopupMissclick();
-
             prevPopup = currentPopup;
             currentPopup = null;
             prevPopup?.Hide();
@@ -495,23 +347,13 @@ namespace Overlewd
             var prevSubPopupTr = prevSubPopup?.GetTransition();
             var prevPopupTr = prevPopup?.GetTransition();
 
-            prevSubPopupTr?.InitializerCall(() =>
+            prevPopupTr?.AddStartListener(() => 
             {
-                prevPopupTr?.AddLocker(prevSubPopupTr);
-            });
-            prevSubPopupTr?.AddEndListener(() =>
-            {
-                prevPopupTr?.RemoveLocker(prevSubPopupTr);
+                HidePopupMissclick();
             });
 
-            prevPopupTr?.InitializerCall(() =>
-            {
-                prevSubPopupTr?.AddLocker(prevPopupTr);
-            });
-            prevPopupTr?.AddPreparedListener(() =>
-            {
-                prevSubPopupTr?.RemoveLocker(prevPopupTr);
-            });
+            prevSubPopupTr?.LockToEnd(new[] { prevPopupTr });
+            prevPopupTr?.LockToPrepare(new[] { prevSubPopupTr });
         }
 
         //SubPopup Layer
@@ -560,39 +402,33 @@ namespace Overlewd
 
             currentSubPopup = GetSubPopupInstance<T>();
             currentSubPopup.Show();
-            currentSubPopup.ShowMissclick();
 
             var prevSubPopupTr = prevSubPopup?.GetTransition();
             var curSubPopupTr = currentSubPopup.GetTransition();
 
-            prevSubPopupTr?.InitializerCall(() => 
+            curSubPopupTr.AddStartListener(() => 
             {
-                curSubPopupTr.AddLocker(prevSubPopupTr);
-            });
-            prevSubPopupTr?.AddEndListener(() => 
-            {
-                curSubPopupTr.RemoveLocker(prevSubPopupTr);
+                currentSubPopup.ShowMissclick();
             });
 
-            curSubPopupTr.InitializerCall(() => 
-            {
-                prevSubPopupTr?.AddLocker(curSubPopupTr);
-            });
-            curSubPopupTr.AddPreparedListener(() => 
-            {
-                prevSubPopupTr?.RemoveLocker(curSubPopupTr);
-            });
+            prevSubPopupTr?.LockToEnd(new[] { curSubPopupTr });
+            curSubPopupTr.LockToPrepare(new[] { prevSubPopupTr });
 
             return currentSubPopup as T;
         }
 
         public static void HideSubPopup()
         {
-            HideSubPopupMissclick();
-
             prevSubPopup = currentSubPopup;
             currentSubPopup = null;
             prevSubPopup?.Hide();
+
+            var prevSubPopupTr = prevSubPopup?.GetTransition();
+
+            prevSubPopupTr?.AddStartListener(() => 
+            {
+                HideSubPopupMissclick();
+            });
         }
 
         //Overlay Layer
@@ -641,39 +477,33 @@ namespace Overlewd
 
             currentOverlay = GetOverlayInstance<T>();
             currentOverlay.Show();
-            currentOverlay.ShowMissclick();
 
             var prevOverlayTr = prevOverlay?.GetTransition();
             var curOverlayTr = currentOverlay.GetTransition();
 
-            prevOverlayTr?.InitializerCall(() =>
+            curOverlayTr.AddStartListener(() => 
             {
-                curOverlayTr.AddLocker(prevOverlayTr);
-            });
-            prevOverlayTr?.AddEndListener(() =>
-            {
-                curOverlayTr.RemoveLocker(prevOverlayTr);
+                currentOverlay.ShowMissclick();
             });
 
-            curOverlayTr.InitializerCall(() =>
-            {
-                prevOverlayTr?.AddLocker(curOverlayTr);
-            });
-            curOverlayTr.AddPreparedListener(() =>
-            {
-                prevOverlayTr?.RemoveLocker(curOverlayTr);
-            });
+            prevOverlayTr?.LockToEnd(new[] { curOverlayTr });
+            curOverlayTr.LockToPrepare(new[] { prevOverlayTr });
 
             return currentOverlay as T;
         }
 
         public static void HideOverlay()
         {
-            HideOverlayMissclick();
-
             prevOverlay = currentOverlay;
             currentOverlay = null;
             prevOverlay?.Hide();
+
+            var prevOverlayTr = prevOverlay?.GetTransition();
+
+            prevOverlayTr?.AddStartListener(() => 
+            {
+                HideOverlayMissclick();
+            });
         }
 
         //Notification Layer
@@ -721,39 +551,33 @@ namespace Overlewd
 
             currentNotification = GetNotificationInstance<T>();
             currentNotification.Show();
-            currentNotification.ShowMissclick();
 
             var prevNotificationTr = prevNotification?.GetTransition();
             var curNotificationTr = currentNotification.GetTransition();
 
-            prevNotificationTr?.InitializerCall(() =>
+            curNotificationTr.AddStartListener(() => 
             {
-                curNotificationTr.AddLocker(prevNotificationTr);
-            });
-            prevNotificationTr?.AddEndListener(() =>
-            {
-                curNotificationTr.RemoveLocker(prevNotificationTr);
+                currentNotification.ShowMissclick();
             });
 
-            curNotificationTr.InitializerCall(() =>
-            {
-                prevNotificationTr?.AddLocker(curNotificationTr);
-            });
-            curNotificationTr.AddPreparedListener(() =>
-            {
-                prevNotificationTr?.RemoveLocker(curNotificationTr);
-            });
+            prevNotificationTr?.LockToEnd(new[] { curNotificationTr });
+            curNotificationTr.LockToPrepare(new[] { prevNotificationTr });
 
             return currentNotification as T;
         }
 
         public static void HideNotification()
         {
-            HideNotificationMissclick();
-
             prevNotification = currentNotification;
             currentNotification = null;
             prevNotification?.Hide();
+
+            var prevNotificationTr = prevNotification?.GetTransition();
+
+            prevNotificationTr?.AddStartListener(() => 
+            {
+                HideNotificationMissclick();
+            });
         }
 
         //Dialog Layer

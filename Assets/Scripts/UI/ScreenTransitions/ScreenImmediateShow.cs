@@ -14,8 +14,7 @@ namespace Overlewd
         async void Start()
         {
             await screen.BeforeShowAsync();
-            prepared = true;
-            preparedTransitionListeners?.Invoke();
+            OnPrepared();
         }
 
         void Update()
@@ -23,7 +22,9 @@ namespace Overlewd
             if (!prepared || locked)
                 return;
 
-            endTransitionListeners?.Invoke();
+            OnStart();
+
+            OnEnd();
             screen.AfterShow();
             Destroy(this);
         }
