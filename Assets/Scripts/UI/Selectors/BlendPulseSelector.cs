@@ -29,7 +29,15 @@ namespace Overlewd
             float periodLen = 2.0f;
             float periodProgress = Time.time / periodLen - Mathf.Floor(Time.time / periodLen);
             float selectLevel = (Mathf.Sin(Mathf.PI * 2.0f * periodProgress) + 1.0f) * 0.5f;
+
             mtl.SetFloat("_SelectLevel", selectLevel);
+            foreach (var image in images)
+            {
+                if (image.maskable)
+                {
+                    image.materialForRendering.SetFloat("_SelectLevel", selectLevel);
+                }
+            }
         }
 
         void OnDestroy()

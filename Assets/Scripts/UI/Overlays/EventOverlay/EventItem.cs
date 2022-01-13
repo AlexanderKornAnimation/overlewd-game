@@ -22,7 +22,7 @@ namespace Overlewd
 
             private List<Image> rewards = new List<Image>();
 
-            void Start()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -32,9 +32,10 @@ namespace Overlewd
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
+            }
 
-                mapButton.gameObject.AddComponent<BlendPulseSelector>();
-                
+            void Start()
+            {
                 CustomizeItem();
             }
 
@@ -58,6 +59,8 @@ namespace Overlewd
                 rewards[2].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Wood");
                 rewards[3].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Stone");
                 rewards[4].sprite = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Copper");
+
+                mapButton.gameObject.AddComponent<BlendPulseSelector>();
             }
 
             private void ToMapClick()
