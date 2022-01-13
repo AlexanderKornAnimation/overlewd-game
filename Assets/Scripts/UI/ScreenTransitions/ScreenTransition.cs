@@ -16,14 +16,17 @@ namespace Overlewd
 
         protected bool prepared { get; private set; } = false;
         protected bool started { get; private set; } = false;
-        private List<ScreenTransition> lockers = new List<ScreenTransition>();
+
+        private List<ScreenTransition> prepareLockers = new List<ScreenTransition>();
+        private List<ScreenTransition> endLockers = new List<ScreenTransition>();
         public bool locked
         { 
             get 
             {
-                return lockers.Count > 0;
+                return (prepareLockers.Count > 0) || (endLockers.Count > 0);
             } 
         }
+
         private List<ScreenTransition> lockToPrepare = new List<ScreenTransition>();
         private List<ScreenTransition> lockToEnd = new List<ScreenTransition>();
         private Action preparedListeners;
@@ -59,22 +62,41 @@ namespace Overlewd
             endListeners += listenter;
         }
 
-        private void AddLocker(ScreenTransition locker)
+        private void AddPrepareLocker(ScreenTransition locker)
         {
             if (locker != null)
             {
-                if (!lockers.Contains(locker))
+                if (!prepareLockers.Contains(locker))
                 {
-                    lockers.Add(locker);
+                    prepareLockers.Add(locker);
                 }
             }
         }
 
-        private void RemoveLocker(ScreenTransition locker)
+        private void RemovePrepareLocker(ScreenTransition locker)
         {
             if (locker != null)
             {
-                lockers.Remove(locker);
+                prepareLockers.Remove(locker);
+            }
+        }
+
+        private void AddEndLocker(ScreenTransition locker)
+        {
+            if (locker != null)
+            {
+                if (!endLockers.Contains(locker))
+                {
+                    endLockers.Add(locker);
+                }
+            }
+        }
+
+        private void RemoveEndLocker(ScreenTransition locker)
+        {
+            if (locker != null)
+            {
+                endLockers.Remove(locker);
             }
         }
 
@@ -88,7 +110,7 @@ namespace Overlewd
                     {
                         lockToPrepare.Add(item);
                     }
-                    item.AddLocker(this);
+                    item.AddPrepareLocker(this);
                 }
             }
         }
@@ -97,7 +119,7 @@ namespace Overlewd
         {
             foreach (var item in lockToPrepare)
             {
-                item.RemoveLocker(this);
+                item.RemovePrepareLocker(this);
             }
             lockToPrepare.Clear();
         }
@@ -112,7 +134,7 @@ namespace Overlewd
                     {
                         lockToEnd.Add(item);
                     }
-                    item.AddLocker(this);
+                    item.AddEndLocker(this);
                 }
             }
         }
@@ -121,7 +143,7 @@ namespace Overlewd
         {
             foreach (var item in lockToEnd)
             {
-                item.RemoveLocker(this);
+                item.RemoveEndLocker(this);
             }
             lockToEnd.Clear();
         }

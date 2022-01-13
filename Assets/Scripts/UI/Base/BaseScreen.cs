@@ -19,12 +19,12 @@ namespace Overlewd
 
         public virtual ScreenShow Show()
         {
-            return gameObject.AddComponent<ScreenBottomShow>();
+            return gameObject.AddComponent<ScreenTopShow>();
         }
 
         public virtual ScreenHide Hide()
         {
-            return gameObject.AddComponent<ScreenBottomHide>();
+            return gameObject.AddComponent<ScreenTopHide>();
         }
 
         public virtual async Task BeforeShowAsync()

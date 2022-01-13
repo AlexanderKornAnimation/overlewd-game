@@ -96,6 +96,16 @@ namespace Overlewd
         {
             UIManager.ShowSubPopup<BottlesSubPopup>();
         }
+
+        public override ScreenShow Show()
+        {
+            return gameObject.AddComponent<ScreenLeftShow>();
+        }
+
+        public override ScreenHide Hide()
+        {
+            return gameObject.AddComponent<ScreenLeftHide>();
+        }
     }
 
 }

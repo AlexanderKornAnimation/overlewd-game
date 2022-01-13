@@ -11,6 +11,16 @@ namespace Overlewd
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/ChestPopup/ChestPopup", transform);
         }
+
+        public override ScreenShow Show()
+        {
+            return gameObject.AddComponent<ScreenLeftShow>();
+        }
+
+        public override ScreenHide Hide()
+        {
+            return gameObject.AddComponent<ScreenLeftHide>();
+        }
     }
 
 }
