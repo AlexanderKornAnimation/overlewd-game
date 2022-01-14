@@ -249,6 +249,11 @@ namespace Overlewd
             prevScreenTr?.LockToEnd(new[] { curScreenTr });
             curScreenTr.LockToPrepare(new[] { prevSubPopupTr, prevPopupTr, prevOverlayTr, prevScreenTr });
 
+            curScreenTr.AddEndListener(() => 
+            {
+                ResourceManager.UnloadUnusedAssets();
+            });
+
             return currentScreen as T;
         }
 
