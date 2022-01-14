@@ -17,24 +17,6 @@ Shader "BlendPulseShader"
 
     SubShader
     {
-        /*Cull Off
-        ZWrite Off
-        ZTest Always
-
-        Blend SrcAlpha OneMinusSrcAlpha
-
-        // required for UI.Mask
-        Stencil
-        {
-            Ref[_Stencil]
-            Comp[_StencilComp]
-            Pass[_StencilOp]
-            ReadMask[_StencilReadMask]
-            WriteMask[_StencilWriteMask]
-        }
-        ColorMask[_ColorMask]
-        */
-
         Tags
         {
             "Queue" = "Transparent"

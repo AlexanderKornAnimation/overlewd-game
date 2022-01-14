@@ -83,7 +83,7 @@ namespace Overlewd
             uiRootScreenLayerGO_aspectRatioFitter.aspectRatio = currentAspectRatio;
 
             //cut screen content outside
-            //var uiRootScreenLayerGO_rectMask2D = uiRootScreenLayerGO.AddComponent<RectMask2D>();
+            var uiRootScreenLayerGO_rectMask2D = uiRootScreenLayerGO.AddComponent<RectMask2D>();
         }
 
         private static void ConfigureLayer(out GameObject layerGO, string name, int siblingIndex)
