@@ -1,6 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-499636520775916992
+--- !u!114 &-4693898822097161550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/FMODAssets/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 637781014446329651
+  FileSizes: []
+  Exists: 1
+--- !u!114 &-2091567277388904415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,10 +30,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
   m_Name: bank:/Master.strings.bank
   m_EditorClassIdentifier: 
-  Path: Assets/Resources/Sounds/Master.strings.bank
+  Path: Assets/FMODAssets/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 637780448920624221
+  lastModified: 637781014446339651
   FileSizes:
   - Name: 
     Value: 754
@@ -33,16 +51,16 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: -499636520775916992}
-  - {fileID: 1523865402935052037}
+  - {fileID: -2091567277388904415}
+  - {fileID: -4693898822097161550}
   EditorEvents:
   - {fileID: 707036965883745621}
   EditorParameters: []
   MasterBanks:
-  - {fileID: 1523865402935052037}
+  - {fileID: -4693898822097161550}
   StringsBanks:
-  - {fileID: -499636520775916992}
-  cacheTime: 637780448920624221
+  - {fileID: -2091567277388904415}
+  cacheTime: 637781014446339651
   cacheVersion: 10
 --- !u!114 &707036965883745621
 MonoBehaviour:
@@ -63,7 +81,7 @@ MonoBehaviour:
     Data3: 780159422
     Data4: -597360560
   Banks:
-  - {fileID: 1523865402935052037}
+  - {fileID: -4693898822097161550}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -71,21 +89,3 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &1523865402935052037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: Assets/Resources/Sounds/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 637780448920611492
-  FileSizes: []
-  Exists: 1
