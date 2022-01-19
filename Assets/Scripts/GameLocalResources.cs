@@ -17,7 +17,8 @@ namespace Overlewd
             },
             ["FinalSex1"] = new Dictionary<string, string>
             {
-                ["idle"] = "FTUE/MainSexAnims/FinalSex1/idle_SkeletonData"
+                ["back"] = "FTUE/MainSexAnims/FinalSex1/back_SkeletonData",
+                ["idle"] = "FTUE/MainSexAnims/FinalSex1/idle01_SkeletonData"
             },
 
             ["MainSex2"] = new Dictionary<string, string>
@@ -27,7 +28,8 @@ namespace Overlewd
             },
             ["FinalSex2"] = new Dictionary<string, string>
             {
-                ["idle"] = "FTUE/MainSexAnims/FinalSex2/idle_SkeletonData"
+                ["back"] = "FTUE/MainSexAnims/FinalSex2/back_SkeletonData",
+                ["idle"] = "FTUE/MainSexAnims/FinalSex2/idle01_SkeletonData"
             },
 
             ["MainSex3"] = new Dictionary<string, string>
@@ -37,7 +39,8 @@ namespace Overlewd
             },
             ["FinalSex3"] = new Dictionary<string, string>
             {
-                ["idle"] = "FTUE/MainSexAnims/FinalSex3/idle_SkeletonData"
+                ["back"] = "FTUE/MainSexAnims/FinalSex3/back_SkeletonData",
+                ["idle"] = "FTUE/MainSexAnims/FinalSex3/idle01_SkeletonData"
             },
         };
 

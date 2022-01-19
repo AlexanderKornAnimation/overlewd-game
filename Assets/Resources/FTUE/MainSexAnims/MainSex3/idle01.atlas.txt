@@ -1,223 +1,223 @@
 
 idle01.png
-size: 2048,1024
+size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 Ulvi_leg
-  rotate: false
-  xy: 572, 228
-  size: 650, 136
-  orig: 650, 162
+  rotate: 180
+  xy: 1305, 233
+  size: 743, 155
+  orig: 743, 186
   offset: 0, 0
   index: -1
 body_man
   rotate: false
-  xy: 0, 177
-  size: 682, 774
-  orig: 682, 774
+  xy: 0, 316
+  size: 779, 885
+  orig: 779, 885
   offset: 0, 0
   index: -1
 body_ulv
   rotate: false
-  xy: 1059, 361
-  size: 491, 591
-  orig: 770, 634
-  offset: 279, 0
+  xy: 1210, 525
+  size: 561, 676
+  orig: 880, 724
+  offset: 319, 0
   index: -1
 boob_L
   rotate: false
-  xy: 1071, 785
-  size: 188, 167
-  orig: 188, 167
+  xy: 1224, 1010
+  size: 215, 190
+  orig: 215, 190
   offset: 0, 0
   index: -1
 boob_R
-  rotate: false
-  xy: 1483, 610
-  size: 207, 161
-  orig: 207, 161
+  rotate: 180
+  xy: 1798, 64
+  size: 236, 184
+  orig: 236, 184
   offset: 0, 0
   index: -1
 brow_l
   rotate: false
-  xy: 1960, 868
-  size: 77, 83
-  orig: 77, 83
+  xy: 1961, 495
+  size: 87, 93
+  orig: 88, 94
   offset: 0, 0
   index: -1
 brow_r
   rotate: false
-  xy: 681, 834
-  size: 66, 26
-  orig: 67, 27
+  xy: 1892, 964
+  size: 75, 30
+  orig: 76, 31
   offset: 0, 1
   index: -1
 culon
   rotate: true
-  xy: 375, 2
-  size: 199, 323
-  orig: 199, 323
+  xy: 389, 1
+  size: 227, 370
+  orig: 227, 370
   offset: 0, 0
   index: -1
 eyelashes_L
   rotate: false
-  xy: 1661, 708
-  size: 85, 64
-  orig: 86, 64
+  xy: 1058, 582
+  size: 98, 73
+  orig: 98, 73
   offset: 0, 0
   index: -1
 eyelashes_R
   rotate: false
-  xy: 0, 807
-  size: 57, 46
-  orig: 57, 46
+  xy: 1967, 942
+  size: 65, 52
+  orig: 65, 52
   offset: 0, 0
   index: -1
 finger_UP
   rotate: false
-  xy: 1131, 742
-  size: 70, 43
-  orig: 70, 43
+  xy: 1301, 961
+  size: 80, 49
+  orig: 80, 49
   offset: 0, 0
   index: -1
 finger_UP2
   rotate: false
-  xy: 681, 860
-  size: 95, 91
-  orig: 95, 92
+  xy: 779, 1096
+  size: 109, 104
+  orig: 109, 105
   offset: 0, 1
   index: -1
 finger_down
   rotate: false
-  xy: 1782, 822
-  size: 67, 129
-  orig: 68, 130
+  xy: 1224, 865
+  size: 77, 147
+  orig: 78, 148
   offset: 1, 1
   index: -1
 hair_back
   rotate: false
-  xy: 776, 897
-  size: 78, 55
-  orig: 78, 55
+  xy: 888, 1138
+  size: 89, 62
+  orig: 89, 62
   offset: 0, 0
   index: -1
 hair_frontL1
   rotate: false
-  xy: 1849, 846
-  size: 113, 106
-  orig: 113, 106
+  xy: 1104, 582
+  size: 129, 121
+  orig: 130, 121
   offset: 0, 0
   index: -1
 hair_frontL2
   rotate: false
-  xy: 1483, 562
-  size: 127, 68
-  orig: 127, 68
+  xy: 1753, 918
+  size: 146, 77
+  orig: 146, 78
   offset: 0, 0
   index: -1
 hair_front_midl
   rotate: false
-  xy: 1053, 694
-  size: 78, 115
-  orig: 78, 115
+  xy: 0, 886
+  size: 89, 131
+  orig: 89, 131
   offset: 0, 0
   index: -1
 hair_front_r
   rotate: false
-  xy: 0, 669
-  size: 76, 134
-  orig: 76, 134
+  xy: 1182, 477
+  size: 86, 153
+  orig: 86, 154
   offset: 0, 0
   index: -1
 hand_L_man
   rotate: 180
-  xy: 1273, 287
-  size: 774, 557
-  orig: 774, 557
+  xy: 1163, 325
+  size: 885, 636
+  orig: 885, 636
   offset: 0, 0
   index: -1
 hand_R_ulv
   rotate: false
-  xy: 0, 90
-  size: 134, 144
-  orig: 134, 144
+  xy: 1455, 67
+  size: 154, 165
+  orig: 154, 165
   offset: 0, 0
   index: -1
 hand_r_man
   rotate: true
-  xy: 1797, 47
-  size: 141, 251
-  orig: 141, 252
+  xy: 1168, 71
+  size: 161, 287
+  orig: 161, 288
   offset: 0, 1
   index: -1
 head
   rotate: false
-  xy: 1718, 188
-  size: 330, 222
-  orig: 330, 222
+  xy: 786, 327
+  size: 377, 253
+  orig: 377, 254
   offset: 0, 0
   index: -1
 heand_L_Ulv
   rotate: true
-  xy: 1080, 140
-  size: 147, 582
-  orig: 147, 582
+  xy: 502, 191
+  size: 168, 666
+  orig: 168, 666
   offset: 0, 0
   index: -1
 leg_man
   rotate: false
-  xy: 698, 80
-  size: 382, 155
-  orig: 382, 155
+  xy: 0, 138
+  size: 436, 178
+  orig: 436, 178
   offset: 0, 0
   index: -1
 leg_r_ulv
   rotate: true
-  xy: 589, 366
-  size: 585, 482
-  orig: 585, 482
+  xy: 673, 532
+  size: 669, 551
+  orig: 669, 551
   offset: 0, 0
   index: -1
 mout
   rotate: false
-  xy: 1240, 926
-  size: 32, 25
-  orig: 32, 25
+  xy: 1417, 1172
+  size: 36, 28
+  orig: 36, 28
   offset: 0, 0
   index: -1
 puppil_L
   rotate: false
-  xy: 0, 920
-  size: 34, 31
-  orig: 34, 31
+  xy: 0, 1165
+  size: 38, 35
+  orig: 38, 35
   offset: 0, 0
   index: -1
 puppil_R
   rotate: false
-  xy: 1064, 921
-  size: 29, 30
-  orig: 29, 30
+  xy: 1216, 1166
+  size: 33, 34
+  orig: 33, 34
   offset: 0, 0
   index: -1
 white_L
   rotate: false
-  xy: 1981, 831
-  size: 60, 37
-  orig: 60, 37
-  offset: 0, 0
+  xy: 779, 1054
+  size: 68, 42
+  orig: 69, 42
+  offset: 1, 0
   index: -1
 white_R
   rotate: false
-  xy: 1849, 825
-  size: 47, 40
-  orig: 48, 41
+  xy: 0, 1042
+  size: 53, 45
+  orig: 54, 46
   offset: 0, 1
   index: -1
 wool
   rotate: false
-  xy: 1549, 771
-  size: 233, 180
-  orig: 233, 180
+  xy: 1770, 994
+  size: 266, 206
+  orig: 266, 206
   offset: 0, 0
   index: -1

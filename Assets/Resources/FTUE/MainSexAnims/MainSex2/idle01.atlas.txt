@@ -1,237 +1,244 @@
 
 idle01.png
-size: 2048,2048
+size: 2400,1865
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 arm-r-gg
-  rotate: 270
-  xy: 0, 285
-  size: 320, 308
-  orig: 320, 308
+  rotate: false
+  xy: 2045, 154
+  size: 355, 342
+  orig: 355, 342
   offset: 0, 0
   index: -1
 body-gg
   rotate: false
-  xy: 1292, 245
-  size: 508, 307
-  orig: 508, 307
-  offset: 0, 0
+  xy: 1284, 365
+  size: 562, 339
+  orig: 564, 341
+  offset: 1, 1
   index: -1
 brow-l
   rotate: false
-  xy: 1861, 1861
-  size: 117, 22
-  orig: 117, 22
+  xy: 1546, 1841
+  size: 130, 24
+  orig: 130, 24
   offset: 0, 0
   index: -1
 brow-r
   rotate: false
-  xy: 871, 1824
-  size: 12, 59
-  orig: 12, 59
+  xy: 0, 1800
+  size: 13, 65
+  orig: 13, 65
   offset: 0, 0
   index: -1
 cock
-  rotate: 180
-  xy: 0, 45
-  size: 293, 205
-  orig: 293, 205
+  rotate: false
+  xy: 692, 65
+  size: 326, 228
+  orig: 326, 228
   offset: 0, 0
   index: -1
 dick
   rotate: false
-  xy: 1487, 722
-  size: 221, 375
-  orig: 221, 375
+  xy: 1846, 287
+  size: 245, 417
+  orig: 245, 417
   offset: 0, 0
   index: -1
 ear-l
   rotate: false
-  xy: 0, 600
-  size: 240, 231
-  orig: 240, 231
+  xy: 2072, 1608
+  size: 267, 257
+  orig: 267, 257
   offset: 0, 0
   index: -1
 ear-r
   rotate: false
-  xy: 543, 1077
-  size: 157, 118
-  orig: 157, 118
+  xy: 1007, 1181
+  size: 174, 131
+  orig: 174, 131
   offset: 0, 0
   index: -1
 hair-1
   rotate: false
-  xy: 1310, 78
-  size: 160, 167
-  orig: 160, 167
+  xy: 1106, 447
+  size: 178, 186
+  orig: 178, 186
   offset: 0, 0
   index: -1
 hair-2
   rotate: false
-  xy: 812, 54
-  size: 221, 244
-  orig: 221, 244
+  xy: 1681, 40
+  size: 245, 271
+  orig: 245, 271
   offset: 0, 0
   index: -1
 hair-3
   rotate: false
-  xy: 1551, 1810
-  size: 86, 73
-  orig: 86, 73
+  xy: 148, 1784
+  size: 95, 81
+  orig: 95, 81
   offset: 0, 0
   index: -1
 hair-4
   rotate: false
-  xy: 1908, 1342
-  size: 140, 252
-  orig: 140, 252
+  xy: 1560, 1071
+  size: 155, 280
+  orig: 155, 280
   offset: 0, 0
   index: -1
 hair-5
   rotate: false
-  xy: 1067, 1790
-  size: 58, 93
-  orig: 58, 93
+  xy: 530, 1762
+  size: 64, 103
+  orig: 64, 103
   offset: 0, 0
   index: -1
 hair-6
   rotate: false
-  xy: 0, 1388
-  size: 138, 163
-  orig: 138, 163
+  xy: 0, 1684
+  size: 153, 181
+  orig: 153, 181
   offset: 0, 0
   index: -1
 hand-l-gg
-  rotate: true
-  xy: 1549, 598
-  size: 158, 224
-  orig: 158, 224
+  rotate: false
+  xy: 2225, 977
+  size: 175, 249
+  orig: 175, 249
   offset: 0, 0
   index: -1
 hand-r-gg
   rotate: false
-  xy: 626, 800
-  size: 317, 275
-  orig: 317, 275
+  xy: 807, 272
+  size: 352, 305
+  orig: 352, 305
   offset: 0, 0
   index: -1
 head
+  rotate: true
+  xy: 369, 252
+  size: 456, 484
+  orig: 456, 494
+  offset: 0, 10
+  index: -1
+hip-fin-l
   rotate: 270
-  xy: 1552, 1472
-  size: 410, 436
-  orig: 410, 445
-  offset: 0, 9
+  xy: 0, 403
+  size: 855, 370
+  orig: 855, 370
+  offset: 0, 0
+  index: -1
+hip-fin-r
+  rotate: false
+  xy: 637, 1114
+  size: 923, 751
+  orig: 923, 751
+  offset: 0, 0
   index: -1
 hip-l
-  rotate: 180
-  xy: 964, 528
-  size: 523, 676
-  orig: 523, 716
-  offset: 0, 40
-  index: -1
-hip-l-gg
-  rotate: 180
-  xy: 290, 378
-  size: 716, 419
-  orig: 716, 419
-  offset: 0, 0
+  rotate: true
+  xy: 678, 577
+  size: 581, 751
+  orig: 581, 796
+  offset: 0, 45
   index: -1
 hip-r
-  rotate: true
-  xy: 0, 679
-  size: 706, 634
-  orig: 706, 634
-  offset: 0, 0
-  index: -1
-hip-r-gg
-  rotate: false
-  xy: 0, 1052
-  size: 965, 831
-  orig: 965, 831
+  rotate: 270
+  xy: 1557, 1081
+  size: 784, 704
+  orig: 784, 704
   offset: 0, 0
   index: -1
 lashes-l
   rotate: false
-  xy: 1945, 1823
-  size: 91, 59
-  orig: 91, 59
+  xy: 1640, 1799
+  size: 101, 66
+  orig: 101, 66
   offset: 0, 0
   index: -1
 lashes-r
   rotate: false
-  xy: 883, 1846
-  size: 32, 37
-  orig: 33, 38
+  xy: 488, 1825
+  size: 35, 41
+  orig: 37, 42
   offset: 0, 0
   index: -1
-leg-r-gg
+leg-fin-l
   rotate: false
-  xy: 1761, 467
-  size: 286, 844
-  orig: 286, 844
+  xy: 337, 26
+  size: 199, 377
+  orig: 199, 377
+  offset: 0, 0
+  index: -1
+leg-fin-r
+  rotate: true
+  xy: 1425, 704
+  size: 395, 810
+  orig: 395, 810
   offset: 0, 0
   index: -1
 liq-1
   rotate: false
-  xy: 907, 58
-  size: 449, 266
-  orig: 449, 266
+  xy: 1867, 1
+  size: 499, 295
+  orig: 499, 295
   offset: 0, 0
   index: -1
 liq-1-2
   rotate: false
-  xy: 893, 1702
-  size: 174, 181
-  orig: 174, 181
+  xy: 1445, 1664
+  size: 193, 201
+  orig: 193, 201
   offset: 0, 0
   index: -1
 liq-2
-  rotate: false
-  xy: 1800, 170
-  size: 166, 297
-  orig: 167, 297
-  offset: 1, 0
+  rotate: true
+  xy: 1353, 182
+  size: 183, 328
+  orig: 185, 330
+  offset: 1, 1
   index: -1
 liq-3
   rotate: false
-  xy: 1444, 1767
-  size: 107, 115
-  orig: 107, 116
-  offset: 0, 0
+  xy: 2261, 1481
+  size: 117, 127
+  orig: 119, 129
+  offset: 1, 1
   index: -1
 neck
   rotate: false
-  xy: 253, 90
-  size: 303, 287
-  orig: 303, 287
+  xy: 0, 84
+  size: 337, 319
+  orig: 337, 319
   offset: 0, 0
   index: -1
 pie
-  rotate: 270
-  xy: 1071, 214
-  size: 326, 221
-  orig: 347, 221
+  rotate: false
+  xy: 304, 747
+  size: 363, 245
+  orig: 385, 245
   offset: 0, 0
   index: -1
 pie-1
   rotate: false
-  xy: 1356, 2
-  size: 273, 244
-  orig: 273, 244
+  xy: 2091, 572
+  size: 303, 271
+  orig: 303, 271
   offset: 0, 0
   index: -1
 shoulder
   rotate: false
-  xy: 556, 127
-  size: 292, 250
-  orig: 292, 250
+  xy: 1029, 95
+  size: 324, 278
+  orig: 324, 278
   offset: 0, 0
   index: -1
 tail
   rotate: false
-  xy: 950, 1097
-  size: 908, 786
-  orig: 932, 786
-  offset: 24, 0
+  xy: 0, 992
+  size: 1008, 873
+  orig: 1035, 873
+  offset: 27, 0
   index: -1
