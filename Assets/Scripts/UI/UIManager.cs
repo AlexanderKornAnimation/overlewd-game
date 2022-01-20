@@ -8,6 +8,35 @@ using System.Threading.Tasks;
 
 namespace Overlewd
 {
+    public class UserInputLocker
+    {
+        private MonoBehaviour mbLocker;
+        private ScreenTransition stLocker;
+
+        public UserInputLocker(MonoBehaviour mbObj)
+        {
+            mbLocker = mbObj;
+        }
+
+        public UserInputLocker(ScreenTransition stObj)
+        {
+            stLocker = stObj;
+        }
+
+        public bool Equals(UserInputLocker other) 
+        {
+            return other != null &&
+                mbLocker == other.mbLocker &&
+                stLocker == other.stLocker;
+        }
+
+        public bool IsNull()
+        {
+            return mbLocker == null &&
+                stLocker == null;
+        }
+    }
+
     public static class UIManager
     {
         private static Vector2 currentResolution;
@@ -47,13 +76,13 @@ namespace Overlewd
         private static BaseMissclick subPopupMissclick;
         private static BaseMissclick notificationMissclick;
 
-        private static List<MonoBehaviour> userInputLockers = new List<MonoBehaviour>();
+        private static List<UserInputLocker> userInputLockers = new List<UserInputLocker>();
 
-        public static void AddUserInputLocker(MonoBehaviour locker)
+        public static void AddUserInputLocker(UserInputLocker locker)
         {
-            if (locker != null)
+            if (!locker.IsNull())
             {
-                if (!userInputLockers.Contains(locker))
+                if (!userInputLockers.Exists(item => item.Equals(locker)))
                 {
                     userInputLockers.Add(locker);
                 }
@@ -65,11 +94,15 @@ namespace Overlewd
             }
         }
 
-        public static void RemoveUserInputLocker(MonoBehaviour locker)
+        public static void RemoveUserInputLocker(UserInputLocker locker)
         {
-            if (locker != null)
+            if (!locker.IsNull())
             {
-                userInputLockers.Remove(locker);
+                var removeItem = userInputLockers.Find(item => item.Equals(locker));
+                if (removeItem != null)
+                {
+                    userInputLockers.Remove(removeItem);
+                }
             }
 
             if (userInputLockers.Count == 0)
