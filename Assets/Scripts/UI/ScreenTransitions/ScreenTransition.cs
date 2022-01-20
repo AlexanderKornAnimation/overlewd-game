@@ -11,7 +11,7 @@ namespace Overlewd
         protected RectTransform screenRectTransform;
         protected BaseScreen screen;
 
-        protected float duration = 1.3f;
+        protected float duration = 0.3f;
         protected float time = 0.0f;
 
         protected bool prepared { get; private set; } = false;
