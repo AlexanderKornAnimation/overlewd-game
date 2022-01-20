@@ -19,6 +19,9 @@ namespace Overlewd
         private static AspectRatioFitter uiRootScreenLayerGO_aspectRatioFitter;
 
         private static GameObject uiEventSystem;
+        private static EventSystem uiEventSystem_eventSystem;
+        private static StandaloneInputModule uiEventSystem_standaloneInputModule;
+        private static BaseInput uiEventSystem_baseInput;
 
         private static GameObject uiScreenLayerGO;
         private static GameObject uiPopupLayerGO;
@@ -43,6 +46,38 @@ namespace Overlewd
         private static BaseMissclick popupMissclick;
         private static BaseMissclick subPopupMissclick;
         private static BaseMissclick notificationMissclick;
+
+        private static List<MonoBehaviour> userInputLockers = new List<MonoBehaviour>();
+
+        public static void AddUserInputLocker(MonoBehaviour locker)
+        {
+            if (locker != null)
+            {
+                if (!userInputLockers.Contains(locker))
+                {
+                    userInputLockers.Add(locker);
+                }
+            }
+
+            if (userInputLockers.Count > 0)
+            {
+                uiEventSystem.SetActive(false);
+            }
+        }
+
+        public static void RemoveUserInputLocker(MonoBehaviour locker)
+        {
+            if (locker != null)
+            {
+                userInputLockers.Remove(locker);
+            }
+
+            if (userInputLockers.Count == 0)
+            {
+                uiEventSystem.SetActive(true);
+            }
+        }
+
 
         private static Vector2 SelectResolution()
         {
@@ -204,9 +239,9 @@ namespace Overlewd
             ConfigureLayer(out uiDialogLayerGO, "UIDialogLayer", 5);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
-            var uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
-            var uiEventSystem_standaloneInputModule = uiEventSystem.AddComponent<StandaloneInputModule>();
-            var uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
+            uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
+            uiEventSystem_standaloneInputModule = uiEventSystem.AddComponent<StandaloneInputModule>();
+            uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
         public static void UpdateGameData()

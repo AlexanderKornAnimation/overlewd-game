@@ -48,8 +48,10 @@ namespace Overlewd
             }
         }
 
-        void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             if (localCanvasGroup)
             {
                 Destroy(canvasGroup);
