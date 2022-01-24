@@ -145,11 +145,5 @@ namespace Overlewd
             [AdminBRO.DialogCharacterKey.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
             [AdminBRO.DialogCharacterKey.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
-
-        public static Dictionary<string, string> uiSoundEventPath = new Dictionary<string, string>()
-        {
-            ["Test"] = "event:/test"
-        };
     }
-
 }

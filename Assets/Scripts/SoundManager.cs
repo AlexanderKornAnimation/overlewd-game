@@ -6,6 +6,15 @@ namespace Overlewd
 {
     public static class SoundManager
     {
+        public class SoundPath
+        {
+            public const string CastleScreenButtons = "event:/UI/Buttons/Basic_menu_click";
+            public const string WindowSlideOn = "event:/UI/Windows/Window_slide_on";
+            public const string WindowSlideOff = "event:/UI/Windows/Window_slide_off";
+            public const string SidebarOverlayOn = "event:/UI/Windows/Deeds_slide_on";
+            public const string SidebarOverlayOff = "event:/UI/Windows/Deeds_slide_off";
+        }
+        
         private static EventInstance music;
 
         public static void PlayUISound(string soundEventPath)

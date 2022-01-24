@@ -24,6 +24,7 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
+                base.ButtonClick();
                 // UIManager.ShowScreen<ForgeScreen>();
             }
 

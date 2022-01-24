@@ -19,7 +19,7 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
-
+                
             }
 
             public static CapitolButton GetInstance(Transform parent)
