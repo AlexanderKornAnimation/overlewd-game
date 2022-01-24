@@ -10,7 +10,7 @@ namespace Overlewd
         protected override void Awake()
         {
             base.Awake();
-            ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopups/ForgePopup", imageSpawnPoint);
+            ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopups/ForgeImage", imageSpawnPoint);
         }
     }
 
