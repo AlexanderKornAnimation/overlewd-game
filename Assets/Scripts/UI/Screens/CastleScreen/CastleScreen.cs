@@ -51,6 +51,16 @@ namespace Overlewd
             Customize();
         }
 
+        public override void StartShow()
+        {
+            SoundManager.PlayUISound(SoundManager.SoundPath.CastleWindowSlideOn);
+        }
+
+        public override void StartHide()
+        {
+            SoundManager.PlayUISound(SoundManager.SoundPath.CastleWindowSlideOff);
+        }
+
         protected virtual void Customize()
         {
             NSCastleScreen.GirlBuildingButton.GetInstance(cave);

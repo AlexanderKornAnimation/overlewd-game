@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,6 +9,8 @@ namespace Overlewd
 {
     public class SidebarMenuOverlay : BaseOverlay
     {
+        protected bool isTransitionStarted = false;
+        
         protected Button castleButton;
         protected Transform castleButton_Markers;
         protected Transform castleButton_MainQuestMark;
@@ -177,6 +180,16 @@ namespace Overlewd
             forgeButton_EventMark3 = forgeButton_Markers.Find("EventMark3");
             forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
+        }
+
+        public override void StartShow()
+        {
+            SoundManager.PlayUISound(SoundManager.SoundPath.SidebarOverlayOn);
+        }
+
+        public override void StartHide()
+        {
+            SoundManager.PlayUISound(SoundManager.SoundPath.SidebarOverlayOff);
         }
 
         private void Start()
