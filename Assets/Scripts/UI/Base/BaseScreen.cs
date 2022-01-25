@@ -32,6 +32,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public virtual void StartShow()
+        {
+
+        }
+
         public virtual void AfterShow()
         {
 
@@ -40,6 +45,11 @@ namespace Overlewd
         public virtual async Task BeforeHideAsync()
         {
             await Task.CompletedTask;
+        }
+
+        public virtual void StartHide()
+        {
+
         }
 
         public virtual void AfterHide()

@@ -57,5 +57,10 @@ namespace Overlewd
                 Destroy(canvasGroup);
             }
         }
+
+        protected override void OnStartCalls()
+        {
+            screen.StartHide();
+        }
     }
 }

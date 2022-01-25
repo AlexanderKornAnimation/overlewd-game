@@ -41,5 +41,10 @@ namespace Overlewd
                 Destroy(gameObject);
             }
         }
+
+        protected override void OnStartCalls()
+        {
+            screen.StartHide();
+        }
     }
 }

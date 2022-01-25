@@ -43,5 +43,10 @@ namespace Overlewd
                 Destroy(this);
             }
         }
+
+        protected override void OnStartCalls()
+        {
+            screen.StartShow();
+        }
     }
 }

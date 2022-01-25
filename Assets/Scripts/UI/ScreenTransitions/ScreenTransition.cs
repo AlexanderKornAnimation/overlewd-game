@@ -160,6 +160,12 @@ namespace Overlewd
             prepared = true;
             preparedListeners?.Invoke();
             FreeLockToPrepare();
+            OnPreparedCalls();
+        }
+
+        protected virtual void OnPreparedCalls()
+        {
+
         }
 
         protected void OnStart()
@@ -168,21 +174,34 @@ namespace Overlewd
                 return;
             startListeners?.Invoke();
             started = true;
+            OnStartCalls();
+        }
+
+        protected virtual void OnStartCalls()
+        {
+            
         }
 
         protected void OnEnd()
         {
             endListeners?.Invoke();
             FreeLockToEnd();
+            OnEndCalls();
+        }
+
+        protected virtual void OnEndCalls()
+        {
+            
         }
     }
 
     public abstract class ScreenShow : ScreenTransition
     {
-
+        
     }
+
     public abstract class ScreenHide : ScreenTransition
     {
-
+        
     }
 }
