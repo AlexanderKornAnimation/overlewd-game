@@ -467,7 +467,7 @@ namespace Overlewd
             public string name;
             public string type;
             public string description;
-            public int goalCount;
+            public int? goalCount;
             public List<EventQuestReward> rewards;
             public string status;
             public int progressCount;
