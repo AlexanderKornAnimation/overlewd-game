@@ -19,7 +19,7 @@ namespace Overlewd
                 {
                     Error = delegate (object sender, ErrorEventArgs args)
                     {
-                        Debug.LogError($"Deserealize entity \"{typeof(T).Name}\" error:  {args.ErrorContext.Error.Message}");
+                        Debug.LogError($"Deserealize entity \"{typeof(T).FullName}\" error:  {args.ErrorContext.Error.Message}");
                         args.ErrorContext.Handled = true;
                     },
                     MissingMemberHandling = MissingMemberHandling.Error,
