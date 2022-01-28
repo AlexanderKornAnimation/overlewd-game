@@ -69,18 +69,21 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            replicaMainSoundPath = SoundManager.SoundPath.Animations.MainScene,
                             message = "You're finally awake! Took you long enough, Master.",
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
+                            replicaMainSoundPath = SoundManager.SoundPath.Animations.MainScene,
                             message = "M-m-m, your cock tastes so good... I guess the legends were true."
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
+                            replicaCutInSoundPath = SoundManager.SoundPath.Animations.CutInLick,
                             message = "I can lick your cock for hours. It feels so smooth and silky...",
                             cutIn = "CutIn1"
                         },
@@ -88,6 +91,7 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
+                            replicaCutInSoundPath = SoundManager.SoundPath.Animations.CutInLick,
                             message = "You're so big. I can barely fit you inside my tight mouth.",
                             cutIn = "CutIn1"
                         },
@@ -95,12 +99,14 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
+                            replicaMainSoundPath = SoundManager.SoundPath.Animations.MainScene,
                             message = "Please, cum for me, Master! I want to taste you so bad…"
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Happy,
+                            replicaCutInSoundPath = SoundManager.SoundPath.Animations.CutInCumshot,
                             message = "Thank you, Master. I'm so happy!",
                             cutIn = "CutIn2"
                         },
@@ -108,6 +114,7 @@ namespace Overlewd
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             animation = AdminBRO.DialogCharacterAnimation.Love,
+                            replicaMainSoundPath = SoundManager.SoundPath.Animations.CutInCumshot,
                             message = "You taste exactly how I imagined. After all those years searching for you…",
                             cutIn = "CutIn2"
                         },

@@ -40,7 +40,7 @@ namespace Overlewd
 
             protected virtual void ButtonClick()
             {
-                SoundManager.PlayUISound(SoundManager.SoundPath.CastleScreenButtons);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.CastleScreenButtons);
             }
         }
     }

@@ -31,6 +31,7 @@ namespace Overlewd
 
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
+
         }
 
         private void StartListener(TrackEntry e)
@@ -48,6 +49,16 @@ namespace Overlewd
             skeletonGraphic.AnimationState.SetAnimation(0, animationName, loop);
         }
 
+        public void Pause()
+        {
+            skeletonGraphic.freeze = true;
+        }
+
+        public void Play()
+        {
+            skeletonGraphic.freeze = false;
+        }
+        
         public static SpineWidget GetInstance(Transform parent)
         {
             var spineGO = new GameObject(nameof(SpineWidget));

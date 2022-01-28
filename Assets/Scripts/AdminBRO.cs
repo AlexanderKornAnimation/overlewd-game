@@ -565,7 +565,8 @@ namespace Overlewd
             public string animation;
             public string sceneOverlayImage;
 
-            public string replicaSoundId;
+            public string replicaCutInSoundPath;
+            public string replicaMainSoundPath;
             public string characterKey
             {
                 get

@@ -81,6 +81,11 @@ namespace Overlewd
             await GameData.EventStageStartAsync(GameGlobalStates.sex_EventStageData);
         }
 
+        protected virtual void PlaySound(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            
+        }
+        
         protected virtual async void LeaveScreen()
         {
             await GameData.EventStageEndAsync(GameGlobalStates.sex_EventStageData);
