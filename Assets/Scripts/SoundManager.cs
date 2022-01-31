@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FMOD;
@@ -82,10 +83,29 @@ namespace Overlewd
             }
         }
 
+        public static void OnMusicVolumeChanged(float value)
+        {
+            
+        }
+
+        public static void OnAnimationVolumeChanged(float value)
+        {
+            var bus = RuntimeManager.GetBus("bus:/Animations");
+
+            bus.setVolume(value);
+        }
+        
         //Sound
         public static void PlayOneShoot(string soundEventPath)
         {
             RuntimeManager.PlayOneShot(soundEventPath);
+        }
+        
+        public static void OnSoundVolumeChanged(float value)
+        {
+            var bus = RuntimeManager.GetBus("bus:/UI");
+
+            bus.setVolume(value);
         }
     }
 }

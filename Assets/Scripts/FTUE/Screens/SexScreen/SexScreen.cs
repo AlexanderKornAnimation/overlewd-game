@@ -212,7 +212,6 @@ namespace Overlewd
                     if (currentReplicaId == 2)
                     {
                         StartCoroutine(FadeOut());
-                        // SoundManager.CreateEventInstance(replica.replicaSoundKey, replica.replicaSoundId);
                     }
                 }
 
