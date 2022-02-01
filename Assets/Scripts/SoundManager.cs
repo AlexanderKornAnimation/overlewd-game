@@ -31,7 +31,10 @@ namespace Overlewd
         }
 
         private static Dictionary<string, EventInstance> eventInstances = new Dictionary<string, EventInstance>();
-
+        
+        private static Bus animationBus;
+        private static Bus uiBus;
+        
         private static void Stop(string keyName, bool allowFade)
         {
             if (allowFade)
@@ -47,30 +50,92 @@ namespace Overlewd
 
         private static void Play(string keyName)
         {
-            if (keyName == null)
+            if (String.IsNullOrWhiteSpace(keyName))
+            {
+                Debug.LogWarning("Key is null or empty. Instance isn't play");
                 return;
-
+            }
+            
             eventInstances[keyName].start();
         }
 
-        public static void CreateEventInstance(string keyName, string eventPath)
+        private static bool IsPathExist(string eventPath)
         {
-            if (keyName == null)
-                return;
+            foreach (var instance in eventInstances)
+            {
+                instance.Value.getDescription(out var description);
+                description.getPath(out var path);
+
+                if (path == eventPath)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static void Initialize()
+        {
+            animationBus = RuntimeManager.GetBus("bus:/Animations");
+            uiBus = RuntimeManager.GetBus("bus:/UI");
+        }
+        
+        public static EventInstance GetInstanceByKey(string keyName)
+        {
+            if (String.IsNullOrWhiteSpace(keyName))
+            {
+                Debug.LogWarning("Key is null or empty. Returned default");
+                return default;
+            }
+            
+            if (eventInstances.ContainsKey(keyName))
+                return eventInstances[keyName];
+
+            return default;
+        }
+
+        public static EventInstance CreateEventInstance(string eventPath)
+        {
+            if (String.IsNullOrWhiteSpace(eventPath))
+            {
+                Debug.LogWarning("Path is null or empty. Returned default");
+                return default;
+            }
+
+            if (!IsPathExist(eventPath))
+            {
+                eventInstances.Add(eventPath, RuntimeManager.CreateInstance(eventPath));
+                Play(eventPath);
+                return eventInstances[eventPath];
+            }
+
+            return eventInstances[eventPath];
+        }
+
+        public static EventInstance CreateEventInstance(string keyName, string eventPath)
+        {
+            if (String.IsNullOrWhiteSpace(keyName) || String.IsNullOrWhiteSpace(eventPath))
+            {
+                Debug.LogWarning("key or path is null or empty. Returned default");
+                return default;
+            }
 
             if (!eventInstances.ContainsKey(keyName))
             {
                 eventInstances.Add(keyName, RuntimeManager.CreateInstance(eventPath));
                 Play(keyName);
             }
-        }
 
+            return eventInstances[keyName];
+        }
 
         public static void SetPause(string keyName, bool pause)
         {
-            if (keyName == null)
+            if (String.IsNullOrWhiteSpace(keyName))
+            {
+                Debug.LogWarning("Key is null or empty. Pause isn't set");
                 return;
-            
+            }
+
             if (eventInstances.ContainsKey(keyName))
                 eventInstances[keyName].setPaused(pause);
         }
@@ -85,27 +150,22 @@ namespace Overlewd
 
         public static void OnMusicVolumeChanged(float value)
         {
-            
         }
 
         public static void OnAnimationVolumeChanged(float value)
         {
-            var bus = RuntimeManager.GetBus("bus:/Animations");
-
-            bus.setVolume(value);
+            animationBus.setVolume(value);
         }
-        
+
         //Sound
         public static void PlayOneShoot(string soundEventPath)
         {
             RuntimeManager.PlayOneShot(soundEventPath);
         }
-        
+
         public static void OnSoundVolumeChanged(float value)
         {
-            var bus = RuntimeManager.GetBus("bus:/UI");
-
-            bus.setVolume(value);
+            uiBus.setVolume(value);
         }
     }
 }
