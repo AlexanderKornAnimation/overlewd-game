@@ -41,15 +41,8 @@ namespace Overlewd
 
         private static void Stop(string keyName, bool allowFade)
         {
-            if (allowFade)
-            {
-                eventInstances[keyName].stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                eventInstances[keyName].release();
-                eventInstances.Remove(keyName);
-                return;
-            }
-
-            eventInstances[keyName].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
+            eventInstances[keyName].stop(stopMode);
             eventInstances[keyName].release();
             eventInstances.Remove(keyName);
         }
