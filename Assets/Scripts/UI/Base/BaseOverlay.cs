@@ -6,6 +6,16 @@ namespace Overlewd
 {
     public abstract class BaseOverlay : BaseScreen
     {
+        public override void StartShow()
+        {
+            
+        }
+
+        public override void StartHide()
+        {
+            
+        }
+        
         public override void ShowMissclick()
         {
             UIManager.ShowOverlayMissclick<OverlayMissclickColored>();

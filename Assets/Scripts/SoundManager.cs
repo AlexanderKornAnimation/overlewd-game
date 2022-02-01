@@ -15,11 +15,15 @@ namespace Overlewd
         {
             public static class UI
             {
-                public const string CastleScreenButtons = "event:/UI/Buttons/Basic_menu_click";
-                public const string CastleWindowSlideOn = "event:/UI/Windows/Window_slide_on";
-                public const string CastleWindowSlideOff = "event:/UI/Windows/Window_slide_off";
-                public const string SidebarOverlayOn = "event:/UI/Windows/Deeds_slide_on";
-                public const string SidebarOverlayOff = "event:/UI/Windows/Deeds_slide_off";
+                public const string CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
+                public const string CastleWindowSlideOn = "event:/UI/Windows/Castle_Screen/Window_slide_on";
+                public const string CastleWindowSlideOff = "event:/UI/Windows/Castle_Screen/Window_slide_off";
+                public const string SidebarOverlayOn = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
+                public const string SidebarOverlayOff = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
+                public const string ButtonClick = "event:/UI/Buttons/Generic/Button_click";
+                public const string WindowSlideOn = "event:/UI/Windows/Generic/Window_slide_on";
+                public const string WindowSlideOff = "event:/UI/Windows/Generic/Window_slide_off";
+                public const string PopupSlideOn = "event:/UI/Windows/Generic/Window_popup_slide";
             }
 
             public static class Animations
@@ -34,18 +38,20 @@ namespace Overlewd
         
         private static Bus animationBus;
         private static Bus uiBus;
-        
+
         private static void Stop(string keyName, bool allowFade)
         {
             if (allowFade)
             {
                 eventInstances[keyName].stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 eventInstances[keyName].release();
+                eventInstances.Remove(keyName);
                 return;
             }
 
             eventInstances[keyName].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             eventInstances[keyName].release();
+            eventInstances.Remove(keyName);
         }
 
         private static void Play(string keyName)
@@ -57,20 +63,6 @@ namespace Overlewd
             }
             
             eventInstances[keyName].start();
-        }
-
-        private static bool IsPathExist(string eventPath)
-        {
-            foreach (var instance in eventInstances)
-            {
-                instance.Value.getDescription(out var description);
-                description.getPath(out var path);
-
-                if (path == eventPath)
-                    return true;
-            }
-
-            return false;
         }
 
         public static void Initialize()
@@ -101,7 +93,7 @@ namespace Overlewd
                 return default;
             }
 
-            if (!IsPathExist(eventPath))
+            if (!eventInstances.ContainsKey(eventPath))
             {
                 eventInstances.Add(eventPath, RuntimeManager.CreateInstance(eventPath));
                 Play(eventPath);
@@ -142,10 +134,12 @@ namespace Overlewd
 
         public static void StopAllInstances(bool allowFade)
         {
-            foreach (var instance in eventInstances)
+            foreach (var instance in eventInstances.ToList())
             {
                 Stop(instance.Key, allowFade);
             }
+            
+            eventInstances.Clear();
         }
 
         public static void OnMusicVolumeChanged(float value)

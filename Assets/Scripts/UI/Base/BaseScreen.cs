@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -9,12 +10,10 @@ namespace Overlewd
     {
         public virtual void UpdateGameData()
         {
-
         }
 
         public virtual void ShowMissclick()
         {
-
         }
 
         public virtual ScreenShow Show()
@@ -34,12 +33,11 @@ namespace Overlewd
 
         public virtual void StartShow()
         {
-
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.WindowSlideOn);
         }
 
         public virtual void AfterShow()
         {
-
         }
 
         public virtual async Task BeforeHideAsync()
@@ -49,12 +47,11 @@ namespace Overlewd
 
         public virtual void StartHide()
         {
-
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.WindowSlideOff);
         }
 
         public virtual void AfterHide()
         {
-
         }
 
         public bool IsTransitionState()

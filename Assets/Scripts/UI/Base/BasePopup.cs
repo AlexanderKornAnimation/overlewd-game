@@ -6,6 +6,16 @@ namespace Overlewd
 {
     public abstract class BasePopup : BaseScreen
     {
+        public override void StartShow()
+        {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.PopupSlideOn);
+        }
+
+        public override void StartHide()
+        {
+            
+        }
+
         public override void ShowMissclick()
         {
             UIManager.ShowPopupMissclick<PopupMissclickColored>();
