@@ -61,6 +61,7 @@ namespace Overlewd
 
                 protected override void ButtonClick()
                 {
+                    SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                     if (battleId == 11)
                     {
                         GameGlobalStates.battleScreen_StageId = stageId;

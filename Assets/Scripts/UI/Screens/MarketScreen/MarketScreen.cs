@@ -38,6 +38,7 @@ namespace Overlewd
 
         private void MainMenuButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
     }

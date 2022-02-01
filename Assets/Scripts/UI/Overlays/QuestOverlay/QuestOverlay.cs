@@ -128,6 +128,7 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.HideOverlay();
         }
     }

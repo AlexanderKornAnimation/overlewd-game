@@ -48,6 +48,7 @@ namespace Overlewd
                     }
                     else if (sexId == 3)
                     {
+                        SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                         UIManager.ShowScreen<CastleScreen>();
                     }
                 }

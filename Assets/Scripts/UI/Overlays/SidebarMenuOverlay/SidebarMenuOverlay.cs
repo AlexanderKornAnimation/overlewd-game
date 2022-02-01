@@ -204,31 +204,37 @@ namespace Overlewd
 
         protected virtual void CastleButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
         protected virtual void PortalButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 
         protected virtual void GlobalMapButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<MapScreen>();
         }
 
         protected virtual void HaremButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
         protected virtual void CastleBuildingButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<BuildingScreen>();
         }
 
         protected virtual void MagicGuildButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 

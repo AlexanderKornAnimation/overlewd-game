@@ -91,6 +91,7 @@ namespace Overlewd
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 if (GameData.CanTradableBuy(tradableData))
                 {
                     if (!currencyData.nutaku)

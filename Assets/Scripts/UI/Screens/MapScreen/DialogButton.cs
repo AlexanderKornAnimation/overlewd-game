@@ -44,6 +44,7 @@ namespace Overlewd
 
             protected virtual void ButtonClick()
             {
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowScreen<SexScreen>();
             }
 

@@ -56,6 +56,7 @@ namespace Overlewd
 
         private void TabClick(int tabId)
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             foreach (var _tabId in tabIds)
             {
                 scrollView[_tabId].gameObject.SetActive(_tabId == tabId);
@@ -87,6 +88,7 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.HideOverlay();
         }
     }

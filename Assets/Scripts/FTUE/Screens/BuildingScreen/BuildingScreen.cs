@@ -98,11 +98,13 @@ namespace Overlewd
 
             protected override void PortalButtonClick()
             {
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowPopup<PortalPopup>();
             }
 
             protected override void UlviCaveButtonClick()
             {
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowPopup<CavePopup>();
             }
 
@@ -128,6 +130,7 @@ namespace Overlewd
 
             protected override void BackButtonClick()
             {
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowScreen<CastleScreen>();
             }
         }

@@ -19,7 +19,7 @@ namespace Overlewd
                 private string[] dialogNames = {
                     "empty",
                     "Evil's Little Helper",
-                    "Overlord’s Inception",
+                    "Overlord's Inception",
                     "Hot&Unbothered"
                 };
 
@@ -43,6 +43,7 @@ namespace Overlewd
 
                 protected override void ButtonClick()
                 {
+                    SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                     if (dialogId == 1)
                     {
                         GameGlobalStates.dialogScreen_StageId = stageId;

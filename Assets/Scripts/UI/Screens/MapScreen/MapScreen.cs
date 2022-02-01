@@ -42,6 +42,7 @@ namespace Overlewd
 
         protected virtual void BackButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
         

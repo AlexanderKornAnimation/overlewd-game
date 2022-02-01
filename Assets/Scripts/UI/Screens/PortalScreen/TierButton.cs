@@ -50,6 +50,7 @@ namespace Overlewd
 
             private void ButtonClick() 
             {
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 Destroy(gameObject);
             }
 

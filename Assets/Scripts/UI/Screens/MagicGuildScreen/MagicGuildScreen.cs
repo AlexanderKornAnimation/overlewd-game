@@ -39,11 +39,13 @@ namespace Overlewd
 
         private void ActiveSpellButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowPopup<SpellPopup>();
         }        
         
         private void BackButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
     }

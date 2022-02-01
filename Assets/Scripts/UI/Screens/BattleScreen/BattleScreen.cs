@@ -74,6 +74,7 @@ namespace Overlewd
 
         protected void BackButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<EventMapScreen>();
         }
     }
