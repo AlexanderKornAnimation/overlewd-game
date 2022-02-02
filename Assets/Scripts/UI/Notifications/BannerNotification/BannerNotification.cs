@@ -47,7 +47,7 @@ namespace Overlewd
             for (int i = 0; i < 7; i++)
             {
                 var rIcon = NSBannerNotification.ResourceIcon.GetInstance(null);
-                rIcon.icon = Resources.Load<Sprite>("Prefabs/UI/Common/Images/Recources/Backgrounds/BattleGirlLegendary");
+                rIcon.icon = Resources.Load<Sprite>("Common/Images/Backgrounds/BattleGirlLegendary");
                 rIcon.caption = "_";
                 AddResourceIcon(rIcon);
             }
