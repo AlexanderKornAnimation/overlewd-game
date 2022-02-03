@@ -1,37 +1,44 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 public class CreateAssetBundles
 {
-	private static void CheckBundlesDirectory(string bundlesPath)
+	private static void CheckOutBundlesDirectory(string dirPath)
     {
-		if (!Directory.Exists(bundlesPath))
+		if (!Directory.Exists(dirPath))
 		{
-			Directory.CreateDirectory(bundlesPath);
+			Directory.CreateDirectory(dirPath);
 		}
 	}
 
-	[MenuItem("Assets/Build AssetBundles")]
+    /*[MenuItem("Assets/Build AssetBundles")]
 	static void BuildAssetBundles()
 	{
-		var bundlesPath = "Assets/AssetsBundles";
-		CheckBundlesDirectory(bundlesPath);
-		BuildPipeline.BuildAssetBundles(bundlesPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-	}
+		var assetsBundlesOutPath = "Assets/AssetsBundlesOut";
+        CheckOutBundlesDirectory(assetsBundlesOutPath);
+		BuildPipeline.BuildAssetBundles(assetsBundlesOutPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+	}*/
 
-    [MenuItem("Assets/Build Asset Bundles Using BuildMap")]
-    static void BuildAssetBundlesCustom()
+    [MenuItem("Assets/Build AssetBundles (buildMap)")]
+    static void BuildAssetBundlesBuildMap()
     {
-        AssetBundleBuild[] buildMap = new AssetBundleBuild[2];
+        var buildMap = new List<AssetBundleBuild>();
+        var assetsBundlesPaths = Directory.GetDirectories("Assets/AssetsBundles/");
+        foreach (var bundlePath in assetsBundlesPaths) 
+        {
+            var bundleName = bundlePath.Split('/').Last();
 
-        buildMap[0].assetBundleName = "test_bundle";
-        string[] bundleAssetsPath = new string[1];
-        bundleAssetsPath[0] = "Assets/AssetsBundles/TestBundle";
-        buildMap[0].assetNames = bundleAssetsPath;
+            var bundleBuildInfo = new AssetBundleBuild();
+            bundleBuildInfo.assetBundleName = Path.Combine(bundleName, bundleName);
+            bundleBuildInfo.assetNames = new string[] { bundlePath };
+            buildMap.Add(bundleBuildInfo);
+        }
 
-        var bundlesPath = "Assets/AssetsBundlesOut";
-        CheckBundlesDirectory(bundlesPath);
-        BuildPipeline.BuildAssetBundles(bundlesPath, buildMap, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+        var assetsBundlesOutPath = "Assets/AssetsBundlesOut";
+        CheckOutBundlesDirectory(assetsBundlesOutPath);
+        BuildPipeline.BuildAssetBundles(assetsBundlesOutPath, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
     }
 }
