@@ -9,7 +9,8 @@ namespace Overlewd
     {
         public static void ChangeScreen()
         {
-            ResourceManager.UnloadUnusedAssets();
+            Resources.UnloadUnusedAssets();
+            ResourceManager.UnloadAssetBundles();
         }
     }
 
