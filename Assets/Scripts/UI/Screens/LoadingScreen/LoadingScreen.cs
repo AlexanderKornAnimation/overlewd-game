@@ -2,15 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
     public class LoadingScreen : BaseScreen
     {
-        void Awake()
+        private Image loadingProgress;
+        private TextMeshProUGUI text;
+        
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/LoadingScreen/LoadingScreen", transform);
+            
+            var canvas = screenInst.transform.Find("Canvas");
+            var loadingBar = canvas.Find("LoadingBar");
+            
+            loadingProgress = loadingBar.Find("Progress").GetComponent<Image>();
+            text = loadingBar.Find("Text").GetComponent<TextMeshProUGUI>();
         }
 
         private async Task LoadResourcesAsync()
