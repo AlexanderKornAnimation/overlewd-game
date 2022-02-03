@@ -319,7 +319,7 @@ namespace Overlewd
 
             curScreenTr.AddEndListener(() => 
             {
-                ResourceManager.UnloadUnusedAssets();
+                MemoryOprimizer.ChangeScreen();
             });
 
             return currentScreen as T;
