@@ -24,13 +24,6 @@ namespace Overlewd
             return instAsset;
         }
 
-        public static T InstantiateAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
-        {
-            var assetBundle = LoadAssetBundleById(assetBundleId);
-            var asset = assetBundle.LoadAsset<T>(assetPath);
-            return UnityEngine.Object.Instantiate(asset);
-        }
-
         public static GameObject InstantiateScreenPrefab(string prefabPath, Transform parent)
         {
             var screenPrefab = Resources.Load<GameObject>(prefabPath);
@@ -59,6 +52,13 @@ namespace Overlewd
             var instWidget = InstantiateWidgetPrefab(prefabPath, parent);
             instWidget.name = typeof(T).FullName;
             return instWidget.AddComponent<T>();
+        }
+
+        public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
+        {
+            var assetBundle = LoadAssetBundleById(assetBundleId);
+            var asset = assetBundle.LoadAsset<T>(assetPath);
+            return UnityEngine.Object.Instantiate(asset);
         }
 
         public static string GetRootPath()

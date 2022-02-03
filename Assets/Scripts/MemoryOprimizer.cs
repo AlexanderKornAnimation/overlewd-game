@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -11,6 +12,12 @@ namespace Overlewd
         {
             Resources.UnloadUnusedAssets();
             ResourceManager.UnloadAssetBundles();
+        }
+
+        private static void ManualCallGC()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 
