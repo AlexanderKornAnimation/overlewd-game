@@ -18,7 +18,7 @@ namespace Overlewd
 
             ResourceManager.InitializeCache();
 
-            if (NetworkHelper.HasNetworkConection())
+            if (HttpCore.HasNetworkConection())
             {
                 await AdminBRO.authLoginAsync();
                 UIManager.ShowScreen<LoadingScreen>();

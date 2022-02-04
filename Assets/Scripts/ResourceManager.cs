@@ -319,7 +319,7 @@ namespace Overlewd
                 if (!existingFiles.Exists(item => item == resourceMeta.hash))
                 {
                     downloadItem?.Invoke(resourceMeta);
-                    using (var request = await NetworkHelper.GetAsync(resourceMeta.url))
+                    using (var request = await HttpCore.GetAsync(resourceMeta.url))
                     {
                         var fileData = request.downloadHandler.data;
                         var filePath = GetResourcesFilePath(resourceMeta.hash);

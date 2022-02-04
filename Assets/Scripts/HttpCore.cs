@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
-    public static class NetworkHelper
+    public static class HttpCore
     {
         public static bool HasNetworkConection()
         {
