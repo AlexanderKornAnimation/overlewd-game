@@ -33,9 +33,9 @@ namespace Overlewd
             reward2 = canvas.Find("Reward2").Find("Resource").GetComponent<Image>();
             reward3 = canvas.Find("Reward3").Find("Resource").GetComponent<Image>();
             
-            reward1.sprite = Resources.Load<Sprite>("Common/Images/Crystal");
-            reward2.sprite = Resources.Load<Sprite>("Common/Images/Gem");
-            reward3.sprite = Resources.Load<Sprite>("Common/Images/Gold");
+            reward1.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
+            reward2.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
+            reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
         }
 
         public override void ShowMissclick()

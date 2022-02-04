@@ -16,14 +16,6 @@ namespace Overlewd
         private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private static Dictionary<string, AssetBundle> assetBundles = new Dictionary<string, AssetBundle>();
 
-        public static T InstantiateAsset<T>(string assetPath) where T : UnityEngine.Object
-        {
-            var tempAsset = Resources.Load<T>(assetPath);
-            var instAsset = UnityEngine.Object.Instantiate(tempAsset);
-            Resources.UnloadAsset(tempAsset);
-            return instAsset;
-        }
-
         public static GameObject InstantiateScreenPrefab(string prefabPath, Transform parent)
         {
             var screenPrefab = Resources.Load<GameObject>(prefabPath);
@@ -43,8 +35,7 @@ namespace Overlewd
         public static GameObject InstantiateWidgetPrefab(string prefabPath, Transform parent)
         {
             var widgetPrefab = Resources.Load<GameObject>(prefabPath);
-            var instWidget = UnityEngine.Object.Instantiate(widgetPrefab, parent);
-            return instWidget;
+            return UnityEngine.Object.Instantiate(widgetPrefab, parent);
         }
 
         public static T InstantiateWidgetPrefab<T>(string prefabPath, Transform parent) where T : MonoBehaviour
@@ -52,6 +43,12 @@ namespace Overlewd
             var instWidget = InstantiateWidgetPrefab(prefabPath, parent);
             instWidget.name = typeof(T).FullName;
             return instWidget.AddComponent<T>();
+        }
+
+        public static T InstantiateAsset<T>(string assetPath) where T : UnityEngine.Object
+        {
+            var asset = Resources.Load<T>(assetPath);
+            return UnityEngine.Object.Instantiate(asset);
         }
 
         public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
@@ -167,49 +164,6 @@ namespace Overlewd
             return runtimeResourcesMeta.Find(item => item.id == id);
         }
 
-        public static async Task<Texture2D> LoadTextureAsync(string fileName)
-        {
-            if (textures.ContainsKey(fileName))
-            {
-                return textures[fileName];
-            }
-
-            var filePath = "file://" + GetResourcesFilePath(fileName);
-            using (var request = UnityWebRequestTexture.GetTexture(filePath))
-            {
-                request.SendWebRequest();
-
-                while (!request.isDone)
-                {
-                    await Task.Delay(5);
-                }
-
-                if (textures.ContainsKey(fileName))
-                {
-                    return textures[fileName];
-                }
-
-                if (request.result != UnityWebRequest.Result.Success)
-                {
-                    return null;
-                }
-
-                var texture = DownloadHandlerTexture.GetContent(request);
-                textures.Add(fileName, texture);
-                return texture;
-            }
-        }
-
-        public static async Task<Texture2D> LoadTextureByIdAsync(string id)
-        {
-            var resourceMeta = GetResourceMetaById(id);
-            if (resourceMeta == null)
-            {
-                return null;
-            }
-            return await LoadTextureAsync(resourceMeta.hash);
-        }
-
         public static Texture2D LoadTexture(string fileName)
         {
             if (textures.ContainsKey(fileName))
@@ -235,68 +189,16 @@ namespace Overlewd
             return LoadTexture(resourceMeta.hash);
         }
 
-        private static Sprite TextureToSprite(Texture2D texture)
-        {
-            if (texture != null)
-            {
-                return Sprite.Create(texture,
-                    new Rect(0.0f, 0.0f, texture.width, texture.height),
-                    new Vector2(0.5f, 0.5f));
-            }
-            return null;
-        }
-
-        public static async Task<Sprite> LoadSpriteByIdAsync(string id)
-        {
-            return TextureToSprite(await LoadTextureByIdAsync(id));
-        }
-
         public static Sprite LoadSpriteById(string id)
         {
-            return TextureToSprite(LoadTextureById(id));
-        }
-
-        public static async Task<AssetBundle> LoadAssetBundleAsync(string fileName)
-        {
-            if (assetBundles.ContainsKey(fileName))
-            {
-                return assetBundles[fileName];
-            }
-
-            var filePath = "file://" + GetResourcesFilePath(fileName);
-            using (var request = UnityWebRequestAssetBundle.GetAssetBundle(filePath))
-            {
-                request.SendWebRequest();
-
-                while (!request.isDone)
-                {
-                    await Task.Delay(5);
-                }
-
-                if (assetBundles.ContainsKey(fileName))
-                {
-                    return assetBundles[fileName];
-                }
-
-                if (request.result != UnityWebRequest.Result.Success)
-                {
-                    return null;
-                }
-
-                var assetBundle = DownloadHandlerAssetBundle.GetContent(request);
-                assetBundles.Add(fileName, assetBundle);
-                return assetBundle;
-            }
-        }
-
-        public static async Task<AssetBundle> LoadAssetBundleByIdAsync(string id)
-        {
-            var resourceMeta = GetResourceMetaById(id);
-            if (resourceMeta == null)
+            var texture = LoadTextureById(id);
+            if (texture == null)
             {
                 return null;
             }
-            return await LoadAssetBundleAsync(resourceMeta.hash);
+            return Sprite.Create(texture,
+                new Rect(0.0f, 0.0f, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f));
         }
 
         public static AssetBundle LoadAssetBundle(string fileName)

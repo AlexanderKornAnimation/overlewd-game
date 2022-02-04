@@ -30,8 +30,7 @@ namespace Overlewd
 
             public static DialogCharacter GetInstance(string prefabPath, Transform parent)
             {
-                var character = (GameObject)Instantiate(Resources.Load(prefabPath), parent);
-                return character.AddComponent<DialogCharacter>();
+                return ResourceManager.InstantiateWidgetPrefab<DialogCharacter>(prefabPath, parent);
             }
         }
     }

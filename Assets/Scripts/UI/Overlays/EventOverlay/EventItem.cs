@@ -54,11 +54,11 @@ namespace Overlewd
                         .GetComponent<Image>());
                 }
 
-                rewards[0].sprite = Resources.Load<Sprite>("Common/Images/Crystal");
-                rewards[1].sprite = Resources.Load<Sprite>("Common/Images/Gem");
-                rewards[2].sprite = Resources.Load<Sprite>("Common/Images/Wood");
-                rewards[3].sprite = Resources.Load<Sprite>("Common/Images/Stone");
-                rewards[4].sprite = Resources.Load<Sprite>("Common/Images/Copper");
+                rewards[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
+                rewards[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
+                rewards[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
+                rewards[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
+                rewards[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Copper");
 
                 mapButton.gameObject.AddComponent<BlendPulseSelector>();
             }

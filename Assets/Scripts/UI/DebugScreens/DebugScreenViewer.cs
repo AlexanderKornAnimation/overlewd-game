@@ -8,21 +8,14 @@ namespace Overlewd
     public class DebugScreenViewer : BaseScreen
     {
         
-        void Start()
+        void Awake()
         {
-            // string prefabPath = "Prefabs/UI/Screens/SummoningScreen/SummoningScreen";
-            // //prefabPath = "Prefabs/UI/DebugScreens/DebugContentViewer/ContentViewer";
-            // var screenPrefab = (GameObject)Instantiate(Resources.Load(prefabPath));
-            // var screenRectTransform = screenPrefab.GetComponent<RectTransform>();
-            // screenRectTransform.SetParent(transform, false);
-            // UIManager.SetStretch(screenRectTransform);
-
-            UIManager.ShowScreen<FTUE.PortalScreen>();
+            var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
         }
 
-        void Update()
+        void Start()
         {
-
+            UIManager.ShowScreen<FTUE.PortalScreen>();
         }
 
         void OnGUI()

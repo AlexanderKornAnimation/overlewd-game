@@ -61,10 +61,10 @@ namespace Overlewd
                 resourceIcon.Add(resource.Find("RecourceIcon").GetComponent<Image>());
             }
 
-            resourceIcon[0].sprite = Resources.Load<Sprite>("Common/Images/Gem");
-            resourceIcon[1].sprite = Resources.Load<Sprite>("Common/Images/Gold");
-            resourceIcon[2].sprite = Resources.Load<Sprite>("Common/Images/Wood");
-            resourceIcon[3].sprite = Resources.Load<Sprite>("Common/Images/Stone");
+            resourceIcon[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
+            resourceIcon[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
+            resourceIcon[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
+            resourceIcon[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
         }
 
         protected virtual void PaidBuildButtonClick()

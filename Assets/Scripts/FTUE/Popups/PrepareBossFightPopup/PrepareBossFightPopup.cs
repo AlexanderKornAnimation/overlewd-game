@@ -11,10 +11,10 @@ namespace Overlewd
         {
             protected override void Customize()
             {
-                firstTimeReward.sprite = Resources.Load<Sprite>("Common/Images/Crystal");
-                reward1.sprite = Resources.Load<Sprite>("Common/Images/Gem");
-                reward2.sprite = Resources.Load<Sprite>("Common/Images/Stone");
-                reward3.sprite = Resources.Load<Sprite>("Common/Images/Wood");
+                firstTimeReward.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
+                reward1.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
+                reward2.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
+                reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
             }
 
             protected override void BattleButtonClick()

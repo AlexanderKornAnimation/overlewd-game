@@ -74,10 +74,10 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            recourceIcon[0].sprite = Resources.Load<Sprite>("Common/Images/Gold");
-            recourceIcon[1].sprite = Resources.Load<Sprite>("Common/Images/Stone");
-            recourceIcon[2].sprite = Resources.Load<Sprite>("Common/Images/Wood");
-            recourceIcon[3].sprite = Resources.Load<Sprite>("Common/Images/Gem");
+            recourceIcon[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
+            recourceIcon[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
+            recourceIcon[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
+            recourceIcon[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
         }
 
         protected virtual void BackButtonClick()

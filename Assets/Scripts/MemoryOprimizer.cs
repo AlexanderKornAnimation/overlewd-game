@@ -8,16 +8,24 @@ namespace Overlewd
 {
     public static class MemoryOprimizer
     {
-        public static void ChangeScreen()
-        {
-            Resources.UnloadUnusedAssets();
-            ResourceManager.UnloadAssetBundles();
-        }
+        private static int numChangeScreen = 0;
 
-        private static void ManualCallGC()
+        private static void ForceGC()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+        public static void ChangeScreen()
+        {
+            Resources.UnloadUnusedAssets();
+            //ResourceManager.UnloadAssetBundles();
+
+            if (++numChangeScreen > 10)
+            {
+                numChangeScreen = 0;
+                ForceGC();
+            }
         }
     }
 
