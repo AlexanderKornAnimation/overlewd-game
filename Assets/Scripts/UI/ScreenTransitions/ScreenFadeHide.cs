@@ -43,8 +43,8 @@ namespace Overlewd
             if (time > duration)
             {
                 OnEnd();
-                screen.AfterHide();
                 Destroy(gameObject);
+                screen.AfterHide();
             }
         }
 

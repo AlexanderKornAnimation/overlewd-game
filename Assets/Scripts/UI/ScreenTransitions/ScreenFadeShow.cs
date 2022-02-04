@@ -45,8 +45,8 @@ namespace Overlewd
             {
                 canvasGroup.alpha = 1.0f;
                 OnEnd();
-                screen.AfterShow();
                 Destroy(this);
+                screen.AfterShow();
             }
         }
 

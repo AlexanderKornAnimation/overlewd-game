@@ -111,7 +111,7 @@ namespace Overlewd
             return Caching.currentCacheForWriting.spaceFree;
         }
 
-        public static void InitializeCache()
+        public static void Initialize()
         {
             var cachePath = Path.Combine(Application.persistentDataPath, "OverlewdCache");
             if (!Directory.Exists(cachePath))

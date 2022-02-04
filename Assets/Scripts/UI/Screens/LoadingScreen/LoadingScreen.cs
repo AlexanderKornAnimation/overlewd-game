@@ -13,7 +13,7 @@ namespace Overlewd
         private Image loadingProgress;
         private TextMeshProUGUI text;
         
-        private void Awake()
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/LoadingScreen/LoadingScreen", transform);
             
@@ -26,35 +26,38 @@ namespace Overlewd
 
         private async Task LoadResourcesAsync()
         {
+            var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
             var serverResourcesMeta = await AdminBRO.resourcesAsync();
             if (serverResourcesMeta != null)
             {
                 if (!ResourceManager.HasFreeSpaceForNewResources(serverResourcesMeta))
                 {
-                    UIManager.ShowDialogBox("Not enough free space", "", /*() => Game.Quit()*/ null);
+                    UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
                 }
                 else
                 {
-                    ResourceManager.SaveLocalResourcesMeta(serverResourcesMeta);
-                    ResourceManager.runtimeResourcesMeta = serverResourcesMeta;
-
                     await ResourceManager.ActualizeResourcesAsync(serverResourcesMeta,
                         (resourceItemMeta) =>
                         {
                             //loadingLabel = "Download: " + resourceItemMeta.url;
                         });
+
+                    ResourceManager.SaveLocalResourcesMeta(serverResourcesMeta);
+                    ResourceManager.runtimeResourcesMeta = serverResourcesMeta;
                 }
             }
             else
             {
-                UIManager.ShowDialogBox("Server error", "No load resources", /*() => Game.Quit()*/ null);
+                UIManager.ShowDialogBox("Server error", "No load resources", () => Game.Quit());
             }
         }
 
-        async void Start()
+        private async void DoLoading()
         {
+            await AdminBRO.authLoginAsync();
+
             await AdminBRO.eventStagesResetAsync();
-            
+
             //
             GameData.playerInfo = await AdminBRO.meAsync();
 
@@ -77,6 +80,11 @@ namespace Overlewd
             await LoadResourcesAsync();
 
             UIManager.ShowScreen<StartingScreen>();
+        }
+
+        public override void AfterShow()
+        {
+            DoLoading();
         }
     }
 }

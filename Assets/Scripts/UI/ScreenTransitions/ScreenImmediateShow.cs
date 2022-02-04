@@ -25,8 +25,8 @@ namespace Overlewd
             OnStart();
 
             OnEnd();
-            screen.AfterShow();
             Destroy(this);
+            screen.AfterShow();
         }
 
         protected override void OnStartCalls()

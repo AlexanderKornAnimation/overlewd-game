@@ -25,8 +25,8 @@ namespace Overlewd
             OnStart();
 
             OnEnd();
-            screen.AfterHide();
             Destroy(gameObject);
+            screen.AfterHide();
         }
 
         protected override void OnStartCalls()

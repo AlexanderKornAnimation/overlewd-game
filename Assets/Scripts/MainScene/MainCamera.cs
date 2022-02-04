@@ -12,38 +12,35 @@ namespace Overlewd
         private Vector2 resolution;
 #endif
 
-        async void Start()
-        {
-            UIManager.Initialize();
-
-            ResourceManager.InitializeCache();
-
-            if (HttpCore.HasNetworkConection())
-            {
-                await AdminBRO.authLoginAsync();
-                UIManager.ShowScreen<LoadingScreen>();
-            }
-            else
-            {
-                var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
-                if (localResourcesMeta != null)
-                {
-                    ResourceManager.runtimeResourcesMeta = localResourcesMeta;
-                    UIManager.ShowScreen<CastleScreen>();
-                }
-                else
-                {
-                    UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
-                }
-            }
-
-        }
-
         void Awake()
         {
 #if UNITY_EDITOR
             resolution = new Vector2(Screen.width, Screen.height);
 #endif
+
+            UIManager.Initialize();
+            ResourceManager.Initialize();
+        }
+
+        IEnumerator Start()
+        {
+            
+
+            if (HttpCore.HasNetworkConection())
+            {
+                /*
+                This delay is needed so that Unity finishes initialization
+                and does't interfere with the smooth animation of showing
+                the window
+                */
+                yield return new WaitForSeconds(0.5f);
+
+                UIManager.ShowScreen<LoadingScreen>();
+            }
+            else
+            {
+                UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
+            }
         }
 
         void Update()

@@ -39,8 +39,8 @@ namespace Overlewd
             {
                 UIManager.SetStretch(screenRectTransform);
                 OnEnd();
+                DestroyImmediate(this);
                 screen.AfterShow();
-                Destroy(this);
             }
         }
 
