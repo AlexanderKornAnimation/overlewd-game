@@ -34,6 +34,11 @@ namespace Overlewd
             UIManager.HideNotification();
         }
 
+        public override void StartShow()
+        {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.DialogNotificationSLideOn);
+        }
+
         public override ScreenShow Show()
         {
             return gameObject.AddComponent<ScreenLeftShow>();

@@ -36,7 +36,6 @@ namespace Overlewd
 
             protected override void StartBattleButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 skipButton.gameObject.SetActive(true);
 
                 battleVideo.Play();

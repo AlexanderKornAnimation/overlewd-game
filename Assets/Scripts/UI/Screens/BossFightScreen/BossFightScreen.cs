@@ -68,13 +68,14 @@ namespace Overlewd
 
         protected void SkipButtonClick()
         {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+
             battleVideo.Stop();
             EndBattleVideo(battleVideo);
         }
         
         protected virtual void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.ShowScreen<EventMapScreen>();
         }
     }

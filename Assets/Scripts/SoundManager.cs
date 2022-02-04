@@ -15,15 +15,24 @@ namespace Overlewd
         {
             public static class UI
             {
+                //buttons
                 public const string CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
+                public const string ButtonClick = "event:/UI/Buttons/Generic/Button_click";
+                public const string DialogNextButtonClick = "event:/UI/Buttons/Dialogue/Text_field_click_next";
+                
+                //screens
                 public const string CastleWindowSlideOn = "event:/UI/Windows/Castle_Screen/Window_slide_on";
                 public const string CastleWindowSlideOff = "event:/UI/Windows/Castle_Screen/Window_slide_off";
-                public const string SidebarOverlayOn = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
-                public const string SidebarOverlayOff = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
-                public const string ButtonClick = "event:/UI/Buttons/Generic/Button_click";
                 public const string WindowSlideOn = "event:/UI/Windows/Generic/Window_slide_on";
                 public const string WindowSlideOff = "event:/UI/Windows/Generic/Window_slide_off";
+                
+                //overlays
+                public const string SidebarOverlayOn = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
+                public const string SidebarOverlayOff = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
+                
+                //popups & nootifications
                 public const string PopupSlideOn = "event:/UI/Windows/Generic/Window_popup_slide";
+                public const string DialogNotificationSLideOn = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
             }
 
             public static class Animations

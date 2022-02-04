@@ -68,8 +68,6 @@ namespace Overlewd
 
             protected override void StartBattleButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
-                
                 if (GameGlobalStates.battleScreen_BattleId >= 3)
                 {
                     skipButton.gameObject.SetActive(true);
