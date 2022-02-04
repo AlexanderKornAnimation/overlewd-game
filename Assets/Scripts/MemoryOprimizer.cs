@@ -16,10 +16,15 @@ namespace Overlewd
             GC.WaitForPendingFinalizers();
         }
 
+        public static void PrepareChangeScreen()
+        {
+            ResourceManager.MarkUnusedAssetBundles();
+        }
+
         public static void ChangeScreen()
         {
             Resources.UnloadUnusedAssets();
-            //ResourceManager.UnloadAssetBundles();
+            ResourceManager.UnloadUnusedAssetBundles();
 
             if (++numChangeScreen > 10)
             {

@@ -14,7 +14,12 @@ namespace Overlewd
     {
         public static List<AdminBRO.NetworkResource> runtimeResourcesMeta { get; set; }
         private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-        private static Dictionary<string, AssetBundle> assetBundles = new Dictionary<string, AssetBundle>();
+        private class AssetBundlePair
+        {
+            public AssetBundle assetBundle;
+            public bool use;
+        }
+        private static Dictionary<string, AssetBundlePair> assetBundles = new Dictionary<string, AssetBundlePair>();
 
         public static GameObject InstantiateScreenPrefab(string prefabPath, Transform parent)
         {
@@ -201,20 +206,22 @@ namespace Overlewd
                 new Vector2(0.5f, 0.5f));
         }
 
-        public static AssetBundle LoadAssetBundle(string fileName)
+        private static AssetBundle LoadAssetBundle(string fileName)
         {
             if (assetBundles.ContainsKey(fileName))
             {
-                return assetBundles[fileName];
+                var item = assetBundles[fileName];
+                item.use = true;
+                return item.assetBundle;
             }
 
             var filePath = Path.Combine(GetResourcesPath(), fileName);
             var assetBundle = AssetBundle.LoadFromFile(filePath);
-            assetBundles.Add(fileName, assetBundle);
+            assetBundles.Add(fileName, new AssetBundlePair { assetBundle = assetBundle, use = true });
             return assetBundle;
         }
 
-        public static AssetBundle LoadAssetBundleById(string id)
+        private static AssetBundle LoadAssetBundleById(string id)
         {
             var resourceMeta = GetResourceMetaById(id);
             if (resourceMeta == null)
@@ -224,13 +231,25 @@ namespace Overlewd
             return LoadAssetBundle(resourceMeta.hash);
         }
 
-        public static void UnloadAssetBundles()
+        public static void UnloadUnusedAssetBundles()
         {
-            foreach (var pairItem in assetBundles)
+            foreach (var key in assetBundles.Keys)
             {
-                pairItem.Value.Unload(false);
+                var item = assetBundles[key];
+                if (!item.use)
+                {
+                    item.assetBundle.Unload(true);
+                    assetBundles.Remove(key);
+                }
             }
-            assetBundles.Clear();
+        }
+
+        public static void MarkUnusedAssetBundles()
+        {
+            foreach (var key in assetBundles.Keys)
+            {
+                assetBundles[key].use = false;
+            }
         }
 
         public static List<AdminBRO.NetworkResource> GetLocalResourcesMeta()

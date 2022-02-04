@@ -299,6 +299,8 @@ namespace Overlewd
 
         public static T ShowScreen<T>() where T : BaseScreen
         {
+            MemoryOprimizer.PrepareChangeScreen();
+
             HideScreen();
 
             currentScreen = GetScreenInstance<T>();
