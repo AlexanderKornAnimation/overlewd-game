@@ -21,9 +21,11 @@ namespace Overlewd
             Destroy(skeletonDataAsset);
         }
 
-        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas)
+        private void Initialize(string skeletonDataPath, bool multipleRenderCanvas, string assetBundleId)
         {
-            skeletonDataAsset = ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath);
+            skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
+                ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
+                ResourceManager.InstantiateRemoteAsset<SkeletonDataAsset>(skeletonDataPath, assetBundleId);
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
@@ -31,7 +33,16 @@ namespace Overlewd
 
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
+        }
 
+        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false)
+        {
+            Initialize(skeletonDataPath, multipleRenderCanvas, null);
+        }
+
+        public void Initialize(string skeletonDataPath, string assetBundleId, bool multipleRenderCanvas = false)
+        {
+            Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId);
         }
 
         private void StartListener(TrackEntry e)

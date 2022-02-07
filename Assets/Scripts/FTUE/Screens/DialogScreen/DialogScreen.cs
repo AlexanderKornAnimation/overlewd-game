@@ -80,7 +80,7 @@ namespace Overlewd
                                 if (animData.Value != null)
                                 {
                                     var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                    anim.Initialize(animData.Value, false);
+                                    anim.Initialize(animData.Value);
                                     anim.PlayAnimation(animData.Key, true);
                                     cutInAnimations.Add(anim);
                                 }
@@ -121,7 +121,7 @@ namespace Overlewd
                                 if (headPath != null)
                                 {
                                     emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                    emotionAnimation.Initialize(headPath, false);
+                                    emotionAnimation.Initialize(headPath);
                                     emotionAnimation.PlayAnimation(replica.animation, true);
                                 }
                             }

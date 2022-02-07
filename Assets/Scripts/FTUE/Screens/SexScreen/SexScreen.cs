@@ -37,7 +37,7 @@ namespace Overlewd
                     if (animData.Value != null)
                     {
                         var anim = SpineWidget.GetInstance(mainAnimPos);
-                        anim.Initialize(animData.Value, false);
+                        anim.Initialize(animData.Value);
                         anim.PlayAnimation(animData.Key, true);
                         mainAnimations.Add(anim);
                     }
@@ -71,7 +71,7 @@ namespace Overlewd
                     if (animData.Value != null)
                     {
                         var anim = SpineWidget.GetInstance(mainAnimPos);
-                        anim.Initialize(animData.Value, false);
+                        anim.Initialize(animData.Value);
                         anim.PlayAnimation(animData.Key, true);
                         mainAnimations.Add(anim);
                     }
@@ -142,7 +142,7 @@ namespace Overlewd
                                 if (animData.Value != null)
                                 {
                                     var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                    anim.Initialize(animData.Value, false);
+                                    anim.Initialize(animData.Value);
                                     anim.PlayAnimation(animData.Key, true);
                                     cutInAnimations.Add(anim);
                                 }

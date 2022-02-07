@@ -57,7 +57,7 @@ namespace Overlewd
                             if (headPath != null)
                             {
                                 emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                emotionAnimation.Initialize(headPath, false);
+                                emotionAnimation.Initialize(headPath);
                                 emotionAnimation.PlayAnimation(firstReplica.animation, true);
                             }
                         }
