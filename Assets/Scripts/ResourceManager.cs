@@ -12,7 +12,8 @@ namespace Overlewd
 
     public static class ResourceManager
     {
-        public static List<AdminBRO.NetworkResource> runtimeResourcesMeta { get; set; }
+        private static string persistentDataPath;
+
         private static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private class AssetBundlePair
         {
@@ -58,14 +59,14 @@ namespace Overlewd
 
         public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
         {
-            var assetBundle = LoadAssetBundleById(assetBundleId);
+            var assetBundle = LoadAssetBundle(assetBundleId);
             var asset = assetBundle.LoadAsset<T>(assetPath);
             return UnityEngine.Object.Instantiate(asset);
         }
 
         public static string GetRootPath()
         {
-            return Application.persistentDataPath;
+            return persistentDataPath;
         }
 
         public static string GetRootFilePath(string fileName)
@@ -113,6 +114,8 @@ namespace Overlewd
 
         public static void Initialize()
         {
+            persistentDataPath = Application.persistentDataPath;
+
             if (!Directory.Exists(GetResourcesPath()))
             {
                 Directory.CreateDirectory(GetResourcesPath());
@@ -129,7 +132,7 @@ namespace Overlewd
             return File.ReadAllText(filePath);
         }
 
-        private static void WriteBinary(string filePath, byte[] data)
+        public static void WriteBinary(string filePath, byte[] data)
         {
             File.WriteAllBytes(filePath, data);
         }
@@ -150,39 +153,24 @@ namespace Overlewd
             return fileInfo.Length;
         }
 
-        public static AdminBRO.NetworkResource GetResourceMetaById(string id)
+        public static Texture2D LoadTexture(string id)
         {
-            return runtimeResourcesMeta.Find(item => item.id == id);
-        }
-
-        public static Texture2D LoadTexture(string fileName)
-        {
-            if (textures.ContainsKey(fileName))
+            if (textures.ContainsKey(id))
             {
-                return textures[fileName];
+                return textures[id];
             }
 
-            var filePath = GetResourcesFilePath(fileName);
+            var filePath = GetResourcesFilePath(id);
             var texture = new Texture2D(1, 1);
             var data = File.ReadAllBytes(filePath);
             texture.LoadImage(data, true);
-            textures.Add(fileName, texture);
+            textures.Add(id, texture);
             return texture;
         }
 
-        public static Texture2D LoadTextureById(string id)
+        public static Sprite LoadSprite(string id)
         {
-            var resourceMeta = GetResourceMetaById(id);
-            if (resourceMeta == null)
-            {
-                return null;
-            }
-            return LoadTexture(resourceMeta.hash);
-        }
-
-        public static Sprite LoadSpriteById(string id)
-        {
-            var texture = LoadTextureById(id);
+            var texture = LoadTexture(id);
             if (texture == null)
             {
                 return null;
@@ -192,29 +180,19 @@ namespace Overlewd
                 new Vector2(0.5f, 0.5f));
         }
 
-        private static AssetBundle LoadAssetBundle(string fileName)
+        private static AssetBundle LoadAssetBundle(string id)
         {
-            if (assetBundles.ContainsKey(fileName))
+            if (assetBundles.ContainsKey(id))
             {
-                var item = assetBundles[fileName];
+                var item = assetBundles[id];
                 item.use = true;
                 return item.assetBundle;
             }
 
-            var filePath = Path.Combine(GetResourcesPath(), fileName);
+            var filePath = Path.Combine(GetResourcesPath(), id);
             var assetBundle = AssetBundle.LoadFromFile(filePath);
-            assetBundles.Add(fileName, new AssetBundlePair { assetBundle = assetBundle, use = true });
+            assetBundles.Add(id, new AssetBundlePair { assetBundle = assetBundle, use = true });
             return assetBundle;
-        }
-
-        private static AssetBundle LoadAssetBundleById(string id)
-        {
-            var resourceMeta = GetResourceMetaById(id);
-            if (resourceMeta == null)
-            {
-                return null;
-            }
-            return LoadAssetBundle(resourceMeta.hash);
         }
 
         public static void UnloadUnusedAssetBundles()
@@ -244,11 +222,9 @@ namespace Overlewd
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                var meta = JsonConvert.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson);
-                return meta;
+                return JsonConvert.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson);
             }
-
-            return null;
+            return new List<AdminBRO.NetworkResource>();
         }
 
         public static void SaveLocalResourcesMeta(List<AdminBRO.NetworkResource> meta)
@@ -258,65 +234,6 @@ namespace Overlewd
                 var metaFilePath = GetRootFilePath("ResourcesMeta");
                 var metaJson = JsonConvert.SerializeObject(meta);
                 WriteText(metaFilePath, metaJson);
-            }
-        }
-
-        public static bool HasFreeSpaceForNewResources(List<AdminBRO.NetworkResource> serverResourcesMeta)
-        {
-            return true;
-
-            /*var existingFiles = GetResourcesFileNames();
-
-            long deleteSize = 0;
-            foreach (var localItemHash in existingFiles)
-            {
-                if (!serverResourcesMeta.Exists(serverItem => serverItem.hash == localItemHash))
-                {
-                    deleteSize += Size(GetResourcesFilePath(localItemHash));
-                }
-            }
-
-            long downloadSize = 0;
-            foreach (var serverItem in serverResourcesMeta)
-            {
-                if (!existingFiles.Exists(localItemHash => serverItem.hash == localItemHash))
-                {
-                    downloadSize += serverItem.size;
-                }
-            }
-
-            return (GetStorageFreeMB() + deleteSize - downloadSize) > 0;*/
-        }
-
-        public static async Task ActualizeResourcesAsync(List<AdminBRO.NetworkResource> resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem)
-        {
-            var existingFiles = GetResourcesFileNames();
-
-            //DeleteNotRelevantResources
-            foreach (var fileName in existingFiles)
-            {
-                if (!resourcesMeta.Exists(item => item.hash == fileName))
-                {
-                    Delete(GetResourcesFilePath(fileName));
-                }
-            }
-
-            //DownloadMissingResources
-            foreach (var resourceMeta in resourcesMeta)
-            {
-                if (!existingFiles.Exists(item => item == resourceMeta.hash))
-                {
-                    downloadItem?.Invoke(resourceMeta);
-                    using (var request = await HttpCore.GetAsync(resourceMeta.url))
-                    {
-                        var fileData = request.downloadHandler.data;
-                        var filePath = GetResourcesFilePath(resourceMeta.hash);
-                        await Task.Run(() => 
-                        {
-                            WriteBinary(filePath, fileData);
-                        });
-                    }
-                }
             }
         }
     }

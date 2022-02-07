@@ -66,7 +66,7 @@ namespace Overlewd
                 return;
 
             var firstIconURL = GameData.GetCurrencyById(battleData.firstRewards[0].currencyId).iconUrl;
-            firstTimeReward.sprite = ResourceManager.LoadSpriteById(firstIconURL);
+            firstTimeReward.sprite = ResourceManager.LoadSprite(firstIconURL);
             firstTimeRewardCount.text = $"{battleData.firstRewards[0].amount}";
 
 
@@ -74,9 +74,9 @@ namespace Overlewd
             var icon2URL = GameData.GetCurrencyById(battleData.rewards[1].currencyId).iconUrl;
             var icon3URL = GameData.GetCurrencyById(battleData.rewards[2].currencyId).iconUrl;
 
-            reward1.sprite = ResourceManager.LoadSpriteById(icon1URL);
-            reward2.sprite = ResourceManager.LoadSpriteById(icon2URL);
-            reward3.sprite = ResourceManager.LoadSpriteById(icon3URL);
+            reward1.sprite = ResourceManager.LoadSprite(icon1URL);
+            reward2.sprite = ResourceManager.LoadSprite(icon2URL);
+            reward3.sprite = ResourceManager.LoadSprite(icon3URL);
             reward1Count.text = $"{battleData.rewards[0].amount}";
             reward2Count.text = $"{battleData.rewards[1].amount}";
             reward3Count.text = $"{battleData.rewards[2].amount}";

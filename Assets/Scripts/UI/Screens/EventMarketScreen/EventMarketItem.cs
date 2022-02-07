@@ -81,7 +81,7 @@ namespace Overlewd
                 }
 
                 item.gameObject.SetActive(true);
-                item.sprite = ResourceManager.LoadSpriteById(tradableData.imageUrl);
+                item.sprite = ResourceManager.LoadSprite(tradableData.imageUrl);
                 description.text = tradableData.description;
             }
 

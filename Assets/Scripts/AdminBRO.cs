@@ -282,7 +282,7 @@ namespace Overlewd
                 {
                     return DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
                 }
-                return null;
+                return new List<NetworkResource>();
             }
         }
 
