@@ -84,7 +84,14 @@ namespace Overlewd
 
         public override void AfterShow()
         {
-            DoLoading();
+            if (HttpCore.HasNetworkConection())
+            {
+                DoLoading();
+            }
+            else
+            {
+                UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
+            }
         }
     }
 }

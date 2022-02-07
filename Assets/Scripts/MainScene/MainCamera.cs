@@ -24,23 +24,14 @@ namespace Overlewd
 
         IEnumerator Start()
         {
-            
+            /*
+            This delay is needed so that Unity finishes initialization
+            and does't interfere with the smooth animation of showing
+            the window
+            */
+            yield return new WaitForSeconds(0.5f);
 
-            if (HttpCore.HasNetworkConection())
-            {
-                /*
-                This delay is needed so that Unity finishes initialization
-                and does't interfere with the smooth animation of showing
-                the window
-                */
-                yield return new WaitForSeconds(0.5f);
-
-                UIManager.ShowScreen<LoadingScreen>();
-            }
-            else
-            {
-                UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
-            }
+            UIManager.ShowScreen<LoadingScreen>();
         }
 
         void Update()

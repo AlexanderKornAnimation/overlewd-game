@@ -65,7 +65,7 @@ namespace Overlewd
 
         public static string GetRootPath()
         {
-            return Caching.currentCacheForWriting.path;
+            return Application.persistentDataPath;
         }
 
         public static string GetRootFilePath(string fileName)
@@ -106,27 +106,13 @@ namespace Overlewd
             return GetDirectoryFileNames(GetResourcesPath());
         }
 
-        public static long GetSpaceFreeBytes()
+        public static int GetStorageFreeMB()
         {
-            return Caching.currentCacheForWriting.spaceFree;
+            return SimpleDiskUtils.DiskUtils.CheckAvailableSpace();
         }
 
         public static void Initialize()
         {
-            var cachePath = Path.Combine(Application.persistentDataPath, "OverlewdCache");
-            if (!Directory.Exists(cachePath))
-            {
-                Directory.CreateDirectory(cachePath);
-            }
-
-            Cache newCache = Caching.AddCache(cachePath);
-
-            if (newCache.valid)
-            {
-                Caching.currentCacheForWriting = newCache;
-            }
-
-            //Resources directory init
             if (!Directory.Exists(GetResourcesPath()))
             {
                 Directory.CreateDirectory(GetResourcesPath());
@@ -277,7 +263,9 @@ namespace Overlewd
 
         public static bool HasFreeSpaceForNewResources(List<AdminBRO.NetworkResource> serverResourcesMeta)
         {
-            var existingFiles = GetResourcesFileNames();
+            return true;
+
+            /*var existingFiles = GetResourcesFileNames();
 
             long deleteSize = 0;
             foreach (var localItemHash in existingFiles)
@@ -297,7 +285,7 @@ namespace Overlewd
                 }
             }
 
-            return (GetSpaceFreeBytes() + deleteSize - downloadSize) > 0;
+            return (GetStorageFreeMB() + deleteSize - downloadSize) > 0;*/
         }
 
         public static async Task ActualizeResourcesAsync(List<AdminBRO.NetworkResource> resourcesMeta, Action<AdminBRO.NetworkResource> downloadItem)
