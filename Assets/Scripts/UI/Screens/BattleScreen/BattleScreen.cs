@@ -46,6 +46,11 @@ namespace Overlewd
             skipButton.gameObject.SetActive(false);
         }
 
+        public override void StartShow()
+        {
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.BattleScreenSlideOn);
+        }
+
         public override void AfterShow()
         {
             StartBattleButtonClick();

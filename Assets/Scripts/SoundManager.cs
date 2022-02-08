@@ -19,12 +19,14 @@ namespace Overlewd
                 public const string CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
                 public const string ButtonClick = "event:/UI/Buttons/Generic/Button_click";
                 public const string DialogNextButtonClick = "event:/UI/Buttons/Dialogue/Text_field_click_next";
+                public const string DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
                 
                 //screens
                 public const string CastleWindowSlideOn = "event:/UI/Windows/Castle_Screen/Window_slide_on";
                 public const string CastleWindowSlideOff = "event:/UI/Windows/Castle_Screen/Window_slide_off";
                 public const string WindowSlideOn = "event:/UI/Windows/Generic/Window_slide_on";
                 public const string WindowSlideOff = "event:/UI/Windows/Generic/Window_slide_off";
+                public const string BattleScreenSlideOn = "event:/UI/Windows/Battle_Screen/Battle_Screen_Transition";
                 
                 //overlays
                 public const string SidebarOverlayOn = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
