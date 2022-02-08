@@ -11,6 +11,8 @@ namespace Overlewd
 {
     public static class HttpCore
     {
+        private const string ApiVersion = "2";
+
         public static bool HasNetworkConection()
         {
             return Application.internetReachability != NetworkReachability.NotReachable;
@@ -31,6 +33,7 @@ namespace Overlewd
             {
                 request.SetRequestHeader("Authorization", "Bearer " + token);
             }
+            request.SetRequestHeader("Version", ApiVersion);
             request.SendWebRequest();
 
             while (!request.isDone)
@@ -48,6 +51,7 @@ namespace Overlewd
             {
                 request.SetRequestHeader("Authorization", "Bearer " + token);
             }
+            request.SetRequestHeader("Version", ApiVersion);
             request.SendWebRequest();
 
             while (!request.isDone)
