@@ -272,6 +272,8 @@ namespace Overlewd
 
             GameData.battles = await AdminBRO.battlesAsync();
 
+            var ftue = await AdminBRO.ftueAsync();
+
             SetDownloadBarProgress(0.3f);
 
             //await LoadResourcesAsync();

@@ -651,5 +651,42 @@ namespace Overlewd
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
         }
+
+        //ftue
+        public static async Task<FTUEInfo> ftueAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/ftue";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return DeserializeObject<FTUEInfo>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class FTUEInfo
+        {
+            public List<FTUEChapter> chapters;
+        }
+
+        [Serializable]
+        public class FTUEChapter
+        {
+            public int id;
+            public string name;
+            public List<FTUEDialogInfo> dialogs;
+            public List<FTUEDialogInfo> sexs;
+            public List<FTUEDialogInfo> notifications;
+        }
+
+        [Serializable]
+        public class FTUEDialogInfo
+        {
+            int id;
+            string key;
+        }
     }
 }
