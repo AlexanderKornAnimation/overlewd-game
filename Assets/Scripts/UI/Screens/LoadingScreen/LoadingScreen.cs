@@ -163,8 +163,8 @@ namespace Overlewd
                         });
                     }
                 }
-                //sort by file size descending (group files by size)
-                var downloadResourcesInfoSort = downloadResourcesInfo.OrderByDescending(item => item.resourceMeta.size).ToList();
+                //sort by file size ascending (group files by size)
+                var downloadResourcesInfoSort = downloadResourcesInfo.OrderBy(item => item.resourceMeta.size).ToList();
 
                 SetDownloadBarProgress(0.4f);
                 if (!downloadResourcesInfoSort.Any())
@@ -175,7 +175,7 @@ namespace Overlewd
                 //parallel download
                 var totalFilesCount = downloadResourcesInfoSort.Count;
                 var currentFilesCount = 0;
-                foreach (var split in SplitList<DownloadResourceInfo>(downloadResourcesInfoSort, 22))
+                foreach (var split in SplitResourcesList<DownloadResourceInfo>(downloadResourcesInfoSort, 22, 70.0f))
                 {
                     SetDownloadBarTitle($"Load resources {currentFilesCount + split.Count}/{totalFilesCount}");
 
@@ -320,8 +320,8 @@ namespace Overlewd
         {
             while (true)
             {
-                loadingProgress.fillAmount += Math.Min(0.01f, progressBarPercent - loadingProgress.fillAmount);
-                yield return new WaitForSeconds(0.02f);
+                loadingProgress.fillAmount += (progressBarPercent - loadingProgress.fillAmount) * 0.2f;
+                yield return new WaitForSeconds(0.015f);
             }
         }
 
@@ -330,12 +330,30 @@ namespace Overlewd
             return (progressBarPercent - loadingProgress.fillAmount) < 0.001f;
         }
 
-        private IEnumerable<List<T>> SplitList<T>(List<T> list, int splitSize)
+        private IEnumerable<List<DownloadResourceInfo>> SplitResourcesList<T>(List<DownloadResourceInfo> resources,
+            int splitSize, float splitSizeMB)
         {
-            for (int i = 0; i < list.Count; i += splitSize)
+            int splitInc = 1;
+            for (int i = 0; i < resources.Count; i += splitInc)
             {
-                yield return list.GetRange(i, Math.Min(splitSize, list.Count - i));
+                int rangeSize = 0;
+                float rangeSizeMB = 0.0f;
+                while ((rangeSize < resources.Count - i) && 
+                       (rangeSize < splitSize) &&
+                       (rangeSizeMB < splitSizeMB))
+                {
+                    rangeSizeMB += (resources[i + rangeSize++].resourceMeta.size / 1024f) / 1024f;
+                }
+
+                yield return resources.GetRange(i, rangeSize);
+
+                splitInc = rangeSize;
             }
+
+            /*for (int i = 0; i < resources.Count; i += splitSize)
+            {
+                yield return resources.GetRange(i, Math.Min(splitSize, resources.Count - i));
+            }*/
         }
 
         private class DownloadResourceInfo
