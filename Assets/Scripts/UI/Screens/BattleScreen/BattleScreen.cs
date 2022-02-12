@@ -48,7 +48,7 @@ namespace Overlewd
 
         public override void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.BattleScreenSlideOn);
+            SoundManager.PlayOneShoot(SoundPath.UI.BattleScreenShow);
         }
 
         public override void AfterShow()
@@ -73,7 +73,7 @@ namespace Overlewd
 
         protected void SkipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             battleVideo.Stop();
             EndBattleVideo(battleVideo);
         }

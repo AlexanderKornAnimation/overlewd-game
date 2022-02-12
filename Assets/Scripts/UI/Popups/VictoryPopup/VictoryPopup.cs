@@ -46,13 +46,13 @@ namespace Overlewd
 
         protected virtual void NextButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<EventMapScreen>();
         }
 
         protected virtual void RepeatButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<BattleScreen>();
         }
     }

@@ -9,41 +9,54 @@ using Debug = UnityEngine.Debug;
 
 namespace Overlewd
 {
-    public static class SoundManager
-    {
-        public static class SoundPath
+    public static class SoundPath
         {
             public static class UI
             {
                 //buttons
                 public const string CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
-                public const string ButtonClick = "event:/UI/Buttons/Generic/Button_click";
+                public const string GenericButtonClick = "event:/UI/Buttons/Generic/Button_click";
                 public const string DialogNextButtonClick = "event:/UI/Buttons/Dialogue/Text_field_click_next";
                 public const string DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
                 
                 //screens
-                public const string CastleWindowSlideOn = "event:/UI/Windows/Castle_Screen/Window_slide_on";
-                public const string CastleWindowSlideOff = "event:/UI/Windows/Castle_Screen/Window_slide_off";
-                public const string WindowSlideOn = "event:/UI/Windows/Generic/Window_slide_on";
-                public const string WindowSlideOff = "event:/UI/Windows/Generic/Window_slide_off";
-                public const string BattleScreenSlideOn = "event:/UI/Windows/Battle_Screen/Battle_Screen_Transition";
+                public const string CastleWindowShow = "event:/UI/Windows/Castle_Screen/Window_slide_on";
+                public const string CastleWindowHide = "event:/UI/Windows/Castle_Screen/Window_slide_off";
+                public const string GenericWindowShow = "event:/UI/Windows/Generic/Window_slide_on";
+                public const string GenericWindowHide = "event:/UI/Windows/Generic/Window_slide_off";
+                public const string BattleScreenShow = "event:/UI/Windows/Battle_Screen/Battle_Screen_Transition";
                 
                 //overlays
-                public const string SidebarOverlayOn = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
-                public const string SidebarOverlayOff = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
+                public const string SidebarOverlayShow = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
+                public const string SidebarOverlayHide = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
                 
                 //popups & nootifications
-                public const string PopupSlideOn = "event:/UI/Windows/Generic/Window_popup_slide";
-                public const string DialogNotificationSLideOn = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
+                public const string GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
+                public const string GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
             }
 
             public static class Animations
             {
-                public const string CutInCumshot = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_cumshot";
-                public const string CutInLick = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_lick";
-                public const string MainScene = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/main_scene";
+                public static class FirstSex
+                {
+                    public const string CutInCumshot = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_cumshot";
+                    public const string CutInLick = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_lick";
+                    public const string MainSexScene1 = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/main_scene";
+                }
+
+                public static class SecondSex
+                {
+                    public const string CutInBeads = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-beads";
+                    public const string CutInCreamPie = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-cum";
+                    public const string MainSexScene2 = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
+                    public const string FinalSexScene2 = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
+                }
             }
         }
+    
+    public static class SoundManager
+    {
+        
 
         private static Dictionary<string, EventInstance> eventInstances = new Dictionary<string, EventInstance>();
         

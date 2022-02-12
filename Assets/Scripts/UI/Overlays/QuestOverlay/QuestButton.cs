@@ -48,7 +48,7 @@ namespace Overlewd
 
             protected virtual void ButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                 buttonPressed?.Invoke(this);
             }
 

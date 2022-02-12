@@ -68,7 +68,7 @@ namespace Overlewd
 
         protected void SkipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
 
             battleVideo.Stop();
             EndBattleVideo(battleVideo);
