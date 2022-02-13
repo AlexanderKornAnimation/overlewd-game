@@ -198,33 +198,37 @@ namespace Overlewd
 
                         saveTasks.Add(Task.Run(() =>
                         {
-                            //save resorce file
+                            //save resource file
                             ResourceManager.WriteBinary(filePath, fileData);
-
-                            //update meta data
-                            if (resourceInfo.state != DownloadResourceInfo.State.Restore)
-                            {
-                                if (resourceInfo.state == DownloadResourceInfo.State.Add)
-                                {
-                                    localResourcesMeta.Add(resourceInfo.resourceMeta);
-                                }
-                                else if (resourceInfo.state == DownloadResourceInfo.State.Update)
-                                {
-                                    var updateId = localResourcesMeta.FindIndex(0, localItem =>
-                                        localItem.id == resourceInfo.resourceMeta.id);
-                                    localResourcesMeta[updateId] = resourceInfo.resourceMeta;
-                                }
-                            }
                         }));
                     }
 
                     await Task.WhenAll(saveTasks);
-                    ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
 
+                    //clear requests
                     foreach (var task in downloadTasks)
                     {
                         task.Result.Dispose();
                     }
+
+                    //update meta data
+                    foreach (var resourceInfo in split)
+                    {
+                        if (resourceInfo.state != DownloadResourceInfo.State.Restore)
+                        {
+                            if (resourceInfo.state == DownloadResourceInfo.State.Add)
+                            {
+                                localResourcesMeta.Add(resourceInfo.resourceMeta);
+                            }
+                            else if (resourceInfo.state == DownloadResourceInfo.State.Update)
+                            {
+                                var updateId = localResourcesMeta.FindIndex(0, localItem =>
+                                    localItem.id == resourceInfo.resourceMeta.id);
+                                localResourcesMeta[updateId] = resourceInfo.resourceMeta;
+                            }
+                        }
+                    }
+                    ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
 
                     currentFilesCount += split.Count;
                     SetDownloadBarProgress(0.4f + 0.6f * currentFilesCount / totalFilesCount);

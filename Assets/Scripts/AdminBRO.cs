@@ -22,7 +22,7 @@ namespace Overlewd
                         Debug.LogError($"Deserealize entity \"{typeof(T).FullName}\" error:  {args.ErrorContext.Error.Message}");
                         args.ErrorContext.Handled = true;
                     },
-                    MissingMemberHandling = MissingMemberHandling.Error,
+                    MissingMemberHandling = MissingMemberHandling.Error
                 });
             }
             catch (JsonSerializationException ex)
