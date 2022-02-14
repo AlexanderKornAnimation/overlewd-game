@@ -18,7 +18,7 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BattleScreen/BattleScreen", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BattleScreens/BattleScreen/BattleScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
