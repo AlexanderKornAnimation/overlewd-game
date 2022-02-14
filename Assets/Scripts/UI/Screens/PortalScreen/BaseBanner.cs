@@ -21,7 +21,7 @@ namespace Overlewd
 
             protected virtual void BannerClick()
             {
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                 selectBanner?.Invoke(this);
             }
 
