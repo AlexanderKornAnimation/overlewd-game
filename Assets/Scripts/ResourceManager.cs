@@ -2,10 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
-using Newtonsoft.Json;
 
 namespace Overlewd
 {
@@ -222,7 +219,7 @@ namespace Overlewd
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                return JsonConvert.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson);
+                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson);
             }
             return new List<AdminBRO.NetworkResource>();
         }
@@ -232,7 +229,7 @@ namespace Overlewd
             if (meta != null)
             {
                 var metaFilePath = GetRootFilePath("ResourcesMeta");
-                var metaJson = JsonConvert.SerializeObject(meta);
+                var metaJson = JsonHelper.SerializeObject(meta);
                 WriteText(metaFilePath, metaJson);
             }
         }
