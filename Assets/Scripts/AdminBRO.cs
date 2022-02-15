@@ -253,11 +253,11 @@ namespace Overlewd
         // /resources
         public static async Task<List<NetworkResource>> resourcesAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlude-api.herokuapp.com/resources", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/resources", tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
+                    return JsonHelper.DeserializeObject<List<NetworkResource>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -269,15 +269,10 @@ namespace Overlewd
             public string id;
             public string type;
             public string internalFormat;
+            public string buildVersion;
             public string hash;
             public int size;
             public string url;
-        }
-
-        [Serializable]
-        public class ResourcesMetaResponse
-        {
-            public List<NetworkResource> items;
         }
 
         // /events
