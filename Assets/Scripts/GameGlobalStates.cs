@@ -71,6 +71,7 @@ namespace Overlewd
                 return GameData.GetTradableById(bannerNotification_EventMarketId, bannerNotification_TradableId);
             }
         }
-    }
 
+        public static string haremGirlNameSelected { get; set; }
+    }
 }

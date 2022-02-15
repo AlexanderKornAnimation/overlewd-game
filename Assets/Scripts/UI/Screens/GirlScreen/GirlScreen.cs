@@ -93,7 +93,7 @@ namespace Overlewd
         private void BannerButtonClick()
         {
             SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
-            UIManager.ShowScreen<MemoryScreen>();
+            UIManager.ShowScreen<MemoryListScreen>();
         }
         
         private void PortalButtonClick()

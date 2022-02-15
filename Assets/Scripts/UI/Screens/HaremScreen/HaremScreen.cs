@@ -103,6 +103,7 @@ namespace Overlewd
         private void UlviButtonClick()
         {
             UIManager.ShowScreen<GirlScreen>();
+            GameGlobalStates.haremGirlNameSelected = ulviName.text;
         }
 
         private void AdrielButtonClick()
