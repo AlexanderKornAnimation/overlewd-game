@@ -38,7 +38,7 @@ namespace Overlewd
             var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
             var serverResourcesMeta = await AdminBRO.resourcesAsync();
 
-            if (serverResourcesMeta.Any())
+            if (serverResourcesMeta?.Any() ?? false)
             {
                 //remove missing resources
                 foreach (var fileName in resourcesFileNames)
@@ -126,7 +126,7 @@ namespace Overlewd
             SetDownloadBarTitle("Check new resources");
             var serverResourcesMeta = await AdminBRO.resourcesAsync();
 
-            if (serverResourcesMeta.Any())
+            if (serverResourcesMeta?.Any() ?? false)
             {
                 //remove missing resources
                 foreach (var fileName in resourcesFileNames)
@@ -291,7 +291,9 @@ namespace Overlewd
 
             GameData.battles = await AdminBRO.battlesAsync();
 
-            var ftue = await AdminBRO.ftueAsync();
+            GameData.ftue = await AdminBRO.ftueAsync();
+
+            GameData.animations = await AdminBRO.animationsAsync();
 
             SetDownloadBarProgress(0.3f);
 

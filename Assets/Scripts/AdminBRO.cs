@@ -259,7 +259,7 @@ namespace Overlewd
                 {
                     return JsonHelper.DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
                 }
-                return new List<NetworkResource>();
+                return null;
             }
         }
 
@@ -664,6 +664,36 @@ namespace Overlewd
         {
             int id;
             string key;
+        }
+
+        //animations
+        public static async Task<List<Animation>> animationsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/animations";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonHelper.DeserializeObject<List<Animation>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class Animation
+        {
+            public int id;
+            public string title;
+            public List<AnimationData> layouts;
+        }
+
+        [Serializable]
+        public class AnimationData
+        {
+            public string assetBundleId;
+            public string animationPath;
+            public string animationName;
         }
     }
 }

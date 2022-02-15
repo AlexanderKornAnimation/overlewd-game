@@ -109,6 +109,10 @@ namespace Overlewd
         {
             return battles.Find(d => d.id == id);
         }
+
+        public static AdminBRO.FTUEInfo ftue { get; set; }
+
+        public static List<AdminBRO.Animation> animations { get; set; }
     }
 
 }
