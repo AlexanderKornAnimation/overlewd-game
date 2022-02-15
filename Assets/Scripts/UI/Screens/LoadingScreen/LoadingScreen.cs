@@ -177,6 +177,21 @@ namespace Overlewd
                 var currentFilesCount = 0;
                 foreach (var split in SplitResourcesList<DownloadResourceInfo>(downloadResourcesInfoSort, 22, 70.0f))
                 {
+                    var downloadSizeMB = 0f;
+                    foreach (var item in split)
+                    {
+                        downloadSizeMB = ((float)item.resourceMeta.size / 1024f) / 1024f;
+                    }
+
+                    if (ResourceManager.GetStorageFreeMB() < downloadSizeMB)
+                    {
+                        UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
+                        while (true)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
+
                     SetDownloadBarTitle($"Load resources {currentFilesCount + split.Count}/{totalFilesCount}");
 
                     var downloadTasks = new List<Task<UnityWebRequest>>();
