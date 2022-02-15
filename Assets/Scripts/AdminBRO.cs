@@ -29,7 +29,7 @@ namespace Overlewd
         {
             var postData = new WWWForm();
             postData.AddField("deviceId", GetDeviceId());
-            using (var request = await HttpCore.PostAsync("https://overlude-api.herokuapp.com/auth/login", postData))
+            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/auth/login", postData))
             {
                 if (!RequestCheckError(request))
                 {
@@ -43,7 +43,7 @@ namespace Overlewd
         public static async Task<Tokens> authRefreshAsync()
         {
             var postData = new WWWForm();
-            using (var request = await HttpCore.PostAsync("https://overlude-api.herokuapp.com/auth/refresh", postData))
+            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/auth/refresh", postData))
             {
                 if (!RequestCheckError(request))
                 {
@@ -66,7 +66,7 @@ namespace Overlewd
         // GET /me; POST /me
         public static async Task<PlayerInfo> meAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlude-api.herokuapp.com/me", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/me", tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
@@ -80,7 +80,7 @@ namespace Overlewd
         {
             var formMe = new WWWForm();
             formMe.AddField("name", name);
-            using (var request = await HttpCore.PostAsync("https://overlude-api.herokuapp.com/me", formMe))
+            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me", formMe))
             {
                 if (!RequestCheckError(request))
                 {
@@ -147,7 +147,7 @@ namespace Overlewd
         // /markets
         public static async Task<List<EventMarketItem>> eventMarketsAsync()
         {
-            var url = "https://overlude-api.herokuapp.com/markets";
+            var url = "https://overlewd-api.herokuapp.com/markets";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -208,7 +208,7 @@ namespace Overlewd
         // /currencies
         public static async Task<List<CurrencyItem>> currenciesAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlude-api.herokuapp.com/currencies", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/currencies", tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
@@ -233,7 +233,7 @@ namespace Overlewd
         public static async Task<TradableBuyStatus> tradableBuyAsync(int marketId, int tradableId)
         {
             var form = new WWWForm();
-            var url = $"https://overlude-api.herokuapp.com/markets/{marketId}/tradable/{tradableId}/buy";
+            var url = $"https://overlewd-api.herokuapp.com/markets/{marketId}/tradable/{tradableId}/buy";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -278,7 +278,7 @@ namespace Overlewd
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlude-api.herokuapp.com/events", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/events", tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
@@ -321,7 +321,7 @@ namespace Overlewd
         // /event-stages
         public static async Task<List<EventStageItem>> eventStagesAsync()
         {
-            var url = "https://overlude-api.herokuapp.com/event-stages";
+            var url = "https://overlewd-api.herokuapp.com/event-stages";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -336,7 +336,7 @@ namespace Overlewd
         public static async Task eventStagesResetAsync()
         {
             var form = new WWWForm();
-            var url = "https://overlude-api.herokuapp.com/event-stages/reset";
+            var url = "https://overlewd-api.herokuapp.com/event-stages/reset";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -350,7 +350,7 @@ namespace Overlewd
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
             var form = new WWWForm();
-            var url = $"https://overlude-api.herokuapp.com/event-stages/{eventStageId}/start";
+            var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/start";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -365,7 +365,7 @@ namespace Overlewd
         public static async Task<EventStageItem> eventStageEndAsync(int eventStageId)
         {
             var form = new WWWForm();
-            var url = $"https://overlude-api.herokuapp.com/event-stages/{eventStageId}/end";
+            var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/end";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -407,7 +407,7 @@ namespace Overlewd
         // /event-quests
         public static async Task<List<EventQuestItem>> eventQuestsAsync()
         {
-            var url = "https://overlude-api.herokuapp.com/event-quests";
+            var url = "https://overlewd-api.herokuapp.com/event-quests";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -448,7 +448,7 @@ namespace Overlewd
         // /i18n
         public static async Task<List<LocalizationItem>> localizationAsync(string locale)
         {
-            var url = String.Format("https://overlude-api.herokuapp.com/i18n?locale={0}", locale);
+            var url = String.Format("https://overlewd-api.herokuapp.com/i18n?locale={0}", locale);
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -475,7 +475,7 @@ namespace Overlewd
         // /dialogs
         public static async Task<List<Dialog>> dialogsAsync()
         {
-            var url = "https://overlude-api.herokuapp.com/dialogs";
+            var url = "https://overlewd-api.herokuapp.com/dialogs";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
@@ -590,7 +590,7 @@ namespace Overlewd
         // /battles
         public static async Task<List<Battle>> battlesAsync()
         {
-            var url = "https://overlude-api.herokuapp.com/battles";
+            var url = "https://overlewd-api.herokuapp.com/battles";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
