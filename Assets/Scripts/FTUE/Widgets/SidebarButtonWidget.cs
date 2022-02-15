@@ -26,7 +26,7 @@ namespace Overlewd
             {
                 if (!UIManager.HasOverlay<SidebarMenuOverlay>())
                 {
-                    SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+                    SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                     UIManager.ShowOverlay<SidebarMenuOverlay>();
                 }
                 else

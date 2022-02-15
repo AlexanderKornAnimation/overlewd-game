@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.Networking;
 
 namespace Overlewd
 {
@@ -13,6 +14,8 @@ namespace Overlewd
     {
         private Image loadingProgress;
         private TextMeshProUGUI text;
+
+        private float progressBarPercent;
         
         void Awake()
         {
@@ -22,102 +25,20 @@ namespace Overlewd
             var loadingBar = canvas.Find("LoadingBar");
             
             loadingProgress = loadingBar.Find("Progress").GetComponent<Image>();
+            loadingProgress.fillAmount = 0.0f;
             text = loadingBar.Find("Text").GetComponent<TextMeshProUGUI>();
-        }
-
-        private async Task LoadResourcesAsync()
-        {
-            var resourcesFileNames = ResourceManager.GetResourcesFileNames();
-            var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
-            var serverResourcesMeta = await AdminBRO.resourcesAsync();
-
-            if (serverResourcesMeta.Any())
-            {
-                //remove missing resources
-                foreach (var fileName in resourcesFileNames)
-                {
-                    if (!serverResourcesMeta.Exists(serverItem => serverItem.id == fileName))
-                    {
-                        localResourcesMeta.RemoveAll(localItem => localItem.id == fileName);
-                        var filePath = ResourceManager.GetResourcesFilePath(fileName);
-                        ResourceManager.Delete(filePath);
-                    }
-                }
-                ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
-
-                int filesCount = serverResourcesMeta.Count;
-                int fileNum = 0;
-                //download updated, added and restored resources
-                foreach (var serverItem in serverResourcesMeta)
-                {
-                    var added = !localResourcesMeta.Exists(localItem => localItem.id == serverItem.id);
-                    var updatedId = localResourcesMeta.FindIndex(0, localItem => 
-                        localItem.id == serverItem.id &&
-                        localItem.hash != serverItem.hash);
-                    var restored = localResourcesMeta.Exists(localItem => 
-                        localItem.id == serverItem.id && localItem.hash == serverItem.hash) &&
-                        !resourcesFileNames.Exists(resourceFileName => resourceFileName == serverItem.id);
-
-                    if (added || updatedId != -1 || restored)
-                    {
-                        var downloadSizeMB = ((float)serverItem.size / 1024f) / 1024f;
-                        if (ResourceManager.GetStorageFreeMB() < downloadSizeMB)
-                        {
-                            UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
-                            while (true)
-                            {
-                                await Task.Delay(1000);
-                            }
-                        }
-
-                        using (var request = await HttpCore.GetAsync(serverItem.url))
-                        {
-                            var fileData = request.downloadHandler.data;
-                            var filePath = ResourceManager.GetResourcesFilePath(serverItem.id);
-                            await Task.Run(() =>
-                            {
-                                //save resorce file
-                                ResourceManager.WriteBinary(filePath, fileData);
-
-                                //update meta file
-                                if (!restored)
-                                {
-                                    if (added)
-                                    {
-                                        localResourcesMeta.Add(serverItem);
-                                    }
-                                    else if (updatedId != -1)
-                                    {
-                                        localResourcesMeta[updatedId] = serverItem;
-                                    }
-                                    ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
-                                }
-                            });
-                        }
-
-                        fileNum++;
-                        SetDownloadBarState(0.2f + 0.75f * fileNum / filesCount);
-                    }
-                }
-            }
-            else
-            {
-                UIManager.ShowDialogBox("Server error", "No load resources", () => Game.Quit());
-
-                while (true)
-                {
-                    await Task.Delay(1000);
-                }
-            }
+            text.text = "";
         }
 
         private async Task ParallelLoadResourcesAsync()
         {
             var resourcesFileNames = ResourceManager.GetResourcesFileNames();
             var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
+
+            SetDownloadBarTitle("Check new resources");
             var serverResourcesMeta = await AdminBRO.resourcesAsync();
 
-            if (serverResourcesMeta.Any())
+            if (serverResourcesMeta?.Any() ?? false)
             {
                 //remove missing resources
                 foreach (var fileName in resourcesFileNames)
@@ -129,63 +50,128 @@ namespace Overlewd
                         ResourceManager.Delete(filePath);
                     }
                 }
-                ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
 
-
-
-                int filesCount = serverResourcesMeta.Count;
-                int fileNum = 0;
-                //download updated, added and restored resources
+                //find download resources
+                var downloadResourcesInfo = new List<DownloadResourceInfo>();
                 foreach (var serverItem in serverResourcesMeta)
                 {
-                    var added = !localResourcesMeta.Exists(localItem => localItem.id == serverItem.id);
-                    var updatedId = localResourcesMeta.FindIndex(0, localItem =>
+                    var state = !localResourcesMeta.Exists(localItem => localItem.id == serverItem.id) ?
+                        DownloadResourceInfo.State.Add : DownloadResourceInfo.State.None;
+                    state = localResourcesMeta.Exists(localItem =>
                         localItem.id == serverItem.id &&
-                        localItem.hash != serverItem.hash);
-                    var restored = localResourcesMeta.Exists(localItem =>
+                        localItem.hash != serverItem.hash) ? DownloadResourceInfo.State.Update : state;
+                    state = localResourcesMeta.Exists(localItem =>
                         localItem.id == serverItem.id && localItem.hash == serverItem.hash) &&
-                        !resourcesFileNames.Exists(resourceFileName => resourceFileName == serverItem.id);
+                        !resourcesFileNames.Exists(resourceFileName => resourceFileName == serverItem.id) ?
+                        DownloadResourceInfo.State.Restore : state;
 
-                    if (added || updatedId != -1 || restored)
+                    //resources meta update
+                    if (state == DownloadResourceInfo.State.None ||
+                        state == DownloadResourceInfo.State.Restore)
                     {
-                        var downloadSizeMB = ((float)serverItem.size / 1024f) / 1024f;
-                        if (ResourceManager.GetStorageFreeMB() < downloadSizeMB)
+                        var localItem = localResourcesMeta.Find(localItem => localItem.id == serverItem.id);
+                        if (localItem != null)
                         {
-                            UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
-                            while (true)
+                            localItem.buildVersion = serverItem.buildVersion;
+                        }
+                    }
+
+                    //add to downloaded resources list
+                    if (state != DownloadResourceInfo.State.None)
+                    {
+                        downloadResourcesInfo.Add(new DownloadResourceInfo 
+                        { 
+                            resourceMeta = serverItem,
+                            state = DownloadResourceInfo.State.Add
+                        });
+                    }
+                }
+                ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
+
+                SetDownloadBarProgress(0.4f);
+
+                //sort by file size ascending (group files by size)
+                var downloadResourcesInfoSort = downloadResourcesInfo.OrderBy(item => item.resourceMeta.size).ToList();
+                if (!downloadResourcesInfoSort.Any())
+                {
+                    SetDownloadBarTitle("Starting");
+                }
+
+                //parallel download
+                var totalFilesCount = downloadResourcesInfoSort.Count;
+                var currentFilesCount = 0;
+                foreach (var split in SplitResourcesList<DownloadResourceInfo>(downloadResourcesInfoSort, 22, 70.0f))
+                {
+                    var downloadSizeMB = 0f;
+                    foreach (var item in split)
+                    {
+                        downloadSizeMB = ((float)item.resourceMeta.size / 1024f) / 1024f;
+                    }
+
+                    if (ResourceManager.GetStorageFreeMB() < downloadSizeMB)
+                    {
+                        UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
+                        while (true)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
+
+                    SetDownloadBarTitle($"Load resources {currentFilesCount + split.Count}/{totalFilesCount}");
+
+                    var downloadTasks = new List<Task<UnityWebRequest>>();
+                    foreach (var item in split)
+                    {
+                        downloadTasks.Add(HttpCore.GetAsync(item.resourceMeta.url));
+                    }
+
+                    await Task.WhenAll(downloadTasks);
+
+                    var saveTasks = new List<Task>();
+                    var taskId = 0;
+                    foreach (var task in downloadTasks)
+                    {
+                        var resourceInfo = split[taskId++];
+                        var request = task.Result;
+                        var fileData = request.downloadHandler.data;
+                        var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
+
+                        saveTasks.Add(Task.Run(() =>
+                        {
+                            //save resource file
+                            ResourceManager.WriteBinary(filePath, fileData);
+                        }));
+                    }
+
+                    await Task.WhenAll(saveTasks);
+
+                    //clear requests
+                    foreach (var task in downloadTasks)
+                    {
+                        task.Result.Dispose();
+                    }
+
+                    //update meta data
+                    foreach (var resourceInfo in split)
+                    {
+                        if (resourceInfo.state != DownloadResourceInfo.State.Restore)
+                        {
+                            if (resourceInfo.state == DownloadResourceInfo.State.Add)
                             {
-                                await Task.Delay(1000);
+                                localResourcesMeta.Add(resourceInfo.resourceMeta);
+                            }
+                            else if (resourceInfo.state == DownloadResourceInfo.State.Update)
+                            {
+                                var updateId = localResourcesMeta.FindIndex(0, localItem =>
+                                    localItem.id == resourceInfo.resourceMeta.id);
+                                localResourcesMeta[updateId] = resourceInfo.resourceMeta;
                             }
                         }
-
-                        using (var request = await HttpCore.GetAsync(serverItem.url))
-                        {
-                            var fileData = request.downloadHandler.data;
-                            var filePath = ResourceManager.GetResourcesFilePath(serverItem.id);
-                            await Task.Run(() =>
-                            {
-                                //save resorce file
-                                ResourceManager.WriteBinary(filePath, fileData);
-
-                                //update meta file
-                                if (!restored)
-                                {
-                                    if (added)
-                                    {
-                                        localResourcesMeta.Add(serverItem);
-                                    }
-                                    else if (updatedId != -1)
-                                    {
-                                        localResourcesMeta[updatedId] = serverItem;
-                                    }
-                                    ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
-                                }
-                            });
-                        }
-
-                        fileNum++;
-                        SetDownloadBarState(0.2f + 0.75f * fileNum / filesCount);
                     }
+                    ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
+
+                    currentFilesCount += split.Count;
+                    SetDownloadBarProgress(0.4f + 0.6f * currentFilesCount / totalFilesCount);
                 }
             }
             else
@@ -201,13 +187,17 @@ namespace Overlewd
 
         private async void DoLoading()
         {
-            SetDownloadBarState(0.0f);
+            SetDownloadBarProgress(0.0f);
+            SetDownloadBarTitle("Autorize");
 
             await AdminBRO.authLoginAsync();
 
             await AdminBRO.eventStagesResetAsync();
 
             //
+            SetDownloadBarProgress(0.1f);
+            SetDownloadBarTitle("Download game data");
+
             GameData.playerInfo = await AdminBRO.meAsync();
 
             var locale = await AdminBRO.localizationAsync("en");
@@ -226,11 +216,23 @@ namespace Overlewd
 
             GameData.battles = await AdminBRO.battlesAsync();
 
-            SetDownloadBarState(0.2f);
+            GameData.ftue = await AdminBRO.ftueAsync();
 
-            await LoadResourcesAsync();
+            GameData.animations = await AdminBRO.animationsAsync();
 
-            SetDownloadBarState(1.0f);
+            SetDownloadBarProgress(0.3f);
+
+            await ParallelLoadResourcesAsync();
+
+            SetDownloadBarProgress(1.0f);
+
+            while (!ProgressBarIsFull())
+            {
+                await Task.Delay(100);
+            }
+
+            SetDownloadBarTitle("Done");
+
             await Task.Delay(500);
 
             UIManager.ShowScreen<StartingScreen>();
@@ -241,6 +243,7 @@ namespace Overlewd
             if (HttpCore.HasNetworkConection())
             {
                 DoLoading();
+                StartCoroutine(UpdateProgressBarPercent());
             }
             else
             {
@@ -248,15 +251,61 @@ namespace Overlewd
             }
         }
 
-        private void SetDownloadBarState(float progressPercent)
+        private void SetDownloadBarProgress(float progressPercent)
         {
-            loadingProgress.fillAmount = progressPercent;
+            progressBarPercent = progressPercent;
+        }
+
+        private void SetDownloadBarTitle(string title)
+        {
+            text.text = title;
+        }
+
+        private IEnumerator UpdateProgressBarPercent()
+        {
+            while (true)
+            {
+                loadingProgress.fillAmount += (progressBarPercent - loadingProgress.fillAmount) * 0.2f;
+                yield return new WaitForSeconds(0.015f);
+            }
+        }
+
+        private bool ProgressBarIsFull()
+        {
+            return (progressBarPercent - loadingProgress.fillAmount) < 0.001f;
+        }
+
+        private IEnumerable<List<DownloadResourceInfo>> SplitResourcesList<T>(List<DownloadResourceInfo> resources,
+            int splitSize, float splitSizeMB)
+        {
+            int splitInc = 1;
+            for (int i = 0; i < resources.Count; i += splitInc)
+            {
+                int rangeSize = 0;
+                float rangeSizeMB = 0.0f;
+                while ((rangeSize < resources.Count - i) && 
+                       (rangeSize < splitSize) &&
+                       (rangeSizeMB < splitSizeMB))
+                {
+                    rangeSizeMB += (resources[i + rangeSize++].resourceMeta.size / 1024f) / 1024f;
+                }
+
+                yield return resources.GetRange(i, rangeSize);
+
+                splitInc = rangeSize;
+            }
+
+            /*for (int i = 0; i < resources.Count; i += splitSize)
+            {
+                yield return resources.GetRange(i, Math.Min(splitSize, resources.Count - i));
+            }*/
         }
 
         private class DownloadResourceInfo
         {
             public enum State
             {
+                None,
                 Add,
                 Update,
                 Restore

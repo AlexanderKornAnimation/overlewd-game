@@ -88,7 +88,7 @@ namespace Overlewd
             var tradableId = GameGlobalStates.bannerNotification_TradableId;
             await GameData.BuyTradableAsync(marketId, tradableId);
 
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }
     }

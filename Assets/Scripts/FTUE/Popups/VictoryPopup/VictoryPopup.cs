@@ -15,7 +15,7 @@ namespace Overlewd
         {
             protected override void NextButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                 
                 if (GameGlobalStates.battleScreen_BattleId == 1)
                 {
@@ -78,7 +78,7 @@ namespace Overlewd
 
             protected override void RepeatButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                 UIManager.ShowScreen<BattleScreen>();
             }
 

@@ -7,7 +7,7 @@ using UnityEngine.Video;
 
 namespace Overlewd
 {
-    public class BossFightScreen : BaseScreen
+    public class BattleScreen : BaseScreen
     {
         protected Button startBattleButton;
         protected Button backButton;
@@ -18,7 +18,7 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BossFightScreen/BossFightScreen", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BattleScreens/BattleScreen/BattleScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
@@ -30,7 +30,7 @@ namespace Overlewd
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
-
+            
             battleVideo = canvas.Find("TestVideo").GetComponent<VideoPlayer>();
             renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
         }
@@ -40,10 +40,15 @@ namespace Overlewd
             backButton.gameObject.SetActive(false);
             startBattleButton.gameObject.SetActive(false);
 
-            await GameData.EventStageStartAsync(GameGlobalStates.bossFight_EventStageData);
+            await GameData.EventStageStartAsync(GameGlobalStates.battle_EventStageData);
             battleVideo.loopPointReached += EndBattleVideo;
 
             skipButton.gameObject.SetActive(false);
+        }
+
+        public override void StartShow()
+        {
+            SoundManager.PlayOneShoot(SoundPath.UI.BattleScreenShow);
         }
 
         public override void AfterShow()
@@ -55,7 +60,7 @@ namespace Overlewd
         {
             skipButton.gameObject.SetActive(false);
 
-            await GameData.EventStageEndAsync(GameGlobalStates.bossFight_EventStageData);
+            await GameData.EventStageEndAsync(GameGlobalStates.battle_EventStageData);
 
             UIManager.ShowPopup<VictoryPopup>();
         }
@@ -68,13 +73,12 @@ namespace Overlewd
 
         protected void SkipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
-
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             battleVideo.Stop();
             EndBattleVideo(battleVideo);
         }
-        
-        protected virtual void BackButtonClick()
+
+        protected void BackButtonClick()
         {
             UIManager.ShowScreen<EventMapScreen>();
         }

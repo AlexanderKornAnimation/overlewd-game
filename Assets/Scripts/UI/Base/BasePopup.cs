@@ -8,7 +8,7 @@ namespace Overlewd
     {
         public override void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.PopupSlideOn);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericPopupShow);
         }
 
         public override void StartHide()

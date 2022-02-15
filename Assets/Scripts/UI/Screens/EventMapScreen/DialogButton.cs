@@ -43,7 +43,7 @@ namespace Overlewd
             private void ButtonClick()
             {
                 GameGlobalStates.dialog_EventStageId = eventStageId;
-                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                 UIManager.ShowScreen<DialogScreen>();
             }
 

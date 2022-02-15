@@ -96,13 +96,14 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
         private void UlviButtonClick()
         {
             UIManager.ShowScreen<GirlScreen>();
+            GameGlobalStates.haremGirlNameSelected = ulviName.text;
         }
 
         private void AdrielButtonClick()

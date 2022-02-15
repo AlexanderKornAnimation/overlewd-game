@@ -184,12 +184,12 @@ namespace Overlewd
 
         public override void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.SidebarOverlayOn);
+            SoundManager.PlayOneShoot(SoundPath.UI.SidebarOverlayShow);
         }
 
         public override void StartHide()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.SidebarOverlayOff);
+            SoundManager.PlayOneShoot(SoundPath.UI.SidebarOverlayHide);
         }
 
         private void Start()
@@ -204,37 +204,37 @@ namespace Overlewd
 
         protected virtual void CastleButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
         protected virtual void PortalButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 
         protected virtual void GlobalMapButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<MapScreen>();
         }
 
         protected virtual void HaremButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
         protected virtual void CastleBuildingButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<BuildingScreen>();
         }
 
         protected virtual void MagicGuildButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
