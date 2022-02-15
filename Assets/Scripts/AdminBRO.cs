@@ -316,6 +316,7 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public List<int> stages;
+            public List<int> chapters;
         }
 
         // /event-stages
