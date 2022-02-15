@@ -219,7 +219,8 @@ namespace Overlewd
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson);
+                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson) ??
+                    new List<AdminBRO.NetworkResource>();
             }
             return new List<AdminBRO.NetworkResource>();
         }
