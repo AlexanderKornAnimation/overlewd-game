@@ -125,7 +125,7 @@ namespace Overlewd
 
             protected override void ChapterButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowScreen<Overlewd.CastleScreen>();
             }
 

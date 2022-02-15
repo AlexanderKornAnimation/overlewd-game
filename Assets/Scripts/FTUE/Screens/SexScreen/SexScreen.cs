@@ -183,9 +183,6 @@ namespace Overlewd
                             mainAnimations[1].Pause();
                             SoundManager.SetPause(mainSexKey, true);
                             SoundManager.CreateEventInstance(replica.cutIn, replica.replicaCutInSoundPath);
-                            
-                            if(prevReplica?.cutIn != null)
-                                SoundManager.SetPause(prevReplica.cutIn, true);
                         }
                     }
                 }

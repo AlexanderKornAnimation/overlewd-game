@@ -49,7 +49,7 @@ namespace Overlewd
             {
                 GameGlobalStates.sexScreen_StageId = 15;
                 GameGlobalStates.sexScreen_DialogId = 3;
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowScreen<SexScreen>();
             }
         }

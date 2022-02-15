@@ -53,12 +53,12 @@ namespace Overlewd
 
         public override void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.CastleWindowShow);
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.CastleWindowSlideOn);
         }
 
         public override void StartHide()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.CastleWindowHide);
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.CastleWindowSlideOff);
         }
 
         protected virtual void Customize()

@@ -22,13 +22,13 @@ namespace Overlewd
 
             protected override void FreeBuildButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 Build();
             }
 
             protected override void PaidBuildingButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 Build();
             }
         }

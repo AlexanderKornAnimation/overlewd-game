@@ -30,13 +30,13 @@ namespace Overlewd
 
         protected virtual void ButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
             UIManager.HideNotification();
         }
 
         public override void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericDialogNotificationShow);
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.DialogNotificationSLideOn);
         }
 
         public override ScreenShow Show()

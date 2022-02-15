@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 
@@ -9,6 +11,27 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
+        private static T DeserializeObject<T>(string json)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
+                {
+                    Error = delegate (object sender, ErrorEventArgs args)
+                    {
+                        Debug.LogError($"Deserealize entity \"{typeof(T).FullName}\" error:  {args.ErrorContext.Error.Message}");
+                        args.ErrorContext.Handled = true;
+                    },
+                    MissingMemberHandling = MissingMemberHandling.Error,
+                });
+            }
+            catch (JsonSerializationException ex)
+            {
+                Debug.LogError($"Deserealize Error: {ex.Message}");
+                return default(T);
+            }
+        }
+
         private static bool RequestCheckError(UnityWebRequest request)
         {
             if (request.result != UnityWebRequest.Result.ProtocolError &&
@@ -33,7 +56,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    tokens = JsonHelper.DeserializeObject<Tokens>(request.downloadHandler.text);
+                    tokens = DeserializeObject<Tokens>(request.downloadHandler.text);
                     return tokens;
                 }
                 return null;
@@ -47,7 +70,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    tokens = JsonHelper.DeserializeObject<Tokens>(request.downloadHandler.text);
+                    tokens = DeserializeObject<Tokens>(request.downloadHandler.text);
                     return tokens;
                 }
                 return null;
@@ -70,7 +93,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
+                    return DeserializeObject<PlayerInfo>(request.downloadHandler.text);
                 }
                 return null;   
             }
@@ -84,7 +107,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
+                    return DeserializeObject<PlayerInfo>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -152,7 +175,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<EventMarketItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventMarketItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -212,7 +235,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -238,7 +261,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
+                    return DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -257,7 +280,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
+                    return DeserializeObject<ResourcesMetaResponse>(request.downloadHandler.text).items;
                 }
                 return new List<NetworkResource>();
             }
@@ -287,7 +310,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<EventItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -331,7 +354,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<EventStageItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventStageItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -360,7 +383,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<EventStageItem>(request.downloadHandler.text);
+                    return DeserializeObject<EventStageItem>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -375,7 +398,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<EventStageItem>(request.downloadHandler.text);
+                    return DeserializeObject<EventStageItem>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -417,7 +440,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<EventQuestItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<EventQuestItem>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -458,7 +481,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<LocalizationItem>>(request.downloadHandler.text);
+                    return DeserializeObject<List<LocalizationItem>>(request.downloadHandler.text);
                 }
                 return null;                
             }
@@ -485,7 +508,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<Dialog>>(request.downloadHandler.text);
+                    return DeserializeObject<List<Dialog>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -600,7 +623,7 @@ namespace Overlewd
             {
                 if (!RequestCheckError(request))
                 {
-                    return JsonHelper.DeserializeObject<List<Battle>>(request.downloadHandler.text);
+                    return DeserializeObject<List<Battle>>(request.downloadHandler.text);
                 }
                 return null;
             }
@@ -627,43 +650,6 @@ namespace Overlewd
             public string type;
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
-        }
-
-        //ftue
-        public static async Task<FTUEInfo> ftueAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/ftue";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
-            {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<FTUEInfo>(request.downloadHandler.text);
-                }
-                return null;
-            }
-        }
-
-        [Serializable]
-        public class FTUEInfo
-        {
-            public List<FTUEChapter> chapters;
-        }
-
-        [Serializable]
-        public class FTUEChapter
-        {
-            public int id;
-            public string name;
-            public List<FTUEDialogInfo> dialogs;
-            public List<FTUEDialogInfo> sexs;
-            public List<FTUEDialogInfo> notifications;
-        }
-
-        [Serializable]
-        public class FTUEDialogInfo
-        {
-            int id;
-            string key;
         }
     }
 }

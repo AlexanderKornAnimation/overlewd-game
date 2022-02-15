@@ -33,7 +33,7 @@ namespace Overlewd
 
         public virtual void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericWindowShow);
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.WindowSlideOn);
         }
 
         public virtual void AfterShow()
@@ -47,7 +47,7 @@ namespace Overlewd
 
         public virtual void StartHide()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericWindowHide);
+            SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.WindowSlideOff);
         }
 
         public virtual void AfterHide()

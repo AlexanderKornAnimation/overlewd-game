@@ -16,7 +16,7 @@ namespace Overlewd
 
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 FTUE.GameData.Initialization();
                 FTUE.GameGlobalStates.Reset();
 
@@ -26,7 +26,7 @@ namespace Overlewd
 
             canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
                 UIManager.ShowScreen<CastleScreen>();
             });
         }
