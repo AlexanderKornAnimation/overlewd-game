@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Overlewd.FTUE;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,12 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
                 UIManager.ShowScreen<CastleScreen>();
+            });
+            
+            canvas.Find("TempBattleScreen").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                UIManager.ShowScreen<TempBattleScreen>();
             });
         }
     }
