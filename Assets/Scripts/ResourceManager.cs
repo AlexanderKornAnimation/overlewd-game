@@ -199,7 +199,7 @@ namespace Overlewd
                 var item = assetBundles[key];
                 if (!item.use)
                 {
-                    item.assetBundle.Unload(true);
+                    item.assetBundle.Unload(false);
                     assetBundles.Remove(key);
                 }
             }
