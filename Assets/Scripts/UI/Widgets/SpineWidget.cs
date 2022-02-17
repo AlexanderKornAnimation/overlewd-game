@@ -73,7 +73,7 @@ namespace Overlewd
         public void Attach(GameObject obj, string boneName)
         {
             obj.transform.SetParent(transform);
-            var boneFollower = obj.AddComponent<BoneFollowerGraphic>();
+            var boneFollower = obj.GetComponent<BoneFollowerGraphic>() ?? obj.AddComponent<BoneFollowerGraphic>();
             boneFollower.SkeletonGraphic = skeletonGraphic;
             boneFollower.SetBone(boneName);
         }
