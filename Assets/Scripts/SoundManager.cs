@@ -25,6 +25,7 @@ namespace Overlewd
                 public const string GenericWindowShow = "event:/UI/Windows/Generic/Window_slide_on";
                 public const string GenericWindowHide = "event:/UI/Windows/Generic/Window_slide_off";
                 public const string BattleScreenShow = "event:/UI/Windows/Battle_Screen/Battle_Screen_Transition";
+                public const string PortalScreenFTUE = "event:/Animations/Chapter_Scenes/Chapter-1/Portals_Chamber_Build";
                 
                 //overlays
                 public const string SidebarOverlayShow = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";

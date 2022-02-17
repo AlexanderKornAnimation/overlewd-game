@@ -33,6 +33,7 @@ namespace Overlewd
             {
                 nextButton.gameObject.SetActive(false);
                 video.Play();
+                SoundManager.PlayOneShoot(SoundPath.UI.PortalScreenFTUE);
                 StartCoroutine(ShowButton());
             }
             
