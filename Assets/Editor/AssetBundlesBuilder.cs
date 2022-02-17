@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class CreateAssetBundles : EditorWindow
+public class AssetBundlesBuilder : EditorWindow
 {
     private class AssetBundleInfo 
     {
@@ -17,7 +17,15 @@ public class CreateAssetBundles : EditorWindow
     bool buildAllBundles = true;
     List<AssetBundleInfo> bundlesInfo = new List<AssetBundleInfo>();
 
-    public CreateAssetBundles()
+    private static void CheckOutBundlesDirectory(string dirPath)
+    {
+        if (!Directory.Exists(dirPath))
+        {
+            Directory.CreateDirectory(dirPath);
+        }
+    }
+
+    public AssetBundlesBuilder()
     {
         var assetsBundlesPaths = Directory.GetDirectories("Assets/AssetsBundles/");
         foreach (var bundlePath in assetsBundlesPaths)
@@ -81,45 +89,45 @@ public class CreateAssetBundles : EditorWindow
         EditorGUILayout.EndScrollView();
     }
 
-    [MenuItem("Assets/Build selected AssetBundles (buildMap)")]
-    static void BuildAssetBundlesBuildMapWithForm()
+    [MenuItem("Assets/Open AssetBundles builder")]
+    static void OpenAssetBundlesBuilder()
     {
-        GetWindow<CreateAssetBundles>(true, "CreateAssetBundles", true);
+        GetWindow<AssetBundlesBuilder>(true, "CreateAssetBundles", true);
     }
 
-    [MenuItem("Assets/Build AssetBundles (buildMap)")]
-    static void BuildAssetBundlesBuildMap()
+    [MenuItem("Assets/Build AssetBundles")]
+    public static void BuildSelectedAssets()
     {
         var buildMap = new List<AssetBundleBuild>();
-        var assetsBundlesPaths = Directory.GetDirectories("Assets/AssetsBundles/");
-        foreach (var bundlePath in assetsBundlesPaths) 
-        {
-            var bundleName = bundlePath.Split('/').Last();
 
-            var bundleBuildInfo = new AssetBundleBuild();
-            bundleBuildInfo.assetBundleName = Path.Combine(bundleName, bundleName);
-            bundleBuildInfo.assetNames = new string[] { bundlePath };
-            buildMap.Add(bundleBuildInfo);
+        var objs = Selection.GetFiltered<Object>(SelectionMode.Assets);
+        foreach (var obj in objs)
+        {
+            string assetPath = AssetDatabase.GetAssetPath(obj);
+            if (!string.IsNullOrEmpty(assetPath))
+            {
+                if (Directory.Exists(assetPath))
+                {
+                    var dirName = assetPath.Split('/').Last();
+                    var bundleBuildInfo = new AssetBundleBuild();
+                    bundleBuildInfo.assetBundleName = Path.Combine(dirName, dirName);
+                    bundleBuildInfo.assetNames = new string[] { assetPath };
+                    buildMap.Add(bundleBuildInfo);
+                }
+
+                if (File.Exists(assetPath))
+                {
+                    var fileName = assetPath.Split('/').Last().Split('.').First();
+                    var bundleBuildInfo = new AssetBundleBuild();
+                    bundleBuildInfo.assetBundleName = Path.Combine(fileName, fileName);
+                    bundleBuildInfo.assetNames = new string[] { assetPath };
+                    buildMap.Add(bundleBuildInfo);
+                }
+            }
         }
 
         var assetsBundlesOutPath = "Assets/AssetsBundlesOut";
         CheckOutBundlesDirectory(assetsBundlesOutPath);
         BuildPipeline.BuildAssetBundles(assetsBundlesOutPath, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
     }
-
-    private static void CheckOutBundlesDirectory(string dirPath)
-    {
-        if (!Directory.Exists(dirPath))
-        {
-            Directory.CreateDirectory(dirPath);
-        }
-    }
-
-    /*[MenuItem("Assets/Build AssetBundles")]
-	static void BuildAssetBundles()
-	{
-		var assetsBundlesOutPath = "Assets/AssetsBundlesOut";
-        CheckOutBundlesDirectory(assetsBundlesOutPath);
-		BuildPipeline.BuildAssetBundles(assetsBundlesOutPath, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-	}*/
 }
