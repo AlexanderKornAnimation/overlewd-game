@@ -20,7 +20,9 @@ MonoBehaviour:
   blendModeMaterials:
     requiresBlendModeMaterials: 1
     applyAdditiveMaterial: 1
-    additiveMaterials: []
+    additiveMaterials:
+    - pageName: battle_cat.png
+      material: {fileID: 2100000, guid: 7d6e36002d5157e4cb682fb3b7387a09, type: 2}
     multiplyMaterials: []
     screenMaterials: []
   skeletonDataModifiers: []

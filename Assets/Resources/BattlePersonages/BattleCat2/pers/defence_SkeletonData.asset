@@ -20,7 +20,9 @@ MonoBehaviour:
   blendModeMaterials:
     requiresBlendModeMaterials: 1
     applyAdditiveMaterial: 1
-    additiveMaterials: []
+    additiveMaterials:
+    - pageName: Caty.png
+      material: {fileID: 2100000, guid: 9bdbe15ad743afe45b7a8b8d11013465, type: 2}
     multiplyMaterials: []
     screenMaterials: []
   skeletonDataModifiers: []

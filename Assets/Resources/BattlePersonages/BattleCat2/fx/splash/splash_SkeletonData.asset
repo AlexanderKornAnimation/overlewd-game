@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1b3b4b945939a54ea0b23d3396115fb, type: 3}
-  m_Name: defence_SkeletonData
+  m_Name: splash_SkeletonData
   m_EditorClassIdentifier: 
   atlasAssets:
-  - {fileID: 11400000, guid: 668d5d1968391a44f9951369db0f033b, type: 2}
+  - {fileID: 11400000, guid: d1e81cb896081684f97bf69183e0bdb0, type: 2}
   scale: 0.01
-  skeletonJSON: {fileID: 4900000, guid: 44cd5d9d0b116f045b922ded389e3b8c, type: 3}
+  skeletonJSON: {fileID: 4900000, guid: 3c0a2a781c28e8848971674a3ea89ddf, type: 3}
   isUpgradingBlendModeMaterials: 0
   blendModeMaterials:
-    requiresBlendModeMaterials: 1
+    requiresBlendModeMaterials: 0
     applyAdditiveMaterial: 1
-    additiveMaterials:
-    - pageName: battle_cat.png
-      material: {fileID: 2100000, guid: 7d6e36002d5157e4cb682fb3b7387a09, type: 2}
+    additiveMaterials: []
     multiplyMaterials: []
     screenMaterials: []
   skeletonDataModifiers: []

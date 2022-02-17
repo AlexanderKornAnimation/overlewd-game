@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1b3b4b945939a54ea0b23d3396115fb, type: 3}
-  m_Name: defence_SkeletonData
+  m_Name: attack2-fx_SkeletonData
   m_EditorClassIdentifier: 
   atlasAssets:
-  - {fileID: 11400000, guid: 668d5d1968391a44f9951369db0f033b, type: 2}
+  - {fileID: 11400000, guid: 2a4a0a7a56c0acd45a3ae78be5b0aba2, type: 2}
   scale: 0.01
-  skeletonJSON: {fileID: 4900000, guid: 44cd5d9d0b116f045b922ded389e3b8c, type: 3}
+  skeletonJSON: {fileID: 4900000, guid: 639cec6b60f58dd4c81f9a463f2b2a9c, type: 3}
   isUpgradingBlendModeMaterials: 0
   blendModeMaterials:
     requiresBlendModeMaterials: 1
     applyAdditiveMaterial: 1
     additiveMaterials:
-    - pageName: battle_cat.png
-      material: {fileID: 2100000, guid: 7d6e36002d5157e4cb682fb3b7387a09, type: 2}
-    multiplyMaterials: []
+    - pageName: attack2-fx.png
+      material: {fileID: 2100000, guid: 5c253577822e39f4db5d42020e33b311, type: 2}
+    multiplyMaterials:
+    - pageName: attack2-fx.png
+      material: {fileID: 2100000, guid: c7261968276d7fb4390a33a642131cd4, type: 2}
     screenMaterials: []
   skeletonDataModifiers: []
   fromAnimation: []
