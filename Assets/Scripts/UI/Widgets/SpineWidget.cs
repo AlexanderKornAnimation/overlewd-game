@@ -70,6 +70,16 @@ namespace Overlewd
             skeletonGraphic.freeze = false;
         }
 
+        public void FlipX()
+        {
+            transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
+        }
+
+        public void Scale(float scale)
+        {
+            transform.localScale *= scale;
+        }
+
         public void Attach(GameObject obj, string boneName)
         {
             obj.transform.SetParent(transform);
