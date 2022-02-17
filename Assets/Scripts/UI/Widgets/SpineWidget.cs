@@ -69,6 +69,14 @@ namespace Overlewd
         {
             skeletonGraphic.freeze = false;
         }
+
+        public void Attach(GameObject obj, string boneName)
+        {
+            obj.transform.SetParent(transform);
+            var boneFollower = obj.AddComponent<BoneFollowerGraphic>();
+            boneFollower.SkeletonGraphic = skeletonGraphic;
+            boneFollower.SetBone(boneName);
+        }
         
         public static SpineWidget GetInstance(Transform parent)
         {
