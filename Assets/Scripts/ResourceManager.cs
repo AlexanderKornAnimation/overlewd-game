@@ -194,14 +194,19 @@ namespace Overlewd
 
         public static void UnloadUnusedAssetBundles()
         {
+            var removeKeys = new List<string>();
             foreach (var key in assetBundles.Keys)
             {
-                var item = assetBundles[key];
-                if (!item.use)
+                if (!assetBundles[key].use)
                 {
-                    item.assetBundle.Unload(false);
-                    assetBundles.Remove(key);
+                    removeKeys.Add(key);
                 }
+            }
+
+            foreach (var key in removeKeys)
+            {
+                assetBundles[key].assetBundle.Unload(false);
+                assetBundles.Remove(key);
             }
         }
 
