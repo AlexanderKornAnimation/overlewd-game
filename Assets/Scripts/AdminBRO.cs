@@ -650,17 +650,19 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public List<FTUEDialogInfo> dialogs;
-            public List<FTUEDialogInfo> sexs;
-            public List<FTUEDialogInfo> notifications;
+            public List<FTUEStageInfo> dialogs;
+            public List<FTUEStageInfo> sexs;
+            public List<FTUEStageInfo> notifications;
+            public List<FTUEStageInfo> battles;
         }
 
         [Serializable]
-        public class FTUEDialogInfo
+        public class FTUEStageInfo
         {
-            int id;
-            string key;
+            public int id;
+            public string key;
         }
+
 
         //animations
         public static async Task<List<Animation>> animationsAsync()
