@@ -57,7 +57,7 @@ namespace Overlewd
         public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
         {
             var assetBundle = LoadAssetBundle(assetBundleId);
-            var asset = assetBundle.LoadAsset<T>(assetPath);
+            var asset = assetBundle.LoadAsset<T>(assetPath.Trim());
             return UnityEngine.Object.Instantiate(asset);
         }
 
