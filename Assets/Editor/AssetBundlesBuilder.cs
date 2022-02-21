@@ -94,40 +94,4 @@ public class AssetBundlesBuilder : EditorWindow
     {
         GetWindow<AssetBundlesBuilder>(true, "CreateAssetBundles", true);
     }
-
-    [MenuItem("Assets/Build AssetBundles")]
-    public static void BuildSelectedAssets()
-    {
-        var buildMap = new List<AssetBundleBuild>();
-
-        var objs = Selection.GetFiltered<Object>(SelectionMode.Assets);
-        foreach (var obj in objs)
-        {
-            string assetPath = AssetDatabase.GetAssetPath(obj);
-            if (!string.IsNullOrEmpty(assetPath))
-            {
-                if (Directory.Exists(assetPath))
-                {
-                    var dirName = assetPath.Split('/').Last();
-                    var bundleBuildInfo = new AssetBundleBuild();
-                    bundleBuildInfo.assetBundleName = Path.Combine(dirName, dirName);
-                    bundleBuildInfo.assetNames = new string[] { assetPath };
-                    buildMap.Add(bundleBuildInfo);
-                }
-
-                if (File.Exists(assetPath))
-                {
-                    var fileName = assetPath.Split('/').Last().Split('.').First();
-                    var bundleBuildInfo = new AssetBundleBuild();
-                    bundleBuildInfo.assetBundleName = Path.Combine(fileName, fileName);
-                    bundleBuildInfo.assetNames = new string[] { assetPath };
-                    buildMap.Add(bundleBuildInfo);
-                }
-            }
-        }
-
-        var assetsBundlesOutPath = "Assets/AssetsBundlesOut";
-        CheckOutBundlesDirectory(assetsBundlesOutPath);
-        BuildPipeline.BuildAssetBundles(assetsBundlesOutPath, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
-    }
 }
