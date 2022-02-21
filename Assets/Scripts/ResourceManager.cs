@@ -218,19 +218,19 @@ namespace Overlewd
             }
         }
 
-        public static List<AdminBRO.NetworkResource> GetLocalResourcesMeta()
+        public static List<AdminBRO.NetworkResourceShort> GetLocalResourcesMeta()
         {
             var metaFilePath = GetRootFilePath("ResourcesMeta");
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson) ??
-                    new List<AdminBRO.NetworkResource>();
+                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResourceShort>>(metaJson) ??
+                    new List<AdminBRO.NetworkResourceShort>();
             }
-            return new List<AdminBRO.NetworkResource>();
+            return new List<AdminBRO.NetworkResourceShort>();
         }
 
-        public static void SaveLocalResourcesMeta(List<AdminBRO.NetworkResource> meta)
+        public static void SaveLocalResourcesMeta(List<AdminBRO.NetworkResourceShort> meta)
         {
             if (meta != null)
             {

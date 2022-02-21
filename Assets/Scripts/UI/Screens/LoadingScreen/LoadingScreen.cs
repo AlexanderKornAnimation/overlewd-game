@@ -40,17 +40,6 @@ namespace Overlewd
 
             if (serverResourcesMeta?.Any() ?? false)
             {
-                //remove missing resources
-                foreach (var fileName in resourcesFileNames)
-                {
-                    if (!serverResourcesMeta.Exists(serverItem => serverItem.id == fileName))
-                    {
-                        localResourcesMeta.RemoveAll(localItem => localItem.id == fileName);
-                        var filePath = ResourceManager.GetResourcesFilePath(fileName);
-                        ResourceManager.Delete(filePath);
-                    }
-                }
-
                 //find download resources
                 var downloadResourcesInfo = new List<DownloadResourceInfo>();
                 foreach (var serverItem in serverResourcesMeta)
@@ -65,25 +54,25 @@ namespace Overlewd
                         !resourcesFileNames.Exists(resourceFileName => resourceFileName == serverItem.id) ?
                         DownloadResourceInfo.State.Restore : state;
 
-                    //resources meta update
-                    if (state == DownloadResourceInfo.State.None ||
-                        state == DownloadResourceInfo.State.Restore)
-                    {
-                        var localItem = localResourcesMeta.Find(localItem => localItem.id == serverItem.id);
-                        if (localItem != null)
-                        {
-                            localItem.buildVersion = serverItem.buildVersion;
-                        }
-                    }
-
                     //add to downloaded resources list
                     if (state != DownloadResourceInfo.State.None)
                     {
                         downloadResourcesInfo.Add(new DownloadResourceInfo 
                         { 
                             resourceMeta = serverItem,
-                            state = DownloadResourceInfo.State.Add
+                            state = state
                         });
+                    }
+                }
+
+                //remove missing resources
+                foreach (var fileName in resourcesFileNames)
+                {
+                    if (!serverResourcesMeta.Exists(serverItem => serverItem.id == fileName))
+                    {
+                        localResourcesMeta.RemoveAll(localItem => localItem.id == fileName);
+                        var filePath = ResourceManager.GetResourcesFilePath(fileName);
+                        ResourceManager.Delete(filePath);
                     }
                 }
                 ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
@@ -154,18 +143,25 @@ namespace Overlewd
                     //update meta data
                     foreach (var resourceInfo in split)
                     {
-                        if (resourceInfo.state != DownloadResourceInfo.State.Restore)
+                        switch (resourceInfo.state)
                         {
-                            if (resourceInfo.state == DownloadResourceInfo.State.Add)
-                            {
-                                localResourcesMeta.Add(resourceInfo.resourceMeta);
-                            }
-                            else if (resourceInfo.state == DownloadResourceInfo.State.Update)
-                            {
+                            case DownloadResourceInfo.State.Add:
+                                localResourcesMeta.Add(new AdminBRO.NetworkResourceShort
+                                {
+                                    id = resourceInfo.resourceMeta.id,
+                                    hash = resourceInfo.resourceMeta.hash
+                                });
+                                break;
+                            case DownloadResourceInfo.State.Update:
                                 var updateId = localResourcesMeta.FindIndex(0, localItem =>
                                     localItem.id == resourceInfo.resourceMeta.id);
-                                localResourcesMeta[updateId] = resourceInfo.resourceMeta;
-                            }
+                                localResourcesMeta[updateId] = 
+                                    new AdminBRO.NetworkResourceShort 
+                                    {
+                                        id = resourceInfo.resourceMeta.id,
+                                        hash = resourceInfo.resourceMeta.hash
+                                    };
+                                break;
                         }
                     }
                     ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);

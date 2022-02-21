@@ -275,6 +275,13 @@ namespace Overlewd
             public string url;
         }
 
+        [Serializable]
+        public class NetworkResourceShort
+        {
+            public string id;
+            public string hash;
+        }
+
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
