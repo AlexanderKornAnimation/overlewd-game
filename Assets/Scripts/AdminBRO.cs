@@ -593,6 +593,7 @@ namespace Overlewd
             public string title;
             public string type;
             public List<DialogReplica> replicas;
+            public string status;
         }
 
         // /battles
@@ -630,6 +631,7 @@ namespace Overlewd
             public string type;
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
+            public string status;
         }
 
         //ftue
