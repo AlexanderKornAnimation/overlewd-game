@@ -88,7 +88,7 @@ namespace Overlewd
 
         protected virtual void FreeBuildButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI.FreeBuildButton);
             UIManager.HidePopup();
         }
 
