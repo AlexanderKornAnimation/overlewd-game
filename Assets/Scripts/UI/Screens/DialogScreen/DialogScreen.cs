@@ -44,6 +44,15 @@ namespace Overlewd
         private Dictionary<string, string> slot_character = new Dictionary<string, string>();
         private Dictionary<string, string> character_slot = new Dictionary<string, string>();
 
+        protected Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
+        {
+            [AdminBRO.DialogCharacterSkin.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            [AdminBRO.DialogCharacterSkin.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogCharacterSkin.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
+            [AdminBRO.DialogCharacterSkin.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
+            [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
+        };
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
@@ -151,7 +160,7 @@ namespace Overlewd
             if (characters[keyName] == null)
             {
                 var slot = slots[keyPos];
-                var prefabPath = GameLocalResources.dialogCharacterPrefabPath[keyName];
+                var prefabPath = dialogCharacterPrefabPath[keyName];
                 characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
 
                 slot_character[keyPos] = keyName;

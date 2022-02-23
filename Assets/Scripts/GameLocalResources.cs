@@ -135,15 +135,5 @@ namespace Overlewd
                 [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/Adriel/surprised_SkeletonData",
             },
         };
-        //
-
-        public static Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
-        {
-            [AdminBRO.DialogCharacterSkin.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogCharacterSkin.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterSkin.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogCharacterSkin.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
-        };
     }
 }
