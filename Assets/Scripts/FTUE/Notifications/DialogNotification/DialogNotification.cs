@@ -46,19 +46,19 @@ namespace Overlewd
                 var firstReplica = dialogData.replicas[0];
                 text.text = firstReplica.message;
 
-                if (firstReplica.animation != null)
+                if (firstReplica.emotionAnimationTemp != null)
                 {
                     if (GameLocalResources.emotionsAnimPath.ContainsKey(firstReplica.characterKey))
                     {
                         var persEmotions = GameLocalResources.emotionsAnimPath[firstReplica.characterKey];
-                        if (persEmotions.ContainsKey(firstReplica.animation))
+                        if (persEmotions.ContainsKey(firstReplica.emotionAnimationTemp))
                         {
-                            var headPath = persEmotions[firstReplica.animation];
+                            var headPath = persEmotions[firstReplica.emotionAnimationTemp];
                             if (headPath != null)
                             {
                                 emotionAnimation = SpineWidget.GetInstance(emotionPos);
                                 emotionAnimation.Initialize(headPath);
-                                emotionAnimation.PlayAnimation(firstReplica.animation, true);
+                                emotionAnimation.PlayAnimation(firstReplica.emotionAnimationTemp, true);
                             }
                         }
                     }

@@ -540,13 +540,18 @@ namespace Overlewd
             public string characterName;
             public string characterSkin;
             public string characterPosition;
-            public string cutIn;
             public string message;
-            public string animation;
             public string sceneOverlayImage;
 
-            public string replicaCutInSoundPath;
-            public string replicaMainSoundPath;
+            public int? emotionAnimationId;
+            public int? cutInAnimationId;
+            public int? mainAnimationId;
+
+            public string cutInAnimationTemp;
+            public string emotionAnimationTemp;
+
+            public string cutInSoundPath;
+            public string mainSoundPath;
             public string characterKey
             {
                 get

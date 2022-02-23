@@ -123,9 +123,9 @@ namespace Overlewd
 
             private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.cutIn != null)
+                if (replica.cutInAnimationTemp != null)
                 {
-                    if (replica.cutIn != prevReplica?.cutIn)
+                    if (replica.cutInAnimationTemp != prevReplica?.cutInAnimationTemp)
                     {
                         foreach (var anim in cutInAnimations)
                         {
@@ -134,9 +134,9 @@ namespace Overlewd
 
                         cutInAnimations.Clear();
 
-                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
+                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutInAnimationTemp))
                         {
-                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutInAnimationTemp];
                             foreach (var animData in cutInData)
                             {
                                 if (animData.Value != null)
@@ -174,31 +174,31 @@ namespace Overlewd
                     _ => "MainSex1"
                 };
                 
-                if (replica.cutIn != null)
+                if (replica.cutInAnimationTemp != null)
                 {
-                    if (replica.cutIn != prevReplica?.cutIn)
+                    if (replica.cutInAnimationTemp != prevReplica?.cutInAnimationTemp)
                     {
-                        if (replica.replicaCutInSoundPath != null)
+                        if (replica.cutInSoundPath != null)
                         {
                             mainAnimations[1].Pause();
                             SoundManager.SetPause(mainSexKey, true);
-                            SoundManager.CreateEventInstance(replica.cutIn, replica.replicaCutInSoundPath);
+                            SoundManager.CreateEventInstance(replica.cutInAnimationTemp, replica.cutInSoundPath);
                             
-                            if(prevReplica?.cutIn != null)
-                                SoundManager.SetPause(prevReplica.cutIn, true);
+                            if(prevReplica?.cutInAnimationTemp != null)
+                                SoundManager.SetPause(prevReplica.cutInAnimationTemp, true);
                         }
                     }
                 }
                 else
                 {
-                    if (replica.replicaMainSoundPath != null)
+                    if (replica.mainSoundPath != null)
                     {
-                        SoundManager.CreateEventInstance(mainSexKey, replica.replicaMainSoundPath);
+                        SoundManager.CreateEventInstance(mainSexKey, replica.mainSoundPath);
                         mainAnimations[1].Play();
                         SoundManager.SetPause(mainSexKey, false);
                         
-                        if (prevReplica?.replicaCutInSoundPath != null)
-                            SoundManager.SetPause(prevReplica.cutIn, true);
+                        if (prevReplica?.cutInSoundPath != null)
+                            SoundManager.SetPause(prevReplica.cutInAnimationTemp, true);
                     }
                 }
             }

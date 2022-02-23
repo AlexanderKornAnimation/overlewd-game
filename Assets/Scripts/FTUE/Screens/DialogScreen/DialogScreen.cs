@@ -62,9 +62,9 @@ namespace Overlewd
 
             private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.cutIn != null)
+                if (replica.cutInAnimationTemp != null)
                 {
-                    if (replica.cutIn != prevReplica?.cutIn)
+                    if (replica.cutInAnimationTemp != prevReplica?.cutInAnimationTemp)
                     {
                         foreach (var anim in cutInAnimations)
                         {
@@ -72,9 +72,9 @@ namespace Overlewd
                         }
                         cutInAnimations.Clear();
 
-                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
+                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutInAnimationTemp))
                         {
-                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
+                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutInAnimationTemp];
                             foreach (var animData in cutInData)
                             {
                                 if (animData.Value != null)
@@ -104,10 +104,10 @@ namespace Overlewd
 
             private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.animation != null)
+                if (replica.emotionAnimationTemp != null)
                 {
                     if (replica.characterKey != prevReplica?.characterKey ||
-                        replica.animation != prevReplica?.animation)
+                        replica.emotionAnimationTemp != prevReplica?.emotionAnimationTemp)
                     {
                         Destroy(emotionAnimation?.gameObject);
                         emotionAnimation = null;
@@ -115,14 +115,14 @@ namespace Overlewd
                         if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterKey))
                         {
                             var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterKey];
-                            if (persEmotions.ContainsKey(replica.animation))
+                            if (persEmotions.ContainsKey(replica.emotionAnimationTemp))
                             {
-                                var headPath = persEmotions[replica.animation];
+                                var headPath = persEmotions[replica.emotionAnimationTemp];
                                 if (headPath != null)
                                 {
                                     emotionAnimation = SpineWidget.GetInstance(emotionPos);
                                     emotionAnimation.Initialize(headPath);
-                                    emotionAnimation.PlayAnimation(replica.animation, true);
+                                    emotionAnimation.PlayAnimation(replica.emotionAnimationTemp, true);
                                 }
                             }
                         }
