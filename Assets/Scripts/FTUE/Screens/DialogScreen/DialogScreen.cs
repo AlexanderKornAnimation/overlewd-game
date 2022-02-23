@@ -106,15 +106,15 @@ namespace Overlewd
             {
                 if (replica.emotionAnimationTemp != null)
                 {
-                    if (replica.characterKey != prevReplica?.characterKey ||
+                    if (replica.characterSkin != prevReplica?.characterSkin ||
                         replica.emotionAnimationTemp != prevReplica?.emotionAnimationTemp)
                     {
                         Destroy(emotionAnimation?.gameObject);
                         emotionAnimation = null;
 
-                        if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterKey))
+                        if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterSkin))
                         {
-                            var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterKey];
+                            var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterSkin];
                             if (persEmotions.ContainsKey(replica.emotionAnimationTemp))
                             {
                                 var headPath = persEmotions[replica.emotionAnimationTemp];

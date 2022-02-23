@@ -94,7 +94,7 @@ namespace Overlewd
 
         public static Dictionary<string, Dictionary<string, string>> emotionsAnimPath = new Dictionary<string, Dictionary<string, string>>
         {
-            [AdminBRO.DialogCharacterKey.Overlord] = new Dictionary<string, string>
+            [AdminBRO.DialogCharacterSkin.Overlord] = new Dictionary<string, string>
             {
                 [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/Overlord/angry_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/Overlord/happy_SkeletonData",
@@ -102,7 +102,7 @@ namespace Overlewd
                 [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/Overlord/love_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/Overlord/surprised_SkeletonData",
             },
-            [AdminBRO.DialogCharacterKey.Ulvi] = new Dictionary<string, string>
+            [AdminBRO.DialogCharacterSkin.Ulvi] = new Dictionary<string, string>
             {
                 [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/Ulvi/angry_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/Ulvi/happy_SkeletonData",
@@ -110,7 +110,7 @@ namespace Overlewd
                 [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/Ulvi/love_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/Ulvi/surprised_SkeletonData",
             },
-            [AdminBRO.DialogCharacterKey.UlviWolf] = new Dictionary<string, string>
+            [AdminBRO.DialogCharacterSkin.UlviWolf] = new Dictionary<string, string>
             {
                 [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/UlviFurry/angry_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/UlviFurry/happy_SkeletonData",
@@ -118,7 +118,7 @@ namespace Overlewd
                 [AdminBRO.DialogCharacterAnimation.Love] = "FTUE/Emotions/UlviFurry/love_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Surprised] = "FTUE/Emotions/UlviFurry/surprised_SkeletonData",
             },
-            [AdminBRO.DialogCharacterKey.Faye] = new Dictionary<string, string>
+            [AdminBRO.DialogCharacterSkin.Faye] = new Dictionary<string, string>
             {
                 [AdminBRO.DialogCharacterAnimation.Angry] = null,
                 [AdminBRO.DialogCharacterAnimation.Happy] = null,
@@ -126,7 +126,7 @@ namespace Overlewd
                 [AdminBRO.DialogCharacterAnimation.Love] = null,
                 [AdminBRO.DialogCharacterAnimation.Surprised] = null,
             },
-            [AdminBRO.DialogCharacterKey.Adriel] = new Dictionary<string, string>
+            [AdminBRO.DialogCharacterSkin.Adriel] = new Dictionary<string, string>
             {
                 [AdminBRO.DialogCharacterAnimation.Angry] = "FTUE/Emotions/Adriel/angry_SkeletonData",
                 [AdminBRO.DialogCharacterAnimation.Happy] = "FTUE/Emotions/Adriel/happy_SkeletonData",
@@ -139,11 +139,11 @@ namespace Overlewd
 
         public static Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
         {
-            [AdminBRO.DialogCharacterKey.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogCharacterKey.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterKey.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogCharacterKey.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterKey.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
+            [AdminBRO.DialogCharacterSkin.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            [AdminBRO.DialogCharacterSkin.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogCharacterSkin.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
+            [AdminBRO.DialogCharacterSkin.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
+            [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
     }
 }

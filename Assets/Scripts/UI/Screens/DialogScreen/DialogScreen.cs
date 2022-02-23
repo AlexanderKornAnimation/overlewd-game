@@ -204,7 +204,7 @@ namespace Overlewd
 
             foreach (var replica in dialogData.replicas)
             {
-                var keyName = replica.characterKey;
+                var keyName = replica.characterSkin;
                 var keyPos = replica.characterPosition;
 
                 bool addKeyName = false;
@@ -300,7 +300,7 @@ namespace Overlewd
             var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
             if (prevReplica != null)
             {
-                var keyName = prevReplica.characterKey;
+                var keyName = prevReplica.characterSkin;
                 var keyPos = prevReplica.characterPosition;
 
                 if (keyPos == null)
@@ -320,7 +320,7 @@ namespace Overlewd
                 personageName.text = replica.characterName;
                 text.text = replica.message;
 
-                var keyName = replica.characterKey;
+                var keyName = replica.characterSkin;
                 var keyPos = replica.characterPosition;
 
                 ShowCharacter(keyName, keyPos);
