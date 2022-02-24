@@ -10,8 +10,9 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
-            private SpineWidget emotionAnimation;
+            private List<SpineWidgetGroup> cutInAnimations = new List<SpineWidgetGroup>();
+
+            private SpineWidgetGroup emotionAnimation;
 
             protected override async Task EnterScreen()
             {
@@ -22,15 +23,12 @@ namespace Overlewd
 
                 if (GameGlobalStates.dialogScreen_DialogId == 1)
                 {
-
                 }
                 else if (GameGlobalStates.dialogScreen_DialogId == 2)
                 {
-
                 }
                 else if (GameGlobalStates.dialogScreen_DialogId == 3)
                 {
-
                 }
 
                 await Task.CompletedTask;
@@ -62,70 +60,48 @@ namespace Overlewd
 
             private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.cutInAnimationTemp != null)
+                if (replica.cutInAnimationId.HasValue)
                 {
-                    if (replica.cutInAnimationTemp != prevReplica?.cutInAnimationTemp)
+                    if (replica.cutInAnimationId != prevReplica?.cutInAnimationId)
                     {
                         foreach (var anim in cutInAnimations)
                         {
                             Destroy(anim?.gameObject);
                         }
+
                         cutInAnimations.Clear();
 
-                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutInAnimationTemp))
-                        {
-                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutInAnimationTemp];
-                            foreach (var animData in cutInData)
-                            {
-                                if (animData.Value != null)
-                                {
-                                    var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                    anim.Initialize(animData.Value);
-                                    anim.PlayAnimation(animData.Key, true);
-                                    cutInAnimations.Add(anim);
-                                }
-                            }
-                        }
-
-                        cutIn.SetActive(cutInAnimations.Count > 0);
+                        var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
+                        var cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                        cutInAnimation.Initialize(animation);
+                        cutInAnimations.Add(cutInAnimation);
                     }
                 }
                 else
                 {
-                    cutIn.SetActive(false);
-
                     foreach (var anim in cutInAnimations)
                     {
                         Destroy(anim?.gameObject);
                     }
+
                     cutInAnimations.Clear();
                 }
+
+                cutIn.SetActive(cutInAnimations.Count > 0);
             }
 
             private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.emotionAnimationTemp != null)
+                if (replica.emotionAnimationId.HasValue)
                 {
-                    if (replica.characterSkin != prevReplica?.characterSkin ||
-                        replica.emotionAnimationTemp != prevReplica?.emotionAnimationTemp)
+                    if (replica.emotionAnimationId != prevReplica?.emotionAnimationId)
                     {
                         Destroy(emotionAnimation?.gameObject);
                         emotionAnimation = null;
 
-                        if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterSkin))
-                        {
-                            var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterSkin];
-                            if (persEmotions.ContainsKey(replica.emotionAnimationTemp))
-                            {
-                                var headPath = persEmotions[replica.emotionAnimationTemp];
-                                if (headPath != null)
-                                {
-                                    emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                    emotionAnimation.Initialize(headPath);
-                                    emotionAnimation.PlayAnimation(replica.emotionAnimationTemp, true);
-                                }
-                            }
-                        }
+                        var animation = GameData.GetAnimationById(replica.emotionAnimationId.Value);
+                        emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                        emotionAnimation.Initialize(animation);
                     }
                 }
                 else

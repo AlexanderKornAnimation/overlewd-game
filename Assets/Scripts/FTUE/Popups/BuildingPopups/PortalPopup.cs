@@ -22,7 +22,7 @@ namespace Overlewd
 
             protected override void FreeBuildButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI.FreeBuildButton);
                 Build();
             }
 
