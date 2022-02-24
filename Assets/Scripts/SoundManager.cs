@@ -19,6 +19,7 @@ namespace Overlewd
                 public const string DialogNextButtonClick = "event:/UI/Buttons/Dialogue/Text_field_click_next";
                 public const string DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
                 public const string FreeBuildButton = "event:/UI/Buttons/Building/Build_8_hours_button";
+                public const string FreeSpellLearnButton = "event:/UI/Buttons/Learn_Spell/Learn_Spell_8_hours";
                 
                 //screens
                 public const string CastleWindowShow = "event:/UI/Windows/Castle_Screen/Window_slide_on";
