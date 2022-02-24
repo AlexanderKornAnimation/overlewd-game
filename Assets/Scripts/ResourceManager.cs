@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -194,19 +195,13 @@ namespace Overlewd
 
         public static void UnloadUnusedAssetBundles()
         {
-            var removeKeys = new List<string>();
-            foreach (var key in assetBundles.Keys)
+            foreach (var pair in assetBundles.ToList())
             {
-                if (!assetBundles[key].use)
+                if (!pair.Value.use)
                 {
-                    removeKeys.Add(key);
+                    pair.Value.assetBundle.Unload(false);
+                    assetBundles.Remove(pair.Key);
                 }
-            }
-
-            foreach (var key in removeKeys)
-            {
-                assetBundles[key].assetBundle.Unload(false);
-                assetBundles.Remove(key);
             }
         }
 

@@ -122,7 +122,6 @@ namespace Overlewd
                             emotionAnimationTemp = AdminBRO.DialogCharacterAnimation.Surprised,
                             message = "I can't believe I found him! But… How do I wake him up?",
                             emotionAnimationId = (int)AnimationId.UlviSurprised,
-                            mainAnimationId = (int)AnimationId.MainSex1
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -138,6 +137,7 @@ namespace Overlewd
                             mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             message = "You're finally awake! Took you long enough, Master.",
                             emotionAnimationId = (int)AnimationId.UlviHappy,
+                            mainAnimationId = (int)AnimationId.MainSex1
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -146,6 +146,7 @@ namespace Overlewd
                             mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             message = "M-m-m, your cock tastes so good... I guess the legends were true.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
+                            mainAnimationId = (int)AnimationId.MainSex1
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -156,6 +157,7 @@ namespace Overlewd
                             cutInAnimationTemp = "CutIn1",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn1,
+                            mainAnimationId = (int)AnimationId.MainSex1,
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -166,6 +168,7 @@ namespace Overlewd
                             cutInAnimationTemp = "CutIn1",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn1,
+                            mainAnimationId = (int)AnimationId.MainSex1,
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -174,6 +177,7 @@ namespace Overlewd
                             mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             message = "Please, cum for me, Master! I want to taste you so bad…",
                             emotionAnimationId = (int)AnimationId.UlviLove,
+                            mainAnimationId = (int)AnimationId.MainSex1,
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -184,16 +188,18 @@ namespace Overlewd
                             cutInAnimationTemp = "CutIn2",
                             emotionAnimationId = (int)AnimationId.UlviHappy,
                             cutInAnimationId = (int)AnimationId.CutIn2,
+                            mainAnimationId = (int)AnimationId.MainSex1,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             emotionAnimationTemp = AdminBRO.DialogCharacterAnimation.Love,
-                            mainSoundPath = SoundPath.Animations.FirstSex.CutInCumshot,
+                            cutInSoundPath = SoundPath.Animations.FirstSex.CutInCumshot,
                             message = "You taste exactly how I imagined. After all those years searching for you…",
                             cutInAnimationTemp = "CutIn2",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn2,
+                            mainAnimationId = (int)AnimationId.MainSex1,
                         },
                         new AdminBRO.DialogReplica
                         {

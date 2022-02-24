@@ -80,11 +80,6 @@ namespace Overlewd
             dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
             await GameData.EventStageStartAsync(GameGlobalStates.sex_EventStageData);
         }
-
-        protected virtual void PlaySound(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
-        {
-            
-        }
         
         protected virtual async void LeaveScreen()
         {

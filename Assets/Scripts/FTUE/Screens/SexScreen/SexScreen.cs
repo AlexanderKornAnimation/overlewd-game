@@ -12,71 +12,10 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
-            private List<SpineWidget> mainAnimations = new List<SpineWidget>();
-            private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
-
-            private void SetMainAnim()
-            {
-                foreach (var anim in mainAnimations)
-                {
-                    Destroy(anim?.gameObject);
-                }
-
-                mainAnimations.Clear();
-
-                var mainSexKey = GameGlobalStates.sexScreen_DialogId switch
-                {
-                    1 => "MainSex1",
-                    2 => "MainSex2",
-                    3 => "MainSex3",
-                    _ => "MainSex1"
-                };
-
-                foreach (var animData in GameLocalResources.mainSexAnimPath[mainSexKey])
-                {
-                    if (animData.Value != null)
-                    {
-                        var anim = SpineWidget.GetInstance(mainAnimPos);
-                        anim.Initialize(animData.Value);
-                        anim.PlayAnimation(animData.Key, true);
-                        mainAnimations.Add(anim);
-                    }
-                }
-            }
-
-            private void SetFinalMainAnim()
-            {
-                if (GameGlobalStates.sexScreen_DialogId == 1)
-                {
-                    SoundManager.StopAllInstances(true);
-                }
-
-                foreach (var anim in mainAnimations)
-                {
-                    Destroy(anim?.gameObject);
-                }
-
-                mainAnimations.Clear();
-
-                var mainFinalSexKey = GameGlobalStates.sexScreen_DialogId switch
-                {
-                    1 => "FinalSex1",
-                    2 => "FinalSex2",
-                    3 => "FinalSex3",
-                    _ => "FinalSex1"
-                };
-
-                foreach (var animData in GameLocalResources.mainSexAnimPath[mainFinalSexKey])
-                {
-                    if (animData.Value != null)
-                    {
-                        var anim = SpineWidget.GetInstance(mainAnimPos);
-                        anim.Initialize(animData.Value);
-                        anim.PlayAnimation(animData.Key, true);
-                        mainAnimations.Add(anim);
-                    }
-                }
-            }
+            private SpineWidgetGroup mainAnimation;
+            private SpineWidgetGroup cutInAnimation;
+            private string mainSoundKey;
+            private string cutInSoundKey;
 
             protected override async Task EnterScreen()
             {
@@ -84,14 +23,11 @@ namespace Overlewd
 
                 dialogData = GameGlobalStates.sexScreen_DialogData;
 
-                SetMainAnim();
 
-                if (GameGlobalStates.sexScreen_DialogId == 1 /* || 
-                    GameGlobalStates.sexScreen_DialogId == 3*/)
+                if (GameGlobalStates.sexScreen_DialogId == 1)
                 {
                     blackScreenTop.gameObject.SetActive(true);
                     blackScreenBot.gameObject.SetActive(true);
-                    mainAnimations[1].Pause();
                 }
 
                 await Task.CompletedTask;
@@ -121,84 +57,120 @@ namespace Overlewd
                 }
             }
 
+            private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+            {
+                if (replica.mainAnimationId.HasValue)
+                {
+                    if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
+                    {
+                        Destroy(mainAnimation?.gameObject);
+                        mainAnimation = null;
+
+                        var animation = GameData.GetAnimationById(replica.mainAnimationId.Value);
+                        if (animation != null)
+                        {
+                            mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
+                            mainAnimation.Initialize(animation);
+                        }
+                    }
+                }
+                else
+                {
+                    Destroy(mainAnimation?.gameObject);
+                    mainAnimation = null;
+                }
+            }
+
             private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.cutInAnimationTemp != null)
+                if (replica.cutInAnimationId.HasValue)
                 {
-                    if (replica.cutInAnimationTemp != prevReplica?.cutInAnimationTemp)
+                    if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
                     {
-                        foreach (var anim in cutInAnimations)
+                        Destroy(cutInAnimation?.gameObject);
+                        cutInAnimation = null;
+
+                        var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
+                        if (animation != null)
                         {
-                            Destroy(anim?.gameObject);
+                            cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                            cutInAnimation.Initialize(animation);
                         }
-
-                        cutInAnimations.Clear();
-
-                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutInAnimationTemp))
-                        {
-                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutInAnimationTemp];
-                            foreach (var animData in cutInData)
-                            {
-                                if (animData.Value != null)
-                                {
-                                    var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                    anim.Initialize(animData.Value);
-                                    anim.PlayAnimation(animData.Key, true);
-                                    cutInAnimations.Add(anim);
-                                }
-                            }
-                        }
-
-                        cutIn.SetActive(cutInAnimations.Count > 0);
                     }
+                }
+                else
+                {
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
+                }
+
+                if (cutInAnimation != null)
+                {
+                    cutIn.SetActive(true);
+                    mainAnimation?.Pause();
                 }
                 else
                 {
                     cutIn.SetActive(false);
-                    foreach (var anim in cutInAnimations)
-                    {
-                        Destroy(anim?.gameObject);
-                    }
-
-                    cutInAnimations.Clear();
+                    mainAnimation?.Play();
                 }
             }
 
-            protected override void PlaySound(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+            private void PlaySound(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                var mainSexKey = GameGlobalStates.sexScreen_DialogId switch
+                //main sound
+                if (!String.IsNullOrEmpty(replica.mainSoundPath))
                 {
-                    1 => "MainSex1",
-                    2 => "MainSex2",
-                    3 => "MainSex3",
-                    _ => "MainSex1"
-                };
-                
-                if (replica.cutInAnimationTemp != null)
-                {
-                    if (replica.cutInAnimationTemp != prevReplica?.cutInAnimationTemp)
+                    if (replica.mainSoundPath != mainSoundKey)
                     {
-                        if (replica.cutInSoundPath != null)
+                        if (!String.IsNullOrEmpty(mainSoundKey))
                         {
-                            mainAnimations[1].Pause();
-                            SoundManager.SetPause(mainSexKey, true);
-                            SoundManager.CreateEventInstance(replica.cutInAnimationTemp, replica.cutInSoundPath);
-                            
-                            if(prevReplica?.cutInAnimationTemp != null)
-                                SoundManager.SetPause(prevReplica.cutInAnimationTemp, true);
+                            SoundManager.Stop(mainSoundKey);
                         }
+
+                        SoundManager.CreateEventInstance(replica.mainSoundPath);
+                        mainSoundKey = replica.mainSoundPath;
                     }
                 }
                 else
                 {
-                    if (replica.mainSoundPath != null)
+                    if (!String.IsNullOrEmpty(mainSoundKey))
                     {
-                        SoundManager.CreateEventInstance(mainSexKey, replica.mainSoundPath);
-                        mainAnimations[1].Play();
-                        SoundManager.SetPause(mainSexKey, false);
-                        
-                        if (prevReplica?.cutInSoundPath != null)
-                            SoundManager.SetPause(prevReplica.cutInAnimationTemp, true);
+                        SoundManager.Stop(mainSoundKey);
+                    }
+                    mainSoundKey = null;
+                }
+
+                //cutIn sound
+                if (!String.IsNullOrEmpty(replica.cutInSoundPath))
+                {
+                    if (replica.cutInSoundPath != cutInSoundKey)
+                    {
+                        if (!String.IsNullOrEmpty(cutInSoundKey))
+                        {
+                            SoundManager.Stop(cutInSoundKey);
+                        }
+
+                        SoundManager.CreateEventInstance(replica.cutInSoundPath);
+                        cutInSoundKey = replica.cutInSoundPath;
+                    }
+
+                    if (!String.IsNullOrEmpty(mainSoundKey))
+                    {
+                        SoundManager.SetPause(mainSoundKey, true);
+                    }
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(cutInSoundKey))
+                    {
+                        SoundManager.Stop(cutInSoundKey);
+                    }
+                    cutInSoundKey = null;
+
+                    if (!String.IsNullOrEmpty(mainSoundKey))
+                    {
+                        SoundManager.SetPause(mainSoundKey, false);
                     }
                 }
             }
@@ -218,24 +190,9 @@ namespace Overlewd
                     }
                 }
 
-                /*if (GameGlobalStates.sexScreen_DialogId == 3)
-                {
-                    blackScreenTop.fillAmount = 0;
-                    blackScreenBot.fillAmount = 0;
-                    
-                    if (currentReplicaId == 7)
-                    {
-                        StartCoroutine(FadeIn());
-                    }
-                }*/
-
-                if (currentReplicaId == dialogData.replicas.Count - 1) //last replica
-                {
-                    SetFinalMainAnim();
-                }
-
-                PlaySound(replica, prevReplica);
+                ShowMain(replica, prevReplica);
                 ShowCutIn(replica, prevReplica);
+                PlaySound(replica, prevReplica);
             }
 
             private IEnumerator FadeIn()

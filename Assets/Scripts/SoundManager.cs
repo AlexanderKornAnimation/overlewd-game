@@ -65,12 +65,15 @@ namespace Overlewd
         private static Bus animationBus;
         private static Bus uiBus;
 
-        private static void Stop(string keyName, bool allowFade)
+        public static void Stop(string keyName, bool allowFade = true)
         {
-            var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
-            eventInstances[keyName].stop(stopMode);
-            eventInstances[keyName].release();
-            eventInstances.Remove(keyName);
+            if (eventInstances.ContainsKey(keyName))
+            {
+                var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
+                eventInstances[keyName].stop(stopMode);
+                eventInstances[keyName].release();
+                eventInstances.Remove(keyName);
+            }
         }
 
         private static void Play(string keyName)
@@ -114,9 +117,15 @@ namespace Overlewd
 
             if (!eventInstances.ContainsKey(eventPath))
             {
-                eventInstances.Add(eventPath, RuntimeManager.CreateInstance(eventPath));
-                Play(eventPath);
-                return eventInstances[eventPath];
+                EventDescription eventDesc;
+                RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
+                if (eventDesc.isValid())
+                {
+                    eventInstances.Add(eventPath, RuntimeManager.CreateInstance(eventPath));
+                    Play(eventPath);
+                    return eventInstances[eventPath];
+                }
+                return default;
             }
 
             return eventInstances[eventPath];
@@ -132,8 +141,15 @@ namespace Overlewd
 
             if (!eventInstances.ContainsKey(keyName))
             {
-                eventInstances.Add(keyName, RuntimeManager.CreateInstance(eventPath));
-                Play(keyName);
+                EventDescription eventDesc;
+                RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
+                if (eventDesc.isValid())
+                {
+                    eventInstances.Add(keyName, RuntimeManager.CreateInstance(eventPath));
+                    Play(keyName);
+                    return eventInstances[keyName];
+                }
+                return default;
             }
 
             return eventInstances[keyName];
