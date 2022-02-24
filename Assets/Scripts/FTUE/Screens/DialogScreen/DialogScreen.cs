@@ -10,8 +10,7 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            private List<SpineWidgetGroup> cutInAnimations = new List<SpineWidgetGroup>();
-
+            private SpineWidgetGroup cutInAnimation;
             private SpineWidgetGroup emotionAnimation;
 
             protected override async Task EnterScreen()
@@ -64,30 +63,20 @@ namespace Overlewd
                 {
                     if (replica.cutInAnimationId != prevReplica?.cutInAnimationId)
                     {
-                        foreach (var anim in cutInAnimations)
-                        {
-                            Destroy(anim?.gameObject);
-                        }
-
-                        cutInAnimations.Clear();
+                        Destroy(cutInAnimation?.gameObject);
+                        cutInAnimation = null;
 
                         var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
-                        var cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                        cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
                         cutInAnimation.Initialize(animation);
-                        cutInAnimations.Add(cutInAnimation);
                     }
                 }
                 else
                 {
-                    foreach (var anim in cutInAnimations)
-                    {
-                        Destroy(anim?.gameObject);
-                    }
-
-                    cutInAnimations.Clear();
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
                 }
-
-                cutIn.SetActive(cutInAnimations.Count > 0);
+                cutIn.SetActive(cutInAnimation != null);
             }
 
             private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
