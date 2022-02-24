@@ -26,6 +26,22 @@ namespace Overlewd
             }
         }
 
+        public void Play()
+        {
+            foreach (var layer in layers)
+            {
+                layer.Play();
+            }
+        }
+
+        public void Pause()
+        {
+            foreach (var layer in layers)
+            {
+                layer.Pause();
+            }
+        }
+
         public static SpineWidgetGroup GetInstance(Transform parent)
         {
             var groupGO = new GameObject(nameof(SpineWidgetGroup));

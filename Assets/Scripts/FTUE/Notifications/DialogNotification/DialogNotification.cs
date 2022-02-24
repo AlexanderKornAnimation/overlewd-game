@@ -25,7 +25,7 @@ namespace Overlewd
 
         public class DialogNotification : Overlewd.DialogNotification
         {
-            private SpineWidgetGroup emotionAnimationGroup;
+            private SpineWidgetGroup emotionAnimation;
 
             protected override void Awake()
             {
@@ -50,8 +50,8 @@ namespace Overlewd
                 if (firstReplica.emotionAnimationId.HasValue)
                 {
                     var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
-                    emotionAnimationGroup = SpineWidgetGroup.GetInstance(emotionPos);
-                    emotionAnimationGroup.Initialize(animation);
+                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                    emotionAnimation.Initialize(animation);
                 }
 
                 StartCoroutine(CloseByTimer());
