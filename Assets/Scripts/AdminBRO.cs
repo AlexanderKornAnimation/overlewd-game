@@ -541,9 +541,6 @@ namespace Overlewd
             public int? cutInAnimationId;
             public int? mainAnimationId;
 
-            public string cutInAnimationTemp;
-            public string emotionAnimationTemp;
-
             public string cutInSoundPath;
             public string mainSoundPath;
         }
