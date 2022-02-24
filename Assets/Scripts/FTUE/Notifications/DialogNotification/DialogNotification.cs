@@ -25,7 +25,6 @@ namespace Overlewd
 
         public class DialogNotification : Overlewd.DialogNotification
         {
-            private SpineWidget emotionAnimation;
             private SpineWidgetGroup emotionAnimationGroup;
 
             protected override void Awake()
