@@ -86,6 +86,10 @@ namespace Overlewd
             }
             public static List<AdminBRO.Dialog> notifications = new List<AdminBRO.Dialog>();
 
+            public static AdminBRO.Animation GetAnimationById(int id)
+            {
+                return animations.Find(a => a.id == id);
+            }
             public static List<AdminBRO.Animation> animations = new List<AdminBRO.Animation>();
 
             public static string[] castleScreenHints =

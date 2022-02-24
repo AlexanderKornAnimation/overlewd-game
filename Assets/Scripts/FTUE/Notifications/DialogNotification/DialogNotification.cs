@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,7 @@ namespace Overlewd
         public class DialogNotification : Overlewd.DialogNotification
         {
             private SpineWidget emotionAnimation;
+            private SpineWidgetGroup emotionAnimationGroup;
 
             protected override void Awake()
             {
@@ -43,25 +45,14 @@ namespace Overlewd
             {
                 var dialogData = GameGlobalStates.dialogNotification_DialogData;
 
-                var firstReplica = dialogData.replicas[0];
+                var firstReplica = dialogData.replicas.First();
                 text.text = firstReplica.message;
 
-                if (firstReplica.emotionAnimationTemp != null)
+                if (firstReplica.emotionAnimationId.HasValue)
                 {
-                    if (GameLocalResources.emotionsAnimPath.ContainsKey(firstReplica.characterSkin))
-                    {
-                        var persEmotions = GameLocalResources.emotionsAnimPath[firstReplica.characterSkin];
-                        if (persEmotions.ContainsKey(firstReplica.emotionAnimationTemp))
-                        {
-                            var headPath = persEmotions[firstReplica.emotionAnimationTemp];
-                            if (headPath != null)
-                            {
-                                emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                emotionAnimation.Initialize(headPath);
-                                emotionAnimation.PlayAnimation(firstReplica.emotionAnimationTemp, true);
-                            }
-                        }
-                    }
+                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
+                    emotionAnimationGroup = SpineWidgetGroup.GetInstance(emotionPos);
+                    emotionAnimationGroup.Initialize(animation);
                 }
 
                 StartCoroutine(CloseByTimer());
