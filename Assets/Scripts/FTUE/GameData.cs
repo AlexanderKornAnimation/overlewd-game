@@ -147,6 +147,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             cutInSoundPath = SoundPath.Animations.FirstSex.CutInLick,
                             message = "I can lick your cock for hours. It feels so smooth and silky...",
                             emotionAnimationId = (int)AnimationId.UlviLove,
@@ -156,6 +157,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             cutInSoundPath = SoundPath.Animations.FirstSex.CutInLick,
                             message = "You're so big. I can barely fit you inside my tight mouth.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
@@ -173,6 +175,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             cutInSoundPath = SoundPath.Animations.FirstSex.CutInCumshot,
                             message = "Thank you, Master. I'm so happy!",
                             emotionAnimationId = (int)AnimationId.UlviHappy,
@@ -182,6 +185,7 @@ namespace Overlewd
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.FirstSex.MainSexScene1,
                             cutInSoundPath = SoundPath.Animations.FirstSex.CutInCumshot,
                             message = "You taste exactly how I imagined. After all those years searching for you…",
                             emotionAnimationId = (int)AnimationId.UlviLove,
@@ -215,55 +219,67 @@ namespace Overlewd
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.SecondSex.MainSexScene2,
                             cutInSoundPath = SoundPath.Animations.SecondSex.CutInBeads,
                             message = "Ah~ You pulled my tail out! I'm so embarrassed… But it feels so good!",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn8,
+                            mainAnimationId = (int)AnimationId.MainSex2,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.SecondSex.MainSexScene2,
                             cutInSoundPath = SoundPath.Animations.SecondSex.CutInBeads,
                             message = "I've been preparing all my holes for you to fill. I think I'm addicted to your cock.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn8,
+                            mainAnimationId = (int)AnimationId.MainSex2,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.SecondSex.MainSexScene2,
                             cutInSoundPath = SoundPath.Animations.SecondSex.CutInBeads,
                             message = "Ummh~ I want to take your hot load… Cum with me, Master!",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn8,
+                            mainAnimationId = (int)AnimationId.MainSex2,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.SecondSex.MainSexScene2,
                             cutInSoundPath = SoundPath.Animations.SecondSex.CutInCreamPie,
                             message = "Aahh~ Aahh! Just like that!",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn9,
+                            mainAnimationId = (int)AnimationId.MainSex2,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.SecondSex.MainSexScene2,
                             cutInSoundPath = SoundPath.Animations.SecondSex.CutInCreamPie,
                             message = "Mmm~ Fuck yes!",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn9,
+                            mainAnimationId = (int)AnimationId.MainSex2,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
+                            mainSoundPath = SoundPath.Animations.SecondSex.MainSexScene2,
                             cutInSoundPath = SoundPath.Animations.SecondSex.CutInCreamPie,
                             message = "Your load feels so hot on my pussy… Thank you for treating me, Master.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn9,
+                            mainAnimationId = (int)AnimationId.MainSex2,
                         },
                         new AdminBRO.DialogReplica
                         {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
-                            cutInSoundPath = SoundPath.Animations.SecondSex.FinalSexScene2,
+                            mainSoundPath = SoundPath.Animations.SecondSex.FinalSexScene2,
                             message =
                                 "Please, don't forget to play with me often. All of my holes are ready to serve you whenever you want!",
                             emotionAnimationId = (int)AnimationId.UlviLove,
