@@ -70,24 +70,40 @@ namespace Overlewd
         {
             public static AdminBRO.Dialog GetSexById(int id)
             {
+                if (GameGlobalStates.newFTUE)
+                {
+                    return Overlewd.GameData.GetDialogById(id);
+                }
                 return sexs.Find(d => d.id == id);
             }
             public static List<AdminBRO.Dialog> sexs = new List<AdminBRO.Dialog>();
 
             public static AdminBRO.Dialog GetDialogById(int id) 
             {
+                if (GameGlobalStates.newFTUE)
+                {
+                    return Overlewd.GameData.GetDialogById(id);
+                }
                 return dialogs.Find(d => d.id == id);
             }
             public static List<AdminBRO.Dialog> dialogs = new List<AdminBRO.Dialog>();
 
             public static AdminBRO.Dialog GetNotificationById(int id)
             {
+                if (GameGlobalStates.newFTUE)
+                {
+                    return Overlewd.GameData.GetDialogById(id);
+                }
                 return notifications.Find(d => d.id == id);
             }
             public static List<AdminBRO.Dialog> notifications = new List<AdminBRO.Dialog>();
 
             public static AdminBRO.Animation GetAnimationById(int id)
             {
+                if (GameGlobalStates.newFTUE)
+                {
+                    return Overlewd.GameData.GetAnimationById(id);
+                }
                 return animations.Find(a => a.id == id);
             }
             public static List<AdminBRO.Animation> animations = new List<AdminBRO.Animation>();

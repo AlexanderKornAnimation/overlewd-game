@@ -11,15 +11,37 @@ namespace Overlewd
     {
         public class NotificationMissclickColored : Overlewd.NotificationMissclickColored
         {
-            void Start()
-            {
-                StartCoroutine(EnableByTimer());
-            }
-
             private IEnumerator EnableByTimer()
             {
                 yield return new WaitForSeconds(2.0f);
                 missClickEnabled = true;
+            }
+
+            public override void OnStart()
+            {
+                missClickEnabled = false;
+                StopCoroutine(EnableByTimer());
+                StartCoroutine(EnableByTimer());
+            }
+
+            protected override void OnClick()
+            {
+                if (GameGlobalStates.newFTUE)
+                {
+                    var notifications = Overlewd.GameData.ftue.chapters[GameGlobalStates.ftueChapterId].
+                        dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
+                    var nextNotificationIndex = notifications.FindIndex(n => n.key == GameGlobalStates.dialogNotification_StageKey);
+                    if (++nextNotificationIndex < notifications.Count)
+                    {
+                        GameGlobalStates.dialogNotification_StageKey = notifications[nextNotificationIndex].key;
+                        UIManager.ShowNotification<DialogNotification>();
+                    }
+                    else
+                    {
+                        UIManager.HideNotification();
+                        UIManager.ShowScreen<StartingScreen>();
+                    }
+                }
             }
         }
 
@@ -36,8 +58,7 @@ namespace Overlewd
 
             public override void ShowMissclick()
             {
-                var missclick = UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
-                missclick.missClickEnabled = false;
+                UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
             }
 
             public override async Task BeforeShowAsync()
@@ -63,6 +84,11 @@ namespace Overlewd
             {
                 yield return new WaitForSeconds(4.0f);
                 UIManager.HideNotification();
+
+                if (GameGlobalStates.newFTUE)
+                {
+                    UIManager.ShowScreen<StartingScreen>();
+                }
             }
         }
     }

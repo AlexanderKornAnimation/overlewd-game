@@ -36,6 +36,16 @@ namespace Overlewd
                 SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<TempBattleScreen>();
             });
+
+            canvas.Find("NewFTUE").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+
+                FTUE.GameGlobalStates.newFTUE = true;
+                FTUE.GameGlobalStates.ftueChapterId = 0;
+                FTUE.GameGlobalStates.sexScreen_StageKey = "sex1";
+                UIManager.ShowScreen<FTUE.SexScreen>();
+            });
         }
     }
 }

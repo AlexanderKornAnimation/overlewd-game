@@ -41,6 +41,11 @@ namespace Overlewd
 
         }
 
+        public virtual void OnStart()
+        {
+
+        }
+
         public virtual MissclickShow Show()
         {
             return null;

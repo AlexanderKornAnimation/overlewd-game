@@ -23,11 +23,17 @@ namespace Overlewd
 
                 dialogData = GameGlobalStates.sexScreen_DialogData;
 
-
-                if (GameGlobalStates.sexScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
-                    blackScreenTop.gameObject.SetActive(true);
-                    blackScreenBot.gameObject.SetActive(true);
+
+                }
+                else
+                {
+                    if (GameGlobalStates.sexScreen_DialogId == 1)
+                    {
+                        blackScreenTop.gameObject.SetActive(true);
+                        blackScreenBot.gameObject.SetActive(true);
+                    }
                 }
 
                 await Task.CompletedTask;
@@ -37,23 +43,49 @@ namespace Overlewd
             {
                 SoundManager.StopAllInstances(true);
 
-                if (GameGlobalStates.sexScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
-                    GameGlobalStates.battleScreen_StageId = 1;
-                    GameGlobalStates.battleScreen_BattleId = 1;
-                    UIManager.ShowScreen<BattleScreen>();
+                    if (GameGlobalStates.sexScreen_StageKey == "sex1")
+                    {
+                        GameGlobalStates.sexScreen_StageKey = "sex2";
+                        UIManager.ShowScreen<SexScreen>();
+                    }
+                    else if (GameGlobalStates.sexScreen_StageKey == "sex2")
+                    {
+                        GameGlobalStates.sexScreen_StageKey = "sex3";
+                        UIManager.ShowScreen<SexScreen>();
+                    }
+                    else if (GameGlobalStates.sexScreen_StageKey == "sex3")
+                    {
+                        GameGlobalStates.sexScreen_StageKey = "sex4";
+                        UIManager.ShowScreen<SexScreen>();
+                    }
+                    else if (GameGlobalStates.sexScreen_StageKey == "sex4")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue1";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
                 }
-                else if (GameGlobalStates.sexScreen_DialogId == 2)
+                else
                 {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
-                    GameGlobalStates.map_DialogNotificationId = 6;
-                    UIManager.ShowScreen<MapScreen>();
-                }
-                else if (GameGlobalStates.sexScreen_DialogId == 3)
-                {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
-                    GameGlobalStates.map_DialogNotificationId = 11;
-                    UIManager.ShowScreen<MapScreen>();
+                    if (GameGlobalStates.sexScreen_DialogId == 1)
+                    {
+                        GameGlobalStates.battleScreen_StageId = 1;
+                        GameGlobalStates.battleScreen_BattleId = 1;
+                        UIManager.ShowScreen<BattleScreen>();
+                    }
+                    else if (GameGlobalStates.sexScreen_DialogId == 2)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
+                        GameGlobalStates.map_DialogNotificationId = 6;
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    else if (GameGlobalStates.sexScreen_DialogId == 3)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
+                        GameGlobalStates.map_DialogNotificationId = 11;
+                        UIManager.ShowScreen<MapScreen>();
+                    }
                 }
             }
 
@@ -182,11 +214,18 @@ namespace Overlewd
                 var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
                 var replica = dialogData.replicas[currentReplicaId];
 
-                if (GameGlobalStates.sexScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
-                    if (currentReplicaId == 2)
+
+                }
+                else
+                {
+                    if (GameGlobalStates.sexScreen_DialogId == 1)
                     {
-                        StartCoroutine(FadeOut());
+                        if (currentReplicaId == 2)
+                        {
+                            StartCoroutine(FadeOut());
+                        }
                     }
                 }
 

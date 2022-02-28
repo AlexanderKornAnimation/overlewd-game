@@ -112,7 +112,11 @@ namespace Overlewd
 
         public static AdminBRO.FTUEInfo ftue { get; set; }
 
-        public static List<AdminBRO.Animation> animations { get; set; }
+        public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
+        public static AdminBRO.Animation GetAnimationById(int id)
+        {
+            return animations.Find(a => a.id == id);
+        }
     }
 
 }

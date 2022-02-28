@@ -549,6 +549,7 @@ namespace Overlewd
         {
             public const string Dialog = "dialog";
             public const string Sex = "sex";
+            public const string Notification = "notification";
         }
 
         [Serializable]
@@ -625,8 +626,6 @@ namespace Overlewd
             public int id;
             public string name;
             public List<FTUEStageInfo> dialogs;
-            public List<FTUEStageInfo> sexs;
-            public List<FTUEStageInfo> notifications;
             public List<FTUEStageInfo> battles;
         }
 

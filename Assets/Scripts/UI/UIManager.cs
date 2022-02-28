@@ -601,6 +601,7 @@ namespace Overlewd
                 notificationMissclick = GetNotificationMissclickInstance<T>();
                 notificationMissclick.Show();
             }
+            notificationMissclick.OnStart();
             return notificationMissclick as T;
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -20,14 +21,21 @@ namespace Overlewd
                 personageHead.gameObject.SetActive(false);
                 emotionBack.gameObject.SetActive(true);
 
-                if (GameGlobalStates.dialogScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
+
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                else
                 {
-                }
-                else if (GameGlobalStates.dialogScreen_DialogId == 3)
-                {
+                    if (GameGlobalStates.dialogScreen_DialogId == 1)
+                    {
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                    {
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 3)
+                    {
+                    }
                 }
 
                 await Task.CompletedTask;
@@ -35,25 +43,53 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                if (GameGlobalStates.dialogScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
-                    UIManager.ShowScreen<MapScreen>();
+                    if (GameGlobalStates.dialogScreen_StageKey == "dialogue1")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue2";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_StageKey == "dialogue2")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue3";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_StageKey == "dialogue3")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue4";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_StageKey == "dialogue4")
+                    {
+                        var notifications = Overlewd.GameData.ftue.chapters[GameGlobalStates.ftueChapterId].
+                            dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
+                        GameGlobalStates.dialogNotification_StageKey = notifications.First().key;
+                        UIManager.ShowNotification<DialogNotification>();
+                    }
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                else
                 {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
-                    UIManager.ShowScreen<MapScreen>();
-                }
-                else if (GameGlobalStates.dialogScreen_DialogId == 3)
-                {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
-                    GameGlobalStates.PortalCanBuilded();
-                    GameGlobalStates.ResetStateCastleButtons();
-                    GameGlobalStates.castle_SideMenuLock = true;
-                    GameGlobalStates.castle_CaveLock = true;
-                    GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[4];
-                    UIManager.ShowScreen<CastleScreen>();
+                    if (GameGlobalStates.dialogScreen_DialogId == 1)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 3)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                        GameGlobalStates.PortalCanBuilded();
+                        GameGlobalStates.ResetStateCastleButtons();
+                        GameGlobalStates.castle_SideMenuLock = true;
+                        GameGlobalStates.castle_CaveLock = true;
+                        GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[4];
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
                 }
             }
 
