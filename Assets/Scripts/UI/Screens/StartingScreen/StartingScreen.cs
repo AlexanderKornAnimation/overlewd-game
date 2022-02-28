@@ -39,7 +39,7 @@ namespace Overlewd
 
             canvas.Find("NewFTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
 
                 FTUE.GameGlobalStates.newFTUE = true;
                 FTUE.GameGlobalStates.ftueChapterId = 0;
