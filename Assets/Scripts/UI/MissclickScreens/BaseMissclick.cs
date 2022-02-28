@@ -41,7 +41,7 @@ namespace Overlewd
 
         }
 
-        public virtual void OnStart()
+        public virtual void OnReset()
         {
 
         }

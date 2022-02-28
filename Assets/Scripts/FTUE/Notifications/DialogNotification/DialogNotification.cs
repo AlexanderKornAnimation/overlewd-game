@@ -17,7 +17,7 @@ namespace Overlewd
                 missClickEnabled = true;
             }
 
-            public override void OnStart()
+            public override void OnReset()
             {
                 missClickEnabled = false;
                 StopCoroutine(EnableByTimer());
@@ -58,7 +58,8 @@ namespace Overlewd
 
             public override void ShowMissclick()
             {
-                UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
+                var missclick = UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
+                missclick.missClickEnabled = false;
             }
 
             public override async Task BeforeShowAsync()
@@ -78,6 +79,11 @@ namespace Overlewd
                 StartCoroutine(CloseByTimer());
 
                 await Task.CompletedTask;
+            }
+
+            public override void AfterShow()
+            {
+                UIManager.GetNotificationMissclick<NotificationMissclick>()?.OnReset();
             }
 
             private IEnumerator CloseByTimer()
