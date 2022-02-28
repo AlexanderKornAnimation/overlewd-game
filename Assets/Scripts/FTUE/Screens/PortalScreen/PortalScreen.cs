@@ -33,7 +33,7 @@ namespace Overlewd
             {
                 nextButton.gameObject.SetActive(false);
                 video.Play();
-                SoundManager.PlayOneShoot(SoundPath.UI.PortalScreenFTUE);
+                SoundManager.PlayOneShoot(SoundPath.UI_PortalScreenFTUE);
                 StartCoroutine(ShowButton());
             }
             
@@ -50,7 +50,7 @@ namespace Overlewd
             {
                 GameGlobalStates.sexScreen_StageId = 15;
                 GameGlobalStates.sexScreen_DialogId = 3;
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<SexScreen>();
             }
         }

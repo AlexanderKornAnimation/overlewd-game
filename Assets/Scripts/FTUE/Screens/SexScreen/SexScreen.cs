@@ -128,7 +128,7 @@ namespace Overlewd
                             SoundManager.Stop(mainSoundKey);
                         }
 
-                        SoundManager.CreateEventInstance(replica.mainSoundPath);
+                        SoundManager.CreateSoundInstance(replica.mainSoundPath);
                         mainSoundKey = replica.mainSoundPath;
                     }
                 }
@@ -151,7 +151,7 @@ namespace Overlewd
                             SoundManager.Stop(cutInSoundKey);
                         }
 
-                        SoundManager.CreateEventInstance(replica.cutInSoundPath);
+                        SoundManager.CreateSoundInstance(replica.cutInSoundPath);
                         cutInSoundKey = replica.cutInSoundPath;
                     }
 

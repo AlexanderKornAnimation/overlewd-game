@@ -94,7 +94,7 @@ namespace Overlewd
 
         private void MemoriesButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             memoriesButtonSelected.gameObject.SetActive(true);
             memoriesScroll.SetActive(true);
 
@@ -107,7 +107,7 @@ namespace Overlewd
 
         private void BattleGirlsButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             memoriesButtonSelected.gameObject.SetActive(false);
             memoriesScroll.SetActive(false);
 
@@ -120,7 +120,7 @@ namespace Overlewd
 
         private void EquipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             memoriesButtonSelected.gameObject.SetActive(false);
             memoriesScroll.SetActive(false);
 

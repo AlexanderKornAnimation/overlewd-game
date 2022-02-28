@@ -43,7 +43,7 @@ namespace Overlewd
             private void ButtonClick()
             {
                 GameGlobalStates.sex_EventStageId = eventStageId;
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<SexScreen>();
             }
 

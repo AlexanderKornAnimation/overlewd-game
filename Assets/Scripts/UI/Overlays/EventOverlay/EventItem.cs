@@ -67,7 +67,7 @@ namespace Overlewd
             {
                 Destroy(mapButton.gameObject.GetComponent<Selector>());
                 GameGlobalStates.eventMapScreen_EventId = eventId;
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<EventMapScreen>();
             }
 

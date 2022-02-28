@@ -106,7 +106,7 @@ namespace Overlewd
 
         private void AutoplayButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             if (isAutoplayButtonPressed == false)
             {
                 isAutoplayButtonPressed = true;
@@ -126,13 +126,13 @@ namespace Overlewd
         
         private void SkipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             LeaveScreen();
         }
 
         private void TextContainerButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.DialogNextButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_DialogNextButtonClick);
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {

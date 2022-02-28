@@ -92,13 +92,13 @@ namespace Overlewd
         
         private void BannerButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MemoryListScreen>();
         }
         
         private void PortalButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
         
@@ -110,7 +110,7 @@ namespace Overlewd
         
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
     }

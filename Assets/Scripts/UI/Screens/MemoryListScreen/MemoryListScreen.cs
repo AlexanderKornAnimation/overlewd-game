@@ -129,42 +129,42 @@ namespace Overlewd
 
         private void UlviButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(ulviTab);
         }
 
         private void AdrielButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(adrielTab);
         }
 
         private void FayeButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(fayeTab);
         }
 
         private void IngieButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(ingieTab);
         }
 
         private void LiliButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(liliTab);
         }
 
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<GirlScreen>();
         }
 

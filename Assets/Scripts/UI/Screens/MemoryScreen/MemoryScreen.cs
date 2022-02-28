@@ -50,13 +50,13 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
         private void PortalButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 

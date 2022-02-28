@@ -82,19 +82,19 @@ namespace Overlewd
 
         protected virtual void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.HidePopup();
         }
 
         protected virtual void FreeBuildButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.FreeBuildButton);
+            SoundManager.PlayOneShoot(SoundPath.UI_FreeBuildButton);
             UIManager.HidePopup();
         }
 
         protected virtual void PaidBuildingButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.HidePopup();
         }
 
