@@ -41,11 +41,6 @@ namespace Overlewd
 
         }
 
-        public virtual void OnReset()
-        {
-
-        }
-
         public virtual MissclickShow Show()
         {
             return null;

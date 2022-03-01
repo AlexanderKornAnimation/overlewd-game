@@ -17,7 +17,7 @@ namespace Overlewd
                 missClickEnabled = true;
             }
 
-            public override void OnReset()
+            public void OnReset()
             {
                 missClickEnabled = false;
                 StopCoroutine(EnableByTimer());
@@ -83,7 +83,7 @@ namespace Overlewd
 
             public override void AfterShow()
             {
-                UIManager.GetNotificationMissclick<NotificationMissclick>()?.OnReset();
+                UIManager.GetNotificationMissclick<NotificationMissclickColored>()?.OnReset();
             }
 
             private IEnumerator CloseByTimer()
