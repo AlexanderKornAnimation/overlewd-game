@@ -41,7 +41,7 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                SoundManager.StopAllInstances(true);
+                SoundManager.StopAll();
 
                 if (GameGlobalStates.newFTUE)
                 {
@@ -160,7 +160,7 @@ namespace Overlewd
                             SoundManager.Stop(mainSoundKey);
                         }
 
-                        SoundManager.CreateSoundInstance(replica.mainSoundPath);
+                        SoundManager.GetSoundInstance(replica.mainSoundPath);
                         mainSoundKey = replica.mainSoundPath;
                     }
                 }
@@ -183,13 +183,13 @@ namespace Overlewd
                             SoundManager.Stop(cutInSoundKey);
                         }
 
-                        SoundManager.CreateSoundInstance(replica.cutInSoundPath);
+                        SoundManager.GetSoundInstance(replica.cutInSoundPath);
                         cutInSoundKey = replica.cutInSoundPath;
                     }
 
                     if (!String.IsNullOrEmpty(mainSoundKey))
                     {
-                        SoundManager.SetPause(mainSoundKey, true);
+                        SoundManager.Pause(mainSoundKey);
                     }
                 }
                 else
@@ -202,7 +202,7 @@ namespace Overlewd
 
                     if (!String.IsNullOrEmpty(mainSoundKey))
                     {
-                        SoundManager.SetPause(mainSoundKey, false);
+                        SoundManager.Play(mainSoundKey);
                     }
                 }
             }

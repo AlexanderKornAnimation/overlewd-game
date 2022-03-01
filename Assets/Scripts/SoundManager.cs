@@ -49,53 +49,43 @@ namespace Overlewd
 
     public class SoundInstance
     {
-        private static EventInstance instance;
-        public string key;
+        private EventInstance instance;
+        public string key { get; private set; }
+        public bool release { get; private set; } = false;
 
-        private SoundInstance(string eventPath, string keyName = null)
+        private SoundInstance(string eventPath, string key = null)
         {
-            EventDescription eventDesc;
-            RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-
-            if (String.IsNullOrWhiteSpace(eventPath))
-                Debug.LogWarning("Path is null or empty. Returned default");
-
-            if (eventDesc.isValid())
-            {
-                instance = RuntimeManager.CreateInstance(eventPath);
-                
-                if (keyName == null)
-                    key = eventPath;
-                else
-                    key = keyName;
-            }
-
-            Play();
-        }
-        
-        public static SoundInstance CreateInstance(string eventPath, string keyName = null)
-        {
-            var inst = new SoundInstance(eventPath, keyName);
-
-            return inst;
-        }
-
-        private void Play()
-        {
+            instance = RuntimeManager.CreateInstance(eventPath);
+            this.key = key ?? eventPath;
             instance.start();
+        }
+
+        public void Play()
+        {
+            instance.setPaused(false);
+        }
+
+        public void Pause()
+        {
+            instance.setPaused(true);
         }
 
         public void Stop(bool allowFade = true)
         {
-            var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
-
+            var stopMode = allowFade ?
+                FMOD.Studio.STOP_MODE.ALLOWFADEOUT :
+                FMOD.Studio.STOP_MODE.IMMEDIATE;
             instance.stop(stopMode);
             instance.release();
+            release = true;
+            SoundManager.ClearReleased();
         }
 
-        public void SetPause(bool pause)
+        public static SoundInstance GetInstance(string eventPath, string key = null)
         {
-            instance.setPaused(pause);
+            EventDescription eventDesc;
+            RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
+            return eventDesc.isValid() ? new SoundInstance(eventPath, key) : null;
         }
     }
 
@@ -112,67 +102,55 @@ namespace Overlewd
             uiBus = RuntimeManager.GetBus("bus:/UI");
         }
 
-        public static SoundInstance CreateSoundInstance(string eventPath, string keyName = null)
+        public static SoundInstance GetSoundInstance(string eventPath, string key = null)
         {
-            if (String.IsNullOrWhiteSpace(eventPath))
+            var inst = instances.Find(item => item.key == (key ?? eventPath));
+            if (inst != null)
             {
-                Debug.LogWarning("Event path is null or empty. SoundInstance isn't created");
-                return null;
+                return inst;
             }
 
-            var instance = GetInstanceByKey(eventPath);
-            
-            if (!IsExist(eventPath))
+            var newInst = SoundInstance.GetInstance(eventPath, key);
+            if (newInst != null)
             {
-                if (IsDescriptionValid(eventPath))
-                {
-                    instance = SoundInstance.CreateInstance(eventPath, keyName);
-                    instances.Add(instance);
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"EventInstance with key : {eventPath} already exist");
+                instances.Add(newInst);
+                return newInst;
             }
 
-            return instance;
+            return null;
         }
         
-        public static void Stop(string keyName, bool allowFade = true)
+        public static void Stop(string key)
         {
-            if (String.IsNullOrWhiteSpace(keyName))
-            {
-                Debug.Log("Key is null. Instance isn't stopped");
-                return;
-            }
-
-            if (!IsExist(keyName))
-            {
-                Debug.Log("Instance isn't exist. Instance isn't stopped");
-                return;
-            }
-            
-            var instance = GetInstanceByKey(keyName);
-            
-            instance.Stop(allowFade);
-            instances.Remove(instance);
+            var inst = instances.Find(item => item.key == key);
+            inst?.Stop();
+            ClearReleased();
         }
 
-        public static void SetPause(string keyName, bool pause)
+        public static void Pause(string key)
         {
-            var instance = GetInstanceByKey(keyName);
-            
-            instance.SetPause(pause);
+            var findInst = instances.Find(item => item.key == key);
+            findInst?.Pause();
         }
 
-        public static void StopAllInstances(bool allowFade = true)
+        public static void Play(string key)
+        {
+            var findInst = instances.Find(item => item.key == key);
+            findInst?.Play();
+        }
+
+        public static void StopAll()
         {
             foreach (var inst in instances.ToList())
             {
-                var key = inst.key;
-                
-                Stop(key, allowFade);
+                inst.Stop();
             }
+            ClearReleased();
+        }
+
+        public static void ClearReleased()
+        {
+            instances.RemoveAll(item => item.release);
         }
 
         public static void OnMusicVolumeChanged(float value)
@@ -184,7 +162,6 @@ namespace Overlewd
             animationBus.setVolume(value);
         }
 
-        //Sound
         public static void PlayOneShoot(string soundEventPath)
         {
             RuntimeManager.PlayOneShot(soundEventPath);
@@ -193,24 +170,6 @@ namespace Overlewd
         public static void OnSoundVolumeChanged(float value)
         {
             uiBus.setVolume(value);
-        }
-        
-        private static bool IsDescriptionValid(string eventPath)
-        {
-            EventDescription eventDesc;
-            RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-
-            return eventDesc.isValid();
-        }
-
-        private static bool IsExist(string key)
-        {
-            return instances.Exists(i => i.key == key);
-        }
-        
-        private static SoundInstance GetInstanceByKey(string keyName)
-        {
-            return instances.Find(i => i.key == keyName);
         }
     }
 }
