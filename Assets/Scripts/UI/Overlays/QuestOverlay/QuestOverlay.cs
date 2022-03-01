@@ -66,7 +66,19 @@ namespace Overlewd
             questContentScrollViewPos = canvas.Find("QuestContentScrollViewPos");
         }
 
-        void Start()
+        public override void StartShow()
+        {
+            if (UIManager.HasScreen<CastleScreen>())
+                SoundManager.PlayOneShoot(SoundPath.UI_QuestOverlayShow);
+        }
+
+        public override void StartHide()
+        {
+            if (UIManager.HasScreen<CastleScreen>())
+                SoundManager.PlayOneShoot(SoundPath.UI_QuestOverlayHide);
+        }
+
+        private void Start()
         {
             Customize();
         }

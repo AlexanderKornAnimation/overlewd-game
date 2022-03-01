@@ -30,6 +30,8 @@ namespace Overlewd
         //overlays
         public const string UI_SidebarOverlayShow = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
         public const string UI_SidebarOverlayHide = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
+        public const string UI_QuestOverlayShow = "event:/UI/Buttons/Castle_Screen/Quests_menu_slide_on";
+        public const string UI_QuestOverlayHide = "event:/UI/Buttons/Castle_Screen/Quests_menu_slide_off";
 
         //popups & nootifications
         public const string UI_GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
