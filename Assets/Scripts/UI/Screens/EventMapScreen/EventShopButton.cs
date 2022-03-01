@@ -42,7 +42,7 @@ namespace Overlewd
             private void ButtonClick()
             {
                 GameGlobalStates.eventShop_MarketId = eventMarketId;
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<EventMarketScreen>();
             }
 

@@ -20,7 +20,7 @@ namespace Overlewd
 
             protected override void BattleButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<BattleScreen>();
             }
 

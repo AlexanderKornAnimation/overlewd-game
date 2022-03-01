@@ -15,7 +15,7 @@ namespace Overlewd
                 {
                     Error = delegate (object sender, ErrorEventArgs args)
                     {
-                        Debug.LogError($"Deserealize entity \"{typeof(T).FullName}\" error:  {args.ErrorContext.Error.Message}");
+                        Debug.LogError($"Deserialize entity \"{typeof(T).FullName}\" error:  {args.ErrorContext.Error.Message}");
                         args.ErrorContext.Handled = true;
                     },
                     MissingMemberHandling = MissingMemberHandling.Error
@@ -23,7 +23,7 @@ namespace Overlewd
             }
             catch (JsonSerializationException ex)
             {
-                Debug.LogError($"Deserealize Error: {ex.Message}");
+                Debug.LogError($"Deserialize Error: {ex.Message}");
                 return default(T);
             }
         }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,21 +11,43 @@ namespace Overlewd
     {
         public class NotificationMissclickColored : Overlewd.NotificationMissclickColored
         {
-            void Start()
-            {
-                StartCoroutine(EnableByTimer());
-            }
-
             private IEnumerator EnableByTimer()
             {
                 yield return new WaitForSeconds(2.0f);
                 missClickEnabled = true;
             }
+
+            public void OnReset()
+            {
+                missClickEnabled = false;
+                StopCoroutine(EnableByTimer());
+                StartCoroutine(EnableByTimer());
+            }
+
+            protected override void OnClick()
+            {
+                if (GameGlobalStates.newFTUE)
+                {
+                    var notifications = Overlewd.GameData.ftue.chapters[GameGlobalStates.ftueChapterId].
+                        dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
+                    var nextNotificationIndex = notifications.FindIndex(n => n.key == GameGlobalStates.dialogNotification_StageKey);
+                    if (++nextNotificationIndex < notifications.Count)
+                    {
+                        GameGlobalStates.dialogNotification_StageKey = notifications[nextNotificationIndex].key;
+                        UIManager.ShowNotification<DialogNotification>();
+                    }
+                    else
+                    {
+                        UIManager.HideNotification();
+                        UIManager.ShowScreen<StartingScreen>();
+                    }
+                }
+            }
         }
 
         public class DialogNotification : Overlewd.DialogNotification
         {
-            private SpineWidget emotionAnimation;
+            private SpineWidgetGroup emotionAnimation;
 
             protected override void Awake()
             {
@@ -43,25 +66,14 @@ namespace Overlewd
             {
                 var dialogData = GameGlobalStates.dialogNotification_DialogData;
 
-                var firstReplica = dialogData.replicas[0];
+                var firstReplica = dialogData.replicas.First();
                 text.text = firstReplica.message;
 
-                if (firstReplica.animation != null)
+                if (firstReplica.emotionAnimationId.HasValue)
                 {
-                    if (GameLocalResources.emotionsAnimPath.ContainsKey(firstReplica.characterKey))
-                    {
-                        var persEmotions = GameLocalResources.emotionsAnimPath[firstReplica.characterKey];
-                        if (persEmotions.ContainsKey(firstReplica.animation))
-                        {
-                            var headPath = persEmotions[firstReplica.animation];
-                            if (headPath != null)
-                            {
-                                emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                emotionAnimation.Initialize(headPath);
-                                emotionAnimation.PlayAnimation(firstReplica.animation, true);
-                            }
-                        }
-                    }
+                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
+                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                    emotionAnimation.Initialize(animation);
                 }
 
                 StartCoroutine(CloseByTimer());
@@ -69,10 +81,20 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
+            public override void AfterShow()
+            {
+                UIManager.GetNotificationMissclick<NotificationMissclickColored>()?.OnReset();
+            }
+
             private IEnumerator CloseByTimer()
             {
                 yield return new WaitForSeconds(4.0f);
                 UIManager.HideNotification();
+
+                if (GameGlobalStates.newFTUE)
+                {
+                    UIManager.ShowScreen<StartingScreen>();
+                }
             }
         }
     }

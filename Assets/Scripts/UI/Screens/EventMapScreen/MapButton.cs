@@ -27,7 +27,7 @@ namespace Overlewd
 
             private void ButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<MapScreen>();
             }
 

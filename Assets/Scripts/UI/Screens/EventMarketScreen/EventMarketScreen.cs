@@ -82,13 +82,13 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<EventMapScreen>();
         }
 
         private void PortalButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 
@@ -99,7 +99,7 @@ namespace Overlewd
 
         private void MoneyBackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             var promoTradable = GameGlobalStates.eventShop_MarketData.tradable.Find(t => t.promo);
             if (promoTradable != null)
             {

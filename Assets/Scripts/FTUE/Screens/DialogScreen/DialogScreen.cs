@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -10,8 +11,8 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            private List<SpineWidget> cutInAnimations = new List<SpineWidget>();
-            private SpineWidget emotionAnimation;
+            private SpineWidgetGroup cutInAnimation;
+            private SpineWidgetGroup emotionAnimation;
 
             protected override async Task EnterScreen()
             {
@@ -20,17 +21,21 @@ namespace Overlewd
                 personageHead.gameObject.SetActive(false);
                 emotionBack.gameObject.SetActive(true);
 
-                if (GameGlobalStates.dialogScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
 
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                else
                 {
-
-                }
-                else if (GameGlobalStates.dialogScreen_DialogId == 3)
-                {
-
+                    if (GameGlobalStates.dialogScreen_DialogId == 1)
+                    {
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                    {
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 3)
+                    {
+                    }
                 }
 
                 await Task.CompletedTask;
@@ -38,94 +43,90 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                if (GameGlobalStates.dialogScreen_DialogId == 1)
+                if (GameGlobalStates.newFTUE)
                 {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
-                    UIManager.ShowScreen<MapScreen>();
+                    if (GameGlobalStates.dialogScreen_StageKey == "dialogue1")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue2";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_StageKey == "dialogue2")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue3";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_StageKey == "dialogue3")
+                    {
+                        GameGlobalStates.dialogScreen_StageKey = "dialogue4";
+                        UIManager.ShowScreen<DialogScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_StageKey == "dialogue4")
+                    {
+                        var notifications = Overlewd.GameData.ftue.chapters[GameGlobalStates.ftueChapterId].
+                            dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
+                        GameGlobalStates.dialogNotification_StageKey = notifications.First().key;
+                        UIManager.ShowNotification<DialogNotification>();
+                    }
                 }
-                else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                else
                 {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
-                    UIManager.ShowScreen<MapScreen>();
-                }
-                else if (GameGlobalStates.dialogScreen_DialogId == 3)
-                {
-                    GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
-                    GameGlobalStates.PortalCanBuilded();
-                    GameGlobalStates.ResetStateCastleButtons();
-                    GameGlobalStates.castle_SideMenuLock = true;
-                    GameGlobalStates.castle_CaveLock = true;
-                    GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[4];
-                    UIManager.ShowScreen<CastleScreen>();
+                    if (GameGlobalStates.dialogScreen_DialogId == 1)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 2)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    else if (GameGlobalStates.dialogScreen_DialogId == 3)
+                    {
+                        GameGlobalStates.CompleteStageId(GameGlobalStates.dialogScreen_StageId);
+                        GameGlobalStates.PortalCanBuilded();
+                        GameGlobalStates.ResetStateCastleButtons();
+                        GameGlobalStates.castle_SideMenuLock = true;
+                        GameGlobalStates.castle_CaveLock = true;
+                        GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[4];
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
                 }
             }
 
             private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.cutIn != null)
+                if (replica.cutInAnimationId.HasValue)
                 {
-                    if (replica.cutIn != prevReplica?.cutIn)
+                    if (replica.cutInAnimationId != prevReplica?.cutInAnimationId)
                     {
-                        foreach (var anim in cutInAnimations)
-                        {
-                            Destroy(anim?.gameObject);
-                        }
-                        cutInAnimations.Clear();
+                        Destroy(cutInAnimation?.gameObject);
+                        cutInAnimation = null;
 
-                        if (GameLocalResources.cutInAnimPath.ContainsKey(replica.cutIn))
-                        {
-                            var cutInData = GameLocalResources.cutInAnimPath[replica.cutIn];
-                            foreach (var animData in cutInData)
-                            {
-                                if (animData.Value != null)
-                                {
-                                    var anim = SpineWidget.GetInstance(cutInAnimPos);
-                                    anim.Initialize(animData.Value);
-                                    anim.PlayAnimation(animData.Key, true);
-                                    cutInAnimations.Add(anim);
-                                }
-                            }
-                        }
-
-                        cutIn.SetActive(cutInAnimations.Count > 0);
+                        var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
+                        cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                        cutInAnimation.Initialize(animation);
                     }
                 }
                 else
                 {
-                    cutIn.SetActive(false);
-
-                    foreach (var anim in cutInAnimations)
-                    {
-                        Destroy(anim?.gameObject);
-                    }
-                    cutInAnimations.Clear();
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
                 }
+                cutIn.SetActive(cutInAnimation != null);
             }
 
             private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
             {
-                if (replica.animation != null)
+                if (replica.emotionAnimationId.HasValue)
                 {
-                    if (replica.characterKey != prevReplica?.characterKey ||
-                        replica.animation != prevReplica?.animation)
+                    if (replica.emotionAnimationId != prevReplica?.emotionAnimationId)
                     {
                         Destroy(emotionAnimation?.gameObject);
                         emotionAnimation = null;
 
-                        if (GameLocalResources.emotionsAnimPath.ContainsKey(replica.characterKey))
-                        {
-                            var persEmotions = GameLocalResources.emotionsAnimPath[replica.characterKey];
-                            if (persEmotions.ContainsKey(replica.animation))
-                            {
-                                var headPath = persEmotions[replica.animation];
-                                if (headPath != null)
-                                {
-                                    emotionAnimation = SpineWidget.GetInstance(emotionPos);
-                                    emotionAnimation.Initialize(headPath);
-                                    emotionAnimation.PlayAnimation(replica.animation, true);
-                                }
-                            }
-                        }
+                        var animation = GameData.GetAnimationById(replica.emotionAnimationId.Value);
+                        emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                        emotionAnimation.Initialize(animation);
                     }
                 }
                 else

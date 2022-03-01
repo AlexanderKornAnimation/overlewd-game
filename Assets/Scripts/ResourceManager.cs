@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -57,7 +58,7 @@ namespace Overlewd
         public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
         {
             var assetBundle = LoadAssetBundle(assetBundleId);
-            var asset = assetBundle.LoadAsset<T>(assetPath);
+            var asset = assetBundle.LoadAsset<T>(assetPath.Trim());
             return UnityEngine.Object.Instantiate(asset);
         }
 
@@ -194,13 +195,12 @@ namespace Overlewd
 
         public static void UnloadUnusedAssetBundles()
         {
-            foreach (var key in assetBundles.Keys)
+            foreach (var pair in assetBundles.ToList())
             {
-                var item = assetBundles[key];
-                if (!item.use)
+                if (!pair.Value.use)
                 {
-                    item.assetBundle.Unload(true);
-                    assetBundles.Remove(key);
+                    pair.Value.assetBundle.Unload(false);
+                    assetBundles.Remove(pair.Key);
                 }
             }
         }
@@ -213,19 +213,19 @@ namespace Overlewd
             }
         }
 
-        public static List<AdminBRO.NetworkResource> GetLocalResourcesMeta()
+        public static List<AdminBRO.NetworkResourceShort> GetLocalResourcesMeta()
         {
             var metaFilePath = GetRootFilePath("ResourcesMeta");
             if (Exists(metaFilePath))
             {
                 var metaJson = LoadText(metaFilePath);
-                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResource>>(metaJson) ??
-                    new List<AdminBRO.NetworkResource>();
+                return JsonHelper.DeserializeObject<List<AdminBRO.NetworkResourceShort>>(metaJson) ??
+                    new List<AdminBRO.NetworkResourceShort>();
             }
-            return new List<AdminBRO.NetworkResource>();
+            return new List<AdminBRO.NetworkResourceShort>();
         }
 
-        public static void SaveLocalResourcesMeta(List<AdminBRO.NetworkResource> meta)
+        public static void SaveLocalResourcesMeta(List<AdminBRO.NetworkResourceShort> meta)
         {
             if (meta != null)
             {

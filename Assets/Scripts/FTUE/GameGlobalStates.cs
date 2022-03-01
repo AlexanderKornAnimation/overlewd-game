@@ -24,6 +24,7 @@ namespace Overlewd
                 ResetStateCastleButtons();
             }
 
+            public static bool newFTUE { get; set; } = false;
             public static bool completeFTUE { get; private set; } = false;
             public static int currentStageId { get; private set; }
             public static void CompleteStageId(int stageId)
@@ -125,34 +126,58 @@ namespace Overlewd
             public static bool portalBuilded { get; private set; } = false;
 
             //stages state
+            public static int ftueChapterId;
+
             public static int battleScreen_BattleId = 0;
             public static int battleScreen_StageId = 0;
+            public static string battleScreen_StageKey;
 
             public static int sexScreen_StageId;
             public static int sexScreen_DialogId;
+            public static string sexScreen_StageKey;
             public static AdminBRO.Dialog sexScreen_DialogData
             {
                 get
                 {
+                    if (newFTUE)
+                    {
+                        var sexDialogId = Overlewd.GameData.ftue.chapters[ftueChapterId].
+                            dialogs.Find(item => item.key == sexScreen_StageKey).id;
+                        return GameData.GetSexById(sexDialogId);
+                    }
                     return GameData.GetSexById(sexScreen_DialogId);
                 }
             }
 
             public static int dialogScreen_StageId;
             public static int dialogScreen_DialogId;
+            public static string dialogScreen_StageKey;
             public static AdminBRO.Dialog dialogScreen_DialogData
             {
                 get
                 {
+                    if (newFTUE)
+                    {
+                        var dialogId = Overlewd.GameData.ftue.chapters[ftueChapterId].
+                            dialogs.Find(item => item.key == dialogScreen_StageKey).id;
+                        return GameData.GetDialogById(dialogId);
+                    }
                     return GameData.GetDialogById(dialogScreen_DialogId);
                 }
             }
 
             public static int dialogNotification_DialogId;
+            public static string dialogNotification_StageKey;
             public static AdminBRO.Dialog dialogNotification_DialogData
             {
                 get
                 {
+                    if (newFTUE)
+                    {
+                        var notificationDialogId = Overlewd.GameData.ftue.chapters[ftueChapterId].
+                            dialogs.Find(item => item.key == dialogNotification_StageKey).id;
+                        return GameData.GetNotificationById(notificationDialogId);
+                    }
                     return GameData.GetNotificationById(dialogNotification_DialogId);
                 }
             }

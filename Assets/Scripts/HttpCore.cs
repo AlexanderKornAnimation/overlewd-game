@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public static class HttpCore
     {
-        private const string ApiVersion = "2";
+        private const string ApiVersion = "3";
 
         public static bool HasNetworkConection()
         {

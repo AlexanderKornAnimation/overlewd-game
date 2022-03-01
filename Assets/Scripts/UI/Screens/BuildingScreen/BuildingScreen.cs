@@ -130,7 +130,7 @@ namespace Overlewd
 
         protected virtual void ForgeButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowPopup<ForgePopup>();
         }
 
@@ -146,13 +146,13 @@ namespace Overlewd
 
         protected virtual void PortalButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowPopup<PortalPopup>();
         }
 
         protected virtual void UlviCaveButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowPopup<CavePopup>();
         }
 
@@ -178,7 +178,7 @@ namespace Overlewd
 
         protected virtual void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI.GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
     }

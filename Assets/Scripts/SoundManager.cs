@@ -10,153 +10,149 @@ using Debug = UnityEngine.Debug;
 namespace Overlewd
 {
     public static class SoundPath
+    {
+        //buttons
+        public const string UI_CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
+        public const string UI_GenericButtonClick = "event:/UI/Buttons/Generic/Button_click";
+        public const string UI_DialogNextButtonClick = "event:/UI/Buttons/Dialogue/Text_field_click_next";
+        public const string UI_DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
+        public const string UI_FreeBuildButton = "event:/UI/Buttons/Building/Build_8_hours_button";
+        public const string UI_FreeSpellLearnButton = "event:/UI/Buttons/Learn_Spell/Learn_Spell_8_hours";
+
+        //screens
+        public const string UI_CastleWindowShow = "event:/UI/Windows/Castle_Screen/Window_slide_on";
+        public const string UI_CastleWindowHide = "event:/UI/Windows/Castle_Screen/Window_slide_off";
+        public const string UI_GenericWindowShow = "event:/UI/Windows/Generic/Window_slide_on";
+        public const string UI_GenericWindowHide = "event:/UI/Windows/Generic/Window_slide_off";
+        public const string UI_BattleScreenShow = "event:/UI/Windows/Battle_Screen/Battle_Screen_Transition";
+        public const string UI_PortalScreenFTUE = "event:/Animations/Chapter_Scenes/Chapter-1/Portals_Chamber_Build";
+
+        //overlays
+        public const string UI_SidebarOverlayShow = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
+        public const string UI_SidebarOverlayHide = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
+        public const string UI_QuestOverlayShow = "event:/UI/Buttons/Castle_Screen/Quests_menu_slide_on";
+        public const string UI_QuestOverlayHide = "event:/UI/Buttons/Castle_Screen/Quests_menu_slide_off";
+
+        //popups & nootifications
+        public const string UI_GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
+        public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
+
+        //sex 1
+        public const string SexScene1_CutInCumshot = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_cumshot";
+        public const string SexScene1_CutInLick = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_lick";
+        public const string SexScene1_MainScene = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/main_scene";
+
+        //sex 2
+        public const string SexScene2_CutInBeads = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-beads";
+        public const string SexScene2_CutInCreamPie = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-cum";
+        public const string SexScene2_MainScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
+        public const string SexScene2_FinalScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
+    }
+
+    public class SoundInstance
+    {
+        private EventInstance instance;
+        public string key { get; private set; }
+        public bool release { get; private set; } = false;
+
+        private SoundInstance(string eventPath, string key = null)
         {
-            public static class UI
-            {
-                //buttons
-                public const string CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
-                public const string GenericButtonClick = "event:/UI/Buttons/Generic/Button_click";
-                public const string DialogNextButtonClick = "event:/UI/Buttons/Dialogue/Text_field_click_next";
-                public const string DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
-                
-                //screens
-                public const string CastleWindowShow = "event:/UI/Windows/Castle_Screen/Window_slide_on";
-                public const string CastleWindowHide = "event:/UI/Windows/Castle_Screen/Window_slide_off";
-                public const string GenericWindowShow = "event:/UI/Windows/Generic/Window_slide_on";
-                public const string GenericWindowHide = "event:/UI/Windows/Generic/Window_slide_off";
-                public const string BattleScreenShow = "event:/UI/Windows/Battle_Screen/Battle_Screen_Transition";
-                
-                //overlays
-                public const string SidebarOverlayShow = "event:/UI/Windows/Castle_Screen/Deeds_slide_on";
-                public const string SidebarOverlayHide = "event:/UI/Windows/Castle_Screen/Deeds_slide_off";
-                
-                //popups & nootifications
-                public const string GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
-                public const string GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
-            }
-
-            public static class Animations
-            {
-                public static class FirstSex
-                {
-                    public const string CutInCumshot = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_cumshot";
-                    public const string CutInLick = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_lick";
-                    public const string MainSexScene1 = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/main_scene";
-                }
-
-                public static class SecondSex
-                {
-                    public const string CutInBeads = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-beads";
-                    public const string CutInCreamPie = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-cum";
-                    public const string MainSexScene2 = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
-                    public const string FinalSexScene2 = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
-                }
-            }
+            instance = RuntimeManager.CreateInstance(eventPath);
+            this.key = key ?? eventPath;
+            instance.start();
         }
-    
+
+        public void Play()
+        {
+            instance.setPaused(false);
+        }
+
+        public void Pause()
+        {
+            instance.setPaused(true);
+        }
+
+        public void Stop(bool allowFade = true)
+        {
+            var stopMode = allowFade ?
+                FMOD.Studio.STOP_MODE.ALLOWFADEOUT :
+                FMOD.Studio.STOP_MODE.IMMEDIATE;
+            instance.stop(stopMode);
+            instance.release();
+            release = true;
+            SoundManager.ClearReleased();
+        }
+
+        public static SoundInstance GetInstance(string eventPath, string key = null)
+        {
+            EventDescription eventDesc;
+            RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
+            return eventDesc.isValid() ? new SoundInstance(eventPath, key) : null;
+        }
+    }
+
     public static class SoundManager
     {
-        
+        private static List<SoundInstance> instances = new List<SoundInstance>();
 
-        private static Dictionary<string, EventInstance> eventInstances = new Dictionary<string, EventInstance>();
-        
         private static Bus animationBus;
         private static Bus uiBus;
-
-        private static void Stop(string keyName, bool allowFade)
-        {
-            var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
-            eventInstances[keyName].stop(stopMode);
-            eventInstances[keyName].release();
-            eventInstances.Remove(keyName);
-        }
-
-        private static void Play(string keyName)
-        {
-            if (String.IsNullOrWhiteSpace(keyName))
-            {
-                Debug.LogWarning("Key is null or empty. Instance isn't play");
-                return;
-            }
-            
-            eventInstances[keyName].start();
-        }
 
         public static void Initialize()
         {
             animationBus = RuntimeManager.GetBus("bus:/Animations");
             uiBus = RuntimeManager.GetBus("bus:/UI");
         }
+
+        public static SoundInstance GetSoundInstance(string eventPath, string key = null)
+        {
+            var inst = instances.Find(item => item.key == (key ?? eventPath));
+            if (inst != null)
+            {
+                return inst;
+            }
+
+            var newInst = SoundInstance.GetInstance(eventPath, key);
+            if (newInst != null)
+            {
+                instances.Add(newInst);
+                return newInst;
+            }
+
+            return null;
+        }
         
-        public static EventInstance GetInstanceByKey(string keyName)
+        public static void Stop(string key)
         {
-            if (String.IsNullOrWhiteSpace(keyName))
-            {
-                Debug.LogWarning("Key is null or empty. Returned default");
-                return default;
-            }
-            
-            if (eventInstances.ContainsKey(keyName))
-                return eventInstances[keyName];
-
-            return default;
+            var inst = instances.Find(item => item.key == key);
+            inst?.Stop();
+            ClearReleased();
         }
 
-        public static EventInstance CreateEventInstance(string eventPath)
+        public static void Pause(string key)
         {
-            if (String.IsNullOrWhiteSpace(eventPath))
-            {
-                Debug.LogWarning("Path is null or empty. Returned default");
-                return default;
-            }
-
-            if (!eventInstances.ContainsKey(eventPath))
-            {
-                eventInstances.Add(eventPath, RuntimeManager.CreateInstance(eventPath));
-                Play(eventPath);
-                return eventInstances[eventPath];
-            }
-
-            return eventInstances[eventPath];
+            var findInst = instances.Find(item => item.key == key);
+            findInst?.Pause();
         }
 
-        public static EventInstance CreateEventInstance(string keyName, string eventPath)
+        public static void Play(string key)
         {
-            if (String.IsNullOrWhiteSpace(keyName) || String.IsNullOrWhiteSpace(eventPath))
-            {
-                Debug.LogWarning("key or path is null or empty. Returned default");
-                return default;
-            }
-
-            if (!eventInstances.ContainsKey(keyName))
-            {
-                eventInstances.Add(keyName, RuntimeManager.CreateInstance(eventPath));
-                Play(keyName);
-            }
-
-            return eventInstances[keyName];
+            var findInst = instances.Find(item => item.key == key);
+            findInst?.Play();
         }
 
-        public static void SetPause(string keyName, bool pause)
+        public static void StopAll()
         {
-            if (String.IsNullOrWhiteSpace(keyName))
+            foreach (var inst in instances.ToList())
             {
-                Debug.LogWarning("Key is null or empty. Pause isn't set");
-                return;
+                inst.Stop();
             }
-
-            if (eventInstances.ContainsKey(keyName))
-                eventInstances[keyName].setPaused(pause);
+            ClearReleased();
         }
 
-        public static void StopAllInstances(bool allowFade)
+        public static void ClearReleased()
         {
-            foreach (var instance in eventInstances.ToList())
-            {
-                Stop(instance.Key, allowFade);
-            }
-            
-            eventInstances.Clear();
+            instances.RemoveAll(item => item.release);
         }
 
         public static void OnMusicVolumeChanged(float value)
@@ -168,7 +164,6 @@ namespace Overlewd
             animationBus.setVolume(value);
         }
 
-        //Sound
         public static void PlayOneShoot(string soundEventPath)
         {
             RuntimeManager.PlayOneShot(soundEventPath);

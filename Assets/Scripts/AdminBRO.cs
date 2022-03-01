@@ -275,6 +275,13 @@ namespace Overlewd
             public string url;
         }
 
+        [Serializable]
+        public class NetworkResourceShort
+        {
+            public string id;
+            public string hash;
+        }
+
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
@@ -504,11 +511,6 @@ namespace Overlewd
 
         public class DialogCharacterSkin
         {
-            public const string Wolf = "wolf";
-        }
-
-        public class DialogCharacterKey
-        {
             public const string Overlord = "Overlord";
             public const string Ulvi = "Ulvi";
             public const string UlviWolf = "UlviWolf";
@@ -533,50 +535,21 @@ namespace Overlewd
             public string characterName;
             public string characterSkin;
             public string characterPosition;
-            public string cutIn;
             public string message;
-            public string animation;
-            public string sceneOverlayImage;
 
-            public string replicaCutInSoundPath;
-            public string replicaMainSoundPath;
-            public string characterKey
-            {
-                get
-                {
-                    return characterName switch
-                    {
-                        DialogCharacterName.Overlord => characterSkin switch
-                        {
-                            _ => DialogCharacterKey.Overlord
-                        },
+            public int? emotionAnimationId;
+            public int? cutInAnimationId;
+            public int? mainAnimationId;
 
-                        DialogCharacterName.Ulvi => characterSkin switch
-                        {
-                            DialogCharacterSkin.Wolf => DialogCharacterKey.UlviWolf,
-                            _ => DialogCharacterKey.Ulvi
-                        },
-
-                        DialogCharacterName.Faye => characterSkin switch
-                        {
-                            _ => DialogCharacterKey.Faye
-                        },
-
-                        DialogCharacterName.Adriel => characterSkin switch
-                        {
-                            _ => DialogCharacterKey.Adriel
-                        },
-
-                        _ => characterName
-                    };
-                }
-            }
+            public string cutInSoundPath;
+            public string mainSoundPath;
         }
 
         public class DialogType 
         {
             public const string Dialog = "dialog";
             public const string Sex = "sex";
+            public const string Notification = "notification";
         }
 
         [Serializable]
@@ -586,6 +559,7 @@ namespace Overlewd
             public string title;
             public string type;
             public List<DialogReplica> replicas;
+            public string status;
         }
 
         // /battles
@@ -623,6 +597,7 @@ namespace Overlewd
             public string type;
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
+            public string status;
         }
 
         //ftue
@@ -650,17 +625,17 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public List<FTUEDialogInfo> dialogs;
-            public List<FTUEDialogInfo> sexs;
-            public List<FTUEDialogInfo> notifications;
+            public List<FTUEStageInfo> dialogs;
+            public List<FTUEStageInfo> battles;
         }
 
         [Serializable]
-        public class FTUEDialogInfo
+        public class FTUEStageInfo
         {
-            int id;
-            string key;
+            public int id;
+            public string key;
         }
+
 
         //animations
         public static async Task<List<Animation>> animationsAsync()
