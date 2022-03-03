@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FMOD;
 using FMOD.Studio;
@@ -172,6 +173,18 @@ namespace Overlewd
         public static void OnSoundVolumeChanged(float value)
         {
             uiBus.setVolume(value);
+        }
+
+        private static void ExampleManualBankLoaded()
+        {
+            Bank loadedBank;
+            RuntimeManager.StudioSystem.loadBankFile(Path.Combine(Application.persistentDataPath, "Test.bank"),
+                LOAD_BANK_FLAGS.NORMAL,
+                out loadedBank);
+            
+            PlayOneShoot("event:/CHECK");
+
+            //loadedBank.unload();
         }
     }
 }
