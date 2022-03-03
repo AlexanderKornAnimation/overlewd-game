@@ -253,7 +253,15 @@ namespace Overlewd
         // /resources
         public static async Task<List<NetworkResource>> resourcesAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/resources", tokens?.accessToken))
+            var url = Application.platform switch
+            {
+                RuntimePlatform.Android => "https://overlewd-api.herokuapp.com/resources?platform=android",
+                //RuntimePlatform.WindowsEditor => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                //RuntimePlatform.WindowsPlayer => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                _ => "https://overlewd-api.herokuapp.com/resources"
+            };
+
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
