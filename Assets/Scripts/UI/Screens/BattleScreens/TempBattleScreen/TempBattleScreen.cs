@@ -71,11 +71,6 @@ namespace Overlewd
 			await Task.CompletedTask;
 		}
 
-		public override void StartShow()
-		{
-			SoundManager.PlayOneShoot(SoundPath.UI.BattleScreenShow);
-		}
-
         public override void StartShow()
         {
             SoundManager.PlayOneShoot(SoundPath.UI_BattleScreenShow);
