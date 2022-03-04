@@ -290,6 +290,32 @@ namespace Overlewd
             public string hash;
         }
 
+        //event-chapters
+        public static async Task<List<EventChapter>> eventChaptersAsync()
+        {
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/event-chapters", tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonHelper.DeserializeObject<List<EventChapter>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class EventChapter
+        {
+            public int id;
+            public string name;
+            public string mapBackgroundImage;
+            public int? chapterMapId;
+            public int eventId;
+            public int? nextChapter;
+            public List<int> stages;
+            public string status;
+        }
+
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
@@ -332,6 +358,7 @@ namespace Overlewd
             public string updatedAt;
             public List<int> stages;
             public List<int> chapters;
+            public int? chapterMapId;
         }
 
         // /event-stages
@@ -696,6 +723,29 @@ namespace Overlewd
             public string title;
             public string soundBankId;
             public string eventPath;
+        }
+
+        //chapter-maps
+        public static async Task<List<ChapterMap>> chapterMapsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/chapter-maps";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonHelper.DeserializeObject<List<ChapterMap>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class ChapterMap
+        {
+            public int id;
+            public string title;
+            public string assetBundleId;
+            public string chapterMapPath;
         }
     }
 }

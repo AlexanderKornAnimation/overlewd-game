@@ -218,6 +218,8 @@ namespace Overlewd
 
             GameData.sounds = await AdminBRO.soundsAsync();
 
+            GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();
