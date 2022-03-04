@@ -216,6 +216,8 @@ namespace Overlewd
 
             GameData.animations = await AdminBRO.animationsAsync();
 
+            GameData.sounds = await AdminBRO.soundsAsync();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();
