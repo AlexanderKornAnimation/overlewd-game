@@ -19,6 +19,7 @@ namespace Overlewd
         public const string UI_DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
         public const string UI_FreeBuildButton = "event:/UI/Buttons/Building/Build_8_hours_button";
         public const string UI_FreeSpellLearnButton = "event:/UI/Buttons/Learn_Spell/Learn_Spell_8_hours";
+        public const string UI_StartBattle = "event:/UI/Buttons/Battle/Start_battle_for_crystals";
 
         //screens
         public const string UI_CastleWindowShow = "event:/UI/Windows/Castle_Screen/Window_slide_on";

@@ -90,7 +90,7 @@ namespace Overlewd
 
         protected virtual void BattleButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShoot(SoundPath.UI_StartBattle);
             UIManager.ShowScreen<BattleScreen>();
         }
 
