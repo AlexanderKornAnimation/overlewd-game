@@ -16,12 +16,6 @@ namespace Overlewd
             protected Button button;
             protected Transform sceneDone;
             protected TextMeshProUGUI title;
-            protected GameObject markers;
-            protected GameObject mainQuestMark;
-            protected GameObject sideQuestMark;
-            protected GameObject firstEventMark;
-            protected GameObject secondEventMark;
-            protected GameObject thirdEventMark;
 
             private void Awake()
             {
@@ -30,12 +24,6 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 sceneDone = button.transform.Find("SceneDone");
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                markers = button.transform.Find("Markers").gameObject;
-                mainQuestMark = markers.transform.Find("MainQuestMark").gameObject;
-                sideQuestMark = markers.transform.Find("SideQuestMark").gameObject;
-                firstEventMark = markers.transform.Find("FirstEventMark").gameObject;
-                secondEventMark = markers.transform.Find("SecondEventMark").gameObject;
-                thirdEventMark = markers.transform.Find("ThirdEventMark").gameObject;
 
                 button.onClick.AddListener(ButtonClick);
             }

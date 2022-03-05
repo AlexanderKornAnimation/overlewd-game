@@ -31,7 +31,6 @@ namespace Overlewd
                     gameObject.SetActive(stageId <= GameGlobalStates.currentStageId);
 
                     title.text = dialogNames[dialogId];
-                    markers.SetActive(false);
                     dialogueDone.gameObject.SetActive(GameGlobalStates.currentStageId > stageId);
                     button.interactable = GameGlobalStates.currentStageId == stageId;
                 }
