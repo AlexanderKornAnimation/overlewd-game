@@ -73,7 +73,7 @@ namespace Overlewd
 
         public override void StartShow()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_BattleScreenShow);
+            SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
         }
 
 		public override void AfterShow()
@@ -83,7 +83,7 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<StartingScreen>();
         }
     }

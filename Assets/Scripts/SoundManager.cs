@@ -10,7 +10,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Overlewd
 {
-    public static class SoundPath
+    public static class FMODEventPath
     {
         //buttons
         public const string UI_CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
@@ -51,70 +51,97 @@ namespace Overlewd
         public const string SexScene2_FinalScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
     }
 
-    public class SoundInstance
+    public class FMODBank
+    {
+        private Bank bank;
+
+        private FMODBank(string path)
+        {
+            RuntimeManager.StudioSystem.loadBankFile(path,
+                LOAD_BANK_FLAGS.NORMAL,
+                out bank);
+        }
+
+        public void Unload()
+        {
+            bank.unload();
+        }
+
+        public static FMODBank LoadFromFile(string bankPath)
+        {
+            return new FMODBank(bankPath);
+        }
+    }
+
+    public class FMODEvent
     {
         private EventInstance instance;
-        public string key { get; private set; }
-        public bool release { get; private set; } = false;
+        public string path { get; private set; }
+        public bool stopped { get; private set; } = false;
 
-        private SoundInstance(string eventPath, string key = null)
+        private FMODEvent(string eventPath)
         {
             instance = RuntimeManager.CreateInstance(eventPath);
-            this.key = key ?? eventPath;
+            path = eventPath;
             instance.start();
         }
 
         public void Play()
         {
+            if (stopped)
+                return;
+
             instance.setPaused(false);
         }
 
         public void Pause()
         {
+            if (stopped)
+                return;
+
             instance.setPaused(true);
         }
 
         public void Stop(bool allowFade = true)
         {
+            if (stopped)
+                return;
+
             var stopMode = allowFade ?
                 FMOD.Studio.STOP_MODE.ALLOWFADEOUT :
                 FMOD.Studio.STOP_MODE.IMMEDIATE;
             instance.stop(stopMode);
             instance.release();
-            release = true;
-            SoundManager.ClearReleased();
+            stopped = true;
+            SoundManager.RemoveEvent(this);
         }
 
-        public static SoundInstance GetInstance(string eventPath, string key = null)
+        public static FMODEvent GetInstance(string eventPath)
         {
             EventDescription eventDesc;
             RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-            return eventDesc.isValid() ? new SoundInstance(eventPath, key) : null;
+            return eventDesc.isValid() ? new FMODEvent(eventPath) : null;
         }
     }
 
     public static class SoundManager
     {
-        private static List<SoundInstance> instances = new List<SoundInstance>();
+        private static List<FMODEvent> instances = new List<FMODEvent>();
 
-        private static Bus animationBus;
-        private static Bus uiBus;
-
-        public static void Initialize()
+        public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
         {
-            animationBus = RuntimeManager.GetBus("bus:/Animations");
-            uiBus = RuntimeManager.GetBus("bus:/UI");
-        }
+            if (!String.IsNullOrEmpty(bankId))
+            {
+                ResourceManager.LoadFMODBank(bankId);
+            }
 
-        public static SoundInstance GetSoundInstance(string eventPath, string key = null)
-        {
-            var inst = instances.Find(item => item.key == (key ?? eventPath));
+            var inst = instances.Find(item => item.path == eventPath);
             if (inst != null)
             {
                 return inst;
             }
 
-            var newInst = SoundInstance.GetInstance(eventPath, key);
+            var newInst = FMODEvent.GetInstance(eventPath);
             if (newInst != null)
             {
                 instances.Add(newInst);
@@ -123,69 +150,30 @@ namespace Overlewd
 
             return null;
         }
-        
-        public static void Stop(string key)
-        {
-            var inst = instances.Find(item => item.key == key);
-            inst?.Stop();
-            ClearReleased();
-        }
 
-        public static void Pause(string key)
+        public static void PlayOneShot(string eventPath)
         {
-            var findInst = instances.Find(item => item.key == key);
-            findInst?.Pause();
-        }
-
-        public static void Play(string key)
-        {
-            var findInst = instances.Find(item => item.key == key);
-            findInst?.Play();
+            RuntimeManager.PlayOneShot(eventPath);
         }
 
         public static void StopAll()
         {
-            foreach (var inst in instances.ToList())
+            foreach (var inst in instances)
             {
                 inst.Stop();
             }
-            ClearReleased();
         }
 
-        public static void ClearReleased()
+        public static void RemoveEvent(FMODEvent soundEvent)
         {
-            instances.RemoveAll(item => item.release);
-        }
-
-        public static void OnMusicVolumeChanged(float value)
-        {
-        }
-
-        public static void OnAnimationVolumeChanged(float value)
-        {
-            animationBus.setVolume(value);
-        }
-
-        public static void PlayOneShoot(string soundEventPath)
-        {
-            RuntimeManager.PlayOneShot(soundEventPath);
-        }
-
-        public static void OnSoundVolumeChanged(float value)
-        {
-            uiBus.setVolume(value);
-        }
-
-        private static void ExampleManualBankLoaded()
-        {
-            Bank loadedBank;
-            RuntimeManager.StudioSystem.loadBankFile(Path.Combine(Application.persistentDataPath, "Test.bank"),
-                LOAD_BANK_FLAGS.NORMAL,
-                out loadedBank);
-            
-            PlayOneShoot("event:/CHECK");
-
-            //loadedBank.unload();
+            if (soundEvent.stopped)
+            {
+                instances.Remove(soundEvent);
+            }
+            else
+            {
+                soundEvent.Stop();
+            }
         }
     }
 }

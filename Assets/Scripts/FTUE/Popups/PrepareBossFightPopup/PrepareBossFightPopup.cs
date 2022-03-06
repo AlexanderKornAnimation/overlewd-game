@@ -19,7 +19,7 @@ namespace Overlewd
 
             protected override void BattleButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI_StartBattle);
+                SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
                 UIManager.ShowScreen<BossFightScreen>();
             }
 

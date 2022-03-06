@@ -19,12 +19,14 @@ namespace Overlewd
         public static void PrepareChangeScreen()
         {
             ResourceManager.MarkUnusedAssetBundles();
+            ResourceManager.MarkUnusedFMODBanks();
         }
 
         public static void ChangeScreen()
         {
             Resources.UnloadUnusedAssets();
             ResourceManager.UnloadUnusedAssetBundles();
+            ResourceManager.UnloadUnusedFMODBanks();
 
             if (++numChangeScreen > 10)
             {

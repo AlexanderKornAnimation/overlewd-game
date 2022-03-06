@@ -14,8 +14,8 @@ namespace Overlewd
         {
             private SpineWidgetGroup mainAnimation;
             private SpineWidgetGroup cutInAnimation;
-            private string mainSoundKey;
-            private string cutInSoundKey;
+            private FMODEvent mainSound;
+            private FMODEvent cutInSound;
 
             protected override async Task EnterScreen()
             {
@@ -153,57 +153,35 @@ namespace Overlewd
                 //main sound
                 if (!String.IsNullOrEmpty(replica.mainSoundPath))
                 {
-                    if (replica.mainSoundPath != mainSoundKey)
+                    if (replica.mainSoundPath != mainSound?.path)
                     {
-                        if (!String.IsNullOrEmpty(mainSoundKey))
-                        {
-                            SoundManager.Stop(mainSoundKey);
-                        }
-
-                        SoundManager.GetSoundInstance(replica.mainSoundPath);
-                        mainSoundKey = replica.mainSoundPath;
+                        mainSound?.Stop();
+                        mainSound = SoundManager.GetEventInstance(replica.mainSoundPath);
                     }
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(mainSoundKey))
-                    {
-                        SoundManager.Stop(mainSoundKey);
-                    }
-                    mainSoundKey = null;
+                    mainSound?.Stop();
+                    mainSound = null;
                 }
 
                 //cutIn sound
                 if (!String.IsNullOrEmpty(replica.cutInSoundPath))
                 {
-                    if (replica.cutInSoundPath != cutInSoundKey)
+                    if (replica.cutInSoundPath != cutInSound?.path)
                     {
-                        if (!String.IsNullOrEmpty(cutInSoundKey))
-                        {
-                            SoundManager.Stop(cutInSoundKey);
-                        }
-
-                        SoundManager.GetSoundInstance(replica.cutInSoundPath);
-                        cutInSoundKey = replica.cutInSoundPath;
+                        cutInSound?.Stop();
+                        cutInSound = SoundManager.GetEventInstance(replica.cutInSoundPath);
                     }
 
-                    if (!String.IsNullOrEmpty(mainSoundKey))
-                    {
-                        SoundManager.Pause(mainSoundKey);
-                    }
+                    mainSound?.Pause();
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(cutInSoundKey))
-                    {
-                        SoundManager.Stop(cutInSoundKey);
-                    }
-                    cutInSoundKey = null;
+                    cutInSound?.Stop();
+                    cutInSound = null;
 
-                    if (!String.IsNullOrEmpty(mainSoundKey))
-                    {
-                        SoundManager.Play(mainSoundKey);
-                    }
+                    mainSound?.Play();
                 }
             }
 

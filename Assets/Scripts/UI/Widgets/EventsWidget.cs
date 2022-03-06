@@ -22,7 +22,7 @@ namespace Overlewd
         
         protected virtual void OnEventButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowOverlay<EventOverlay>();
         }
         

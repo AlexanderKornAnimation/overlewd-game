@@ -12,7 +12,7 @@ namespace Overlewd
             {
                 protected override void ButtonClick()
                 {
-                    SoundManager.PlayOneShoot(SoundPath.UI_CastleScreenButtons);
+                    SoundManager.PlayOneShot(FMODEventPath.UI_CastleScreenButtons);
                     UIManager.ShowScreen<PortalScreen>();
                 }
 

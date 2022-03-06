@@ -53,7 +53,7 @@ namespace Overlewd
 
                 GameGlobalStates.sexScreen_StageId = 3;
                 GameGlobalStates.sexScreen_DialogId = 2;
-                SoundManager.PlayOneShoot(SoundPath.UI_DefeatPopupHaremButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
                 UIManager.ShowScreen<SexScreen>();
             }
         }

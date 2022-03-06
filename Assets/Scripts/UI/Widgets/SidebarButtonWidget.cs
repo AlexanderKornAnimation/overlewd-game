@@ -19,7 +19,7 @@ namespace Overlewd
 
         protected virtual void SidebarMenuButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (!UIManager.HasOverlay<SidebarMenuOverlay>())
             {
                 UIManager.ShowOverlay<SidebarMenuOverlay>();
