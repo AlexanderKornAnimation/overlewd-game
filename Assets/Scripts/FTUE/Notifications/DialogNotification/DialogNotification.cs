@@ -42,6 +42,10 @@ namespace Overlewd
                         UIManager.ShowScreen<StartingScreen>();
                     }
                 }
+                else
+                {
+                    UIManager.HideNotification();
+                }
             }
         }
 
@@ -77,6 +81,13 @@ namespace Overlewd
                 }
 
                 StartCoroutine(CloseByTimer());
+
+                await Task.CompletedTask;
+            }
+
+            public override async Task BeforeHideAsync()
+            {
+                StopCoroutine(CloseByTimer());
 
                 await Task.CompletedTask;
             }
