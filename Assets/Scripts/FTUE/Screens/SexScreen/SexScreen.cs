@@ -19,8 +19,6 @@ namespace Overlewd
 
             protected override async Task EnterScreen()
             {
-                backImage.gameObject.SetActive(false);
-
                 dialogData = GameGlobalStates.sexScreen_DialogData;
 
                 if (GameGlobalStates.newFTUE)
@@ -29,11 +27,7 @@ namespace Overlewd
                 }
                 else
                 {
-                    if (GameGlobalStates.sexScreen_DialogId == 1)
-                    {
-                        blackScreenTop.gameObject.SetActive(true);
-                        blackScreenBot.gameObject.SetActive(true);
-                    }
+
                 }
 
                 await Task.CompletedTask;
@@ -198,44 +192,12 @@ namespace Overlewd
                 }
                 else
                 {
-                    if (GameGlobalStates.sexScreen_DialogId == 1)
-                    {
-                        if (currentReplicaId == 2)
-                        {
-                            StartCoroutine(FadeOut());
-                        }
-                    }
+
                 }
 
                 ShowMain(replica, prevReplica);
                 ShowCutIn(replica, prevReplica);
                 PlaySound(replica, prevReplica);
-            }
-
-            private IEnumerator FadeIn()
-            {
-                blackScreenTop.fillMethod = Image.FillMethod.Horizontal;
-                blackScreenBot.fillMethod = Image.FillMethod.Horizontal;
-
-                blackScreenBot.fillOrigin = 0;
-                blackScreenTop.fillOrigin = 0;
-
-                while (blackScreenTop.fillAmount != 1)
-                {
-                    yield return new WaitForSeconds(0.0005f);
-                    blackScreenTop.fillAmount += 0.07f;
-                    blackScreenBot.fillAmount += 0.07f;
-                }
-            }
-
-            private IEnumerator FadeOut()
-            {
-                while (blackScreenTop.fillAmount != 0)
-                {
-                    yield return new WaitForSeconds(0.0005f);
-                    blackScreenTop.fillAmount -= 0.07f;
-                    blackScreenBot.fillAmount -= 0.07f;
-                }
             }
         }
     }

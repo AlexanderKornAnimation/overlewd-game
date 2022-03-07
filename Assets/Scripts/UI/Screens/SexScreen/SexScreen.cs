@@ -11,8 +11,6 @@ namespace Overlewd
     {
         protected Coroutine autoplayCoroutine;
 
-        protected Image backImage;
-
         protected TextMeshProUGUI personageName;
         protected TextMeshProUGUI text;
 
@@ -21,8 +19,6 @@ namespace Overlewd
         protected Button autoplayButton;
         protected TextMeshProUGUI autoplayStatus;
         protected Image autoplayButtonPressed;
-        protected Image blackScreenTop;
-        protected Image blackScreenBot;
 
         protected Transform mainAnimPos;
         protected GameObject cutIn;
@@ -42,8 +38,6 @@ namespace Overlewd
             textContainer = canvas.Find("TextContainer").GetComponent<Button>();
             textContainer.onClick.AddListener(TextContainerButtonClick);
 
-            backImage = canvas.Find("BackImage").GetComponent<Image>();
-
             personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
@@ -55,12 +49,6 @@ namespace Overlewd
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
 
-            blackScreenTop = canvas.Find("BlackScreenTop").GetComponent<Image>();
-            blackScreenTop.gameObject.SetActive(false);
-            
-            blackScreenBot = canvas.Find("BlackScreenBot").GetComponent<Image>();
-            blackScreenBot.gameObject.SetActive(false);
-            
             mainAnimPos = canvas.Find("MainAnimPos");
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
