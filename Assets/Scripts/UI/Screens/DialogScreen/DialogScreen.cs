@@ -11,9 +11,6 @@ namespace Overlewd
     public class DialogScreen : BaseScreen
     {
         protected Coroutine autoplayCoroutine;
-        
-        private SpineWidgetGroup cutInAnimation;
-        private SpineWidgetGroup emotionAnimation;
 
         protected Transform charactersPos;
         protected Transform leftCharacterPos;
@@ -22,7 +19,7 @@ namespace Overlewd
 
         protected Button textContainer;
         protected TextMeshProUGUI personageName;
-        protected Image personageHead;
+
         protected Transform emotionBack;
         protected Transform emotionPos;
         protected TextMeshProUGUI text;
@@ -32,7 +29,6 @@ namespace Overlewd
         protected Image autoplayButtonPressed;
         protected TextMeshProUGUI autoplayStatus;
 
-        protected Transform mainAnimPos;
         protected GameObject cutIn;
         protected Transform cutInAnimPos;
 
@@ -56,6 +52,9 @@ namespace Overlewd
             [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
 
+        protected SpineWidgetGroup cutInAnimation;
+        protected SpineWidgetGroup emotionAnimation;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
@@ -73,7 +72,6 @@ namespace Overlewd
             textContainer.onClick.AddListener(TextContainerButtonClick);
 
             personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            personageHead = textContainer.transform.Find("PersonageHead").GetComponent<Image>();
             emotionBack = textContainer.transform.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -87,7 +85,6 @@ namespace Overlewd
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
             autoplayButtonPressed.enabled = false;
 
-            mainAnimPos = canvas.Find("MainAnimPos");
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
             cutIn.SetActive(false);
@@ -240,7 +237,7 @@ namespace Overlewd
             }
         }
 
-        protected void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
         {
             if (replica.cutInAnimationId.HasValue)
             {
@@ -262,7 +259,7 @@ namespace Overlewd
             cutIn.SetActive(cutInAnimation != null);
         }
         
-        protected void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
         {
             if (replica.emotionAnimationId.HasValue)
             {
@@ -283,7 +280,7 @@ namespace Overlewd
             }
         }
         
-        protected void AutoplayButtonCustomize()
+        private void AutoplayButtonCustomize()
         {
             if (isAutoplayButtonPressed)
             {
@@ -350,9 +347,11 @@ namespace Overlewd
             }
         }
 
-        protected virtual void ShowCurrentReplica()
+        private void ShowCurrentReplica()
         {
+            var replica = dialogData.replicas[currentReplicaId];
             var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
+
             if (prevReplica != null)
             {
                 var keyName = prevReplica.characterSkin;
@@ -368,8 +367,7 @@ namespace Overlewd
                 }
             }
 
-        
-            var replica = dialogData.replicas[currentReplicaId];
+
             if (replica != null)
             {
                 personageName.text = replica.characterName;
@@ -380,9 +378,10 @@ namespace Overlewd
 
                 ShowCharacter(keyName, keyPos);
                 CharacterSelect(keyName);
-                ShowPersEmotion(replica, prevReplica);
-                ShowCutIn(replica, prevReplica);
             }
+
+            ShowPersEmotion(replica, prevReplica);
+            ShowCutIn(replica, prevReplica);
         }
 
         protected virtual AdminBRO.Animation GetAnimationById(int id)

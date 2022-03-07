@@ -11,32 +11,9 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            private SpineWidgetGroup cutInAnimation;
-            private SpineWidgetGroup emotionAnimation;
-
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.dialogScreen_DialogData;
-
-                personageHead.gameObject.SetActive(false);
-                emotionBack.gameObject.SetActive(true);
-
-                if (GameGlobalStates.newFTUE)
-                {
-
-                }
-                else
-                {
-                    if (GameGlobalStates.dialogScreen_DialogId == 1)
-                    {
-                    }
-                    else if (GameGlobalStates.dialogScreen_DialogId == 2)
-                    {
-                    }
-                    else if (GameGlobalStates.dialogScreen_DialogId == 3)
-                    {
-                    }
-                }
 
                 await Task.CompletedTask;
             }
@@ -91,17 +68,6 @@ namespace Overlewd
                         UIManager.ShowScreen<CastleScreen>();
                     }
                 }
-            }
-
-            protected override void ShowCurrentReplica()
-            {
-                base.ShowCurrentReplica();
-
-                var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
-                var replica = dialogData.replicas[currentReplicaId];
-                
-                ShowCutIn(replica, prevReplica);
-                ShowPersEmotion(replica, prevReplica);
             }
 
             protected override AdminBRO.Animation GetAnimationById(int id)
