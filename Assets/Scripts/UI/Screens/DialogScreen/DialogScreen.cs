@@ -366,6 +366,13 @@ namespace Overlewd
                     CharacterDeselect(keyName);
                 }
             }
+            else
+            {
+                foreach (var ch in characters)
+                {
+                    ch.Value?.Deselect();
+                }
+            }
 
 
             if (replica != null)

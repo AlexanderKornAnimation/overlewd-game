@@ -11,21 +11,24 @@ namespace Overlewd
         public class DialogCharacter : MonoBehaviour
         {
             private GameObject persImageAdditive;
+            private GameObject persImageShadow;
 
             void Awake()
             {
                 persImageAdditive = transform.Find("PersImageAdditive").gameObject;
                 persImageAdditive.SetActive(false);
+                persImageShadow = transform.Find("PersImageShadow").gameObject;
+                persImageShadow.SetActive(false);
             }
 
             public void Select()
             {
-                persImageAdditive.SetActive(true);
+                persImageShadow.SetActive(false);
             }
 
             public void Deselect()
             {
-                persImageAdditive.SetActive(false);
+                persImageShadow.SetActive(true);
             }
 
             public static DialogCharacter GetInstance(string prefabPath, Transform parent)
