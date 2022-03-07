@@ -77,7 +77,6 @@ namespace Overlewd
     {
         private EventInstance instance;
         public string path { get; private set; }
-        public bool stopped { get; private set; } = false;
 
         private FMODEvent(string eventPath)
         {
@@ -86,33 +85,31 @@ namespace Overlewd
             instance.start();
         }
 
+        public bool IsPlaying()
+        {
+            PLAYBACK_STATE state;
+            instance.getPlaybackState(out state);
+            return (state != PLAYBACK_STATE.STOPPED) &&
+                (state != PLAYBACK_STATE.STOPPING);
+        }
+
         public void Play()
         {
-            if (stopped)
-                return;
-
             instance.setPaused(false);
         }
 
         public void Pause()
         {
-            if (stopped)
-                return;
-
             instance.setPaused(true);
         }
 
         public void Stop(bool allowFade = true)
         {
-            if (stopped)
-                return;
-
             var stopMode = allowFade ?
                 FMOD.Studio.STOP_MODE.ALLOWFADEOUT :
                 FMOD.Studio.STOP_MODE.IMMEDIATE;
             instance.stop(stopMode);
             instance.release();
-            stopped = true;
             SoundManager.RemoveEvent(this);
         }
 
@@ -135,7 +132,7 @@ namespace Overlewd
                 ResourceManager.LoadFMODBank(bankId);
             }
 
-            var inst = instances.Find(item => item.path == eventPath);
+            var inst = instances.Find(item => (item.path == eventPath) && item.IsPlaying());
             if (inst != null)
             {
                 return inst;
@@ -166,13 +163,13 @@ namespace Overlewd
 
         public static void RemoveEvent(FMODEvent soundEvent)
         {
-            if (soundEvent.stopped)
+            if (soundEvent.IsPlaying())
             {
-                instances.Remove(soundEvent);
+                soundEvent.Stop();
             }
             else
             {
-                soundEvent.Stop();
+                instances.Remove(soundEvent);
             }
         }
     }
