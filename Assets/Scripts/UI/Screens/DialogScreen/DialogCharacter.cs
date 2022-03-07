@@ -18,7 +18,7 @@ namespace Overlewd
                 persImageAdditive = transform.Find("PersImageAdditive").gameObject;
                 persImageAdditive.SetActive(false);
                 persImageShadow = transform.Find("PersImageShadow").gameObject;
-                persImageShadow.SetActive(false);
+                persImageShadow.SetActive(true);
             }
 
             public void Select()
