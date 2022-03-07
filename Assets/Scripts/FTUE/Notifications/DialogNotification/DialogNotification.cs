@@ -9,21 +9,8 @@ namespace Overlewd
 {
     namespace FTUE
     {
-        public class NotificationMissclickColored : Overlewd.NotificationMissclickColored
+        public class DialogNotificationMissclick : Overlewd.DialogNotificationMissclick
         {
-            private IEnumerator EnableByTimer()
-            {
-                yield return new WaitForSeconds(2.0f);
-                missClickEnabled = true;
-            }
-
-            public void OnReset()
-            {
-                missClickEnabled = false;
-                StopCoroutine(EnableByTimer());
-                StartCoroutine(EnableByTimer());
-            }
-
             protected override void OnClick()
             {
                 if (GameGlobalStates.newFTUE)
@@ -51,61 +38,29 @@ namespace Overlewd
 
         public class DialogNotification : Overlewd.DialogNotification
         {
-            private SpineWidgetGroup emotionAnimation;
-
-            protected override void Awake()
-            {
-                base.Awake();
-
-                button.gameObject.SetActive(false);
-            }
-
             public override void ShowMissclick()
             {
-                var missclick = UIManager.ShowNotificationMissclick<NotificationMissclickColored>();
+                var missclick = UIManager.ShowNotificationMissclick<DialogNotificationMissclick>();
                 missclick.missClickEnabled = false;
             }
 
-            public override async Task BeforeShowAsync()
+            protected override void EnterScreen()
             {
-                var dialogData = GameGlobalStates.dialogNotification_DialogData;
-
-                var firstReplica = dialogData.replicas.First();
-                text.text = firstReplica.message;
-
-                if (firstReplica.emotionAnimationId.HasValue)
-                {
-                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
-                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
-                    emotionAnimation.Initialize(animation);
-                }
-
-                StartCoroutine(CloseByTimer());
-
-                await Task.CompletedTask;
+                button.gameObject.SetActive(false);
+                dialogData = GameGlobalStates.dialogNotification_DialogData;
             }
 
-            public override async Task BeforeHideAsync()
+            protected override void LeaveByTimerScreen()
             {
-                StopCoroutine(CloseByTimer());
-
-                await Task.CompletedTask;
-            }
-
-            public override void AfterShow()
-            {
-                UIManager.GetNotificationMissclick<NotificationMissclickColored>()?.OnReset();
-            }
-
-            private IEnumerator CloseByTimer()
-            {
-                yield return new WaitForSeconds(4.0f);
-                UIManager.HideNotification();
-
                 if (GameGlobalStates.newFTUE)
                 {
                     UIManager.ShowScreen<StartingScreen>();
                 }
+            }
+
+            protected override AdminBRO.Animation GetAnimationById(int id)
+            {
+                return GameData.GetAnimationById(id);
             }
         }
     }
