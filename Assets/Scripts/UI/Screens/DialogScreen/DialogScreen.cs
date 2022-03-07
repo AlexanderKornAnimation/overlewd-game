@@ -11,6 +11,9 @@ namespace Overlewd
     public class DialogScreen : BaseScreen
     {
         protected Coroutine autoplayCoroutine;
+        
+        private SpineWidgetGroup cutInAnimation;
+        private SpineWidgetGroup emotionAnimation;
 
         protected Transform charactersPos;
         protected Transform leftCharacterPos;
@@ -237,6 +240,49 @@ namespace Overlewd
             }
         }
 
+        protected void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.cutInAnimationId.HasValue)
+            {
+                if (replica.cutInAnimationId != prevReplica?.cutInAnimationId)
+                {
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
+
+                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                    cutInAnimation.Initialize(animation);
+                }
+            }
+            else
+            {
+                Destroy(cutInAnimation?.gameObject);
+                cutInAnimation = null;
+            }
+            cutIn.SetActive(cutInAnimation != null);
+        }
+        
+        protected void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.emotionAnimationId.HasValue)
+            {
+                if (replica.emotionAnimationId != prevReplica?.emotionAnimationId)
+                {
+                    Destroy(emotionAnimation?.gameObject);
+                    emotionAnimation = null;
+
+                    var animation = GetAnimationById(replica.emotionAnimationId.Value);
+                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                    emotionAnimation.Initialize(animation);
+                }
+            }
+            else
+            {
+                Destroy(emotionAnimation?.gameObject);
+                emotionAnimation = null;
+            }
+        }
+        
         protected void AutoplayButtonCustomize()
         {
             if (isAutoplayButtonPressed)
@@ -334,7 +380,14 @@ namespace Overlewd
 
                 ShowCharacter(keyName, keyPos);
                 CharacterSelect(keyName);
+                ShowPersEmotion(replica, prevReplica);
+                ShowCutIn(replica, prevReplica);
             }
+        }
+
+        protected virtual AdminBRO.Animation GetAnimationById(int id)
+        {
+            return GameData.GetAnimationById(id);
         }
     }
 }

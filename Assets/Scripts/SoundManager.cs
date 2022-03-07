@@ -155,7 +155,7 @@ namespace Overlewd
 
         public static void StopAll()
         {
-            foreach (var inst in instances)
+            foreach (var inst in instances.ToList())
             {
                 inst.Stop();
             }
