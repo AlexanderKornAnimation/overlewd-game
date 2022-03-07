@@ -12,31 +12,15 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
-            private SpineWidgetGroup mainAnimation;
-            private SpineWidgetGroup cutInAnimation;
-            private FMODEvent mainSound;
-            private FMODEvent cutInSound;
-
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.sexScreen_DialogData;
-
-                if (GameGlobalStates.newFTUE)
-                {
-
-                }
-                else
-                {
-
-                }
 
                 await Task.CompletedTask;
             }
 
             protected override void LeaveScreen()
             {
-                SoundManager.StopAll();
-
                 if (GameGlobalStates.newFTUE)
                 {
                     if (GameGlobalStates.sexScreen_StageKey == "sex1")
@@ -83,121 +67,9 @@ namespace Overlewd
                 }
             }
 
-            private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+            protected override AdminBRO.Animation GetAnimationById(int id)
             {
-                if (replica.mainAnimationId.HasValue)
-                {
-                    if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
-                    {
-                        Destroy(mainAnimation?.gameObject);
-                        mainAnimation = null;
-
-                        var animation = GameData.GetAnimationById(replica.mainAnimationId.Value);
-                        if (animation != null)
-                        {
-                            mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
-                            mainAnimation.Initialize(animation);
-                        }
-                    }
-                }
-                else
-                {
-                    Destroy(mainAnimation?.gameObject);
-                    mainAnimation = null;
-                }
-            }
-
-            private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
-            {
-                if (replica.cutInAnimationId.HasValue)
-                {
-                    if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
-                    {
-                        Destroy(cutInAnimation?.gameObject);
-                        cutInAnimation = null;
-
-                        var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
-                        if (animation != null)
-                        {
-                            cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
-                            cutInAnimation.Initialize(animation);
-                        }
-                    }
-                }
-                else
-                {
-                    Destroy(cutInAnimation?.gameObject);
-                    cutInAnimation = null;
-                }
-
-                if (cutInAnimation != null)
-                {
-                    cutIn.SetActive(true);
-                    mainAnimation?.Pause();
-                }
-                else
-                {
-                    cutIn.SetActive(false);
-                    mainAnimation?.Play();
-                }
-            }
-
-            private void PlaySound(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
-            {
-                //main sound
-                if (!String.IsNullOrEmpty(replica.mainSoundPath))
-                {
-                    if (replica.mainSoundPath != mainSound?.path)
-                    {
-                        mainSound?.Stop();
-                        mainSound = SoundManager.GetEventInstance(replica.mainSoundPath);
-                    }
-                }
-                else
-                {
-                    mainSound?.Stop();
-                    mainSound = null;
-                }
-
-                //cutIn sound
-                if (!String.IsNullOrEmpty(replica.cutInSoundPath))
-                {
-                    if (replica.cutInSoundPath != cutInSound?.path)
-                    {
-                        cutInSound?.Stop();
-                        cutInSound = SoundManager.GetEventInstance(replica.cutInSoundPath);
-                    }
-
-                    mainSound?.Pause();
-                }
-                else
-                {
-                    cutInSound?.Stop();
-                    cutInSound = null;
-
-                    mainSound?.Play();
-                }
-            }
-
-            protected override void ShowCurrentReplica()
-            {
-                base.ShowCurrentReplica();
-
-                var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
-                var replica = dialogData.replicas[currentReplicaId];
-
-                if (GameGlobalStates.newFTUE)
-                {
-
-                }
-                else
-                {
-
-                }
-
-                ShowMain(replica, prevReplica);
-                ShowCutIn(replica, prevReplica);
-                PlaySound(replica, prevReplica);
+                return GameData.GetAnimationById(id);
             }
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,6 +29,11 @@ namespace Overlewd
         protected int currentReplicaId;
 
         protected bool isAutoplayButtonPressed = false;
+
+        protected SpineWidgetGroup mainAnimation;
+        protected SpineWidgetGroup cutInAnimation;
+        protected FMODEvent mainSound;
+        protected FMODEvent cutInSound;
 
         void Awake()
         {
@@ -61,6 +67,13 @@ namespace Overlewd
 
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
+
+            await Task.CompletedTask;
         }
 
         protected virtual async Task EnterScreen()
@@ -132,11 +145,17 @@ namespace Overlewd
             }
         }
 
-        protected virtual void ShowCurrentReplica()
+        private void ShowCurrentReplica()
         {
             var replica = dialogData.replicas[currentReplicaId];
+            var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
+            
             personageName.text = replica.characterName;
             text.text = replica.message;
+
+            ShowMain(replica, prevReplica);
+            ShowCutIn(replica, prevReplica);
+            PlaySound(replica, prevReplica);
         }
         
         private IEnumerator Autoplay()
@@ -148,6 +167,107 @@ namespace Overlewd
                 currentReplicaId++;
             }
             AutoplayButtonClick();
+        }
+
+        private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.mainAnimationId.HasValue)
+            {
+                if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
+                {
+                    Destroy(mainAnimation?.gameObject);
+                    mainAnimation = null;
+
+                    var animation = GetAnimationById(replica.mainAnimationId.Value);
+                    if (animation != null)
+                    {
+                        mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
+                        mainAnimation.Initialize(animation);
+                    }
+                }
+            }
+            else
+            {
+                Destroy(mainAnimation?.gameObject);
+                mainAnimation = null;
+            }
+        }
+
+        private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.cutInAnimationId.HasValue)
+            {
+                if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
+                {
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
+
+                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    if (animation != null)
+                    {
+                        cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                        cutInAnimation.Initialize(animation);
+                    }
+                }
+            }
+            else
+            {
+                Destroy(cutInAnimation?.gameObject);
+                cutInAnimation = null;
+            }
+
+            if (cutInAnimation != null)
+            {
+                cutIn.SetActive(true);
+                mainAnimation?.Pause();
+            }
+            else
+            {
+                cutIn.SetActive(false);
+                mainAnimation?.Play();
+            }
+        }
+
+        private void PlaySound(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            //main sound
+            if (!String.IsNullOrEmpty(replica.mainSoundPath))
+            {
+                if (replica.mainSoundPath != mainSound?.path)
+                {
+                    mainSound?.Stop();
+                    mainSound = SoundManager.GetEventInstance(replica.mainSoundPath);
+                }
+            }
+            else
+            {
+                mainSound?.Stop();
+                mainSound = null;
+            }
+
+            //cutIn sound
+            if (!String.IsNullOrEmpty(replica.cutInSoundPath))
+            {
+                if (replica.cutInSoundPath != cutInSound?.path)
+                {
+                    cutInSound?.Stop();
+                    cutInSound = SoundManager.GetEventInstance(replica.cutInSoundPath);
+                }
+
+                mainSound?.Pause();
+            }
+            else
+            {
+                cutInSound?.Stop();
+                cutInSound = null;
+
+                mainSound?.Play();
+            }
+        }
+
+        protected virtual AdminBRO.Animation GetAnimationById(int id)
+        {
+            return GameData.GetAnimationById(id);
         }
     }
 }
