@@ -21,6 +21,7 @@ namespace Overlewd
                 FTUE.GameData.Initialization();
                 FTUE.GameGlobalStates.Reset();
 
+                FTUE.GameGlobalStates.newFTUE = false;
                 FTUE.GameGlobalStates.sexScreen_DialogId = 1;
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });
