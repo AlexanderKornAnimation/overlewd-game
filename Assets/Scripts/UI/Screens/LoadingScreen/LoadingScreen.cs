@@ -245,7 +245,7 @@ namespace Overlewd
             if (HttpCore.HasNetworkConection())
             {
                 DoLoading();
-                StartCoroutine(UpdateProgressBarPercent());
+                UpdateProgressBarPercent();
             }
             else
             {
@@ -263,12 +263,12 @@ namespace Overlewd
             text.text = title;
         }
 
-        private IEnumerator UpdateProgressBarPercent()
+        private async void UpdateProgressBarPercent()
         {
-            while (true)
+            while (progressBarPercent < 1.0f || !ProgressBarIsFull())
             {
                 loadingProgress.fillAmount += (progressBarPercent - loadingProgress.fillAmount) * 0.2f;
-                yield return new WaitForSeconds(0.015f);
+                await UniTask.Delay(15);
             }
         }
 

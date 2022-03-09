@@ -11,6 +11,7 @@ namespace Overlewd
     public static class ResourceManager
     {
         private static string persistentDataPath;
+        private static string streamingAssetsPath;
 
         private class TextureInfo
         {
@@ -79,7 +80,11 @@ namespace Overlewd
 
         public static string GetRootPath()
         {
+#if UNITY_WEBGL
+            return streamingAssetsPath;
+#else
             return persistentDataPath;
+#endif
         }
 
         public static string GetRootFilePath(string fileName)
@@ -128,6 +133,7 @@ namespace Overlewd
         public static void Initialize()
         {
             persistentDataPath = Application.persistentDataPath;
+            streamingAssetsPath = Application.streamingAssetsPath;
 
             if (!Directory.Exists(GetResourcesPath()))
             {
