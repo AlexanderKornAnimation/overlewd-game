@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -30,14 +31,7 @@ namespace Overlewd
                 request.SetRequestHeader("Authorization", "Bearer " + token);
             }
             request.SetRequestHeader("Version", ApiVersion);
-            request.SendWebRequest();
-
-            while (!request.isDone)
-            {
-                await Task.Delay(10);
-            }
-
-            return request;
+            return await request.SendWebRequest();
         }
 
         public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, string token = null)
@@ -48,14 +42,7 @@ namespace Overlewd
                 request.SetRequestHeader("Authorization", "Bearer " + token);
             }
             request.SetRequestHeader("Version", ApiVersion);
-            request.SendWebRequest();
-
-            while (!request.isDone)
-            {
-                await Task.Delay(10);
-            }
-
-            return request;
+            return await request.SendWebRequest();
         }
     }
 }

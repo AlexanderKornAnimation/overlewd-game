@@ -108,6 +108,10 @@ public class AssetBundlesBuilderExtern : EditorWindow
                 var assetsBundlesOutPathAndroid = "Assets/AssetsBundlesOut/Android";
                 CheckOutBundlesDirectory(assetsBundlesOutPathAndroid);
                 BuildPipeline.BuildAssetBundles(assetsBundlesOutPathAndroid, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.Android);
+
+                var assetsBundlesOutPathWebGL = "Assets/AssetsBundlesOut/WebGL";
+                CheckOutBundlesDirectory(assetsBundlesOutPathWebGL);
+                BuildPipeline.BuildAssetBundles(assetsBundlesOutPathWebGL, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.WebGL);
             }
 
             EditorGUILayout.LabelField("");
