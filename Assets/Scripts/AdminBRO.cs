@@ -256,8 +256,9 @@ namespace Overlewd
             var url = Application.platform switch
             {
                 RuntimePlatform.Android => "https://overlewd-api.herokuapp.com/resources?platform=android",
-                //RuntimePlatform.WindowsEditor => "https://overlewd-api.herokuapp.com/resources?platform=windows",
-                //RuntimePlatform.WindowsPlayer => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                RuntimePlatform.WindowsEditor => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                RuntimePlatform.WindowsPlayer => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                RuntimePlatform.WebGLPlayer => "https://overlewd-api.herokuapp.com/resources?platform=webgl",
                 _ => "https://overlewd-api.herokuapp.com/resources"
             };
 
