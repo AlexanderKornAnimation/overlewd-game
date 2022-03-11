@@ -113,7 +113,7 @@ namespace Overlewd
                         }
                     }
 
-                    SetDownloadBarTitle($"Load resources {currentFilesCount + split.Count}/{totalFilesCount}");
+                    SetDownloadBarTitle($"Load resources {currentFilesCount + 1}-{currentFilesCount + split.Count}/{totalFilesCount}");
 
                     var downloadTasks = new List<Task<UnityWebRequest>>();
                     foreach (var item in split)

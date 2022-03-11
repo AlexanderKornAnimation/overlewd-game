@@ -359,7 +359,6 @@ namespace Overlewd
             public string updatedAt;
             public List<int> stages;
             public List<int> chapters;
-            public int? chapterMapId;
         }
 
         // /event-stages
@@ -661,6 +660,7 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public int? chapterMapId;
             public List<FTUEStageInfo> dialogs;
             public List<FTUEStageInfo> battles;
         }
