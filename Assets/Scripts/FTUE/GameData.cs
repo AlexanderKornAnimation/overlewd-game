@@ -402,6 +402,7 @@ namespace Overlewd
                             characterPosition = AdminBRO.DialogCharacterPosition.Left,
                             emotionAnimationId = (int)AnimationId.OverlordIdle,
                             cutInAnimationId = (int)AnimationId.CutIn3,
+                            cutInSoundPath = FMODEventPath.Dialogue1_CutInUlviScratch
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -411,6 +412,7 @@ namespace Overlewd
                             characterPosition = AdminBRO.DialogCharacterPosition.Right,
                             emotionAnimationId = (int)AnimationId.UlviHappy,
                             cutInAnimationId = (int)AnimationId.CutIn3,
+                            cutInSoundPath = FMODEventPath.Dialogue1_CutInUlviScratch
                         },
                         new AdminBRO.DialogReplica
                         {
@@ -421,6 +423,7 @@ namespace Overlewd
                             characterPosition = AdminBRO.DialogCharacterPosition.Left,
                             emotionAnimationId = (int)AnimationId.OverlordIdle,
                             cutInAnimationId = (int)AnimationId.CutIn3,
+                            cutInSoundPath = FMODEventPath.Dialogue1_CutInUlviScratch
                         },
                         new AdminBRO.DialogReplica
                         {

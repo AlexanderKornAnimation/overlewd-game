@@ -10,6 +10,9 @@ namespace Overlewd
 {
     public class DialogScreen : BaseScreen
     {
+        protected FMODEvent mainSound;
+        protected FMODEvent cutInSound;
+        
         protected Coroutine autoplayCoroutine;
 
         protected Transform charactersPos;
@@ -347,6 +350,43 @@ namespace Overlewd
             }
         }
 
+        private void PlaySound(AdminBRO.DialogReplica replica)
+        {
+            //main sound
+            if (!String.IsNullOrEmpty(replica.mainSoundPath))
+            {
+                if (replica.mainSoundPath != mainSound?.path)
+                {
+                    mainSound?.Stop();
+                    mainSound = SoundManager.GetEventInstance(replica.mainSoundPath);
+                }
+            }
+            else
+            {
+                mainSound?.Stop();
+                mainSound = null;
+            }
+
+            //cutIn sound
+            if (!String.IsNullOrEmpty(replica.cutInSoundPath))
+            {
+                if (replica.cutInSoundPath != cutInSound?.path)
+                {
+                    cutInSound?.Stop();
+                    cutInSound = SoundManager.GetEventInstance(replica.cutInSoundPath);
+                }
+
+                mainSound?.Pause();
+            }
+            else
+            {
+                cutInSound?.Stop();
+                cutInSound = null;
+
+                mainSound?.Play();
+            }
+        }
+        
         private void ShowCurrentReplica()
         {
             var replica = dialogData.replicas[currentReplicaId];
@@ -381,6 +421,7 @@ namespace Overlewd
             }
 
             ShowPersEmotion(replica, prevReplica);
+            PlaySound(replica);
             ShowCutIn(replica, prevReplica);
         }
 
