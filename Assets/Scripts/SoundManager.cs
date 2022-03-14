@@ -50,8 +50,17 @@ namespace Overlewd
         public const string SexScene2_MainScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
         public const string SexScene2_FinalScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
         
+        //sex 3
+        public const string SexScene3_MainScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/1_scene";
+        public const string SexSscene3_CutInPussyRubbing = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/2_scene";
+        public const string SexScene3_CutInPussyRubbingZoom = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/3_scene";
+        public const string SexScene3_FinalScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/4_scene";
+        
         //dialogue 1
         public const string Dialogue1_CutInUlviScratch = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/Ulvi_Head_Pat";
+        
+        //dialogue 3
+        public const string Dialogue3_CutInAdrielKiss = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/OL_Kiss";
     }
 
     public class FMODBank

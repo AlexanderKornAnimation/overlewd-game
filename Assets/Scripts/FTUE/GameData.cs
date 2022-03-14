@@ -315,48 +315,56 @@ namespace Overlewd
                             message = "Your nimble fingers playing with my pussy make me so horny…",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             mainAnimationId = (int)AnimationId.MainSex3,
+                            mainSoundPath = FMODEventPath.SexScene3_MainScene
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "Is this what the touch of a Master feels like?",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn6,
+                            cutInSoundPath = FMODEventPath.SexSscene3_CutInPussyRubbing
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "My clit is throbbing under your touch, it feels so good!",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn6,
+                            cutInSoundPath = FMODEventPath.SexSscene3_CutInPussyRubbing
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "Ahh~ I wish you'd fuck me already and make me yours forever.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn6,
+                            cutInSoundPath = FMODEventPath.SexSscene3_CutInPussyRubbing
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "Umm~ I've creamed all over your fingers, oops.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn7,
+                            cutInSoundPath = FMODEventPath.SexScene3_CutInPussyRubbingZoom
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "Now your cock will slide in so easily… And you can be my Master.",
                             emotionAnimationId = (int)AnimationId.UlviLove,
                             cutInAnimationId = (int)AnimationId.CutIn7,
+                            cutInSoundPath = FMODEventPath.SexScene3_CutInPussyRubbingZoom
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "What do you mean you're not ready? I was ready! I was a good girl! I… Wasn't I?",
                             emotionAnimationId = (int)AnimationId.UlviSurprised,
                             cutInAnimationId = (int)AnimationId.CutIn7,
+                            cutInSoundPath = FMODEventPath.SexScene3_CutInPussyRubbingZoom
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
                             message = "Fine! Walk away. No — fuck off forever! I know how my Master will feel like. He'd fuck me so much better!",
                             emotionAnimationId = (int)AnimationId.UlviAngry,
                             mainAnimationId = (int)AnimationId.FinalSex3,
+                            mainSoundPath = FMODEventPath.SexScene3_FinalScene
                         },
                     }
                 });
@@ -574,6 +582,7 @@ namespace Overlewd
                             characterPosition = AdminBRO.DialogCharacterPosition.Right,
                             emotionAnimationId = (int)AnimationId.AdrielLove,
                             cutInAnimationId = (int)AnimationId.CutIn5,
+                            cutInSoundPath = FMODEventPath.Dialogue3_CutInAdrielKiss
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
@@ -582,6 +591,7 @@ namespace Overlewd
                             characterPosition = AdminBRO.DialogCharacterPosition.Right,
                             emotionAnimationId = (int)AnimationId.UlviAngry,
                             cutInAnimationId = (int)AnimationId.CutIn5,
+                            cutInSoundPath = FMODEventPath.Dialogue3_CutInAdrielKiss
                         },
                         new AdminBRO.DialogReplica {
                             characterName = AdminBRO.DialogCharacterName.Ulvi,
