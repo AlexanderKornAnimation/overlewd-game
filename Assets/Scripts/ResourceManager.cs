@@ -65,17 +65,17 @@ namespace Overlewd
             return instWidget.AddComponent<T>();
         }
 
-        public static T InstantiateAsset<T>(string assetPath) where T : UnityEngine.Object
+        public static T InstantiateAsset<T>(string assetPath, Transform parent = null) where T : UnityEngine.Object
         {
             var asset = Resources.Load<T>(assetPath);
-            return UnityEngine.Object.Instantiate(asset);
+            return UnityEngine.Object.Instantiate(asset, parent);
         }
 
-        public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId) where T : UnityEngine.Object
+        public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId, Transform parent = null) where T : UnityEngine.Object
         {
             var assetBundle = LoadAssetBundle(assetBundleId);
             var asset = assetBundle.LoadAsset<T>(assetPath.Trim());
-            return UnityEngine.Object.Instantiate(asset);
+            return UnityEngine.Object.Instantiate(asset, parent);
         }
 
         public static string GetRootPath()
