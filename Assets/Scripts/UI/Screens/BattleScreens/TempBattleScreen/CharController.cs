@@ -1,8 +1,9 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -11,14 +12,19 @@ namespace Overlewd
 		public bool isEnemy = false;
 		public bool isBoss = false;
 
+		public Button bt;
+		public Slider hpSlider;
+		public BattleManager bm; //init on BattleManager Initialize();
+		private GameObject border;
+
 		public Character character;
 		private float idleScale = .5f, battleScale = .7f;
 		[SerializeField] private int battleOrder = -1; //3,2,1 = on the table; -1 = in the deck;
 		public int hp = 100;
-		private int maxHp = 100;
+		public int maxHp = 100;
 
 		public int mp = 100;
-		private int maxMp = 100;
+		public int maxMp = 100;
 
 		public int baseDamage = 10;
 		public int defence = 5;
@@ -31,14 +37,13 @@ namespace Overlewd
 		[HideInInspector]
 		public int buffDamageScale = 2;
 
-
 		public bool isDead = false;
 
 		private Transform battleLayer;
 		private Transform persPos;
 		private Transform battlePos;
 		private List<SpineWidget> spineWidgets;
-		private float[] aniDuration = { 2f, 0.9f, 0.9f, 1f, 1f, 2f, 2.333f };
+		private float[] aniDuration = { 2f, 0.9f, 0.9f, 1f, 1f, .9f, 2.333f };
 		private int aniID = 0;
 		private RectTransform rt;
 
@@ -49,6 +54,11 @@ namespace Overlewd
 			tempBattleScene = FindObjectOfType<TempBattleScreen>();
 			spineWidgets = new List<SpineWidget>();
 			Init();
+			//button init
+			bt = persPos.Find("button").GetComponent<Button>();
+			border = persPos.Find("button/border").gameObject;
+			border.SetActive(false);
+			bt.onClick.AddListener(Select);
 		}
 
 
@@ -85,11 +95,6 @@ namespace Overlewd
 			InsAndAddSWToList(folder + character.ani_difeat_path);
 
 			PlayIdle();
-
-			/*for (int i = 0; i < spineWidgets.Count; i++)
-			{
-				Debug.Log($"aniDuration {aniDuration[i]}");
-			}*/
 		}
 
 		private void InsAndAddSWToList(string path)
@@ -114,19 +119,34 @@ namespace Overlewd
 
 		public void PlayDifeat()
 		{
-			PlayAnimID(7, character.ani_difeat_name, true);
+			PlayAnimID(7, character.ani_difeat_name, false);
+		}
+
+		public void Attack(int attackID, CharController target)
+		{
+			BattleIn();
+			StartCoroutine(PlayAttack(attackID, target));
 		}
 
 		IEnumerator PlayAttack(int id, CharController target)
 		{
-			PlayAnimID(1 + id, character.ani_pAttack_1_name, false);
-			yield return new WaitForSeconds(aniDuration[1] + id);
-			PlayAnimID(3 + id, character.ani_attack_1_name, false);
-			yield return new WaitForSeconds(aniDuration[3] + id);
-
+			if (id == 0)
+			{
+				PlayAnimID(1, character.ani_pAttack_1_name, false);
+				yield return new WaitForSeconds(aniDuration[1]);
+				PlayAnimID(3, character.ani_attack_1_name, false);
+				yield return new WaitForSeconds(aniDuration[3]);
+			} else
+			{
+				PlayAnimID(2, character.ani_pAttack_2_name, false);
+				yield return new WaitForSeconds(aniDuration[2]);
+				PlayAnimID(4, character.ani_attack_2_name, false);
+				yield return new WaitForSeconds(aniDuration[4]);
+			}
 			target.Damage(baseDamage * (isDamageBuff ? buffDamageScale : 1));
 			PlayIdle();
 			BattleOut();
+			bm.BattleOut();
 		}
 
 		IEnumerator PlayDefence(CharController target)
@@ -139,14 +159,22 @@ namespace Overlewd
 			BattleOut();
 		}
 
-		public CharController Select()
+		public void Select()
 		{
+			bm.onClick = this; //type CharController
+			var borderActive = !border.activeSelf;
+			border.SetActive(borderActive);
 
-			return this;
+		}
+
+		public void Highlight() //On UI Border
+		{
+			border.SetActive(true);
 		}
 
 		public void BattleIn()
 		{
+			border.SetActive(false);
 			transform.SetParent(battlePos);
 			rt.DOAnchorPos(Vector2.zero, 0.25f);
 			rt.DOScale(battleScale, 0.25f);
@@ -162,11 +190,7 @@ namespace Overlewd
 			rt.DOScale(idleScale, 0.25f);
 		}
 
-		public void Attack(CharController target)
-		{
-				BattleIn();
-				StartCoroutine(PlayAttack(0, target));
-		}
+
 
 		public void Defence()
 		{
@@ -203,6 +227,10 @@ namespace Overlewd
 }
 
 
+/*for (int i = 0; i < spineWidgets.Count; i++)
+{
+	Debug.Log($"aniDuration {aniDuration[i]}");
+}*/
 /*		private void DurationDataInit() //duration not working
 		{
 			for (int i = 0; i < spineWidgets.Count; i++)

@@ -10,18 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
-  m_Name: BattleCat3
+  m_Name: wBattleCat4
   m_EditorClassIdentifier: 
   charName: BattleCat3
-  ico: {fileID: 0}
-  battleOrder: 3
-  isEnemy: 1
+  ico: {fileID: 21300000, guid: 369788ffdcb32304593505d54f08a473, type: 3}
+  battlePortrait: {fileID: 0}
+  battleOrder: 2
+  isEnemy: 0
   isBoss: 0
   charClass: 0
-  idleScale: 0.32
-  battleScale: 0.56
+  idleScale: 0.37
+  battleScale: 0.53
   yOffset: 0
-  initiative: 5
+  initiative: 50
   attack: 10
   defence: 5
   agility: 5

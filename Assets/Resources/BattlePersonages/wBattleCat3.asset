@@ -10,44 +10,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
-  m_Name: BattleCat4
+  m_Name: wBattleCat3
   m_EditorClassIdentifier: 
-  charName: BattleCat4
-  ico: {fileID: 0}
-  battleOrder: 1
-  isEnemy: 0
+  charName: BattleCat3
+  ico: {fileID: 21300000, guid: 369788ffdcb32304593505d54f08a473, type: 3}
+  battlePortrait: {fileID: 0}
+  battleOrder: 3
+  isEnemy: 1
   isBoss: 0
-  charClass: 1
-  idleScale: 0.26
-  battleScale: 0.38
-  yOffset: 1000
-  initiative: 10
+  charClass: 0
+  idleScale: 0.37
+  battleScale: 0.53
+  yOffset: 0
+  initiative: 5
   attack: 10
   defence: 5
   agility: 5
-  itemSlot1: {fileID: 11400000, guid: c018269f423a82841a0edc591bbe9a09, type: 2}
+  itemSlot1: {fileID: 0}
   itemSlot2: {fileID: 0}
   level: 1
   maxLevel: 10
   xp: 0
   xpToNextlUp: 1000
-  hp: 100
-  maxHp: 100
+  hp: 25
+  maxHp: 25
   mp: 100
   maxMp: 100
   isDead: 0
-  folder: BattlePersonages/BattleCat1/pers/
+  folder: BattlePersonages/BattleCat2/pers/
   ani_idle_path: idle0_SkeletonData
-  ani_pAttack_1_path: prepair1_SkeletonData
+  ani_pAttack_1_path: prepair_SkeletonData
   ani_pAttack_2_path: prepair2_SkeletonData
-  ani_attack_1_path: attack1_SkeletonData
+  ani_attack_1_path: attack_SkeletonData
   ani_attack_2_path: attack2_SkeletonData
   ani_defence_path: defence_SkeletonData
   ani_difeat_path: difeat_SkeletonData
-  ani_idle_name: idle
-  ani_pAttack_1_name: prepair1
+  ani_idle_name: Idle
+  ani_pAttack_1_name: prepair
   ani_pAttack_2_name: prepair2
-  ani_attack_1_name: attack1
+  ani_attack_1_name: attack
   ani_attack_2_name: attack2
   ani_defence_name: defence
   ani_difeat_name: difeat

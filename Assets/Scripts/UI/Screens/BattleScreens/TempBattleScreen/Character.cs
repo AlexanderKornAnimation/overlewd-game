@@ -7,6 +7,7 @@ namespace Overlewd
 	{
 		public string charName;
 		public Sprite ico;
+		public Sprite battlePortrait;
 
 		public int battleOrder = -1; //3,2,1 = on the table; -1 = in the deck;
 
