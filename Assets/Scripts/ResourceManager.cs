@@ -74,13 +74,8 @@ namespace Overlewd
         public static T InstantiateRemoteAsset<T>(string assetPath, string assetBundleId, Transform parent = null) where T : UnityEngine.Object
         {
             var assetBundle = LoadAssetBundle(assetBundleId);
-            var asset = assetBundle.LoadAsset<T>(assetPath.Trim());
-            if (asset == null)
-            {
-                Debug.LogWarning($"No bandle asset {assetBundle.name} : {assetPath}");
-                return null;
-            }
-            return UnityEngine.Object.Instantiate(asset, parent);
+            var asset = assetBundle?.LoadAsset<T>(assetPath.Trim());
+            return asset != null ? UnityEngine.Object.Instantiate(asset, parent) : null;
         }
 
         public static string GetRootPath()
