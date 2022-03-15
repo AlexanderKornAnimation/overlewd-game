@@ -216,7 +216,10 @@ namespace Overlewd
 
             var filePath = Path.Combine(GetResourcesPath(), id);
             var assetBundle = AssetBundle.LoadFromFile(filePath);
-            assetBundles.Add(new AssetBundleInfo { key = id, assetBundle = assetBundle, use = true });
+            if (assetBundle != null)
+            {
+                assetBundles.Add(new AssetBundleInfo { key = id, assetBundle = assetBundle, use = true });
+            }
             return assetBundle;
         }
 
