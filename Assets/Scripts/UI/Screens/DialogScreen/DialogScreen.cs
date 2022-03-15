@@ -353,12 +353,15 @@ namespace Overlewd
         private void PlaySound(AdminBRO.DialogReplica replica)
         {
             //main sound
-            if (!String.IsNullOrEmpty(replica.mainSoundPath))
+            var mainSoundData = replica.mainSoundId.HasValue ? GameData.GetSoundById(replica.mainSoundId.Value) : null;
+            var mainSoundPath = mainSoundData != null ? mainSoundData.eventPath : replica.mainSoundPath;
+            var mainBankId = mainSoundData != null ? mainSoundData.soundBankId : null;
+            if (!String.IsNullOrEmpty(mainSoundPath))
             {
-                if (replica.mainSoundPath != mainSound?.path)
+                if (mainSoundPath != mainSound?.path)
                 {
                     mainSound?.Stop();
-                    mainSound = SoundManager.GetEventInstance(replica.mainSoundPath);
+                    mainSound = SoundManager.GetEventInstance(mainSoundPath, mainBankId);
                 }
             }
             else
@@ -368,12 +371,15 @@ namespace Overlewd
             }
 
             //cutIn sound
-            if (!String.IsNullOrEmpty(replica.cutInSoundPath))
+            var cutInSoundData = replica.cutInSoundId.HasValue ? GameData.GetSoundById(replica.cutInSoundId.Value) : null;
+            var cutInSoundPath = cutInSoundData != null ? cutInSoundData.eventPath : replica.cutInSoundPath;
+            var cutInBankId = cutInSoundData != null ? cutInSoundData.soundBankId : null;
+            if (!String.IsNullOrEmpty(cutInSoundPath))
             {
-                if (replica.cutInSoundPath != cutInSound?.path)
+                if (cutInSoundPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
-                    cutInSound = SoundManager.GetEventInstance(replica.cutInSoundPath);
+                    cutInSound = SoundManager.GetEventInstance(cutInSoundPath, cutInBankId);
                 }
 
                 mainSound?.Pause();

@@ -45,6 +45,8 @@ namespace Overlewd
             skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
                 ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
                 ResourceManager.InstantiateRemoteAsset<SkeletonDataAsset>(skeletonDataPath, assetBundleId);
+            if (skeletonDataAsset == null)
+                return;
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
@@ -119,16 +121,22 @@ namespace Overlewd
 
         public void PlayAnimation(string animationName, bool loop)
         {
+            if (skeletonGraphic == null)
+                return;
             skeletonGraphic.AnimationState.SetAnimation(0, animationName, loop);
         }
 
         public void Pause()
         {
+            if (skeletonGraphic == null)
+                return;
             skeletonGraphic.freeze = true;
         }
 
         public void Play()
         {
+            if (skeletonGraphic == null)
+                return;
             skeletonGraphic.freeze = false;
         }
 

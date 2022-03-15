@@ -75,6 +75,11 @@ namespace Overlewd
         {
             var assetBundle = LoadAssetBundle(assetBundleId);
             var asset = assetBundle.LoadAsset<T>(assetPath.Trim());
+            if (asset == null)
+            {
+                Debug.LogWarning($"No bandle asset {assetBundle.name} : {assetPath}");
+                return null;
+            }
             return UnityEngine.Object.Instantiate(asset, parent);
         }
 
