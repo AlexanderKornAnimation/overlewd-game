@@ -117,6 +117,18 @@ namespace Overlewd
         {
             return animations.Find(a => a.id == id);
         }
+
+        public static List<AdminBRO.Sound> sounds { get; set; } = new List<AdminBRO.Sound>();
+        public static AdminBRO.Sound GetSoundById(int id)
+        {
+            return sounds.Find(s => s.id == id);
+        }
+
+        public static List<AdminBRO.ChapterMap> chapterMaps { get; set; } = new List<AdminBRO.ChapterMap>();
+        public static AdminBRO.ChapterMap GetChapterMapById(int id)
+        {
+            return chapterMaps.Find(cm => cm.id == id);
+        }
     }
 
 }

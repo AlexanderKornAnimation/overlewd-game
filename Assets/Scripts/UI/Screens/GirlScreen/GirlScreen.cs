@@ -92,25 +92,25 @@ namespace Overlewd
         
         private void BannerButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MemoryListScreen>();
         }
         
         private void PortalButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
         
         private void ChestButtonClick()
         {
-            // SoundManager.PlayOneShoot(SoundManager.SoundPath.UI.ButtonClick);
+            // SoundManager.PlayOneShot(SoundManager.FMODEventPath.UI.ButtonClick);
             // UIManager.ShowPopup<ChestPopup>();
         }
         
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
     }

@@ -42,7 +42,7 @@ namespace SimpleDiskUtils
 
 	public class DiskUtils
 	{
-        #region DISK_TOOLS
+		#region DISK_TOOLS
 
 #if UNITY_STANDALONE || UNITY_EDITOR
 
@@ -85,7 +85,7 @@ namespace SimpleDiskUtils
 
 
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
-        [DllImport("DiskUtilsWinAPI")]
+		[DllImport("DiskUtilsWinAPI")]
         private static extern int getAvailableDiskSpace(StringBuilder drive);
 
         [DllImport("DiskUtilsWinAPI")]
@@ -240,17 +240,33 @@ namespace SimpleDiskUtils
 	ulong ret = DiskUtils.getBusyDiskSpace();
 	return int.Parse(ret.ToString());
 	}
+
+#elif UNITY_WEBGL
+		public static int CheckAvailableSpace()
+        {
+            return 1000;
+        }
+
+        public static int CheckTotalSpace()
+        {
+            return 1000;
+        }
+
+        public static int CheckBusySpace()
+        {
+            return 0;
+        }
 #endif
 
-        #endregion
+		#endregion
 
-        #region FILE_TOOLS
+		#region FILE_TOOLS
 
-        /// <summary>
-        /// Deletes the file.
-        /// </summary>
-        /// <param name="filePath">File path.</param>
-        public static void DeleteFile (string filePath)
+		/// <summary>
+		/// Deletes the file.
+		/// </summary>
+		/// <param name="filePath">File path.</param>
+		public static void DeleteFile (string filePath)
 		{
 			#if UNITY_IOS
 	if (!filePath.StartsWith("/private"))

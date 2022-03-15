@@ -101,9 +101,17 @@ public class AssetBundlesBuilderExtern : EditorWindow
                     }
                 }
 
-                var assetsBundlesOutPath = "Assets/AssetsBundlesOut";
-                CheckOutBundlesDirectory(assetsBundlesOutPath);
-                BuildPipeline.BuildAssetBundles(assetsBundlesOutPath, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+                var assetsBundlesOutPathWindows = "Assets/AssetsBundlesOut/Windows";
+                CheckOutBundlesDirectory(assetsBundlesOutPathWindows);
+                BuildPipeline.BuildAssetBundles(assetsBundlesOutPathWindows, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+
+                var assetsBundlesOutPathAndroid = "Assets/AssetsBundlesOut/Android";
+                CheckOutBundlesDirectory(assetsBundlesOutPathAndroid);
+                BuildPipeline.BuildAssetBundles(assetsBundlesOutPathAndroid, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.Android);
+
+                var assetsBundlesOutPathWebGL = "Assets/AssetsBundlesOut/WebGL";
+                CheckOutBundlesDirectory(assetsBundlesOutPathWebGL);
+                BuildPipeline.BuildAssetBundles(assetsBundlesOutPathWebGL, buildMap.ToArray(), BuildAssetBundleOptions.None, BuildTarget.WebGL);
             }
 
             EditorGUILayout.LabelField("");

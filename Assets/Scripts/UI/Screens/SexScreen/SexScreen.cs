@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,8 +12,6 @@ namespace Overlewd
     {
         protected Coroutine autoplayCoroutine;
 
-        protected Image backImage;
-
         protected TextMeshProUGUI personageName;
         protected TextMeshProUGUI text;
 
@@ -21,8 +20,6 @@ namespace Overlewd
         protected Button autoplayButton;
         protected TextMeshProUGUI autoplayStatus;
         protected Image autoplayButtonPressed;
-        protected Image blackScreenTop;
-        protected Image blackScreenBot;
 
         protected Transform mainAnimPos;
         protected GameObject cutIn;
@@ -33,6 +30,11 @@ namespace Overlewd
 
         protected bool isAutoplayButtonPressed = false;
 
+        protected SpineWidgetGroup mainAnimation;
+        protected SpineWidgetGroup cutInAnimation;
+        protected FMODEvent mainSound;
+        protected FMODEvent cutInSound;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SexScreen/SexScreen", transform);
@@ -41,8 +43,6 @@ namespace Overlewd
 
             textContainer = canvas.Find("TextContainer").GetComponent<Button>();
             textContainer.onClick.AddListener(TextContainerButtonClick);
-
-            backImage = canvas.Find("BackImage").GetComponent<Image>();
 
             personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -55,12 +55,6 @@ namespace Overlewd
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
 
-            blackScreenTop = canvas.Find("BlackScreenTop").GetComponent<Image>();
-            blackScreenTop.gameObject.SetActive(false);
-            
-            blackScreenBot = canvas.Find("BlackScreenBot").GetComponent<Image>();
-            blackScreenBot.gameObject.SetActive(false);
-            
             mainAnimPos = canvas.Find("MainAnimPos");
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
@@ -73,6 +67,13 @@ namespace Overlewd
 
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
+
+            await Task.CompletedTask;
         }
 
         protected virtual async Task EnterScreen()
@@ -106,7 +107,7 @@ namespace Overlewd
 
         private void AutoplayButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (isAutoplayButtonPressed == false)
             {
                 isAutoplayButtonPressed = true;
@@ -126,13 +127,13 @@ namespace Overlewd
         
         private void SkipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveScreen();
         }
 
         private void TextContainerButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_DialogNextButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {
@@ -144,11 +145,17 @@ namespace Overlewd
             }
         }
 
-        protected virtual void ShowCurrentReplica()
+        private void ShowCurrentReplica()
         {
             var replica = dialogData.replicas[currentReplicaId];
+            var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
+            
             personageName.text = replica.characterName;
             text.text = replica.message;
+
+            ShowMain(replica, prevReplica);
+            ShowCutIn(replica, prevReplica);
+            PlaySound(replica);
         }
         
         private IEnumerator Autoplay()
@@ -160,6 +167,113 @@ namespace Overlewd
                 currentReplicaId++;
             }
             AutoplayButtonClick();
+        }
+
+        private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.mainAnimationId.HasValue)
+            {
+                if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
+                {
+                    Destroy(mainAnimation?.gameObject);
+                    mainAnimation = null;
+
+                    var animation = GetAnimationById(replica.mainAnimationId.Value);
+                    if (animation != null)
+                    {
+                        mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
+                        mainAnimation.Initialize(animation);
+                    }
+                }
+            }
+            else
+            {
+                Destroy(mainAnimation?.gameObject);
+                mainAnimation = null;
+            }
+        }
+
+        private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.cutInAnimationId.HasValue)
+            {
+                if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
+                {
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
+
+                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    if (animation != null)
+                    {
+                        cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                        cutInAnimation.Initialize(animation);
+                    }
+                }
+            }
+            else
+            {
+                Destroy(cutInAnimation?.gameObject);
+                cutInAnimation = null;
+            }
+
+            if (cutInAnimation != null)
+            {
+                cutIn.SetActive(true);
+                mainAnimation?.Pause();
+            }
+            else
+            {
+                cutIn.SetActive(false);
+                mainAnimation?.Play();
+            }
+        }
+
+        private void PlaySound(AdminBRO.DialogReplica replica)
+        {
+            //main sound
+            var mainSoundData = replica.mainSoundId.HasValue ? GameData.GetSoundById(replica.mainSoundId.Value) : null;
+            var mainSoundPath = mainSoundData != null ? mainSoundData.eventPath : replica.mainSoundPath;
+            var mainBankId = mainSoundData != null ? mainSoundData.soundBankId : null;
+            if (!String.IsNullOrEmpty(mainSoundPath))
+            {
+                if (mainSoundPath != mainSound?.path)
+                {
+                    mainSound?.Stop();
+                    mainSound = SoundManager.GetEventInstance(mainSoundPath, mainBankId);
+                }
+            }
+            else
+            {
+                mainSound?.Stop();
+                mainSound = null;
+            }
+
+            //cutIn sound
+            var cutInSoundData = replica.cutInSoundId.HasValue ? GameData.GetSoundById(replica.cutInSoundId.Value) : null;
+            var cutInSoundPath = cutInSoundData != null ? cutInSoundData.eventPath : replica.cutInSoundPath;
+            var cutInBankId = cutInSoundData != null ? cutInSoundData.soundBankId : null;
+            if (!String.IsNullOrEmpty(cutInSoundPath))
+            {
+                if (cutInSoundPath != cutInSound?.path)
+                {
+                    cutInSound?.Stop();
+                    cutInSound = SoundManager.GetEventInstance(cutInSoundPath, cutInBankId);
+                }
+
+                mainSound?.Pause();
+            }
+            else
+            {
+                cutInSound?.Stop();
+                cutInSound = null;
+
+                mainSound?.Play();
+            }
+        }
+
+        protected virtual AdminBRO.Animation GetAnimationById(int id)
+        {
+            return GameData.GetAnimationById(id);
         }
     }
 }

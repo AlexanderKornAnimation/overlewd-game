@@ -69,13 +69,13 @@ namespace Overlewd
         public override void StartShow()
         {
             if (UIManager.HasScreen<CastleScreen>())
-                SoundManager.PlayOneShoot(SoundPath.UI_QuestOverlayShow);
+                SoundManager.PlayOneShot(FMODEventPath.UI_QuestOverlayShow);
         }
 
         public override void StartHide()
         {
             if (UIManager.HasScreen<CastleScreen>())
-                SoundManager.PlayOneShoot(SoundPath.UI_QuestOverlayHide);
+                SoundManager.PlayOneShot(FMODEventPath.UI_QuestOverlayHide);
         }
 
         private void Start()
@@ -140,7 +140,7 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HideOverlay();
         }
     }

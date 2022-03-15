@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,7 +36,7 @@ namespace Overlewd
             mapButton = NSEventMapScreen.MapButton.GetInstance(stages.Find("eventMap"));
         }
 
-        void Start()
+        public override async Task BeforeShowAsync()
         {
             var eventData = GameGlobalStates.eventMapScreen_EventData;
             foreach (var stageId in eventData.stages)
@@ -101,11 +102,13 @@ namespace Overlewd
                     shopButtons.Add(shopButton);
                 }
             }
+
+            await Task.CompletedTask;
         }
         
         private void BackButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
     }

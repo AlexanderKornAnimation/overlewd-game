@@ -253,7 +253,16 @@ namespace Overlewd
         // /resources
         public static async Task<List<NetworkResource>> resourcesAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/resources", tokens?.accessToken))
+            var url = Application.platform switch
+            {
+                RuntimePlatform.Android => "https://overlewd-api.herokuapp.com/resources?platform=android",
+                RuntimePlatform.WindowsEditor => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                RuntimePlatform.WindowsPlayer => "https://overlewd-api.herokuapp.com/resources?platform=windows",
+                RuntimePlatform.WebGLPlayer => "https://overlewd-api.herokuapp.com/resources?platform=webgl",
+                _ => "https://overlewd-api.herokuapp.com/resources"
+            };
+
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 if (!RequestCheckError(request))
                 {
@@ -280,6 +289,32 @@ namespace Overlewd
         {
             public string id;
             public string hash;
+        }
+
+        //event-chapters
+        public static async Task<List<EventChapter>> eventChaptersAsync()
+        {
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/event-chapters", tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonHelper.DeserializeObject<List<EventChapter>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class EventChapter
+        {
+            public int id;
+            public string name;
+            public string mapBackgroundImage;
+            public int? chapterMapId;
+            public int eventId;
+            public int? nextChapter;
+            public List<int> stages;
+            public string status;
         }
 
         // /events
@@ -541,6 +576,9 @@ namespace Overlewd
             public int? cutInAnimationId;
             public int? mainAnimationId;
 
+            public int? mainSoundId;
+            public int? cutInSoundId;
+
             public string cutInSoundPath;
             public string mainSoundPath;
         }
@@ -625,6 +663,7 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public int? chapterMapId;
             public List<FTUEStageInfo> dialogs;
             public List<FTUEStageInfo> battles;
         }
@@ -665,6 +704,52 @@ namespace Overlewd
             public string assetBundleId;
             public string animationPath;
             public string animationName;
+        }
+
+        //sounds
+        public static async Task<List<Sound>> soundsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/sounds";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonHelper.DeserializeObject<List<Sound>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class Sound
+        {
+            public int id;
+            public string title;
+            public string soundBankId;
+            public string eventPath;
+        }
+
+        //chapter-maps
+        public static async Task<List<ChapterMap>> chapterMapsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/chapter-maps";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                if (!RequestCheckError(request))
+                {
+                    return JsonHelper.DeserializeObject<List<ChapterMap>>(request.downloadHandler.text);
+                }
+                return null;
+            }
+        }
+
+        [Serializable]
+        public class ChapterMap
+        {
+            public int id;
+            public string title;
+            public string assetBundleId;
+            public string chapterMapPath;
         }
     }
 }

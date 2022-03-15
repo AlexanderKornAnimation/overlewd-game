@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Spine.Unity;
 using System;
 using Spine;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -12,6 +13,24 @@ namespace Overlewd
     {
         public event Action startListeners;
         public event Action completeListeners;
+
+        private class SpineEventInfo
+        {
+            public string eventName;
+            public event Action listeners;
+            public void CallListeners()
+            {
+                listeners?.Invoke();
+            }
+            public bool HasListener(Action listener)
+            {
+                return listener.
+                    GetInvocationList().
+                    ToList().
+                    Exists(l => l == (MulticastDelegate)listener);
+            }
+        }
+        private List<SpineEventInfo> eventListeners = new List<SpineEventInfo>();
 
         private SkeletonDataAsset skeletonDataAsset;
         private SkeletonGraphic skeletonGraphic;
@@ -26,6 +45,8 @@ namespace Overlewd
             skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
                 ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
                 ResourceManager.InstantiateRemoteAsset<SkeletonDataAsset>(skeletonDataPath, assetBundleId);
+            if (skeletonDataAsset == null)
+                return;
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
@@ -33,6 +54,7 @@ namespace Overlewd
 
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
+            skeletonGraphic.AnimationState.Event += EventListener;
         }
 
         public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false)
@@ -55,18 +77,66 @@ namespace Overlewd
             completeListeners?.Invoke();
         }
 
+        public void AddEventListener(string eventName, Action listener)
+        {
+            var eventInfo = eventListeners.Find(item => item.eventName == eventName);
+            if (eventInfo != null)
+            {
+                if (!eventInfo.HasListener(listener))
+                {
+                    eventInfo.listeners += listener;
+                }
+            }
+            else
+            {
+                var newEventInfo = new SpineEventInfo { eventName = eventName };
+                newEventInfo.listeners += listener;
+                eventListeners.Add(newEventInfo);
+            }
+        }
+
+        public void RemoveEventListeners(string eventName)
+        {
+            eventListeners.RemoveAll(item => item.eventName == eventName);
+        }
+
+        public void RemoveEventListener(Action listener)
+        {
+            foreach (var eventInfoItem in eventListeners)
+            {
+                if (eventInfoItem.HasListener(listener))
+                {
+                    eventInfoItem.listeners -= listener;
+                }
+            }
+        }
+
+        private void EventListener(TrackEntry trackEntry, Spine.Event e)
+        {
+            foreach (var eventInfoItem in eventListeners.FindAll(item => item.eventName == e.Data.Name))
+            {
+                eventInfoItem.CallListeners();
+            }
+        }
+
         public void PlayAnimation(string animationName, bool loop)
         {
+            if (skeletonGraphic == null)
+                return;
             skeletonGraphic.AnimationState.SetAnimation(0, animationName, loop);
         }
 
         public void Pause()
         {
+            if (skeletonGraphic == null)
+                return;
             skeletonGraphic.freeze = true;
         }
 
         public void Play()
         {
+            if (skeletonGraphic == null)
+                return;
             skeletonGraphic.freeze = false;
         }
 
@@ -86,6 +156,12 @@ namespace Overlewd
             var boneFollower = obj.GetComponent<BoneFollowerGraphic>() ?? obj.AddComponent<BoneFollowerGraphic>();
             boneFollower.SkeletonGraphic = skeletonGraphic;
             boneFollower.SetBone(boneName);
+        }
+
+        public void Detach(GameObject obj)
+        {
+            obj?.transform.SetParent(null);
+            Destroy(obj?.GetComponent<BoneFollowerGraphic>());
         }
         
         public static SpineWidget GetInstance(Transform parent)

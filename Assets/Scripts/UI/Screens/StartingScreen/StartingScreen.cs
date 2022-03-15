@@ -17,29 +17,30 @@ namespace Overlewd
 
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 FTUE.GameData.Initialization();
                 FTUE.GameGlobalStates.Reset();
 
+                FTUE.GameGlobalStates.newFTUE = false;
                 FTUE.GameGlobalStates.sexScreen_DialogId = 1;
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });
 
             canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<CastleScreen>();
             });
             
             canvas.Find("TempBattleScreen").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<TempBattleScreen>();
             });
 
             canvas.Find("NewFTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
-                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 FTUE.GameGlobalStates.newFTUE = true;
                 FTUE.GameGlobalStates.ftueChapterId = 0;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FMOD;
 using FMOD.Studio;
@@ -9,7 +10,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Overlewd
 {
-    public static class SoundPath
+    public static class FMODEventPath
     {
         //buttons
         public const string UI_CastleScreenButtons = "event:/UI/Buttons/Castle_Screen/Basic_menu_click";
@@ -18,6 +19,7 @@ namespace Overlewd
         public const string UI_DefeatPopupHaremButtonClick = "event:/UI/PopUps/Battle/Boosts/Matriarch_Boost";
         public const string UI_FreeBuildButton = "event:/UI/Buttons/Building/Build_8_hours_button";
         public const string UI_FreeSpellLearnButton = "event:/UI/Buttons/Learn_Spell/Learn_Spell_8_hours";
+        public const string UI_StartBattle = "event:/UI/Buttons/Battle/Start_battle_for_crystals";
 
         //screens
         public const string UI_CastleWindowShow = "event:/UI/Windows/Castle_Screen/Window_slide_on";
@@ -47,19 +49,60 @@ namespace Overlewd
         public const string SexScene2_CutInCreamPie = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-cum";
         public const string SexScene2_MainScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
         public const string SexScene2_FinalScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
+        
+        //sex 3
+        public const string SexScene3_MainScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/1_scene";
+        public const string SexSscene3_CutInPussyRubbing = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/2_scene";
+        public const string SexScene3_CutInPussyRubbingZoom = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/3_scene";
+        public const string SexScene3_FinalScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/4_scene";
+        
+        //dialogue 1
+        public const string Dialogue1_CutInUlviScratch = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/Ulvi_Head_Pat";
+        
+        //dialogue 3
+        public const string Dialogue3_CutInAdrielKiss = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/OL_Kiss";
     }
 
-    public class SoundInstance
+    public class FMODBank
+    {
+        private Bank bank;
+
+        private FMODBank(string path)
+        {
+            RuntimeManager.StudioSystem.loadBankFile(path,
+                LOAD_BANK_FLAGS.NORMAL,
+                out bank);
+        }
+
+        public void Unload()
+        {
+            bank.unload();
+        }
+
+        public static FMODBank LoadFromFile(string bankPath)
+        {
+            return new FMODBank(bankPath);
+        }
+    }
+
+    public class FMODEvent
     {
         private EventInstance instance;
-        public string key { get; private set; }
-        public bool release { get; private set; } = false;
+        public string path { get; private set; }
 
-        private SoundInstance(string eventPath, string key = null)
+        private FMODEvent(string eventPath)
         {
             instance = RuntimeManager.CreateInstance(eventPath);
-            this.key = key ?? eventPath;
+            path = eventPath;
             instance.start();
+        }
+
+        public bool IsPlaying()
+        {
+            PLAYBACK_STATE state;
+            instance.getPlaybackState(out state);
+            return (state != PLAYBACK_STATE.STOPPED) &&
+                (state != PLAYBACK_STATE.STOPPING);
         }
 
         public void Play()
@@ -79,40 +122,35 @@ namespace Overlewd
                 FMOD.Studio.STOP_MODE.IMMEDIATE;
             instance.stop(stopMode);
             instance.release();
-            release = true;
-            SoundManager.ClearReleased();
+            SoundManager.RemoveEvent(this);
         }
 
-        public static SoundInstance GetInstance(string eventPath, string key = null)
+        public static FMODEvent GetInstance(string eventPath)
         {
             EventDescription eventDesc;
             RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-            return eventDesc.isValid() ? new SoundInstance(eventPath, key) : null;
+            return eventDesc.isValid() ? new FMODEvent(eventPath) : null;
         }
     }
 
     public static class SoundManager
     {
-        private static List<SoundInstance> instances = new List<SoundInstance>();
+        private static List<FMODEvent> instances = new List<FMODEvent>();
 
-        private static Bus animationBus;
-        private static Bus uiBus;
-
-        public static void Initialize()
+        public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
         {
-            animationBus = RuntimeManager.GetBus("bus:/Animations");
-            uiBus = RuntimeManager.GetBus("bus:/UI");
-        }
+            if (!String.IsNullOrEmpty(bankId))
+            {
+                ResourceManager.LoadFMODBank(bankId);
+            }
 
-        public static SoundInstance GetSoundInstance(string eventPath, string key = null)
-        {
-            var inst = instances.Find(item => item.key == (key ?? eventPath));
+            var inst = instances.Find(item => (item.path == eventPath) && item.IsPlaying());
             if (inst != null)
             {
                 return inst;
             }
 
-            var newInst = SoundInstance.GetInstance(eventPath, key);
+            var newInst = FMODEvent.GetInstance(eventPath);
             if (newInst != null)
             {
                 instances.Add(newInst);
@@ -121,24 +159,10 @@ namespace Overlewd
 
             return null;
         }
-        
-        public static void Stop(string key)
-        {
-            var inst = instances.Find(item => item.key == key);
-            inst?.Stop();
-            ClearReleased();
-        }
 
-        public static void Pause(string key)
+        public static void PlayOneShot(string eventPath)
         {
-            var findInst = instances.Find(item => item.key == key);
-            findInst?.Pause();
-        }
-
-        public static void Play(string key)
-        {
-            var findInst = instances.Find(item => item.key == key);
-            findInst?.Play();
+            RuntimeManager.PlayOneShot(eventPath);
         }
 
         public static void StopAll()
@@ -147,31 +171,18 @@ namespace Overlewd
             {
                 inst.Stop();
             }
-            ClearReleased();
         }
 
-        public static void ClearReleased()
+        public static void RemoveEvent(FMODEvent soundEvent)
         {
-            instances.RemoveAll(item => item.release);
-        }
-
-        public static void OnMusicVolumeChanged(float value)
-        {
-        }
-
-        public static void OnAnimationVolumeChanged(float value)
-        {
-            animationBus.setVolume(value);
-        }
-
-        public static void PlayOneShoot(string soundEventPath)
-        {
-            RuntimeManager.PlayOneShot(soundEventPath);
-        }
-
-        public static void OnSoundVolumeChanged(float value)
-        {
-            uiBus.setVolume(value);
+            if (soundEvent.IsPlaying())
+            {
+                soundEvent.Stop();
+            }
+            else
+            {
+                instances.Remove(soundEvent);
+            }
         }
     }
 }

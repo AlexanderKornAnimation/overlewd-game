@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,12 @@ namespace Overlewd
             loadingProgress.fillAmount = 0.0f;
             text = loadingBar.Find("Text").GetComponent<TextMeshProUGUI>();
             text.text = "";
+        }
+
+        private async Task WriteFile(string filePath, byte[] data)
+        {
+            ResourceManager.WriteBinary(filePath, data);
+            await Task.CompletedTask;
         }
 
         private async Task ParallelLoadResourcesAsync()
@@ -102,42 +109,37 @@ namespace Overlewd
                         UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
                         while (true)
                         {
-                            await Task.Delay(1000);
+                            await UniTask.Delay(1000);
                         }
                     }
 
-                    SetDownloadBarTitle($"Load resources {currentFilesCount + split.Count}/{totalFilesCount}");
+                    SetDownloadBarTitle($"Load resources {currentFilesCount + 1}-{currentFilesCount + split.Count}/{totalFilesCount}");
 
                     var downloadTasks = new List<Task<UnityWebRequest>>();
                     foreach (var item in split)
                     {
                         downloadTasks.Add(HttpCore.GetAsync(item.resourceMeta.url));
                     }
-
-                    await Task.WhenAll(downloadTasks);
+                    var downloadTasksResults = await Task.WhenAll(downloadTasks);
 
                     var saveTasks = new List<Task>();
                     var taskId = 0;
-                    foreach (var task in downloadTasks)
+                    foreach (var downloadTaskResult in downloadTasksResults)
                     {
                         var resourceInfo = split[taskId++];
-                        var request = task.Result;
-                        var fileData = request.downloadHandler.data;
+                        var fileData = downloadTaskResult.downloadHandler.data;
                         var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
-
-                        saveTasks.Add(Task.Run(() =>
-                        {
-                            //save resource file
-                            ResourceManager.WriteBinary(filePath, fileData);
-                        }));
+                        saveTasks.Add(WriteFile(filePath, fileData));
                     }
-
                     await Task.WhenAll(saveTasks);
 
                     //clear requests
-                    foreach (var task in downloadTasks)
+                    foreach (var downloadTaskResult in downloadTasksResults)
                     {
-                        task.Result.Dispose();
+                        using (downloadTaskResult)
+                        {
+
+                        }
                     }
 
                     //update meta data
@@ -176,7 +178,7 @@ namespace Overlewd
 
                 while (true)
                 {
-                    await Task.Delay(1000);
+                    await UniTask.Delay(1000);
                 }
             }
         }
@@ -216,6 +218,10 @@ namespace Overlewd
 
             GameData.animations = await AdminBRO.animationsAsync();
 
+            GameData.sounds = await AdminBRO.soundsAsync();
+
+            GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();
@@ -224,12 +230,12 @@ namespace Overlewd
 
             while (!ProgressBarIsFull())
             {
-                await Task.Delay(100);
+                await UniTask.Delay(100);
             }
 
             SetDownloadBarTitle("Done");
 
-            await Task.Delay(500);
+            await UniTask.Delay(500);
 
             UIManager.ShowScreen<StartingScreen>();
         }
@@ -239,7 +245,7 @@ namespace Overlewd
             if (HttpCore.HasNetworkConection())
             {
                 DoLoading();
-                StartCoroutine(UpdateProgressBarPercent());
+                UpdateProgressBarPercent();
             }
             else
             {
@@ -257,12 +263,12 @@ namespace Overlewd
             text.text = title;
         }
 
-        private IEnumerator UpdateProgressBarPercent()
+        private async void UpdateProgressBarPercent()
         {
-            while (true)
+            while (progressBarPercent < 1.0f || !ProgressBarIsFull())
             {
                 loadingProgress.fillAmount += (progressBarPercent - loadingProgress.fillAmount) * 0.2f;
-                yield return new WaitForSeconds(0.015f);
+                await UniTask.Delay(15);
             }
         }
 

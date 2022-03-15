@@ -10,6 +10,9 @@ namespace Overlewd
 {
     public class DialogScreen : BaseScreen
     {
+        protected FMODEvent mainSound;
+        protected FMODEvent cutInSound;
+        
         protected Coroutine autoplayCoroutine;
 
         protected Transform charactersPos;
@@ -19,7 +22,7 @@ namespace Overlewd
 
         protected Button textContainer;
         protected TextMeshProUGUI personageName;
-        protected Image personageHead;
+
         protected Transform emotionBack;
         protected Transform emotionPos;
         protected TextMeshProUGUI text;
@@ -29,7 +32,6 @@ namespace Overlewd
         protected Image autoplayButtonPressed;
         protected TextMeshProUGUI autoplayStatus;
 
-        protected Transform mainAnimPos;
         protected GameObject cutIn;
         protected Transform cutInAnimPos;
 
@@ -53,6 +55,9 @@ namespace Overlewd
             [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
 
+        protected SpineWidgetGroup cutInAnimation;
+        protected SpineWidgetGroup emotionAnimation;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
@@ -70,7 +75,6 @@ namespace Overlewd
             textContainer.onClick.AddListener(TextContainerButtonClick);
 
             personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            personageHead = textContainer.transform.Find("PersonageHead").GetComponent<Image>();
             emotionBack = textContainer.transform.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -84,7 +88,6 @@ namespace Overlewd
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
             autoplayButtonPressed.enabled = false;
 
-            mainAnimPos = canvas.Find("MainAnimPos");
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
             cutIn.SetActive(false);
@@ -237,7 +240,50 @@ namespace Overlewd
             }
         }
 
-        protected void AutoplayButtonCustomize()
+        private void ShowCutIn(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.cutInAnimationId.HasValue)
+            {
+                if (replica.cutInAnimationId != prevReplica?.cutInAnimationId)
+                {
+                    Destroy(cutInAnimation?.gameObject);
+                    cutInAnimation = null;
+
+                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                    cutInAnimation.Initialize(animation);
+                }
+            }
+            else
+            {
+                Destroy(cutInAnimation?.gameObject);
+                cutInAnimation = null;
+            }
+            cutIn.SetActive(cutInAnimation != null);
+        }
+        
+        private void ShowPersEmotion(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
+        {
+            if (replica.emotionAnimationId.HasValue)
+            {
+                if (replica.emotionAnimationId != prevReplica?.emotionAnimationId)
+                {
+                    Destroy(emotionAnimation?.gameObject);
+                    emotionAnimation = null;
+
+                    var animation = GetAnimationById(replica.emotionAnimationId.Value);
+                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                    emotionAnimation.Initialize(animation);
+                }
+            }
+            else
+            {
+                Destroy(emotionAnimation?.gameObject);
+                emotionAnimation = null;
+            }
+        }
+        
+        private void AutoplayButtonCustomize()
         {
             if (isAutoplayButtonPressed)
             {
@@ -255,7 +301,7 @@ namespace Overlewd
 
         private void AutoplayButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (isAutoplayButtonPressed == false)
             {
                 isAutoplayButtonPressed = true;
@@ -286,13 +332,13 @@ namespace Overlewd
 
         private void SkipButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveScreen();
         }
 
         private void TextContainerButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_DialogNextButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             currentReplicaId++;
             if (currentReplicaId < dialogData.replicas.Count)
             {
@@ -304,9 +350,54 @@ namespace Overlewd
             }
         }
 
-        protected virtual void ShowCurrentReplica()
+        private void PlaySound(AdminBRO.DialogReplica replica)
         {
+            //main sound
+            var mainSoundData = replica.mainSoundId.HasValue ? GameData.GetSoundById(replica.mainSoundId.Value) : null;
+            var mainSoundPath = mainSoundData != null ? mainSoundData.eventPath : replica.mainSoundPath;
+            var mainBankId = mainSoundData != null ? mainSoundData.soundBankId : null;
+            if (!String.IsNullOrEmpty(mainSoundPath))
+            {
+                if (mainSoundPath != mainSound?.path)
+                {
+                    mainSound?.Stop();
+                    mainSound = SoundManager.GetEventInstance(mainSoundPath, mainBankId);
+                }
+            }
+            else
+            {
+                mainSound?.Stop();
+                mainSound = null;
+            }
+
+            //cutIn sound
+            var cutInSoundData = replica.cutInSoundId.HasValue ? GameData.GetSoundById(replica.cutInSoundId.Value) : null;
+            var cutInSoundPath = cutInSoundData != null ? cutInSoundData.eventPath : replica.cutInSoundPath;
+            var cutInBankId = cutInSoundData != null ? cutInSoundData.soundBankId : null;
+            if (!String.IsNullOrEmpty(cutInSoundPath))
+            {
+                if (cutInSoundPath != cutInSound?.path)
+                {
+                    cutInSound?.Stop();
+                    cutInSound = SoundManager.GetEventInstance(cutInSoundPath, cutInBankId);
+                }
+
+                mainSound?.Pause();
+            }
+            else
+            {
+                cutInSound?.Stop();
+                cutInSound = null;
+
+                mainSound?.Play();
+            }
+        }
+        
+        private void ShowCurrentReplica()
+        {
+            var replica = dialogData.replicas[currentReplicaId];
             var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
+
             if (prevReplica != null)
             {
                 var keyName = prevReplica.characterSkin;
@@ -322,8 +413,7 @@ namespace Overlewd
                 }
             }
 
-        
-            var replica = dialogData.replicas[currentReplicaId];
+
             if (replica != null)
             {
                 personageName.text = replica.characterName;
@@ -335,6 +425,15 @@ namespace Overlewd
                 ShowCharacter(keyName, keyPos);
                 CharacterSelect(keyName);
             }
+
+            ShowPersEmotion(replica, prevReplica);
+            PlaySound(replica);
+            ShowCutIn(replica, prevReplica);
+        }
+
+        protected virtual AdminBRO.Animation GetAnimationById(int id)
+        {
+            return GameData.GetAnimationById(id);
         }
     }
 }

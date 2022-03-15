@@ -56,7 +56,7 @@ namespace Overlewd
 
             protected override void GlobalMapButtonClick()
             {
-                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<MapScreen>();
             }
 

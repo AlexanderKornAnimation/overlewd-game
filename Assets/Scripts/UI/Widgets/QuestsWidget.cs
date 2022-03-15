@@ -30,7 +30,7 @@ namespace Overlewd
 
         protected virtual void OnQuestButtonClick()
         {
-            SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowOverlay<QuestOverlay>();
         }
         

@@ -56,7 +56,7 @@ namespace Overlewd
             private void ButtonClick()
             {
                 GameGlobalStates.battle_EventStageId = eventStageId;
-                SoundManager.PlayOneShoot(SoundPath.UI_GenericButtonClick);
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowPopup<PrepareBattlePopup>();
             }
 
