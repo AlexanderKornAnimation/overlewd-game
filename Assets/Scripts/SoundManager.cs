@@ -66,10 +66,11 @@ namespace Overlewd
     public class FMODBank
     {
         private Bank bank;
+        private RESULT status;
 
         private FMODBank(string path)
         {
-            RuntimeManager.StudioSystem.loadBankFile(path,
+            status = RuntimeManager.StudioSystem.loadBankFile(path,
                 LOAD_BANK_FLAGS.NORMAL,
                 out bank);
         }
@@ -79,9 +80,15 @@ namespace Overlewd
             bank.unload();
         }
 
+        public bool IsValid()
+        {
+            return status == RESULT.OK;
+        }
+
         public static FMODBank LoadFromFile(string bankPath)
         {
-            return new FMODBank(bankPath);
+            var bank = new FMODBank(bankPath);
+            return bank.IsValid() ? bank : null;
         }
     }
 
