@@ -88,7 +88,13 @@ namespace Overlewd
         public static FMODBank LoadFromFile(string bankPath)
         {
             var bank = new FMODBank(bankPath);
-            return bank.IsValid() ? bank : null;
+            if (bank.IsValid())
+            {
+                return bank;
+            }
+
+            bank.Unload();
+            return null;
         }
     }
 
