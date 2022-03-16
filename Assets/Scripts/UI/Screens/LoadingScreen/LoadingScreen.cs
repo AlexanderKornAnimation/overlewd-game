@@ -190,8 +190,6 @@ namespace Overlewd
 
             await AdminBRO.authLoginAsync();
 
-            await AdminBRO.eventStagesResetAsync();
-
             //
             SetDownloadBarProgress(0.1f);
             SetDownloadBarTitle("Download game data");

@@ -9,6 +9,11 @@ namespace Overlewd
     {
         public static T DeserializeObject<T>(string json)
         {
+            if (String.IsNullOrEmpty(json))
+            {
+                return default;
+            }
+
             try
             {
                 return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings

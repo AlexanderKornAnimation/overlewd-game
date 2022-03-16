@@ -25,24 +25,41 @@ namespace Overlewd
 
         public static async Task<UnityWebRequest> GetAsync(string url, string token = null)
         {
-            var request = UnityWebRequest.Get(url);
-            if (token != null)
+            try
             {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                var request = UnityWebRequest.Get(url);
+                if (token != null)
+                {
+                    request.SetRequestHeader("Authorization", "Bearer " + token);
+                }
+                request.SetRequestHeader("Version", ApiVersion);
+            
+                return await request.SendWebRequest();
             }
-            request.SetRequestHeader("Version", ApiVersion);
-            return await request.SendWebRequest();
+            catch (UnityWebRequestException e)
+            {
+                Debug.LogError(e.Message);
+                return default;
+            }
         }
 
         public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, string token = null)
         {
-            var request = UnityWebRequest.Post(url, form);
-            if (token != null)
+            try
             {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                var request = UnityWebRequest.Post(url, form);
+                if (token != null)
+                {
+                    request.SetRequestHeader("Authorization", "Bearer " + token);
+                }
+                request.SetRequestHeader("Version", ApiVersion);
+                return await request.SendWebRequest();
             }
-            request.SetRequestHeader("Version", ApiVersion);
-            return await request.SendWebRequest();
+            catch (UnityWebRequestException e)
+            {
+                Debug.LogError(e.Message);
+                return default;
+            }
         }
     }
 }
