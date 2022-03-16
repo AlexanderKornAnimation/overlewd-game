@@ -78,6 +78,7 @@ namespace Overlewd
         public void Unload()
         {
             bank.unload();
+            RuntimeManager.StudioSystem.update();
         }
 
         public bool IsValid()
@@ -149,21 +150,47 @@ namespace Overlewd
     public static class SoundManager
     {
         private static List<FMODEvent> instances = new List<FMODEvent>();
+        private static List<EventDescription> localEvents = new List<EventDescription>();
+
+        public static void Initialize()
+        {
+            Bank[] banks;
+            RuntimeManager.StudioSystem.getBankList(out banks);
+            foreach (var bank in banks)
+            {
+                EventDescription[] bankEvents;
+                bank.getEventList(out bankEvents);
+                foreach (var eventItem in bankEvents)
+                {
+                    localEvents.Add(eventItem);
+                }
+            }
+        }
+
+        public static bool HasLocalEvent(string eventPath)
+        {
+            return localEvents.Exists(item => 
+                {
+                    string localEventPath;
+                    item.getPath(out localEventPath);
+                    return localEventPath == eventPath.Trim();
+                });
+        }
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
         {
-            if (!String.IsNullOrEmpty(bankId))
+            if (!HasLocalEvent(eventPath) && !String.IsNullOrEmpty(bankId))
             {
                 ResourceManager.LoadFMODBank(bankId);
             }
 
-            var inst = instances.Find(item => (item.path == eventPath) && item.IsPlaying());
+            var inst = instances.Find(item => (item.path == eventPath.Trim()) && item.IsPlaying());
             if (inst != null)
             {
                 return inst;
             }
 
-            var newInst = FMODEvent.GetInstance(eventPath);
+            var newInst = FMODEvent.GetInstance(eventPath.Trim());
             if (newInst != null)
             {
                 instances.Add(newInst);
@@ -175,7 +202,7 @@ namespace Overlewd
 
         public static void PlayOneShot(string eventPath)
         {
-            RuntimeManager.PlayOneShot(eventPath);
+            RuntimeManager.PlayOneShot(eventPath.Trim());
         }
 
         public static void StopAll()
