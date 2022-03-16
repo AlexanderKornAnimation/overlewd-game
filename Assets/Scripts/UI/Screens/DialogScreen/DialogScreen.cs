@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -36,6 +37,7 @@ namespace Overlewd
         protected Transform cutInAnimPos;
 
         protected AdminBRO.Dialog dialogData;
+        protected List<AdminBRO.DialogReplica> dialogReplicas;
         protected int currentReplicaId;
 
         protected bool isAutoplayButtonPressed = false;
@@ -205,8 +207,10 @@ namespace Overlewd
             characters[keyName]?.Deselect();
         }
 
-        protected void Initialize()
+        private void Initialize()
         {
+            dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
+
             slots[AdminBRO.DialogCharacterPosition.Left] = leftCharacterPos;
             slots[AdminBRO.DialogCharacterPosition.Right] = rightCharacterPos;
             slots[AdminBRO.DialogCharacterPosition.Middle] = midCharacterPos;
@@ -214,7 +218,7 @@ namespace Overlewd
             slot_character[AdminBRO.DialogCharacterPosition.Right] = null;
             slot_character[AdminBRO.DialogCharacterPosition.Middle] = null;
 
-            foreach (var replica in dialogData.replicas)
+            foreach (var replica in dialogReplicas)
             {
                 var keyName = replica.characterSkin;
                 var keyPos = replica.characterPosition;
@@ -321,7 +325,7 @@ namespace Overlewd
 
         private IEnumerator Autoplay()
         {
-            while (currentReplicaId < dialogData.replicas.Count)
+            while (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
                 yield return new WaitForSeconds(2f);
@@ -340,7 +344,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             currentReplicaId++;
-            if (currentReplicaId < dialogData.replicas.Count)
+            if (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
             }
@@ -395,8 +399,8 @@ namespace Overlewd
         
         private void ShowCurrentReplica()
         {
-            var replica = dialogData.replicas[currentReplicaId];
-            var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
+            var replica = dialogReplicas[currentReplicaId];
+            var prevReplica = (currentReplicaId > 0) ? dialogReplicas[currentReplicaId - 1] : null;
 
             if (prevReplica != null)
             {

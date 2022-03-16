@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -26,6 +27,7 @@ namespace Overlewd
         protected Transform cutInAnimPos;
 
         protected AdminBRO.Dialog dialogData;
+        protected List<AdminBRO.DialogReplica> dialogReplicas;
         protected int currentReplicaId;
 
         protected bool isAutoplayButtonPressed = false;
@@ -65,6 +67,7 @@ namespace Overlewd
         {
             await EnterScreen();
 
+            Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
         }
@@ -135,7 +138,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             currentReplicaId++;
-            if (currentReplicaId < dialogData.replicas.Count)
+            if (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
             }
@@ -147,8 +150,8 @@ namespace Overlewd
 
         private void ShowCurrentReplica()
         {
-            var replica = dialogData.replicas[currentReplicaId];
-            var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
+            var replica = dialogReplicas[currentReplicaId];
+            var prevReplica = currentReplicaId > 0 ? dialogReplicas[currentReplicaId - 1] : null;
             
             personageName.text = replica.characterName;
             text.text = replica.message;
@@ -160,13 +163,18 @@ namespace Overlewd
         
         private IEnumerator Autoplay()
         {
-            while (currentReplicaId < dialogData.replicas.Count)
+            while (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
                 yield return new WaitForSeconds(2f);
                 currentReplicaId++;
             }
             AutoplayButtonClick();
+        }
+
+        private void Initialize()
+        {
+            dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
         }
 
         private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
