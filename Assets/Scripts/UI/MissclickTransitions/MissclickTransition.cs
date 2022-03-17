@@ -22,6 +22,13 @@ namespace Overlewd
         protected virtual void Awake()
         {
             missclickRectTransform = GetComponent<RectTransform>();
+
+            UIManager.AddUserInputLocker(new UserInputLocker(this));
+        }
+
+        protected virtual void OnDestroy()
+        {
+            UIManager.RemoveUserInputLocker(new UserInputLocker(this));
         }
     }
 

@@ -15,43 +15,21 @@ namespace Overlewd
         {
             public class FightButton : Overlewd.NSMapScreen.FightButton
             {
-                private string[] battleNames = { 
-                    "empty",
-                    "Unchained",
-                    "Blast 'em",
-                    "Operation Domination",
-                    "Player and Slayer",
-                    "Dog's Day",
-                    "Lord of Ashes",
-                    "Knucklesandwiches",
-                    "Rule the World",
-                    "Hack and Slash",
-                    "Power is Power",
-                    "Spoils of War",
-                };
+                public string battleKey { get; set; }
 
-                public int stageId { get; set; }
-                public int battleId { get; set; }
 
                 private void Customize()
                 {
-                    gameObject.SetActive(stageId <= GameGlobalStates.currentStageId);
+                    gameObject.SetActive(true);
 
-                    title.text = battleNames[battleId];
+                    title.text = "name";
                     markers.SetActive(false);
-                    fightDone.gameObject.SetActive(GameGlobalStates.currentStageId > stageId);
-                    button.interactable = GameGlobalStates.currentStageId == stageId;
+                    fightDone.gameObject.SetActive(true);
+                    button.interactable = true;
 
-                    if (battleId == 11)
-                    {
-                        icon.SetActive(false);
-                        bossIcon.SetActive(true);
-                    }
-                    else
-                    {
-                        icon.SetActive(true);
-                        bossIcon.SetActive(false);
-                    }
+
+                    //icon.SetActive(false);
+                    //bossIcon.SetActive(true);
                 }
 
                 private void Start()
@@ -62,24 +40,15 @@ namespace Overlewd
                 protected override void ButtonClick()
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                    if (battleId == 11)
+                    if (battleKey == "key1")
                     {
-                        GameGlobalStates.battleScreen_StageId = stageId;
-                        GameGlobalStates.battleScreen_BattleId = battleId;
+                        GameGlobalStates.battleScreen_StageKey = battleKey;
                         UIManager.ShowPopup<PrepareBossFightPopup>();
                     }
                     else
                     {
-                        GameGlobalStates.battleScreen_StageId = stageId;
-                        GameGlobalStates.battleScreen_BattleId = battleId;
-                        if (GameGlobalStates.battleScreen_BattleId < 6)
-                        {
-                            UIManager.ShowScreen<BattleScreen>();
-                        }
-                        else
-                        {
-                            UIManager.ShowPopup<PrepareBattlePopup>();
-                        }
+                        GameGlobalStates.battleScreen_StageKey = battleKey;
+                        UIManager.ShowScreen<BattleScreen>();
                     }
                 }
 

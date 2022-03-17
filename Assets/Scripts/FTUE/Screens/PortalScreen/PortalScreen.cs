@@ -42,16 +42,15 @@ namespace Overlewd
                 yield return new WaitForSeconds(10.5f);
                 nextButton.gameObject.SetActive(true);
 
-                GameGlobalStates.dialogNotification_DialogId = 10;
-                UIManager.ShowNotification<DialogNotification>();
+                //GameGlobalStates.dialogNotification_StageKey = "key";
+                //UIManager.ShowNotification<DialogNotification>();
             }
             
             private void NextButtonClick()
             {
-                GameGlobalStates.sexScreen_StageId = 15;
-                GameGlobalStates.sexScreen_DialogId = 3;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<SexScreen>();
+                //GameGlobalStates.sexScreen_StageKey = "key";
+                //UIManager.ShowScreen<SexScreen>();
             }
         }
     }

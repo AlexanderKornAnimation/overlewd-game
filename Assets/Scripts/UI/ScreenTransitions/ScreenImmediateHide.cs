@@ -17,16 +17,16 @@ namespace Overlewd
             OnPrepared();
         }
 
-        void Update()
+        async void Update()
         {
             if (!prepared || locked)
                 return;
 
             OnStart();
 
+            await screen.AfterHideAsync();
             OnEnd();
             Destroy(gameObject);
-            screen.AfterHide();
         }
 
         protected override void OnStartCalls()

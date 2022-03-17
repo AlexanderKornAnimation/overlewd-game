@@ -79,9 +79,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override void AfterShow()
+        public override async Task AfterShowAsync()
         {
             UIManager.GetNotificationMissclick<DialogNotificationMissclick>()?.OnReset();
+
+            await Task.CompletedTask;
         }
 
         public override void StartShow()
@@ -108,7 +110,7 @@ namespace Overlewd
 
                 if (firstReplica.emotionAnimationId.HasValue)
                 {
-                    var animation = GetAnimationById(firstReplica.emotionAnimationId.Value);
+                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
                     emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
                     emotionAnimation.Initialize(animation);
                 }
@@ -136,11 +138,6 @@ namespace Overlewd
         protected virtual void LeaveByButtonScreen()
         {
 
-        }
-
-        protected virtual AdminBRO.Animation GetAnimationById(int id)
-        {
-            return GameData.GetAnimationById(id);
         }
     }
 }

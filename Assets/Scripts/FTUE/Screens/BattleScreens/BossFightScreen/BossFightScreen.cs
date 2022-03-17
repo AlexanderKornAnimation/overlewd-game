@@ -22,9 +22,11 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
-            public override void AfterShow()
+            public override async Task AfterShowAsync()
             {
                 StartBattleButtonClick();
+
+                await Task.CompletedTask;
             }
 
             protected override void EndBattleVideo(VideoPlayer vp)

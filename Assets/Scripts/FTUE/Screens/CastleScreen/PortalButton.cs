@@ -23,18 +23,9 @@ namespace Overlewd
                     freeSummonNotification.gameObject.SetActive(false);
                     markers.gameObject.SetActive(false);
 
-                    if (GameGlobalStates.castle_PortalLock)
+                    if (/*GameGlobalStates.castle_PortalLock*/true)
                     {
-                        Lock();
-                    }
-                }
-
-                public void Lock()
-                {
-                    button.interactable = false;
-                    foreach (var cr in GetComponentsInChildren<CanvasRenderer>())
-                    {
-                        cr.SetColor(Color.gray);
+                        UIHelper.DisableButton(button);
                     }
                 }
 

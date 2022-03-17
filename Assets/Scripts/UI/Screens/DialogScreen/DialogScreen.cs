@@ -253,7 +253,7 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
                     cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
                     cutInAnimation.Initialize(animation);
                 }
@@ -275,7 +275,7 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    var animation = GetAnimationById(replica.emotionAnimationId.Value);
+                    var animation = GameData.GetAnimationById(replica.emotionAnimationId.Value);
                     emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
                     emotionAnimation.Initialize(animation);
                 }
@@ -357,15 +357,13 @@ namespace Overlewd
         private void PlaySound(AdminBRO.DialogReplica replica)
         {
             //main sound
-            var mainSoundData = replica.mainSoundId.HasValue ? GameData.GetSoundById(replica.mainSoundId.Value) : null;
-            var mainSoundPath = mainSoundData != null ? mainSoundData.eventPath : replica.mainSoundPath;
-            var mainBankId = mainSoundData != null ? mainSoundData.soundBankId : null;
-            if (!String.IsNullOrEmpty(mainSoundPath))
+            if (replica.mainSoundId.HasValue)
             {
-                if (mainSoundPath != mainSound?.path)
+                var mainSoundData = GameData.GetSoundById(replica.mainSoundId.Value);
+                if (mainSoundData.eventPath != mainSound?.path)
                 {
                     mainSound?.Stop();
-                    mainSound = SoundManager.GetEventInstance(mainSoundPath, mainBankId);
+                    mainSound = SoundManager.GetEventInstance(mainSoundData.eventPath, mainSoundData.soundBankId);
                 }
             }
             else
@@ -375,15 +373,13 @@ namespace Overlewd
             }
 
             //cutIn sound
-            var cutInSoundData = replica.cutInSoundId.HasValue ? GameData.GetSoundById(replica.cutInSoundId.Value) : null;
-            var cutInSoundPath = cutInSoundData != null ? cutInSoundData.eventPath : replica.cutInSoundPath;
-            var cutInBankId = cutInSoundData != null ? cutInSoundData.soundBankId : null;
-            if (!String.IsNullOrEmpty(cutInSoundPath))
+            if (replica.cutInSoundId.HasValue)
             {
-                if (cutInSoundPath != cutInSound?.path)
+                var cutInSoundData = GameData.GetSoundById(replica.cutInSoundId.Value);
+                if (cutInSoundData.eventPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
-                    cutInSound = SoundManager.GetEventInstance(cutInSoundPath, cutInBankId);
+                    cutInSound = SoundManager.GetEventInstance(cutInSoundData.eventPath, cutInSoundData.soundBankId);
                 }
 
                 mainSound?.Pause();
@@ -433,11 +429,6 @@ namespace Overlewd
             ShowPersEmotion(replica, prevReplica);
             PlaySound(replica);
             ShowCutIn(replica, prevReplica);
-        }
-
-        protected virtual AdminBRO.Animation GetAnimationById(int id)
-        {
-            return GameData.GetAnimationById(id);
         }
     }
 }

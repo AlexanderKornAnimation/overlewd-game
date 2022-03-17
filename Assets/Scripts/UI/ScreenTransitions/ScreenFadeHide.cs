@@ -27,7 +27,7 @@ namespace Overlewd
             OnPrepared();
         }
 
-        void Update()
+        async void Update()
         {
             if (!prepared || locked)
                 return;
@@ -42,9 +42,9 @@ namespace Overlewd
 
             if (time > duration)
             {
+                await screen.AfterHideAsync();
                 OnEnd();
                 Destroy(gameObject);
-                screen.AfterHide();
             }
         }
 

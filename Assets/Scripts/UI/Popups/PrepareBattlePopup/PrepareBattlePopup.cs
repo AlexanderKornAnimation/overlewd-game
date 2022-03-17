@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -101,43 +102,43 @@ namespace Overlewd
             // reward3Count.text = $"{battleData.rewards[2].amount}";
         }
 
-        private IEnumerator HideBuffButton()
+        private async Task HideBuffButton()
         {
             float time = 0.0f;
             float duration = 0.1f;
-            
+
             while (time < duration)
             {
                 float deltaTimeInc = Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
                 float transitionProgressPercent = time / duration;
                 float transitionOffsetPercent = EasingFunction.easeInOutQuad(transitionProgressPercent);
-                
+
                 time += deltaTimeInc;
                 buffButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
                     -buffButtonRect.rect.height * transitionOffsetPercent,
                     buffButtonRect.rect.height);
 
-                yield return null;
+                await UniTask.Yield();
             }
         }
-        
-        private IEnumerator ShowBuffButton()
+
+        private async Task ShowBuffButton()
         {
             float time = 0.0f;
             float duration = 0.2f;
-            
+
             while (time < duration)
             {
                 float deltaTimeInc = Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
                 float transitionProgressPercent = time / duration;
                 float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
-                
+
                 time += deltaTimeInc;
                 buffButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
                     -buffButtonRect.rect.height * transitionOffsetPercent,
                     buffButtonRect.rect.height);
 
-                yield return null;
+                await UniTask.Yield();
             }
         }
 
@@ -173,16 +174,14 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenLeftHide>();
         }
         
-        public override void AfterShow()
+        public override async Task AfterShowAsync()
         {
-            StartCoroutine(ShowBuffButton());
+            await ShowBuffButton();
         }
 
         public override async Task BeforeHideAsync()
         {
-            StartCoroutine(HideBuffButton());
-            
-            await Task.CompletedTask;
+            await HideBuffButton();
         }
     }
 }

@@ -13,25 +13,18 @@ namespace Overlewd
         {
             protected override void OnClick()
             {
-                if (GameGlobalStates.newFTUE)
+                var notifications = GameData.ftue.chapters[GameGlobalStates.chapterId].
+                    dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
+                var nextNotificationIndex = notifications.FindIndex(n => n.key == GameGlobalStates.dialogNotification_StageKey);
+                if (++nextNotificationIndex < notifications.Count)
                 {
-                    var notifications = Overlewd.GameData.ftue.chapters[GameGlobalStates.ftueChapterId].
-                        dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
-                    var nextNotificationIndex = notifications.FindIndex(n => n.key == GameGlobalStates.dialogNotification_StageKey);
-                    if (++nextNotificationIndex < notifications.Count)
-                    {
-                        GameGlobalStates.dialogNotification_StageKey = notifications[nextNotificationIndex].key;
-                        UIManager.ShowNotification<DialogNotification>();
-                    }
-                    else
-                    {
-                        UIManager.HideNotification();
-                        UIManager.ShowScreen<StartingScreen>();
-                    }
+                    GameGlobalStates.dialogNotification_StageKey = notifications[nextNotificationIndex].key;
+                    UIManager.ShowNotification<DialogNotification>();
                 }
                 else
                 {
                     UIManager.HideNotification();
+                    UIManager.ShowScreen<StartingScreen>();
                 }
             }
         }
@@ -52,15 +45,7 @@ namespace Overlewd
 
             protected override void LeaveByTimerScreen()
             {
-                if (GameGlobalStates.newFTUE)
-                {
-                    UIManager.ShowScreen<StartingScreen>();
-                }
-            }
-
-            protected override AdminBRO.Animation GetAnimationById(int id)
-            {
-                return GameData.GetAnimationById(id);
+                UIManager.ShowScreen<StartingScreen>();
             }
         }
     }

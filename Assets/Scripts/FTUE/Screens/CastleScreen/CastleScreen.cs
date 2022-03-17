@@ -42,22 +42,22 @@ namespace Overlewd
             {
                 contenViewerButton.gameObject.SetActive(false);
 
-                var hintMessage = GameGlobalStates.castle_HintMessage;
+                var hintMessage = "Hint";
                 hintText.text = hintMessage;
                 hint.SetActive(hintMessage != null);
 
-                if (GameGlobalStates.ulviCaveBuilded)
+                if (/*GameGlobalStates.ulviCaveBuilded*/true)
                 {
                     NSCastleScreen.GirlBuildingButton.GetInstance(cave);
                 }
 
-                if (GameGlobalStates.portalBuilded)
+                if (/*GameGlobalStates.portalBuilded*/true)
                 {
                     NSCastleScreen.PortalButton.GetInstance(portal);
                 }
 
-                if (GameGlobalStates.ulviCaveCanBuilded || GameGlobalStates.portalCanBuilded ||
-                    GameGlobalStates.ulviCaveBuilded || GameGlobalStates.portalBuilded)
+                if (/*GameGlobalStates.ulviCaveCanBuilded || GameGlobalStates.portalCanBuilded ||
+                    GameGlobalStates.ulviCaveBuilded || GameGlobalStates.portalBuilded*/true)
                 {
                     NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
                 }
@@ -66,16 +66,6 @@ namespace Overlewd
                 //QuestsWidget.GetInstance(transform);
                 //BuffWidget.GetInstance(transform);
                 SidebarButtonWidget.GetInstance(transform);
-            }
-
-            public override void AfterShow()
-            {
-                var notification = GameGlobalStates.castle_DialogNotificationId;
-                if (notification.HasValue)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = notification.Value;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
             }
         }
     }

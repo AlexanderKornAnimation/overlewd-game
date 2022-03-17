@@ -12,12 +12,7 @@ namespace Overlewd
         {
             private void Build()
             {
-                GameGlobalStates.UlviCaveBuild();
-                GameGlobalStates.ResetStateCastleButtons();
-                GameGlobalStates.castle_SideMenuLock = true;
-                GameGlobalStates.castle_BuildingButtonLock = true;
-                GameGlobalStates.castle_DialogNotificationId = 9;
-                GameGlobalStates.castle_HintMessage = GameData.castleScreenHints[3];
+
                 UIManager.ShowScreen<CastleScreen>();
             }
             protected override void FreeBuildButtonClick()

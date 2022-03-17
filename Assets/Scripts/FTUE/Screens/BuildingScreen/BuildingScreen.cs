@@ -25,13 +25,13 @@ namespace Overlewd
                 marketUnaviable.SetActive(true);
                 marketMaxLevel.SetActive(false);
 
-                if (GameGlobalStates.portalCanBuilded)
+                if (/*GameGlobalStates.portalCanBuilded*/ true)
                 {
                     portalUnaviable.SetActive(false);
                     portalMaxLevel.SetActive(false);
                     portalButton.interactable = true;
                 }
-                else if (GameGlobalStates.portalBuilded)
+                else if (/*GameGlobalStates.portalBuilded*/ true)
                 {
                     portalUnaviable.SetActive(false);
                     portalMaxLevel.SetActive(true);
@@ -44,13 +44,13 @@ namespace Overlewd
                     portalButton.interactable = false;
                 }
 
-                if (GameGlobalStates.ulviCaveCanBuilded)
+                if (/*GameGlobalStates.ulviCaveCanBuilded*/ true)
                 {
                     ulviCaveUnaviable.SetActive(false);
                     ulviCaveMaxLevel.SetActive(false);
                     ulviCaveButton.interactable = true;
                 }
-                else if (GameGlobalStates.ulviCaveBuilded)
+                else if (/*GameGlobalStates.ulviCaveBuilded*/ true)
                 {
                     ulviCaveUnaviable.SetActive(false);
                     ulviCaveMaxLevel.SetActive(true);

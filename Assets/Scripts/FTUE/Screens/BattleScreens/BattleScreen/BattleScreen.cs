@@ -22,25 +22,11 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
-            public override void AfterShow()
+            public override async Task AfterShowAsync()
             {
-                if (GameGlobalStates.battleScreen_BattleId == 1)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 1;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.battleScreen_BattleId == 2)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 4;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-                else if (GameGlobalStates.battleScreen_BattleId == 4)
-                {
-                    GameGlobalStates.dialogNotification_DialogId = 7;
-                    UIManager.ShowNotification<DialogNotification>();
-                }
-
                 StartCoroutine(WaitDialogNotificationHide());
+
+                await Task.CompletedTask;
             }
 
             private IEnumerator WaitDialogNotificationHide()
@@ -56,7 +42,7 @@ namespace Overlewd
             {
                 skipButton.gameObject.SetActive(false);
 
-                if (GameGlobalStates.battleScreen_BattleId == 2)
+                if (true)
                 {
                     UIManager.ShowPopup<DefeatPopup>();
                 }
@@ -68,7 +54,7 @@ namespace Overlewd
 
             protected override void StartBattleButtonClick()
             {
-                if (GameGlobalStates.battleScreen_BattleId >= 3)
+                if (true)
                 {
                     skipButton.gameObject.SetActive(true);
                 }

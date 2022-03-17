@@ -18,11 +18,9 @@ namespace Overlewd
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                FTUE.GameData.Initialization();
-                FTUE.GameGlobalStates.Reset();
 
-                FTUE.GameGlobalStates.newFTUE = false;
-                FTUE.GameGlobalStates.sexScreen_DialogId = 1;
+                FTUE.GameGlobalStates.chapterId = 0;
+                FTUE.GameGlobalStates.sexScreen_StageKey = "sex1";
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });
 
@@ -36,16 +34,6 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<TempBattleScreen>();
-            });
-
-            canvas.Find("NewFTUE").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-                FTUE.GameGlobalStates.newFTUE = true;
-                FTUE.GameGlobalStates.ftueChapterId = 0;
-                FTUE.GameGlobalStates.sexScreen_StageKey = "sex1";
-                UIManager.ShowScreen<FTUE.SexScreen>();
             });
         }
     }

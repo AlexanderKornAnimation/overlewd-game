@@ -17,16 +17,16 @@ namespace Overlewd
             OnPrepared();
         }
 
-        void Update()
+        async void Update()
         {
             if (!prepared || locked)
                 return;
 
             OnStart();
 
+            await screen.AfterShowAsync();
             OnEnd();
             Destroy(this);
-            screen.AfterShow();
         }
 
         protected override void OnStartCalls()

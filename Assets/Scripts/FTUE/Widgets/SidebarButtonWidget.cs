@@ -16,10 +16,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                if (GameGlobalStates.castle_SideMenuLock)
-                {
-                    Lock();
-                }
+                UIHelper.DisableButton(sidebarMenuButton);
             }
 
             protected override void SidebarMenuButtonClick()
@@ -32,15 +29,6 @@ namespace Overlewd
                 else
                 {
                     UIManager.HideOverlay();
-                }
-            }
-
-            public void Lock()
-            {
-                sidebarMenuButton.interactable = false;
-                foreach (var cr in GetComponentsInChildren<CanvasRenderer>())
-                {
-                    cr.SetColor(Color.gray);
                 }
             }
 

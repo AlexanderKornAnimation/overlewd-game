@@ -490,9 +490,6 @@ namespace Overlewd
 
             public int? mainSoundId;
             public int? cutInSoundId;
-
-            public string cutInSoundPath;
-            public string mainSoundPath;
         }
 
         public class DialogType 

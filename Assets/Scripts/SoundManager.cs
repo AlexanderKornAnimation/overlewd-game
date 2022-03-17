@@ -6,7 +6,6 @@ using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Overlewd
 {
@@ -38,29 +37,6 @@ namespace Overlewd
         //popups & nootifications
         public const string UI_GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
         public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
-
-        //sex 1
-        public const string SexScene1_CutInCumshot = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_cumshot";
-        public const string SexScene1_CutInLick = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_lick";
-        public const string SexScene1_MainScene = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/main_scene";
-
-        //sex 2
-        public const string SexScene2_CutInBeads = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-beads";
-        public const string SexScene2_CutInCreamPie = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-cum";
-        public const string SexScene2_MainScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
-        public const string SexScene2_FinalScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
-        
-        //sex 3
-        public const string SexScene3_MainScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/1_scene";
-        public const string SexSscene3_CutInPussyRubbing = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/2_scene";
-        public const string SexScene3_CutInPussyRubbingZoom = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/3_scene";
-        public const string SexScene3_FinalScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/4_scene";
-        
-        //dialogue 1
-        public const string Dialogue1_CutInUlviScratch = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/Ulvi_Head_Pat";
-        
-        //dialogue 3
-        public const string Dialogue3_CutInAdrielKiss = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/OL_Kiss";
     }
 
     public class FMODBank

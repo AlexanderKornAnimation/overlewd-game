@@ -21,55 +21,26 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                if (GameGlobalStates.newFTUE)
+                if (GameGlobalStates.sexScreen_StageKey == "sex1")
                 {
-                    if (GameGlobalStates.sexScreen_StageKey == "sex1")
-                    {
-                        GameGlobalStates.sexScreen_StageKey = "sex2";
-                        UIManager.ShowScreen<SexScreen>();
-                    }
-                    else if (GameGlobalStates.sexScreen_StageKey == "sex2")
-                    {
-                        GameGlobalStates.sexScreen_StageKey = "sex3";
-                        UIManager.ShowScreen<SexScreen>();
-                    }
-                    else if (GameGlobalStates.sexScreen_StageKey == "sex3")
-                    {
-                        GameGlobalStates.sexScreen_StageKey = "sex4";
-                        UIManager.ShowScreen<SexScreen>();
-                    }
-                    else if (GameGlobalStates.sexScreen_StageKey == "sex4")
-                    {
-                        GameGlobalStates.dialogScreen_StageKey = "dialogue1";
-                        UIManager.ShowScreen<DialogScreen>();
-                    }
+                    GameGlobalStates.sexScreen_StageKey = "sex2";
+                    UIManager.ShowScreen<SexScreen>();
                 }
-                else
+                else if (GameGlobalStates.sexScreen_StageKey == "sex2")
                 {
-                    if (GameGlobalStates.sexScreen_DialogId == 1)
-                    {
-                        GameGlobalStates.battleScreen_StageId = 1;
-                        GameGlobalStates.battleScreen_BattleId = 1;
-                        UIManager.ShowScreen<BattleScreen>();
-                    }
-                    else if (GameGlobalStates.sexScreen_DialogId == 2)
-                    {
-                        GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
-                        GameGlobalStates.map_DialogNotificationId = 6;
-                        UIManager.ShowScreen<MapScreen>();
-                    }
-                    else if (GameGlobalStates.sexScreen_DialogId == 3)
-                    {
-                        GameGlobalStates.CompleteStageId(GameGlobalStates.sexScreen_StageId);
-                        GameGlobalStates.map_DialogNotificationId = 11;
-                        UIManager.ShowScreen<MapScreen>();
-                    }
+                    GameGlobalStates.sexScreen_StageKey = "sex3";
+                    UIManager.ShowScreen<SexScreen>();
                 }
-            }
-
-            protected override AdminBRO.Animation GetAnimationById(int id)
-            {
-                return GameData.GetAnimationById(id);
+                else if (GameGlobalStates.sexScreen_StageKey == "sex3")
+                {
+                    GameGlobalStates.sexScreen_StageKey = "sex4";
+                    UIManager.ShowScreen<SexScreen>();
+                }
+                else if (GameGlobalStates.sexScreen_StageKey == "sex4")
+                {
+                    GameGlobalStates.dialogScreen_StageKey = "dialogue1";
+                    UIManager.ShowScreen<DialogScreen>();
+                }
             }
         }
     }

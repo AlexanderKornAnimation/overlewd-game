@@ -28,7 +28,7 @@ namespace Overlewd
             OnPrepared();
         }
 
-        void Update()
+        async void Update()
         {
             if (!prepared || locked)
                 return;
@@ -44,9 +44,9 @@ namespace Overlewd
             if (time > duration)
             {
                 canvasGroup.alpha = 1.0f;
+                await screen.AfterShowAsync();
                 OnEnd();
                 Destroy(this);
-                screen.AfterShow();
             }
         }
 

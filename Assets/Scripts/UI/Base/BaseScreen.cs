@@ -36,8 +36,9 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericWindowShow);
         }
 
-        public virtual void AfterShow()
+        public virtual async Task AfterShowAsync()
         {
+            await Task.CompletedTask;
         }
 
         public virtual async Task BeforeHideAsync()
@@ -50,8 +51,9 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericWindowHide);
         }
 
-        public virtual void AfterHide()
+        public virtual async Task AfterHideAsync()
         {
+            await Task.CompletedTask;
         }
 
         public bool IsTransitionState()

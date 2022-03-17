@@ -51,9 +51,11 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
         }
 
-        public override void AfterShow()
+        public override async Task AfterShowAsync()
         {
             StartBattleButtonClick();
+
+            await Task.CompletedTask;
         }
 
         protected virtual async void EndBattleVideo(VideoPlayer vp)

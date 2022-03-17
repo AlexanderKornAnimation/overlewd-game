@@ -39,11 +39,6 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
         }
 
-		public override void AfterShow()
-		{
-
-		}
-
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

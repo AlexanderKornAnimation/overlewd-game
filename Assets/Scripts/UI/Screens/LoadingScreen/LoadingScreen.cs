@@ -238,7 +238,7 @@ namespace Overlewd
             UIManager.ShowScreen<StartingScreen>();
         }
 
-        public override void AfterShow()
+        public override async Task AfterShowAsync()
         {
             if (HttpCore.HasNetworkConection())
             {
@@ -249,6 +249,8 @@ namespace Overlewd
             {
                 UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
             }
+
+            await Task.CompletedTask;
         }
 
         private void SetDownloadBarProgress(float progressPercent)

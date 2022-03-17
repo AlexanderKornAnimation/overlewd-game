@@ -15,23 +15,15 @@ namespace Overlewd
         {
             public class SexSceneButton : Overlewd.NSMapScreen.SexSceneButton
             {
-                private string[] sexNames = {
-                    "empty",
-                    "empty",
-                    "Harder, Stronger",
-                    "Lustful Memories"
-                };
-
-                public int stageId { get; set; }
-                public int sexId { get; set; }
+                public string sexKey { get; set; }
 
                 private void Customize()
                 {
-                    gameObject.SetActive(stageId <= GameGlobalStates.currentStageId);
+                    gameObject.SetActive(true);
 
-                    title.text = sexNames[sexId];
-                    sceneDone.gameObject.SetActive(GameGlobalStates.currentStageId > stageId);
-                    button.interactable = GameGlobalStates.currentStageId == stageId;
+                    title.text = "name";
+                    sceneDone.gameObject.SetActive(true);
+                    button.interactable = true;
                 }
 
                 private void Start()
@@ -41,15 +33,8 @@ namespace Overlewd
 
                 protected override void ButtonClick()
                 {
-                    if (sexId == 2)
-                    {
-
-                    }
-                    else if (sexId == 3)
-                    {
-                        SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                        UIManager.ShowScreen<CastleScreen>();
-                    }
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                    UIManager.ShowScreen<CastleScreen>();
                 }
 
                 public new static SexSceneButton GetInstance(Transform parent)
