@@ -11,10 +11,7 @@ namespace Overlewd
         {
             protected override void Customize()
             {
-                firstTimeReward.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
-                reward1.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
-                reward2.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
-                reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
+
             }
 
             protected override void BattleButtonClick()
@@ -23,9 +20,9 @@ namespace Overlewd
                 UIManager.ShowScreen<BossFightScreen>();
             }
 
-            protected override void PrepareButtonClick()
+            protected override void BuffButtonClick()
             {
-
+                
             }
         }
     }
