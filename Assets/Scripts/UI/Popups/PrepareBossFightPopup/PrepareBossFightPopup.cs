@@ -99,46 +99,6 @@ namespace Overlewd
             // reward3Count.text = $"{battleData.rewards[2].amount}";
         }
 
-        private async Task HideBuffButton()
-        {
-            float time = 0.0f;
-            float duration = 0.1f;
-            
-            while (time < duration)
-            {
-                float deltaTimeInc = Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
-                float transitionProgressPercent = time / duration;
-                float transitionOffsetPercent = EasingFunction.easeInOutQuad(transitionProgressPercent);
-                
-                time += deltaTimeInc;
-                buffButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                    -buffButtonRect.rect.height * transitionOffsetPercent,
-                    buffButtonRect.rect.height);
-
-                await UniTask.Yield();
-            }
-        }
-        
-        private async Task ShowBuffButton()
-        {
-            float time = 0.0f;
-            float duration = 0.2f;
-            
-            while (time < duration)
-            {
-                float deltaTimeInc = Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
-                float transitionProgressPercent = time / duration;
-                float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
-                
-                time += deltaTimeInc;
-                buffButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                    -buffButtonRect.rect.height * transitionOffsetPercent,
-                    buffButtonRect.rect.height);
-
-                await UniTask.Yield();
-            }
-        }
-
         protected virtual void EditTeamButtonClick()
         {
             
@@ -174,12 +134,12 @@ namespace Overlewd
         
         public override async Task AfterShowAsync()
         {
-            await ShowBuffButton();
+            await UIHelper.ShowBottomAsync(buffButtonRect);
         }
 
         public override async Task BeforeHideAsync()
         {
-            await HideBuffButton();
+            await UIHelper.HideBottomAsync(buffButtonRect);
         }
     }
 }
