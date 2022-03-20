@@ -11,26 +11,24 @@ namespace Overlewd
 {
     public static class UIHelper
     {
-        public static void DisableButton(Button button)
+        private static float deltaTimeInc
         {
-            button.interactable = false;
-            foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+            get
             {
-                cr.SetColor(Color.gray);
+                return Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
             }
         }
 
-        public static async Task ShowBottomAsync(RectTransform uiRect, float duration = 0.2f)
+        /*public static async Task ShowBottomAsync(RectTransform uiRect, float duration = 0.2f)
         {
             float time = 0.0f;
 
             while (time < duration)
             {
-                float deltaTimeInc = Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
+                time += deltaTimeInc;
                 float transitionProgressPercent = time / duration;
                 float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
 
-                time += deltaTimeInc;
                 uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
                     -uiRect.rect.height * transitionOffsetPercent,
                     uiRect.rect.height);
@@ -45,16 +43,60 @@ namespace Overlewd
 
             while (time < duration)
             {
-                float deltaTimeInc = Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
+                time += deltaTimeInc;
                 float transitionProgressPercent = time / duration;
                 float transitionOffsetPercent = EasingFunction.easeInOutQuad(transitionProgressPercent);
 
-                time += deltaTimeInc;
                 uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
                     -uiRect.rect.height * transitionOffsetPercent,
                     uiRect.rect.height);
 
                 await UniTask.Yield();
+            }
+        }*/
+
+        public static void DisableButton(Button button)
+        {
+            button.interactable = false;
+            foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+            {
+                cr.SetColor(Color.gray);
+            }
+        }
+
+        public static IEnumerator ShowBottom(RectTransform uiRect, float duration = 0.2f)
+        {
+            float time = 0.0f;
+
+            while (time < duration)
+            {
+                time += deltaTimeInc;
+                float transitionProgressPercent = time / duration;
+                float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
+
+                uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                    -uiRect.rect.height * transitionOffsetPercent,
+                    uiRect.rect.height);
+
+                yield return null;
+            }
+        }
+
+        public static IEnumerator HideBottom(RectTransform uiRect, float duration = 0.2f)
+        {
+            float time = 0.0f;
+
+            while (time < duration)
+            {
+                time += deltaTimeInc;
+                float transitionProgressPercent = time / duration;
+                float transitionOffsetPercent = EasingFunction.easeInOutQuad(transitionProgressPercent);
+
+                uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                    -uiRect.rect.height * transitionOffsetPercent,
+                    uiRect.rect.height);
+
+                yield return null;
             }
         }
     }
