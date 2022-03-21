@@ -9,9 +9,17 @@ namespace Overlewd
     {
         public class EventsWidget : Overlewd.EventsWidget
         {
-            protected override void OnEventButtonClick()
+            protected override void WeeklyEventClick()
             {
-
+                
+            }
+            protected override void MonthlyEventClick()
+            {
+                
+            }
+            protected override void QuarterlyEventClick()
+            {
+                
             }
 
             public new static EventsWidget GetInstance(Transform parent)

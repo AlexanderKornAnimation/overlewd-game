@@ -15,6 +15,7 @@ namespace Overlewd
             {
                 UITools.DisableButton(magicGuildButton);
                 UITools.DisableButton(inventoryButton);
+                UITools.DisableButton(editTeamButton);
             }
 
             protected override void MagicGuildButtonClick()

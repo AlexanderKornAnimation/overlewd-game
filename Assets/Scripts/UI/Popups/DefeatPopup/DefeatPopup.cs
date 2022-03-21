@@ -13,6 +13,7 @@ namespace Overlewd
         protected Button magicGuildButton;
         protected Button inventoryButton;
         protected Button haremButton;
+        protected Button editTeamButton;
 
         void Awake()
         {
@@ -28,6 +29,9 @@ namespace Overlewd
 
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
+
+            editTeamButton = canvas.Find("EditTeamButton").GetComponent<Button>();
+            editTeamButton.onClick.AddListener(EditTeamButtonClick);
         }
 
         void Start()
@@ -46,6 +50,11 @@ namespace Overlewd
             missClick.missClickEnabled = false;
         }
 
+        protected virtual void EditTeamButtonClick()
+        {
+            
+        }
+        
         protected virtual void MagicGuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

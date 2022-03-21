@@ -22,6 +22,8 @@ namespace Overlewd
         protected Transform capitol;
         protected Transform castleBuilding;
 
+        protected Transform eventWidget;
+
         protected Button contenViewerButton;
 
         protected virtual void Awake()
@@ -75,16 +77,10 @@ namespace Overlewd
             NSCastleScreen.CapitolButton.GetInstance(capitol);
             NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
 
-            var eventWidgetButton = EventsWidget.GetInstance(transform).transform.Find("Canvas").Find("EventsButton").GetComponent<Button>();
+            EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
             SidebarButtonWidget.GetInstance(transform);
-
-            eventWidgetButton.gameObject.AddComponent<BlendPulseSelector>();
-            eventWidgetButton.onClick.AddListener(() =>
-            {
-                Destroy(eventWidgetButton.gameObject.GetComponent<Selector>());
-            });
         }
     }
 }
