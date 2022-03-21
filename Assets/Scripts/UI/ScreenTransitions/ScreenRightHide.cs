@@ -18,32 +18,21 @@ namespace Overlewd
         {
             await screen.BeforeHideAsync();
             OnPrepared();
-        }
 
-        async void Update()
-        {
-            if (!prepared || locked)
-                return;
-
+            await WaitUnlocked();
             OnStart();
 
-            time += deltaTimeInc;
-            float transitionProgressPercent = time / duration;
-            float transitionOffsetPercent = EasingFunction.easeInOutQuad(transitionProgressPercent);
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
-                -screenRectTransform.rect.width * transitionOffsetPercent,
-                screenRectTransform.rect.width);
+            await UIHelper.RightHideAsync(screenRectTransform);
 
-            if (time > duration)
-            {
-                await screen.AfterHideAsync();
-                OnEnd();
-                Destroy(gameObject);
-            }
+            await screen.AfterHideAsync();
+            OnEnd();
+
+            Destroy(gameObject);
         }
 
-        protected override void OnStartCalls()
+        protected override void OnStart()
         {
+            base.OnStart();
             screen.StartHide();
         }
     }

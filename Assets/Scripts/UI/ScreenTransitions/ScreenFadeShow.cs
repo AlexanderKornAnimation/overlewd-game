@@ -26,28 +26,16 @@ namespace Overlewd
         {
             await screen.BeforeShowAsync();
             OnPrepared();
-        }
 
-        async void Update()
-        {
-            if (!prepared || locked)
-                return;
-
+            await WaitUnlocked();
             OnStart();
 
-            time += deltaTimeInc;
-            float transitionProgressPercent = time / duration;
-            float transitionPercent = EasingFunction.easeOutBack(transitionProgressPercent);
+            await UIHelper.FadeShowAsync(canvasGroup);
 
-            canvasGroup.alpha = transitionPercent;
+            await screen.AfterShowAsync();
+            OnEnd();
 
-            if (time > duration)
-            {
-                canvasGroup.alpha = 1.0f;
-                await screen.AfterShowAsync();
-                OnEnd();
-                Destroy(this);
-            }
+            Destroy(this);
         }
 
         protected override void OnDestroy()
@@ -60,8 +48,9 @@ namespace Overlewd
             }
         }
 
-        protected override void OnStartCalls()
+        protected override void OnStart()
         {
+            base.OnStart();
             screen.StartShow();
         }
     }

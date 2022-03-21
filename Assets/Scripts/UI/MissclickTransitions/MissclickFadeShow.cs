@@ -6,45 +6,16 @@ namespace Overlewd
 {
     public class MissclickFadeShow : MissclickShow
     {
-        private CanvasGroup canvasGroup;
-        private bool localCanvasGroup = false;
-
         protected override void Awake()
         {
             base.Awake();
-
-            canvasGroup = gameObject.GetComponent<CanvasGroup>();
-            if (canvasGroup == null)
-            {
-                canvasGroup = gameObject.AddComponent<CanvasGroup>();
-                localCanvasGroup = true;
-            }
             canvasGroup.alpha = 0.0f;
         }
 
-        void Update()
+        async void Start()
         {
-            time += deltaTimeInc;
-            float transitionProgressPercent = time / duration;
-            float transitionPercent = EasingFunction.easeOutBack(transitionProgressPercent);
-
-            canvasGroup.alpha = transitionPercent;
-
-            if (time > duration)
-            {
-                canvasGroup.alpha = 1.0f;
-                Destroy(this);
-            }
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            if (localCanvasGroup)
-            {
-                Destroy(canvasGroup);
-            }
+            await UIHelper.FadeShowAsync(canvasGroup);
+            Destroy(this);
         }
     }
 }
