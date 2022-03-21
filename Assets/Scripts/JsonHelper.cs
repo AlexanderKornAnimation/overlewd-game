@@ -5,6 +5,16 @@ using Newtonsoft.Json.Serialization;
 
 namespace Overlewd
 {
+    public class RequireObjectPropertiesContractResolver : DefaultContractResolver
+    {
+        protected override JsonObjectContract CreateObjectContract(Type objectType)
+        {
+            var contract = base.CreateObjectContract(objectType);
+            contract.ItemRequired = Required.AllowNull;
+            return contract;
+        }
+    }
+
     public static class JsonHelper
     {
         public static T DeserializeObject<T>(string json)
@@ -23,7 +33,9 @@ namespace Overlewd
                         Debug.LogError($"Deserialize entity \"{typeof(T).FullName}\" error:  {args.ErrorContext.Error.Message}");
                         args.ErrorContext.Handled = true;
                     },
-                    MissingMemberHandling = MissingMemberHandling.Error
+                    MissingMemberHandling = MissingMemberHandling.Error,
+                    // analog [JsonProperty(Required = Required.Always)] attribute for property
+                    ContractResolver = new RequireObjectPropertiesContractResolver()
                 });
             }
             catch (JsonSerializationException ex)

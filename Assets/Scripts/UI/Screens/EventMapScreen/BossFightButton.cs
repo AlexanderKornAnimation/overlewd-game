@@ -39,7 +39,7 @@ namespace Overlewd
                 var eventStageData = GameData.GetEventStageById(eventStageId);
 
                 title.text = eventStageData.title;
-                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageStatus.Complete);
+                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
             }
 
             private void ButtonClick()

@@ -13,8 +13,7 @@ namespace Overlewd
         {
             protected override void OnClick()
             {
-                var notifications = GameData.ftue.chapters[GameGlobalStates.chapterId].
-                    dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
+                var notifications = GameData.ftue.chapters[GameGlobalStates.chapterId].notifications;
                 var nextNotificationIndex = notifications.FindIndex(n => n.key == GameGlobalStates.dialogNotification_StageKey);
                 if (++nextNotificationIndex < notifications.Count)
                 {

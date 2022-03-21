@@ -37,9 +37,9 @@ namespace Overlewd
                 }
                 else if (GameGlobalStates.dialogScreen_StageKey == "dialogue4")
                 {
-                    var notifications = Overlewd.GameData.ftue.chapters[GameGlobalStates.chapterId].
-                        dialogs.FindAll(d => GameData.GetDialogById(d.id)?.type == AdminBRO.DialogType.Notification);
-                    GameGlobalStates.dialogNotification_StageKey = notifications.First().key;
+                    var firstNotif = GameData.ftue.chapters[GameGlobalStates.chapterId].
+                        notifications.First();
+                    GameGlobalStates.dialogNotification_StageKey = firstNotif.key;
                     UIManager.ShowNotification<DialogNotification>();
                 }
             }

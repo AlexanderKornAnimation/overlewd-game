@@ -50,11 +50,11 @@ namespace Overlewd
 
         protected Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
         {
-            [AdminBRO.DialogCharacterSkin.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogCharacterSkin.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterSkin.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogCharacterSkin.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
+            [AdminBRO.DialogReplica.CharacterSkin_Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
+            [AdminBRO.DialogReplica.CharacterSkin_Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
+            [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
         };
 
         protected SpineWidgetGroup cutInAnimation;
@@ -210,13 +210,12 @@ namespace Overlewd
         private void Initialize()
         {
             dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
-
-            slots[AdminBRO.DialogCharacterPosition.Left] = leftCharacterPos;
-            slots[AdminBRO.DialogCharacterPosition.Right] = rightCharacterPos;
-            slots[AdminBRO.DialogCharacterPosition.Middle] = midCharacterPos;
-            slot_character[AdminBRO.DialogCharacterPosition.Left] = null;
-            slot_character[AdminBRO.DialogCharacterPosition.Right] = null;
-            slot_character[AdminBRO.DialogCharacterPosition.Middle] = null;
+            slots[AdminBRO.DialogReplica.CharacterPosition_Left] = leftCharacterPos;
+            slots[AdminBRO.DialogReplica.CharacterPosition_Right] = rightCharacterPos;
+            slots[AdminBRO.DialogReplica.CharacterPosition_Middle] = midCharacterPos;
+            slot_character[AdminBRO.DialogReplica.CharacterPosition_Left] = null;
+            slot_character[AdminBRO.DialogReplica.CharacterPosition_Right] = null;
+            slot_character[AdminBRO.DialogReplica.CharacterPosition_Middle] = null;
 
             foreach (var replica in dialogReplicas)
             {

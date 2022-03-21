@@ -235,7 +235,6 @@ namespace Overlewd
         {
             public string id;
             public string type;
-            public string internalFormat;
             public string buildVersion;
             public string hash;
             public int size;
@@ -268,7 +267,6 @@ namespace Overlewd
             public int eventId;
             public int? nextChapter;
             public List<int> stages;
-            public string status;
         }
 
         // /events
@@ -280,13 +278,6 @@ namespace Overlewd
             }
         }
 
-        public class EventType
-        {
-            public const string Quarterly = "quarterly";
-            public const string Monthly = "monthly";
-            public const string Weekly = "weekly";
-        }
-
         [Serializable]
         public class EventItem
         {
@@ -296,7 +287,6 @@ namespace Overlewd
             public string description;
             public string dateStart;
             public string dateEnd;
-            public string backgroundUrl;
             public List<int> currencies;
             public string mapBackgroundImage;
             public string mapBannerImage;
@@ -304,11 +294,13 @@ namespace Overlewd
             public string bannerOverlayText;
             public List<int> markets;
             public List<int> quests;
-            public int? buyLimit;
             public string createdAt;
             public string updatedAt;
-            public List<int> stages;
             public List<int> chapters;
+
+            public const string Type_Quarterly = "quarterly";
+            public const string Type_Monthly = "monthly";
+            public const string Type_Weekly = "weekly";
         }
 
         // /event-stages
@@ -343,20 +335,6 @@ namespace Overlewd
             }
         }
 
-        public class EventStageType
-        {
-            public const string Battle = "battle";
-            public const string Dialog = "dialog";
-        }
-
-        public class EventStageStatus
-        {
-            public const string Open = "open";
-            public const string Started = "started";
-            public const string Complete = "complete";
-            public const string Closed =  "closed";
-        }
-
         [Serializable]
         public class EventStageItem
         {
@@ -366,9 +344,17 @@ namespace Overlewd
             public string type;
             public int? dialogId;
             public int? battleId;
-            public string eventMapNodeName;
+            public string mapNodeName;
             public List<int> nextStages;
             public string status;
+
+            public const string Type_Battle = "battle";
+            public const string Type_Dialog = "dialog";
+
+            public const string Status_Open = "open";
+            public const string Status_Started = "started";
+            public const string Status_Complete = "complete";
+            public const string Status_Closed = "closed";
         }
 
         // /event-quests
@@ -388,13 +374,6 @@ namespace Overlewd
             public int amount;
         }
 
-        public class EventQuestType
-        {
-            public const string StandartHunt = "standart_hunt";
-            public const string QuickQuest = "quick_quest";
-            public const string UniversalAdventure = "universal_adventure";
-        }
-
         [Serializable]
         public class EventQuestItem
         {
@@ -406,6 +385,10 @@ namespace Overlewd
             public List<EventQuestReward> rewards;
             public string status;
             public int progressCount;
+
+            public const string Type_StandartHunt = "standart_hunt";
+            public const string Type_QuickQuest = "quick_quest";
+            public const string Type_UniversalAdventure = "universal_adventure";
         }
 
         // /i18n
@@ -441,39 +424,6 @@ namespace Overlewd
             }
         }
 
-        public class DialogCharacterPosition 
-        {
-            public const string Left = "left";
-            public const string Right = "right";
-            public const string Middle = "middle";
-        }
-
-        public class DialogCharacterName
-        {
-            public const string Overlord = "Overlord";
-            public const string Ulvi = "Ulvi";
-            public const string Faye = "Faye";
-            public const string Adriel = "Adriel";
-        }
-
-        public class DialogCharacterSkin
-        {
-            public const string Overlord = "Overlord";
-            public const string Ulvi = "Ulvi";
-            public const string UlviWolf = "UlviWolf";
-            public const string Faye = "Faye";
-            public const string Adriel = "Adriel";
-        }
-
-        public class DialogCharacterAnimation
-        {
-            public const string Idle = "idle";
-            public const string Surprised = "surprised";
-            public const string Happy = "happy";
-            public const string Love = "love";
-            public const string Angry = "angry";
-        }
-
         [Serializable]
         public class DialogReplica
         {
@@ -490,13 +440,21 @@ namespace Overlewd
 
             public int? mainSoundId;
             public int? cutInSoundId;
-        }
 
-        public class DialogType 
-        {
-            public const string Dialog = "dialog";
-            public const string Sex = "sex";
-            public const string Notification = "notification";
+            public const string CharacterPosition_Left = "left";
+            public const string CharacterPosition_Right = "right";
+            public const string CharacterPosition_Middle = "middle";
+
+            public const string CharacterName_Overlord = "Overlord";
+            public const string CharacterName_Ulvi = "Ulvi";
+            public const string CharacterName_Faye = "Faye";
+            public const string CharacterName_Adriel = "Adriel";
+
+            public const string CharacterSkin_Overlord = "Overlord";
+            public const string CharacterSkin_Ulvi = "Ulvi";
+            public const string CharacterSkin_UlviWolf = "UlviWolf";
+            public const string CharacterSkin_Faye = "Faye";
+            public const string CharacterSkin_Adriel = "Adriel";
         }
 
         [Serializable]
@@ -506,7 +464,10 @@ namespace Overlewd
             public string title;
             public string type;
             public List<DialogReplica> replicas;
-            public string status;
+
+            public const string Type_Dialog = "dialog";
+            public const string Type_Sex = "sex";
+            public const string Type_Notification = "notification";
         }
 
         // /battles
@@ -526,12 +487,6 @@ namespace Overlewd
             public int amount;
         }
 
-        public class BattleType
-        {
-            public const string Battle = "battle";
-            public const string Boss = "boss";
-        }
-
         [Serializable]
         public class Battle
         {
@@ -540,7 +495,10 @@ namespace Overlewd
             public string type;
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
-            public string status;
+            public List<int> characters;
+
+            public const string Type_Battle = "battle";
+            public const string Type_Boss = "boss";
         }
 
         //ftue
@@ -554,9 +512,33 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class FTUEInfo
+        public class FTUENotificationItem
         {
-            public List<FTUEChapter> chapters;
+            public int id;
+            public string key;
+            public int? ftueChapterId;
+            public int? dialogId;
+        }
+
+        [Serializable]
+        public class FTUEStageItem
+        {
+            public int id;
+            public string key;
+            public int? ftueChapterId;
+            public int? dialogId;
+            public int? battleId;
+            public string mapNodeName;
+            public string defaultStatus;
+            public string type;
+
+            public const string Status_Open = "open";
+            public const string Status_Started = "started";
+            public const string Status_Complete = "complete";
+            public const string Status_Closed = "closed";
+
+            public const string Type_Dialog = "dialog";
+            public const string Type_Battle = "battle";
         }
 
         [Serializable]
@@ -565,17 +547,15 @@ namespace Overlewd
             public int id;
             public string name;
             public int? chapterMapId;
-            public List<FTUEStageInfo> dialogs;
-            public List<FTUEStageInfo> battles;
+            public List<FTUENotificationItem> notifications;
+            public List<FTUEStageItem> stages;
         }
 
         [Serializable]
-        public class FTUEStageInfo
+        public class FTUEInfo
         {
-            public int id;
-            public string key;
+            public List<FTUEChapter> chapters;
         }
-
 
         //animations
         public static async Task<List<Animation>> animationsAsync()

@@ -48,6 +48,12 @@ namespace Overlewd
             return events.Find(e => e.id == id);
         }
 
+        public static List<AdminBRO.EventChapter> eventChapters { get; set; }
+        public static AdminBRO.EventChapter GetEventChapterById(int id)
+        {
+            return eventChapters.Find(c => c.id == id);
+        }
+
         public static List<AdminBRO.EventQuestItem> eventQuests { get; set; } = new List<AdminBRO.EventQuestItem>();
         public static AdminBRO.EventQuestItem GetEventQuestById(int id)
         {
