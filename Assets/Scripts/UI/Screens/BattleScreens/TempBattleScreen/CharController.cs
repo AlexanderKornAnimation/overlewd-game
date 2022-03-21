@@ -66,7 +66,7 @@ namespace Overlewd
 		private void Init()
 		{
 			rt = gameObject.AddComponent<RectTransform>();
-			UIManager.SetStretch(GetComponent<RectTransform>());
+			UITools.SetStretch(GetComponent<RectTransform>());
 
 			isEnemy = character.isEnemy;
 			battleOrder = character.battleOrder;

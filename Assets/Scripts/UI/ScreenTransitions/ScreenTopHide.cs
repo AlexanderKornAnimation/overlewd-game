@@ -22,7 +22,7 @@ namespace Overlewd
             await WaitUnlocked();
             OnStart();
 
-            await UIHelper.TopHideAsync(screenRectTransform);
+            await UITools.TopHideAsync(screenRectTransform);
 
             await screen.AfterHideAsync();
             OnEnd();

@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
-    public static class UIHelper
+    public static class UITools
     {
         public static void DisableButton(Button button)
         {
@@ -18,6 +18,15 @@ namespace Overlewd
             {
                 cr.SetColor(Color.gray);
             }
+        }
+
+        public static void SetStretch(RectTransform rectTransform)
+        {
+            rectTransform.offsetMax = Vector2.zero;
+            rectTransform.offsetMin = Vector2.zero;
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
 
         //anim

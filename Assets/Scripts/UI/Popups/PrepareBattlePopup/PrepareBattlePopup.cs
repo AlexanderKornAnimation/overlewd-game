@@ -136,12 +136,12 @@ namespace Overlewd
         
         public override async Task AfterShowAsync()
         {
-            await UIHelper.BottomShowAsync(buffButtonRect);
+            await UITools.BottomShowAsync(buffButtonRect);
         }
 
         public override async Task BeforeHideAsync()
         {
-            await UIHelper.BottomHideAsync(buffButtonRect);
+            await UITools.BottomHideAsync(buffButtonRect);
         }
     }
 }

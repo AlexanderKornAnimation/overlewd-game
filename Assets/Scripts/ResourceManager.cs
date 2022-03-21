@@ -41,7 +41,7 @@ namespace Overlewd
             var screenPrefab = Resources.Load<GameObject>(prefabPath);
             var instScreen = UnityEngine.Object.Instantiate(screenPrefab, parent);
             var screenRectTransform = instScreen.GetComponent<RectTransform>();
-            UIManager.SetStretch(screenRectTransform);
+            UITools.SetStretch(screenRectTransform);
             return instScreen;
         }
 

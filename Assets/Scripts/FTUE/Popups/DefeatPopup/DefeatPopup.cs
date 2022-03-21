@@ -13,8 +13,8 @@ namespace Overlewd
         {
             protected override void Customize()
             {
-                UIHelper.DisableButton(magicGuildButton);
-                UIHelper.DisableButton(inventoryButton);
+                UITools.DisableButton(magicGuildButton);
+                UITools.DisableButton(inventoryButton);
             }
 
             protected override void MagicGuildButtonClick()

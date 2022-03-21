@@ -30,7 +30,7 @@ namespace Overlewd
             await WaitUnlocked();
             OnStart();
 
-            await UIHelper.FadeHideAsync(canvasGroup);
+            await UITools.FadeHideAsync(canvasGroup);
 
             await screen.AfterHideAsync();
             OnEnd();

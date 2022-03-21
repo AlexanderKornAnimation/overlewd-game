@@ -14,7 +14,7 @@ namespace Overlewd
 
         async void Start()
         {
-            await UIHelper.FadeShowAsync(canvasGroup);
+            await UITools.FadeShowAsync(canvasGroup);
             Destroy(this);
         }
     }

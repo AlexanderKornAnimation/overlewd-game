@@ -24,8 +24,8 @@ namespace Overlewd
             await WaitUnlocked();
             OnStart();
 
-            await UIHelper.RightShowAsync(screenRectTransform);
-            UIManager.SetStretch(screenRectTransform);
+            await UITools.RightShowAsync(screenRectTransform);
+            UITools.SetStretch(screenRectTransform);
 
             await screen.AfterShowAsync();
             OnEnd();

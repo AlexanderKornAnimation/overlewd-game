@@ -143,7 +143,7 @@ namespace Overlewd
             uiRootScreenLayerGO.layer = 5;
             var uiRootScreenLayerGO_rectTransform = uiRootScreenLayerGO.AddComponent<RectTransform>();
             uiRootScreenLayerGO_rectTransform.SetParent(uiRootCanvasGO.transform, false);
-            SetStretch(uiRootScreenLayerGO_rectTransform);
+            UITools.SetStretch(uiRootScreenLayerGO_rectTransform);
 
             //resolution fixed aspect
             uiRootScreenLayerGO_aspectRatioFitter = uiRootScreenLayerGO.AddComponent<AspectRatioFitter>();
@@ -160,18 +160,9 @@ namespace Overlewd
             layerGO.layer = 5;
             var layerGO_rectTransform = layerGO.AddComponent<RectTransform>();
             layerGO_rectTransform.SetParent(uiRootScreenLayerGO.transform, false);
-            SetStretch(layerGO_rectTransform);
+            UITools.SetStretch(layerGO_rectTransform);
 
             layerGO.transform.SetSiblingIndex(siblingIndex);
-        }
-
-        public static void SetStretch(RectTransform rectTransform)
-        {
-            rectTransform.offsetMax = Vector2.zero;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
 
         //Missclick Instantiate
@@ -181,7 +172,7 @@ namespace Overlewd
             var missclickGO_screenRectTransform = missclickGO.AddComponent<RectTransform>();
             missclickGO_screenRectTransform.SetParent(parent, false);
             missclickGO_screenRectTransform.SetAsFirstSibling();
-            SetStretch(missclickGO_screenRectTransform);
+            UITools.SetStretch(missclickGO_screenRectTransform);
             return missclickGO.AddComponent<T>();
         }
 
@@ -213,7 +204,7 @@ namespace Overlewd
             var screenGO_rectTransform = screenGO.AddComponent<RectTransform>();
             var screenGO_rectMask2D = screenGO.AddComponent<RectMask2D>();
             screenGO_rectTransform.SetParent(parent, false);
-            SetStretch(screenGO_rectTransform);
+            UITools.SetStretch(screenGO_rectTransform);
             return screenGO.AddComponent<T>();
         }
 
@@ -664,7 +655,7 @@ namespace Overlewd
             currentDialogBoxGO.layer = 5;
             var currentDialogBoxGO_rectTransform = currentDialogBoxGO.AddComponent<RectTransform>();
             currentDialogBoxGO_rectTransform.SetParent(uiDialogLayerGO.transform, false);
-            SetStretch(currentDialogBoxGO_rectTransform);
+            UITools.SetStretch(currentDialogBoxGO_rectTransform);
             var dialogBox = currentDialogBoxGO.AddComponent<DebugDialogBox>();
 
             dialogBox.title = title;

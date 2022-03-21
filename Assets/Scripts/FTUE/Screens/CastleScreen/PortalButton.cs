@@ -25,7 +25,7 @@ namespace Overlewd
 
                     if (/*GameGlobalStates.castle_PortalLock*/true)
                     {
-                        UIHelper.DisableButton(button);
+                        UITools.DisableButton(button);
                     }
                 }
 
