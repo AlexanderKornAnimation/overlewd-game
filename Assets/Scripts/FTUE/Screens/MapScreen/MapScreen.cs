@@ -13,20 +13,6 @@ namespace Overlewd
     {
         public class MapScreen : Overlewd.MapScreen
         {
-            protected override void Awake()
-            {
-                var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MapScreen/MapScreenFTUE", transform);
-
-                var canvas = screenInst.transform.Find("Canvas");
-                chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
-                backbutton = canvas.Find("BackButton").GetComponent<Button>();
-
-                chapterButton.onClick.AddListener(ChapterButtonClick);
-                backbutton.onClick.AddListener(BackButtonClick);
-
-                map = canvas.Find("Map");
-            }
-
             protected override void Customize()
             {
                 backbutton.gameObject.SetActive(false);
