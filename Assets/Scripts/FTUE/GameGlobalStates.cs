@@ -10,16 +10,29 @@ namespace Overlewd
     {
         public static class GameGlobalStates
         {
-            public static int chapterId { get; set; }
+            public static AdminBRO.FTUEChapter chapterData { get; set; }
+
+            public static List<AdminBRO.FTUENotificationItem> chapterNotifications 
+            {
+                get 
+                {
+                    return chapterData?.notifications;
+                }
+            }
+
+            public static AdminBRO.FTUEStageItem GetStageByKey(string key)
+            {
+                return GameData.ftueStages.Find(s => s.ftueChapterId == chapterData?.id && s.key == key);
+            }
 
             public static string battleScreen_StageKey { get; set; }
             public static AdminBRO.Battle battleScreen_BattleData
             {
                 get
                 {
-                    var stageData = GameData.ftue.chapters[chapterId].
-                        stages.Find(s => (s.key == battleScreen_StageKey) && s.battleId.HasValue);
-                    return GameData.GetBattleById(stageData.battleId.Value);
+                    var stageData = GetStageByKey(battleScreen_StageKey);
+                    var battleId = stageData?.battleId;
+                    return battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
                 }
             }
 
@@ -29,9 +42,9 @@ namespace Overlewd
             {
                 get
                 {
-                    var stageData = GameData.ftue.chapters[chapterId].
-                        stages.Find(s => (s.key == sexScreen_StageKey) && s.dialogId.HasValue);
-                    var sexData = GameData.GetDialogById(stageData.dialogId.Value);
+                    var stageData = GetStageByKey(sexScreen_StageKey);
+                    var sexId = stageData?.dialogId;
+                    var sexData = sexId.HasValue ? GameData.GetDialogById(sexId.Value) : null;
                     return sexData?.type == AdminBRO.Dialog.Type_Sex ? sexData : null;
                 }
             }
@@ -41,9 +54,10 @@ namespace Overlewd
             {
                 get
                 {
-                    var stageData = GameData.ftue.chapters[chapterId].
-                        stages.Find(s => (s.key == dialogScreen_StageKey) && s.dialogId.HasValue);
-                    var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+
+                    var stageData = GetStageByKey(dialogScreen_StageKey);
+                    var dialogId = stageData?.dialogId;
+                    var dialogData = dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
                     return dialogData?.type == AdminBRO.Dialog.Type_Dialog ? dialogData : null;
                 }
             }
@@ -53,9 +67,9 @@ namespace Overlewd
             {
                 get
                 {
-                    var notificationId = GameData.ftue.chapters[chapterId].
-                        notifications.Find(n => n.key == dialogNotification_StageKey).id;
-                    return GameData.GetDialogById(notificationId);
+                    var notificationData = chapterNotifications.Find(n => n.key == dialogNotification_StageKey);
+                    var dialogId = notificationData?.dialogId;
+                    return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
                 }
             }
         }

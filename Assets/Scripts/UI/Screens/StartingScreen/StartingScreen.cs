@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Overlewd.FTUE;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                FTUE.GameGlobalStates.chapterId = 0;
+                FTUE.GameGlobalStates.chapterData = GameData.ftue.chapters.First();
                 FTUE.GameGlobalStates.sexScreen_StageKey = "sex1";
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });

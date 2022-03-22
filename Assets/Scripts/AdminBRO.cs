@@ -532,6 +532,32 @@ namespace Overlewd
         }
 
         [Serializable]
+        public class FTUEChapter
+        {
+            public int id;
+            public string name;
+            public int? chapterMapId;
+            public List<FTUENotificationItem> notifications;
+            public List<int> stages;
+        }
+
+        [Serializable]
+        public class FTUEInfo
+        {
+            public List<FTUEChapter> chapters;
+        }
+
+        // /ftue-stages
+        public static async Task<List<FTUEStageItem>> ftueStagesAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/ftue-stages";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<FTUEStageItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
         public class FTUEStageItem
         {
             public int id;
@@ -540,7 +566,7 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
-            public string defaultStatus;
+            public string status;
             public string type;
 
             public const string Status_Open = "open";
@@ -550,22 +576,6 @@ namespace Overlewd
 
             public const string Type_Dialog = "dialog";
             public const string Type_Battle = "battle";
-        }
-
-        [Serializable]
-        public class FTUEChapter
-        {
-            public int id;
-            public string name;
-            public int? chapterMapId;
-            public List<FTUENotificationItem> notifications;
-            public List<FTUEStageItem> stages;
-        }
-
-        [Serializable]
-        public class FTUEInfo
-        {
-            public List<FTUEChapter> chapters;
         }
 
         // /ftue/reset

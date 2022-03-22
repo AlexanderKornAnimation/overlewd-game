@@ -37,8 +37,7 @@ namespace Overlewd
                 }
                 else if (GameGlobalStates.dialogScreen_StageKey == "dialogue4")
                 {
-                    var firstNotif = GameData.ftue.chapters[GameGlobalStates.chapterId].
-                        notifications.First();
+                    var firstNotif = GameGlobalStates.chapterNotifications.First();
                     GameGlobalStates.dialogNotification_StageKey = firstNotif.key;
                     UIManager.ShowNotification<DialogNotification>();
                 }
