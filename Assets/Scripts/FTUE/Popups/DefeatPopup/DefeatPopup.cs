@@ -18,21 +18,11 @@ namespace Overlewd
                 UITools.DisableButton(editTeamButton);
             }
 
-            protected override void MagicGuildButtonClick()
-            {
-                
-            }
-
-            protected override void InventoryButtonClick()
-            {
-
-            }
-
             protected override void HaremButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
-                //GameGlobalStates.sexScreen_StageKey = "key";
-                //UIManager.ShowScreen<SexScreen>();
+
+                UIManager.ShowScreen<MapScreen>();
             }
         }
     }

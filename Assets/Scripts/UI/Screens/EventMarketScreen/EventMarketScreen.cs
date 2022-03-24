@@ -6,7 +6,7 @@ using TMPro;
 
 namespace Overlewd
 {
-    public class EventMarketScreen : BaseScreen
+    public class EventMarketScreen : BaseFullScreen
     {
         private Button backButton;
         private Button portalButton;

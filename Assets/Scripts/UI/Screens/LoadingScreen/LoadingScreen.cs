@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
-    public class LoadingScreen : BaseScreen
+    public class LoadingScreen : BaseFullScreen
     {
         private Image loadingProgress;
         private TextMeshProUGUI text;

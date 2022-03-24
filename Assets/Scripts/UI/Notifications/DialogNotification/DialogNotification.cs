@@ -33,7 +33,6 @@ namespace Overlewd
         protected Transform emotionPos;
 
         protected SpineWidgetGroup emotionAnimation;
-        protected AdminBRO.Dialog dialogData;
 
         protected virtual void Awake()
         {
@@ -43,6 +42,7 @@ namespace Overlewd
  
             button = canvas.Find("Button").GetComponent<Button>();
             button.onClick.AddListener(ButtonClick);
+            button.gameObject.SetActive(false);
 
             var banner = canvas.Find("Banner");
             text = banner.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -54,8 +54,6 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HideNotification();
-
-            LeaveByButtonScreen();
         }
 
         public override void ShowMissclick()
@@ -66,9 +64,22 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
-            EnterScreen();
-            Customize();
+            var dialogData = GameGlobalStates.dialogNotificationData;
+            if (dialogData != null)
+            {
+                var firstReplica = dialogData.replicas.First();
+                text.text = firstReplica.message;
+
+                if (firstReplica.emotionAnimationId.HasValue)
+                {
+                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
+                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                    emotionAnimation.Initialize(animation);
+                }
+            }
+
             StartCoroutine(CloseByTimer());
+
             await Task.CompletedTask;
         }
 
@@ -101,43 +112,10 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenLeftHide>();
         }
 
-        private void Customize()
-        {
-            if (dialogData != null)
-            {
-                var firstReplica = dialogData.replicas.First();
-                text.text = firstReplica.message;
-
-                if (firstReplica.emotionAnimationId.HasValue)
-                {
-                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
-                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
-                    emotionAnimation.Initialize(animation);
-                }
-            }
-        }
-
         private IEnumerator CloseByTimer()
         {
             yield return new WaitForSeconds(4.0f);
             UIManager.HideNotification();
-
-            LeaveByTimerScreen();
-        }
-
-        protected virtual void EnterScreen()
-        {
-            //dialogData = 
-        }
-
-        protected virtual void LeaveByTimerScreen()
-        {
-
-        }
-
-        protected virtual void LeaveByButtonScreen()
-        {
-
         }
     }
 }

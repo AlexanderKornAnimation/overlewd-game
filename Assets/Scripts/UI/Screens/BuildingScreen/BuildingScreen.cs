@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BuildingScreen : BaseScreen
+    public class BuildingScreen : BaseFullScreen
     {
         protected Button municipalityButton;
         protected GameObject municipalityUnaviable;

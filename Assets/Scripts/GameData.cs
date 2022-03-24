@@ -119,6 +119,28 @@ namespace Overlewd
         public static AdminBRO.FTUEInfo ftue { get; set; }
         public static List<AdminBRO.FTUEStageItem> ftueStages { get; set; } = new List<AdminBRO.FTUEStageItem>();
 
+        public static AdminBRO.FTUEChapter GetFTUEChapterByKey(string key)
+        {
+            return ftue.chapters.Find(ch => ch.key == key);
+        }
+        public static AdminBRO.FTUEChapter GetFTUEChapterById(int id)
+        {
+            return ftue.chapters.Find(ch => ch.id == id);
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageById(int id)
+        {
+            return ftueStages.Find(s => s.id == id);
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key, int chapterId)
+        {
+            return ftueStages.Find(s => s.key == key && s.ftueChapterId == chapterId);
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key, string chapterKey)
+        {
+            var chpaterData = GetFTUEChapterByKey(chapterKey);
+            return (chpaterData != null) ? GetFTUEStageByKey(key, chpaterData.id) : null;
+        }
+
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
         public static AdminBRO.Animation GetAnimationById(int id)
         {

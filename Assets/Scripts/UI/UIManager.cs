@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -59,8 +60,8 @@ namespace Overlewd
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
 
-        private static BaseScreen prevScreen;
-        private static BaseScreen currentScreen;
+        private static BaseFullScreen prevScreen;
+        private static BaseFullScreen currentScreen;
         private static BasePopup prevPopup;
         private static BasePopup currentPopup;
         private static BaseSubPopup prevSubPopup;
@@ -208,7 +209,7 @@ namespace Overlewd
             return screenGO.AddComponent<T>();
         }
 
-        public static T GetScreenInstance<T>() where T : BaseScreen
+        public static T GetScreenInstance<T>() where T : BaseFullScreen
         {
             return GetScreenInstance<T>(uiScreenLayerGO.transform);
         }
@@ -278,17 +279,17 @@ namespace Overlewd
         }
 
         //Screen Layer
-        public static T GetScreen<T>() where T : BaseScreen
+        public static T GetScreen<T>() where T : BaseFullScreen
         {
             return currentScreen as T;
         }
 
-        public static bool HasScreen<T>() where T : BaseScreen
+        public static bool HasScreen<T>() where T : BaseFullScreen
         {
             return currentScreen?.GetType() == typeof(T);
         }
 
-        public static T ShowScreen<T>() where T : BaseScreen
+        public static T ShowScreen<T>() where T : BaseFullScreen
         {
             MemoryOprimizer.PrepareChangeScreen();
 
@@ -609,6 +610,15 @@ namespace Overlewd
         public static bool HasNotification<T>() where T : BaseNotification
         {
             return currentNotification?.GetType() == typeof(T);
+        }
+
+        public static async Task WaitHideNotifications()
+        {
+            while (currentNotification != null ||
+                   prevNotification != null)
+            {
+                await UniTask.NextFrame();
+            }
         }
 
         public static T ShowNotification<T>() where T : BaseNotification

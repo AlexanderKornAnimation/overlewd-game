@@ -13,33 +13,22 @@ namespace Overlewd
         {
             protected override async Task EnterScreen()
             {
-                dialogData = GameGlobalStates.dialogScreen_DialogData;
+                dialogData = GameGlobalStates.ftue_StageDialogData;
 
                 await Task.CompletedTask;
             }
 
             protected override void LeaveScreen()
             {
-                if (GameGlobalStates.dialogScreen_StageKey == "dialogue1")
+                switch (GameGlobalStates.ftue_StageKey)
                 {
-                    GameGlobalStates.dialogScreen_StageKey = "dialogue2";
-                    UIManager.ShowScreen<DialogScreen>();
-                }
-                else if (GameGlobalStates.dialogScreen_StageKey == "dialogue2")
-                {
-                    GameGlobalStates.dialogScreen_StageKey = "dialogue3";
-                    UIManager.ShowScreen<DialogScreen>();
-                }
-                else if (GameGlobalStates.dialogScreen_StageKey == "dialogue3")
-                {
-                    GameGlobalStates.dialogScreen_StageKey = "dialogue4";
-                    UIManager.ShowScreen<DialogScreen>();
-                }
-                else if (GameGlobalStates.dialogScreen_StageKey == "dialogue4")
-                {
-                    var firstNotif = GameGlobalStates.chapterNotifications.First();
-                    GameGlobalStates.dialogNotification_StageKey = firstNotif.key;
-                    UIManager.ShowNotification<DialogNotification>();
+                    case "dialogue1":
+                        GameGlobalStates.ftue_StageKey = "battle1";
+                        UIManager.ShowScreen<BattleScreen>();
+                        break;
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
                 }
             }
         }

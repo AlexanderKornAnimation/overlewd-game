@@ -7,7 +7,7 @@ using UnityEngine.Video;
 
 namespace Overlewd
 {
-    public class BattleScreen : BaseScreen
+    public class BattleScreen : BaseFullScreen
     {
         protected Button startBattleButton;
         protected Button backButton;

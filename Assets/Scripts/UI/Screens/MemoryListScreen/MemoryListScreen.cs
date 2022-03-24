@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MemoryListScreen : BaseScreen
+    public class MemoryListScreen : BaseFullScreen
     {
         private Dictionary<string, List<NSMemoryListScreen.BaseScroll>> content =
             new Dictionary<string, List<NSMemoryListScreen.BaseScroll>>();

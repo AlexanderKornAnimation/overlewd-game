@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,25 +25,16 @@ namespace Overlewd
 
             public override async Task AfterShowAsync()
             {
-                StartCoroutine(WaitDialogNotificationHide());
+                ShowStartNotifications();
 
                 await Task.CompletedTask;
-            }
-
-            private IEnumerator WaitDialogNotificationHide()
-            {
-                while (UIManager.HasNotification<DialogNotification>())
-                {
-                    yield return new WaitForSeconds(0.1f);
-                }
-                StartBattleButtonClick();
             }
 
             protected override void EndBattleVideo(VideoPlayer vp)
             {
                 skipButton.gameObject.SetActive(false);
 
-                if (true)
+                if (GameGlobalStates.ftue_StageKey == "battle2")
                 {
                     UIManager.ShowPopup<DefeatPopup>();
                 }
@@ -50,6 +42,8 @@ namespace Overlewd
                 {
                     UIManager.ShowPopup<VictoryPopup>();
                 }
+
+                ShowEndNotifications();
             }
 
             protected override void StartBattleButtonClick()
@@ -60,6 +54,52 @@ namespace Overlewd
                 }
 
                 battleVideo.Play();
+            }
+
+            private async void ShowStartNotifications()
+            {
+                if (GameGlobalStates.ftue_StageKey == "battle1")
+                {
+                    GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("battletutor1");
+                    UIManager.ShowNotification<DialogNotification>();
+                    await UIManager.WaitHideNotifications();
+                }
+
+                StartBattleButtonClick();
+            }
+
+            private async void ShowEndNotifications()
+            {
+                var waitPopupsEndTr = true;
+                while (waitPopupsEndTr)
+                {
+                    var victoryPopupTrState = UIManager.GetPopup<VictoryPopup>()?.IsTransitionState() ?? false;
+                    var defeatPopupTrState = UIManager.GetPopup<DefeatPopup>()?.IsTransitionState() ?? false;
+                    waitPopupsEndTr = victoryPopupTrState || defeatPopupTrState;
+                    await UniTask.NextFrame();
+                }
+
+                switch (GameGlobalStates.ftue_StageKey)
+                {
+                    case "battle1":
+                        GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("battletutor2");
+                        UIManager.ShowNotification<DialogNotification>();
+                        break;
+                    case "battle2":
+                        GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("battletutor3");
+                        UIManager.ShowNotification<DialogNotification>();
+                        await UIManager.WaitHideNotifications();
+
+                        GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("bufftutor1");
+                        UIManager.ShowNotification<DialogNotification>();
+                        break;
+                    case "battle5":
+                        GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("castletutor");
+                        UIManager.ShowNotification<DialogNotification>();
+                        break;
+                }
+
+                await Task.CompletedTask;
             }
         }
     }

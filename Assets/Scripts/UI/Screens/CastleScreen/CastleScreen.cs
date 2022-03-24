@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CastleScreen : BaseScreen
+    public class CastleScreen : BaseFullScreen
     {
         protected Transform cave;
         protected Transform stable;

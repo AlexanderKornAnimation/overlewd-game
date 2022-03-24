@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Overlewd
 {
-    public class PortalScreen : BaseScreen
+    public class PortalScreen : BaseFullScreen
     {
         private Button memoriesButton;
         private Image memoriesButtonSelected;

@@ -10,20 +10,10 @@ namespace Overlewd
     {
         public class PrepareBattlePopup : Overlewd.PrepareBattlePopup
         {
-            protected override void Customize()
-            {
-
-            }
-
             protected override void BattleButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
                 UIManager.ShowScreen<BattleScreen>();
-            }
-
-            protected override void BuffButtonClick()
-            {
-                
             }
         }
     }

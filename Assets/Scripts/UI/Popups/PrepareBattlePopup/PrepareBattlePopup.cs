@@ -70,38 +70,6 @@ namespace Overlewd
             reward3Count = reward3.transform.Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
-        void Start()
-        {
-            Customize();
-        }
-
-        protected virtual void Customize()
-        {
-            // if (!GameGlobalStates.battle_EventStageData.battleId.HasValue)
-            //     return;
-            //
-            // var battleData = GameData.GetBattleById(GameGlobalStates.battle_EventStageData.battleId.Value);
-            // if (battleData.firstRewards == null || battleData.rewards == null)
-            //     return;
-            // if (battleData.firstRewards.Count < 1 || battleData.rewards.Count < 3)
-            //     return;
-            //
-            // var firstIconURL = GameData.GetCurrencyById(battleData.firstRewards[0].currencyId).iconUrl;
-            // firstTimeReward.sprite = ResourceManager.LoadSprite(firstIconURL);
-            // firstTimeRewardCount.text = $"{battleData.firstRewards[0].amount}";
-            //
-            // var icon1URL = GameData.GetCurrencyById(battleData.rewards[0].currencyId).iconUrl;
-            // var icon2URL = GameData.GetCurrencyById(battleData.rewards[1].currencyId).iconUrl;
-            // var icon3URL = GameData.GetCurrencyById(battleData.rewards[2].currencyId).iconUrl;
-            //
-            // reward1.sprite = ResourceManager.LoadSprite(icon1URL);
-            // reward2.sprite = ResourceManager.LoadSprite(icon2URL);
-            // reward3.sprite = ResourceManager.LoadSprite(icon3URL);
-            // reward1Count.text = $"{battleData.rewards[0].amount}";
-            // reward2Count.text = $"{battleData.rewards[1].amount}";
-            // reward3Count.text = $"{battleData.rewards[2].amount}";
-        }
-
         protected virtual void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

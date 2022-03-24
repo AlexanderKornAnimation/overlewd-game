@@ -5,33 +5,29 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Resharper disable All
-
 namespace Overlewd
 {
     namespace NSMapScreen
     {
-        public class SexSceneButton : MonoBehaviour
+        public class SexSceneButton : BaseStageButton
         {
-            protected Button button;
-            protected Transform sceneDone;
-            protected TextMeshProUGUI title;
-
-            private void Awake()
+            protected override void Start()
             {
-                var canvas = transform.Find("Canvas");
+                base.Start();
 
-                button = canvas.Find("Button").GetComponent<Button>();
-                sceneDone = button.transform.Find("SceneDone");
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-                button.onClick.AddListener(ButtonClick);
+                var dialogId = stageData?.dialogId;
+                if (dialogId.HasValue)
+                {
+                    var dialogData = GameData.GetDialogById(dialogId.Value);
+                    title.text = dialogData.title;
+                }
             }
 
-            protected virtual void ButtonClick()
+            protected override void ButtonClick()
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<SexScreen>();
+                base.ButtonClick();
+                GameGlobalStates.ftue_StageKey = stageData?.key;
+                UIManager.ShowScreen<FTUE.SexScreen>();
             }
 
             public static SexSceneButton GetInstance(Transform parent)

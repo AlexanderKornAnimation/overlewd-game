@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class UserSettingsScreen : BaseScreen
+    public class UserSettingsScreen : BaseFullScreen
     {
         void Awake()
         {

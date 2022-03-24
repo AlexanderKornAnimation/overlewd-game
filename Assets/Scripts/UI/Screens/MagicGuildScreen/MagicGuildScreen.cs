@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MagicGuildScreen : BaseScreen
+    public class MagicGuildScreen : BaseFullScreen
     {
         private Button activeSpell;
         private Button ultimateSpell;

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SexScreen : BaseScreen
+    public class SexScreen : BaseFullScreen
     {
         protected Coroutine autoplayCoroutine;
 
@@ -148,6 +148,11 @@ namespace Overlewd
             }
         }
 
+        protected virtual void ShowLastReplica()
+        {
+
+        }
+
         private void ShowCurrentReplica()
         {
             var replica = dialogReplicas[currentReplicaId];
@@ -159,6 +164,11 @@ namespace Overlewd
             ShowMain(replica, prevReplica);
             ShowCutIn(replica, prevReplica);
             PlaySound(replica);
+
+            if (!(currentReplicaId + 1 < dialogReplicas.Count))
+            {
+                ShowLastReplica();
+            }
         }
         
         private IEnumerator Autoplay()

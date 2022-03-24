@@ -7,12 +7,22 @@ namespace Overlewd
 {
     namespace FTUE
     {
-        public class QuestsWidget : Overlewd.BaseWidget
+        public class QuestsWidget : Overlewd.QuestsWidget
         {
-            public static QuestsWidget GetInstance(Transform parent)
+            protected override void Customize()
+            {
+
+            }
+
+            protected override void MainQuestButtonClick()
+            {
+
+            }
+
+            public static new QuestsWidget GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateScreenPrefab<QuestsWidget>
-                    ("Prefabs/UI/Widgets/QuestsWidget/QuestWidgetFTUE", parent);
+                    ("Prefabs/UI/Widgets/QuestsWidget/QuestWidget", parent);
             }
         }
     }

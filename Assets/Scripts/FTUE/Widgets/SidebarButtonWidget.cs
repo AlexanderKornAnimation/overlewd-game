@@ -16,7 +16,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                UITools.DisableButton(sidebarMenuButton);
+                //UITools.DisableButton(sidebarMenuButton);
             }
 
             protected override void SidebarMenuButtonClick()

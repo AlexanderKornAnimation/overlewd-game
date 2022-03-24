@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-	public class TempBattleScreen : BaseScreen
+	public class TempBattleScreen : BaseFullScreen
 	{
 		private Button backButton;
 		//private GameObject battleManager;

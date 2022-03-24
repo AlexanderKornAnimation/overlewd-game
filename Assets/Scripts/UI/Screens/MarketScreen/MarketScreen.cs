@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MarketScreen : BaseScreen
+    public class MarketScreen : BaseFullScreen
     {
         private Transform bottomGrid;
         private Button mainMenuButton;

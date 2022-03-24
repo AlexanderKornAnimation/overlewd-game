@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class ForgeScreen : BaseScreen
+    public class ForgeScreen : BaseFullScreen
     {
         private Button castleBtn;
 

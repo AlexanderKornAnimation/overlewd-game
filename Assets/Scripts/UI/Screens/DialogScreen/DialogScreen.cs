@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DialogScreen : BaseScreen
+    public class DialogScreen : BaseFullScreen
     {
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
@@ -102,6 +102,13 @@ namespace Overlewd
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
+
+            await Task.CompletedTask;
         }
 
         protected virtual async Task EnterScreen()
@@ -391,7 +398,12 @@ namespace Overlewd
                 mainSound?.Play();
             }
         }
-        
+
+        protected virtual void ShowLastReplica()
+        {
+
+        }
+
         private void ShowCurrentReplica()
         {
             var replica = dialogReplicas[currentReplicaId];
@@ -428,6 +440,11 @@ namespace Overlewd
             ShowPersEmotion(replica, prevReplica);
             PlaySound(replica);
             ShowCutIn(replica, prevReplica);
+
+            if (!(currentReplicaId + 1 < dialogReplicas.Count))
+            {
+                ShowLastReplica();
+            }
         }
     }
 }

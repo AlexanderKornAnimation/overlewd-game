@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class EventMapScreen : BaseScreen
+    public class EventMapScreen : BaseFullScreen
     { 
         private Transform stages;
 
