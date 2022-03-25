@@ -34,25 +34,16 @@ namespace Overlewd
         {
             var quests = GameData.eventQuests;
 
-            var questSkinId = 0;
-            foreach (var questData in quests)
+            for (int qId = 0; qId < quests.Count; qId++)
             {
-                NSQuestWidget.BaseQuestButton questButton = null;
-                if (questSkinId == 0)
+                NSQuestWidget.BaseQuestButton questButton = (qId % 3) switch
                 {
-                    questButton = NSQuestWidget.SideQuestButton1.GetInstance(content);
-                }
-                else if (questSkinId == 1)
-                {
-                    questButton = NSQuestWidget.SideQuestButton2.GetInstance(content);
-                }
-                else if (questSkinId == 2)
-                {
-                    questButton = NSQuestWidget.SideQuestButton3.GetInstance(content);
-                }
-                questButton.questData = questData;
-
-                questSkinId = ++questSkinId > 2 ? 0 : questSkinId;
+                    0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
+                    1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
+                    2 => NSQuestWidget.SideQuestButton3.GetInstance(content),
+                    _ => null
+                };
+                questButton.questData = quests[qId];
             }
         }
 
