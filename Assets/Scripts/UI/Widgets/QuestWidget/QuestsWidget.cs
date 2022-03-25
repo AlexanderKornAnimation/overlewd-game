@@ -42,17 +42,17 @@ namespace Overlewd
             {
                 if (iterForButton1 == i)
                 {
-                    SideQuestButton1.GetInstance(content);
+                    QuestWidget.SideQuestButton1.GetInstance(content);
                     iterForButton1 += 4;
                 }
                 else if (iterForButton2 == i)
                 {
-                    SideQuestButton2.GetInstance(content);
+                    QuestWidget.SideQuestButton2.GetInstance(content);
                     iterForButton2 += 2;
                 }
                 else if (iterForButton3 == i)
                 {
-                    SideQuestButton3.GetInstance(content);
+                    QuestWidget.SideQuestButton3.GetInstance(content);
 
                     iterForButton3 += i % 2 == 0 ? 4 : 3;
                 }

@@ -2,11 +2,15 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class SideQuestButton1 : BaseQuestButton
+    namespace QuestWidget
     {
-        public static SideQuestButton1 GetInstance(Transform parent)
+         public class SideQuestButton1 : BaseQuestButton
         {
-            return ResourceManager.InstantiateWidgetPrefab<SideQuestButton1>("Prefabs/UI/Widgets/QuestsWidget/SideQuest1", parent);
+            public static SideQuestButton1 GetInstance(Transform parent)
+            {
+                return ResourceManager.InstantiateWidgetPrefab<SideQuestButton1>(
+                    "Prefabs/UI/Widgets/QuestsWidget/SideQuest1", parent);
+            }
         }
     }
 }
