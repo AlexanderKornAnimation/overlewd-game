@@ -20,7 +20,7 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                FTUE.GameGlobalStates.chapterData = GameData.ftue.chapters.First();
+                FTUE.GameGlobalStates.chapterData = GameData.ftue.chapters.Find(ch => ch.key == "chapter1");
                 FTUE.GameGlobalStates.sexScreen_StageKey = "sex1";
                 UIManager.ShowScreen<FTUE.SexScreen>();
             });

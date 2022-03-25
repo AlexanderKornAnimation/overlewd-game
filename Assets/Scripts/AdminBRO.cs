@@ -535,10 +535,12 @@ namespace Overlewd
         public class FTUEChapter
         {
             public int id;
+            public string key;
             public string name;
             public int? chapterMapId;
             public List<FTUENotificationItem> notifications;
             public List<int> stages;
+            public int? nextChapterId;
         }
 
         [Serializable]
@@ -568,6 +570,7 @@ namespace Overlewd
             public string mapNodeName;
             public string status;
             public string type;
+            public List<int> nextStages;
 
             public const string Status_Open = "open";
             public const string Status_Started = "started";
