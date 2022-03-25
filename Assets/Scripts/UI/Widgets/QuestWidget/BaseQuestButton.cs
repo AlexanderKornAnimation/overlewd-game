@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    namespace QuestWidget
+    namespace NSQuestWidget
     {
-        public class BaseQuestButton : MonoBehaviour
+        public abstract class BaseQuestButton : MonoBehaviour
         {
             protected TextMeshProUGUI title;
             protected Button button;
-            protected static int questId = 1;
+            public AdminBRO.EventQuestItem questData { get; set; }
 
             private void Awake()
             {
@@ -32,9 +32,7 @@ namespace Overlewd
 
             protected virtual void Customize()
             {
-                var questData = GameData.GetEventQuestById(questId);
-                questId += 1;
-                title.text = questData.name;
+                title.text = questData?.name;
             }
         }
     }

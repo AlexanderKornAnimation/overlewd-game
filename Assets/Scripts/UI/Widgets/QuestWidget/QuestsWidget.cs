@@ -33,32 +33,27 @@ namespace Overlewd
         protected virtual void Customize()
         {
             var quests = GameData.eventQuests;
-            
-            var iterForButton1 = 0;
-            var iterForButton2 = 1;
-            var iterForButton3 = 2;
-            
-            for (int i = 0; i < quests.Count; i++)
+
+            var questSkinId = 0;
+            foreach (var questData in quests)
             {
-                if (iterForButton1 == i)
+                NSQuestWidget.BaseQuestButton questButton = null;
+                if (questSkinId == 0)
                 {
-                    QuestWidget.SideQuestButton1.GetInstance(content);
-                    iterForButton1 += 4;
+                    questButton = NSQuestWidget.SideQuestButton1.GetInstance(content);
                 }
-                else if (iterForButton2 == i)
+                else if (questSkinId == 1)
                 {
-                    QuestWidget.SideQuestButton2.GetInstance(content);
-                    iterForButton2 += 2;
+                    questButton = NSQuestWidget.SideQuestButton2.GetInstance(content);
                 }
-                else if (iterForButton3 == i)
+                else if (questSkinId == 2)
                 {
-                    QuestWidget.SideQuestButton3.GetInstance(content);
+                    questButton = NSQuestWidget.SideQuestButton3.GetInstance(content);
+                }
+                questButton.questData = questData;
 
-                    iterForButton3 += i % 2 == 0 ? 4 : 3;
-                }
+                questSkinId = ++questSkinId > 2 ? 0 : questSkinId;
             }
-
-            scrollMarker.SetActive(quests.Count >= 3);
         }
 
         protected virtual void MainQuestButtonClick()

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    namespace QuestWidget
+    namespace NSQuestWidget
     {
         public class SideQuestButton3 : BaseQuestButton
         {

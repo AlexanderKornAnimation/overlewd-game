@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    namespace QuestWidget
+    namespace NSQuestWidget
     {
-         public class SideQuestButton1 : BaseQuestButton
+        public class SideQuestButton1 : BaseQuestButton
         {
             public static SideQuestButton1 GetInstance(Transform parent)
             {
