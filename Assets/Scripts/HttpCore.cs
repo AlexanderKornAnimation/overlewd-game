@@ -38,6 +38,7 @@ namespace Overlewd
             }
             catch (UnityWebRequestException e)
             {
+                Debug.LogError(e.UnityWebRequest.url);
                 Debug.LogError(e.Message);
                 return default;
             }
@@ -57,6 +58,7 @@ namespace Overlewd
             }
             catch (UnityWebRequestException e)
             {
+                Debug.LogError(e.UnityWebRequest.url);
                 Debug.LogError(e.Message);
                 return default;
             }
