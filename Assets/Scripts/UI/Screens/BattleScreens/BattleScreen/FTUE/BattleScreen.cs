@@ -18,7 +18,9 @@ namespace Overlewd
                 backButton.gameObject.SetActive(false);
 
                 skipButton.gameObject.SetActive(false);
-                battleVideo.loopPointReached += EndBattleVideo;      
+                battleVideo.loopPointReached += EndBattleVideo;
+
+                await GameData.FTUEStartStage(GameGlobalStates.ftue_StageId.Value);
 
                 await Task.CompletedTask;
             }
@@ -28,6 +30,11 @@ namespace Overlewd
                 ShowStartNotifications();
 
                 await Task.CompletedTask;
+            }
+
+            public override async Task BeforeHideAsync()
+            {
+                await GameData.FTUEStartStage(GameGlobalStates.ftue_StageId.Value);
             }
 
             protected override void EndBattleVideo(VideoPlayer vp)

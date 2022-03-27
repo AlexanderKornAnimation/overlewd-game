@@ -140,6 +140,16 @@ namespace Overlewd
             var chpaterData = GetFTUEChapterByKey(chapterKey);
             return (chpaterData != null) ? GetFTUEStageByKey(key, chpaterData.id) : null;
         }
+        public static async Task FTUEStartStage(int stageId)
+        {
+            await AdminBRO.ftueStageStartAsync(stageId);
+            ftueStages = await AdminBRO.ftueStagesAsync();
+        }
+        public static async Task FTUEEndStage(int stageId)
+        {
+            await AdminBRO.ftueStageEndAsync(stageId);
+            ftueStages = await AdminBRO.ftueStagesAsync();
+        }
 
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
         public static AdminBRO.Animation GetAnimationById(int id)

@@ -11,6 +11,20 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
+            public override async Task BeforeShowAsync()
+            {
+                await base.BeforeShowAsync();
+
+                await GameData.FTUEStartStage(GameGlobalStates.ftue_StageId.Value);
+            }
+
+            public override async Task BeforeHideAsync()
+            {
+                await base.BeforeHideAsync();
+
+                await GameData.FTUEEndStage(GameGlobalStates.ftue_StageId.Value);
+            }
+
             protected override async Task EnterScreen()
             {
                 dialogData = GameGlobalStates.ftue_StageDialogData;

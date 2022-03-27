@@ -581,33 +581,33 @@ namespace Overlewd
             public const string Type_Battle = "battle";
         }
 
-        // /ftue/reset
+        // /ftue-stages/reset
         public static async Task ftueReset()
         {
             var form = new WWWForm();
-            var url = "https://overlewd-api.herokuapp.com/ftue/reset";
+            var url = "https://overlewd-api.herokuapp.com/ftue-stages/reset";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
             }
         }
 
-        // /ftue/{id}/start
+        // /ftue-stages/{id}/start
         public static async Task ftueStageStartAsync(int stageId)
         {
             var form = new WWWForm();
-            var url = $"https://overlewd-api.herokuapp.com/ftue/{stageId}/start";
+            var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/start";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 
             }
         }
 
-        // /ftue/{id}/end
+        // /ftue-stages/{id}/end
         public static async Task ftueStageEndAsync(int stageId)
         {
             var form = new WWWForm();
-            var url = $"https://overlewd-api.herokuapp.com/ftue/{stageId}/end";
+            var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/end";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
