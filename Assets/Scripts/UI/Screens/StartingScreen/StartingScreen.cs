@@ -21,8 +21,15 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
-                GameGlobalStates.ftue_StageKey = "sex1";
-                UIManager.ShowScreen<FTUE.SexScreen>();
+                UIManager.ShowScreen<MapScreen>();
+                /*UIManager.ShowScreen<FTUE.SexScreen>().
+                    SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/
+            });
+
+            canvas.Find("Reset_FTUE").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                FTUEReset();
             });
 
             canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
@@ -36,6 +43,13 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<TempBattleScreen>();
             });
+        }
+
+        private async void FTUEReset()
+        {
+            UIManager.AddUserInputLocker(new UserInputLocker(this));
+            await GameData.FTUEReset();
+            UIManager.RemoveUserInputLocker(new UserInputLocker(this));
         }
     }
 }

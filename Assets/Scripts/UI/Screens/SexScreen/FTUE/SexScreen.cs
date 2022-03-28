@@ -13,24 +13,17 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
-            public override async Task BeforeShowAsync()
+            private AdminBRO.FTUEStageItem stageData;
+
+            public void SetStageData(AdminBRO.FTUEStageItem data)
             {
-                await base.BeforeShowAsync();
-
-                await GameData.FTUEStartStage(GameGlobalStates.ftue_StageId.Value);
-            }
-
-            public override async Task BeforeHideAsync()
-            {
-                await base.BeforeHideAsync();
-
-                await GameData.FTUEEndStage(GameGlobalStates.ftue_StageId.Value);
+                stageData = data;
             }
 
             protected override async Task EnterScreen()
             {
-                dialogData = GameGlobalStates.ftue_StageDialogData;
-
+                dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+                await GameData.FTUEStartStage(stageData.id);
                 await Task.CompletedTask;
             }
 
@@ -42,16 +35,19 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
-            protected override void LeaveScreen()
+            protected override async void LeaveScreen()
             {
-                switch (GameGlobalStates.ftue_StageKey)
+                await GameData.FTUEEndStage(stageData.id);
+
+                switch (stageData.key)
                 {
                     case "sex1":
-                        GameGlobalStates.ftue_StageKey = "dialogue1";
-                        UIManager.ShowScreen<DialogScreen>();
+                        /*UIManager.ShowScreen<DialogScreen>().
+                            SetStageData(GameGlobalStates.GetFTUEStageByKey("dialogue1"));*/
+                        UIManager.ShowScreen<MapScreen>();
                         break;
                     case "sex4":
-                        UIManager.ShowScreen<StartingScreen>();
+                        UIManager.ShowScreen<MapScreen>();
                         break;
                     default:
                         UIManager.ShowScreen<MapScreen>();
@@ -66,10 +62,10 @@ namespace Overlewd
 
             private async void ShowStartNotifications()
             {
-                if (GameGlobalStates.ftue_StageKey == "sex4")
+                if (stageData.key == "sex4")
                 {
-                    GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("memorytutor2");
-                    UIManager.ShowNotification<DialogNotification>();
+                    /*UIManager.ShowNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("memorytutor2"));*/
                 }
 
                 await Task.CompletedTask;
@@ -77,20 +73,21 @@ namespace Overlewd
 
             private async void ShowEndNotifictaions()
             {
-                if (GameGlobalStates.ftue_StageKey == "sex2")
+                /*if (stageData.key == "sex2")
                 {
                     UIManager.AddUserInputLocker(new UserInputLocker(this));
                     await UniTask.Delay(1000);
                     UIManager.RemoveUserInputLocker(new UserInputLocker(this));
 
-                    GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("bufftutor2");
-                    UIManager.ShowNotification<DialogNotification>();
+                    UIManager.ShowNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor2"));
                     await UIManager.WaitHideNotifications();
 
-                    GameGlobalStates.dialogNotificationData = GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor");
-                    UIManager.ShowNotification<DialogNotification>();
+                    UIManager.ShowNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor"));
                     await UIManager.WaitHideNotifications();
-                }
+                }*/
+                await Task.CompletedTask;
             }
         }
     }

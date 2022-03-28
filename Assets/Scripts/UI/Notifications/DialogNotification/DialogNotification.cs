@@ -33,6 +33,7 @@ namespace Overlewd
         protected Transform emotionPos;
 
         protected SpineWidgetGroup emotionAnimation;
+        protected AdminBRO.Dialog dialogData;
 
         protected virtual void Awake()
         {
@@ -50,6 +51,12 @@ namespace Overlewd
             emotionPos = emotionBack.Find("EmotionPos");
         }
 
+        public DialogNotification SetDialogData(AdminBRO.Dialog data)
+        {
+            dialogData = data;
+            return this;
+        }
+
         protected virtual void ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -64,7 +71,6 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
-            var dialogData = GameGlobalStates.dialogNotificationData;
             if (dialogData != null)
             {
                 var firstReplica = dialogData.replicas.First();

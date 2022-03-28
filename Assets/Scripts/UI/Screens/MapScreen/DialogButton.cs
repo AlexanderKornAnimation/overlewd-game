@@ -27,8 +27,8 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                GameGlobalStates.ftue_StageKey = stageData?.key;
-                UIManager.ShowScreen<FTUE.DialogScreen>();
+                UIManager.ShowScreen<FTUE.DialogScreen>().
+                    SetStageData(stageData);
             }
 
             public static DialogButton GetInstance(Transform parent)

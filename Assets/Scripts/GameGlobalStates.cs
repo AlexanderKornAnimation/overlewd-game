@@ -15,39 +15,10 @@ namespace Overlewd
             var dialogId = notifData?.dialogId;
             return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
         }
-        public static string ftue_StageKey { get; set; }
-        private static AdminBRO.FTUEStageItem ftue_StageData
+        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key)
         {
-            get
-            {
-                return ftueChapterData != null ? GameData.GetFTUEStageByKey(ftue_StageKey, ftueChapterData.id) : null;
-            }
+            return ftueChapterData != null ? GameData.GetFTUEStageByKey(key, ftueChapterData.id) : null;
         }
-        public static int? ftue_StageId {
-            get 
-            {
-                return ftue_StageData?.id;
-            }
-        }
-        public static AdminBRO.Dialog ftue_StageDialogData
-        {
-            get
-            {
-                var dialogId = ftue_StageData?.dialogId;
-                return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
-            }
-        }
-        public static AdminBRO.Battle ftue_StageBattleData
-        {
-            get
-            {
-                var battleId = ftue_StageData?.battleId;
-                return battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
-            }
-        }
-
-        //
-        public static AdminBRO.Dialog dialogNotificationData { get; set; }
         //
 
         public static int eventMapScreen_EventId;

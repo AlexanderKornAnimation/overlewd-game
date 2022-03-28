@@ -11,6 +11,12 @@ namespace Overlewd
     {
         public class DefeatPopup : Overlewd.DefeatPopup
         {
+            private AdminBRO.FTUEStageItem stageData;
+
+            public void SetStageData(AdminBRO.FTUEStageItem data)
+            {
+                stageData = data;
+            }
             protected override void Customize()
             {
                 UITools.DisableButton(magicGuildButton);

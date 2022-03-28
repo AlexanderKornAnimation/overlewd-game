@@ -9,10 +9,6 @@ namespace Overlewd
     {
         public class PrepareBossFightPopup : Overlewd.PrepareBossFightPopup
         {
-            protected override void Customize()
-            {
-
-            }
 
             protected override void BattleButtonClick()
             {

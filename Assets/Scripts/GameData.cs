@@ -150,6 +150,11 @@ namespace Overlewd
             await AdminBRO.ftueStageEndAsync(stageId);
             ftueStages = await AdminBRO.ftueStagesAsync();
         }
+        public static async Task FTUEReset()
+        {
+            await AdminBRO.ftueReset();
+            ftueStages = await AdminBRO.ftueStagesAsync();
+        }
 
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
         public static AdminBRO.Animation GetAnimationById(int id)

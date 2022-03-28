@@ -55,8 +55,8 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                GameGlobalStates.ftue_StageKey = stageData?.key;
-                UIManager.ShowPopup<FTUE.PrepareBattlePopup>();
+                UIManager.ShowPopup<FTUE.PrepareBattlePopup>().
+                    SetStageData(stageData);
             }
 
             public static FightButton GetInstance(Transform parent)

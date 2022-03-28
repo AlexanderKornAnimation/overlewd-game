@@ -13,6 +13,12 @@ namespace Overlewd
     {
         public class VictoryPopup : Overlewd.VictoryPopup
         {
+            private AdminBRO.FTUEStageItem stageData;
+
+            public void SetStageData(AdminBRO.FTUEStageItem data)
+            {
+                stageData = data;
+            }
             protected override void NextButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

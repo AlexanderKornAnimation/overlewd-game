@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -11,34 +12,30 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
-            public override async Task BeforeShowAsync()
+            private AdminBRO.FTUEStageItem stageData;
+
+            public void SetStageData(AdminBRO.FTUEStageItem data)
             {
-                await base.BeforeShowAsync();
-
-                await GameData.FTUEStartStage(GameGlobalStates.ftue_StageId.Value);
-            }
-
-            public override async Task BeforeHideAsync()
-            {
-                await base.BeforeHideAsync();
-
-                await GameData.FTUEEndStage(GameGlobalStates.ftue_StageId.Value);
+                stageData = data;
             }
 
             protected override async Task EnterScreen()
             {
-                dialogData = GameGlobalStates.ftue_StageDialogData;
-
+                dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+                await GameData.FTUEStartStage(stageData.id);
                 await Task.CompletedTask;
             }
 
-            protected override void LeaveScreen()
+            protected override async void LeaveScreen()
             {
-                switch (GameGlobalStates.ftue_StageKey)
+                await GameData.FTUEEndStage(stageData.id);
+
+                switch (stageData.key)
                 {
                     case "dialogue1":
-                        GameGlobalStates.ftue_StageKey = "battle1";
-                        UIManager.ShowScreen<BattleScreen>();
+                        UIManager.ShowScreen<MapScreen>();
+                        /*UIManager.ShowScreen<BattleScreen>().
+                            SetStageData(GameGlobalStates.GetFTUEStageByKey("battle1"));*/
                         break;
                     default:
                         UIManager.ShowScreen<MapScreen>();
