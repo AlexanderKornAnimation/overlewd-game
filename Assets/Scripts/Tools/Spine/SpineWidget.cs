@@ -150,6 +150,11 @@ namespace Overlewd
             transform.localScale = Vector3.Scale(transform.localScale, new Vector3(scale, scale, 1));
         }
 
+        public float GetAnimationDuaration(string animationName)
+        {
+            return skeletonGraphic.SkeletonData.Animations.Find(a => a.Name == animationName).Duration;
+        }
+
         public void Attach(GameObject obj, string boneName)
         {
             obj.transform.SetParent(transform);
