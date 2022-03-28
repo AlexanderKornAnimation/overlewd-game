@@ -8,7 +8,8 @@ namespace Overlewd
 {
     public class EventMapScreen : BaseFullScreen
     { 
-        private Transform stages;
+        private Transform map;
+        private GameObject chapterMap;
 
         private Button backButton;
 
@@ -19,7 +20,7 @@ namespace Overlewd
         private List<NSEventMapScreen.DialogButton> dialogButtons = new List<NSEventMapScreen.DialogButton>();
         private List<NSEventMapScreen.SexButton> sexButtons = new List<NSEventMapScreen.SexButton>();
 
-        void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/EventMapScreen/EventMap", transform);
 
@@ -28,27 +29,31 @@ namespace Overlewd
             BuffWidget.GetInstance(transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-            stages = canvas.Find("Stages");
+            map = canvas.Find("Map");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            mapButton = NSEventMapScreen.MapButton.GetInstance(stages.Find("eventMap"));
         }
 
         public override async Task BeforeShowAsync()
         {
             var eventData = GameGlobalStates.eventMapScreen_EventData;
             var eventChapterData = GameData.GetEventChapterById(eventData.chapters[0]);
+            var mapData = GameData.GetChapterMapById(eventChapterData.chapterMapId.Value);
+            chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
+
+            mapButton = NSEventMapScreen.MapButton.GetInstance(chapterMap.transform.Find("eventMap"));
+
             foreach (var stageId in eventChapterData.stages)
             {
                 var stageData = GameData.GetEventStageById(stageId);
+
                 if (stageData.status == AdminBRO.EventStageItem.Status_Closed)
                 {
                     continue;
                 }
 
-                var node = stages.Find(stageData.mapNodeName ?? "");
+                var node = chapterMap.transform.Find(stageData.mapNodeName ?? "");
                 if (node != null)
                 {
                     if (stageData.type == AdminBRO.EventStageItem.Type_Battle)
@@ -95,7 +100,7 @@ namespace Overlewd
             foreach (var eventMarketId in eventData.markets)
             {
                 var eventMarketData = GameData.GetEventMarketById(eventMarketId);
-                var node = stages.Find(eventMarketData.eventMapNodeName);
+                var node = chapterMap.transform.Find(eventMarketData.eventMapNodeName);
                 if (node != null)
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(node);
