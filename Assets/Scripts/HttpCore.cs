@@ -28,16 +28,23 @@ namespace Overlewd
             try
             {
                 var request = UnityWebRequest.Get(url);
+                UIManager.AddUserInputLocker(new UserInputLocker(request));
+
                 if (token != null)
                 {
                     request.SetRequestHeader("Authorization", "Bearer " + token);
                 }
                 request.SetRequestHeader("Version", ApiVersion);
             
-                return await request.SendWebRequest();
+                await request.SendWebRequest();
+                UIManager.RemoveUserInputLocker(new UserInputLocker(request));
+
+                return request;
             }
             catch (UnityWebRequestException e)
             {
+                UIManager.RemoveUserInputLocker(new UserInputLocker(e.UnityWebRequest));
+
                 Debug.LogError(e.UnityWebRequest.url);
                 Debug.LogError(e.Message);
                 return default;
@@ -49,15 +56,23 @@ namespace Overlewd
             try
             {
                 var request = UnityWebRequest.Post(url, form);
+                UIManager.AddUserInputLocker(new UserInputLocker(request));
+
                 if (token != null)
                 {
                     request.SetRequestHeader("Authorization", "Bearer " + token);
                 }
                 request.SetRequestHeader("Version", ApiVersion);
-                return await request.SendWebRequest();
+
+                await request.SendWebRequest();
+                UIManager.RemoveUserInputLocker(new UserInputLocker(request));
+
+                return request;
             }
             catch (UnityWebRequestException e)
             {
+                UIManager.RemoveUserInputLocker(new UserInputLocker(e.UnityWebRequest));
+
                 Debug.LogError(e.UnityWebRequest.url);
                 Debug.LogError(e.Message);
                 return default;

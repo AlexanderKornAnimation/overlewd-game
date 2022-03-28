@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Networking;
 
 namespace Overlewd
 {
@@ -13,6 +14,7 @@ namespace Overlewd
     {
         private MonoBehaviour mbLocker;
         private ScreenTransition stLocker;
+        private UnityWebRequest uwrLocker;
 
         public UserInputLocker(MonoBehaviour mbObj)
         {
@@ -24,17 +26,24 @@ namespace Overlewd
             stLocker = stObj;
         }
 
+        public UserInputLocker(UnityWebRequest uwrObj)
+        {
+            uwrLocker = uwrObj;
+        }
+
         public bool Equals(UserInputLocker other) 
         {
             return other != null &&
                 mbLocker == other.mbLocker &&
-                stLocker == other.stLocker;
+                stLocker == other.stLocker &&
+                uwrLocker == other.uwrLocker;
         }
 
         public bool IsNull()
         {
             return mbLocker == null &&
-                stLocker == null;
+                stLocker == null &&
+                uwrLocker == null;
         }
     }
 

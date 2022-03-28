@@ -47,9 +47,7 @@ namespace Overlewd
 
         private async void FTUEReset()
         {
-            UIManager.AddUserInputLocker(new UserInputLocker(this));
             await GameData.FTUEReset();
-            UIManager.RemoveUserInputLocker(new UserInputLocker(this));
         }
     }
 }
