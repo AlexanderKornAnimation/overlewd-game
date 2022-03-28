@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
+  m_Name: wBattleCat4.enemy
+  m_EditorClassIdentifier: 
+  charName: BattleCat3
+  ico: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
+  battlePortrait: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
+  bigPortrait: {fileID: 21300000, guid: e5ad9dad72c3efd439a767fa359a2f98, type: 3}
+  spell_1: {fileID: 0}
+  spell_2: {fileID: 0}
+  spell_3: {fileID: 0}
+  order: 1
+  isEnemy: 1
+  isBoss: 0
+  isOverlord: 0
+  charClass: 0
+  idleScale: 0.37
+  battleScale: 0.61
+  yOffset: 0
+  initiative: 50
+  attack: 10
+  defence: 5
+  agility: 5
+  itemSlot1: {fileID: 0}
+  itemSlot2: {fileID: 0}
+  level: 1
+  maxLevel: 10
+  xp: 0
+  xpToNextlUp: 1000
+  hp: 50
+  maxHp: 50
+  mp: 100
+  maxMp: 100
+  isDead: 0
+  folder: BattlePersonages/BattleCat2/pers/
+  ani_idle_path: idle0_SkeletonData
+  ani_pAttack_1_path: prepair_SkeletonData
+  ani_pAttack_2_path: prepair2_SkeletonData
+  ani_attack_1_path: attack_SkeletonData
+  ani_attack_2_path: attack2_SkeletonData
+  ani_defence_path: defence_SkeletonData
+  ani_difeat_path: difeat_SkeletonData
+  ani_idle_name: Idle
+  ani_pAttack_1_name: prepair
+  ani_pAttack_2_name: prepair2
+  ani_attack_1_name: attack
+  ani_attack_2_name: attack2
+  ani_defence_name: defence
+  ani_defeat_name: difeat
