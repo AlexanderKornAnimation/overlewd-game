@@ -54,7 +54,7 @@ namespace Overlewd
             [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
             [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
             [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel",
-            [AdminBRO.DialogReplica.CharacterSkin_Milf] = "Prefabs/UI/Screens/DialogScreen/Milf"
+            [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/Inge"
         };
 
         protected SpineWidgetGroup cutInAnimation;

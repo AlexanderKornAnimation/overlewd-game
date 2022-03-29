@@ -465,7 +465,7 @@ namespace Overlewd
             public const string CharacterSkin_Ulvi = "Ulvi";
             public const string CharacterSkin_UlviWolf = "UlviWolf";
             public const string CharacterSkin_Adriel = "Adriel";
-            public const string CharacterSkin_Milf = "Milf";
+            public const string CharacterSkin_Inge = "Inge";
         }
 
         [Serializable]
