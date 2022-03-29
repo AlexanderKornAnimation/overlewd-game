@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CastleScreen : BaseScreen
+    public class CastleScreen : BaseFullScreen
     {
         protected Transform cave;
         protected Transform stable;
@@ -21,6 +21,8 @@ namespace Overlewd
         protected Transform portal;
         protected Transform capitol;
         protected Transform castleBuilding;
+
+        protected Transform eventWidget;
 
         protected Button contenViewerButton;
 
@@ -75,16 +77,10 @@ namespace Overlewd
             NSCastleScreen.CapitolButton.GetInstance(capitol);
             NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
 
-            var eventWidgetButton = EventsWidget.GetInstance(transform).transform.Find("Canvas").Find("EventsButton").GetComponent<Button>();
+            EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             BuffWidget.GetInstance(transform);
             SidebarButtonWidget.GetInstance(transform);
-
-            eventWidgetButton.gameObject.AddComponent<BlendPulseSelector>();
-            eventWidgetButton.onClick.AddListener(() =>
-            {
-                Destroy(eventWidgetButton.gameObject.GetComponent<Selector>());
-            });
         }
     }
 }

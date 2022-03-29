@@ -41,7 +41,7 @@ namespace Overlewd
             var screenPrefab = Resources.Load<GameObject>(prefabPath);
             var instScreen = UnityEngine.Object.Instantiate(screenPrefab, parent);
             var screenRectTransform = instScreen.GetComponent<RectTransform>();
-            UIManager.SetStretch(screenRectTransform);
+            UITools.SetStretch(screenRectTransform);
             return instScreen;
         }
 
@@ -248,13 +248,12 @@ namespace Overlewd
             }
 
             var filePath = Path.Combine(GetResourcesPath(), id);
-            if (Exists(filePath))
+            var fmodBank = FMODBank.LoadFromFile(filePath);
+            if (fmodBank != null)
             {
-                var fmodBank = FMODBank.LoadFromFile(filePath);
                 fmodBanks.Add(new FMODBankInfo { key = id, bank = fmodBank, use = true });
-                return fmodBank;
-            }
-            return null;
+            }    
+            return fmodBank;
         }
 
         public static void UnloadUnusedFMODBanks()

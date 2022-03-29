@@ -21,31 +21,21 @@ namespace Overlewd
             }
             canvasGroup.alpha = 1.0f;
         }
+
         async void Start()
         {
             await screen.BeforeHideAsync();
             OnPrepared();
-        }
 
-        void Update()
-        {
-            if (!prepared || locked)
-                return;
-
+            await WaitUnlocked();
             OnStart();
 
-            time += deltaTimeInc;
-            float transitionProgressPercent = time / duration;
-            float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
+            await UITools.FadeHideAsync(canvasGroup);
 
-            canvasGroup.alpha = transitionPercent;
+            await screen.AfterHideAsync();
+            OnEnd();
 
-            if (time > duration)
-            {
-                OnEnd();
-                Destroy(gameObject);
-                screen.AfterHide();
-            }
+            Destroy(gameObject);
         }
 
         protected override void OnDestroy()
@@ -58,8 +48,9 @@ namespace Overlewd
             }
         }
 
-        protected override void OnStartCalls()
+        protected override void OnStart()
         {
+            base.OnStart();
             screen.StartHide();
         }
     }

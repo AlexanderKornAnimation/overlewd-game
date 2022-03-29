@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -11,35 +12,29 @@ namespace Overlewd
         protected RectTransform screenRectTransform;
         protected BaseScreen screen;
 
-        protected float duration = 0.3f;
-        protected float time = 0.0f;
-
-        protected bool prepared { get; private set; } = false;
-        protected bool started { get; private set; } = false;
-
         private List<ScreenTransition> prepareLockers = new List<ScreenTransition>();
         private List<ScreenTransition> endLockers = new List<ScreenTransition>();
-        public bool locked
+        private bool locked
         { 
             get 
             {
                 return (prepareLockers.Count > 0) || (endLockers.Count > 0);
             } 
         }
+        protected async Task WaitUnlocked()
+        {
+            while (locked)
+            {
+                await UniTask.NextFrame();
+            }
+        }
 
         private List<ScreenTransition> lockToPrepare = new List<ScreenTransition>();
         private List<ScreenTransition> lockToEnd = new List<ScreenTransition>();
+
         private Action preparedListeners;
         private Action startListeners;
         private Action endListeners;
-
-        protected float deltaTimeInc
-        {
-            get
-            {
-                return Time.deltaTime > 1.0f / 60.0f ? 1.0f / 60.0f : Time.deltaTime;
-            }
-        }
 
         protected virtual void Awake()
         {
@@ -155,43 +150,21 @@ namespace Overlewd
             lockToEnd.Clear();
         }
 
-        protected void OnPrepared()
+        protected virtual void OnPrepared()
         {
-            prepared = true;
             preparedListeners?.Invoke();
             FreeLockToPrepare();
-            OnPreparedCalls();
         }
 
-        protected virtual void OnPreparedCalls()
+        protected virtual void OnStart()
         {
-
-        }
-
-        protected void OnStart()
-        {
-            if (started)
-                return;
             startListeners?.Invoke();
-            started = true;
-            OnStartCalls();
         }
 
-        protected virtual void OnStartCalls()
-        {
-            
-        }
-
-        protected void OnEnd()
+        protected virtual void OnEnd()
         {
             endListeners?.Invoke();
             FreeLockToEnd();
-            OnEndCalls();
-        }
-
-        protected virtual void OnEndCalls()
-        {
-            
         }
     }
 

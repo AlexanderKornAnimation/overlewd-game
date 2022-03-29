@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,20 +6,64 @@ namespace Overlewd
 {
     public class EventsWidget : BaseWidget
     {
-        protected Button eventsButton;
+        protected Transform background;
+        
+        protected Button weeklyEventButton;
+        protected Button monthlyEventButton;
+        protected Button quarterlyEventButton;
 
-        void Awake()
+        protected TextMeshProUGUI weeklyEventTitle;
+        protected TextMeshProUGUI monthlyEventTitle;
+        protected TextMeshProUGUI quarterlyEventTitle;
+
+        private void Awake()
         {
             var canvas = transform.Find("Canvas");
+            background = canvas.Find("Background");
 
-            eventsButton = canvas.Find("EventsButton").GetComponent<Button>();
+            weeklyEventButton = background.Find("WeeklyEvent").GetComponent<Button>();
+            weeklyEventTitle = weeklyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            weeklyEventButton.onClick.AddListener(WeeklyEventClick);
+            
+            monthlyEventButton = background.Find("MonthlyEvent").GetComponent<Button>();
+            monthlyEventTitle = monthlyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            monthlyEventButton.onClick.AddListener(MonthlyEventClick);
+            
+            quarterlyEventButton = background.Find("QuarterlyEvent").GetComponent<Button>();
+            quarterlyEventTitle = quarterlyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            quarterlyEventButton.onClick.AddListener(QuarterlyEventClick);
 
-            eventsButton.onClick.AddListener(OnEventButtonClick);
+            gameObject.AddComponent<BlendPulseSelector>();
+        }
+
+        private void Start()
+        {
+            Customize();
         }
         
-        protected virtual void OnEventButtonClick()
+        protected virtual void Customize()
+        {
+            
+        }
+        
+        protected virtual void WeeklyEventClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Destroy(GetComponent<Selector>());
+            UIManager.ShowOverlay<EventOverlay>();
+        }
+
+        protected virtual void MonthlyEventClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Destroy(GetComponent<Selector>());
+            UIManager.ShowOverlay<EventOverlay>();
+        }
+        
+        protected virtual void QuarterlyEventClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Destroy(GetComponent<Selector>());
             UIManager.ShowOverlay<EventOverlay>();
         }
         

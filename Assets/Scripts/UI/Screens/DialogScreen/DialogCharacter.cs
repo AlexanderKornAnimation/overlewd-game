@@ -10,13 +10,10 @@ namespace Overlewd
     {
         public class DialogCharacter : MonoBehaviour
         {
-            private GameObject persImageAdditive;
             private GameObject persImageShadow;
 
             void Awake()
             {
-                persImageAdditive = transform.Find("PersImageAdditive").gameObject;
-                persImageAdditive.SetActive(false);
                 persImageShadow = transform.Find("PersImageShadow").gameObject;
                 persImageShadow.SetActive(true);
             }

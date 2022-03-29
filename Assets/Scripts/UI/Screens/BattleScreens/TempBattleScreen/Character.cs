@@ -8,11 +8,19 @@ namespace Overlewd
 		public string charName;
 		public Sprite ico;
 		public Sprite battlePortrait;
+		public Sprite bigPortrait;
+		public Sprite spell_1, spell_2, spell_3;
 
-		public int battleOrder = -1; //3,2,1 = on the table; -1 = in the deck;
+		[SerializeField] private int order = -1; //3,2,1 = on the table; -1 = in the deck;
+		public int Order
+		{
+			get => order;
+			set => order = value;
+		}
 
 		public bool isEnemy = false;
 		public bool isBoss = false;
+		public bool isOverlord = false;
 
 		private enum CharClass { ASSASIN, TANK, WARRIOR, SUPPORT }
 		[SerializeField] private CharClass charClass;
@@ -47,7 +55,7 @@ namespace Overlewd
 			ani_attack_1_name = "attack1",
 			ani_attack_2_name = "attack2",
 			ani_defence_name = "defence",
-			ani_difeat_name = "difeat";
+			ani_defeat_name = "defeat";
 
 		public void ApplyBonus()
 		{
@@ -86,6 +94,6 @@ namespace Overlewd
 			mp = saveMP;
 		}
 
-
+		
 	}
 }

@@ -5,17 +5,18 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DebugScreenViewer : BaseScreen
+    public class DebugScreenViewer : BaseFullScreen
     {
         
         void Awake()
         {
-            var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
+            UIManager.ShowPopup<FTUE.PrepareBossFightPopup>();
+            // var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
         }
 
         void Start()
         {
-            UIManager.ShowScreen<FTUE.PortalScreen>();
+            // UIManager.ShowScreen<FTUE.PortalScreen>();
         }
 
         void OnGUI()

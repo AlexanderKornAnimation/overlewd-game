@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using UnityEngine.Networking;
 
 namespace Overlewd
 {
@@ -12,6 +14,7 @@ namespace Overlewd
     {
         private MonoBehaviour mbLocker;
         private ScreenTransition stLocker;
+        private UnityWebRequest uwrLocker;
 
         public UserInputLocker(MonoBehaviour mbObj)
         {
@@ -23,17 +26,24 @@ namespace Overlewd
             stLocker = stObj;
         }
 
+        public UserInputLocker(UnityWebRequest uwrObj)
+        {
+            uwrLocker = uwrObj;
+        }
+
         public bool Equals(UserInputLocker other) 
         {
             return other != null &&
                 mbLocker == other.mbLocker &&
-                stLocker == other.stLocker;
+                stLocker == other.stLocker &&
+                uwrLocker == other.uwrLocker;
         }
 
         public bool IsNull()
         {
             return mbLocker == null &&
-                stLocker == null;
+                stLocker == null &&
+                uwrLocker == null;
         }
     }
 
@@ -59,8 +69,8 @@ namespace Overlewd
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
 
-        private static BaseScreen prevScreen;
-        private static BaseScreen currentScreen;
+        private static BaseFullScreen prevScreen;
+        private static BaseFullScreen currentScreen;
         private static BasePopup prevPopup;
         private static BasePopup currentPopup;
         private static BaseSubPopup prevSubPopup;
@@ -143,7 +153,7 @@ namespace Overlewd
             uiRootScreenLayerGO.layer = 5;
             var uiRootScreenLayerGO_rectTransform = uiRootScreenLayerGO.AddComponent<RectTransform>();
             uiRootScreenLayerGO_rectTransform.SetParent(uiRootCanvasGO.transform, false);
-            SetStretch(uiRootScreenLayerGO_rectTransform);
+            UITools.SetStretch(uiRootScreenLayerGO_rectTransform);
 
             //resolution fixed aspect
             uiRootScreenLayerGO_aspectRatioFitter = uiRootScreenLayerGO.AddComponent<AspectRatioFitter>();
@@ -160,18 +170,9 @@ namespace Overlewd
             layerGO.layer = 5;
             var layerGO_rectTransform = layerGO.AddComponent<RectTransform>();
             layerGO_rectTransform.SetParent(uiRootScreenLayerGO.transform, false);
-            SetStretch(layerGO_rectTransform);
+            UITools.SetStretch(layerGO_rectTransform);
 
             layerGO.transform.SetSiblingIndex(siblingIndex);
-        }
-
-        public static void SetStretch(RectTransform rectTransform)
-        {
-            rectTransform.offsetMax = Vector2.zero;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.pivot = new Vector2(0.5f, 0.5f);
         }
 
         //Missclick Instantiate
@@ -181,7 +182,7 @@ namespace Overlewd
             var missclickGO_screenRectTransform = missclickGO.AddComponent<RectTransform>();
             missclickGO_screenRectTransform.SetParent(parent, false);
             missclickGO_screenRectTransform.SetAsFirstSibling();
-            SetStretch(missclickGO_screenRectTransform);
+            UITools.SetStretch(missclickGO_screenRectTransform);
             return missclickGO.AddComponent<T>();
         }
 
@@ -213,11 +214,11 @@ namespace Overlewd
             var screenGO_rectTransform = screenGO.AddComponent<RectTransform>();
             var screenGO_rectMask2D = screenGO.AddComponent<RectMask2D>();
             screenGO_rectTransform.SetParent(parent, false);
-            SetStretch(screenGO_rectTransform);
+            UITools.SetStretch(screenGO_rectTransform);
             return screenGO.AddComponent<T>();
         }
 
-        public static T GetScreenInstance<T>() where T : BaseScreen
+        public static T GetScreenInstance<T>() where T : BaseFullScreen
         {
             return GetScreenInstance<T>(uiScreenLayerGO.transform);
         }
@@ -287,17 +288,17 @@ namespace Overlewd
         }
 
         //Screen Layer
-        public static T GetScreen<T>() where T : BaseScreen
+        public static T GetScreen<T>() where T : BaseFullScreen
         {
             return currentScreen as T;
         }
 
-        public static bool HasScreen<T>() where T : BaseScreen
+        public static bool HasScreen<T>() where T : BaseFullScreen
         {
             return currentScreen?.GetType() == typeof(T);
         }
 
-        public static T ShowScreen<T>() where T : BaseScreen
+        public static T ShowScreen<T>() where T : BaseFullScreen
         {
             MemoryOprimizer.PrepareChangeScreen();
 
@@ -620,6 +621,15 @@ namespace Overlewd
             return currentNotification?.GetType() == typeof(T);
         }
 
+        public static async Task WaitHideNotifications()
+        {
+            while (currentNotification != null ||
+                   prevNotification != null)
+            {
+                await UniTask.NextFrame();
+            }
+        }
+
         public static T ShowNotification<T>() where T : BaseNotification
         {
             prevNotification = currentNotification;
@@ -664,7 +674,7 @@ namespace Overlewd
             currentDialogBoxGO.layer = 5;
             var currentDialogBoxGO_rectTransform = currentDialogBoxGO.AddComponent<RectTransform>();
             currentDialogBoxGO_rectTransform.SetParent(uiDialogLayerGO.transform, false);
-            SetStretch(currentDialogBoxGO_rectTransform);
+            UITools.SetStretch(currentDialogBoxGO_rectTransform);
             var dialogBox = currentDialogBoxGO.AddComponent<DebugDialogBox>();
 
             dialogBox.title = title;

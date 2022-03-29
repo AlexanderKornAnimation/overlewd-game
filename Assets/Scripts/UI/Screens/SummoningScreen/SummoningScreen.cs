@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SummoningScreen : BaseScreen
+    public class SummoningScreen : BaseFullScreen
     {
         private Button backButton;
         private Button haremButton;

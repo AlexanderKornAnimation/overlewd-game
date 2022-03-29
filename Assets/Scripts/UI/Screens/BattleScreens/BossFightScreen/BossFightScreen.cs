@@ -7,7 +7,7 @@ using UnityEngine.Video;
 
 namespace Overlewd
 {
-    public class BossFightScreen : BaseScreen
+    public class BossFightScreen : BaseFullScreen
     {
         protected Button startBattleButton;
         protected Button backButton;
@@ -46,9 +46,11 @@ namespace Overlewd
             skipButton.gameObject.SetActive(false);
         }
 
-        public override void AfterShow()
+        public override async Task AfterShowAsync()
         {
             StartBattleButtonClick();
+
+            await Task.CompletedTask;
         }
 
         protected virtual async void EndBattleVideo(VideoPlayer vp)

@@ -20,33 +20,22 @@ namespace Overlewd
         {
             await screen.BeforeShowAsync();
             OnPrepared();
-        }
 
-        void Update()
-        {
-            if (!prepared || locked)
-                return;
-
+            await WaitUnlocked();
             OnStart();
 
-            time += deltaTimeInc;
-            float transitionProgressPercent = time / duration;
-            float transitionOffsetPercent = 1.0f - EasingFunction.easeOutExpo(transitionProgressPercent);
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
-                -screenRectTransform.rect.width * transitionOffsetPercent,
-                screenRectTransform.rect.width);
+            await UITools.RightShowAsync(screenRectTransform);
+            UITools.SetStretch(screenRectTransform);
 
-            if (time > duration)
-            {
-                UIManager.SetStretch(screenRectTransform);
-                OnEnd();
-                Destroy(this);
-                screen.AfterShow();
-            }
+            await screen.AfterShowAsync();
+            OnEnd();
+
+            Destroy(this);
         }
 
-        protected override void OnStartCalls()
+        protected override void OnStart()
         {
+            base.OnStart();
             screen.StartShow();
         }
     }

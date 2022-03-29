@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SexScreen : BaseScreen
+    public class SexScreen : BaseFullScreen
     {
         protected Coroutine autoplayCoroutine;
 
@@ -26,6 +27,7 @@ namespace Overlewd
         protected Transform cutInAnimPos;
 
         protected AdminBRO.Dialog dialogData;
+        protected List<AdminBRO.DialogReplica> dialogReplicas;
         protected int currentReplicaId;
 
         protected bool isAutoplayButtonPressed = false;
@@ -65,6 +67,7 @@ namespace Overlewd
         {
             await EnterScreen();
 
+            Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
         }
@@ -135,7 +138,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             currentReplicaId++;
-            if (currentReplicaId < dialogData.replicas.Count)
+            if (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
             }
@@ -145,10 +148,15 @@ namespace Overlewd
             }
         }
 
+        protected virtual void ShowLastReplica()
+        {
+
+        }
+
         private void ShowCurrentReplica()
         {
-            var replica = dialogData.replicas[currentReplicaId];
-            var prevReplica = currentReplicaId > 0 ? dialogData.replicas[currentReplicaId - 1] : null;
+            var replica = dialogReplicas[currentReplicaId];
+            var prevReplica = currentReplicaId > 0 ? dialogReplicas[currentReplicaId - 1] : null;
             
             personageName.text = replica.characterName;
             text.text = replica.message;
@@ -156,17 +164,27 @@ namespace Overlewd
             ShowMain(replica, prevReplica);
             ShowCutIn(replica, prevReplica);
             PlaySound(replica);
+
+            if (!(currentReplicaId + 1 < dialogReplicas.Count))
+            {
+                ShowLastReplica();
+            }
         }
         
         private IEnumerator Autoplay()
         {
-            while (currentReplicaId < dialogData.replicas.Count)
+            while (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
                 yield return new WaitForSeconds(2f);
                 currentReplicaId++;
             }
             AutoplayButtonClick();
+        }
+
+        private void Initialize()
+        {
+            dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
         }
 
         private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)
@@ -178,7 +196,7 @@ namespace Overlewd
                     Destroy(mainAnimation?.gameObject);
                     mainAnimation = null;
 
-                    var animation = GetAnimationById(replica.mainAnimationId.Value);
+                    var animation = GameData.GetAnimationById(replica.mainAnimationId.Value);
                     if (animation != null)
                     {
                         mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
@@ -202,7 +220,7 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
                     if (animation != null)
                     {
                         cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
@@ -231,15 +249,13 @@ namespace Overlewd
         private void PlaySound(AdminBRO.DialogReplica replica)
         {
             //main sound
-            var mainSoundData = replica.mainSoundId.HasValue ? GameData.GetSoundById(replica.mainSoundId.Value) : null;
-            var mainSoundPath = mainSoundData != null ? mainSoundData.eventPath : replica.mainSoundPath;
-            var mainBankId = mainSoundData != null ? mainSoundData.soundBankId : null;
-            if (!String.IsNullOrEmpty(mainSoundPath))
+            if (replica.mainSoundId.HasValue)
             {
-                if (mainSoundPath != mainSound?.path)
+                var mainSoundData = GameData.GetSoundById(replica.mainSoundId.Value);
+                if (mainSoundData.eventPath != mainSound?.path)
                 {
                     mainSound?.Stop();
-                    mainSound = SoundManager.GetEventInstance(mainSoundPath, mainBankId);
+                    mainSound = SoundManager.GetEventInstance(mainSoundData.eventPath, mainSoundData.soundBankId);
                 }
             }
             else
@@ -248,16 +264,13 @@ namespace Overlewd
                 mainSound = null;
             }
 
-            //cutIn sound
-            var cutInSoundData = replica.cutInSoundId.HasValue ? GameData.GetSoundById(replica.cutInSoundId.Value) : null;
-            var cutInSoundPath = cutInSoundData != null ? cutInSoundData.eventPath : replica.cutInSoundPath;
-            var cutInBankId = cutInSoundData != null ? cutInSoundData.soundBankId : null;
-            if (!String.IsNullOrEmpty(cutInSoundPath))
+            if (replica.cutInSoundId.HasValue)
             {
-                if (cutInSoundPath != cutInSound?.path)
+                var cutInSoundData = GameData.GetSoundById(replica.cutInSoundId.Value);
+                if (cutInSoundData.eventPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
-                    cutInSound = SoundManager.GetEventInstance(cutInSoundPath, cutInBankId);
+                    cutInSound = SoundManager.GetEventInstance(cutInSoundData.eventPath, cutInSoundData.soundBankId);
                 }
 
                 mainSound?.Pause();
@@ -269,11 +282,6 @@ namespace Overlewd
 
                 mainSound?.Play();
             }
-        }
-
-        protected virtual AdminBRO.Animation GetAnimationById(int id)
-        {
-            return GameData.GetAnimationById(id);
         }
     }
 }

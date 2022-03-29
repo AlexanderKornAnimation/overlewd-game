@@ -40,13 +40,13 @@ namespace Overlewd
                 var eventStageData = GameData.GetEventStageById(eventStageId);
 
                 title.text = eventStageData.title;
-                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageStatus.Complete);
+                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
                 
                 if (eventStageId == 1)
                 {
                     button.gameObject.AddComponent<BlendPulseSelector>();
                     
-                    if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageStatus.Complete)
+                    if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageItem.Status_Complete)
                     {
                         Destroy(button.gameObject.GetComponent<Selector>());
                     }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class GirlScreen : BaseScreen
+    public class GirlScreen : BaseFullScreen
     {
         private Image girlImage;
         

@@ -15,22 +15,19 @@ namespace Overlewd
         {
             await screen.BeforeHideAsync();
             OnPrepared();
-        }
 
-        void Update()
-        {
-            if (!prepared || locked)
-                return;
-
+            await WaitUnlocked();
             OnStart();
 
+            await screen.AfterHideAsync();
             OnEnd();
+
             Destroy(gameObject);
-            screen.AfterHide();
         }
 
-        protected override void OnStartCalls()
+        protected override void OnStart()
         {
+            base.OnStart();
             screen.StartHide();
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DebugContentViewer : BaseScreen
+    public class DebugContentViewer : BaseFullScreen
     {
         private List<Texture2D> loadedTextures = new List<Texture2D>();
         private int currentTextureId;

@@ -9,16 +9,6 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
-        private static bool RequestCheckError(UnityWebRequest request)
-        {
-            if (request.result != UnityWebRequest.Result.ProtocolError &&
-                request.result != UnityWebRequest.Result.ConnectionError)
-            {
-                return false;
-            }
-            return true;
-        }
-
         public static string GetDeviceId()
         {
             return SystemInfo.deviceUniqueIdentifier;
@@ -31,12 +21,8 @@ namespace Overlewd
             postData.AddField("deviceId", GetDeviceId());
             using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/auth/login", postData))
             {
-                if (!RequestCheckError(request))
-                {
-                    tokens = JsonHelper.DeserializeObject<Tokens>(request.downloadHandler.text);
-                    return tokens;
-                }
-                return null;
+                tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
+                return tokens;
             }
         }
 
@@ -45,12 +31,8 @@ namespace Overlewd
             var postData = new WWWForm();
             using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/auth/refresh", postData))
             {
-                if (!RequestCheckError(request))
-                {
-                    tokens = JsonHelper.DeserializeObject<Tokens>(request.downloadHandler.text);
-                    return tokens;
-                }
-                return null;
+                tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
+                return tokens;
             }
         }
 
@@ -68,11 +50,7 @@ namespace Overlewd
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/me", tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
-                }
-                return null;   
+                return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
             }
         }
 
@@ -82,11 +60,7 @@ namespace Overlewd
             formMe.AddField("name", name);
             using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me", formMe))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<PlayerInfo>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
             }
         }
 
@@ -150,11 +124,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/markets";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<EventMarketItem>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<EventMarketItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -210,11 +180,7 @@ namespace Overlewd
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/currencies", tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<CurrencyItem>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<CurrencyItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -236,11 +202,7 @@ namespace Overlewd
             var url = $"https://overlewd-api.herokuapp.com/markets/{marketId}/tradable/{tradableId}/buy";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<TradableBuyStatus>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
             }
         }
 
@@ -264,11 +226,7 @@ namespace Overlewd
 
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<NetworkResource>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<NetworkResource>>(request?.downloadHandler.text);
             }
         }
 
@@ -277,7 +235,6 @@ namespace Overlewd
         {
             public string id;
             public string type;
-            public string internalFormat;
             public string buildVersion;
             public string hash;
             public int size;
@@ -291,16 +248,12 @@ namespace Overlewd
             public string hash;
         }
 
-        //event-chapters
+        // /event-chapters
         public static async Task<List<EventChapter>> eventChaptersAsync()
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/event-chapters", tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<EventChapter>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<EventChapter>>(request?.downloadHandler.text);
             }
         }
 
@@ -314,7 +267,6 @@ namespace Overlewd
             public int eventId;
             public int? nextChapter;
             public List<int> stages;
-            public string status;
         }
 
         // /events
@@ -322,19 +274,8 @@ namespace Overlewd
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/events", tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<EventItem>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<EventItem>>(request?.downloadHandler.text);
             }
-        }
-
-        public class EventType
-        {
-            public const string Quarterly = "quarterly";
-            public const string Monthly = "monthly";
-            public const string Weekly = "weekly";
         }
 
         [Serializable]
@@ -346,7 +287,6 @@ namespace Overlewd
             public string description;
             public string dateStart;
             public string dateEnd;
-            public string backgroundUrl;
             public List<int> currencies;
             public string mapBackgroundImage;
             public string mapBannerImage;
@@ -354,11 +294,13 @@ namespace Overlewd
             public string bannerOverlayText;
             public List<int> markets;
             public List<int> quests;
-            public int? buyLimit;
             public string createdAt;
             public string updatedAt;
-            public List<int> stages;
             public List<int> chapters;
+
+            public const string Type_Quarterly = "quarterly";
+            public const string Type_Monthly = "monthly";
+            public const string Type_Weekly = "weekly";
         }
 
         // /event-stages
@@ -367,40 +309,29 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/event-stages";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<EventStageItem>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<EventStageItem>>(request?.downloadHandler.text);
             }
         }
 
         // /event-stages/reset
-        public static async Task eventStagesResetAsync()
+        public static async Task eventStagesReset()
         {
             var form = new WWWForm();
             var url = "https://overlewd-api.herokuapp.com/event-stages/reset";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    
-                }
+                
             }
         }
 
-        // //event-stages/{id}/start
+        // /event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
             var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/start";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<EventStageItem>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
             }
         }
 
@@ -411,26 +342,8 @@ namespace Overlewd
             var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/end";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<EventStageItem>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
             }
-        }
-
-        public class EventStageType
-        {
-            public const string Battle = "battle";
-            public const string Dialog = "dialog";
-        }
-
-        public class EventStageStatus
-        {
-            public const string Open = "open";
-            public const string Started = "started";
-            public const string Complete = "complete";
-            public const string Closed =  "closed";
         }
 
         [Serializable]
@@ -442,9 +355,17 @@ namespace Overlewd
             public string type;
             public int? dialogId;
             public int? battleId;
-            public string eventMapNodeName;
+            public string mapNodeName;
             public List<int> nextStages;
             public string status;
+
+            public const string Type_Battle = "battle";
+            public const string Type_Dialog = "dialog";
+
+            public const string Status_Open = "open";
+            public const string Status_Started = "started";
+            public const string Status_Complete = "complete";
+            public const string Status_Closed = "closed";
         }
 
         // /event-quests
@@ -453,11 +374,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/event-quests";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<EventQuestItem>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<EventQuestItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -466,13 +383,6 @@ namespace Overlewd
         {
             public int currencyId;
             public int amount;
-        }
-
-        public class EventQuestType
-        {
-            public const string StandartHunt = "standart_hunt";
-            public const string QuickQuest = "quick_quest";
-            public const string UniversalAdventure = "universal_adventure";
         }
 
         [Serializable]
@@ -486,6 +396,10 @@ namespace Overlewd
             public List<EventQuestReward> rewards;
             public string status;
             public int progressCount;
+
+            public const string Type_StandartHunt = "standart_hunt";
+            public const string Type_QuickQuest = "quick_quest";
+            public const string Type_UniversalAdventure = "universal_adventure";
         }
 
         // /i18n
@@ -494,11 +408,7 @@ namespace Overlewd
             var url = String.Format("https://overlewd-api.herokuapp.com/i18n?locale={0}", locale);
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<LocalizationItem>>(request.downloadHandler.text);
-                }
-                return null;                
+                return JsonHelper.DeserializeObject<List<LocalizationItem>>(request?.downloadHandler.text);              
             }
         }
 
@@ -521,45 +431,8 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/dialogs";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<Dialog>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<Dialog>>(request?.downloadHandler.text);
             }
-        }
-
-        public class DialogCharacterPosition 
-        {
-            public const string Left = "left";
-            public const string Right = "right";
-            public const string Middle = "middle";
-        }
-
-        public class DialogCharacterName
-        {
-            public const string Overlord = "Overlord";
-            public const string Ulvi = "Ulvi";
-            public const string Faye = "Faye";
-            public const string Adriel = "Adriel";
-        }
-
-        public class DialogCharacterSkin
-        {
-            public const string Overlord = "Overlord";
-            public const string Ulvi = "Ulvi";
-            public const string UlviWolf = "UlviWolf";
-            public const string Faye = "Faye";
-            public const string Adriel = "Adriel";
-        }
-
-        public class DialogCharacterAnimation
-        {
-            public const string Idle = "idle";
-            public const string Surprised = "surprised";
-            public const string Happy = "happy";
-            public const string Love = "love";
-            public const string Angry = "angry";
         }
 
         [Serializable]
@@ -579,15 +452,20 @@ namespace Overlewd
             public int? mainSoundId;
             public int? cutInSoundId;
 
-            public string cutInSoundPath;
-            public string mainSoundPath;
-        }
+            public const string CharacterPosition_Left = "left";
+            public const string CharacterPosition_Right = "right";
+            public const string CharacterPosition_Middle = "middle";
 
-        public class DialogType 
-        {
-            public const string Dialog = "dialog";
-            public const string Sex = "sex";
-            public const string Notification = "notification";
+            public const string CharacterName_Overlord = "Overlord";
+            public const string CharacterName_Ulvi = "Ulvi";
+            public const string CharacterName_Faye = "Faye";
+            public const string CharacterName_Adriel = "Adriel";
+
+            public const string CharacterSkin_Overlord = "Overlord";
+            public const string CharacterSkin_Ulvi = "Ulvi";
+            public const string CharacterSkin_UlviWolf = "UlviWolf";
+            public const string CharacterSkin_Adriel = "Adriel";
+            public const string CharacterSkin_Milf = "Milf";
         }
 
         [Serializable]
@@ -597,7 +475,10 @@ namespace Overlewd
             public string title;
             public string type;
             public List<DialogReplica> replicas;
-            public string status;
+
+            public const string Type_Dialog = "dialog";
+            public const string Type_Sex = "sex";
+            public const string Type_Notification = "notification";
         }
 
         // /battles
@@ -606,11 +487,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/battles";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<Battle>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<Battle>>(request?.downloadHandler.text);
             }
         }
 
@@ -621,12 +498,6 @@ namespace Overlewd
             public int amount;
         }
 
-        public class BattleType
-        {
-            public const string Battle = "battle";
-            public const string Boss = "boss";
-        }
-
         [Serializable]
         public class Battle
         {
@@ -635,7 +506,10 @@ namespace Overlewd
             public string type;
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
-            public string status;
+            public List<int> characters;
+
+            public const string Type_Battle = "battle";
+            public const string Type_Boss = "boss";
         }
 
         //ftue
@@ -644,12 +518,29 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/ftue";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<FTUEInfo>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<FTUEInfo>(request?.downloadHandler.text);
             }
+        }
+
+        [Serializable]
+        public class FTUENotificationItem
+        {
+            public int id;
+            public string key;
+            public int? ftueChapterId;
+            public int? dialogId;
+        }
+
+        [Serializable]
+        public class FTUEChapter
+        {
+            public int id;
+            public string key;
+            public string name;
+            public int? chapterMapId;
+            public List<FTUENotificationItem> notifications;
+            public List<int> stages;
+            public int? nextChapterId;
         }
 
         [Serializable]
@@ -658,23 +549,70 @@ namespace Overlewd
             public List<FTUEChapter> chapters;
         }
 
-        [Serializable]
-        public class FTUEChapter
+        // /ftue-stages
+        public static async Task<List<FTUEStageItem>> ftueStagesAsync()
         {
-            public int id;
-            public string name;
-            public int? chapterMapId;
-            public List<FTUEStageInfo> dialogs;
-            public List<FTUEStageInfo> battles;
+            var url = "https://overlewd-api.herokuapp.com/ftue-stages";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<FTUEStageItem>>(request?.downloadHandler.text);
+            }
         }
 
         [Serializable]
-        public class FTUEStageInfo
+        public class FTUEStageItem
         {
             public int id;
             public string key;
+            public int? ftueChapterId;
+            public int? dialogId;
+            public int? battleId;
+            public string mapNodeName;
+            public string status;
+            public string type;
+            public List<int> nextStages;
+
+            public const string Status_Open = "open";
+            public const string Status_Started = "started";
+            public const string Status_Complete = "complete";
+            public const string Status_Closed = "closed";
+
+            public const string Type_Dialog = "dialog";
+            public const string Type_Battle = "battle";
         }
 
+        // /ftue-stages/reset
+        public static async Task ftueReset()
+        {
+            var form = new WWWForm();
+            var url = "https://overlewd-api.herokuapp.com/ftue-stages/reset";
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        // /ftue-stages/{id}/start
+        public static async Task ftueStageStartAsync(int stageId)
+        {
+            var form = new WWWForm();
+            var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/start";
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+                
+            }
+        }
+
+        // /ftue-stages/{id}/end
+        public static async Task ftueStageEndAsync(int stageId)
+        {
+            var form = new WWWForm();
+            var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/end";
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
 
         //animations
         public static async Task<List<Animation>> animationsAsync()
@@ -682,11 +620,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/animations";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<Animation>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
             }
         }
 
@@ -712,11 +646,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/sounds";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<Sound>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<Sound>>(request?.downloadHandler.text);
             }
         }
 
@@ -735,11 +665,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/chapter-maps";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                if (!RequestCheckError(request))
-                {
-                    return JsonHelper.DeserializeObject<List<ChapterMap>>(request.downloadHandler.text);
-                }
-                return null;
+                return JsonHelper.DeserializeObject<List<ChapterMap>>(request?.downloadHandler.text);
             }
         }
 

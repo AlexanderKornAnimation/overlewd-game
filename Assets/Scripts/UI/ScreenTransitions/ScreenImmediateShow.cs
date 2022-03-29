@@ -15,22 +15,19 @@ namespace Overlewd
         {
             await screen.BeforeShowAsync();
             OnPrepared();
-        }
 
-        void Update()
-        {
-            if (!prepared || locked)
-                return;
-
+            await WaitUnlocked();
             OnStart();
 
+            await screen.AfterShowAsync();
             OnEnd();
+
             Destroy(this);
-            screen.AfterShow();
         }
 
-        protected override void OnStartCalls()
+        protected override void OnStart()
         {
+            base.OnStart();
             screen.StartShow();
         }
     }

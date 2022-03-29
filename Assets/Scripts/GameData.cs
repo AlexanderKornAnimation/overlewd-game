@@ -48,6 +48,12 @@ namespace Overlewd
             return events.Find(e => e.id == id);
         }
 
+        public static List<AdminBRO.EventChapter> eventChapters { get; set; }
+        public static AdminBRO.EventChapter GetEventChapterById(int id)
+        {
+            return eventChapters.Find(c => c.id == id);
+        }
+
         public static List<AdminBRO.EventQuestItem> eventQuests { get; set; } = new List<AdminBRO.EventQuestItem>();
         public static AdminBRO.EventQuestItem GetEventQuestById(int id)
         {
@@ -111,6 +117,44 @@ namespace Overlewd
         }
 
         public static AdminBRO.FTUEInfo ftue { get; set; }
+        public static List<AdminBRO.FTUEStageItem> ftueStages { get; set; } = new List<AdminBRO.FTUEStageItem>();
+
+        public static AdminBRO.FTUEChapter GetFTUEChapterByKey(string key)
+        {
+            return ftue.chapters.Find(ch => ch.key == key);
+        }
+        public static AdminBRO.FTUEChapter GetFTUEChapterById(int id)
+        {
+            return ftue.chapters.Find(ch => ch.id == id);
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageById(int id)
+        {
+            return ftueStages.Find(s => s.id == id);
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key, int chapterId)
+        {
+            return ftueStages.Find(s => s.key == key && s.ftueChapterId == chapterId);
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key, string chapterKey)
+        {
+            var chpaterData = GetFTUEChapterByKey(chapterKey);
+            return (chpaterData != null) ? GetFTUEStageByKey(key, chpaterData.id) : null;
+        }
+        public static async Task FTUEStartStage(int stageId)
+        {
+            await AdminBRO.ftueStageStartAsync(stageId);
+            ftueStages = await AdminBRO.ftueStagesAsync();
+        }
+        public static async Task FTUEEndStage(int stageId)
+        {
+            await AdminBRO.ftueStageEndAsync(stageId);
+            ftueStages = await AdminBRO.ftueStagesAsync();
+        }
+        public static async Task FTUEReset()
+        {
+            await AdminBRO.ftueReset();
+            ftueStages = await AdminBRO.ftueStagesAsync();
+        }
 
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
         public static AdminBRO.Animation GetAnimationById(int id)

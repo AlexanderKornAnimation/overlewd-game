@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Overlewd.FTUE;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class StartingScreen : BaseScreen
+    public class StartingScreen : BaseFullScreen
     {
         void Awake()
         {
@@ -18,12 +19,17 @@ namespace Overlewd
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                FTUE.GameData.Initialization();
-                FTUE.GameGlobalStates.Reset();
 
-                FTUE.GameGlobalStates.newFTUE = false;
-                FTUE.GameGlobalStates.sexScreen_DialogId = 1;
-                UIManager.ShowScreen<FTUE.SexScreen>();
+                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                UIManager.ShowScreen<MapScreen>();
+                /*UIManager.ShowScreen<FTUE.SexScreen>().
+                    SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/
+            });
+
+            canvas.Find("Reset_FTUE").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                FTUEReset();
             });
 
             canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
@@ -37,16 +43,11 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<TempBattleScreen>();
             });
+        }
 
-            canvas.Find("NewFTUE").GetComponent<Button>().onClick.AddListener(() =>
-            {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-                FTUE.GameGlobalStates.newFTUE = true;
-                FTUE.GameGlobalStates.ftueChapterId = 0;
-                FTUE.GameGlobalStates.sexScreen_StageKey = "sex1";
-                UIManager.ShowScreen<FTUE.SexScreen>();
-            });
+        private async void FTUEReset()
+        {
+            await GameData.FTUEReset();
         }
     }
 }

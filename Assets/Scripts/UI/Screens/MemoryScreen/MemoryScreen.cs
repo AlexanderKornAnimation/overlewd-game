@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MemoryScreen : BaseScreen
+    public class MemoryScreen : BaseFullScreen
     {
         private Button portalButton;
         private Button forgeButton;

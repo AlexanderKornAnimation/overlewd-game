@@ -25,24 +25,58 @@ namespace Overlewd
 
         public static async Task<UnityWebRequest> GetAsync(string url, string token = null)
         {
-            var request = UnityWebRequest.Get(url);
-            if (token != null)
+            try
             {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                var request = UnityWebRequest.Get(url);
+                UIManager.AddUserInputLocker(new UserInputLocker(request));
+
+                if (token != null)
+                {
+                    request.SetRequestHeader("Authorization", "Bearer " + token);
+                }
+                request.SetRequestHeader("Version", ApiVersion);
+            
+                await request.SendWebRequest();
+                UIManager.RemoveUserInputLocker(new UserInputLocker(request));
+
+                return request;
             }
-            request.SetRequestHeader("Version", ApiVersion);
-            return await request.SendWebRequest();
+            catch (UnityWebRequestException e)
+            {
+                UIManager.RemoveUserInputLocker(new UserInputLocker(e.UnityWebRequest));
+
+                Debug.LogError(e.UnityWebRequest.url);
+                Debug.LogError(e.Message);
+                return default;
+            }
         }
 
         public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, string token = null)
         {
-            var request = UnityWebRequest.Post(url, form);
-            if (token != null)
+            try
             {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
+                var request = UnityWebRequest.Post(url, form);
+                UIManager.AddUserInputLocker(new UserInputLocker(request));
+
+                if (token != null)
+                {
+                    request.SetRequestHeader("Authorization", "Bearer " + token);
+                }
+                request.SetRequestHeader("Version", ApiVersion);
+
+                await request.SendWebRequest();
+                UIManager.RemoveUserInputLocker(new UserInputLocker(request));
+
+                return request;
             }
-            request.SetRequestHeader("Version", ApiVersion);
-            return await request.SendWebRequest();
+            catch (UnityWebRequestException e)
+            {
+                UIManager.RemoveUserInputLocker(new UserInputLocker(e.UnityWebRequest));
+
+                Debug.LogError(e.UnityWebRequest.url);
+                Debug.LogError(e.Message);
+                return default;
+            }
         }
     }
 }

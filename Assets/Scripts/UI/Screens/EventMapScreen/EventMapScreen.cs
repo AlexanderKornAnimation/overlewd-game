@@ -6,9 +6,10 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class EventMapScreen : BaseScreen
+    public class EventMapScreen : BaseFullScreen
     { 
-        private Transform stages;
+        private Transform map;
+        private GameObject chapterMap;
 
         private Button backButton;
 
@@ -19,7 +20,7 @@ namespace Overlewd
         private List<NSEventMapScreen.DialogButton> dialogButtons = new List<NSEventMapScreen.DialogButton>();
         private List<NSEventMapScreen.SexButton> sexButtons = new List<NSEventMapScreen.SexButton>();
 
-        void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/EventMapScreen/EventMap", transform);
 
@@ -28,40 +29,45 @@ namespace Overlewd
             BuffWidget.GetInstance(transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-            stages = canvas.Find("Stages");
+            map = canvas.Find("Map");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            mapButton = NSEventMapScreen.MapButton.GetInstance(stages.Find("eventMap"));
         }
 
         public override async Task BeforeShowAsync()
         {
             var eventData = GameGlobalStates.eventMapScreen_EventData;
-            foreach (var stageId in eventData.stages)
+            var eventChapterData = GameData.GetEventChapterById(eventData.chapters[0]);
+            var mapData = GameData.GetChapterMapById(eventChapterData.chapterMapId.Value);
+            chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
+
+            mapButton = NSEventMapScreen.MapButton.GetInstance(chapterMap.transform.Find("eventMap"));
+
+            foreach (var stageId in eventChapterData.stages)
             {
                 var stageData = GameData.GetEventStageById(stageId);
-                if (stageData.status == AdminBRO.EventStageStatus.Closed)
+
+                if (stageData.status == AdminBRO.EventStageItem.Status_Closed)
                 {
                     continue;
                 }
 
-                var node = stages.Find(stageData.eventMapNodeName ?? "");
+                var node = chapterMap.transform.Find(stageData.mapNodeName ?? "");
                 if (node != null)
                 {
-                    if (stageData.type == AdminBRO.EventStageType.Battle)
+                    if (stageData.type == AdminBRO.EventStageItem.Type_Battle)
                     {
                         if (stageData.battleId.HasValue)
                         {
                             var battleData = GameData.GetBattleById(stageData.battleId.Value);
-                            if (battleData.type == AdminBRO.BattleType.Battle)
+                            if (battleData.type == AdminBRO.Battle.Type_Battle)
                             {
                                 var fightButton = NSEventMapScreen.FightButton.GetInstance(node);
                                 fightButton.eventStageId = stageId;
                                 fightButtons.Add(fightButton);
                             }
-                            else if (battleData.type == AdminBRO.BattleType.Boss)
+                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
                             {
                                 var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(node);
                                 bossFightButton.eventStageId = stageId;
@@ -69,18 +75,18 @@ namespace Overlewd
                             }
                         }
                     }
-                    else if (stageData.type == AdminBRO.EventStageType.Dialog)
+                    else if (stageData.type == AdminBRO.EventStageItem.Type_Dialog)
                     {
                         if (stageData.dialogId.HasValue)
                         {
                             var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-                            if (dialogData.type == AdminBRO.DialogType.Dialog)
+                            if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
                             {
                                 var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
                                 dialogButton.eventStageId = stageId;
                                 dialogButtons.Add(dialogButton);
                             }
-                            else if (dialogData.type == AdminBRO.DialogType.Sex)
+                            else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
                             {
                                 var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
                                 sexButton.eventStageId = stageId;
@@ -94,7 +100,7 @@ namespace Overlewd
             foreach (var eventMarketId in eventData.markets)
             {
                 var eventMarketData = GameData.GetEventMarketById(eventMarketId);
-                var node = stages.Find(eventMarketData.eventMapNodeName);
+                var node = chapterMap.transform.Find(eventMarketData.eventMapNodeName);
                 if (node != null)
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(node);

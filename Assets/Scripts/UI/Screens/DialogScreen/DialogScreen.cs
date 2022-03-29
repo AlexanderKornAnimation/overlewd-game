@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DialogScreen : BaseScreen
+    public class DialogScreen : BaseFullScreen
     {
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
@@ -36,6 +37,7 @@ namespace Overlewd
         protected Transform cutInAnimPos;
 
         protected AdminBRO.Dialog dialogData;
+        protected List<AdminBRO.DialogReplica> dialogReplicas;
         protected int currentReplicaId;
 
         protected bool isAutoplayButtonPressed = false;
@@ -48,11 +50,11 @@ namespace Overlewd
 
         protected Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
         {
-            [AdminBRO.DialogCharacterSkin.Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogCharacterSkin.Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogCharacterSkin.UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogCharacterSkin.Faye] = "Prefabs/UI/Screens/DialogScreen/Faye",
-            [AdminBRO.DialogCharacterSkin.Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel"
+            [AdminBRO.DialogReplica.CharacterSkin_Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
+            [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
+            [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
+            [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel",
+            [AdminBRO.DialogReplica.CharacterSkin_Milf] = "Prefabs/UI/Screens/DialogScreen/Milf"
         };
 
         protected SpineWidgetGroup cutInAnimation;
@@ -100,6 +102,13 @@ namespace Overlewd
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
+
+            await Task.CompletedTask;
         }
 
         protected virtual async Task EnterScreen()
@@ -205,16 +214,17 @@ namespace Overlewd
             characters[keyName]?.Deselect();
         }
 
-        protected void Initialize()
+        private void Initialize()
         {
-            slots[AdminBRO.DialogCharacterPosition.Left] = leftCharacterPos;
-            slots[AdminBRO.DialogCharacterPosition.Right] = rightCharacterPos;
-            slots[AdminBRO.DialogCharacterPosition.Middle] = midCharacterPos;
-            slot_character[AdminBRO.DialogCharacterPosition.Left] = null;
-            slot_character[AdminBRO.DialogCharacterPosition.Right] = null;
-            slot_character[AdminBRO.DialogCharacterPosition.Middle] = null;
+            dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
+            slots[AdminBRO.DialogReplica.CharacterPosition_Left] = leftCharacterPos;
+            slots[AdminBRO.DialogReplica.CharacterPosition_Right] = rightCharacterPos;
+            slots[AdminBRO.DialogReplica.CharacterPosition_Middle] = midCharacterPos;
+            slot_character[AdminBRO.DialogReplica.CharacterPosition_Left] = null;
+            slot_character[AdminBRO.DialogReplica.CharacterPosition_Right] = null;
+            slot_character[AdminBRO.DialogReplica.CharacterPosition_Middle] = null;
 
-            foreach (var replica in dialogData.replicas)
+            foreach (var replica in dialogReplicas)
             {
                 var keyName = replica.characterSkin;
                 var keyPos = replica.characterPosition;
@@ -249,7 +259,7 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GetAnimationById(replica.cutInAnimationId.Value);
+                    var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
                     cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
                     cutInAnimation.Initialize(animation);
                 }
@@ -271,7 +281,7 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    var animation = GetAnimationById(replica.emotionAnimationId.Value);
+                    var animation = GameData.GetAnimationById(replica.emotionAnimationId.Value);
                     emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
                     emotionAnimation.Initialize(animation);
                 }
@@ -321,7 +331,7 @@ namespace Overlewd
 
         private IEnumerator Autoplay()
         {
-            while (currentReplicaId < dialogData.replicas.Count)
+            while (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
                 yield return new WaitForSeconds(2f);
@@ -340,7 +350,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             currentReplicaId++;
-            if (currentReplicaId < dialogData.replicas.Count)
+            if (currentReplicaId < dialogReplicas.Count)
             {
                 ShowCurrentReplica();
             }
@@ -353,15 +363,13 @@ namespace Overlewd
         private void PlaySound(AdminBRO.DialogReplica replica)
         {
             //main sound
-            var mainSoundData = replica.mainSoundId.HasValue ? GameData.GetSoundById(replica.mainSoundId.Value) : null;
-            var mainSoundPath = mainSoundData != null ? mainSoundData.eventPath : replica.mainSoundPath;
-            var mainBankId = mainSoundData != null ? mainSoundData.soundBankId : null;
-            if (!String.IsNullOrEmpty(mainSoundPath))
+            if (replica.mainSoundId.HasValue)
             {
-                if (mainSoundPath != mainSound?.path)
+                var mainSoundData = GameData.GetSoundById(replica.mainSoundId.Value);
+                if (mainSoundData.eventPath != mainSound?.path)
                 {
                     mainSound?.Stop();
-                    mainSound = SoundManager.GetEventInstance(mainSoundPath, mainBankId);
+                    mainSound = SoundManager.GetEventInstance(mainSoundData.eventPath, mainSoundData.soundBankId);
                 }
             }
             else
@@ -371,15 +379,13 @@ namespace Overlewd
             }
 
             //cutIn sound
-            var cutInSoundData = replica.cutInSoundId.HasValue ? GameData.GetSoundById(replica.cutInSoundId.Value) : null;
-            var cutInSoundPath = cutInSoundData != null ? cutInSoundData.eventPath : replica.cutInSoundPath;
-            var cutInBankId = cutInSoundData != null ? cutInSoundData.soundBankId : null;
-            if (!String.IsNullOrEmpty(cutInSoundPath))
+            if (replica.cutInSoundId.HasValue)
             {
-                if (cutInSoundPath != cutInSound?.path)
+                var cutInSoundData = GameData.GetSoundById(replica.cutInSoundId.Value);
+                if (cutInSoundData.eventPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
-                    cutInSound = SoundManager.GetEventInstance(cutInSoundPath, cutInBankId);
+                    cutInSound = SoundManager.GetEventInstance(cutInSoundData.eventPath, cutInSoundData.soundBankId);
                 }
 
                 mainSound?.Pause();
@@ -392,11 +398,16 @@ namespace Overlewd
                 mainSound?.Play();
             }
         }
-        
+
+        protected virtual void ShowLastReplica()
+        {
+
+        }
+
         private void ShowCurrentReplica()
         {
-            var replica = dialogData.replicas[currentReplicaId];
-            var prevReplica = (currentReplicaId > 0) ? dialogData.replicas[currentReplicaId - 1] : null;
+            var replica = dialogReplicas[currentReplicaId];
+            var prevReplica = (currentReplicaId > 0) ? dialogReplicas[currentReplicaId - 1] : null;
 
             if (prevReplica != null)
             {
@@ -429,11 +440,11 @@ namespace Overlewd
             ShowPersEmotion(replica, prevReplica);
             PlaySound(replica);
             ShowCutIn(replica, prevReplica);
-        }
 
-        protected virtual AdminBRO.Animation GetAnimationById(int id)
-        {
-            return GameData.GetAnimationById(id);
+            if (!(currentReplicaId + 1 < dialogReplicas.Count))
+            {
+                ShowLastReplica();
+            }
         }
     }
 }

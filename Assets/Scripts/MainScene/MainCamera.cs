@@ -20,6 +20,7 @@ namespace Overlewd
 
             UIManager.Initialize();
             ResourceManager.Initialize();
+            SoundManager.Initialize();
         }
 
         IEnumerator Start()

@@ -11,14 +11,9 @@ namespace Overlewd
 {
     namespace NSMapScreen
     {
-        public class FightButton : MonoBehaviour
+        public class FightButton : BaseStageButton
         {
-            protected Button button;
-            protected Transform fightDone;
-
-            protected TextMeshProUGUI title;
             protected TextMeshProUGUI loot;
-
             protected GameObject icon;
             protected GameObject bossIcon;
             protected GameObject markers;
@@ -28,17 +23,11 @@ namespace Overlewd
             protected GameObject mainQuestMark;
             protected GameObject sideQuestMark;
 
-            private void Awake()
+            protected override void Awake()
             {
-                var canvas = transform.Find("Canvas");
+                base.Awake();
 
-                button = canvas.Find("Button").GetComponent<Button>();
-                
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
-                
-                fightDone = button.transform.Find("FightDone");
-
                 icon = button.transform.Find("Icon").gameObject;
                 bossIcon = button.transform.Find("BossIcon").gameObject;
                 markers = button.transform.Find("Markers").gameObject;
@@ -47,16 +36,29 @@ namespace Overlewd
                 eventMark3 = markers.transform.Find("EventMark3").gameObject;
                 mainQuestMark = markers.transform.Find("MainQuestMark").gameObject;
                 sideQuestMark = markers.transform.Find("SideQuestMark").gameObject;
-
-                button.onClick.AddListener(ButtonClick);
             }
 
-            protected virtual void ButtonClick()
+            protected override void Start()
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<PrepareBattlePopup>();
+                base.Start();
+
+                var battleId = stageData?.battleId;
+                if (battleId.HasValue)
+                {
+                    var battleData = GameData.GetBattleById(battleId.Value);
+                    title.text = battleData.title;
+                    icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
+                    bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
+                }
             }
-            
+
+            protected override void ButtonClick()
+            {
+                base.ButtonClick();
+                UIManager.ShowPopup<FTUE.PrepareBattlePopup>().
+                    SetStageData(stageData);
+            }
+
             public static FightButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<FightButton>

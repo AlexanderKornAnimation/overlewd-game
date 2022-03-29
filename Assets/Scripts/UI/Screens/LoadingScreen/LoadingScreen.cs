@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
-    public class LoadingScreen : BaseScreen
+    public class LoadingScreen : BaseFullScreen
     {
         private Image loadingProgress;
         private TextMeshProUGUI text;
@@ -190,8 +190,6 @@ namespace Overlewd
 
             await AdminBRO.authLoginAsync();
 
-            await AdminBRO.eventStagesResetAsync();
-
             //
             SetDownloadBarProgress(0.1f);
             SetDownloadBarTitle("Download game data");
@@ -204,6 +202,8 @@ namespace Overlewd
 
             GameData.events = await AdminBRO.eventsAsync();
 
+            GameData.eventChapters = await AdminBRO.eventChaptersAsync();
+
             GameData.eventMarkets = await AdminBRO.eventMarketsAsync();
 
             GameData.eventQuests = await AdminBRO.eventQuestsAsync();
@@ -215,6 +215,8 @@ namespace Overlewd
             GameData.battles = await AdminBRO.battlesAsync();
 
             GameData.ftue = await AdminBRO.ftueAsync();
+
+            GameData.ftueStages = await AdminBRO.ftueStagesAsync();
 
             GameData.animations = await AdminBRO.animationsAsync();
 
@@ -240,7 +242,7 @@ namespace Overlewd
             UIManager.ShowScreen<StartingScreen>();
         }
 
-        public override void AfterShow()
+        public override async Task AfterShowAsync()
         {
             if (HttpCore.HasNetworkConection())
             {
@@ -251,6 +253,8 @@ namespace Overlewd
             {
                 UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
             }
+
+            await Task.CompletedTask;
         }
 
         private void SetDownloadBarProgress(float progressPercent)

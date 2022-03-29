@@ -6,7 +6,6 @@ using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Overlewd
 {
@@ -38,38 +37,16 @@ namespace Overlewd
         //popups & nootifications
         public const string UI_GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
         public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
-
-        //sex 1
-        public const string SexScene1_CutInCumshot = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_cumshot";
-        public const string SexScene1_CutInLick = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/add_lick";
-        public const string SexScene1_MainScene = "event:/Animations/Sex_Scenes/1_Ulvi_BJ/main_scene";
-
-        //sex 2
-        public const string SexScene2_CutInBeads = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-beads";
-        public const string SexScene2_CutInCreamPie = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene_add-cum";
-        public const string SexScene2_MainScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/1_scene";
-        public const string SexScene2_FinalScene = "event:/Animations/Sex_Scenes/2_Ulvi_Cowgirl/2_scene";
-        
-        //sex 3
-        public const string SexScene3_MainScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/1_scene";
-        public const string SexSscene3_CutInPussyRubbing = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/2_scene";
-        public const string SexScene3_CutInPussyRubbingZoom = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/3_scene";
-        public const string SexScene3_FinalScene = "event:/Animations/Sex_Scenes/3_Ulvi_Clit_Rubbing/4_scene";
-        
-        //dialogue 1
-        public const string Dialogue1_CutInUlviScratch = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/Ulvi_Head_Pat";
-        
-        //dialogue 3
-        public const string Dialogue3_CutInAdrielKiss = "event:/Animations/Sex_Scenes/Chapter-1_Cut_Ins/OL_Kiss";
     }
 
     public class FMODBank
     {
         private Bank bank;
+        private RESULT status;
 
         private FMODBank(string path)
         {
-            RuntimeManager.StudioSystem.loadBankFile(path,
+            status = RuntimeManager.StudioSystem.loadBankFile(path,
                 LOAD_BANK_FLAGS.NORMAL,
                 out bank);
         }
@@ -77,11 +54,24 @@ namespace Overlewd
         public void Unload()
         {
             bank.unload();
+            RuntimeManager.StudioSystem.update();
+        }
+
+        public bool IsValid()
+        {
+            return status == RESULT.OK;
         }
 
         public static FMODBank LoadFromFile(string bankPath)
         {
-            return new FMODBank(bankPath);
+            var bank = new FMODBank(bankPath);
+            if (bank.IsValid())
+            {
+                return bank;
+            }
+
+            bank.Unload();
+            return null;
         }
     }
 
@@ -136,21 +126,47 @@ namespace Overlewd
     public static class SoundManager
     {
         private static List<FMODEvent> instances = new List<FMODEvent>();
+        private static List<EventDescription> localEvents = new List<EventDescription>();
+
+        public static void Initialize()
+        {
+            Bank[] banks;
+            RuntimeManager.StudioSystem.getBankList(out banks);
+            foreach (var bank in banks)
+            {
+                EventDescription[] bankEvents;
+                bank.getEventList(out bankEvents);
+                foreach (var eventItem in bankEvents)
+                {
+                    localEvents.Add(eventItem);
+                }
+            }
+        }
+
+        public static bool HasLocalEvent(string eventPath)
+        {
+            return localEvents.Exists(item => 
+                {
+                    string localEventPath;
+                    item.getPath(out localEventPath);
+                    return localEventPath == eventPath.Trim();
+                });
+        }
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
         {
-            if (!String.IsNullOrEmpty(bankId))
+            if (!HasLocalEvent(eventPath) && !String.IsNullOrEmpty(bankId))
             {
                 ResourceManager.LoadFMODBank(bankId);
             }
 
-            var inst = instances.Find(item => (item.path == eventPath) && item.IsPlaying());
+            var inst = instances.Find(item => (item.path == eventPath.Trim()) && item.IsPlaying());
             if (inst != null)
             {
                 return inst;
             }
 
-            var newInst = FMODEvent.GetInstance(eventPath);
+            var newInst = FMODEvent.GetInstance(eventPath.Trim());
             if (newInst != null)
             {
                 instances.Add(newInst);
@@ -162,7 +178,7 @@ namespace Overlewd
 
         public static void PlayOneShot(string eventPath)
         {
-            RuntimeManager.PlayOneShot(eventPath);
+            RuntimeManager.PlayOneShot(eventPath.Trim());
         }
 
         public static void StopAll()

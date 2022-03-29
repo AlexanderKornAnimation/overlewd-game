@@ -7,6 +7,20 @@ namespace Overlewd
 {
     public static class GameGlobalStates
     {
+        //ftue
+        public static AdminBRO.FTUEChapter ftueChapterData { get; set; }
+        public static AdminBRO.Dialog GetFTUENotificationByKey(string key)
+        {
+            var notifData = ftueChapterData?.notifications.Find(n => n.key == key);
+            var dialogId = notifData?.dialogId;
+            return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+        }
+        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key)
+        {
+            return ftueChapterData != null ? GameData.GetFTUEStageByKey(key, ftueChapterData.id) : null;
+        }
+        //
+
         public static int eventMapScreen_EventId;
         public static AdminBRO.EventItem eventMapScreen_EventData 
         { 
