@@ -12,7 +12,7 @@ namespace Overlewd
         {
         }
 
-        public virtual void ShowMissclick()
+        public virtual void MakeMissclick()
         {
         }
 
@@ -26,6 +26,11 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenTopHide>();
         }
 
+        public virtual async Task BeforeShowDataAsync()
+        {
+            await Task.CompletedTask;
+        }
+
         public virtual async Task BeforeShowAsync()
         {
             await Task.CompletedTask;
@@ -37,6 +42,11 @@ namespace Overlewd
         }
 
         public virtual async Task AfterShowAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async Task BeforeHideDataAsync()
         {
             await Task.CompletedTask;
         }

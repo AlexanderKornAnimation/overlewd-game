@@ -63,9 +63,9 @@ namespace Overlewd
             UIManager.HideNotification();
         }
 
-        public override void ShowMissclick()
+        public override void MakeMissclick()
         {
-            var missclick = UIManager.ShowNotificationMissclick<DialogNotificationMissclick>();
+            var missclick = UIManager.MakeNotificationMissclick<DialogNotificationMissclick>();
             missclick.missClickEnabled = false;
         }
 

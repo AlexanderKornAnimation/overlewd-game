@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -14,26 +15,22 @@ namespace Overlewd
                 0.0f, screenRectTransform.rect.width);
         }
 
-        async void Start()
+        public override async Task PrepareDataAsync()
         {
-            await screen.BeforeHideAsync();
-            OnPrepared();
-
-            await WaitUnlocked();
-            OnStart();
-
-            await UITools.RightHideAsync(screenRectTransform);
-
-            await screen.AfterHideAsync();
-            OnEnd();
-
-            Destroy(gameObject);
+            await screen.BeforeHideDataAsync();
         }
 
-        protected override void OnStart()
+        public override async Task PrepareAsync()
         {
-            base.OnStart();
+            await screen.BeforeHideAsync();
+        }
+
+        public override async Task ProgressAsync()
+        {
             screen.StartHide();
+            await UITools.RightHideAsync(screenRectTransform);
+            await screen.AfterHideAsync();
+            Destroy(gameObject);
         }
     }
 }
