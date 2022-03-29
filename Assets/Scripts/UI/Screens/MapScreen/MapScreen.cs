@@ -65,29 +65,35 @@ namespace Overlewd
                             if (stageData.dialogId.HasValue)
                             {
                                 var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-                                if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                                if (dialogData != null)
                                 {
-                                    var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
-                                    dialog.stageData = stageData;
-                                }
-                                else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
-                                {
-                                    var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
-                                    sex.stageData = stageData;
+                                    if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                                    {
+                                        var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
+                                        dialog.stageData = stageData;
+                                    }
+                                    else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
+                                    {
+                                        var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
+                                        sex.stageData = stageData;
+                                    }
                                 }
                             }
                             else if (stageData.battleId.HasValue)
                             {
                                 var battleData = GameData.GetBattleById(stageData.battleId.Value);
-                                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                                if (battleData != null)
                                 {
-                                    var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                    fight.stageData = stageData;
-                                }
-                                else if (battleData.type == AdminBRO.Battle.Type_Boss)
-                                {
-                                    var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                    fight.stageData = stageData;
+                                    if (battleData.type == AdminBRO.Battle.Type_Battle)
+                                    {
+                                        var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.stageData = stageData;
+                                    }
+                                    else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                                    {
+                                        var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.stageData = stageData;
+                                    }
                                 }
                             }
                         }
