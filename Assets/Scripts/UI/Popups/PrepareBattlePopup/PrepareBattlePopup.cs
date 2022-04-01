@@ -16,7 +16,7 @@ namespace Overlewd
         protected Button battleButton;
         protected Button editTeamButton;
         protected Button buffButton;
-        protected RectTransform buffButtonRect;
+        protected RectTransform buffRect;
 
         protected Image firstTimeReward;
         protected Image reward1;
@@ -39,6 +39,7 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
             var rewards = canvas.Find("ResourceBack").Find("Rewards");
             var levelTitle = canvas.Find("LevelTitle");
+            var buff = canvas.Find("Buff");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -49,12 +50,12 @@ namespace Overlewd
             editTeamButton = canvas.Find("AlliesBack").Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
 
-            buffButton = canvas.Find("BuffButton").GetComponent<Button>();
-            buffButtonRect = buffButton.GetComponent<RectTransform>();
+            buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
+            buffRect = buff.GetComponent<RectTransform>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
-            buffButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -buffButtonRect.rect.height, buffButtonRect.rect.height);
+            buffRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
+                -buffRect.rect.height, buffRect.rect.height);
 
             eventMark = levelTitle.Find("EventMark").GetComponent<Image>();
             questMark = levelTitle.Find("QuestMark").GetComponent<Image>();
@@ -104,12 +105,12 @@ namespace Overlewd
         
         public override async Task AfterShowAsync()
         {
-            await UITools.BottomShowAsync(buffButtonRect);
+            await UITools.TopShowAsync(buffRect, 0.2f);
         }
 
         public override async Task BeforeHideAsync()
         {
-            await UITools.BottomHideAsync(buffButtonRect);
+            await UITools.TopHideAsync(buffRect, 0.2f);
         }
     }
 }
