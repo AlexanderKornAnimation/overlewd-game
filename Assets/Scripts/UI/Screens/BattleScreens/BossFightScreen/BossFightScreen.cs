@@ -49,7 +49,6 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             StartBattleButtonClick();
-
             await Task.CompletedTask;
         }
 

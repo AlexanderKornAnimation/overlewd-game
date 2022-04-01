@@ -15,30 +15,31 @@ namespace Overlewd
         {
             private AdminBRO.FTUEStageItem stageData;
 
-            public void SetStageData(AdminBRO.FTUEStageItem data)
+            public SexScreen SetStageData(AdminBRO.FTUEStageItem data)
             {
                 stageData = data;
-            }
-
-            protected override async Task EnterScreen()
-            {
                 dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-                await GameData.FTUEStartStage(stageData.id);
-                await Task.CompletedTask;
+                return this;
             }
 
+            public override async Task BeforeShowDataAsync()
+            {
+                await GameData.FTUEStartStage(stageData.id);
+            }
+
+            public override async Task BeforeHideDataAsync()
+            {
+                await GameData.FTUEEndStage(stageData.id);
+            }
 
             public override async Task AfterShowAsync()
             {
                 ShowStartNotifications();
-
                 await Task.CompletedTask;
             }
 
-            protected override async void LeaveScreen()
+            protected override void LeaveScreen()
             {
-                await GameData.FTUEEndStage(stageData.id);
-
                 switch (stageData.key)
                 {
                     case "sex1":

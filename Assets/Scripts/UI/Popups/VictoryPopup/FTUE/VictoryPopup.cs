@@ -22,7 +22,6 @@ namespace Overlewd
             protected override void NextButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
                 UIManager.ShowScreen<MapScreen>();
             }
 

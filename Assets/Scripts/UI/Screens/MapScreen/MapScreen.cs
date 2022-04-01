@@ -35,7 +35,7 @@ namespace Overlewd
             map = canvas.Find("Map");
         }
 
-        public override async Task BeforeShowAsync()
+        public override async Task BeforeShowMakeAsync()
         {
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);

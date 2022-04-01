@@ -13,37 +13,40 @@ namespace Overlewd
         public class BattleScreen : Overlewd.BattleScreen
         {
             private AdminBRO.FTUEStageItem stageData;
-
-            public void SetStageData(AdminBRO.FTUEStageItem data)
+            public BattleScreen SetStageData(AdminBRO.FTUEStageItem data)
             {
                 stageData = data;
+                return this;
+            }
+
+            public override async Task BeforeShowDataAsync()
+            {
+                await GameData.FTUEStartStage(stageData.id);
+            }
+
+            public override async Task BeforeHideDataAsync()
+            {
+                await GameData.FTUEEndStage(stageData.id);
             }
 
             public override async Task BeforeShowAsync()
             {
                 startBattleButton.gameObject.SetActive(false);
                 backButton.gameObject.SetActive(false);
-
                 skipButton.gameObject.SetActive(false);
                 battleVideo.loopPointReached += EndBattleVideo;
-
-                await GameData.FTUEStartStage(stageData.id);
-
                 await Task.CompletedTask;
             }
 
             public override async Task AfterShowAsync()
             {
                 ShowStartNotifications();
-
                 await Task.CompletedTask;
             }
 
-            protected override async void EndBattleVideo(VideoPlayer vp)
+            protected override void EndBattleVideo(VideoPlayer vp)
             {
                 skipButton.gameObject.SetActive(false);
-
-                await GameData.FTUEEndStage(stageData.id);
 
                 if (stageData.key == "battle2")
                 {
@@ -61,11 +64,7 @@ namespace Overlewd
 
             protected override void StartBattleButtonClick()
             {
-                if (true)
-                {
-                    skipButton.gameObject.SetActive(true);
-                }
-
+                skipButton.gameObject.SetActive(true);
                 battleVideo.Play();
             }
 

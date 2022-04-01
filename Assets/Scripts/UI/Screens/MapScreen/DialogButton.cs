@@ -27,8 +27,8 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.ShowScreen<FTUE.DialogScreen>().
-                    SetStageData(stageData);
+                UIManager.MakeScreen<FTUE.DialogScreen>().
+                    SetStageData(stageData).RunShowScreenProcess();
             }
 
             public static DialogButton GetInstance(Transform parent)

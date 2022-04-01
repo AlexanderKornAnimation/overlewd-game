@@ -12,16 +12,17 @@ namespace Overlewd
         {
             private AdminBRO.FTUEStageItem stageData;
 
-            public void SetStageData(AdminBRO.FTUEStageItem data)
+            public PrepareBattlePopup SetStageData(AdminBRO.FTUEStageItem data)
             {
                 stageData = data;
+                return this;
             }
 
             protected override void BattleButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-                UIManager.ShowScreen<BattleScreen>().
-                    SetStageData(stageData);
+                UIManager.MakeScreen<BattleScreen>().
+                    SetStageData(stageData).RunShowScreenProcess();
             }
         }
     }

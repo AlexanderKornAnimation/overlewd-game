@@ -65,8 +65,6 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
-            await EnterScreen();
-
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
@@ -75,21 +73,23 @@ namespace Overlewd
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();
-
             await Task.CompletedTask;
         }
+        
+        protected virtual void LeaveScreen()
+        {
+            UIManager.ShowScreen<EventMapScreen>();
+        }
 
-        protected virtual async Task EnterScreen()
+        public override async Task BeforeShowDataAsync()
         {
             dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
             await GameData.EventStageStartAsync(GameGlobalStates.sex_EventStageData);
         }
-        
-        protected virtual async void LeaveScreen()
+
+        public override async Task BeforeHideDataAsync()
         {
             await GameData.EventStageEndAsync(GameGlobalStates.sex_EventStageData);
-
-            UIManager.ShowScreen<EventMapScreen>();
         }
 
         protected void AutoplayButtonCustomize()

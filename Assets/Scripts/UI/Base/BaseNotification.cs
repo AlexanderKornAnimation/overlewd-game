@@ -30,5 +30,10 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenImmediateHide>();
         }
+
+        public void RunShowNotificationProcess()
+        {
+            UIManager.ShowNotificationProcess();
+        }
     }
 }

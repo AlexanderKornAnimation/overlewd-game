@@ -35,15 +35,23 @@ namespace Overlewd
             renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
         }
 
+        public override async Task BeforeShowDataAsync()
+        {
+            await GameData.EventStageStartAsync(GameGlobalStates.battle_EventStageData);
+        }
+
+        public override async Task BeforeHideDataAsync()
+        {
+            await GameData.EventStageEndAsync(GameGlobalStates.battle_EventStageData);
+        }
+
         public override async Task BeforeShowAsync()
         {
             backButton.gameObject.SetActive(false);
             startBattleButton.gameObject.SetActive(false);
-
-            await GameData.EventStageStartAsync(GameGlobalStates.battle_EventStageData);
             battleVideo.loopPointReached += EndBattleVideo;
-
             skipButton.gameObject.SetActive(false);
+            await Task.CompletedTask;
         }
 
         public override void StartShow()
@@ -54,16 +62,12 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             StartBattleButtonClick();
-
             await Task.CompletedTask;
         }
 
-        protected virtual async void EndBattleVideo(VideoPlayer vp)
+        protected virtual void EndBattleVideo(VideoPlayer vp)
         {
             skipButton.gameObject.SetActive(false);
-
-            await GameData.EventStageEndAsync(GameGlobalStates.battle_EventStageData);
-
             UIManager.ShowPopup<VictoryPopup>();
         }
 

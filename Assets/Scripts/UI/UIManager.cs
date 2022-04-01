@@ -408,7 +408,7 @@ namespace Overlewd
             return currentScreen?.GetType() == typeof(T);
         }
 
-        private static async void ShowScreenProcess()
+        public static async void ShowScreenProcess()
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             { 
@@ -423,18 +423,22 @@ namespace Overlewd
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup, prevOverlay, prevScreen },
                                         new List<BaseMissclick> { prevPopupMissclick, prevOverlayMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { currentScreen }, new List<BaseMissclick>());
-
             MemoryOprimizer.ChangeScreen();
         }
 
-        public static T ShowScreen<T>() where T : BaseFullScreen
+        public static T MakeScreen<T>() where T : BaseFullScreen
         {
             MemoryOprimizer.PrepareChangeScreen();
-
             MakeSubPopup(null);
             MakePopup(null);
             MakeOverlay(null);
             MakeScreen(GetScreenInstance<T>());
+            return currentScreen as T;
+        }
+
+        public static T ShowScreen<T>() where T : BaseFullScreen
+        {
+            MakeScreen<T>();
             ShowScreenProcess();
             return currentScreen as T;
         }
@@ -472,7 +476,7 @@ namespace Overlewd
             return currentPopup?.GetType() == typeof(T);
         }
 
-        private static async void ShowPopupProcess()
+        public static async void ShowPopupProcess()
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             {
@@ -488,10 +492,16 @@ namespace Overlewd
                                         new List<BaseMissclick> { popupMissclick });
         }
 
-        public static T ShowPopup<T>() where T : BasePopup
+        public static T MakePopup<T>() where T : BasePopup
         {
             MakeSubPopup(null);
             MakePopup(GetPopupInstance<T>());
+            return currentPopup as T;
+        }
+
+        public static T ShowPopup<T>() where T : BasePopup
+        {
+            MakePopup<T>();
             ShowPopupProcess();
             return currentPopup as T;
         }
@@ -549,7 +559,7 @@ namespace Overlewd
             return currentSubPopup?.GetType() == typeof(T);
         }
 
-        private static async void ShowSubPopupProcess()
+        public static async void ShowSubPopupProcess()
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             {
@@ -562,9 +572,15 @@ namespace Overlewd
                                         new List<BaseMissclick> { subPopupMissclick });
         }
 
-        public static T ShowSubPopup<T>() where T : BaseSubPopup
+        public static T MakeSubPopup<T>() where T : BaseSubPopup
         {
             MakeSubPopup(GetSubPopupInstance<T>());
+            return currentSubPopup as T;
+        }
+
+        public static T ShowSubPopup<T>() where T : BaseSubPopup
+        {
+            MakeSubPopup<T>();
             ShowSubPopupProcess();
             return currentSubPopup as T;
         }
@@ -615,7 +631,7 @@ namespace Overlewd
             return currentOverlay?.GetType() == typeof(T);
         }
 
-        private static async void ShowOverlayProcess()
+        public static async void ShowOverlayProcess()
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             {
@@ -628,9 +644,15 @@ namespace Overlewd
                                         new List<BaseMissclick> { overlayMissclick });
         }
 
-        public static T ShowOverlay<T>() where T : BaseOverlay
+        public static T MakeOverlay<T>() where T : BaseOverlay
         {
             MakeOverlay(GetOverlayInstance<T>());
+            return currentOverlay as T;
+        }
+
+        public static T ShowOverlay<T>() where T : BaseOverlay
+        {
+            MakeOverlay<T>();
             ShowOverlayProcess();
             return currentOverlay as T;
         }
@@ -689,7 +711,7 @@ namespace Overlewd
             }
         }
 
-        private static async void ShowNotificationProcess()
+        public static async void ShowNotificationProcess()
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             {
@@ -702,9 +724,15 @@ namespace Overlewd
                                         new List<BaseMissclick> { notificationMissclick });
         }
 
-        public static T ShowNotification<T>() where T : BaseNotification
+        public static T MakeNotification<T>() where T : BaseNotification
         {
             MakeNotification(GetNotificationInstance<T>());
+            return currentNotification as T;
+        }
+
+        public static T ShowNotification<T>() where T : BaseNotification
+        {
+            MakeNotification<T>();
             ShowNotificationProcess();
             return currentNotification as T;
         }

@@ -30,5 +30,10 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenRightHide>();
         }
+
+        public void RunShowOverlayProcess()
+        {
+            UIManager.ShowOverlayProcess();
+        }
     }
 }

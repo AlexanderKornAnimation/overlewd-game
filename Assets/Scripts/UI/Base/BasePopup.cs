@@ -30,5 +30,10 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenBottomHide>();
         }
+
+        public void RunShowPopupProcess()
+        {
+            UIManager.ShowPopupProcess();
+        }
     }
 }
