@@ -32,7 +32,7 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            var quests = GameData.eventQuests;
+            var quests = GameData.quests;
 
             for (int qId = 0; qId < quests.Count; qId++)
             {

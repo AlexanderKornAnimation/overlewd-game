@@ -206,7 +206,7 @@ namespace Overlewd
 
             GameData.eventMarkets = await AdminBRO.eventMarketsAsync();
 
-            GameData.eventQuests = await AdminBRO.eventQuestsAsync();
+            GameData.quests = await AdminBRO.questsAsync();
 
             GameData.eventStages = await AdminBRO.eventStagesAsync();
 

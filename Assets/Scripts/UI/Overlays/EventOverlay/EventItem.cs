@@ -12,7 +12,7 @@ namespace Overlewd
         public class EventItem : MonoBehaviour
         {
             public int eventId;
-            public int eventQuestId;
+            public int questId;
 
             private Button mapButton;
 
@@ -42,11 +42,11 @@ namespace Overlewd
             private void CustomizeItem()
             {
                 var eventData = GameData.GetEventById(eventId);
-                var eventQuestData = GameData.GetEventQuestById(eventQuestId);
+                var questData = GameData.GetQuestById(questId);
 
                 eventName.text = eventData?.name;
-                title.text = eventQuestData?.name;
-                description.text = eventQuestData?.description;
+                title.text = questData?.name;
+                description.text = questData?.description;
 
                 for (int i = 1; i <= 5; i++)
                 {

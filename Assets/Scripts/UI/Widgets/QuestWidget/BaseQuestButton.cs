@@ -10,7 +10,7 @@ namespace Overlewd
         {
             protected TextMeshProUGUI title;
             protected Button button;
-            public AdminBRO.EventQuestItem questData { get; set; }
+            public AdminBRO.QuestItem questData { get; set; }
 
             private void Awake()
             {

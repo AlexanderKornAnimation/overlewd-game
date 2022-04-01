@@ -369,37 +369,42 @@ namespace Overlewd
         }
 
         // /event-quests
-        public static async Task<List<EventQuestItem>> eventQuestsAsync()
+        public static async Task<List<QuestItem>> questsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/event-quests";
+            var url = "https://overlewd-api.herokuapp.com/quests";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<EventQuestItem>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<QuestItem>>(request?.downloadHandler.text);
             }
         }
 
         [Serializable]
-        public class EventQuestReward
+        public class QuestReward
         {
             public int currencyId;
             public int amount;
         }
 
         [Serializable]
-        public class EventQuestItem
+        public class QuestItem
         {
             public int id;
             public string name;
             public string type;
             public string description;
             public int? goalCount;
-            public List<EventQuestReward> rewards;
+            public List<QuestReward> rewards;
             public string status;
             public int progressCount;
 
             public const string Type_StandartHunt = "standart_hunt";
             public const string Type_QuickQuest = "quick_quest";
             public const string Type_UniversalAdventure = "universal_adventure";
+
+            public const string Status_New = "new";
+            public const string Status_In_Progress = "in_progress";
+            public const string Status_Complete = "complete";
+            public const string Status_Rewards_Claimed = "rewards_claimed";
         }
 
         // /i18n

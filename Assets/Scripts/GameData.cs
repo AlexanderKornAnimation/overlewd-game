@@ -54,10 +54,10 @@ namespace Overlewd
             return eventChapters.Find(c => c.id == id);
         }
 
-        public static List<AdminBRO.EventQuestItem> eventQuests { get; set; } = new List<AdminBRO.EventQuestItem>();
-        public static AdminBRO.EventQuestItem GetEventQuestById(int id)
+        public static List<AdminBRO.QuestItem> quests { get; set; } = new List<AdminBRO.QuestItem>();
+        public static AdminBRO.QuestItem GetQuestById(int id)
         {
-            return eventQuests.Find(q => q.id == id);
+            return quests.Find(q => q.id == id);
         }
 
         public static List<AdminBRO.EventMarketItem> eventMarkets { get; set; } = new List<AdminBRO.EventMarketItem>();
