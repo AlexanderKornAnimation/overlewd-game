@@ -30,6 +30,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public virtual async Task PrepareMakeAsync()
+        {
+            await Task.CompletedTask;
+        }
+
         public virtual async Task PrepareAsync()
         {
             await Task.CompletedTask;
@@ -43,11 +48,37 @@ namespace Overlewd
 
     public abstract class ScreenShow : ScreenTransition
     {
-        
+        public override async Task PrepareDataAsync()
+        {
+            await screen.BeforeShowDataAsync();
+        }
+
+        public override async Task PrepareMakeAsync()
+        {
+            await screen.BeforeShowMakeAsync();
+        }
+
+        public override async Task PrepareAsync()
+        {
+            await screen.BeforeShowAsync();
+        }
     }
 
     public abstract class ScreenHide : ScreenTransition
     {
-        
+        public override async Task PrepareDataAsync()
+        {
+            await screen.BeforeHideDataAsync();
+        }
+
+        public override async Task PrepareMakeAsync()
+        {
+            await screen.BeforeHideMakeAsync();
+        }
+
+        public override async Task PrepareAsync()
+        {
+            await screen.BeforeHideAsync();
+        }
     }
 }

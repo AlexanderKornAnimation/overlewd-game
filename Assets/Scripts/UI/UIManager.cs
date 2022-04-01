@@ -291,10 +291,18 @@ namespace Overlewd
         }
 
         //transition tools
-        private static async Task WaitScreenPrepare(BaseScreen screen)
+        private static async Task WaitScreensPrepare(List<BaseScreen> screens)
         {
-            var screenTr = screen?.GetTransition();
-            if (screenTr != null) await screenTr.PrepareDataAsync();
+            foreach (var screen in screens)
+            {
+                var screenTr = screen?.GetTransition();
+                if (screenTr != null) await screenTr.PrepareDataAsync();
+            }
+            foreach (var screen in screens)
+            {
+                var screenTr = screen?.GetTransition();
+                if (screenTr != null) await screenTr.PrepareMakeAsync();
+            }
         }
 
         private static async Task WaitScreenTransitions(List<BaseScreen> screens, List<BaseMissclick> missclicks)
@@ -402,11 +410,14 @@ namespace Overlewd
 
         private static async void ShowScreenProcess()
         {
-            await WaitScreenPrepare(prevSubPopup);
-            await WaitScreenPrepare(prevPopup);
-            await WaitScreenPrepare(prevOverlay);
-            await WaitScreenPrepare(prevScreen);
-            await WaitScreenPrepare(currentScreen);
+            await WaitScreensPrepare(new List<BaseScreen> 
+            { 
+                prevSubPopup,
+                prevPopup,
+                prevOverlay,
+                prevScreen,
+                currentScreen
+            });
             await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup, prevOverlay, prevScreen },
@@ -463,9 +474,12 @@ namespace Overlewd
 
         private static async void ShowPopupProcess()
         {
-            await WaitScreenPrepare(prevSubPopup);
-            await WaitScreenPrepare(prevPopup);
-            await WaitScreenPrepare(currentPopup);
+            await WaitScreensPrepare(new List<BaseScreen> 
+            {
+                prevSubPopup,
+                prevPopup,
+                currentPopup
+            });
             await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup }, 
@@ -484,8 +498,11 @@ namespace Overlewd
 
         private static async void HidePopupProcess()
         {
-            await WaitScreenPrepare(prevSubPopup);
-            await WaitScreenPrepare(prevPopup);
+            await WaitScreensPrepare(new List<BaseScreen> 
+            {
+                prevSubPopup,
+                prevPopup
+            });
             await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup },
@@ -534,8 +551,11 @@ namespace Overlewd
 
         private static async void ShowSubPopupProcess()
         {
-            await WaitScreenPrepare(prevSubPopup);
-            await WaitScreenPrepare(currentSubPopup);
+            await WaitScreensPrepare(new List<BaseScreen> 
+            {
+                prevSubPopup,
+                currentSubPopup
+            });
             await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { currentSubPopup },
@@ -551,7 +571,7 @@ namespace Overlewd
 
         private static async void HideSubPopupProcess()
         {
-            await WaitScreenPrepare(prevSubPopup);
+            await WaitScreensPrepare(new List<BaseScreen> { prevSubPopup });
             await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
                                         new List<BaseMissclick> { prevSubPopupMissclick });
         }
@@ -597,8 +617,11 @@ namespace Overlewd
 
         private static async void ShowOverlayProcess()
         {
-            await WaitScreenPrepare(prevOverlay);
-            await WaitScreenPrepare(currentOverlay);
+            await WaitScreensPrepare(new List<BaseScreen> 
+            {
+                prevOverlay,
+                currentOverlay
+            });
             await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
                                         new List<BaseMissclick> { prevOverlayMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { currentOverlay },
@@ -614,7 +637,7 @@ namespace Overlewd
 
         private static async void HideOverlayProcess()
         {
-            await WaitScreenPrepare(prevOverlay);
+            await WaitScreensPrepare(new List<BaseScreen> { prevOverlay });
             await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
                                         new List<BaseMissclick> { prevOverlayMissclick });
         }
@@ -668,8 +691,11 @@ namespace Overlewd
 
         private static async void ShowNotificationProcess()
         {
-            await WaitScreenPrepare(prevNotification);
-            await WaitScreenPrepare(currentNotification);
+            await WaitScreensPrepare(new List<BaseScreen> 
+            {
+                prevNotification,
+                currentNotification
+            });
             await WaitScreenTransitions(new List<BaseScreen> { prevNotification },
                                         new List<BaseMissclick> { prevNotificationMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { currentNotification },
@@ -685,7 +711,7 @@ namespace Overlewd
 
         private static async void HideNotificationProcess()
         {
-            await WaitScreenPrepare(prevNotification);
+            await WaitScreensPrepare(new List<BaseScreen> { prevNotification });
             await WaitScreenTransitions(new List<BaseScreen> { prevNotification },
                                         new List<BaseMissclick> { prevNotificationMissclick });
         }

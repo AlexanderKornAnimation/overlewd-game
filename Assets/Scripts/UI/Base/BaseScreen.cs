@@ -31,6 +31,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public virtual async Task BeforeShowMakeAsync()
+        {
+            await Task.CompletedTask;
+        }
+
         public virtual async Task BeforeShowAsync()
         {
             await Task.CompletedTask;
@@ -47,6 +52,11 @@ namespace Overlewd
         }
 
         public virtual async Task BeforeHideDataAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async Task BeforeHideMakeAsync()
         {
             await Task.CompletedTask;
         }

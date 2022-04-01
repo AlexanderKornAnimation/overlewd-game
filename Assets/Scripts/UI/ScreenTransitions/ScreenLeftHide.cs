@@ -15,16 +15,6 @@ namespace Overlewd
                 0.0f, screenRectTransform.rect.width);
         }
 
-        public override async Task PrepareDataAsync()
-        {
-            await screen.BeforeHideDataAsync();
-        }
-
-        public override async Task PrepareAsync()
-        {
-            await screen.BeforeHideAsync();
-        }
-
         public override async Task ProgressAsync()
         {
             screen.StartHide();
