@@ -9,9 +9,9 @@ namespace Overlewd
     {
         public class TierButtonsScroll : MonoBehaviour
         {
-            public Transform content { get; private set; }
+            public Transform content { get; protected set; }
 
-            void Awake()
+            protected virtual void Awake()
             {
                 content = transform.Find("Viewport").Find("Content");
                 Hide();

@@ -9,13 +9,13 @@ namespace Overlewd
 {
     namespace NSMemoryListScreen
     {
-         public class MainMemoryOpened : MonoBehaviour
+        public class MainMemoryOpened : MonoBehaviour
         {
-            private Image art;
-            private TextMeshProUGUI title;
-            private Button button;
+            protected Image art;
+            protected TextMeshProUGUI title;
+            protected Button button;
 
-            private void Awake()
+            protected virtual void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -24,20 +24,19 @@ namespace Overlewd
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             }
 
-            private void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void Customize()
+            protected virtual void Customize()
             {
-
             }
 
             public static MainMemoryOpened GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<MainMemoryOpened>(
-                    "Prefabs/UI/Screens/MemoryListScreen/MainMemoryOpened", parent);
+                return ResourceManager.InstantiateWidgetPrefab<MainMemoryOpened>
+                    ("Prefabs/UI/Screens/MemoryListScreen/MainMemoryOpened", parent);
             }
         }
     }

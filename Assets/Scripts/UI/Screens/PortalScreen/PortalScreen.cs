@@ -8,27 +8,27 @@ namespace Overlewd
 {
     public class PortalScreen : BaseFullScreen
     {
-        private Button memoriesButton;
-        private Image memoriesButtonSelected;
-        private Button battleGirlsButton;
-        private Image battleGirlsButtonSelected;
-        private Button equipButton;
-        private Image equipButtonSelected;
+        protected Button memoriesButton;
+        protected Image memoriesButtonSelected;
+        protected Button battleGirlsButton;
+        protected Image battleGirlsButtonSelected;
+        protected Button equipButton;
+        protected Image equipButtonSelected;
 
-        private GameObject memoriesScroll;
-        private Transform memoriesScrollContent;
-        private GameObject battleGirlsScroll;
-        private Transform battleGirlsScrollContent;
-        private GameObject equipScroll;
-        private Transform equipScrollContent;
+        protected GameObject memoriesScroll;
+        protected Transform memoriesScrollContent;
+        protected GameObject battleGirlsScroll;
+        protected Transform battleGirlsScrollContent;
+        protected GameObject equipScroll;
+        protected Transform equipScrollContent;
 
-        private Transform tierButtonsScrollPos;
+        protected Transform tierButtonsScrollPos;
 
-        private NSPortalScreen.BaseBanner selectedBanner;
+        protected NSPortalScreen.BaseBanner selectedBanner;
 
-        private List<NSPortalScreen.BaseBanner> banners = new List<NSPortalScreen.BaseBanner>();
+        protected List<NSPortalScreen.BaseBanner> banners = new List<NSPortalScreen.BaseBanner>();
 
-        void Awake()
+        protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/PortalScreen/PortalScreen", transform);
 
@@ -55,7 +55,7 @@ namespace Overlewd
             tierButtonsScrollPos = canvas.Find("TierButtonsScrollPos");
         }
 
-        void Start()
+        protected virtual void Start()
         {
             SidebarButtonWidget.GetInstance(transform);
 
@@ -64,7 +64,7 @@ namespace Overlewd
             MemoriesButtonClick();
         }
 
-        private void AddBanner(NSPortalScreen.BaseBanner newBanner)
+        protected virtual void AddBanner(NSPortalScreen.BaseBanner newBanner)
         {
             newBanner.selectBanner += SelectBanner;
             newBanner.tierButtonsScroll = NSPortalScreen.TierButtonsScroll.GetInstance(tierButtonsScrollPos);
@@ -72,7 +72,7 @@ namespace Overlewd
             banners.Add(newBanner);
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
             AddBanner(NSPortalScreen.BattleGirlsBannerTypeA.GetInstance(memoriesScrollContent));
             AddBanner(NSPortalScreen.BattleGirlsBannerTypeB.GetInstance(memoriesScrollContent));
@@ -92,7 +92,7 @@ namespace Overlewd
             }
         }
 
-        private void MemoriesButtonClick()
+        protected virtual void MemoriesButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             memoriesButtonSelected.gameObject.SetActive(true);
@@ -105,7 +105,7 @@ namespace Overlewd
             equipScroll.SetActive(false);
         }
 
-        private void BattleGirlsButtonClick()
+        protected virtual void BattleGirlsButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             memoriesButtonSelected.gameObject.SetActive(false);
@@ -118,7 +118,7 @@ namespace Overlewd
             equipScroll.SetActive(false);
         }
 
-        private void EquipButtonClick()
+        protected virtual void EquipButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             memoriesButtonSelected.gameObject.SetActive(false);
@@ -131,7 +131,7 @@ namespace Overlewd
             equipScroll.SetActive(true);
         }
 
-        private void SelectBanner(NSPortalScreen.BaseBanner banner)
+        protected virtual void SelectBanner(NSPortalScreen.BaseBanner banner)
         {
             selectedBanner?.Deselect();
             selectedBanner = banner;

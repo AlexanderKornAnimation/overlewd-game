@@ -10,19 +10,19 @@ namespace Overlewd
     {
         public class TierButton : MonoBehaviour
         {
-            private Transform guarantedSummon;
-            private Image girlBack1;
-            private Image girl1;
-            private Image girlBack2;
-            private Image girl2;
+            protected Transform guarantedSummon;
+            protected Image girlBack1;
+            protected Image girl1;
+            protected Image girlBack2;
+            protected Image girl2;
 
-            private Button button;
-            private GameObject buttonSelected;
-            private TextMeshProUGUI buttonText;
-            private GameObject currentTierCheck;
-            private TextMeshProUGUI tierTitle;
+            protected Button button;
+            protected GameObject buttonSelected;
+            protected TextMeshProUGUI buttonText;
+            protected GameObject currentTierCheck;
+            protected TextMeshProUGUI tierTitle;
 
-            void Awake()
+            protected virtual void Awake()
             {
                 guarantedSummon = transform.Find("GuarantedSummon");
                 girlBack1 = guarantedSummon.Find("GirlBack1").GetComponent<Image>();
@@ -38,17 +38,17 @@ namespace Overlewd
                 tierTitle = button.transform.Find("TierBack").Find("Tier").GetComponent<TextMeshProUGUI>();
             }
 
-            void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void Customize()
+            protected virtual void Customize()
             {
 
             } 
 
-            private void ButtonClick() 
+            protected virtual void ButtonClick() 
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 Destroy(gameObject);

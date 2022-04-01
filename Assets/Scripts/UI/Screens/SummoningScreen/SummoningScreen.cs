@@ -7,11 +7,11 @@ namespace Overlewd
 {
     public class SummoningScreen : BaseFullScreen
     {
-        private Button backButton;
-        private Button haremButton;
-        private Button portalButton;
+        protected Button backButton;
+        protected Button haremButton;
+        protected Button portalButton;
 
-        void Awake()
+        protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
 
@@ -26,12 +26,12 @@ namespace Overlewd
             portalButton.onClick.AddListener(PortalButtonClick);
         }
 
-        void Start()
+        protected virtual void Start()
         {
             Customize();
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
             var shardPositions = transform.Find("Canvas").Find("ShardPositions");
             
@@ -42,23 +42,22 @@ namespace Overlewd
             }
         }
         
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
-        private void HaremButtonClick()
+        protected virtual void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
-        private void PortalButtonClick()
+        protected virtual void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
     }
-
 }

@@ -22,19 +22,14 @@ namespace Overlewd
                 
                 for (int i = 0; i < rand; i++)
                 {
-                    AddMemory();
+                    EventMemoryOpened.GetInstance(content);
                 }
-            }
-
-            private void AddMemory()
-            {
-                EventMemoryOpened.GetInstance(content);
             }
 
             public static OpenedEventMemoryScroll GetInstance(Transform parent)
             {
-                var prefab = ResourceManager.InstantiateWidgetPrefab<OpenedEventMemoryScroll>("Prefabs/UI/Screens/MemoryListScreen/OpenedEventMemoryScroll", parent);
-                return prefab;
+                return ResourceManager.InstantiateWidgetPrefab<OpenedEventMemoryScroll>
+                    ("Prefabs/UI/Screens/MemoryListScreen/OpenedEventMemoryScroll", parent);
             }
         }
     }

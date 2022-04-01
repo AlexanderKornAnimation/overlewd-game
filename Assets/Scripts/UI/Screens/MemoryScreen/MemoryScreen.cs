@@ -8,16 +8,16 @@ namespace Overlewd
 {
     public class MemoryScreen : BaseFullScreen
     {
-        private Button portalButton;
-        private Button forgeButton;
-        private Button buyButton;
-        private Button backButton;
+        protected Button portalButton;
+        protected Button forgeButton;
+        protected Button buyButton;
+        protected Button backButton;
 
-        private TextMeshProUGUI commonShardsCount;
-        private TextMeshProUGUI rareShardsCount;
-        private TextMeshProUGUI legendaryShardsCount;
+        protected TextMeshProUGUI commonShardsCount;
+        protected TextMeshProUGUI rareShardsCount;
+        protected TextMeshProUGUI legendaryShardsCount;
         
-        void Awake()
+        protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MemoryScreen/Memory", transform);
 
@@ -38,34 +38,34 @@ namespace Overlewd
             buyButton.onClick.AddListener(BuyButtonClick);
         }
 
-        void Start()
+        protected virtual void Start()
         {
             Customize();
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
             
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
-        private void PortalButtonClick()
+        protected virtual void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 
-        private void ForgeButtonClick()
+        protected virtual void ForgeButtonClick()
         {
             
         }
 
-        private void BuyButtonClick()
+        protected virtual void BuyButtonClick()
         {
             
         }

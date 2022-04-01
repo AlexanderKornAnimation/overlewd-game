@@ -11,14 +11,14 @@ namespace Overlewd
     {
          public class EventMemoryClosed : MonoBehaviour
         {
-            private Image art;
-            private TextMeshProUGUI title;
-            private Button button;
-            private TextMeshProUGUI legendaryShardCount;
-            private TextMeshProUGUI rareShardCount;
-            private TextMeshProUGUI commonShardCount;
+            protected Image art;
+            protected TextMeshProUGUI title;
+            protected Button button;
+            protected TextMeshProUGUI legendaryShardCount;
+            protected TextMeshProUGUI rareShardCount;
+            protected TextMeshProUGUI commonShardCount;
 
-            private void Awake()
+            protected virtual void Awake()
             {
                 var canvas = transform.Find("Canvas");
                 
@@ -35,18 +35,18 @@ namespace Overlewd
                 commonShardCount = shards.transform.Find("CommonShard").Find("Collected").GetComponent<TextMeshProUGUI>();
             }
 
-            private void ButtonClick()
+            protected virtual void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.ShowScreen<MemoryScreen>();
             }
             
-            private void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void Customize()
+            protected virtual void Customize()
             {
 
             }

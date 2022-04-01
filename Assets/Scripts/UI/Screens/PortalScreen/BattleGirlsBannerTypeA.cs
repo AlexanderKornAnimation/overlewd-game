@@ -8,13 +8,12 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-       
         public class BattleGirlsBannerTypeA : BaseBanner
         {
-            private Button button;
-            private GameObject buttonSelected;
-            private Image image;
-            private TextMeshProUGUI title;
+            protected Button button;
+            protected GameObject buttonSelected;
+            protected Image image;
+            protected TextMeshProUGUI title;
 
             protected override void Awake()
             {
@@ -30,12 +29,12 @@ namespace Overlewd
                 buttonSelected.SetActive(false);
             }
 
-            void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void Customize()
+            protected virtual void Customize()
             {
                 TierButton.GetInstance(tierButtonsScroll?.content);
                 TierButton.GetInstance(tierButtonsScroll?.content);
@@ -43,13 +42,13 @@ namespace Overlewd
                 TierButton.GetInstance(tierButtonsScroll?.content);
             }
 
-            public override void Select()
+            public virtual void Select()
             {
                 base.Select();
                 buttonSelected.SetActive(true);
             }
 
-            public override void Deselect()
+            public virtual void Deselect()
             {
                 base.Deselect();
                 buttonSelected.SetActive(false);
