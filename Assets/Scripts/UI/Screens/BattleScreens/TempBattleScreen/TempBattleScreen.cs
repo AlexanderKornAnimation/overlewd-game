@@ -9,11 +9,14 @@ namespace Overlewd
 	{
 		private Button backButton;
 		private Button skipButton;
+		private BattleManager bm;
 
 		private void Awake()
 		{
 			var screenInst = ResourceManager.InstantiateScreenPrefab(
 				"Prefabs/UI/Screens/BattleScreens/TempBattleScreen/TempBattleScreen", transform);
+
+			bm = screenInst.GetComponent<BattleManager>();
 
 			var canvas = screenInst.transform.Find("Canvas");
 			backButton = canvas.Find("BackButton").GetComponent<Button>();
@@ -21,6 +24,9 @@ namespace Overlewd
 
 			skipButton = canvas.Find("SkipButton").GetComponent<Button>();
 			skipButton.onClick.AddListener(SkipButtonClick);
+			skipButton.gameObject.SetActive(false);
+
+			WannaWin(true);
 		}
 
 		public override async Task BeforeShowAsync()
@@ -41,16 +47,29 @@ namespace Overlewd
 		protected void SkipButtonClick()
 		{
 			SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-			//skip action
+			if (bm.wannaWin)
+				BattleWin();
+			else
+				BattleDefeat();
 		}
+
+		public void StartBattle()
+        {
+			backButton.gameObject.SetActive(false);
+			skipButton.gameObject.SetActive(true);
+		}
+		public void WannaWin(bool win)
+        {
+			bm.wannaWin = win;
+        }
 
 		public void BattleWin()
         {
-
+			Debug.Log("Win Battle");
         }
 		public void BattleDefeat()
         {
-
-        }
+			Debug.Log("Lose Battle");
+		}
     }
 }

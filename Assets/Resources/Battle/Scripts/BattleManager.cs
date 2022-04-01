@@ -27,7 +27,8 @@ namespace Overlewd
 
         public Button attack_1, attack_2, attack_3;
 
-
+        private bool battleStart = false;
+        public bool wannaWin = true;
         private int step = 0; //current characters list step
         private int maxStep = 2; //max count of battle queue, take from character's list
         private int wave = 1, maxWave = 3;
@@ -37,7 +38,6 @@ namespace Overlewd
         private void Initialize()
         {
             tempBattleScene = FindObjectOfType<TempBattleScreen>();
-
             if (attack_1 != null)
                 attack_1.onClick.AddListener(Button1);
             else
@@ -114,6 +114,7 @@ namespace Overlewd
         {
             yield return new WaitForSeconds(0.01f);
             charControllerList[step].Select();
+            WinOrLose(wannaWin);
         }
 
         private void Update()
@@ -125,17 +126,10 @@ namespace Overlewd
             if (Input.GetKeyDown(KeyCode.C))
                 Button3();
             if (Input.GetKeyDown(KeyCode.W))
-                foreach (var cc in charControllerList)
-                    if (cc.isEnemy) { 
-                        cc.hp = 10;
-                        cc.UpdateUI();
-                    }
+                WinOrLose(true);
             if (Input.GetKeyDown(KeyCode.L))
-                foreach (var cc in charControllerList)
-                    if (!cc.isEnemy) { 
-                        cc.hp = 10;
-                        cc.UpdateUI();
-                    }
+                WinOrLose(false);
+
         }
 
         public void Button1()
@@ -146,6 +140,7 @@ namespace Overlewd
                 ccOnSelect.Attack(0, ccOnClick);
                 ccOnClick.Defence(ccOnSelect);
                 battleState = BattleState.ANIMATION;
+                BattleStart();
             }
         }
         public void Button2()
@@ -156,6 +151,7 @@ namespace Overlewd
                 ccOnSelect.Attack(1, ccOnClick);
                 ccOnClick.Defence(ccOnSelect);
                 battleState = BattleState.ANIMATION;
+                BattleStart();
             }
         }
         public void Button3()
@@ -166,7 +162,18 @@ namespace Overlewd
                 ccOnSelect.Attack(3, ccOnClick);
                 ccOnClick.Defence(ccOnSelect);
                 battleState = BattleState.ANIMATION;
+                BattleStart();
             }
+        }
+
+        public void WinOrLose(bool isWin)
+        {
+            foreach (var cc in charControllerList)
+                if (cc.isEnemy == isWin)
+                {
+                    cc.hp = 10;
+                    cc.UpdateUI();
+                }
         }
 
         IEnumerator EnemyAttack1()
@@ -252,6 +259,15 @@ namespace Overlewd
                 charControllerList[step].CharPortraitSet();
             }
             ccOnSelect = charControllerList[step];
+        }
+
+        private void BattleStart()
+        {
+            if (!battleStart)
+            {
+                tempBattleScene.StartBattle();
+                battleStart = true;
+            }
         }
 
         private int SortByInitiative(Character a, Character b)
