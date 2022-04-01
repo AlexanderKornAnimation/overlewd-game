@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
-  m_Name: cBattleCat4.char
+  m_Name: cBattleCat3.char
   m_EditorClassIdentifier: 
   charName: BattleCat4
   ico: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}
@@ -19,7 +19,7 @@ MonoBehaviour:
   spell_1: {fileID: 0}
   spell_2: {fileID: 0}
   spell_3: {fileID: 0}
-  order: -1
+  order: 2
   isEnemy: 0
   isBoss: 0
   isOverlord: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
   idleScale: 0.26
   battleScale: 0.45
   yOffset: 1000
-  initiative: 30
+  initiative: 10
   attack: 10
   defence: 5
   agility: 5
@@ -38,11 +38,11 @@ MonoBehaviour:
   xp: 0
   xpToNextlUp: 1000
   hp: 100
-  maxHp: 100
+  maxHp: 200
   mp: 100
   maxMp: 100
   isDead: 0
-  folder: BattlePersonages/BattleCat1/pers/
+  folder: Battle/BattlePersonages/BattleCat1/pers/
   ani_idle_path: idle0_SkeletonData
   ani_pAttack_1_path: prepair1_SkeletonData
   ani_pAttack_2_path: prepair2_SkeletonData

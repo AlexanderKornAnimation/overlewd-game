@@ -37,6 +37,7 @@ namespace Overlewd
         private void Initialize()
         {
             tempBattleScene = FindObjectOfType<TempBattleScreen>();
+
             if (attack_1 != null)
                 attack_1.onClick.AddListener(Button1);
             else
@@ -52,13 +53,17 @@ namespace Overlewd
             if (QueueUIContent == null)
                 QueueUIContent = transform.Find("BattleUICanvas/QueueUI/Content");
             if (portraitPrefab == null)
-                portraitPrefab = Resources.Load("Prefabs/Battle/Portrait") as GameObject;
+                portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
             if (EnemyStatsContent == null)
                 EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (EnemyStats == null)
-                EnemyStats = Resources.Load("Prefabs/Battle/EnemyStats") as GameObject;
+                EnemyStats = Resources.Load("Battle/Prefabs/Battle/EnemyStats") as GameObject;
+            if (PlayerStatsContent == null)
+                PlayerStatsContent = transform.Find("BattleUICanvas/Character");
+            if (PlayerStats == null)
+                PlayerStats = Resources.Load("Battle/Prefabs/Battle/PlayerStats") as GameObject;
 
-            characters = new List<Character>(Resources.LoadAll<Character>("BattlePersonages/Profiles"));
+            characters = new List<Character>(Resources.LoadAll<Character>("Battle/BattlePersonages/Profiles"));
             characters.Sort(SortByInitiative);
             Color redColor;
             ColorUtility.TryParseHtmlString("#A64646", out redColor);
@@ -119,6 +124,18 @@ namespace Overlewd
                 Button2();
             if (Input.GetKeyDown(KeyCode.C))
                 Button3();
+            if (Input.GetKeyDown(KeyCode.W))
+                foreach (var cc in charControllerList)
+                    if (cc.isEnemy) { 
+                        cc.hp = 10;
+                        cc.UpdateUI();
+                    }
+            if (Input.GetKeyDown(KeyCode.L))
+                foreach (var cc in charControllerList)
+                    if (!cc.isEnemy) { 
+                        cc.hp = 10;
+                        cc.UpdateUI();
+                    }
         }
 
         public void Button1()
@@ -171,7 +188,8 @@ namespace Overlewd
         public void BattleOut()
         {
             ani.SetTrigger("BattleOut");
-            Step();
+            if (battleState != BattleState.LOSE && battleState != BattleState.WIN)
+                Step();
             charControllerList[step].Highlight();
             ccOnClick = null;
         }
@@ -196,12 +214,14 @@ namespace Overlewd
             }
             if (enemy == enemyIsDead) { 
                 battleState = BattleState.WIN;
-                tempBattleScene.BattleWin();
+                if (tempBattleScene != null)
+                    tempBattleScene.BattleWin();
                 Debug.Log("WINNIG");
             }
             if (character == charIsDead) { 
                 battleState = BattleState.LOSE;
-                tempBattleScene.BattleDefeat();
+                if (tempBattleScene!=null)
+                    tempBattleScene.BattleDefeat();
                 Debug.Log("LOOSING");
             }
         }

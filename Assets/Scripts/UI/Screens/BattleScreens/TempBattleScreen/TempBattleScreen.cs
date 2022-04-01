@@ -8,6 +8,7 @@ namespace Overlewd
 	public class TempBattleScreen : BaseFullScreen
 	{
 		private Button backButton;
+		private Button skipButton;
 
 		private void Awake()
 		{
@@ -17,6 +18,9 @@ namespace Overlewd
 			var canvas = screenInst.transform.Find("Canvas");
 			backButton = canvas.Find("BackButton").GetComponent<Button>();
 			backButton.onClick.AddListener(BackButtonClick);
+
+			skipButton = canvas.Find("SkipButton").GetComponent<Button>();
+			skipButton.onClick.AddListener(SkipButtonClick);
 		}
 
 		public override async Task BeforeShowAsync()
@@ -34,6 +38,11 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<StartingScreen>();
         }
+		protected void SkipButtonClick()
+		{
+			SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+			//skip action
+		}
 
 		public void BattleWin()
         {

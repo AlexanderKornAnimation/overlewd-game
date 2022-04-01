@@ -58,6 +58,7 @@ namespace Overlewd
 
         public void UpdateUI()
         {
+            hp = charCtrl.hp;
             textHP.text = $"{hp}/{maxHp}";
             sliderHP.value = hp;
         }

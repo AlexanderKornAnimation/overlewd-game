@@ -150,7 +150,7 @@ namespace Overlewd
             charStats.SetUI();
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             string hpTxt = $"{hp}/{maxHp}";
             if (hpTMP != null) hpTMP.text = hpTxt;
@@ -179,13 +179,7 @@ namespace Overlewd
                 PlayAnimID(0, character.ani_idle_name, true);
         }
 
-        public void PlayDifeat()
-        {
-            if (isOverlord)
-                spineWidgetOne.PlayAnimation(character.ani_defeat_name, false);
-            else
-                PlayAnimID(7, character.ani_defeat_name, false);
-        }
+
 
         public void Attack(int attackID, CharController target)
         {
@@ -338,8 +332,11 @@ namespace Overlewd
         IEnumerator PlayDead()
         {
             yield return new WaitForSeconds(0.2f);
-            if (isOverlord)
+            if (isOverlord) { 
                 spineWidgetOne.PlayAnimation(character.ani_defeat_name, false);
+                yield return new WaitForSeconds(1.333f);
+                spineWidgetOne.PlayAnimation("defeat2", true);
+            }
             else
                 PlayAnimID(6, character.ani_defeat_name, false);
         }
