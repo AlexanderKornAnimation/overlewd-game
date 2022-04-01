@@ -38,10 +38,10 @@ namespace Overlewd
                 UIManager.ShowScreen<CastleScreen>();
             });
             
-            canvas.Find("TempBattleScreen").GetComponent<Button>().onClick.AddListener(() =>
+            canvas.Find("BattleScreen").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<TempBattleScreen>();
+                UIManager.ShowScreen<BaseBattleScreen>();
             });
         }
 

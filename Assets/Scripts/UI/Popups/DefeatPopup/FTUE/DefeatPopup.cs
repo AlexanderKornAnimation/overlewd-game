@@ -13,9 +13,10 @@ namespace Overlewd
         {
             private AdminBRO.FTUEStageItem stageData;
 
-            public void SetStageData(AdminBRO.FTUEStageItem data)
+            public DefeatPopup SetStageData(AdminBRO.FTUEStageItem data)
             {
                 stageData = data;
+                return this;
             }
             protected override void Customize()
             {
@@ -27,7 +28,6 @@ namespace Overlewd
             protected override void HaremButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
-
                 UIManager.ShowScreen<MapScreen>();
             }
         }

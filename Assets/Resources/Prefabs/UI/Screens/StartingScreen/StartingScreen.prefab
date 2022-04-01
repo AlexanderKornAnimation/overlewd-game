@@ -376,7 +376,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Temp battle screen
+  m_Text: Battle screen
 --- !u!1 &4326460365670417917
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ GameObject:
   - component: {fileID: 2247806751374364094}
   - component: {fileID: 8725937813684685411}
   m_Layer: 0
-  m_Name: TempBattleScreen
+  m_Name: BattleScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public class BattleManager : MonoBehaviour
     {
-        private TempBattleScreen tempBattleScene; //In Out of Stage
+        private BaseBattleScreen battleScene; //In Out of Stage
 
         [HideInInspector] public List<Character> characters;
         [HideInInspector] public List<CharController> charControllerList;
@@ -37,7 +37,7 @@ namespace Overlewd
 
         private void Initialize()
         {
-            tempBattleScene = FindObjectOfType<TempBattleScreen>();
+            battleScene = FindObjectOfType<BaseBattleScreen>();
             if (attack_1 != null)
                 attack_1.onClick.AddListener(Button1);
             else
@@ -221,14 +221,14 @@ namespace Overlewd
             }
             if (enemy == enemyIsDead) { 
                 battleState = BattleState.WIN;
-                if (tempBattleScene != null)
-                    tempBattleScene.BattleWin();
+                if (battleScene != null)
+                    battleScene.BattleWin();
                 Debug.Log("WINNIG");
             }
             if (character == charIsDead) { 
                 battleState = BattleState.LOSE;
-                if (tempBattleScene!=null)
-                    tempBattleScene.BattleDefeat();
+                if (battleScene != null)
+                    battleScene.BattleDefeat();
                 Debug.Log("LOOSING");
             }
         }
@@ -265,7 +265,7 @@ namespace Overlewd
         {
             if (!battleStart)
             {
-                tempBattleScene.StartBattle();
+                battleScene.StartBattle();
                 battleStart = true;
             }
         }

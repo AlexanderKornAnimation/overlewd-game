@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-	public class TempBattleScreen : BaseFullScreen
+	public class BaseBattleScreen : BaseFullScreen
 	{
-		private Button backButton;
-		private Button skipButton;
-		private BattleManager bm;
+		protected Button backButton;
+		protected Button skipButton;
+		protected BattleManager bm;
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			var screenInst = ResourceManager.InstantiateScreenPrefab(
-				"Prefabs/UI/Screens/BattleScreens/TempBattleScreen/TempBattleScreen", transform);
+				"Prefabs/UI/Screens/BattleScreens/BaseBattleScreen/BaseBattleScreen", transform);
 
 			bm = screenInst.GetComponent<BattleManager>();
 
@@ -25,13 +25,6 @@ namespace Overlewd
 			skipButton = canvas.Find("SkipButton").GetComponent<Button>();
 			skipButton.onClick.AddListener(SkipButtonClick);
 			skipButton.gameObject.SetActive(false);
-
-			WannaWin(true);
-		}
-
-		public override async Task BeforeShowAsync()
-		{
-			await Task.CompletedTask;
 		}
 
         public override void StartShow()
@@ -39,12 +32,13 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<StartingScreen>();
         }
-		protected void SkipButtonClick()
+
+		private void SkipButtonClick()
 		{
 			SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 			if (bm.wannaWin)
@@ -58,18 +52,24 @@ namespace Overlewd
 			backButton.gameObject.SetActive(false);
 			skipButton.gameObject.SetActive(true);
 		}
-		public void WannaWin(bool win)
+
+		protected void WannaWin(bool win)
         {
 			bm.wannaWin = win;
         }
 
-		public void BattleWin()
+		public virtual void BattleWin()
         {
 			Debug.Log("Win Battle");
-        }
-		public void BattleDefeat()
+			backButton.gameObject.SetActive(true);
+			skipButton.gameObject.SetActive(false);
+		}
+
+		public virtual void BattleDefeat()
         {
 			Debug.Log("Lose Battle");
+			backButton.gameObject.SetActive(true);
+			skipButton.gameObject.SetActive(false);
 		}
     }
 }

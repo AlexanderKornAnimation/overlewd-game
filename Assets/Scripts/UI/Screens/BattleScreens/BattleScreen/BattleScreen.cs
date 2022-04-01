@@ -1,38 +1,32 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 namespace Overlewd
 {
-    public class BattleScreen : BaseFullScreen
-    {
-        protected Button startBattleButton;
-        protected Button backButton;
-        protected Button skipButton;
-
-        protected VideoPlayer battleVideo;
-        protected RawImage renderTarget;
-
-        void Awake()
+	public class BattleScreen : BaseBattleScreen
+	{
+        protected override void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BattleScreens/BattleScreen/BattleScreen", transform);
+            base.Awake();
+            WannaWin(true);
+        }
 
-            var canvas = screenInst.transform.Find("Canvas");
+        protected override void BackButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<EventMapScreen>();
+        }
 
-            startBattleButton = canvas.Find("StartBattleButton").GetComponent<Button>();
-            startBattleButton.onClick.AddListener(StartBattleButtonClick);
+        public override void BattleWin()
+        {
+            UIManager.ShowPopup<VictoryPopup>();
+        }
 
-            backButton = canvas.Find("BackButton").GetComponent<Button>();
-            backButton.onClick.AddListener(BackButtonClick);
-
-            skipButton = canvas.Find("SkipButton").GetComponent<Button>();
-            skipButton.onClick.AddListener(SkipButtonClick);
-            
-            battleVideo = canvas.Find("TestVideo").GetComponent<VideoPlayer>();
-            renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
+        public override void BattleDefeat()
+        {
+            UIManager.ShowPopup<DefeatPopup>();
         }
 
         public override async Task BeforeShowDataAsync()
@@ -43,50 +37,6 @@ namespace Overlewd
         public override async Task BeforeHideDataAsync()
         {
             await GameData.EventStageEndAsync(GameGlobalStates.battle_EventStageData);
-        }
-
-        public override async Task BeforeShowAsync()
-        {
-            backButton.gameObject.SetActive(false);
-            startBattleButton.gameObject.SetActive(false);
-            battleVideo.loopPointReached += EndBattleVideo;
-            skipButton.gameObject.SetActive(false);
-            await Task.CompletedTask;
-        }
-
-        public override void StartShow()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
-        }
-
-        public override async Task AfterShowAsync()
-        {
-            StartBattleButtonClick();
-            await Task.CompletedTask;
-        }
-
-        protected virtual void EndBattleVideo(VideoPlayer vp)
-        {
-            skipButton.gameObject.SetActive(false);
-            UIManager.ShowPopup<VictoryPopup>();
-        }
-
-        protected virtual void StartBattleButtonClick()
-        {
-            skipButton.gameObject.SetActive(true);
-            battleVideo.Play();
-        }
-
-        protected void SkipButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            battleVideo.Stop();
-            EndBattleVideo(battleVideo);
-        }
-
-        protected void BackButtonClick()
-        {
-            UIManager.ShowScreen<EventMapScreen>();
         }
     }
 }
