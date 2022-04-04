@@ -2940,16 +2940,16 @@ RectTransform:
   m_GameObject: {fileID: 124971870179351115}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_Children:
   - {fileID: 6047017267904410772}
   - {fileID: 8570328151203454522}
   m_Father: {fileID: 4058682060314796959}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 257.5, y: -80.5}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -200, y: -80.5}
   m_SizeDelta: {x: 475, y: 121}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1132877593687650069
@@ -4891,6 +4891,7 @@ MonoBehaviour:
   attack_1: {fileID: 9184983763147672031}
   attack_2: {fileID: 2820950003659279769}
   attack_3: {fileID: 1734716323041922411}
+  wannaWin: 1
   battleState: 3
 --- !u!1 &6279933092519458706
 GameObject:
