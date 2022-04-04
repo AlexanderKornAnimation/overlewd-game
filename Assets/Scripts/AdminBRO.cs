@@ -262,11 +262,20 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public string mapBackgroundImage;
             public int? chapterMapId;
             public int eventId;
-            public int? nextChapter;
+            public int? nextChapterId;
+            public int? durationInDays;
             public List<int> stages;
+            public List<EventChapterReward> rewards;
+        }
+
+        [Serializable]
+        public class EventChapterReward
+        {
+            public string icon;
+            public int amount;
+            public int currency;
         }
 
         // /events
@@ -297,10 +306,19 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public List<int> chapters;
+            public List<EventReward> rewards;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
             public const string Type_Weekly = "weekly";
+        }
+
+        [Serializable]
+        public class EventReward
+        {
+            public string icon;
+            public int amount;
+            public int currency;
         }
 
         // /event-stages
@@ -390,16 +408,12 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public string type;
+            public string subtitle;
             public string description;
             public int? goalCount;
             public List<QuestReward> rewards;
             public string status;
             public int progressCount;
-
-            public const string Type_StandartHunt = "standart_hunt";
-            public const string Type_QuickQuest = "quick_quest";
-            public const string Type_UniversalAdventure = "universal_adventure";
 
             public const string Status_New = "new";
             public const string Status_In_Progress = "in_progress";
@@ -511,7 +525,7 @@ namespace Overlewd
             public string type;
             public List<BattleReward> rewards;
             public List<BattleReward> firstRewards;
-            public List<int> characters;
+            public List<int> enemyCharacters;
 
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
