@@ -73,13 +73,13 @@ namespace Overlewd
             hp = character.hp; maxHp = character.maxHp;
             mp = character.mp; maxMp = character.maxMp;
             damage_1 = character.attack;
-            damage_2 = character.attack * 2;
+            damage_2 = character.attack / 2;
         }
 
         private void ShapeInit()
         {
             rt = gameObject.AddComponent<RectTransform>();
-            UITools.SetStretch(GetComponent<RectTransform>());
+            UITools.SetStretch(rt);
             rt.localScale *= idleScale;
 
             battlePos = isEnemy ? GameObject.Find("battlePos2").transform : GameObject.Find("battlePos1").transform;
@@ -192,36 +192,43 @@ namespace Overlewd
             if (isOverlord)
             {
                 currentPreAttackDuration = 1f;
+                GameObject vfx;
                 switch (id)
                 {
                     case 1:
-                        spineWidgetOne.PlayAnimation(character.ani_pAttack_2_name, false);
-                        yield return new WaitForSeconds(currentPreAttackDuration);
-                        spineWidgetOne.PlayAnimation(character.ani_attack_2_name, false);
-                        yield return new WaitForSeconds(1);
-                        target.Damage(damage_1);
+                        currentPreAttackDuration = 5.667f;
+                        spineWidgetOne.PlayAnimation("prepair2", false);
+                        yield return new WaitForSeconds(1f);
+                        if (character.attackVFX != null)
+                        {
+                            vfx = Instantiate(character.attackVFX[0], battleLayer);
+                            yield return new WaitForSeconds(vfx.GetComponent<VFXManager>().duration);
+                        }
+                        spineWidgetOne.PlayAnimation("attack2", false);
+                        yield return new WaitForSeconds(1f);
                         break;
                     case 2:
                         spineWidgetOne.PlayAnimation("prepair3", false);
-                        yield return new WaitForSeconds(currentPreAttackDuration);
+                        yield return new WaitForSeconds(1f);
+                        if (character.attackVFX != null) {
+                            vfx = Instantiate(character.attackVFX[1], battleLayer);
+                            yield return new WaitForSeconds(vfx.GetComponent<VFXManager>().duration);
+                        }
                         spineWidgetOne.PlayAnimation("attack3", false);
                         yield return new WaitForSeconds(1f);
-                        target.Damage(damage_2);
                         break;
                     case 3:
-                        currentPreAttackDuration = 1f;
                         spineWidgetOne.PlayAnimation("prepair4", false);
                         yield return new WaitForSeconds(currentPreAttackDuration);
                         spineWidgetOne.PlayAnimation("attack4", false);
                         yield return new WaitForSeconds(1f);
-                        target.Damage(damage_2);
                         break;
                     default: //0 or else...
                         spineWidgetOne.PlayAnimation(character.ani_pAttack_1_name, false);
                         yield return new WaitForSeconds(currentPreAttackDuration);
                         spineWidgetOne.PlayAnimation(character.ani_attack_1_name, false);
                         yield return new WaitForSeconds(1);
-                        target.Damage(damage_1);
+                        Debug.Log("Default");
                         break;
                 }
             }
@@ -235,7 +242,6 @@ namespace Overlewd
                     yield return new WaitForSeconds(currentPreAttackDuration);
                     PlayAnimID(3, character.ani_attack_1_name, false);
                     yield return new WaitForSeconds(aniDuration[3]);
-                    target.Damage(damage_1);// * (isDamageBuff ? buffDamageScale : 1)
                 }
                 else
                 {
@@ -244,7 +250,6 @@ namespace Overlewd
                     yield return new WaitForSeconds(currentPreAttackDuration);
                     PlayAnimID(4, character.ani_attack_2_name, false);
                     yield return new WaitForSeconds(aniDuration[4]);
-                    target.Damage(damage_2);// * (isDamageBuff ? buffDamageScale : 1)
                 }
             }
 
@@ -253,15 +258,30 @@ namespace Overlewd
             bm.BattleOut();
         }
 
-        IEnumerator PlayDefence(float preAttackDuration)
+        IEnumerator PlayDefence(CharController cc)
         {
             BattleIn();
-            yield return new WaitForSeconds(preAttackDuration);
+            yield return new WaitForSeconds(cc.currentPreAttackDuration);
             if (isOverlord)
                 spineWidgetOne.PlayAnimation(character.ani_defence_name, false);
             else
                 PlayAnimID(5, character.ani_defence_name, false);
             yield return new WaitForSeconds(aniDuration[5]);
+            Damage(cc.damage_1);
+            PlayIdle();
+            BattleOut();
+        }
+        IEnumerator PlayDefenceAOE(CharController cc)
+        {
+            UnHiglight();
+            transform.SetParent(battlePos);
+            yield return new WaitForSeconds(cc.currentPreAttackDuration);
+            if (isOverlord)
+                spineWidgetOne.PlayAnimation(character.ani_defence_name, false);
+            else
+                PlayAnimID(5, character.ani_defence_name, false);
+            yield return new WaitForSeconds(aniDuration[5]);
+            Damage(cc.damage_2);
             PlayIdle();
             BattleOut();
         }
@@ -270,31 +290,23 @@ namespace Overlewd
         {
             if (bm.battleState == BattleManager.BattleState.PLAYER && !isDead)
             {
+                bm.unselect?.Invoke();
                 bm.ccOnClick = this; //type CharController
-                var borderActive = !border.activeSelf;
-                border.SetActive(borderActive);
+                Highlight();
             }
             if (!isEnemy)
                 CharPortraitSet();
         }
 
-
-
-        public void Highlight() //On UI Border
-        {
-            border.SetActive(true);
-        }
+        public void Highlight() => border.SetActive(true);
+        public void UnHiglight() => border.SetActive(false);
 
         public void BattleIn()
         {
-            border.SetActive(false);
+            UnHiglight();
             transform.SetParent(battlePos);
             rt.DOAnchorPos(Vector2.zero, 0.25f);
             rt.DOScale(battleScale, 0.25f);
-            //UI.SetActive(false)
-            //SetParentTo Battle Pos
-
-            //Change Scale To BattleScale
         }
         public void BattleOut()
         {
@@ -304,9 +316,12 @@ namespace Overlewd
             rt.DOScale(idleScale, 0.25f);
         }
 
-        public void Defence(CharController attacker)
+        public void Defence(CharController attacker, bool aoe)
         {
-            StartCoroutine(PlayDefence(attacker.currentPreAttackDuration));
+            if (aoe)
+                StartCoroutine(PlayDefenceAOE(attacker));
+            else
+                StartCoroutine(PlayDefence(attacker));
         }
 
         public void Damage(int value)
@@ -323,7 +338,7 @@ namespace Overlewd
                     isDead = true;
                     bt.onClick.RemoveAllListeners();
                     StartCoroutine(PlayDead());
-                    bm.StateUpdate();
+                    bm.StateUpdate(isEnemy, this);
                 }
             }
             UpdateUI();

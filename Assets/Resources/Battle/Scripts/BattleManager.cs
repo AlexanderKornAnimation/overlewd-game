@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace Overlewd
 {
@@ -27,11 +28,14 @@ namespace Overlewd
 
         public Button attack_1, attack_2, attack_3;
 
+        private int enemyNum = 0, enemyIsDead = 0, charNum = 0, charIsDead = 0;
         private bool battleStart = false;
         public bool wannaWin = true;
         private int step = 0; //current characters list step
         private int maxStep = 2; //max count of battle queue, take from character's list
         private int wave = 1, maxWave = 3;
+        public delegate void Unselect();
+        public Unselect unselect;
 
         private void Start() => Initialize();
 
@@ -46,7 +50,7 @@ namespace Overlewd
                 attack_2.onClick.AddListener(Button2);
             else
                 Debug.LogError($"Lost Button 2 prefab on {this.name}");
-            if (attack_3 != null) attack_3.onClick.AddListener(Button2);
+            if (attack_3 != null) attack_3.onClick.AddListener(Button3);
             else
                 Debug.LogError($"Lost Button 3 prefab on {this.name}");
 
@@ -79,15 +83,18 @@ namespace Overlewd
                     cc.character = c;
                     charControllerList.Add(cc);
                     cc.bm = this;
+                    unselect += cc.UnHiglight; //подписываем на делегата
                     if (!c.isEnemy)
                     {
                         targetsForEnemy.Add(cc);
                         cc.charStats = pStats.GetComponent<CharacterPortrait>();
+                        charNum++;
                     }
                     else
                     {
                         var eStats = Instantiate(EnemyStats, EnemyStatsContent);
                         cc.charStats = eStats.GetComponent<CharacterPortrait>();
+                        enemyNum++;
                     }
                     //Fill QueueUI characters icons
                     var portraitQ = Instantiate(portraitPrefab, QueueUIContent);
@@ -129,7 +136,17 @@ namespace Overlewd
                 WinOrLose(true);
             if (Input.GetKeyDown(KeyCode.L))
                 WinOrLose(false);
-
+            if (Input.GetKeyDown(KeyCode.R))
+                foreach (var cc in charControllerList)
+                    if (cc.isEnemy == true)
+                    {
+                        cc.hp = cc.maxHp;
+                        cc.UpdateUI();
+                    }
+            if (Input.GetKeyDown(KeyCode.Q))
+                transform.DOMove(Vector3.zero, 1f);
+            if (Input.GetKeyDown(KeyCode.W))
+                DOTween.Clear(true);
         }
 
         public void Button1()
@@ -138,29 +155,33 @@ namespace Overlewd
             {
                 ani.SetTrigger("Player");
                 ccOnSelect.Attack(0, ccOnClick);
-                ccOnClick.Defence(ccOnSelect);
+                ccOnClick.Defence(ccOnSelect, false);
                 battleState = BattleState.ANIMATION;
                 BattleStart();
             }
         }
         public void Button2()
         {
-            if (ccOnClick != null && battleState == BattleState.PLAYER)
+            if (battleState == BattleState.PLAYER)
             {
                 ani.SetTrigger("Player");
                 ccOnSelect.Attack(1, ccOnClick);
-                ccOnClick.Defence(ccOnSelect);
+                foreach (var cc in charControllerList)
+                    if (cc.isEnemy)
+                        cc.Defence(ccOnClick, true);
                 battleState = BattleState.ANIMATION;
                 BattleStart();
             }
         }
         public void Button3()
         {
-            if (ccOnClick != null && battleState == BattleState.PLAYER && ccOnClick.isOverlord)
+            if (battleState == BattleState.PLAYER && ccOnSelect.isOverlord)
             {
                 ani.SetTrigger("Player");
-                ccOnSelect.Attack(3, ccOnClick);
-                ccOnClick.Defence(ccOnSelect);
+                ccOnSelect.Attack(2, ccOnClick);
+                foreach (var cc in charControllerList)
+                    if (cc.isEnemy)
+                        cc.Defence(ccOnClick, true);
                 battleState = BattleState.ANIMATION;
                 BattleStart();
             }
@@ -188,7 +209,7 @@ namespace Overlewd
             ccOnClick.CharPortraitSet(); //Show target stats
             ani.SetTrigger("Enemy");
             ccOnSelect.Attack(Random.Range(0, 2), ccOnClick);
-            ccOnClick.Defence(ccOnSelect);
+            ccOnClick.Defence(ccOnSelect, false);
             battleState = BattleState.ANIMATION;
         }
 
@@ -197,35 +218,27 @@ namespace Overlewd
             ani.SetTrigger("BattleOut");
             if (battleState != BattleState.LOSE && battleState != BattleState.WIN)
                 Step();
+            unselect?.Invoke();
             charControllerList[step].Highlight();
             ccOnClick = null;
         }
 
-        public void StateUpdate() //call when any character is dead
+        public void StateUpdate(bool isEnemy, CharController invoker) //call when any character is dead
         {
-            int enemy = 0, enemyIsDead = 0, character = 0, charIsDead = 0;
-            foreach (var item in charControllerList)
+            var index = charControllerList.FindIndex(x => x == invoker);
+            QueueElements[index].SetActive(false);
+
+            if (isEnemy) enemyIsDead++; else charIsDead++;
+            if (enemyNum == enemyIsDead)
             {
-                if (item.isEnemy)
-                {
-                    enemy++;
-                    if (item.isDead)
-                        enemyIsDead++;
-                }
-                else
-                {
-                    character++;
-                    if (item.isDead)
-                        charIsDead++;
-                }
-            }
-            if (enemy == enemyIsDead) { 
+                //next wave function or
                 battleState = BattleState.WIN;
                 if (battleScene != null)
                     battleScene.BattleWin();
                 Debug.Log("WINNIG");
             }
-            if (character == charIsDead) { 
+            if (charNum == charIsDead)
+            {
                 battleState = BattleState.LOSE;
                 if (battleScene != null)
                     battleScene.BattleDefeat();
@@ -238,16 +251,16 @@ namespace Overlewd
             var qe = QueueElements[step];
             qe.transform.SetSiblingIndex(maxStep);
             qe.transform.localScale = Vector3.one; //Reset Scale and push back portrait
-            if (step < maxStep) step++; else step = 0;
+            if (++step >= maxStep) step = 0;
             qe.transform.SetSiblingIndex(maxStep); //Push element to back after Step++
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Portrait
-            if (charControllerList[step].isDead) //check & skip dead character
-            {
-                if (qe.activeSelf) qe.SetActive(false); //turn off portrait from queue
-                Step();
-            }
 
-            if (charControllerList[step].isEnemy)
+            if (charControllerList[step].isDead) //check & skip dead character
+                Step();
+
+            ccOnSelect = charControllerList[step];
+
+            if (ccOnSelect.isEnemy)
             {
                 battleState = BattleState.ENEMY;
                 StartCoroutine(EnemyAttack1());
@@ -255,20 +268,22 @@ namespace Overlewd
             else
             {
                 battleState = BattleState.PLAYER;
-                attack_3.gameObject.SetActive(charControllerList[step].isOverlord); //Turn Off Attack 3 button on screen
-                charControllerList[step].CharPortraitSet();
+                attack_3.gameObject.SetActive(ccOnSelect.isOverlord); //Turn Off Attack 3 button on screen
+                ccOnSelect.CharPortraitSet();
             }
-            ccOnSelect = charControllerList[step];
         }
 
         private void BattleStart()
         {
             if (!battleStart)
             {
-                battleScene.StartBattle();
+                if (battleScene != null)
+                    battleScene.StartBattle();
                 battleStart = true;
             }
         }
+
+        private void OnDestroy() { DOTween.Clear(true); } //Destroy DOTween
 
         private int SortByInitiative(Character a, Character b)
         {
