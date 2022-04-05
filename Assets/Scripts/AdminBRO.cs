@@ -56,9 +56,10 @@ namespace Overlewd
 
         public static async Task<PlayerInfo> meAsync(string name)
         {
-            var formMe = new WWWForm();
-            formMe.AddField("name", name);
-            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me", formMe))
+            var form = new WWWForm();
+            form.AddField("name", name);
+            form.AddField("currentVersion", HttpCore.ApiVersion);
+            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me", form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
             }
@@ -338,7 +339,7 @@ namespace Overlewd
             var url = "https://overlewd-api.herokuapp.com/event-stages/reset";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                
+
             }
         }
 
@@ -386,7 +387,7 @@ namespace Overlewd
             public const string Status_Closed = "closed";
         }
 
-        // /event-quests
+        // /quests
         public static async Task<List<QuestItem>> questsAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/quests";
@@ -421,13 +422,38 @@ namespace Overlewd
             public const string Status_Rewards_Claimed = "rewards_claimed";
         }
 
+        // //quests/{id}/claim-reward
+        public static async Task<QuestClaimReward> questClaimRewardAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/quests/{id}/claim-reward";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<QuestClaimReward>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class QuestClaimReward
+        {
+            public int userId;
+            public int questId;
+            public string status;
+            public int id;
+            public int progressCount;
+            public string createdAt;
+            public string updatedAt;
+
+            public const string Status_Rewards_Claimed = "rewards_claimed";
+        }
+
         // /i18n
         public static async Task<List<LocalizationItem>> localizationAsync(string locale)
         {
             var url = String.Format("https://overlewd-api.herokuapp.com/i18n?locale={0}", locale);
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<LocalizationItem>>(request?.downloadHandler.text);              
+                return JsonHelper.DeserializeObject<List<LocalizationItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -618,7 +644,7 @@ namespace Overlewd
             var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/start";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                
+
             }
         }
 
@@ -676,6 +702,78 @@ namespace Overlewd
             public string title;
             public string soundBankId;
             public string eventPath;
+        }
+
+        // /buildings
+        public static async Task<List<Building>> buildingsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/buildings";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<Building>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class Building
+        {
+            public int id;
+            public string name;
+            public string description;
+            public string image;
+            public string icon;
+            public List<Level> levels;
+            public int? currentLevel;
+            public int? nextLevel;
+            public bool isMax;
+            public Progress userProgress;
+
+            public class Progress
+            {
+                public int id;
+                public int buildingId;
+                public int userId;
+                public int? currentLevelId;
+                public string buildingStartedAt;
+            }
+
+            public class Level
+            {
+                public int id;
+                public int orderPosition;
+                public List<Price> price;
+                public List<Price> momentPrice;
+                public int minutesToBuild;
+                public int buildingId;
+
+                public class Price
+                {
+                    public int amount;
+                    public int currency;
+                }
+            }
+        }
+
+        // /buildings/{id}/build
+        public static async Task buildingBuildAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        // /buildings/{id}/build-now
+        public static async Task buildingBuildNowAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-now";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
         }
 
         //chapter-maps

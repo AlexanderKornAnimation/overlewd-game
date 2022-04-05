@@ -189,6 +189,7 @@ namespace Overlewd
             SetDownloadBarTitle("Autorize");
 
             await AdminBRO.authLoginAsync();
+            await AdminBRO.meAsync(SystemInfo.deviceModel);
 
             //
             SetDownloadBarProgress(0.1f);
