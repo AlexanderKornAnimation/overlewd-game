@@ -9,6 +9,7 @@ namespace Overlewd
     {
         //ftue
         public static AdminBRO.FTUEChapter ftueChapterData { get; set; }
+        public static bool ftueProgressMode { get; set; } = false;
         public static AdminBRO.Dialog GetFTUENotificationByKey(string key)
         {
             var notifData = ftueChapterData?.notifications.Find(n => n.key == key);

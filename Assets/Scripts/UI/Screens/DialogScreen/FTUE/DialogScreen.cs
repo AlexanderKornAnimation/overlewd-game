@@ -33,17 +33,7 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                switch (stageData.key)
-                {
-                    case "dialogue1":
-                        UIManager.ShowScreen<MapScreen>();
-                        /*UIManager.ShowScreen<BattleScreen>().
-                            SetStageData(GameGlobalStates.GetFTUEStageByKey("battle1"));*/
-                        break;
-                    default:
-                        UIManager.ShowScreen<MapScreen>();
-                        break;
-                }
+                UIManager.ShowScreen<MapScreen>();
             }
         }
     }

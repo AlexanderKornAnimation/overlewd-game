@@ -16,11 +16,21 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
+            canvas.Find("FTUE_Progress").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+
+                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                GameGlobalStates.ftueProgressMode = true;
+                UIManager.ShowScreen<MapScreen>();
+            });
+
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                GameGlobalStates.ftueProgressMode = false;
                 UIManager.ShowScreen<MapScreen>();
                 /*UIManager.ShowScreen<FTUE.SexScreen>().
                     SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/

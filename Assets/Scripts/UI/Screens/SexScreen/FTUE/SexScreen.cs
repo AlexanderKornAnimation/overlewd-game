@@ -40,20 +40,7 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                switch (stageData.key)
-                {
-                    case "sex1":
-                        /*UIManager.ShowScreen<DialogScreen>().
-                            SetStageData(GameGlobalStates.GetFTUEStageByKey("dialogue1"));*/
-                        UIManager.ShowScreen<MapScreen>();
-                        break;
-                    case "sex4":
-                        UIManager.ShowScreen<MapScreen>();
-                        break;
-                    default:
-                        UIManager.ShowScreen<MapScreen>();
-                        break;
-                }
+                UIManager.ShowScreen<MapScreen>();
             }
 
             protected override void ShowLastReplica()
@@ -63,10 +50,18 @@ namespace Overlewd
 
             private async void ShowStartNotifications()
             {
-                if (stageData.key == "sex4")
+                switch (GameGlobalStates.ftueChapterData.key)
                 {
-                    /*UIManager.ShowNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("memorytutor2"));*/
+                    case "chapter1":
+                        switch (stageData.key)
+                        {
+                            case "sex4":
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("memorytutor2")).
+                                    RunShowNotificationProcess();
+                                break;
+                        }
+                        break;
                 }
 
                 await Task.CompletedTask;
@@ -74,21 +69,28 @@ namespace Overlewd
 
             private async void ShowEndNotifictaions()
             {
-                /*if (stageData.key == "sex2")
+                switch (GameGlobalStates.ftueChapterData.key)
                 {
-                    UIManager.AddUserInputLocker(new UserInputLocker(this));
-                    await UniTask.Delay(1000);
-                    UIManager.RemoveUserInputLocker(new UserInputLocker(this));
+                    case "chapter1":
+                        switch (stageData.key)
+                        {
+                            case "sex2":
+                                UIManager.AddUserInputLocker(new UserInputLocker(this));
+                                await UniTask.Delay(1000);
+                                UIManager.RemoveUserInputLocker(new UserInputLocker(this));
 
-                    UIManager.ShowNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor2"));
-                    await UIManager.WaitHideNotifications();
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor2")).
+                                    RunShowNotificationProcess();
+                                await UIManager.WaitHideNotifications();
 
-                    UIManager.ShowNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor"));
-                    await UIManager.WaitHideNotifications();
-                }*/
-                await Task.CompletedTask;
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor")).
+                                    RunShowNotificationProcess();
+                                break;
+                        }
+                        break;
+                }
             }
         }
     }

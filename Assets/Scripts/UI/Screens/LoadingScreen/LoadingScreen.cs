@@ -225,6 +225,8 @@ namespace Overlewd
 
             GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
 
+            var b = AdminBRO.buildingsAsync();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();
