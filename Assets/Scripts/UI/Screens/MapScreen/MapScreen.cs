@@ -37,6 +37,18 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            if (GameGlobalStates.ftueChapterData == null)
+            {
+                if (GameGlobalStates.ftueProgressMode)
+                {
+                    GameGlobalStates.ftueChapterData = GetActiveChapter();
+                }
+                else
+                {
+                    GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                }
+            }
+
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
@@ -107,7 +119,7 @@ namespace Overlewd
                     nextChapterData = GameData.GetFTUEChapterById(GameGlobalStates.ftueChapterData.nextChapterId.Value);
                     chapterButtonText.text = nextChapterData?.name;
                     var showNextChapterButton = GameGlobalStates.ftueProgressMode ?
-                        ChapterComplete() : true;
+                        ChapterComplete(GameGlobalStates.ftueChapterData) : true;
                     chapterButton.gameObject.SetActive(showNextChapterButton);
                 }
                 else
@@ -182,9 +194,9 @@ namespace Overlewd
 
         }
 
-        private bool ChapterComplete()
+        private bool ChapterComplete(AdminBRO.FTUEChapter chapterData)
         {
-            foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
+            foreach (var stageId in chapterData.stages)
             {
                 var stageData = GameData.GetFTUEStageById(stageId);
                 if (stageData == null)
@@ -209,6 +221,19 @@ namespace Overlewd
                 }
             }
             return false;
+        }
+
+        private AdminBRO.FTUEChapter GetActiveChapter()
+        {
+            var chapterData = GameData.GetFTUEChapterByKey("chapter1");
+            while (ChapterComplete(chapterData))
+            {
+                if (chapterData.nextChapterId.HasValue)
+                {
+                    chapterData = GameData.GetFTUEChapterById(chapterData.nextChapterId.Value);
+                }
+            }
+            return chapterData;
         }
     }
 }

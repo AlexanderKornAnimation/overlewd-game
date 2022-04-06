@@ -20,8 +20,8 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
                 GameGlobalStates.ftueProgressMode = true;
+                GameGlobalStates.ftueChapterData = null;
                 UIManager.ShowScreen<MapScreen>();
             });
 
@@ -29,8 +29,8 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
                 GameGlobalStates.ftueProgressMode = false;
+                GameGlobalStates.ftueChapterData = null;
                 UIManager.ShowScreen<MapScreen>();
                 /*UIManager.ShowScreen<FTUE.SexScreen>().
                     SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/
