@@ -82,9 +82,9 @@ namespace Overlewd
             UITools.SetStretch(rt);
             rt.localScale *= idleScale;
 
-            battlePos = isEnemy ? GameObject.Find("battlePos2").transform : GameObject.Find("battlePos1").transform;
-            battleLayer = GameObject.Find("BattleLayer").transform;
-
+            Transform spawnPos = bm.transform;
+            battleLayer = spawnPos.Find("BattleCanvas/BattleLayer").transform;
+            battlePos = isEnemy ? battleLayer.Find("battlePos2").transform : battleLayer.Find("battlePos1").transform;
             if (isEnemy)
                 persPos = battleLayer.Find("enemy" + battleOrder.ToString()).transform;
             else
