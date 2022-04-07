@@ -93,6 +93,7 @@ namespace Overlewd
             public string type;
             public bool promo;
             public bool donat;
+            public bool hidden;
             public string imageUrl;
             public string description;
             public string discount;
@@ -144,6 +145,7 @@ namespace Overlewd
             public string type;
             public bool promo;
             public bool donat;
+            public bool hidden;
             public string imageUrl;
             public string description;
             public List<PriceItem> price;
@@ -537,24 +539,24 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class BattleReward
-        {
-            public int currencyId;
-            public int amount;
-        }
-
-        [Serializable]
         public class Battle
         {
             public int id;
             public string title;
             public string type;
-            public List<BattleReward> rewards;
-            public List<BattleReward> firstRewards;
+            public List<Reward> rewards;
+            public List<Reward> firstRewards;
             public List<int> enemyCharacters;
 
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
+
+            public class Reward
+            {
+                public string icon;
+                public int amount;
+                public int tradableId;
+            }
         }
 
         //ftue
