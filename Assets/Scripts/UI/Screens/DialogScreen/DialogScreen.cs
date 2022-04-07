@@ -60,6 +60,8 @@ namespace Overlewd
         protected SpineWidgetGroup cutInAnimation;
         protected SpineWidgetGroup emotionAnimation;
 
+        private int stageId;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
@@ -95,6 +97,12 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
+        public DialogScreen SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
         public override async Task BeforeShowAsync()
         {
             Initialize();
@@ -112,13 +120,14 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
-            await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
+            var stageData = GameData.GetEventStageById(stageId);
+            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+            await GameData.EventStageStartAsync(stageId);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
+            await GameData.EventStageEndAsync(stageId);
         }
 
         protected virtual void LeaveScreen()

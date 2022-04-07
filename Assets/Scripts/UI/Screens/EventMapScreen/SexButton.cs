@@ -10,7 +10,7 @@ namespace Overlewd
     {
         public class SexButton : MonoBehaviour
         {
-            public int eventStageId;
+            public int stageId { get; set; }
 
             private Button button;
             private GameObject sceneDone;
@@ -34,7 +34,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventStageData = GameData.GetEventStageById(eventStageId);
+                var eventStageData = GameData.GetEventStageById(stageId);
 
                 title.text = eventStageData.title;
                 sceneDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
@@ -42,9 +42,9 @@ namespace Overlewd
 
             private void ButtonClick()
             {
-                GameGlobalStates.sex_EventStageId = eventStageId;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<SexScreen>();
+                UIManager.MakeScreen<SexScreen>().
+                    SetData(stageId).RunShowScreenProcess();
             }
 
             public static SexButton GetInstance(Transform parent)

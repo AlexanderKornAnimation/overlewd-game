@@ -1259,8 +1259,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -322.5, y: 262}
-  m_SizeDelta: {x: 484, y: 60}
+  m_AnchoredPosition: {x: -177.25, y: 262}
+  m_SizeDelta: {x: 774.5, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2215583664436859761
 CanvasRenderer:
@@ -1290,7 +1290,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Universal Adventure
+  m_text: Universal Adventure fdgdfgdfg
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
   m_sharedMaterial: {fileID: -4931939531266473624, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
@@ -1333,7 +1333,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -3188,7 +3188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8372425861683081882}
   m_Layer: 0
-  m_Name: EventItem
+  m_Name: EventQuest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

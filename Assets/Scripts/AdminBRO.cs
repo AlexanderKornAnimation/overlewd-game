@@ -417,6 +417,7 @@ namespace Overlewd
             public List<QuestReward> rewards;
             public string status;
             public int progressCount;
+            public int? eventId;
 
             public const string Status_New = "new";
             public const string Status_In_Progress = "in_progress";

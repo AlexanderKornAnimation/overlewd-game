@@ -10,7 +10,7 @@ namespace Overlewd
     {
         public class FightButton : MonoBehaviour
         {
-            public int eventStageId;
+            public int stageId { get; set; }
 
             private Button button;
             private GameObject fightDone;
@@ -36,17 +36,16 @@ namespace Overlewd
 
             private void Customize()
             {
+                var stageData = GameData.GetEventStageById(stageId);
 
-                var eventStageData = GameData.GetEventStageById(eventStageId);
-
-                title.text = eventStageData.title;
-                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
+                title.text = stageData.title;
+                fightDone.SetActive(stageData.status == AdminBRO.EventStageItem.Status_Complete);
                 
-                if (eventStageId == 1)
+                if (stageId == 1)
                 {
                     button.gameObject.AddComponent<BlendPulseSelector>();
                     
-                    if (GameData.GetEventStageById(eventStageId).status == AdminBRO.EventStageItem.Status_Complete)
+                    if (GameData.GetEventStageById(stageId).status == AdminBRO.EventStageItem.Status_Complete)
                     {
                         Destroy(button.gameObject.GetComponent<Selector>());
                     }
@@ -55,9 +54,9 @@ namespace Overlewd
 
             private void ButtonClick()
             {
-                GameGlobalStates.battle_EventStageId = eventStageId;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowPopup<PrepareBattlePopup>();
+                UIManager.MakePopup<PrepareBattlePopup>().
+                    SetData(stageId).RunShowPopupProcess();
             }
 
             public static FightButton GetInstance(Transform parent)

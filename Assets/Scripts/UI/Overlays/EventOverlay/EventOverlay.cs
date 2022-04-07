@@ -48,10 +48,14 @@ namespace Overlewd
                     TabClick(tabId_delegate);
                 });
             }
+        }
 
+        public override async Task BeforeShowMakeAsync()
+        {
+            InitTabs();
             eventButton[TabWeekly].onClick.Invoke();
 
-            InitTabs();
+            await Task.CompletedTask;
         }
 
         private void TabClick(int tabId)
@@ -67,21 +71,42 @@ namespace Overlewd
             }
         }
 
-        private void InitTabs()
+        private void InitTab(AdminBRO.EventItem eventData, Transform tab)
         {
-            NSEventOverlay.Banner.GetInstance(scrollViewContent[TabWeekly]);
-
-            foreach (var eventData in GameData.events)
+            NSEventOverlay.Banner.GetInstance(tab);
+            foreach (var quest in GameData.quests)
             {
-                foreach (var questId in eventData.quests)
+                if (quest.eventId.HasValue)
                 {
-                    var eventItem = NSEventOverlay.EventItem.GetInstance(scrollViewContent[TabWeekly]);
-                    eventItem.eventId = eventData.id;
-                    eventItem.questId = questId;
+                    if (quest.eventId.Value == eventData.id)
+                    {
+                        var eventQuest = NSEventOverlay.EventQuest.GetInstance(tab);
+                        eventQuest.eventId = eventData.id;
+                        eventQuest.questId = quest.eventId.Value;
+                    }
                 }
             }
+            var descr = NSEventOverlay.EventDescription.GetInstance(tab);
+            descr.eventId = eventData.id;
+        }
 
-            NSEventOverlay.EventDescription.GetInstance(scrollViewContent[TabWeekly]);
+        private void InitTabs()
+        {
+            foreach (var eventData in GameData.events)
+            {
+                switch (eventData.type)
+                {
+                    case AdminBRO.EventItem.Type_Weekly :
+                        InitTab(eventData, scrollViewContent[TabWeekly]);
+                        break;
+                    case AdminBRO.EventItem.Type_Monthly :
+                        InitTab(eventData, scrollViewContent[TabMonthly]);
+                        break;
+                    case AdminBRO.EventItem.Type_Quarterly :
+                        InitTab(eventData, scrollViewContent[TabDecade]);
+                        break;
+                }
+            }
 
             NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[TabComingSoon]);
         }

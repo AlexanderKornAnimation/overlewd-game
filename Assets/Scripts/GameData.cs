@@ -93,14 +93,14 @@ namespace Overlewd
                 eventStages[stageIndex] = stageData;
             }
         }
-        public static async Task EventStageStartAsync(AdminBRO.EventStageItem stage)
+        public static async Task EventStageStartAsync(int stageId)
         {
-            var newEventStageData = await AdminBRO.eventStageStartAsync(stage.id);
+            var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
             eventStages = await AdminBRO.eventStagesAsync();
         }
-        public static async Task EventStageEndAsync(AdminBRO.EventStageItem stage)
+        public static async Task EventStageEndAsync(int stageId)
         {
-            var newEventStageData = await AdminBRO.eventStageEndAsync(stage.id);
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId);
             eventStages = await AdminBRO.eventStagesAsync();
         }
 

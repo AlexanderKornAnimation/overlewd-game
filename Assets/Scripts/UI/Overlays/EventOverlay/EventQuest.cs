@@ -9,10 +9,10 @@ namespace Overlewd
 {
     namespace NSEventOverlay
     {
-        public class EventItem : MonoBehaviour
+        public class EventQuest : MonoBehaviour
         {
-            public int eventId;
-            public int questId;
+            public int eventId { get; set; }
+            public int questId { get; set; }
 
             private Button mapButton;
 
@@ -36,10 +36,10 @@ namespace Overlewd
 
             void Start()
             {
-                CustomizeItem();
+                Customize();
             }
 
-            private void CustomizeItem()
+            private void Customize()
             {
                 var eventData = GameData.GetEventById(eventId);
                 var questData = GameData.GetQuestById(questId);
@@ -66,14 +66,14 @@ namespace Overlewd
             private void ToMapClick()
             {
                 Destroy(mapButton.gameObject.GetComponent<Selector>());
-                GameGlobalStates.eventMapScreen_EventId = eventId;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                GameGlobalStates.eventData = GameData.GetEventById(eventId);
                 UIManager.ShowScreen<EventMapScreen>();
             }
 
-            public static EventItem GetInstance(Transform parent)
+            public static EventQuest GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<EventItem>("Prefabs/UI/Overlays/EventOverlay/EventItem", parent);
+                return ResourceManager.InstantiateWidgetPrefab<EventQuest>("Prefabs/UI/Overlays/EventOverlay/EventQuest", parent);
             }
         }
     }

@@ -30,6 +30,8 @@ namespace Overlewd
         protected Image eventMark;
         protected Image questMark;
 
+        private int stageId;
+
         private void Awake()
         {
             var screenInst =
@@ -71,6 +73,12 @@ namespace Overlewd
             reward3Count = reward3.transform.Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
+        public PrepareBattlePopup SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
         protected virtual void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -90,7 +98,8 @@ namespace Overlewd
         protected virtual void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.ShowScreen<BattleScreen>();
+            UIManager.MakeScreen<BattleScreen>().
+                SetData(stageId).RunShowScreenProcess();
         }
 
         public override ScreenShow Show()

@@ -10,7 +10,7 @@ namespace Overlewd
     {
         public class BossFightButton : MonoBehaviour
         {
-            public int eventStageId;
+            public int stageId { get; set; }
 
             private Button button;
             private GameObject fightDone;
@@ -36,7 +36,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventStageData = GameData.GetEventStageById(eventStageId);
+                var eventStageData = GameData.GetEventStageById(stageId);
 
                 title.text = eventStageData.title;
                 fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
@@ -44,9 +44,9 @@ namespace Overlewd
 
             private void ButtonClick()
             {
-                GameGlobalStates.bossFight_EventStageId = eventStageId;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowPopup<PrepareBossFightPopup>();
+                UIManager.MakePopup<PrepareBossFightPopup>().
+                    SetData(stageId).RunShowPopupProcess();
             }
 
             public static BossFightButton GetInstance(Transform parent)

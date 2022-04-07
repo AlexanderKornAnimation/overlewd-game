@@ -27,6 +27,8 @@ namespace Overlewd
         protected Image eventMark;
         protected Image questMark;
 
+        private int stageId;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup", transform);
@@ -67,9 +69,17 @@ namespace Overlewd
             reward3Count = reward3.transform.Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
-        void Start()
+        public PrepareBossFightPopup SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
+        public override async Task BeforeShowMakeAsync()
         {
             Customize();
+
+            await Task.CompletedTask;
         }
         
         protected virtual void Customize()
@@ -120,7 +130,8 @@ namespace Overlewd
         protected virtual void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.ShowScreen<BossFightScreen>();
+            UIManager.MakeScreen<BossFightScreen>().
+                SetData(stageId).RunShowScreenProcess();
         }
 
         public override ScreenShow Show()

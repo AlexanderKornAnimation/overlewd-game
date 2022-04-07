@@ -37,6 +37,8 @@ namespace Overlewd
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
 
+        private int stageId;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SexScreen/SexScreen", transform);
@@ -63,6 +65,12 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
+        public SexScreen SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
         public override async Task BeforeShowAsync()
         {
             Initialize();
@@ -85,13 +93,14 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
-            await GameData.EventStageStartAsync(GameGlobalStates.sex_EventStageData);
+            var stageData = GameData.GetEventStageById(stageId);
+            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+            await GameData.EventStageStartAsync(stageId);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(GameGlobalStates.sex_EventStageData);
+            await GameData.EventStageEndAsync(stageId);
         }
 
         protected void AutoplayButtonCustomize()
