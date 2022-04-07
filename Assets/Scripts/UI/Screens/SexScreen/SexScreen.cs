@@ -68,6 +68,8 @@ namespace Overlewd
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+
+            await Task.CompletedTask;
         }
 
         public override async Task BeforeHideAsync()
@@ -185,6 +187,14 @@ namespace Overlewd
         private void Initialize()
         {
             dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
+            if (!dialogReplicas.Any())
+            {
+                dialogReplicas.Add(
+                    new AdminBRO.DialogReplica
+                    {
+                        message = "EMPTY DIALOG"
+                    });
+            }
         }
 
         private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)

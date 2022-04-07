@@ -100,6 +100,8 @@ namespace Overlewd
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+
+            await Task.CompletedTask;
         }
 
         public override async Task BeforeHideAsync()
@@ -217,6 +219,15 @@ namespace Overlewd
         private void Initialize()
         {
             dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
+            if (!dialogReplicas.Any())
+            {
+                dialogReplicas.Add(
+                    new AdminBRO.DialogReplica
+                    {
+                        message = "EMPTY DIALOG"
+                    });
+            }
+
             slots[AdminBRO.DialogReplica.CharacterPosition_Left] = leftCharacterPos;
             slots[AdminBRO.DialogReplica.CharacterPosition_Right] = rightCharacterPos;
             slots[AdminBRO.DialogReplica.CharacterPosition_Middle] = midCharacterPos;
@@ -228,6 +239,11 @@ namespace Overlewd
             {
                 var keyName = replica.characterSkin;
                 var keyPos = replica.characterPosition;
+
+                if (String.IsNullOrEmpty(keyName))
+                {
+                    continue;
+                }
 
                 bool addKeyName = false;
                 if (!characters.ContainsKey(keyName))
