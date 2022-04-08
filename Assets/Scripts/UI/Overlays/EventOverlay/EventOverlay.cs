@@ -3,27 +3,31 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Overlewd
 {
     public class EventOverlay : BaseOverlay
     {
-        private static int TabWeekly = 0;
-        private static int TabMonthly = 1;
-        private static int TabDecade = 2;
-        private static int TabActive = 3;
-        private static int TabComingSoon = 4;
-        private static int TabsCount = 5;
+        public const int TabWeekly = 0;
+        public const int TabMonthly = 1;
+        public const int TabDecade = 2;
+        public const int TabActive = 3;
+        public const int TabComingSoon = 4;
+        public const int TabsCount = 5;
 
         private int[] tabIds = { TabWeekly, TabMonthly, TabDecade, TabActive, TabComingSoon };
         private string[] tabNames = { "Weekly", "Monthly", "Decade", "Active", "ComingSoon" };
         private Transform[] scrollView = new Transform[TabsCount];
         private Transform[] scrollViewContent = new Transform[TabsCount];
         private Button[] eventButton = new Button[TabsCount];
+        private TextMeshProUGUI[] eventButtonText = new TextMeshProUGUI[TabsCount];
         private Image[] eventButtonImage = new Image[TabsCount];
         private Sprite[] eventButtonDefaultSprite = new Sprite[TabsCount];
 
         private Button backButton;
+
+        private int openingTabId = TabWeekly;
 
         void Awake()
         {
@@ -39,7 +43,8 @@ namespace Overlewd
                 scrollView[tabId] = canvas.Find("ScrollView_" + tabNames[tabId]);
                 scrollViewContent[tabId] = scrollView[tabId].Find("Viewport").Find("Content");
                 eventButton[tabId] = canvas.Find("EventButton_" + tabNames[tabId]).GetComponent<Button>();
-                eventButtonImage[tabId] = canvas.Find("EventButton_" + tabNames[tabId]).GetComponent<Image>();
+                eventButtonText[tabId] = eventButton[tabId].transform.Find("Text").GetComponent<TextMeshProUGUI>();
+                eventButtonImage[tabId] = eventButton[tabId].GetComponent<Image>();
                 eventButtonDefaultSprite[tabId] = eventButtonImage[tabId].sprite;
 
                 var tabId_delegate = tabId;
@@ -50,10 +55,16 @@ namespace Overlewd
             }
         }
 
+        public EventOverlay SetData(int openingTabId)
+        {
+            this.openingTabId = openingTabId;
+            return this;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             InitTabs();
-            eventButton[TabWeekly].onClick.Invoke();
+            eventButton[openingTabId].onClick.Invoke();
 
             await Task.CompletedTask;
         }
@@ -71,22 +82,25 @@ namespace Overlewd
             }
         }
 
-        private void InitTab(AdminBRO.EventItem eventData, Transform tab)
+        private void InitTab(AdminBRO.EventItem eventData, int tabId)
         {
-            NSEventOverlay.Banner.GetInstance(tab);
+            var tabScrollViewContent = scrollViewContent[tabId];
+            eventButtonText[tabId].text = eventData.name;
+
+            NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
             foreach (var quest in GameData.quests)
             {
                 if (quest.eventId.HasValue)
                 {
                     if (quest.eventId.Value == eventData.id)
                     {
-                        var eventQuest = NSEventOverlay.EventQuest.GetInstance(tab);
+                        var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
                         eventQuest.eventId = eventData.id;
                         eventQuest.questId = quest.eventId.Value;
                     }
                 }
             }
-            var descr = NSEventOverlay.EventDescription.GetInstance(tab);
+            var descr = NSEventOverlay.EventDescription.GetInstance(tabScrollViewContent);
             descr.eventId = eventData.id;
         }
 
@@ -97,13 +111,13 @@ namespace Overlewd
                 switch (eventData.type)
                 {
                     case AdminBRO.EventItem.Type_Weekly :
-                        InitTab(eventData, scrollViewContent[TabWeekly]);
+                        InitTab(eventData, TabWeekly);
                         break;
                     case AdminBRO.EventItem.Type_Monthly :
-                        InitTab(eventData, scrollViewContent[TabMonthly]);
+                        InitTab(eventData, TabMonthly);
                         break;
                     case AdminBRO.EventItem.Type_Quarterly :
-                        InitTab(eventData, scrollViewContent[TabDecade]);
+                        InitTab(eventData, TabDecade);
                         break;
                 }
             }

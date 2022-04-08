@@ -24,14 +24,17 @@ namespace Overlewd
             weeklyEventButton = background.Find("WeeklyEvent").GetComponent<Button>();
             weeklyEventTitle = weeklyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             weeklyEventButton.onClick.AddListener(WeeklyEventClick);
-            
+            weeklyEventButton.gameObject.SetActive(false);
+
             monthlyEventButton = background.Find("MonthlyEvent").GetComponent<Button>();
             monthlyEventTitle = monthlyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             monthlyEventButton.onClick.AddListener(MonthlyEventClick);
-            
+            monthlyEventButton.gameObject.SetActive(false);
+
             quarterlyEventButton = background.Find("QuarterlyEvent").GetComponent<Button>();
             quarterlyEventTitle = quarterlyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             quarterlyEventButton.onClick.AddListener(QuarterlyEventClick);
+            quarterlyEventButton.gameObject.SetActive(false);
 
             gameObject.AddComponent<BlendPulseSelector>();
         }
@@ -43,28 +46,45 @@ namespace Overlewd
         
         protected virtual void Customize()
         {
-            
+            foreach (var eventData in GameData.events)
+            {
+                switch (eventData.type)
+                {
+                    case AdminBRO.EventItem.Type_Weekly:
+                        weeklyEventButton.gameObject.SetActive(true);
+                        weeklyEventTitle.text = eventData.name;
+                        break;
+                    case AdminBRO.EventItem.Type_Monthly:
+                        monthlyEventButton.gameObject.SetActive(true);
+                        monthlyEventTitle.text = eventData.name;
+                        break;
+                    case AdminBRO.EventItem.Type_Quarterly:
+                        quarterlyEventButton.gameObject.SetActive(true);
+                        quarterlyEventTitle.text = eventData.name;
+                        break;
+                }
+            }
         }
         
         protected virtual void WeeklyEventClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            Destroy(GetComponent<Selector>());
-            UIManager.ShowOverlay<EventOverlay>();
+            UIManager.MakeOverlay<EventOverlay>().
+                SetData(EventOverlay.TabWeekly).RunShowOverlayProcess(); ;
         }
 
         protected virtual void MonthlyEventClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            Destroy(GetComponent<Selector>());
-            UIManager.ShowOverlay<EventOverlay>();
+            UIManager.MakeOverlay<EventOverlay>().
+                SetData(EventOverlay.TabMonthly).RunShowOverlayProcess();
         }
         
         protected virtual void QuarterlyEventClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            Destroy(GetComponent<Selector>());
-            UIManager.ShowOverlay<EventOverlay>();
+            UIManager.MakeOverlay<EventOverlay>().
+                SetData(EventOverlay.TabDecade).RunShowOverlayProcess();
         }
         
         public static EventsWidget GetInstance(Transform parent)
