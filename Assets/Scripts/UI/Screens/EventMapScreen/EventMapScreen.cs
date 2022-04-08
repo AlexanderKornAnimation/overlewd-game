@@ -123,15 +123,13 @@ namespace Overlewd
             AdminBRO.EventChapter firstChapter = null;
             foreach (var chapterId in eventData.chapters)
             {
-                var findAsNextChapter = false;
-                foreach (var chId in eventData.chapters)
+                var findAsNextChapter = eventData.chapters.Exists(chId => 
                 {
                     var chData = GameData.GetEventChapterById(chId);
-                    if (chData.nextChapterId.HasValue)
-                    {
-                        findAsNextChapter = (chData.nextChapterId.Value == chapterId);
-                    }
-                }
+                    return chData.nextChapterId.HasValue ?
+                        chData.nextChapterId.Value == chapterId :
+                        false;
+                });
                 firstChapter = findAsNextChapter ? firstChapter : GameData.GetEventChapterById(chapterId);
             }
 
