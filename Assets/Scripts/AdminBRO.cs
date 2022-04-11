@@ -14,6 +14,21 @@ namespace Overlewd
             return SystemInfo.deviceUniqueIdentifier;
         }
 
+        // /version
+        public static async Task<ApiVersion> versionAsync()
+        {
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/version"))
+            {
+                return JsonHelper.DeserializeObject<ApiVersion>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class ApiVersion
+        {
+            public int version;
+        }
+
         // auth/login; auth/refresh
         public static async Task<Tokens> authLoginAsync()
         {

@@ -188,6 +188,16 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
+            var apiVersion = await AdminBRO.versionAsync();
+            if (apiVersion.version.ToString() != HttpCore.ApiVersion)
+            {
+                UIManager.ShowDialogBox("Need client update", "", () => Game.Quit());
+                while (true)
+                {
+                    await UniTask.Delay(1000);
+                }
+            }
+
             await AdminBRO.authLoginAsync();
             await AdminBRO.meAsync(SystemInfo.deviceModel);
 
