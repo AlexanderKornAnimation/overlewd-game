@@ -115,6 +115,8 @@ namespace Overlewd
             public string specialOfferLabel;
             public List<int> itemPack;
             public int? currencyId;
+            public int? characterId;
+            public int? equipmentId;
             public int? currencyAmount;
             public int? limit;
             public string dateStart;
@@ -170,6 +172,8 @@ namespace Overlewd
             public int? currencyId;
             public int? currencyAmount;
             public int? limit;
+            public int? characterId;
+            public int? equipmentId;
             public string dateStart;
             public string dateEnd;
             public string discountStart;
@@ -311,6 +315,7 @@ namespace Overlewd
             public int id;
             public string type;
             public string name;
+            public string label;
             public string description;
             public string dateStart;
             public string dateEnd;
@@ -388,7 +393,6 @@ namespace Overlewd
             public int index;
             public int id;
             public string title;
-            public string type;
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
@@ -562,7 +566,7 @@ namespace Overlewd
             public string type;
             public List<Reward> rewards;
             public List<Reward> firstRewards;
-            public List<int> enemyCharacters;
+            public List<Phase> battlePhases;
 
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
@@ -573,6 +577,85 @@ namespace Overlewd
                 public int amount;
                 public int tradableId;
             }
+
+            public class Phase 
+            {
+                public List<int> enemyCharacters;
+            }
+        }
+
+        // /characters
+        public static async Task<List<Character>> charactersAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/characters";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class Character
+        {
+            public int id;
+            public string name;
+            public string characterClass;
+            public List<int> animations;
+            public int? level;
+            public string rarity;
+            public List<int> equipment;
+            public float speed;
+            public float power;
+            public float constitution;
+            public float agility;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
+
+            public const string Class_Assassin = "Assassin";
+
+            public const string Rarity_Basic = "basic";
+        }
+
+        // /characters/equipment
+        // /battles/characters/{id}/equip/{id}
+        public static async Task<List<Equipment>> equipmentsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/characters/equipment";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task equipAsync(int characterId, int equipmentId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/characters/{characterId}/equip/{equipmentId}";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+                
+            }
+        }
+
+        [Serializable]
+        public class Equipment
+        {
+            public int id;
+            public string name;
+            public float speed;
+            public float power;
+            public float constitution;
+            public float agility;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
         }
 
         //ftue
