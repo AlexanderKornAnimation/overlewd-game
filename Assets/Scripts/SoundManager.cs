@@ -37,6 +37,8 @@ namespace Overlewd
         //popups & nootifications
         public const string UI_GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
         public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
+
+        public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
     }
 
     public class FMODBank

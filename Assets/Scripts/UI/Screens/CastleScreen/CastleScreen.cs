@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,8 @@ namespace Overlewd
         protected Transform eventWidget;
 
         protected Button contenViewerButton;
+
+        protected FMODEvent music;
 
         protected virtual void Awake()
         {
@@ -56,11 +59,14 @@ namespace Overlewd
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowShow);
+            music = SoundManager.GetEventInstance(FMODEventPath.Music_CastleScreen);
+            music.Play();
         }
 
         public override void StartHide()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowHide);
+            music.Pause();
         }
 
         protected virtual void Customize()
