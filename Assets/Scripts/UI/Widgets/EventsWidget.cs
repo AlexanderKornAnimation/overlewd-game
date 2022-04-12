@@ -70,7 +70,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeOverlay<EventOverlay>().
-                SetData(EventOverlay.TabWeekly).RunShowOverlayProcess(); ;
+                SetData(EventOverlay.TabWeekly).RunShowOverlayProcess();
         }
 
         protected virtual void MonthlyEventClick()

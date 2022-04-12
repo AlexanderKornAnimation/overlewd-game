@@ -38,6 +38,10 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var eventChapterData = GetActiveChapter(GameGlobalStates.eventData);
+            if (eventChapterData == null)
+            {
+                return;
+            }
 
             if (!eventChapterData.chapterMapId.HasValue)
             {
@@ -57,7 +61,7 @@ namespace Overlewd
                     //continue;
                 }
 
-                var mapNode = chapterMap.transform.Find(stageData.mapNodeName);
+                var mapNode = chapterMap.transform.Find(stageData.mapNodeName ?? "");
                 if (mapNode == null)
                 {
                     continue;
