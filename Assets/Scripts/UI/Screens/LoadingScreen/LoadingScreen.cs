@@ -188,7 +188,18 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
+            var apiVersion = await AdminBRO.versionAsync();
+            if (apiVersion.version.ToString() != HttpCore.ApiVersion)
+            {
+                UIManager.ShowDialogBox("Need client update", "", () => Game.Quit());
+                while (true)
+                {
+                    await UniTask.Delay(1000);
+                }
+            }
+
             await AdminBRO.authLoginAsync();
+            await AdminBRO.meAsync(SystemInfo.deviceModel);
 
             //
             SetDownloadBarProgress(0.1f);
@@ -206,7 +217,7 @@ namespace Overlewd
 
             GameData.eventMarkets = await AdminBRO.eventMarketsAsync();
 
-            GameData.eventQuests = await AdminBRO.eventQuestsAsync();
+            GameData.quests = await AdminBRO.questsAsync();
 
             GameData.eventStages = await AdminBRO.eventStagesAsync();
 
@@ -223,6 +234,8 @@ namespace Overlewd
             GameData.sounds = await AdminBRO.soundsAsync();
 
             GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
+
+            var b = AdminBRO.buildingsAsync();
 
             SetDownloadBarProgress(0.3f);
 

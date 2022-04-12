@@ -13,7 +13,7 @@ namespace Overlewd
         protected Button battleButton;
         protected Button editTeamButton;
         protected Button buffButton;
-        protected RectTransform buffButtonRect;
+        protected RectTransform buffRect;
 
         protected Image firstTimeReward;
         protected Image reward1;
@@ -27,6 +27,8 @@ namespace Overlewd
         protected Image eventMark;
         protected Image questMark;
 
+        private int stageId;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup", transform);
@@ -35,6 +37,7 @@ namespace Overlewd
             var levelTitle = canvas.Find("LevelTitle");
             var rewards = canvas.Find("ResourceBack").Find("Rewards");
             var alliesBack = canvas.Find("AlliesBack");
+            var buff = canvas.Find("Buff");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -45,12 +48,12 @@ namespace Overlewd
             editTeamButton = alliesBack.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
             
-            buffButton = canvas.Find("BuffButton").GetComponent<Button>();
-            buffButtonRect = buffButton.GetComponent<RectTransform>();
+            buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
+            buffRect = buff.GetComponent<RectTransform>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
-            buffButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
-                -buffButtonRect.rect.height, buffButtonRect.rect.height);
+            buffRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
+                -buffRect.rect.height, buffRect.rect.height);
 
             eventMark = levelTitle.Find("EventMark").GetComponent<Image>();
             questMark = levelTitle.Find("QuestMark").GetComponent<Image>();
@@ -66,9 +69,17 @@ namespace Overlewd
             reward3Count = reward3.transform.Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
-        void Start()
+        public PrepareBossFightPopup SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
+        public override async Task BeforeShowMakeAsync()
         {
             Customize();
+
+            await Task.CompletedTask;
         }
         
         protected virtual void Customize()
@@ -119,7 +130,8 @@ namespace Overlewd
         protected virtual void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.ShowScreen<BossFightScreen>();
+            UIManager.MakeScreen<BossFightScreen>().
+                SetData(stageId).RunShowScreenProcess();
         }
 
         public override ScreenShow Show()
@@ -134,12 +146,12 @@ namespace Overlewd
         
         public override async Task AfterShowAsync()
         {
-            await UITools.BottomShowAsync(buffButtonRect);
+            await UITools.TopShowAsync(buffRect, 0.2f);
         }
 
         public override async Task BeforeHideAsync()
         {
-            await UITools.BottomHideAsync(buffButtonRect);
+            await UITools.TopHideAsync(buffRect, 0.2f);
         }
     }
 }

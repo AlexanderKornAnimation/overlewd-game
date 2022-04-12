@@ -1,47 +1,54 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 namespace Overlewd
 {
-    namespace FTUE
-    {
-        public class BossFightScreen : Overlewd.BossFightScreen
-        {
-            public override async Task BeforeShowAsync()
+	namespace FTUE
+	{
+		public class BossFightScreen : Overlewd.BossFightScreen
+		{
+            protected AdminBRO.FTUEStageItem stageData;
+            public BossFightScreen SetStageData(AdminBRO.FTUEStageItem data)
             {
-                backButton.gameObject.SetActive(false);
-                startBattleButton.gameObject.SetActive(false);
-
-                skipButton.gameObject.SetActive(false);
-                battleVideo.loopPointReached += EndBattleVideo;
-
-                await Task.CompletedTask;
+                stageData = data;
+                return this;
             }
 
-            public override async Task AfterShowAsync()
+            protected override void Awake()
             {
-                StartBattleButtonClick();
-
-                await Task.CompletedTask;
+                base.Awake();
+                WannaWin(true);
             }
 
-            protected override void EndBattleVideo(VideoPlayer vp)
+            protected override void BackButtonClick()
             {
-                skipButton.gameObject.SetActive(false);
-
-                UIManager.ShowPopup<VictoryPopup>();
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                UIManager.ShowScreen<MapScreen>();
             }
 
-            protected override void StartBattleButtonClick()
+            public override void BattleWin()
             {
-                skipButton.gameObject.SetActive(true);
+                UIManager.MakePopup<VictoryPopup>().
+                    SetStageData(stageData).RunShowPopupProcess();
+            }
 
-                battleVideo.Play();
+            public override void BattleDefeat()
+            {
+                UIManager.MakePopup<DefeatPopup>().
+                    SetStageData(stageData).RunShowPopupProcess();
+            }
+
+            public override async Task BeforeShowDataAsync()
+            {
+                await GameData.FTUEStartStage(stageData.id);
+            }
+
+            public override async Task BeforeHideDataAsync()
+            {
+                await GameData.FTUEEndStage(stageData.id);
             }
         }
-    }
+	}
 }

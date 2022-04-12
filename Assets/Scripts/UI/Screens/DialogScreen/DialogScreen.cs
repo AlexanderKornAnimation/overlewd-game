@@ -54,11 +54,13 @@ namespace Overlewd
             [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
             [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
             [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel",
-            [AdminBRO.DialogReplica.CharacterSkin_Milf] = "Prefabs/UI/Screens/DialogScreen/Milf"
+            [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/Inge"
         };
 
         protected SpineWidgetGroup cutInAnimation;
         protected SpineWidgetGroup emotionAnimation;
+
+        private int stageId;
 
         void Awake()
         {
@@ -95,32 +97,41 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
+        public DialogScreen SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
         public override async Task BeforeShowAsync()
         {
-            await EnterScreen();
-
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+
+            await Task.CompletedTask;
         }
 
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();
-
             await Task.CompletedTask;
         }
 
-        protected virtual async Task EnterScreen()
+        public override async Task BeforeShowDataAsync()
         {
-            dialogData = GameData.GetDialogById(GameGlobalStates.dialog_EventStageData.dialogId.Value);
-            await GameData.EventStageStartAsync(GameGlobalStates.dialog_EventStageData);
+            var stageData = GameData.GetEventStageById(stageId);
+            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+            await GameData.EventStageStartAsync(stageId);
         }
 
-        protected virtual async void LeaveScreen()
+        public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(GameGlobalStates.dialog_EventStageData);
+            await GameData.EventStageEndAsync(stageId);
+        }
 
+        protected virtual void LeaveScreen()
+        {
             UIManager.ShowScreen<EventMapScreen>();
         }
 
@@ -217,6 +228,15 @@ namespace Overlewd
         private void Initialize()
         {
             dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
+            if (!dialogReplicas.Any())
+            {
+                dialogReplicas.Add(
+                    new AdminBRO.DialogReplica
+                    {
+                        message = "EMPTY DIALOG"
+                    });
+            }
+
             slots[AdminBRO.DialogReplica.CharacterPosition_Left] = leftCharacterPos;
             slots[AdminBRO.DialogReplica.CharacterPosition_Right] = rightCharacterPos;
             slots[AdminBRO.DialogReplica.CharacterPosition_Middle] = midCharacterPos;
@@ -228,6 +248,11 @@ namespace Overlewd
             {
                 var keyName = replica.characterSkin;
                 var keyPos = replica.characterPosition;
+
+                if (String.IsNullOrEmpty(keyName))
+                {
+                    continue;
+                }
 
                 bool addKeyName = false;
                 if (!characters.ContainsKey(keyName))

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -22,22 +23,6 @@ namespace Overlewd
             canvasGroup.alpha = 0.0f;
         }
 
-        async void Start()
-        {
-            await screen.BeforeShowAsync();
-            OnPrepared();
-
-            await WaitUnlocked();
-            OnStart();
-
-            await UITools.FadeShowAsync(canvasGroup);
-
-            await screen.AfterShowAsync();
-            OnEnd();
-
-            Destroy(this);
-        }
-
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -48,10 +33,12 @@ namespace Overlewd
             }
         }
 
-        protected override void OnStart()
+        public override async Task ProgressAsync()
         {
-            base.OnStart();
             screen.StartShow();
+            await UITools.FadeShowAsync(canvasGroup);
+            await screen.AfterShowAsync();
+            Destroy(this);
         }
     }
 }

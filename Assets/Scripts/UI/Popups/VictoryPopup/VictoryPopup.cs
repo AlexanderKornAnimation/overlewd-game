@@ -38,9 +38,9 @@ namespace Overlewd
             reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
         }
 
-        public override void ShowMissclick()
+        public override void MakeMissclick()
         {
-            var missClick = UIManager.ShowPopupMissclick<PopupMissclickColored>();
+            var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
             missClick.missClickEnabled = false;
         }
 

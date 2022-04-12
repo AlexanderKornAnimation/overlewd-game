@@ -9,33 +9,33 @@ namespace Overlewd
 {
     public class GirlScreen : BaseFullScreen
     {
-        private Image girlImage;
+        protected Image girlImage;
         
-        private Image trustProgress;
-        private TextMeshProUGUI currentProgressLevel;
-        private TextMeshProUGUI nextProgressLevel;
+        protected Image trustProgress;
+        protected TextMeshProUGUI currentProgressLevel;
+        protected TextMeshProUGUI nextProgressLevel;
         
-        private Image rewardTier1;
-        private Image receivedTier1;
+        protected Image rewardTier1;
+        protected Image receivedTier1;
         
-        private Image rewardTier2;
-        private Image receivedTier2;
+        protected Image rewardTier2;
+        protected Image receivedTier2;
 
-        private Image rewardTier3;
-        private Image receivedTier3;
+        protected Image rewardTier3;
+        protected Image receivedTier3;
         
-        private TextMeshProUGUI buffPower;
-        private TextMeshProUGUI buffType;
+        protected TextMeshProUGUI buffPower;
+        protected TextMeshProUGUI buffType;
 
-        private Button bannerButton;
-        private Image bannerArt;
-        private GameObject bannerNotification; 
+        protected Button bannerButton;
+        protected Image bannerArt;
+        protected GameObject bannerNotification; 
 
-        private Button seduceButton;
-        private Button dialogButton;
-        private Button portalButton;
-        private Button chestButton;
-        private Button backButton;
+        protected Button seduceButton;
+        protected Button dialogButton;
+        protected Button portalButton;
+        protected Button chestButton;
+        protected Button backButton;
         
         void Awake()
         {
@@ -80,35 +80,35 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             Customize();
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
             
         }
         
-        private void BannerButtonClick()
+        protected virtual void BannerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MemoryListScreen>();
         }
         
-        private void PortalButtonClick()
+        protected virtual void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
         
-        private void ChestButtonClick()
+        protected virtual void ChestButtonClick()
         {
             // SoundManager.PlayOneShot(SoundManager.FMODEventPath.UI.ButtonClick);
             // UIManager.ShowPopup<ChestPopup>();
         }
         
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();

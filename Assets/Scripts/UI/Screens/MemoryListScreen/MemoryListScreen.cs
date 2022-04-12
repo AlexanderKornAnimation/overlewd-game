@@ -9,20 +9,20 @@ namespace Overlewd
 {
     public class MemoryListScreen : BaseFullScreen
     {
-        private Dictionary<string, List<NSMemoryListScreen.BaseScroll>> content =
+        protected Dictionary<string, List<NSMemoryListScreen.BaseScroll>> content =
             new Dictionary<string, List<NSMemoryListScreen.BaseScroll>>();
 
-        private Button backButton;
-        private TextMeshProUGUI backButtonGirlName;
+        protected Button backButton;
+        protected TextMeshProUGUI backButtonGirlName;
 
-        private Button ulviTab;
-        private Button adrielTab;
-        private Button fayeTab;
-        private Button ingieTab;
-        private Button liliTab;
-        private Button prevTab;
+        protected Button ulviTab;
+        protected Button adrielTab;
+        protected Button fayeTab;
+        protected Button ingieTab;
+        protected Button liliTab;
+        protected Button prevTab;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MemoryListScreen/MemoryListScreen", transform);
@@ -62,7 +62,7 @@ namespace Overlewd
             EnterTab(selectedGirl);
         }
 
-        private void EnterTab(Button girlTab)
+        protected virtual void EnterTab(Button girlTab)
         {
             var canvas = transform.GetChild(0).transform.Find("Canvas");
             
@@ -83,21 +83,17 @@ namespace Overlewd
                 content[girlTab.name].Add(mainMemoryScroll);
             }
 
-            foreach (var scroll in content)
+            var girlContent = content[girlTab.name];
+            
+            foreach (var _content in girlContent)
             {
-                if (scroll.Key == girlTab.name)
-                {
-                    for (int i = 0; i < scroll.Value.Count; i++)
-                    {
-                        scroll.Value[i].Show();
-                    }
-                }
+                _content.Show();
             }
             
             Select(girlTab);
         }
         
-        private void Select(Button girlTab)
+        protected virtual void Select(Button girlTab)
         {
             prevTab = girlTab;
             girlTab.transform.Find("SelectedTab").gameObject.SetActive(true);
@@ -105,75 +101,71 @@ namespace Overlewd
             backButtonGirlName.text = girlTab.name + "`s";
         }
 
-        private void LeaveTab(Button girlTab)
+        protected virtual void LeaveTab(Button girlTab)
         {
             Deselect();
 
-            foreach (var scroll in content)
+            var girlContent = content[girlTab.name];
+            
+            foreach (var _content in girlContent)
             {
-                if (scroll.Key == girlTab.name)
-                {
-                    for (int i = 0; i < scroll.Value.Count; i++)
-                    {
-                        scroll.Value[i].Hide();
-                    }
-                }
+                _content.Hide();
             }
         }
         
-        private void Deselect()
+        protected virtual void Deselect()
         {
             var selectedTab = prevTab.transform.Find("SelectedTab");
             selectedTab.gameObject.SetActive(false);
         }
 
-        private void UlviButtonClick()
+        protected virtual void UlviButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(ulviTab);
         }
 
-        private void AdrielButtonClick()
+        protected virtual void AdrielButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(adrielTab);
         }
 
-        private void FayeButtonClick()
+        protected virtual void FayeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(fayeTab);
         }
 
-        private void IngieButtonClick()
+        protected virtual void IngieButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(ingieTab);
         }
 
-        private void LiliButtonClick()
+        protected virtual void LiliButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(liliTab);
         }
 
-        private void BackButtonClick()
+        protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<GirlScreen>();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             Customize();
         }
 
-        private void Customize()
+        protected virtual void Customize()
         {
         }
     }

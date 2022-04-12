@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -11,24 +12,11 @@ namespace Overlewd
             base.Awake();
         }
 
-        async void Start()
+        public override async Task ProgressAsync()
         {
-            await screen.BeforeShowAsync();
-            OnPrepared();
-
-            await WaitUnlocked();
-            OnStart();
-
-            await screen.AfterShowAsync();
-            OnEnd();
-
-            Destroy(this);
-        }
-
-        protected override void OnStart()
-        {
-            base.OnStart();
             screen.StartShow();
+            await screen.AfterShowAsync();
+            Destroy(this);
         }
     }
 }

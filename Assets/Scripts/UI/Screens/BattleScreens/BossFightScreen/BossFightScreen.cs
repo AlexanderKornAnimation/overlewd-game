@@ -1,84 +1,50 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 namespace Overlewd
 {
-    public class BossFightScreen : BaseFullScreen
-    {
-        protected Button startBattleButton;
-        protected Button backButton;
-        protected Button skipButton;
+	public class BossFightScreen : BaseBossFightScreen
+	{
+        private int stageId;
 
-        protected VideoPlayer battleVideo;
-        protected RawImage renderTarget;
-
-        void Awake()
+        protected override void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BattleScreens/BossFightScreen/BossFightScreen", transform);
-
-            var canvas = screenInst.transform.Find("Canvas");
-
-            startBattleButton = canvas.Find("StartBattleButton").GetComponent<Button>();
-            startBattleButton.onClick.AddListener(StartBattleButtonClick);
-
-            backButton = canvas.Find("BackButton").GetComponent<Button>();
-            backButton.onClick.AddListener(BackButtonClick);
-
-            skipButton = canvas.Find("SkipButton").GetComponent<Button>();
-            skipButton.onClick.AddListener(SkipButtonClick);
-
-            battleVideo = canvas.Find("TestVideo").GetComponent<VideoPlayer>();
-            renderTarget = battleVideo.transform.Find("RenderTarget").GetComponent<RawImage>();
+            base.Awake();
+            WannaWin(true);
         }
 
-        public override async Task BeforeShowAsync()
+        public BossFightScreen SetData(int stageId)
         {
-            backButton.gameObject.SetActive(false);
-            startBattleButton.gameObject.SetActive(false);
-
-            await GameData.EventStageStartAsync(GameGlobalStates.bossFight_EventStageData);
-            battleVideo.loopPointReached += EndBattleVideo;
-
-            skipButton.gameObject.SetActive(false);
+            this.stageId = stageId;
+            return this;
         }
 
-        public override async Task AfterShowAsync()
+        protected override void BackButtonClick()
         {
-            StartBattleButtonClick();
-
-            await Task.CompletedTask;
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<EventMapScreen>();
         }
 
-        protected virtual async void EndBattleVideo(VideoPlayer vp)
+        public override void BattleWin()
         {
-            skipButton.gameObject.SetActive(false);
-
-            await GameData.EventStageEndAsync(GameGlobalStates.bossFight_EventStageData);
-
             UIManager.ShowPopup<VictoryPopup>();
         }
 
-        protected virtual void StartBattleButtonClick()
+        public override void BattleDefeat()
         {
-            skipButton.gameObject.SetActive(true);
-            battleVideo.Play();
+            UIManager.ShowPopup<DefeatPopup>();
         }
 
-        protected void SkipButtonClick()
+        public override async Task BeforeShowDataAsync()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            battleVideo.Stop();
-            EndBattleVideo(battleVideo);
+            await GameData.EventStageStartAsync(stageId);
         }
-        
-        protected virtual void BackButtonClick()
+
+        public override async Task BeforeHideDataAsync()
         {
-            UIManager.ShowScreen<EventMapScreen>();
+            await GameData.EventStageEndAsync(stageId);
         }
     }
 }

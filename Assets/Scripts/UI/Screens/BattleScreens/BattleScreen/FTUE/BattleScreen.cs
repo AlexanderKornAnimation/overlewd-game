@@ -1,84 +1,74 @@
-using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
 namespace Overlewd
 {
-    namespace FTUE
-    {
-        public class BattleScreen : Overlewd.BattleScreen
-        {
-            private AdminBRO.FTUEStageItem stageData;
-
-            public void SetStageData(AdminBRO.FTUEStageItem data)
+	namespace FTUE
+	{
+		public class BattleScreen : Overlewd.BattleScreen
+		{
+            protected AdminBRO.FTUEStageItem stageData;
+            public BattleScreen SetStageData(AdminBRO.FTUEStageItem data)
             {
                 stageData = data;
+                return this;
             }
 
-            public override async Task BeforeShowAsync()
+            protected override void Awake()
             {
-                startBattleButton.gameObject.SetActive(false);
-                backButton.gameObject.SetActive(false);
+                base.Awake();
+                WannaWin(true);
+            }
 
-                skipButton.gameObject.SetActive(false);
-                battleVideo.loopPointReached += EndBattleVideo;
+            protected override void BackButtonClick()
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                UIManager.ShowScreen<MapScreen>();
+            }
 
+            public override void BattleWin()
+            {
+                UIManager.MakePopup<VictoryPopup>().
+                    SetStageData(stageData).RunShowPopupProcess();
+            }
+
+            public override void BattleDefeat()
+            {
+                UIManager.MakePopup<DefeatPopup>().
+                    SetStageData(stageData).RunShowPopupProcess();
+            }
+
+            public override async Task BeforeShowDataAsync()
+            {
                 await GameData.FTUEStartStage(stageData.id);
-
-                await Task.CompletedTask;
             }
 
-            public override async Task AfterShowAsync()
+            public override async Task BeforeHideDataAsync()
             {
-                ShowStartNotifications();
-
-                await Task.CompletedTask;
-            }
-
-            protected override async void EndBattleVideo(VideoPlayer vp)
-            {
-                skipButton.gameObject.SetActive(false);
-
                 await GameData.FTUEEndStage(stageData.id);
-
-                if (stageData.key == "battle2")
-                {
-                    UIManager.ShowPopup<DefeatPopup>().
-                        SetStageData(stageData);
-                }
-                else
-                {
-                    UIManager.ShowPopup<VictoryPopup>().
-                        SetStageData(stageData);
-                }
-
-                ShowEndNotifications();
             }
 
-            protected override void StartBattleButtonClick()
-            {
-                if (true)
-                {
-                    skipButton.gameObject.SetActive(true);
-                }
-
-                battleVideo.Play();
-            }
-
+            //
             private async void ShowStartNotifications()
             {
-                if (stageData.key == "battle1")
+                switch (GameGlobalStates.ftueChapterData.key)
                 {
-                    UIManager.ShowNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor1"));
-                    await UIManager.WaitHideNotifications();
+                    case "chapter1":
+                        switch (stageData.key)
+                        {
+                            case "battle1" :
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor1")).
+                                    RunShowNotificationProcess();
+                                break;
+                        }
+                        break;
                 }
 
-                StartBattleButtonClick();
+                await Task.CompletedTask;
             }
 
             private async void ShowEndNotifications()
@@ -92,28 +82,37 @@ namespace Overlewd
                     await UniTask.NextFrame();
                 }
 
-                /*switch (stageData.key)
+                switch (GameGlobalStates.ftueChapterData.key)
                 {
-                    case "battle1":
-                        UIManager.ShowNotification<DialogNotification>().
-                            SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor2"));
-                        break;
-                    case "battle2":
-                        UIManager.ShowNotification<DialogNotification>().
-                            SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor3"));
-                        await UIManager.WaitHideNotifications();
+                    case "chapter1":
+                        switch (stageData.key)
+                        {
+                            case "battle1":
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor2")).
+                                    RunShowNotificationProcess();
+                                break;
+                            case "battle2":
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor3")).
+                                    RunShowNotificationProcess();
+                                await UIManager.WaitHideNotifications();
 
-                        UIManager.ShowNotification<DialogNotification>().
-                            SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor1"));
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor1")).
+                                    RunShowNotificationProcess();
+                                break;
+                            case "battle5":
+                                UIManager.MakeNotification<DialogNotification>().
+                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("castletutor")).
+                                    RunShowNotificationProcess();
+                                break;
+                        }
                         break;
-                    case "battle5":
-                        UIManager.ShowNotification<DialogNotification>().
-                            SetDialogData(GameGlobalStates.GetFTUENotificationByKey("castletutor"));
-                        break;
-                }*/
+                }
 
                 await Task.CompletedTask;
             }
         }
-    }
+	}
 }

@@ -56,5 +56,10 @@ namespace Overlewd
         {
             return GetComponent<MissclickTransition>() != null;
         }
+
+        public MissclickTransition GetTransition()
+        {
+            return GetComponent<MissclickTransition>();
+        }
     }
 }

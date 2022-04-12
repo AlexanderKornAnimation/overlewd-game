@@ -10,10 +10,10 @@ namespace Overlewd
     {
         public class BattleGirlsBannerTypeB : BaseBanner
         {
-            private Button button;
-            private GameObject buttonSelected;
-            private Image image;
-            private TextMeshProUGUI title;
+            protected Button button;
+            protected GameObject buttonSelected;
+            protected Image image;
+            protected TextMeshProUGUI title;
 
             protected override void Awake()
             {
@@ -29,12 +29,12 @@ namespace Overlewd
                 buttonSelected.SetActive(false);
             }
 
-            void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void Customize()
+            protected virtual void Customize()
             {
                 TierButton.GetInstance(tierButtonsScroll?.content);
                 TierButton.GetInstance(tierButtonsScroll?.content);

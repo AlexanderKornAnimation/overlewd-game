@@ -6,6 +6,9 @@ namespace Overlewd
 {
     public abstract class BaseFullScreen : BaseScreen
     {
-        
+        public void RunShowScreenProcess()
+        {
+            UIManager.ShowScreenProcess();
+        }
     }
 }

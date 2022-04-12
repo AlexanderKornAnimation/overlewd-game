@@ -10,21 +10,21 @@ namespace Overlewd
     {
         public class Shard : MonoBehaviour
         {
-            private Image shardBackground;
-            private Image girl;
+            protected Image shardBackground;
+            protected Image girl;
 
-            private void Awake()
+            protected virtual void Awake()
             {
                 shardBackground = transform.Find("ShardBackground").GetComponent<Image>();
                 girl = shardBackground.transform.Find("Girl").GetComponent<Image>();
             }
 
-            private void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void Customize()
+            protected virtual void Customize()
             {
 
             }

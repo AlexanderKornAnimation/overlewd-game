@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -12,7 +13,7 @@ namespace Overlewd
             canvasGroup.alpha = 1.0f;
         }
 
-        async void Start()
+        public override async Task ProgressAsync()
         {
             await UITools.FadeHideAsync(canvasGroup);
             Destroy(gameObject);

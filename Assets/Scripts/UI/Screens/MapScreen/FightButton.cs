@@ -23,6 +23,8 @@ namespace Overlewd
             protected GameObject mainQuestMark;
             protected GameObject sideQuestMark;
 
+            private AdminBRO.Battle battleData;
+
             protected override void Awake()
             {
                 base.Awake();
@@ -45,7 +47,7 @@ namespace Overlewd
                 var battleId = stageData?.battleId;
                 if (battleId.HasValue)
                 {
-                    var battleData = GameData.GetBattleById(battleId.Value);
+                    battleData = GameData.GetBattleById(battleId.Value);
                     title.text = battleData.title;
                     icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
                     bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
@@ -55,8 +57,16 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.ShowPopup<FTUE.PrepareBattlePopup>().
-                    SetStageData(stageData);
+                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                {
+                    UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                        SetStageData(stageData).RunShowPopupProcess();
+                }
+                else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                {
+                    UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                        SetStageData(stageData).RunShowPopupProcess();
+                }
             }
 
             public static FightButton GetInstance(Transform parent)

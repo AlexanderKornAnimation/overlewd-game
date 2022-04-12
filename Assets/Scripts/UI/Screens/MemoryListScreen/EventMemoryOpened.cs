@@ -8,34 +8,37 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class EventMemoryOpened : MonoBehaviour
+    namespace NSMemoryListScreen
     {
-        private Image art;
-        private TextMeshProUGUI title;
-        private Button button;
-
-        private void Awake()
+        public class EventMemoryOpened : MonoBehaviour
         {
-            var canvas = transform.Find("Canvas");
+            protected Image art;
+            protected TextMeshProUGUI title;
+            protected Button button;
 
-            button = canvas.Find("Button").GetComponent<Button>();
-            art = button.transform.Find("Art").GetComponent<Image>();
-            title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-        }
+            protected virtual void Awake()
+            {
+                var canvas = transform.Find("Canvas");
 
-        private void Start()
-        {
-            Customize();
-        }
+                button = canvas.Find("Button").GetComponent<Button>();
+                art = button.transform.Find("Art").GetComponent<Image>();
+                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            }
 
-        private void Customize()
-        {
-        }
+            protected virtual void Start()
+            {
+                Customize();
+            }
 
-        public static EventMemoryOpened GetInstance(Transform parent)
-        {
-            return ResourceManager.InstantiateWidgetPrefab<EventMemoryOpened>(
-                "Prefabs/UI/Screens/MemoryListScreen/EventMemoryOpened", parent);
+            protected virtual void Customize()
+            {
+            }
+
+            public static EventMemoryOpened GetInstance(Transform parent)
+            {
+                return ResourceManager.InstantiateWidgetPrefab<EventMemoryOpened>(
+                    "Prefabs/UI/Screens/MemoryListScreen/EventMemoryOpened", parent);
+            }
         }
     }
 }

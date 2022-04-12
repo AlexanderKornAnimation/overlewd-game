@@ -10,7 +10,7 @@ namespace Overlewd
     {
         public class DialogButton : MonoBehaviour
         {
-            public int eventStageId;
+            public int stageId { get; set; }
 
             private Button button;
             private GameObject dialogDone;
@@ -34,7 +34,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventStageData = GameData.GetEventStageById(eventStageId);
+                var eventStageData = GameData.GetEventStageById(stageId);
 
                 title.text = eventStageData.title;
                 dialogDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
@@ -42,9 +42,9 @@ namespace Overlewd
 
             private void ButtonClick()
             {
-                GameGlobalStates.dialog_EventStageId = eventStageId;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<DialogScreen>();
+                UIManager.MakeScreen<DialogScreen>().
+                    SetData(stageId).RunShowScreenProcess();
             }
 
             public static DialogButton GetInstance(Transform parent)

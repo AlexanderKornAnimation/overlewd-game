@@ -22,20 +22,15 @@ namespace Overlewd
                 
                 for (int i = 0; i < rand; i++)
                 {
-                    AddMemory();
+                    MainMemoryClosed.GetInstance(content);
+                    MainMemoryOpened.GetInstance(content);
                 }
-            }
-
-            private void AddMemory()
-            {
-                MainMemoryClosed.GetInstance(content);
-                MainMemoryOpened.GetInstance(content);
             }
 
             public static MainMemoryScroll GetInstance(Transform parent)
             {
-                var prefab = ResourceManager.InstantiateWidgetPrefab<MainMemoryScroll>("Prefabs/UI/Screens/MemoryListScreen/MainMemoryScroll", parent);
-                return prefab;
+                return ResourceManager.InstantiateWidgetPrefab<MainMemoryScroll>
+                    ("Prefabs/UI/Screens/MemoryListScreen/MainMemoryScroll", parent);
             }
         }
     }

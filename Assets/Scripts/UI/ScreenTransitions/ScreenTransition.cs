@@ -12,30 +12,6 @@ namespace Overlewd
         protected RectTransform screenRectTransform;
         protected BaseScreen screen;
 
-        private List<ScreenTransition> prepareLockers = new List<ScreenTransition>();
-        private List<ScreenTransition> endLockers = new List<ScreenTransition>();
-        private bool locked
-        { 
-            get 
-            {
-                return (prepareLockers.Count > 0) || (endLockers.Count > 0);
-            } 
-        }
-        protected async Task WaitUnlocked()
-        {
-            while (locked)
-            {
-                await UniTask.NextFrame();
-            }
-        }
-
-        private List<ScreenTransition> lockToPrepare = new List<ScreenTransition>();
-        private List<ScreenTransition> lockToEnd = new List<ScreenTransition>();
-
-        private Action preparedListeners;
-        private Action startListeners;
-        private Action endListeners;
-
         protected virtual void Awake()
         {
             screenRectTransform = GetComponent<RectTransform>();
@@ -49,132 +25,60 @@ namespace Overlewd
             UIManager.RemoveUserInputLocker(new UserInputLocker(this));
         }
 
-        public void AddPreparedListener(Action listener)
+        public virtual async Task PrepareDataAsync()
         {
-            preparedListeners += listener;
+            await Task.CompletedTask;
         }
 
-        public void AddStartListener(Action listener)
+        public virtual async Task PrepareMakeAsync()
         {
-            startListeners += listener;
+            await Task.CompletedTask;
         }
 
-        public void AddEndListener(Action listenter)
+        public virtual async Task PrepareAsync()
         {
-            endListeners += listenter;
+            await Task.CompletedTask;
         }
 
-        private void AddPrepareLocker(ScreenTransition locker)
+        public virtual async Task ProgressAsync()
         {
-            if (locker != null)
-            {
-                if (!prepareLockers.Contains(locker))
-                {
-                    prepareLockers.Add(locker);
-                }
-            }
-        }
-
-        private void RemovePrepareLocker(ScreenTransition locker)
-        {
-            if (locker != null)
-            {
-                prepareLockers.Remove(locker);
-            }
-        }
-
-        private void AddEndLocker(ScreenTransition locker)
-        {
-            if (locker != null)
-            {
-                if (!endLockers.Contains(locker))
-                {
-                    endLockers.Add(locker);
-                }
-            }
-        }
-
-        private void RemoveEndLocker(ScreenTransition locker)
-        {
-            if (locker != null)
-            {
-                endLockers.Remove(locker);
-            }
-        }
-
-        public void LockToPrepare(ScreenTransition[] transitions)
-        {
-            foreach (var item in transitions)
-            {
-                if (item != null)
-                {
-                    if (!lockToPrepare.Contains(item))
-                    {
-                        lockToPrepare.Add(item);
-                    }
-                    item.AddPrepareLocker(this);
-                }
-            }
-        }
-
-        private void FreeLockToPrepare()
-        {
-            foreach (var item in lockToPrepare)
-            {
-                item.RemovePrepareLocker(this);
-            }
-            lockToPrepare.Clear();
-        }
-
-        public void LockToEnd(ScreenTransition[] transitions)
-        {
-            foreach (var item in transitions)
-            {
-                if (item != null)
-                {
-                    if (!lockToEnd.Contains(item))
-                    {
-                        lockToEnd.Add(item);
-                    }
-                    item.AddEndLocker(this);
-                }
-            }
-        }
-
-        private void FreeLockToEnd()
-        {
-            foreach (var item in lockToEnd)
-            {
-                item.RemoveEndLocker(this);
-            }
-            lockToEnd.Clear();
-        }
-
-        protected virtual void OnPrepared()
-        {
-            preparedListeners?.Invoke();
-            FreeLockToPrepare();
-        }
-
-        protected virtual void OnStart()
-        {
-            startListeners?.Invoke();
-        }
-
-        protected virtual void OnEnd()
-        {
-            endListeners?.Invoke();
-            FreeLockToEnd();
-        }
+            await Task.CompletedTask;
+        } 
     }
 
     public abstract class ScreenShow : ScreenTransition
     {
-        
+        public override async Task PrepareDataAsync()
+        {
+            await screen.BeforeShowDataAsync();
+        }
+
+        public override async Task PrepareMakeAsync()
+        {
+            await screen.BeforeShowMakeAsync();
+        }
+
+        public override async Task PrepareAsync()
+        {
+            await screen.BeforeShowAsync();
+        }
     }
 
     public abstract class ScreenHide : ScreenTransition
     {
-        
+        public override async Task PrepareDataAsync()
+        {
+            await screen.BeforeHideDataAsync();
+        }
+
+        public override async Task PrepareMakeAsync()
+        {
+            await screen.BeforeHideMakeAsync();
+        }
+
+        public override async Task PrepareAsync()
+        {
+            await screen.BeforeHideAsync();
+        }
     }
 }

@@ -31,6 +31,11 @@ namespace Overlewd
 
             UIManager.RemoveUserInputLocker(new UserInputLocker(this));
         }
+
+        public virtual async Task ProgressAsync()
+        {
+            await Task.CompletedTask;
+        }
     }
 
     public abstract class MissclickShow : MissclickTransition

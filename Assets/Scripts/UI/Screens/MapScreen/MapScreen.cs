@@ -35,8 +35,20 @@ namespace Overlewd
             map = canvas.Find("Map");
         }
 
-        public override async Task BeforeShowAsync()
+        public override async Task BeforeShowMakeAsync()
         {
+            if (GameGlobalStates.ftueChapterData == null)
+            {
+                if (GameGlobalStates.ftueProgressMode)
+                {
+                    GameGlobalStates.ftueChapterData = GetActiveChapter();
+                }
+                else
+                {
+                    GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                }
+            }
+
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
@@ -60,34 +72,42 @@ namespace Overlewd
                             continue;
                         }
 
-                        //if (stageData.status != AdminBRO.FTUEStageItem.Status_Closed)
+                        var instantiateStageOnMap = GameGlobalStates.ftueProgressMode ?
+                            (stageData.status != AdminBRO.FTUEStageItem.Status_Closed) : true;
+                        if (instantiateStageOnMap)
                         {
                             if (stageData.dialogId.HasValue)
                             {
                                 var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-                                if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                                if (dialogData != null)
                                 {
-                                    var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
-                                    dialog.stageData = stageData;
-                                }
-                                else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
-                                {
-                                    var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
-                                    sex.stageData = stageData;
+                                    if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                                    {
+                                        var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
+                                        dialog.stageData = stageData;
+                                    }
+                                    else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
+                                    {
+                                        var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
+                                        sex.stageData = stageData;
+                                    }
                                 }
                             }
                             else if (stageData.battleId.HasValue)
                             {
                                 var battleData = GameData.GetBattleById(stageData.battleId.Value);
-                                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                                if (battleData != null)
                                 {
-                                    var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                    fight.stageData = stageData;
-                                }
-                                else if (battleData.type == AdminBRO.Battle.Type_Boss)
-                                {
-                                    var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                    fight.stageData = stageData;
+                                    if (battleData.type == AdminBRO.Battle.Type_Battle)
+                                    {
+                                        var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.stageData = stageData;
+                                    }
+                                    else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                                    {
+                                        var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.stageData = stageData;
+                                    }
                                 }
                             }
                         }
@@ -98,7 +118,9 @@ namespace Overlewd
                 {
                     nextChapterData = GameData.GetFTUEChapterById(GameGlobalStates.ftueChapterData.nextChapterId.Value);
                     chapterButtonText.text = nextChapterData?.name;
-                    chapterButton.gameObject.SetActive(true);
+                    var showNextChapterButton = GameGlobalStates.ftueProgressMode ?
+                        ChapterComplete(GameGlobalStates.ftueChapterData) : true;
+                    chapterButton.gameObject.SetActive(showNextChapterButton);
                 }
                 else
                 {
@@ -139,26 +161,79 @@ namespace Overlewd
 
         private async void EnterScreen()
         {
-            /*UIManager.ShowNotification<DialogNotification>().
-                SetDialogData(GameGlobalStates.GetFTUENotificationByKey("maptutor"));
-            await UIManager.WaitHideNotifications();
+            return;
+            switch (GameGlobalStates.ftueChapterData.key)
+            {
+                case "chapter1":
+                    UIManager.MakeNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("maptutor")).
+                        RunShowNotificationProcess();
+                    await UIManager.WaitHideNotifications();
 
-            UIManager.ShowNotification<DialogNotification>().
-                SetDialogData(GameGlobalStates.GetFTUENotificationByKey("questbooktutor"));
-            await UIManager.WaitHideNotifications();
+                    UIManager.MakeNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("questbooktutor")).
+                        RunShowNotificationProcess();
+                    await UIManager.WaitHideNotifications();
 
-            UIManager.ShowNotification<DialogNotification>().
-                SetDialogData(GameGlobalStates.GetFTUENotificationByKey("qbcontenttutor"));
-            await UIManager.WaitHideNotifications();
+                    UIManager.MakeNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("qbcontenttutor")).
+                        RunShowNotificationProcess();
+                    await UIManager.WaitHideNotifications();
 
-            UIManager.ShowNotification<DialogNotification>().
-                SetDialogData(GameGlobalStates.GetFTUENotificationByKey("eventbooktutor"));*/
+                    UIManager.MakeNotification<DialogNotification>().
+                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("eventbooktutor")).
+                        RunShowNotificationProcess();
+                    break;
+            }
+
             await Task.CompletedTask;
         }
 
         private void LeaveScreen()
         {
 
+        }
+
+        private bool ChapterComplete(AdminBRO.FTUEChapter chapterData)
+        {
+            foreach (var stageId in chapterData.stages)
+            {
+                var stageData = GameData.GetFTUEStageById(stageId);
+                if (stageData == null)
+                    return false;
+                if (stageData.status != AdminBRO.FTUEStageItem.Status_Complete)
+                    return false;
+            }
+            return true;
+        }
+
+        private bool StageIsActive(string stageKey)
+        {
+            foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
+            {
+                var stageData = GameData.GetFTUEStageById(stageId);
+                if (stageData == null)
+                    return false;
+                if (stageData.key == stageKey)
+                {
+                    return (stageData.status != AdminBRO.FTUEStageItem.Status_Closed) &&
+                           (stageData.status != AdminBRO.FTUEStageItem.Status_Complete);
+                }
+            }
+            return false;
+        }
+
+        private AdminBRO.FTUEChapter GetActiveChapter()
+        {
+            var chapterData = GameData.GetFTUEChapterByKey("chapter1");
+            while (ChapterComplete(chapterData))
+            {
+                if (chapterData.nextChapterId.HasValue)
+                {
+                    chapterData = GameData.GetFTUEChapterById(chapterData.nextChapterId.Value);
+                }
+            }
+            return chapterData;
         }
     }
 }

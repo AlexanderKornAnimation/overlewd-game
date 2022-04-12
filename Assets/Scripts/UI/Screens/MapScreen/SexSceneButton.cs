@@ -26,8 +26,8 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.ShowScreen<FTUE.SexScreen>().
-                    SetStageData(stageData);
+                UIManager.MakeScreen<FTUE.SexScreen>().
+                    SetStageData(stageData).RunShowScreenProcess();
             }
 
             public static SexSceneButton GetInstance(Transform parent)

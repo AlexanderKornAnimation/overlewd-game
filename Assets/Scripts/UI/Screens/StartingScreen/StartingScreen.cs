@@ -16,11 +16,21 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
+            canvas.Find("FTUE_Progress").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+
+                GameGlobalStates.ftueProgressMode = true;
+                GameGlobalStates.ftueChapterData = null;
+                UIManager.ShowScreen<MapScreen>();
+            });
+
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                GameGlobalStates.ftueProgressMode = false;
+                GameGlobalStates.ftueChapterData = null;
                 UIManager.ShowScreen<MapScreen>();
                 /*UIManager.ShowScreen<FTUE.SexScreen>().
                     SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/
@@ -38,10 +48,10 @@ namespace Overlewd
                 UIManager.ShowScreen<CastleScreen>();
             });
             
-            canvas.Find("TempBattleScreen").GetComponent<Button>().onClick.AddListener(() =>
+            canvas.Find("BattleScreen").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<TempBattleScreen>();
+                UIManager.ShowScreen<BaseBattleScreen>();
             });
         }
 

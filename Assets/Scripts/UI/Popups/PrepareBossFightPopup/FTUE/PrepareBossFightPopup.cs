@@ -9,16 +9,19 @@ namespace Overlewd
     {
         public class PrepareBossFightPopup : Overlewd.PrepareBossFightPopup
         {
+            private AdminBRO.FTUEStageItem stageData;
+
+            public PrepareBossFightPopup SetStageData(AdminBRO.FTUEStageItem data)
+            {
+                stageData = data;
+                return this;
+            }
 
             protected override void BattleButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-                UIManager.ShowScreen<BossFightScreen>();
-            }
-
-            protected override void BuffButtonClick()
-            {
-                
+                UIManager.MakeScreen<BossFightScreen>().
+                    SetStageData(stageData).RunShowScreenProcess();
             }
         }
     }

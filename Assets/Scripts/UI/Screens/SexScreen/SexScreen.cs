@@ -37,6 +37,8 @@ namespace Overlewd
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
 
+        private int stageId;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SexScreen/SexScreen", transform);
@@ -63,33 +65,42 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
+        public SexScreen SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
         public override async Task BeforeShowAsync()
         {
-            await EnterScreen();
-
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
+
+            await Task.CompletedTask;
         }
 
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();
-
             await Task.CompletedTask;
         }
-
-        protected virtual async Task EnterScreen()
-        {
-            dialogData = GameData.GetDialogById(GameGlobalStates.sex_EventStageData.dialogId.Value);
-            await GameData.EventStageStartAsync(GameGlobalStates.sex_EventStageData);
-        }
         
-        protected virtual async void LeaveScreen()
+        protected virtual void LeaveScreen()
         {
-            await GameData.EventStageEndAsync(GameGlobalStates.sex_EventStageData);
-
             UIManager.ShowScreen<EventMapScreen>();
+        }
+
+        public override async Task BeforeShowDataAsync()
+        {
+            var stageData = GameData.GetEventStageById(stageId);
+            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+            await GameData.EventStageStartAsync(stageId);
+        }
+
+        public override async Task BeforeHideDataAsync()
+        {
+            await GameData.EventStageEndAsync(stageId);
         }
 
         protected void AutoplayButtonCustomize()
@@ -185,6 +196,14 @@ namespace Overlewd
         private void Initialize()
         {
             dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
+            if (!dialogReplicas.Any())
+            {
+                dialogReplicas.Add(
+                    new AdminBRO.DialogReplica
+                    {
+                        message = "EMPTY DIALOG"
+                    });
+            }
         }
 
         private void ShowMain(AdminBRO.DialogReplica replica, AdminBRO.DialogReplica prevReplica)

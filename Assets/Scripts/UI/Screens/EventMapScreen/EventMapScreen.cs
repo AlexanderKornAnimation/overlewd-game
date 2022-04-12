@@ -35,10 +35,18 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
         }
 
-        public override async Task BeforeShowAsync()
+        public override async Task BeforeShowMakeAsync()
         {
-            var eventData = GameGlobalStates.eventMapScreen_EventData;
-            var eventChapterData = GameData.GetEventChapterById(eventData.chapters[0]);
+            var eventChapterData = GetActiveChapter(GameGlobalStates.eventData);
+            if (eventChapterData == null)
+            {
+                return;
+            }
+
+            if (!eventChapterData.chapterMapId.HasValue)
+            {
+                return;
+            }
             var mapData = GameData.GetChapterMapById(eventChapterData.chapterMapId.Value);
             chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
 
@@ -50,60 +58,56 @@ namespace Overlewd
 
                 if (stageData.status == AdminBRO.EventStageItem.Status_Closed)
                 {
+                    //continue;
+                }
+
+                var mapNode = chapterMap.transform.Find(stageData.mapNodeName ?? "");
+                if (mapNode == null)
+                {
                     continue;
                 }
 
-                var node = chapterMap.transform.Find(stageData.mapNodeName ?? "");
-                if (node != null)
+                if (stageData.battleId.HasValue)
                 {
-                    if (stageData.type == AdminBRO.EventStageItem.Type_Battle)
+                    var battleData = GameData.GetBattleById(stageData.battleId.Value);
+                    if (battleData.type == AdminBRO.Battle.Type_Battle)
                     {
-                        if (stageData.battleId.HasValue)
-                        {
-                            var battleData = GameData.GetBattleById(stageData.battleId.Value);
-                            if (battleData.type == AdminBRO.Battle.Type_Battle)
-                            {
-                                var fightButton = NSEventMapScreen.FightButton.GetInstance(node);
-                                fightButton.eventStageId = stageId;
-                                fightButtons.Add(fightButton);
-                            }
-                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
-                            {
-                                var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(node);
-                                bossFightButton.eventStageId = stageId;
-                                bossFightButtons.Add(bossFightButton);
-                            }
-                        }
+                        var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        fightButton.stageId = stageId;
+                        fightButtons.Add(fightButton);
                     }
-                    else if (stageData.type == AdminBRO.EventStageItem.Type_Dialog)
+                    else if (battleData.type == AdminBRO.Battle.Type_Boss)
                     {
-                        if (stageData.dialogId.HasValue)
-                        {
-                            var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-                            if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
-                            {
-                                var dialogButton = NSEventMapScreen.DialogButton.GetInstance(node);
-                                dialogButton.eventStageId = stageId;
-                                dialogButtons.Add(dialogButton);
-                            }
-                            else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
-                            {
-                                var sexButton = NSEventMapScreen.SexButton.GetInstance(node);
-                                sexButton.eventStageId = stageId;
-                                sexButtons.Add(sexButton);
-                            }
-                        }
+                        var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(mapNode);
+                        bossFightButton.stageId = stageId;
+                        bossFightButtons.Add(bossFightButton);
+                    }
+                }
+                else if (stageData.dialogId.HasValue)
+                {
+                    var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+                    if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                    {
+                        var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
+                        dialogButton.stageId = stageId;
+                        dialogButtons.Add(dialogButton);
+                    }
+                    else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
+                    {
+                        var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
+                        sexButton.stageId = stageId;
+                        sexButtons.Add(sexButton);
                     }
                 }
             }
 
-            foreach (var eventMarketId in eventData.markets)
+            foreach (var eventMarketId in GameGlobalStates.eventData.markets)
             {
                 var eventMarketData = GameData.GetEventMarketById(eventMarketId);
-                var node = chapterMap.transform.Find(eventMarketData.eventMapNodeName);
-                if (node != null)
+                var mapNode = chapterMap.transform.Find(eventMarketData.eventMapNodeName);
+                if (mapNode != null)
                 {
-                    var shopButton = NSEventMapScreen.EventShopButton.GetInstance(node);
+                    var shopButton = NSEventMapScreen.EventShopButton.GetInstance(mapNode);
                     shopButton.eventMarketId = eventMarketData.id;
                     shopButtons.Add(shopButton);
                 }
@@ -116,6 +120,43 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
+        }
+
+        private AdminBRO.EventChapter GetActiveChapter(AdminBRO.EventItem eventData)
+        {
+            AdminBRO.EventChapter firstChapter = null;
+            foreach (var chapterId in eventData.chapters)
+            {
+                var findAsNextChapter = eventData.chapters.Exists(chId => 
+                {
+                    var chData = GameData.GetEventChapterById(chId);
+                    return chData.nextChapterId.HasValue ?
+                        chData.nextChapterId.Value == chapterId :
+                        false;
+                });
+                firstChapter = findAsNextChapter ? firstChapter : GameData.GetEventChapterById(chapterId);
+            }
+
+            var curChapter = firstChapter;
+            while (curChapter != null)
+            {
+                foreach (var stageId in curChapter.stages)
+                {
+                    var stageData = GameData.GetEventStageById(stageId);
+                    if (stageData.status != AdminBRO.EventStageItem.Status_Complete)
+                    {
+                        return curChapter;
+                    }
+                }
+
+                if (curChapter.nextChapterId.HasValue)
+                {
+                    curChapter = GameData.GetEventChapterById(curChapter.nextChapterId.Value);
+                    continue;
+                }
+                return curChapter;
+            }
+            return null;
         }
     }
 }

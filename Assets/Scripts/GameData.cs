@@ -54,10 +54,10 @@ namespace Overlewd
             return eventChapters.Find(c => c.id == id);
         }
 
-        public static List<AdminBRO.EventQuestItem> eventQuests { get; set; } = new List<AdminBRO.EventQuestItem>();
-        public static AdminBRO.EventQuestItem GetEventQuestById(int id)
+        public static List<AdminBRO.QuestItem> quests { get; set; } = new List<AdminBRO.QuestItem>();
+        public static AdminBRO.QuestItem GetQuestById(int id)
         {
-            return eventQuests.Find(q => q.id == id);
+            return quests.Find(q => q.id == id);
         }
 
         public static List<AdminBRO.EventMarketItem> eventMarkets { get; set; } = new List<AdminBRO.EventMarketItem>();
@@ -93,14 +93,14 @@ namespace Overlewd
                 eventStages[stageIndex] = stageData;
             }
         }
-        public static async Task EventStageStartAsync(AdminBRO.EventStageItem stage)
+        public static async Task EventStageStartAsync(int stageId)
         {
-            var newEventStageData = await AdminBRO.eventStageStartAsync(stage.id);
+            var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
             eventStages = await AdminBRO.eventStagesAsync();
         }
-        public static async Task EventStageEndAsync(AdminBRO.EventStageItem stage)
+        public static async Task EventStageEndAsync(int stageId)
         {
-            var newEventStageData = await AdminBRO.eventStageEndAsync(stage.id);
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId);
             eventStages = await AdminBRO.eventStagesAsync();
         }
 

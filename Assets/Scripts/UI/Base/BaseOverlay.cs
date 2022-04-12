@@ -16,9 +16,9 @@ namespace Overlewd
             
         }
         
-        public override void ShowMissclick()
+        public override void MakeMissclick()
         {
-            UIManager.ShowOverlayMissclick<OverlayMissclickColored>();
+            UIManager.MakeOverlayMissclick<OverlayMissclickColored>();
         }
 
         public override ScreenShow Show()
@@ -29,6 +29,11 @@ namespace Overlewd
         public override ScreenHide Hide()
         {
             return gameObject.AddComponent<ScreenRightHide>();
+        }
+
+        public void RunShowOverlayProcess()
+        {
+            UIManager.ShowOverlayProcess();
         }
     }
 }
