@@ -36,6 +36,7 @@ namespace Overlewd
         public int mp = 100, maxMp = 100;
         public int damage_1 = 10;
         public int damage_2 = 10;
+        public int attackDamage = 10;
         public int defence = 5;
 
         [HideInInspector] public bool isDamageBuff = false;
@@ -44,7 +45,7 @@ namespace Overlewd
         public bool isDead = false;
 
         private Transform battleLayer;
-        private Transform persPos;
+        public Transform persPos;
         private Transform battlePos;
         private List<SpineWidget> spineWidgets;
         private SpineWidget spineWidgetOne;
@@ -74,6 +75,7 @@ namespace Overlewd
             mp = character.mp; maxMp = character.maxMp;
             damage_1 = character.attack;
             damage_2 = character.attack / 2;
+            attackDamage = damage_1;
         }
 
         private void ShapeInit()
@@ -173,17 +175,18 @@ namespace Overlewd
 
         public void PlayIdle()
         {
-            if (isOverlord)
-                spineWidgetOne.PlayAnimation(character.ani_idle_name, true);
-            else
-                PlayAnimID(0, character.ani_idle_name, true);
+            if (!isDead) { 
+                if (isOverlord)
+                    spineWidgetOne.PlayAnimation(character.ani_idle_name, true);
+                else
+                    PlayAnimID(0, character.ani_idle_name, true);
+            }
         }
-
-
 
         public void Attack(int attackID, CharController target)
         {
             BattleIn();
+            if (target != null) target.BattleIn();
             StartCoroutine(PlayAttack(attackID, target));
         }
 
@@ -196,6 +199,7 @@ namespace Overlewd
                 switch (id)
                 {
                     case 1:
+                        attackDamage = damage_2;
                         currentPreAttackDuration = 5.667f;
                         spineWidgetOne.PlayAnimation("prepair2", false);
                         yield return new WaitForSeconds(1f);
@@ -208,6 +212,7 @@ namespace Overlewd
                         yield return new WaitForSeconds(1f);
                         break;
                     case 2:
+                        attackDamage = damage_2;
                         spineWidgetOne.PlayAnimation("prepair3", false);
                         yield return new WaitForSeconds(1f);
                         if (character.attackVFX != null) {
@@ -218,12 +223,14 @@ namespace Overlewd
                         yield return new WaitForSeconds(1f);
                         break;
                     case 3:
+                        attackDamage = damage_2;
                         spineWidgetOne.PlayAnimation("prepair4", false);
                         yield return new WaitForSeconds(currentPreAttackDuration);
                         spineWidgetOne.PlayAnimation("attack4", false);
                         yield return new WaitForSeconds(1f);
                         break;
                     default: //0 or else...
+                        attackDamage = damage_1;
                         spineWidgetOne.PlayAnimation(character.ani_pAttack_1_name, false);
                         yield return new WaitForSeconds(currentPreAttackDuration);
                         spineWidgetOne.PlayAnimation(character.ani_attack_1_name, false);
@@ -237,6 +244,7 @@ namespace Overlewd
 
                 if (id == 0)
                 {
+                    attackDamage = damage_1;
                     currentPreAttackDuration = aniDuration[1]; //send to target
                     PlayAnimID(1, character.ani_pAttack_1_name, false);
                     yield return new WaitForSeconds(currentPreAttackDuration);
@@ -245,6 +253,7 @@ namespace Overlewd
                 }
                 else
                 {
+                    attackDamage = damage_2;
                     currentPreAttackDuration = aniDuration[2];
                     PlayAnimID(2, character.ani_pAttack_2_name, false);
                     yield return new WaitForSeconds(currentPreAttackDuration);
@@ -255,35 +264,21 @@ namespace Overlewd
 
             PlayIdle();
             BattleOut();
+            if (target != null) target.BattleOut();
             bm.BattleOut();
         }
 
         IEnumerator PlayDefence(CharController cc)
         {
-            BattleIn();
-            yield return new WaitForSeconds(cc.currentPreAttackDuration);
-            if (isOverlord)
-                spineWidgetOne.PlayAnimation(character.ani_defence_name, false);
-            else
-                PlayAnimID(5, character.ani_defence_name, false);
-            yield return new WaitForSeconds(aniDuration[5]);
-            Damage(cc.damage_1);
-            PlayIdle();
-            BattleOut();
-        }
-        IEnumerator PlayDefenceAOE(CharController cc)
-        {
             UnHiglight();
-            transform.SetParent(battlePos);
             yield return new WaitForSeconds(cc.currentPreAttackDuration);
             if (isOverlord)
                 spineWidgetOne.PlayAnimation(character.ani_defence_name, false);
             else
                 PlayAnimID(5, character.ani_defence_name, false);
-            yield return new WaitForSeconds(aniDuration[5]);
-            Damage(cc.damage_2);
+            yield return new WaitForSeconds(aniDuration[5]);  //defence duratin
             PlayIdle();
-            BattleOut();
+            Damage(cc.attackDamage);
         }
 
         public void Select()
@@ -316,12 +311,10 @@ namespace Overlewd
             rt.DOScale(idleScale, 0.25f);
         }
 
-        public void Defence(CharController attacker, bool aoe)
+        public void Defence(CharController attacker)
         {
-            if (aoe)
-                StartCoroutine(PlayDefenceAOE(attacker));
-            else
-                StartCoroutine(PlayDefence(attacker));
+            transform.SetParent(battlePos);
+            StartCoroutine(PlayDefence(attacker));
         }
 
         public void Damage(int value)
@@ -346,8 +339,8 @@ namespace Overlewd
 
         IEnumerator PlayDead()
         {
-            yield return new WaitForSeconds(0.2f);
-            if (isOverlord) { 
+            yield return new WaitForSeconds(0.2f); //need for avoid idle animation state if isDead
+            if (isOverlord) {
                 spineWidgetOne.PlayAnimation(character.ani_defeat_name, false);
                 yield return new WaitForSeconds(1.333f);
                 spineWidgetOne.PlayAnimation("defeat2", true);
@@ -358,13 +351,16 @@ namespace Overlewd
 
         public void Heal(int value)
         {
-            //play animation heal
+            //heal fx or animation
             hp += value;
             hp = Mathf.Min(hp, maxHp);
+            UpdateUI();
         }
-        public void CastMahou(int id)
+        public void HealMP(int value)
         {
-            //drop spell or skill
+            mp += value;
+            mp = Mathf.Min(mp, maxMp);
+            UpdateUI();
         }
     }
 }

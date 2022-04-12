@@ -370,9 +370,33 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2385518333846929843, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2385518333846929843, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6268323754130870893, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
       propertyPath: m_Name
       value: TempBattleScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996754464176759468, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7996754464176759468, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979892223768739756, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8979892223768739756, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
