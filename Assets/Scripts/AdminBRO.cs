@@ -117,6 +117,7 @@ namespace Overlewd
             public int? currencyId;
             public int? characterId;
             public int? equipmentId;
+            public int? potionCount;
             public int? currencyAmount;
             public int? limit;
             public string dateStart;
@@ -174,6 +175,7 @@ namespace Overlewd
             public int? limit;
             public int? characterId;
             public int? equipmentId;
+            public int? potionCount;
             public string dateStart;
             public string dateEnd;
             public string discountStart;
@@ -289,6 +291,7 @@ namespace Overlewd
             public int? nextChapterId;
             public int? durationInDays;
             public List<int> stages;
+            public int? order;
             public List<EventChapterReward> rewards;
         }
 
@@ -329,20 +332,21 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public List<int> chapters;
-            public List<EventReward> rewards;
+            public List<Reward> rewards;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
             public const string Type_Weekly = "weekly";
-        }
 
-        [Serializable]
-        public class EventReward
-        {
-            public string icon;
-            public int amount;
-            public int currency;
+            public class Reward
+            {
+                public string icon;
+                public int amount;
+                public int currency;
+                public int tradableId;
+            }
         }
+        
 
         // /event-stages
         public static async Task<List<EventStageItem>> eventStagesAsync()
@@ -419,13 +423,6 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class QuestReward
-        {
-            public int currencyId;
-            public int amount;
-        }
-
-        [Serializable]
         public class QuestItem
         {
             public int id;
@@ -433,7 +430,7 @@ namespace Overlewd
             public string subtitle;
             public string description;
             public int? goalCount;
-            public List<QuestReward> rewards;
+            public List<Reward> rewards;
             public string status;
             public int progressCount;
             public int? eventId;
@@ -442,6 +439,13 @@ namespace Overlewd
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
+
+            public class Reward
+            {
+                public int currencyId;
+                public int amount;
+                public int tradableId;
+            }
         }
 
         // //quests/{id}/claim-reward

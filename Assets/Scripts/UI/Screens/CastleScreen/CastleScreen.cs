@@ -60,13 +60,12 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowShow);
             music = SoundManager.GetEventInstance(FMODEventPath.Music_CastleScreen);
-            music.Play();
         }
 
         public override void StartHide()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowHide);
-            music.Pause();
+            music?.Stop();
         }
 
         protected virtual void Customize()
