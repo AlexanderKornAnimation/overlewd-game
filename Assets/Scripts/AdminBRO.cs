@@ -341,9 +341,8 @@ namespace Overlewd
             public class Reward
             {
                 public string icon;
-                public int amount;
-                public int currency;
-                public int tradableId;
+                public int? amount;
+                public int? tradableId;
             }
         }
         
@@ -442,9 +441,9 @@ namespace Overlewd
 
             public class Reward
             {
-                public int currencyId;
-                public int amount;
-                public int tradableId;
+                public string icon;
+                public int? amount;
+                public int? tradableId;
             }
         }
 
@@ -578,8 +577,8 @@ namespace Overlewd
             public class Reward
             {
                 public string icon;
-                public int amount;
-                public int tradableId;
+                public int? amount;
+                public int? tradableId;
             }
 
             public class Phase 
