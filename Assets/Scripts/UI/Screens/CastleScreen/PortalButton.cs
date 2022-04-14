@@ -8,14 +8,12 @@ namespace Overlewd
     {
         public class PortalButton : BaseButton
         {
-            protected Transform markers;
             protected Transform freeSummonNotification;
 
             protected override void Awake()
             {
                 base.Awake();
 
-                markers = transform.Find("Markers");
                 freeSummonNotification = transform.Find("FreeSummonNotification");
             }
 

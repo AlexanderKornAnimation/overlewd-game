@@ -24,8 +24,7 @@ namespace Overlewd
         protected TextMeshProUGUI reward2Count;
         protected TextMeshProUGUI reward3Count;
 
-        protected Image eventMark;
-        protected Image questMark;
+        protected TextMeshProUGUI markers;
 
         private int stageId;
 
@@ -55,8 +54,7 @@ namespace Overlewd
             buffRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
                 -buffRect.rect.height, buffRect.rect.height);
 
-            eventMark = levelTitle.Find("EventMark").GetComponent<Image>();
-            questMark = levelTitle.Find("QuestMark").GetComponent<Image>();
+            markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
             
             firstTimeReward = rewards.Find("FirstTimeReward").GetComponent<Image>();
             reward1 = rewards.Find("Reward1").GetComponent<Image>();

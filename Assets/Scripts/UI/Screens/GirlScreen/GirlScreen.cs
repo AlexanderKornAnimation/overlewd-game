@@ -16,13 +16,13 @@ namespace Overlewd
         protected TextMeshProUGUI nextProgressLevel;
         
         protected Image rewardTier1;
-        protected Image receivedTier1;
+        protected TextMeshProUGUI receivedTier1;
         
         protected Image rewardTier2;
-        protected Image receivedTier2;
+        protected TextMeshProUGUI receivedTier2;
 
         protected Image rewardTier3;
-        protected Image receivedTier3;
+        protected TextMeshProUGUI receivedTier3;
         
         protected TextMeshProUGUI buffPower;
         protected TextMeshProUGUI buffType;
@@ -53,13 +53,13 @@ namespace Overlewd
             nextProgressLevel = progressBar.Find("NextLvl").GetComponent<TextMeshProUGUI>();
 
             rewardTier1 = progressBar.Find("RewardTier1").GetComponent<Image>();
-            receivedTier1 = rewardTier1.transform.Find("Received").GetComponent<Image>();
+            receivedTier1 = rewardTier1.transform.Find("Received").GetComponent<TextMeshProUGUI>();
             
             rewardTier2 = progressBar.Find("RewardTier2").GetComponent<Image>();
-            receivedTier2 = rewardTier2.transform.Find("Received").GetComponent<Image>();
+            receivedTier2 = rewardTier2.transform.Find("Received").GetComponent<TextMeshProUGUI>();
             
             rewardTier3 = progressBar.Find("RewardTier3").GetComponent<Image>();
-            receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<Image>();
+            receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<TextMeshProUGUI>();
 
             buffPower = buff.Find("Power").GetComponent<TextMeshProUGUI>();
             buffType = buff.Find("Type").GetComponent<TextMeshProUGUI>();

@@ -16,12 +16,8 @@ namespace Overlewd
             protected TextMeshProUGUI loot;
             protected GameObject icon;
             protected GameObject bossIcon;
-            protected GameObject markers;
-            protected GameObject eventMark1;
-            protected GameObject eventMark2;
-            protected GameObject eventMark3;
-            protected GameObject mainQuestMark;
-            protected GameObject sideQuestMark;
+            protected TextMeshProUGUI markers;
+
 
             private AdminBRO.Battle battleData;
 
@@ -32,12 +28,7 @@ namespace Overlewd
                 loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
                 icon = button.transform.Find("Icon").gameObject;
                 bossIcon = button.transform.Find("BossIcon").gameObject;
-                markers = button.transform.Find("Markers").gameObject;
-                eventMark1 = markers.transform.Find("EventMark1").gameObject;
-                eventMark2 = markers.transform.Find("EventMark2").gameObject;
-                eventMark3 = markers.transform.Find("EventMark3").gameObject;
-                mainQuestMark = markers.transform.Find("MainQuestMark").gameObject;
-                sideQuestMark = markers.transform.Find("SideQuestMark").gameObject;
+                markers = button.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             }
 
             protected override void Start()

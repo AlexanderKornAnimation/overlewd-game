@@ -16,6 +16,7 @@ namespace Overlewd
             protected Image arrowTop;
             protected Image arrowLeft;
             protected Image arrowBot;
+            protected TextMeshProUGUI questMark;
 
             protected override void Awake()
             {
@@ -26,6 +27,7 @@ namespace Overlewd
                 arrowTop = button.transform.Find("ArrowTop").GetComponent<Image>();
                 arrowLeft = button.transform.Find("ArrowLeft").GetComponent<Image>();
                 arrowBot = button.transform.Find("ArrowBot").GetComponent<Image>();
+                button.transform.Find("QuestMark").GetComponent<TextMeshProUGUI>();
             }
 
             protected override void ButtonClick()

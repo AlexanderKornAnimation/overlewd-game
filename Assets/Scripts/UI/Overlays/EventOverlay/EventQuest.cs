@@ -19,16 +19,19 @@ namespace Overlewd
             private TextMeshProUGUI eventName;
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
+            private TextMeshProUGUI eventMark;
 
             private List<Image> rewards = new List<Image>();
 
             void Awake()
             {
                 var canvas = transform.Find("Canvas");
+                var backWithClock = canvas.Find("BackWithClock");
 
                 eventName = canvas.Find("EventName").GetComponent<TextMeshProUGUI>();
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
+                eventMark = backWithClock.Find("EventMark").GetComponent<TextMeshProUGUI>();
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
