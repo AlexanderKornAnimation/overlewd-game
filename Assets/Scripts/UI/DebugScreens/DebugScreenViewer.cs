@@ -7,11 +7,10 @@ namespace Overlewd
 {
     public class DebugScreenViewer : BaseFullScreen
     {
-        
         void Awake()
         {
-            UIManager.ShowPopup<FTUE.PrepareBossFightPopup>();
-            // var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
+            UIManager.ShowScreen<WeaponScreen>();
+            // var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/TeamEditScreen/TeamEditScreen", transform);
         }
 
         void Start()
