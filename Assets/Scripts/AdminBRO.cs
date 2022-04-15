@@ -822,6 +822,7 @@ namespace Overlewd
         public class Building
         {
             public int id;
+            public string key;
             public string name;
             public string description;
             public string image;
@@ -831,6 +832,17 @@ namespace Overlewd
             public int? nextLevel;
             public bool isMax;
             public Progress userProgress;
+
+            public const string Key_Castle = "castle";
+            public const string Key_Catacombs = "catacombs";
+            public const string Key_Cathedral = "cathedral";
+            public const string Key_Eye = "eye";
+            public const string Key_Forge = "forge";
+            public const string Key_Harem = "harem";
+            public const string Key_MagicGuild = "magicGuild";
+            public const string Key_Market = "market";
+            public const string Key_Municipality = "municipality";
+            public const string Key_Portal = "portal";
 
             public class Progress
             {

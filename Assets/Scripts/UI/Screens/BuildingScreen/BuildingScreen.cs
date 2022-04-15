@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-//Resharper disable All
+using TMPro;
+using System.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -12,42 +12,52 @@ namespace Overlewd
         protected Button municipalityButton;
         protected GameObject municipalityUnaviable;
         protected GameObject municipalityMaxLevel;
+        protected TextMeshProUGUI municipalityName;
 
         protected Button forgeButton;
         protected GameObject forgeUnaviable;
         protected GameObject forgeMaxLevel;
+        protected TextMeshProUGUI forgeName;
 
         protected Button magicGuildButton;
         protected GameObject magicGuildUnaviable;
         protected GameObject magicGuildMaxLevel;
+        protected TextMeshProUGUI magicGuildName;
 
         protected Button marketButton;
         protected GameObject marketUnaviable;
         protected GameObject marketMaxLevel;
+        protected TextMeshProUGUI marketName;
 
         protected Button portalButton;
         protected GameObject portalUnaviable;
         protected GameObject portalMaxLevel;
+        protected TextMeshProUGUI portalName;
 
-        protected Button ulviCaveButton;
-        protected GameObject ulviCaveUnaviable;
-        protected GameObject ulviCaveMaxLevel;
+        protected Button castleButton;
+        protected GameObject castleUnaviable;
+        protected GameObject castleMaxLevel;
+        protected TextMeshProUGUI castleName;
 
-        protected Button fayeCaveButton;
-        protected GameObject fayeCaveUnaviable;
-        protected GameObject fayeCaveMaxLevel;
+        protected Button cathedralButton;
+        protected GameObject cathedralUnaviable;
+        protected GameObject cathedralMaxLevel;
+        protected TextMeshProUGUI cathedralName;
 
-        protected Button fionaCaveButton;
-        protected GameObject fionaCaveUnaviable;
-        protected GameObject fionaCaveMaxLevel;
+        protected Button eyeButton;
+        protected GameObject eyeUnaviable;
+        protected GameObject eyeMaxLevel;
+        protected TextMeshProUGUI eyeName;
 
-        protected Button jadeCaveButton;
-        protected GameObject jadeCaveUnaviable;
-        protected GameObject jadeCaveMaxLevel;
+        protected Button catacombsButton;
+        protected GameObject catacombsUnaviable;
+        protected GameObject catacombsMaxLevel;
+        protected TextMeshProUGUI catacombsName;
 
-        protected Button yuiCaveButton;
-        protected GameObject yuiCaveUnaviable;
-        protected GameObject yuiCaveMaxLevel;
+        protected Button haremButton;
+        protected GameObject haremUnaviable;
+        protected GameObject haremMaxLevel;
+        protected TextMeshProUGUI haremName;
 
         protected Button backButton;
 
@@ -61,42 +71,52 @@ namespace Overlewd
             municipalityButton = grid.Find("MunicipalityButton").GetComponent<Button>();
             municipalityUnaviable = municipalityButton.transform.Find("Unaviable").gameObject;
             municipalityMaxLevel =  municipalityButton.transform.Find("MaxLevel").gameObject;
+            municipalityName = municipalityButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             forgeButton = grid.Find("ForgeButton").GetComponent<Button>();
             forgeUnaviable = forgeButton.transform.Find("Unaviable").gameObject;
             forgeMaxLevel = forgeButton.transform.Find("MaxLevel").gameObject;
+            forgeName = forgeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             magicGuildButton = grid.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildUnaviable = magicGuildButton.transform.Find("Unaviable").gameObject;
             magicGuildMaxLevel = magicGuildButton.transform.Find("MaxLevel").gameObject;
+            magicGuildName = magicGuildButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             marketButton = grid.Find("MarketButton").GetComponent<Button>();
             marketUnaviable = marketButton.transform.Find("Unaviable").gameObject;
             marketMaxLevel = marketButton.transform.Find("MaxLevel").gameObject;
+            marketName = marketButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             portalButton = grid.Find("PortalButton").GetComponent<Button>();
             portalUnaviable = portalButton.transform.Find("Unaviable").gameObject;
             portalMaxLevel = portalButton.transform.Find("MaxLevel").gameObject;
+            portalName = portalButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            ulviCaveButton = grid.Find("UlviCaveButton").GetComponent<Button>();
-            ulviCaveUnaviable = ulviCaveButton.transform.Find("Unaviable").gameObject;
-            ulviCaveMaxLevel = ulviCaveButton.transform.Find("MaxLevel").gameObject;
+            castleButton = grid.Find("CastleButton").GetComponent<Button>();
+            castleUnaviable = castleButton.transform.Find("Unaviable").gameObject;
+            castleMaxLevel = castleButton.transform.Find("MaxLevel").gameObject;
+            castleName = castleButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            fayeCaveButton = grid.Find("FayeCaveButton").GetComponent<Button>();
-            fayeCaveUnaviable = fayeCaveButton.transform.Find("Unaviable").gameObject;
-            fayeCaveMaxLevel = fayeCaveButton.transform.Find("MaxLevel").gameObject;
+            cathedralButton = grid.Find("CathedralButton").GetComponent<Button>();
+            cathedralUnaviable = cathedralButton.transform.Find("Unaviable").gameObject;
+            cathedralMaxLevel = cathedralButton.transform.Find("MaxLevel").gameObject;
+            cathedralName = cathedralButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            fionaCaveButton = grid.Find("FionaCaveButton").GetComponent<Button>();
-            fionaCaveUnaviable = fionaCaveButton.transform.Find("Unaviable").gameObject;
-            fionaCaveMaxLevel = fionaCaveButton.transform.Find("MaxLevel").gameObject;
+            eyeButton = grid.Find("EyeButton").GetComponent<Button>();
+            eyeUnaviable = eyeButton.transform.Find("Unaviable").gameObject;
+            eyeMaxLevel = eyeButton.transform.Find("MaxLevel").gameObject;
+            eyeName = eyeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            jadeCaveButton = grid.Find("JadeCaveButton").GetComponent<Button>();
-            jadeCaveUnaviable = jadeCaveButton.transform.Find("Unaviable").gameObject;
-            jadeCaveMaxLevel = jadeCaveButton.transform.Find("MaxLevel").gameObject;
+            catacombsButton = grid.Find("CatacombsButton").GetComponent<Button>();
+            catacombsUnaviable = catacombsButton.transform.Find("Unaviable").gameObject;
+            catacombsMaxLevel = catacombsButton.transform.Find("MaxLevel").gameObject;
+            catacombsName = catacombsButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            yuiCaveButton = grid.Find("YuiCaveButton").GetComponent<Button>();
-            yuiCaveUnaviable = yuiCaveButton.transform.Find("Unaviable").gameObject;
-            yuiCaveMaxLevel = yuiCaveButton.transform.Find("MaxLevel").gameObject;
+            haremButton = grid.Find("HaremButton").GetComponent<Button>();
+            haremUnaviable = haremButton.transform.Find("Unaviable").gameObject;
+            haremMaxLevel = haremButton.transform.Find("MaxLevel").gameObject;
+            haremName = haremButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
 
@@ -106,21 +126,75 @@ namespace Overlewd
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
             marketButton.onClick.AddListener(MarketButtonClick);
             portalButton.onClick.AddListener(PortalButtonClick);
-            ulviCaveButton.onClick.AddListener(UlviCaveButtonClick);
-            fayeCaveButton.onClick.AddListener(FayeCaveButtonClick);
-            fionaCaveButton.onClick.AddListener(FionaCaveButtonClick);
-            jadeCaveButton.onClick.AddListener(JadeCaveButtonClick);
-            yuiCaveButton.onClick.AddListener(YuiCaveButtonClick);
+            castleButton.onClick.AddListener(CastleButtonClick);
+            cathedralButton.onClick.AddListener(CathedralButtonClick);
+            eyeButton.onClick.AddListener(EyeButtonClick);
+            catacombsButton.onClick.AddListener(CatacombsButtonClick);
+            haremButton.onClick.AddListener(HaremButtonClick);
         }
 
-        void Start()
+        protected TextMeshProUGUI NameByKey(string key)
         {
-            Customize();
+            return key switch
+            {
+                AdminBRO.Building.Key_Castle => castleName,
+                AdminBRO.Building.Key_Catacombs => catacombsName,
+                AdminBRO.Building.Key_Cathedral => cathedralName,
+                AdminBRO.Building.Key_Eye => eyeName,
+                AdminBRO.Building.Key_Forge => forgeName,
+                AdminBRO.Building.Key_Harem => haremName,
+                AdminBRO.Building.Key_MagicGuild => magicGuildName,
+                AdminBRO.Building.Key_Market => marketName,
+                AdminBRO.Building.Key_Municipality => municipalityName,
+                AdminBRO.Building.Key_Portal => portalName,
+                _ => null
+            };
         }
 
-        protected virtual void Customize()
+        protected GameObject UnaviableByKey(string key)
         {
+            return key switch
+            {
+                AdminBRO.Building.Key_Castle => castleUnaviable,
+                AdminBRO.Building.Key_Catacombs => catacombsUnaviable,
+                AdminBRO.Building.Key_Cathedral => cathedralUnaviable,
+                AdminBRO.Building.Key_Eye => eyeUnaviable,
+                AdminBRO.Building.Key_Forge => forgeUnaviable,
+                AdminBRO.Building.Key_Harem => haremUnaviable,
+                AdminBRO.Building.Key_MagicGuild => magicGuildUnaviable,
+                AdminBRO.Building.Key_Market => marketUnaviable,
+                AdminBRO.Building.Key_Municipality => municipalityUnaviable,
+                AdminBRO.Building.Key_Portal => portalUnaviable,
+                _ => null
+            };
+        }
 
+        protected GameObject MaxLevelByKey(string key)
+        {
+            return key switch
+            {
+                AdminBRO.Building.Key_Castle => castleMaxLevel,
+                AdminBRO.Building.Key_Catacombs => catacombsMaxLevel,
+                AdminBRO.Building.Key_Cathedral => cathedralMaxLevel,
+                AdminBRO.Building.Key_Eye => eyeMaxLevel,
+                AdminBRO.Building.Key_Forge => forgeMaxLevel,
+                AdminBRO.Building.Key_Harem => haremMaxLevel,
+                AdminBRO.Building.Key_MagicGuild => magicGuildMaxLevel,
+                AdminBRO.Building.Key_Market => marketMaxLevel,
+                AdminBRO.Building.Key_Municipality => municipalityMaxLevel,
+                AdminBRO.Building.Key_Portal => portalMaxLevel,
+                _ => null
+            };
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            foreach (var buildingData in GameData.buildings)
+            {
+                NameByKey(buildingData.key).text = buildingData.name;
+            }
+
+            await Task.CompletedTask;
         }
 
         protected virtual void MunicipalityButtonClick()
@@ -150,28 +224,27 @@ namespace Overlewd
             UIManager.ShowPopup<PortalPopup>();
         }
 
-        protected virtual void UlviCaveButtonClick()
+        protected virtual void CastleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowPopup<CavePopup>();
         }
 
-        protected virtual void FayeCaveButtonClick()
+        protected virtual void CathedralButtonClick()
         {
 
         }
 
-        protected virtual void FionaCaveButtonClick()
+        protected virtual void EyeButtonClick()
         {
 
         }
 
-        protected virtual void JadeCaveButtonClick()
+        protected virtual void CatacombsButtonClick()
         {
 
         }
 
-        protected virtual void YuiCaveButtonClick()
+        protected virtual void HaremButtonClick()
         {
 
         }
