@@ -38,6 +38,10 @@ namespace Overlewd
         public const string UI_GenericPopupShow = "event:/UI/Windows/Generic/Window_popup_slide";
         public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
 
+        //battle
+        public const string UI_Battle_Healpotion = "event:/UI/Battle_Interface/Misc/Healpotion";
+        public const string UI_Battle_Manapotion = "event:/UI/Battle_Interface/Misc/Manapotion";
+
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
     }
 
