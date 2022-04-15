@@ -30,6 +30,7 @@ namespace Overlewd
         private GameObject border;
 
         public Character character;
+        public Skill[] skill;
         private float idleScale = .5f, battleScale = .7f;
         [SerializeField] private int battleOrder = -1; //3,2,1 = on the table; -1 = in the deck;
         public int hp = 100, maxHp = 100;
@@ -76,6 +77,7 @@ namespace Overlewd
             damage_1 = character.attack;
             damage_2 = character.attack / 2;
             attackDamage = damage_1;
+            skill = character.skill;
         }
 
         private void ShapeInit()
@@ -203,10 +205,10 @@ namespace Overlewd
                         currentPreAttackDuration = 5.667f;
                         spineWidgetOne.PlayAnimation("prepair2", false);
                         yield return new WaitForSeconds(1f);
-                        if (character.attackVFX != null)
+                        if (character.skill[1] != null)
                         {
-                            vfx = Instantiate(character.attackVFX[0], battleLayer);
-                            yield return new WaitForSeconds(vfx.GetComponent<VFXManager>().duration);
+                            vfx = Instantiate(character.skill[1].vfx, battleLayer);
+                            yield return new WaitForSeconds(character.skill[1].vfxDuration);
                         }
                         spineWidgetOne.PlayAnimation("attack2", false);
                         yield return new WaitForSeconds(1f);
@@ -215,9 +217,9 @@ namespace Overlewd
                         attackDamage = damage_2;
                         spineWidgetOne.PlayAnimation("prepair3", false);
                         yield return new WaitForSeconds(1f);
-                        if (character.attackVFX != null) {
-                            vfx = Instantiate(character.attackVFX[1], battleLayer);
-                            yield return new WaitForSeconds(vfx.GetComponent<VFXManager>().duration);
+                        if (character.skill[2] != null) {
+                            vfx = Instantiate(character.skill[2].vfx, battleLayer);
+                            yield return new WaitForSeconds(character.skill[2].vfxDuration);
                         }
                         spineWidgetOne.PlayAnimation("attack3", false);
                         yield return new WaitForSeconds(1f);

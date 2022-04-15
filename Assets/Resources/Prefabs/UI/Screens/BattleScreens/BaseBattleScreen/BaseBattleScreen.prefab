@@ -6158,9 +6158,10 @@ MonoBehaviour:
   EnemyStatsContent: {fileID: 5496798229500404337}
   PlayerStats: {fileID: 5095278123638647373, guid: e0709591a0b4e834299bfd58ef286ef9, type: 3}
   PlayerStatsContent: {fileID: 6775220076688316199}
-  skill_0: {fileID: 9184983763147672031}
-  skill_1: {fileID: 2820950003659279769}
-  skill_2: {fileID: 1734716323041922411}
+  skillControllers:
+  - {fileID: 270373221}
+  - {fileID: 1369232636}
+  - {fileID: 645748022}
   potion_0: {fileID: 443578431}
   potion_1: {fileID: 1180136640}
   healVFX: {fileID: 86848110055568654, guid: 74096253829e79c478b557784947128a, type: 3}

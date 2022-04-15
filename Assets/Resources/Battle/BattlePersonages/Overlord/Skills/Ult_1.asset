@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e180528410c80244b9cb774093047405, type: 3}
-  m_Name: UltimateAttack
+  m_Name: Ult_1
   m_EditorClassIdentifier: 
-  skillName: Cast Spell
-  discription: Add 20 Damage for 20 mana to all enemys
+  skillName: Firestorm
+  discription: Powerfull storm of furious fire
   battleIco: {fileID: 21300000, guid: df0436bbff76deb40a5a6900a3b9c1fd, type: 3}
-  vfx: {fileID: 0}
+  vfx: {fileID: 5541813711829063474, guid: dfa91f97a81e5e5419d6dc294cf0695f, type: 3}
+  vfxDuration: 4.667
   sfx: {fileID: 0}
   select: 0
   power: 20
-  manaCost: 0
+  manaCost: 20
   amount: 0
   cooldown: 3
-  cooldownCount: 2
+  cooldownCount: 0
   attackType: 1

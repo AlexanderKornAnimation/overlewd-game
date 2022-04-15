@@ -22,13 +22,16 @@ namespace Overlewd
         [HideInInspector]
         public int power, manaCost, amount, cooldown, cooldownCount = 0;
 
-        private void Start()
+        private void Awake()
         {
-            image = GetComponent<Image>();
             button = GetComponent<Button>();
+            image = GetComponent<Image>();
             slider = GetComponentInChildren<Slider>();
             textCount = GetComponentInChildren<TextMeshProUGUI>();
             selectBorder = transform.Find("select")?.gameObject;
+        }
+        private void Start()
+        {
             StatInit();
         }
         private void StatInit()
@@ -79,7 +82,7 @@ namespace Overlewd
                     textCount.text = $"{amount}";
                 else
                     textCount.text = $"{cooldownCount}";
-            //SaveSkill(); //Uncoment for save amount
+            SaveSkill();
         }
 
         public void Select() => selectBorder?.SetActive(true);
