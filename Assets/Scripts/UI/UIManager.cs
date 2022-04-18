@@ -151,6 +151,11 @@ namespace Overlewd
             uiRootScreenLayerGO_aspectRatioFitter.aspectRatio = currentAspectRatio;
         }
 
+        public static Rect GetScreenWorldRect()
+        {
+            return uiRootScreenLayerGO.GetComponent<RectTransform>().WorldRect();
+        }
+
         private static void ConfigureRootScreenLayer()
         {
             uiRootScreenLayerGO = new GameObject("UIRootScreenLayer");
