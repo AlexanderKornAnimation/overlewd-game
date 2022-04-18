@@ -9,7 +9,6 @@ namespace Overlewd
     {
         void Awake()
         {
-            UIManager.ShowScreen<WeaponScreen>();
             // var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/TeamEditScreen/TeamEditScreen", transform);
         }
 
@@ -23,8 +22,15 @@ namespace Overlewd
             float offset = Screen.width * 0.05f;
             float size = Screen.width * 0.1f;
             var rect = new Rect(offset, offset, size, size);
+            
+            float offsetY = Screen.width * 0.2f;
+            var rect2 = new Rect(offset, offsetY, size, size);
             if (GUI.Button(rect, "Castle")) {
                 UIManager.ShowScreen<CastleScreen>();
+            }
+            if(GUI.Button(rect2, "ShowScreen"))
+            {
+                UIManager.ShowScreen<BattleGirlScreen>();
             }
         }
     }

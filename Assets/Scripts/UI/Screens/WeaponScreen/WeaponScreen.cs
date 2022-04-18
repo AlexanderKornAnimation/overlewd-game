@@ -88,7 +88,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<GirlScreen>();
+            UIManager.ShowScreen<BattleGirlScreen>();
         }
     }
 }
