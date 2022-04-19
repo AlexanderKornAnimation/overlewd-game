@@ -41,6 +41,8 @@ namespace Overlewd
         //battle
         public const string UI_Battle_Healpotion = "event:/UI/Battle_Interface/Misc/Healpotion";
         public const string UI_Battle_Manapotion = "event:/UI/Battle_Interface/Misc/Manapotion";
+        public const string UI_Battle_Attack = "event:/UI/Battle_Interface/Actions/Attack";
+        public const string UI_Battle_SelectPers = "event:/UI/Battle_Interface/Misc/Hero_select";
 
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
     }
