@@ -18,18 +18,23 @@ namespace Overlewd
                 if (stageData.battleId.HasValue)
                 {
                     var battleData = GameData.GetBattleById(stageData.battleId.Value);
-                    
-                    if (battleData.rewards.Count < 1 || battleData.firstRewards.Count < 1)
-                        return;                    
-                    
-                    var firstReward = battleData.firstRewards[0];
 
-                    firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
-                    firstTimeRewardCount.text = firstReward.amount.ToString();
+                    if (battleData.firstRewards.Count > 0)
+                    {
+                        var firstReward = battleData.firstRewards[0];
+
+                        firstTimeReward.gameObject.SetActive(true);
+                        firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
+                        firstTimeRewardCount.text = firstReward.amount.ToString();
+                    }
+
+                    if (battleData.rewards.Count < 1)
+                        return;
 
                     for (int i = 0; i < rewards.Length; i++)
                     {
                         var reward = battleData.rewards[i];
+                        rewards[i].gameObject.SetActive(true);
                         rewards[i].sprite = ResourceManager.LoadSprite(reward.icon);
                         rewardsAmount[i].text = reward.amount.ToString();
                     }
@@ -52,15 +57,13 @@ namespace Overlewd
             protected override void EditTeamButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakeScreen<TeamEditScreen>().
-                    SetDataFromMapScreen(stageData).RunShowScreenProcess();
+                UIManager.MakeScreen<TeamEditScreen>().SetDataFromMapScreen(stageData).RunShowScreenProcess();
             }
 
             protected override void BattleButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-                UIManager.MakeScreen<BattleScreen>().
-                    SetStageData(stageData).RunShowScreenProcess();
+                UIManager.MakeScreen<BattleScreen>().SetStageData(stageData).RunShowScreenProcess();
             }
         }
     }

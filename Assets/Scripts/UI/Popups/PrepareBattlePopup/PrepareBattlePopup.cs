@@ -61,11 +61,13 @@ namespace Overlewd
 
             firstTimeReward = rewardsTr.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardCount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+            firstTimeReward.gameObject.SetActive(false);
 
             for (int i = 0; i < rewards.Length; i++)
             {
                 var reward = rewardsTr.Find("Reward" + i).GetComponent<Image>();
                 rewards[i] = reward;
+                rewards[i].gameObject.SetActive(false);
 
                 var amount = reward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
                 rewardsAmount[i] = amount;
@@ -75,18 +77,23 @@ namespace Overlewd
         protected virtual void Customize()
         {
             var battleData = GameData.GetBattleById(stageId);
+
+            if (battleData.firstRewards.Count > 0)
+            {
+                var firstReward = battleData.firstRewards[0];
+
+                firstTimeReward.gameObject.SetActive(true);
+                firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
+                firstTimeRewardCount.text = firstReward.amount.ToString();
+            }
             
-            if (battleData.rewards.Count < 1 || battleData.firstRewards.Count < 1)
+            if (battleData.rewards.Count < 1)
                 return;
             
-            var firstReward = battleData.firstRewards[0];
-
-            firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
-            firstTimeRewardCount.text = firstReward.amount.ToString();
-
             for (int i = 0; i < rewards.Length; i++)
             {
                 var reward = battleData.rewards[i];
+                rewards[i].gameObject.SetActive(true);
                 rewards[i].sprite = ResourceManager.LoadSprite(reward.icon);
                 rewardsAmount[i].text = reward.amount.ToString();
             }
@@ -114,8 +121,7 @@ namespace Overlewd
         protected virtual void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().
-                SetDataFromEventMapScreen(stageId).RunShowScreenProcess();
+            UIManager.MakeScreen<TeamEditScreen>().SetDataFromEventMapScreen(stageId).RunShowScreenProcess();
         }
 
         protected virtual void BackButtonClick()

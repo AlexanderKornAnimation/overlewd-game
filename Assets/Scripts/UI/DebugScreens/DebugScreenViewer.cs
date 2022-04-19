@@ -9,7 +9,7 @@ namespace Overlewd
     {
         void Awake()
         {
-            UIManager.MakePopup<PrepareBossFightPopup>().SetData(1).RunShowPopupProcess();
+            UIManager.MakePopup<PrepareBossFightPopup>().SetData(2).RunShowPopupProcess();
             // var screenPrefab = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/TeamEditScreen/TeamEditScreen", transform);
         }
 
