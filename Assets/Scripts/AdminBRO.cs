@@ -619,6 +619,11 @@ namespace Overlewd
             public float mana;
 
             public const string Class_Assassin = "Assassin";
+            public const string Class_Bruiser = "Bruiser";
+            public const string Class_Caster = "Caster";
+            public const string Class_Healer = "Healer";
+            public const string Class_Overlord = "Overlord";
+            public const string Class_Tank = "Tank";
 
             public const string Rarity_Basic = "basic";
         }

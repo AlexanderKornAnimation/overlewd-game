@@ -1,16 +1,14 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 namespace Overlewd
 {
-    public class PrepareBattlePopup : BasePopup
+    public class PrepareBossFightPopup : BasePopup
     {
         protected const int RewardsCount = 3;
 
@@ -21,24 +19,25 @@ namespace Overlewd
         protected RectTransform buffRect;
 
         protected Image firstTimeReward;
-
         protected Image[] rewards = new Image[RewardsCount];
         protected TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
+
         protected TextMeshProUGUI firstTimeRewardCount;
 
         protected TextMeshProUGUI markers;
 
         private int stageId;
 
-        private void Awake()
+        void Awake()
         {
             var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBattlePopup/PrepareBattlePopup",
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBattlePopups/PrepareBossFightPopup/PrepareBossFightPopup",
                     transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-            var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
             var levelTitle = canvas.Find("LevelTitle");
+            var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
+            var alliesBack = canvas.Find("AlliesBack");
             var buff = canvas.Find("Buff");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
@@ -47,7 +46,7 @@ namespace Overlewd
             battleButton = canvas.Find("BattleButton").GetComponent<Button>();
             battleButton.onClick.AddListener(BattleButtonClick);
 
-            editTeamButton = canvas.Find("AlliesBack").Find("EditTeamButton").GetComponent<Button>();
+            editTeamButton = alliesBack.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
 
             buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
@@ -86,10 +85,10 @@ namespace Overlewd
                 firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
                 firstTimeRewardCount.text = firstReward.amount.ToString();
             }
-            
+
             if (battleData.rewards.Count < 1)
                 return;
-            
+
             for (int i = 0; i < rewards.Length; i++)
             {
                 var reward = battleData.rewards[i];
@@ -99,6 +98,12 @@ namespace Overlewd
             }
         }
 
+        public PrepareBossFightPopup SetData(int stageId)
+        {
+            this.stageId = stageId;
+            return this;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
@@ -106,22 +111,16 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public PrepareBattlePopup SetData(int stageId)
+        protected virtual void EditTeamButtonClick()
         {
-            this.stageId = stageId;
-            return this;
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<TeamEditScreen>().SetDataFromEventMapScreen(stageId).RunShowScreenProcess();
         }
 
         protected virtual void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
-        }
-
-        protected virtual void EditTeamButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().SetDataFromEventMapScreen(stageId).RunShowScreenProcess();
         }
 
         protected virtual void BackButtonClick()
@@ -133,7 +132,7 @@ namespace Overlewd
         protected virtual void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.MakeScreen<BattleScreen>().SetData(stageId).RunShowScreenProcess();
+            UIManager.MakeScreen<BossFightScreen>().SetData(stageId).RunShowScreenProcess();
         }
 
         public override ScreenShow Show()
