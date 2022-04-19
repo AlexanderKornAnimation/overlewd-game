@@ -113,6 +113,9 @@ namespace Overlewd
 
         protected virtual void EditTeamButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<TeamEditScreen>().
+                SetDataFromEventMapScreen(stageId).RunShowScreenProcess();
         }
 
         protected virtual void BackButtonClick()

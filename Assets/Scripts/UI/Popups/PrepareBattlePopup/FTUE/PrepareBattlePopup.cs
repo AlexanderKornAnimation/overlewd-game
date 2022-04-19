@@ -49,6 +49,13 @@ namespace Overlewd
                 return this;
             }
 
+            protected override void EditTeamButtonClick()
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                UIManager.MakeScreen<TeamEditScreen>().
+                    SetDataFromMapScreen(stageData).RunShowScreenProcess();
+            }
+
             protected override void BattleButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);

@@ -30,6 +30,9 @@ namespace Overlewd
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
 
+        private int? eventMapStageId;
+        private AdminBRO.FTUEStageItem mapStageData;
+
         private void Awake()
         {
             var screenInst =
@@ -48,7 +51,8 @@ namespace Overlewd
                 tabs[i] = tabsArea.Find(tabNames[i]).GetComponent<Button>();
                 tabs[i].onClick.AddListener(() =>
                 {
-                    TabClick(i);
+                    var tabId = i;
+                    TabClick(tabId);
                 });
 
                 pressedTabs[i] = pressedTabsArea.Find(tabNames[i]).GetComponent<Image>().gameObject;
@@ -60,6 +64,18 @@ namespace Overlewd
             }
             
             EnterTab(activeTabId);
+        }
+
+        public TeamEditScreen SetDataFromMapScreen(AdminBRO.FTUEStageItem stageData)
+        {
+            mapStageData = stageData;
+            return this;
+        }
+
+        public TeamEditScreen SetDataFromEventMapScreen(int stageId)
+        {
+            eventMapStageId = stageId;
+            return this;
         }
 
         private void TabClick(int tabId)
@@ -87,7 +103,17 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
+
+            if (mapStageData != null)
+            {
+                UIManager.MakeScreen<MapScreen>().
+                    SetDataFromTeamEdit(mapStageData).RunShowScreenProcess();
+            }
+            else if (eventMapStageId.HasValue)
+            {
+                UIManager.MakeScreen<EventMapScreen>().
+                    SetDataFromTeamEdit(eventMapStageId.Value).RunShowScreenProcess();
+            }
         }
     }
 }

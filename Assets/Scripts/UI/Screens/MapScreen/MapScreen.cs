@@ -21,6 +21,7 @@ namespace Overlewd
         protected GameObject chapterMap;
         protected AdminBRO.FTUEChapter nextChapterData;
 
+        private AdminBRO.FTUEStageItem teamEditStageData;
 
         protected virtual void Awake()
         {
@@ -37,6 +38,12 @@ namespace Overlewd
             backbutton.onClick.AddListener(BackButtonClick);
 
             map = canvas.Find("Map");
+        }
+
+        public MapScreen SetDataFromTeamEdit(AdminBRO.FTUEStageItem stageData)
+        {
+            teamEditStageData = stageData;
+            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -143,6 +150,27 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            if (teamEditStageData != null)
+            {
+                if (teamEditStageData.battleId.HasValue)
+                {
+                    var battleData = GameData.GetBattleById(teamEditStageData.battleId.Value);
+                    if (battleData != null)
+                    {
+                        if (battleData.type == AdminBRO.Battle.Type_Battle)
+                        {
+                            UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                                SetStageData(teamEditStageData).RunShowPopupProcess();
+                        }
+                        else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                        {
+                            UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                                SetStageData(teamEditStageData).RunShowPopupProcess();
+                        }
+                    }
+                }
+            }
+
             EnterScreen();
 
             await Task.CompletedTask;
