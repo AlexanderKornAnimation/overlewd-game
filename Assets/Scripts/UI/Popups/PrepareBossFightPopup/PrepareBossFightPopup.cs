@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace Overlewd
 {
     public class PrepareBossFightPopup : BasePopup
     {
+        protected const int RewardsCount = 3;
+
         protected Button backButton;
         protected Button battleButton;
         protected Button editTeamButton;
@@ -16,13 +19,10 @@ namespace Overlewd
         protected RectTransform buffRect;
 
         protected Image firstTimeReward;
-        protected Image reward1;
-        protected Image reward2;
-        protected Image reward3;
+        protected Image[] rewards = new Image[RewardsCount];
+        protected TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
+
         protected TextMeshProUGUI firstTimeRewardCount;
-        protected TextMeshProUGUI reward1Count;
-        protected TextMeshProUGUI reward2Count;
-        protected TextMeshProUGUI reward3Count;
 
         protected TextMeshProUGUI markers;
 
@@ -30,11 +30,13 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBossFightPopup/PrepareBossFightPopup",
+                    transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var levelTitle = canvas.Find("LevelTitle");
-            var rewards = canvas.Find("ResourceBack").Find("Rewards");
+            var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
             var alliesBack = canvas.Find("AlliesBack");
             var buff = canvas.Find("Buff");
 
@@ -46,7 +48,7 @@ namespace Overlewd
 
             editTeamButton = alliesBack.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
-            
+
             buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
             buffRect = buff.GetComponent<RectTransform>();
 
@@ -55,18 +57,40 @@ namespace Overlewd
                 -buffRect.rect.height, buffRect.rect.height);
 
             markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
-            
-            firstTimeReward = rewards.Find("FirstTimeReward").GetComponent<Image>();
-            reward1 = rewards.Find("Reward1").GetComponent<Image>();
-            reward2 = rewards.Find("Reward2").GetComponent<Image>();
-            reward3 = rewards.Find("Reward3").GetComponent<Image>();
-            
+
+            firstTimeReward = rewardsTr.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardCount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            reward1Count = reward1.transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            reward2Count = reward2.transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            reward3Count = reward3.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+
+            for (int i = 0; i < rewards.Length; i++)
+            {
+                var reward = rewardsTr.Find("Reward" + i).GetComponent<Image>();
+                rewards[i] = reward;
+
+                var amount = reward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                rewardsAmount[i] = amount;
+            }
         }
 
+        protected virtual void Customize()
+        {
+            var battleData = GameData.GetBattleById(stageId);
+            
+            if (battleData.rewards.Count < 1 || battleData.firstRewards.Count < 1)
+                return;
+            
+            var firstReward = battleData.firstRewards[0];
+
+            firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
+            firstTimeRewardCount.text = firstReward.amount.ToString();
+
+            for (int i = 0; i < rewards.Length; i++)
+            {
+                var reward = battleData.rewards[i];
+                rewards[i].sprite = ResourceManager.LoadSprite(reward.icon);
+                rewardsAmount[i].text = reward.amount.ToString();
+            }
+        }
+        
         public PrepareBossFightPopup SetData(int stageId)
         {
             this.stageId = stageId;
@@ -79,46 +103,17 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-        
-        protected virtual void Customize()
-        {
-            // if (!GameGlobalStates.bossFight_EventStageData.battleId.HasValue)
-            //     return;
-            //
-            // var battleData = GameData.GetBattleById(GameGlobalStates.bossFight_EventStageData.battleId.Value);
-            // if (battleData.firstRewards == null || battleData.rewards == null)
-            //     return;
-            // if (battleData.firstRewards.Count < 1 || battleData.rewards.Count < 3)
-            //     return;
-            //
-            // var firstIconURL = GameData.GetCurrencyById(battleData.firstRewards[0].currencyId).iconUrl;
-            // firstTimeReward.sprite = ResourceManager.LoadSprite(firstIconURL);
-            // firstTimeRewardCount.text = $"{battleData.firstRewards[0].amount}";
-            //
-            //
-            // var icon1URL = GameData.GetCurrencyById(battleData.rewards[0].currencyId).iconUrl;
-            // var icon2URL = GameData.GetCurrencyById(battleData.rewards[1].currencyId).iconUrl;
-            // var icon3URL = GameData.GetCurrencyById(battleData.rewards[2].currencyId).iconUrl;
-            //
-            // reward1.sprite = ResourceManager.LoadSprite(icon1URL);
-            // reward2.sprite = ResourceManager.LoadSprite(icon2URL);
-            // reward3.sprite = ResourceManager.LoadSprite(icon3URL);
-            // reward1Count.text = $"{battleData.rewards[0].amount}";
-            // reward2Count.text = $"{battleData.rewards[1].amount}";
-            // reward3Count.text = $"{battleData.rewards[2].amount}";
-        }
 
         protected virtual void EditTeamButtonClick()
         {
-            
         }
-        
+
         protected virtual void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
-        
+
         protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -128,8 +123,7 @@ namespace Overlewd
         protected virtual void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.MakeScreen<BossFightScreen>().
-                SetData(stageId).RunShowScreenProcess();
+            UIManager.MakeScreen<BossFightScreen>().SetData(stageId).RunShowScreenProcess();
         }
 
         public override ScreenShow Show()
@@ -141,7 +135,7 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenLeftHide>();
         }
-        
+
         public override async Task AfterShowAsync()
         {
             await UITools.TopShowAsync(buffRect, 0.2f);
