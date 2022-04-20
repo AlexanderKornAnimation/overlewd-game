@@ -44,7 +44,7 @@ namespace Overlewd
             var buff = canvas.Find("Buff");
             var enemiesBack = canvas.Find("EnemiesBack");
 
-            content = enemiesBack.Find("ScrollView").Find("Viewport").Find("Content");
+            content = enemiesBack.Find("Characters").Find("ScrollView").Find("Viewport").Find("Content");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);

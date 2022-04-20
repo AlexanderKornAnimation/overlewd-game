@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,6 +31,11 @@ namespace Overlewd
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
 
+        private Transform slot1;
+        private NSTeamEditScreen.SlotOneDrop slot1_drop;
+        private Transform slot2;
+        private NSTeamEditScreen.SlotTwoDrop slot2_drop;
+
         private int? eventMapStageId;
         private AdminBRO.FTUEStageItem mapStageData;
 
@@ -51,19 +57,21 @@ namespace Overlewd
                 tabs[i] = tabsArea.Find(tabNames[i]).GetComponent<Button>();
                 tabs[i].onClick.AddListener(() =>
                 {
-                    var tabId = i;
-                    TabClick(tabId);
+                    TabClick(i);
                 });
 
                 pressedTabs[i] = pressedTabsArea.Find(tabNames[i]).GetComponent<Image>().gameObject;
-                pressedTabs[i].gameObject.SetActive(false);
 
                 scrollViews[i] = charactersBack.Find("ScrollView_" + tabNames[i]).gameObject;
                 scrollContents[i] = scrollViews[i].transform.Find("Viewport").Find("Content");
-                scrollViews[i].gameObject.SetActive(false);
             }
-            
-            EnterTab(activeTabId);
+
+            slot1 = canvas.Find("Slot1");
+            slot1_drop = slot1.Find("DropArea").GetComponent<NSTeamEditScreen.SlotOneDrop>();
+            slot1_drop.screen = this;
+            slot2 = canvas.Find("Slot2");
+            slot2_drop = slot2.Find("DropArea").GetComponent<NSTeamEditScreen.SlotTwoDrop>();
+            slot2_drop.screen = this;
         }
 
         public TeamEditScreen SetDataFromMapScreen(AdminBRO.FTUEStageItem stageData)
@@ -76,6 +84,39 @@ namespace Overlewd
         {
             eventMapStageId = stageId;
             return this;
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            foreach (var tabId in tabIds)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    var ch = NSTeamEditScreen.Character.GetInstance(scrollContents[tabId]);
+                    ch.dragDetector.scrollRect = scrollViews[tabId].GetComponent<ScrollRect>();
+                    ch.dragDetector.screen = this;
+                }
+            }
+
+
+            foreach (var i in tabIds)
+            {
+                pressedTabs[i].gameObject.SetActive(false);
+                scrollViews[i].gameObject.SetActive(false);
+            }
+            EnterTab(activeTabId);
+
+            await Task.CompletedTask;
+        }
+
+        public void SlotOneDrop()
+        {
+            Debug.Log("slot 1 drop");
+        }
+
+        public void SlotTwoDrop()
+        {
+            Debug.Log("slot 2 drop");
         }
 
         private void TabClick(int tabId)

@@ -55,10 +55,9 @@ namespace Overlewd
                 eventButtonImage[tabId] = eventButton[tabId].GetComponent<Image>();
                 eventButtonDefaultSprite[tabId] = eventButtonImage[tabId].sprite;
 
-                var tabId_delegate = tabId;
                 eventButton[tabId].onClick.AddListener(() =>
                 {
-                    TabClick(tabId_delegate);
+                    TabClick(tabId);
                 });
             }
         }

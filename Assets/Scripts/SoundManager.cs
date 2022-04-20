@@ -43,6 +43,8 @@ namespace Overlewd
         public const string UI_Battle_Manapotion = "event:/UI/Battle_Interface/Misc/Manapotion";
         public const string UI_Battle_Attack = "event:/UI/Battle_Interface/Actions/Attack";
         public const string UI_Battle_SelectPers = "event:/UI/Battle_Interface/Misc/Hero_select";
+        public const string Battle_Overlord_hit = "event:/Animations/Battle/Generic_Hits/Overlord_hit";
+        public const string Batlle_Overlord_AOE_Hits_AOE1 = "event:/Animations/Battle/Overlord_AOE_Hits/AOE1";
 
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
     }

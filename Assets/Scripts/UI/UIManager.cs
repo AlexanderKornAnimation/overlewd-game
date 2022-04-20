@@ -54,6 +54,8 @@ namespace Overlewd
 
         private static GameObject uiRootCanvasGO;
         private static CanvasScaler uiRootCanvasGO_canvasScaler;
+        private static RectTransform uiRootCanvasGO_rectTransform;
+        private static Canvas uiRootCanvasGO_canvas;
         private static GameObject uiRootScreenLayerGO;
         private static AspectRatioFitter uiRootScreenLayerGO_aspectRatioFitter;
 
@@ -154,6 +156,11 @@ namespace Overlewd
         public static Rect GetScreenWorldRect()
         {
             return uiRootScreenLayerGO.GetComponent<RectTransform>().WorldRect();
+        }
+
+        public static float GetScreenScaleFactor()
+        {
+            return uiRootCanvasGO_canvas.scaleFactor;
         }
 
         private static void ConfigureRootScreenLayer()
@@ -263,8 +270,8 @@ namespace Overlewd
 
             uiRootCanvasGO = new GameObject("UIManagerRootCanvas");
             uiRootCanvasGO.layer = 5;
-            var uiRootCanvasGO_rectTransform = uiRootCanvasGO.AddComponent<RectTransform>();
-            var uiRootCanvasGO_canvas = uiRootCanvasGO.AddComponent<Canvas>();
+            uiRootCanvasGO_rectTransform = uiRootCanvasGO.AddComponent<RectTransform>();
+            uiRootCanvasGO_canvas = uiRootCanvasGO.AddComponent<Canvas>();
             uiRootCanvasGO_canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             uiRootCanvasGO_canvasScaler = uiRootCanvasGO.AddComponent<CanvasScaler>();
             uiRootCanvasGO_canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
