@@ -19,6 +19,7 @@ namespace Overlewd
         protected Button editTeamButton;
         protected Button buffButton;
         protected RectTransform buffRect;
+        protected Transform content;
 
         protected Image firstTimeReward;
 
@@ -33,13 +34,17 @@ namespace Overlewd
         private void Awake()
         {
             var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBattlePopups/PrepareBattlePopup/PrepareBattlePopup",
+                ResourceManager.InstantiateScreenPrefab(
+                    "Prefabs/UI/Popups/PrepareBattlePopups/PrepareBattlePopup/PrepareBattlePopup",
                     transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
             var levelTitle = canvas.Find("LevelTitle");
             var buff = canvas.Find("Buff");
+            var enemiesBack = canvas.Find("EnemiesBack");
+
+            content = enemiesBack.Find("ScrollView").Find("Viewport").Find("Content");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -78,6 +83,14 @@ namespace Overlewd
         {
             var battleData = GameData.GetBattleById(stageId);
 
+            foreach (var phase in battleData.battlePhases)
+            {
+                foreach (var charId in phase.enemyCharacters)
+                {
+                    var character = NSPrepareBattlePopup.EnemyCharacter.GetInstance(content);
+                }
+            }
+
             if (battleData.firstRewards.Count > 0)
             {
                 var firstReward = battleData.firstRewards[0];
@@ -86,15 +99,15 @@ namespace Overlewd
                 firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
                 firstTimeRewardCount.text = firstReward.amount.ToString();
             }
-            
+
             if (battleData.rewards.Count < 1)
                 return;
-            
-            for (int i = 0; i < rewards.Length; i++)
+
+            for (int i = 0; i < battleData.rewards.Count; i++)
             {
                 var reward = battleData.rewards[i];
                 rewards[i].gameObject.SetActive(true);
-                rewards[i].sprite = ResourceManager.LoadSprite(reward.icon);
+                rewards[i].sprite = reward.icon == null ? null : ResourceManager.LoadSprite(reward.icon);
                 rewardsAmount[i].text = reward.amount.ToString();
             }
         }

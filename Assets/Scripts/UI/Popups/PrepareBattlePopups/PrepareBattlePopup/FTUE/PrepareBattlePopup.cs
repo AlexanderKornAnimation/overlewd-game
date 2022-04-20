@@ -19,6 +19,14 @@ namespace Overlewd
                 {
                     var battleData = GameData.GetBattleById(stageData.battleId.Value);
 
+                    foreach (var phase in battleData.battlePhases)
+                    {
+                        foreach (var charId in phase.enemyCharacters)
+                        {
+                            var character = NSPrepareBattlePopup.EnemyCharacter.GetInstance(content);
+                        }
+                    }
+
                     if (battleData.firstRewards.Count > 0)
                     {
                         var firstReward = battleData.firstRewards[0];
@@ -31,7 +39,7 @@ namespace Overlewd
                     if (battleData.rewards.Count < 1)
                         return;
 
-                    for (int i = 0; i < rewards.Length; i++)
+                    for (int i = 0; i < battleData.rewards.Count; i++)
                     {
                         var reward = battleData.rewards[i];
                         rewards[i].gameObject.SetActive(true);
