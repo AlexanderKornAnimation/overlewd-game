@@ -568,6 +568,7 @@ namespace Overlewd
             public string title;
             public string type;
             public List<Reward> rewards;
+            public string rewardSpriteString;
             public List<Reward> firstRewards;
             public List<Phase> battlePhases;
 

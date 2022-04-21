@@ -8,28 +8,22 @@ namespace Overlewd
 {
     namespace NSTeamEditScreen
     {
-        public class CharacterDrag : MonoBehaviour, IEndDragHandler, IDragHandler
+        public class CharacterDrag : MonoBehaviour
         {
-            private RectTransform rectTr;
+            public CharacterDragger dragger { get; private set; }
+            public TeamEditScreen screen { get; set; }
 
             void Awake()
             {
-                rectTr = GetComponent<RectTransform>();
+                var canvas = transform.Find("Canvas");
+                dragger = canvas.Find("DragDetectorArea").GetComponent<CharacterDragger>();
+                dragger.dragObj = this;
             }
 
-            public void OnEndDrag(PointerEventData eventData)
+            public static CharacterDrag GetInstance(Transform parent)
             {
-                Debug.Log("end drag ch");
-                rectTr.anchoredPosition = Vector2.zero;
-                Destroy(this);
-            }
-
-            public void OnDrag(PointerEventData eventData)
-            {
-                Debug.Log("drag ch");
-                rectTr.position += new Vector3(eventData.delta.x, eventData.delta.y);
-                //rectTr.anchoredPosition += eventData.delta / UIManager.GetScreenScaleFactor();
-                //rectTr.position = Input.mousePosition;
+                return ResourceManager.InstantiateWidgetPrefab<CharacterDrag>(
+                    "Prefabs/UI/Screens/TeamEditScreen/CharacterDrag", parent);
             }
         }
     }

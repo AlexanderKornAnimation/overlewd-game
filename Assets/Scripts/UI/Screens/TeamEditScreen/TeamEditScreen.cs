@@ -18,14 +18,14 @@ namespace Overlewd
         private const int tabBruisers = 4;
         private const int tabTanks = 5;
         private const int tabsCount = 6;
-        
+
         private int activeTabId;
 
         private Button backButton;
 
-        private string[] tabNames = {"AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks"};
+        private string[] tabNames = { "AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks" };
 
-        private int[] tabIds = {tabAllUnits, tabAssassins, tabCasters, tabHealers, tabBruisers, tabTanks};
+        private int[] tabIds = { tabAllUnits, tabAssassins, tabCasters, tabHealers, tabBruisers, tabTanks };
         private Button[] tabs = new Button[tabsCount];
         private GameObject[] pressedTabs = new GameObject[tabsCount];
         private GameObject[] scrollViews = new GameObject[tabsCount];
@@ -39,12 +39,16 @@ namespace Overlewd
         private int? eventMapStageId;
         private AdminBRO.FTUEStageItem mapStageData;
 
+        private Transform canvas;
+
+        public NSTeamEditScreen.CharacterDrag chDragObj { get; private set; }
+
         private void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/TeamEditScreen/TeamEditScreen", transform);
 
-            var canvas = screenInst.transform.Find("Canvas");
+            canvas = screenInst.transform.Find("Canvas");
             var tabsArea = canvas.Find("TabsArea");
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var charactersBack = canvas.Find("CharactersBack");
@@ -111,12 +115,34 @@ namespace Overlewd
 
         public void SlotOneDrop()
         {
-            Debug.Log("slot 1 drop");
+            if (chDragObj != null)
+            {
+                Debug.Log("slot 1 drop");
+            }
         }
 
         public void SlotTwoDrop()
         {
-            Debug.Log("slot 2 drop");
+            if (chDragObj != null)
+            {
+                Debug.Log("slot 2 drop");
+            }
+        }
+
+        public NSTeamEditScreen.CharacterDrag MakeDragCharacterObject()
+        {
+            if (chDragObj == null)
+            {
+                chDragObj = NSTeamEditScreen.CharacterDrag.GetInstance(canvas);
+                chDragObj.screen = this;
+            }
+            return chDragObj;
+        }
+
+        public void DestroyDragCharacterObject()
+        {
+            Destroy(chDragObj?.gameObject);
+            chDragObj = null;
         }
 
         private void TabClick(int tabId)

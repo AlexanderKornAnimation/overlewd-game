@@ -237,6 +237,8 @@ namespace Overlewd
 
             GameData.buildings = await AdminBRO.buildingsAsync();
 
+            GameData.characters = await AdminBRO.charactersAsync();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();
