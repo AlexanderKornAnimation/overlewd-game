@@ -14,7 +14,6 @@ namespace Overlewd
             private TextMeshProUGUI level;
             private TextMeshProUGUI girlClass;
             private Transform equipStatus;
-            public CharacterDragDetector dragDetector { get; private set; }
 
             void Awake()
             {
@@ -23,7 +22,6 @@ namespace Overlewd
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 girlClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
                 equipStatus = canvas.Find("Notification");
-                dragDetector = canvas.Find("DragDetectorArea").GetComponent<CharacterDragDetector>();
             }
 
             public static Character GetInstance(Transform parent)
