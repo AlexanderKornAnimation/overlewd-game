@@ -602,6 +602,10 @@ namespace Overlewd
         public class Character
         {
             public int id;
+            public int? teamPosition;
+            public string teamEditPersIcon;
+            public string teamEditSlotPersIcon;
+            public string fullScreenPersIcon;
             public string name;
             public string characterClass;
             public List<int> animations;
