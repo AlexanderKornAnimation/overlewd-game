@@ -15,7 +15,6 @@ namespace Overlewd
         protected Button chapterButton;
         protected TextMeshProUGUI chapterButtonText;
         protected Button backbutton;
-        protected TextMeshProUGUI backButtonMarkers;
         protected TextMeshProUGUI chapterButtonMarkers;
 
         protected GameObject chapterMap;
@@ -32,7 +31,6 @@ namespace Overlewd
             chapterButtonText = chapterButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             chapterButtonMarkers = chapterButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             backbutton = canvas.Find("BackButton").GetComponent<Button>();
-            backButtonMarkers = backbutton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
 
             chapterButton.onClick.AddListener(ChapterButtonClick);
             backbutton.onClick.AddListener(BackButtonClick);

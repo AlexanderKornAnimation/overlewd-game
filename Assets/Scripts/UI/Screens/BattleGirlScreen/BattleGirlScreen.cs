@@ -9,12 +9,14 @@ namespace Overlewd
 {
     public class BattleGirlScreen : BaseFullScreen
     {
-        public AdminBRO.Character character { get; set; }
+        private AdminBRO.Character character;
         
         private Button backButton;
-        private Button levelUpButton;
         private Button forgeButton;
         private Button sexSceneButton;
+        
+        private Button levelUpButton;
+        private GameObject levelUpButtonMaxLevel;
 
         private TextMeshProUGUI speed;
         private TextMeshProUGUI power;
@@ -28,7 +30,10 @@ namespace Overlewd
         private TextMeshProUGUI damageDealt;
 
         private Image rarityBack;
-        private TextMeshProUGUI rarity;
+        private TextMeshProUGUI classIcon;
+        private TextMeshProUGUI className;
+        private TextMeshProUGUI characterName;
+        private TextMeshProUGUI potency;
 
         private Image weapon;
         private Button weaponScreenButton;
@@ -51,6 +56,8 @@ namespace Overlewd
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
             
             levelUpButton = canvas.Find("LevelUpButton").GetComponent<Button>();
+            levelUpButtonMaxLevel = levelUpButton.transform.Find("MaxLevel").GetComponent<GameObject>();
+            
             forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
             sexSceneButton = canvas.Find("SexSceneButton").GetComponent<Button>();
 
@@ -65,8 +72,11 @@ namespace Overlewd
             health = secondaryStats.Find("Health").Find("Stat").GetComponent<TextMeshProUGUI>();
             damageDealt = secondaryStats.Find("DamageDealt").Find("Stat").GetComponent<TextMeshProUGUI>();
 
-            rarityBack = info.Find("RarityBack").GetComponent<Image>();
-            rarity = rarityBack.transform.Find("Rarity").GetComponent<TextMeshProUGUI>();
+            rarityBack = info.Find("ClassBack").GetComponent<Image>();
+            classIcon = rarityBack.transform.Find("Icon").GetComponent<TextMeshProUGUI>();
+            className = rarityBack.transform.Find("ClassName").GetComponent<TextMeshProUGUI>();
+            characterName = info.Find("NameBack").Find("Name").GetComponent<TextMeshProUGUI>();
+            potency = info.Find("PotencyBack").Find("Value").GetComponent<TextMeshProUGUI>();
         }
 
         private void Start()
