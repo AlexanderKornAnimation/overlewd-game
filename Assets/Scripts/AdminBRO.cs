@@ -584,14 +584,14 @@ namespace Overlewd
 
             public class Phase 
             {
-                public List<int> enemyCharacters;
+                public List<Character> enemyCharacters;
             }
         }
 
-        // /characters
+        // /my/characters
         public static async Task<List<Character>> charactersAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/characters";
+            var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
@@ -601,7 +601,7 @@ namespace Overlewd
         [Serializable]
         public class Character
         {
-            public int id;
+            public int? id;
             public int? teamPosition;
             public string teamEditPersIcon;
             public string teamEditSlotPersIcon;
@@ -612,16 +612,16 @@ namespace Overlewd
             public int? level;
             public string rarity;
             public List<int> equipment;
-            public float speed;
-            public float power;
-            public float constitution;
-            public float agility;
-            public float accuracy;
-            public float dodge;
-            public float critrate;
-            public float health;
-            public float damage;
-            public float mana;
+            public float? speed;
+            public float? power;
+            public float? constitution;
+            public float? agility;
+            public float? accuracy;
+            public float? dodge;
+            public float? critrate;
+            public float? health;
+            public float? damage;
+            public float? mana;
 
             public const string Class_Assassin = "Assassin";
             public const string Class_Bruiser = "Bruiser";
@@ -646,11 +646,13 @@ namespace Overlewd
             public const string Rarity_Basic = "basic";
         }
 
-        // /characters/equipment
-        // /battles/characters/{id}/equip/{id}
-        public static async Task<List<Equipment>> equipmentsAsync()
+        // /my/characters/equipment
+        // /battles/my/characters/{id}/equip/{id} - post
+        // /battles/my/characters/{id}/equip/{id} - delete
+        // /battles/my/characters/{id}
+        public static async Task<List<Equipment>> equipmentAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/characters/equipment";
+            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
@@ -659,7 +661,7 @@ namespace Overlewd
 
         public static async Task equipAsync(int characterId, int equipmentId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/characters/{characterId}/equip/{equipmentId}";
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -667,10 +669,32 @@ namespace Overlewd
             }
         }
 
+        public static async Task unequipAsync(int characterId, int equipmentId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
+            var form = new WWWForm();
+            using (var request = await HttpCore.DeleteAsync(url, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task characterSetSlotAsync(int characterId, int? slotId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
+            var form = new WWWForm();
+            form.AddField("teamPosition", slotId.ToString());
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         [Serializable]
         public class Equipment
         {
             public int id;
+            public int? characterId;
             public string name;
             public float speed;
             public float power;

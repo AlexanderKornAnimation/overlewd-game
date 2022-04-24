@@ -185,6 +185,12 @@ namespace Overlewd
         {
             return characters.Find(ch => ch.id == id);
         }
+
+        public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();
+        public static AdminBRO.Equipment GetEquipmentById(int id)
+        {
+            return equipment.Find(eq => eq.id == id);
+        }
     }
 
 }

@@ -239,6 +239,8 @@ namespace Overlewd
 
             GameData.characters = await AdminBRO.charactersAsync();
 
+            GameData.equipment = await AdminBRO.equipmentAsync();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();
