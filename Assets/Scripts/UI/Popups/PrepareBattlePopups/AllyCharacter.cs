@@ -1,15 +1,12 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Overlewd
 {
     namespace NSPrepareBattlePopup
     {
-        public class EnemyCharacter : BaseCharacter
+        public class AllyCharacter : BaseCharacter
         {
             protected override void Start()
             {
@@ -18,13 +15,12 @@ namespace Overlewd
 
             protected override void Customize()
             {
-
             }
 
-            public static EnemyCharacter GetInstance(Transform parent)
+            public static AllyCharacter GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<EnemyCharacter>(
-                    "Prefabs/UI/Popups/PrepareBattlePopups/EnemyCharacter", parent);
+                return ResourceManager.InstantiateWidgetPrefab<AllyCharacter>(
+                    "Prefabs/UI/Popups/PrepareBattlePopups/AllyCharacter", parent);
             }
         }
     }
