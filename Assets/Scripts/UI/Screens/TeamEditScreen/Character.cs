@@ -10,6 +10,9 @@ namespace Overlewd
     {
         public class Character : MonoBehaviour
         {
+            public int characterId { get; set; }
+            public TeamEditScreen screen { private get; set; }
+
             private Image girlIcon;
             private TextMeshProUGUI level;
             private TextMeshProUGUI girlClass;
@@ -24,12 +27,46 @@ namespace Overlewd
                 var girl = canvas.Find("Girl");
                 
                 girlIcon = girl.GetComponent<Image>();
-                equipButton = girl.GetComponent<Button>();
+                equipButton = canvas.Find("EquipButton").GetComponent<Button>();
+                equipButton.onClick.AddListener(EquipButtonClick);
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 girlClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
                 equipStatus = canvas.Find("EquipStatus");
                 girlScreenButton = canvas.Find("GirlScreenButton").GetComponent<Button>();
+                girlScreenButton.onClick.AddListener(GirlScreenButtonClick);
                 notificationNew = canvas.Find("NotificationNew").GetComponent<GameObject>();
+            }
+
+            void Start()
+            {
+                Customize();
+            }
+
+            public void Customize()
+            {
+                var chData = GameData.GetCharacterById(characterId);
+                girlIcon.sprite = ResourceManager.LoadSprite(chData.teamEditPersIcon);
+                if (chData.teamPosition.HasValue)
+                {
+                    girlIcon.color = Color.gray;
+                    equipStatus.gameObject.SetActive(true);
+                }
+                else
+                {
+                    girlIcon.color = Color.white;
+                    equipStatus.gameObject.SetActive(false);
+                }
+
+            }
+
+            private void EquipButtonClick()
+            {
+                screen.TryEquipOrUnequip(characterId);
+            }
+
+            private void GirlScreenButtonClick()
+            {
+                
             }
 
             public static Character GetInstance(Transform parent)

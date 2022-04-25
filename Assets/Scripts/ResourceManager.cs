@@ -174,6 +174,11 @@ namespace Overlewd
 
         public static Texture2D LoadTexture(string id)
         {
+            if (String.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+
             var item = textures.Find(item => item.key == id);
             if (item != null)
             {

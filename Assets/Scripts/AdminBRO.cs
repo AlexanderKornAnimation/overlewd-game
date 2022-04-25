@@ -672,19 +672,27 @@ namespace Overlewd
         public static async Task unequipAsync(int characterId, int equipmentId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
-            var form = new WWWForm();
             using (var request = await HttpCore.DeleteAsync(url, tokens?.accessToken))
             {
 
             }
         }
 
-        public static async Task characterSetSlotAsync(int characterId, int? slotId)
+        [Serializable]
+        public class CharacterPostData
+        {
+            public int? teamPosition;
+        }
+
+        public static async Task characterPostAsync(int characterId, int? slotId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
-            var form = new WWWForm();
-            form.AddField("teamPosition", slotId.ToString());
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            var postData = JsonHelper.SerializeObject(
+                new CharacterPostData 
+                {
+                    teamPosition = slotId
+                });
+            using (var request = await HttpCore.PostAsync(url, postData, tokens?.accessToken))
             {
 
             }
