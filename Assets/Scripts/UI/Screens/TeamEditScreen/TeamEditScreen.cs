@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -126,36 +127,20 @@ namespace Overlewd
 
         private int? GetCharacterInSlot1()
         {
-            foreach (var ch in GameData.characters)
-            {
-                if (ch.teamPosition.HasValue)
-                {
-                    if (ch.teamPosition.Value == 1)
-                        return ch.id;
-                }
-            }
-            return null;
+            return GameData.characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1)?.id;
         }
 
         private int? GetCharacterInSlot2()
         {
-            foreach (var ch in GameData.characters)
-            {
-                if (ch.teamPosition.HasValue)
-                {
-                    if (ch.teamPosition.Value == 2)
-                        return ch.id;
-                }
-            }
-            return null;
+            return GameData.characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2)?.id;
         }
 
         public async void TryEquipOrUnequip(int chId)
         {
             var chData = GameData.GetCharacterById(chId);
-            if (chData.teamPosition.HasValue)
+            if (chData.teamPosition != AdminBRO.Character.TeamPosition_None)
             {
-                await AdminBRO.characterPostAsync(chId, null);
+                await AdminBRO.characterPostAsync(chId, AdminBRO.Character.TeamPosition_None);
                 GameData.characters = await AdminBRO.charactersAsync();
                 Customize();
             }
@@ -163,13 +148,13 @@ namespace Overlewd
             {
                 if (!GetCharacterInSlot1().HasValue)
                 {
-                    await AdminBRO.characterPostAsync(chId, 1);
+                    await AdminBRO.characterPostAsync(chId, AdminBRO.Character.TeamPosition_Slot1);
                     GameData.characters = await AdminBRO.charactersAsync();
                     Customize();
                 }
                 else if (!GetCharacterInSlot2().HasValue)
                 {
-                    await AdminBRO.characterPostAsync(chId, 2);
+                    await AdminBRO.characterPostAsync(chId, AdminBRO.Character.TeamPosition_Slot2);
                     GameData.characters = await AdminBRO.charactersAsync();
                     Customize();
                 }
@@ -260,7 +245,8 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            foreach (var ch in GameData.characters)
+            var orderedCharactersById = GameData.characters.OrderBy(ch => ch.id).ToList();
+            foreach (var ch in orderedCharactersById)
             {
                 if (ch.characterClass == AdminBRO.Character.Class_Overlord)
                     continue;

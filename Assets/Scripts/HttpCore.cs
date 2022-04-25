@@ -79,34 +79,6 @@ namespace Overlewd
             }
         }
 
-        public static async Task<UnityWebRequest> PostAsync(string url, string postData, string token = null)
-        {
-            try
-            {
-                var request = UnityWebRequest.Post(url, postData);
-                UIManager.AddUserInputLocker(new UserInputLocker(request));
-
-                if (token != null)
-                {
-                    request.SetRequestHeader("Authorization", "Bearer " + token);
-                }
-                request.SetRequestHeader("Version", ApiVersion);
-
-                await request.SendWebRequest();
-                UIManager.RemoveUserInputLocker(new UserInputLocker(request));
-
-                return request;
-            }
-            catch (UnityWebRequestException e)
-            {
-                UIManager.RemoveUserInputLocker(new UserInputLocker(e.UnityWebRequest));
-
-                Debug.LogError(e.UnityWebRequest.url);
-                Debug.LogError(e.Message);
-                return default;
-            }
-        }
-
         public static async Task<UnityWebRequest> DeleteAsync(string url, string token = null)
         {
             try

@@ -602,7 +602,7 @@ namespace Overlewd
         public class Character
         {
             public int? id;
-            public int? teamPosition;
+            public string teamPosition;
             public string teamEditPersIcon;
             public string teamEditSlotPersIcon;
             public string fullScreenPersIcon;
@@ -622,6 +622,10 @@ namespace Overlewd
             public float? health;
             public float? damage;
             public float? mana;
+
+            public const string TeamPosition_Slot1 = "slot1";
+            public const string TeamPosition_Slot2 = "slot2";
+            public const string TeamPosition_None = "none";
 
             public const string Class_Assassin = "Assassin";
             public const string Class_Bruiser = "Bruiser";
@@ -684,15 +688,12 @@ namespace Overlewd
             public int? teamPosition;
         }
 
-        public static async Task characterPostAsync(int characterId, int? slotId)
+        public static async Task characterPostAsync(int characterId, string slotId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
-            var postData = JsonHelper.SerializeObject(
-                new CharacterPostData 
-                {
-                    teamPosition = slotId
-                });
-            using (var request = await HttpCore.PostAsync(url, postData, tokens?.accessToken))
+            var form = new WWWForm();
+            form.AddField("teamPosition", slotId);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
             }
