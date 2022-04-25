@@ -21,8 +21,6 @@ namespace Overlewd
 
         private int activeTabId;
 
-        private Button backButton;
-
         private string[] tabNames = { "AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks" };
 
         private int[] tabIds = { tabAllUnits, tabAssassins, tabCasters, tabHealers, tabBruisers, tabTanks };
@@ -31,6 +29,7 @@ namespace Overlewd
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
 
+        private Button backButton;
         private Transform slot1;
         private Transform slot2;
 

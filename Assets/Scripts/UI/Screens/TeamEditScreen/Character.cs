@@ -14,14 +14,22 @@ namespace Overlewd
             private TextMeshProUGUI level;
             private TextMeshProUGUI girlClass;
             private Transform equipStatus;
+            private Button girlScreenButton;
+            private Button equipButton;
+            private GameObject notificationNew;
 
             void Awake()
             {
                 var canvas = transform.Find("Canvas");
-                girlIcon = canvas.Find("Girl").GetComponent<Image>();
+                var girl = canvas.Find("Girl");
+                
+                girlIcon = girl.GetComponent<Image>();
+                equipButton = girl.GetComponent<Button>();
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 girlClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
-                equipStatus = canvas.Find("Notification");
+                equipStatus = canvas.Find("EquipStatus");
+                girlScreenButton = canvas.Find("GirlScreenButton").GetComponent<Button>();
+                notificationNew = canvas.Find("NotificationNew").GetComponent<GameObject>();
             }
 
             public static Character GetInstance(Transform parent)
