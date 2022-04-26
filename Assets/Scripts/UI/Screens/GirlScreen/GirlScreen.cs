@@ -92,14 +92,14 @@ namespace Overlewd
         
         protected virtual void BannerButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<MemoryListScreen>();
+            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            // UIManager.ShowScreen<MemoryListScreen>();
         }
         
         protected virtual void PortalButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<PortalScreen>();
+            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            // UIManager.ShowScreen<PortalScreen>();
         }
         
         protected virtual void ChestButtonClick()

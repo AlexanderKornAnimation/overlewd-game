@@ -31,6 +31,7 @@ namespace Overlewd
         private Transform[] scrollContents = new Transform[tabsCount];
 
         private Button backButton;
+        private Button overlordButton;
 
         private Transform slot1;
         private Transform slot1_SlotEmptyHint;
@@ -70,6 +71,9 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
+
+            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton.onClick.AddListener(OverlordButtonClick);
 
             foreach (var i in tabIds)
             {
@@ -325,6 +329,11 @@ namespace Overlewd
             {
                 UIManager.ShowScreen<HaremScreen>();
             }
+        }
+
+        private void OverlordButtonClick()
+        {
+            
         }
     }
 
