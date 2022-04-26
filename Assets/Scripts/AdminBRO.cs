@@ -401,6 +401,7 @@ namespace Overlewd
             public string mapNodeName;
             public List<int> nextStages;
             public string status;
+            public int? order;
 
             public const string Type_Battle = "battle";
             public const string Type_Dialog = "dialog";
@@ -771,6 +772,7 @@ namespace Overlewd
             public List<FTUENotificationItem> notifications;
             public List<int> stages;
             public int? nextChapterId;
+            public int? order;
         }
 
         [Serializable]
@@ -801,6 +803,7 @@ namespace Overlewd
             public string status;
             public string type;
             public List<int> nextStages;
+            public int? order;
 
             public const string Status_Open = "open";
             public const string Status_Started = "started";
