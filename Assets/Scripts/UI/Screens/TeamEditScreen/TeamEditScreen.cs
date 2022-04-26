@@ -56,8 +56,7 @@ namespace Overlewd
         private Transform slot2_Potency;
         private TextMeshProUGUI slot2_PotencyValue;
 
-        private int? eventMapStageId;
-        private AdminBRO.FTUEStageItem mapStageData;
+        private TeamEditScreenInData inputData;
 
         private void Awake()
         {
@@ -113,15 +112,9 @@ namespace Overlewd
             slot2_PotencyValue = slot2_Potency.Find("Value").GetComponent<TextMeshProUGUI>();
         }
 
-        public TeamEditScreen SetDataFromMapScreen(AdminBRO.FTUEStageItem stageData)
+        public TeamEditScreen SetData(TeamEditScreenInData data)
         {
-            mapStageData = stageData;
-            return this;
-        }
-
-        public TeamEditScreen SetDataFromEventMapScreen(int stageId)
-        {
-            eventMapStageId = stageId;
+            inputData = data;
             return this;
         }
 
@@ -309,16 +302,31 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            if (mapStageData != null)
+            if (inputData != null)
             {
-                UIManager.MakeScreen<MapScreen>().
-                    SetDataFromTeamEdit(mapStageData).RunShowScreenProcess();
-            }
-            else if (eventMapStageId.HasValue)
-            {
-                UIManager.MakeScreen<EventMapScreen>().
-                    SetDataFromTeamEdit(eventMapStageId.Value).RunShowScreenProcess();
+                if (inputData.mapStageData != null)
+                {
+                    UIManager.MakeScreen<MapScreen>().
+                        SetData(new MapScreenInData 
+                        { 
+                            teamEditStageData = inputData.mapStageData 
+                        }).RunShowScreenProcess();
+                }
+                else if (inputData.eventMapStageId.HasValue)
+                {
+                    UIManager.MakeScreen<EventMapScreen>().
+                        SetData(new EventMapScreenInData
+                        {
+                            teamEditStageId = inputData.eventMapStageId
+                        }).RunShowScreenProcess();
+                }
             }
         }
+    }
+
+    public class TeamEditScreenInData
+    {
+        public int? eventMapStageId;
+        public AdminBRO.FTUEStageItem mapStageData;
     }
 }

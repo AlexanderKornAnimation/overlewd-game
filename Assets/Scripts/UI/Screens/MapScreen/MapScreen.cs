@@ -20,7 +20,7 @@ namespace Overlewd
         protected GameObject chapterMap;
         protected AdminBRO.FTUEChapter nextChapterData;
 
-        private AdminBRO.FTUEStageItem teamEditStageData;
+        private MapScreenInData inputData;
 
         protected virtual void Awake()
         {
@@ -38,9 +38,9 @@ namespace Overlewd
             map = canvas.Find("Map");
         }
 
-        public MapScreen SetDataFromTeamEdit(AdminBRO.FTUEStageItem stageData)
+        public MapScreen SetData(MapScreenInData data)
         {
-            teamEditStageData = stageData;
+            inputData = data;
             return this;
         }
 
@@ -148,22 +148,26 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (teamEditStageData != null)
+            if (inputData != null)
             {
-                if (teamEditStageData.battleId.HasValue)
+                var teamEditStageData = inputData.teamEditStageData;
+                if (teamEditStageData != null)
                 {
-                    var battleData = GameData.GetBattleById(teamEditStageData.battleId.Value);
-                    if (battleData != null)
+                    if (teamEditStageData.battleId.HasValue)
                     {
-                        if (battleData.type == AdminBRO.Battle.Type_Battle)
+                        var battleData = GameData.GetBattleById(teamEditStageData.battleId.Value);
+                        if (battleData != null)
                         {
-                            UIManager.MakePopup<FTUE.PrepareBattlePopup>().
-                                SetStageData(teamEditStageData).RunShowPopupProcess();
-                        }
-                        else if (battleData.type == AdminBRO.Battle.Type_Boss)
-                        {
-                            UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
-                                SetStageData(teamEditStageData).RunShowPopupProcess();
+                            if (battleData.type == AdminBRO.Battle.Type_Battle)
+                            {
+                                UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                                    SetStageData(teamEditStageData).RunShowPopupProcess();
+                            }
+                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                            {
+                                UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                                    SetStageData(teamEditStageData).RunShowPopupProcess();
+                            }
                         }
                     }
                 }
@@ -265,5 +269,10 @@ namespace Overlewd
             }
             return chapterData;
         }
+    }
+
+    public class MapScreenInData
+    {
+        public AdminBRO.FTUEStageItem teamEditStageData;
     }
 }

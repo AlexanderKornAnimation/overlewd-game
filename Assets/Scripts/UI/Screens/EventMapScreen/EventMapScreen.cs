@@ -20,7 +20,7 @@ namespace Overlewd
         private List<NSEventMapScreen.DialogButton> dialogButtons = new List<NSEventMapScreen.DialogButton>();
         private List<NSEventMapScreen.SexButton> sexButtons = new List<NSEventMapScreen.SexButton>();
 
-        private int? teamEditStageId;
+        private EventMapScreenInData inputData;
 
         private void Awake()
         {
@@ -37,9 +37,9 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
         }
 
-        public EventMapScreen SetDataFromTeamEdit(int stageId)
+        public EventMapScreen SetData(EventMapScreenInData data)
         {
-            teamEditStageId = stageId;
+            inputData = data;
             return this;
         }
 
@@ -126,23 +126,27 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (teamEditStageId.HasValue)
+            if (inputData != null)
             {
-                var stageData = GameData.GetEventStageById(teamEditStageId.Value);
-                if (stageData != null)
+                var teamEditStageId = inputData.teamEditStageId;
+                if (teamEditStageId.HasValue)
                 {
-                    if (stageData.battleId.HasValue)
+                    var stageData = GameData.GetEventStageById(teamEditStageId.Value);
+                    if (stageData != null)
                     {
-                        var battleData = GameData.GetBattleById(stageData.battleId.Value);
-                        if (battleData.type == AdminBRO.Battle.Type_Battle)
+                        if (stageData.battleId.HasValue)
                         {
-                            UIManager.MakePopup<PrepareBattlePopup>().
-                                SetData(teamEditStageId.Value).RunShowPopupProcess();
-                        }
-                        else if (battleData.type == AdminBRO.Battle.Type_Boss)
-                        {
-                            UIManager.MakePopup<PrepareBossFightPopup>().
-                                SetData(teamEditStageId.Value).RunShowPopupProcess();
+                            var battleData = GameData.GetBattleById(stageData.battleId.Value);
+                            if (battleData.type == AdminBRO.Battle.Type_Battle)
+                            {
+                                UIManager.MakePopup<PrepareBattlePopup>().
+                                    SetData(teamEditStageId.Value).RunShowPopupProcess();
+                            }
+                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                            {
+                                UIManager.MakePopup<PrepareBossFightPopup>().
+                                    SetData(teamEditStageId.Value).RunShowPopupProcess();
+                            }
                         }
                     }
                 }
@@ -193,5 +197,10 @@ namespace Overlewd
             }
             return null;
         }
+    }
+
+    public class EventMapScreenInData
+    {
+        public int? teamEditStageId;
     }
 }
