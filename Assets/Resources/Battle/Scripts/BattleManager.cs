@@ -26,7 +26,7 @@ namespace Overlewd
         public GameObject PlayerStats;
         public Transform PlayerStatsContent;
 
-        public Button skill_0, skill_1, skill_2;
+        public SkillController[] skillControllers;
         public SkillController potion_0, potion_1;
         public GameObject healVFX;
 
@@ -45,9 +45,10 @@ namespace Overlewd
         {
             battleScene = FindObjectOfType<BaseBattleScreen>();
 
-            if (skill_0) skill_0.onClick.AddListener(Button1);
-            if (skill_1) skill_1.onClick.AddListener(Button2);
-            if (skill_2) skill_2.onClick.AddListener(Button3);
+            if (skillControllers[0]) skillControllers[0].button.onClick.AddListener(Button1);
+            if (skillControllers[1]) skillControllers[1].button.onClick.AddListener(Button2);
+            if (skillControllers[2]) skillControllers[2].button.onClick.AddListener(Button3);
+
             if (potion_0) potion_0.button.onClick.AddListener(UseMPPotion);
             if (potion_1) potion_1.button.onClick.AddListener(UseHPPotion);
 
@@ -110,9 +111,12 @@ namespace Overlewd
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
             if (charControllerList[0].isEnemy)
                 battleState = BattleState.ENEMY;
-            else
+            else 
+            {
                 battleState = BattleState.PLAYER;
+            }
             ccOnSelect = charControllerList[step];
+            SetSkillCtrl(ccOnSelect);
             StartCoroutine(LateInit());
         }
 
@@ -142,7 +146,7 @@ namespace Overlewd
         public void Button1()
         {
             UnselectButtons();
-            skill_0.GetComponent<SkillController>().Select();
+            skillControllers[0].Select();
             if (ccOnClick != null && battleState == BattleState.PLAYER) //|| onClick.isEnemy == false
             {
                 ani.SetTrigger("Player");
@@ -155,7 +159,7 @@ namespace Overlewd
         public void Button2()
         {
             UnselectButtons();
-            skill_1.GetComponent<SkillController>().Select();
+            skillControllers[1].Select();
             if (battleState == BattleState.PLAYER)
             {
                 ani.SetTrigger("Player");
@@ -170,7 +174,7 @@ namespace Overlewd
         public void Button3()
         {
             UnselectButtons();
-            skill_2.GetComponent<SkillController>().Select();
+            skillControllers[2].Select();
             if (battleState == BattleState.PLAYER && ccOnSelect.isOverlord)
             {
                 ani.SetTrigger("Player");
@@ -222,9 +226,8 @@ namespace Overlewd
         }
         public void UnselectButtons()
         {
-            skill_0.GetComponent<SkillController>().Unselect();
-            skill_1.GetComponent<SkillController>().Unselect();
-            skill_2.GetComponent<SkillController>().Unselect();
+            for (int i = 0; i < skillControllers.Length; i++)
+                skillControllers[i].Unselect();
         }
         public void WinOrLose(bool isWin)
         {
@@ -291,9 +294,18 @@ namespace Overlewd
             }
             else
             {
+                SetSkillCtrl(ccOnSelect);
                 battleState = BattleState.PLAYER;
-                skill_2.gameObject.SetActive(ccOnSelect.isOverlord); //Turn Off Attack 3 button on screen
+                skillControllers[2].gameObject.SetActive(ccOnSelect.isOverlord); //Turn Off Attack 3 button on screen
                 ccOnSelect.CharPortraitSet();
+            }
+        }
+
+        private void SetSkillCtrl(CharController character)
+        {
+            for (int i = 0; i < ccOnSelect.skill.Length; i++)
+            { //add selected character skill on button controller
+                skillControllers[i].ReplaceSkill(character.skill[i]);
             }
         }
 

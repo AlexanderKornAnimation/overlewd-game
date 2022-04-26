@@ -11,7 +11,8 @@ namespace Overlewd
         public string skillName;
         public string discription;
         public Sprite battleIco;
-        public GameObject vfx;
+        public GameObject vfx = null;
+        public float vfxDuration = 0f;
         public AudioClip sfx;
         public bool select;
 
@@ -20,6 +21,12 @@ namespace Overlewd
         public int amount = 0; //potions any supplies
         public int cooldown = 0; //in rounds
         public int cooldownCount = 0;
+
+        private void Awake()
+        {
+            if (vfx != null && vfx.GetComponent<VFXManager>() != null)
+                vfxDuration = vfx.GetComponent<VFXManager>().duration;
+        }
 
         public void SaveAmount(int am) => amount = am;
         public void SaveCDcount(int cdc) => cooldownCount = cdc;

@@ -16,6 +16,7 @@ namespace Overlewd
             private GameObject fightDone;
             private TextMeshProUGUI title;
             private TextMeshProUGUI loot;
+            private TextMeshProUGUI markers;
 
             void Awake()
             {
@@ -27,6 +28,7 @@ namespace Overlewd
                 fightDone = button.transform.Find("FightDone").gameObject;
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
+                markers = button.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             }
 
             void Start()

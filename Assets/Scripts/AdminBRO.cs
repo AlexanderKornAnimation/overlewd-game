@@ -401,6 +401,7 @@ namespace Overlewd
             public string mapNodeName;
             public List<int> nextStages;
             public string status;
+            public int? order;
 
             public const string Type_Battle = "battle";
             public const string Type_Dialog = "dialog";
@@ -568,6 +569,7 @@ namespace Overlewd
             public string title;
             public string type;
             public List<Reward> rewards;
+            public string rewardSpriteString;
             public List<Reward> firstRewards;
             public List<Phase> battlePhases;
 
@@ -583,14 +585,14 @@ namespace Overlewd
 
             public class Phase 
             {
-                public List<int> enemyCharacters;
+                public List<Character> enemyCharacters;
             }
         }
 
-        // /characters
+        // /my/characters
         public static async Task<List<Character>> charactersAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/characters";
+            var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
@@ -600,34 +602,87 @@ namespace Overlewd
         [Serializable]
         public class Character
         {
-            public int id;
+            public int? id;
+            public string teamPosition;
+            public string teamEditPersIcon;
+            public string teamEditSlotPersIcon;
+            public string fullScreenPersIcon;
             public string name;
             public string characterClass;
             public List<int> animations;
             public int? level;
             public string rarity;
             public List<int> equipment;
-            public float speed;
-            public float power;
-            public float constitution;
-            public float agility;
-            public float accuracy;
-            public float dodge;
-            public float critrate;
-            public float health;
-            public float damage;
-            public float mana;
+            public float? speed;
+            public float? power;
+            public float? constitution;
+            public float? agility;
+            public float? accuracy;
+            public float? dodge;
+            public float? critrate;
+            public float? health;
+            public float? damage;
+            public float? mana;
+
+            public const string TeamPosition_Slot1 = "slot1";
+            public const string TeamPosition_Slot2 = "slot2";
+            public const string TeamPosition_None = "none";
 
             public const string Class_Assassin = "Assassin";
+            public const string Class_Bruiser = "Bruiser";
+            public const string Class_Caster = "Caster";
+            public const string Class_Healer = "Healer";
+            public const string Class_Overlord = "Overlord";
+            public const string Class_Tank = "Tank";
+
+            public const string Sprite_AllyAssassin = "<sprite=\"ClassesNLevel\" name=\"AllyAssasin\">";
+            public const string Sprite_AllyBruiser = "<sprite=\"ClassesNLevel\" name=\"AllyBruiser\">";
+            public const string Sprite_AllyCaster = "<sprite=\"ClassesNLevel\" name=\"AllyCaster\">";
+            public const string Sprite_AllyHealer = "<sprite=\"ClassesNLevel\" name=\"AllyHealer\">";
+            public const string Sprite_Overlord = "<sprite=\"ClassesNLevel\" name=\"Overlord\">";
+            public const string Sprite_AllyTank = "<sprite=\"ClassesNLevel\" name=\"AllyTank\">";
+            public static string GetMyClassMarker(string classId)
+            {
+                return classId switch
+                {
+                    Class_Assassin => Sprite_AllyAssassin,
+                    Class_Bruiser => Sprite_AllyBruiser,
+                    Class_Caster => Sprite_AllyCaster,
+                    Class_Healer => Sprite_AllyHealer,
+                    Class_Overlord => Sprite_Overlord,
+                    Class_Tank => Sprite_AllyTank,
+                    _ => ""
+                };
+            }
+            
+            public const string Sprite_EnemyAssassin = "<sprite=\"ClassesNLevel\" name=\"EnemyAssasin\">";
+            public const string Sprite_EnemyBruiser = "<sprite=\"ClassesNLevel\" name=\"EnemyBruiser\">";
+            public const string Sprite_EnemyCaster = "<sprite=\"ClassesNLevel\" name=\"EnemyCaster\">";
+            public const string Sprite_EnemyHealer = "<sprite=\"ClassesNLevel\" name=\"EnemyHealer\">";
+            public const string Sprite_EnemyTank = "<sprite=\"ClassesNLevel\" name=\"EnemyTank\">";
+            public static string GetEnemyClassMarker(string classId)
+            {
+                return classId switch
+                {
+                    Class_Assassin => Sprite_EnemyAssassin,
+                    Class_Bruiser => Sprite_EnemyBruiser,
+                    Class_Caster => Sprite_EnemyCaster,
+                    Class_Healer => Sprite_EnemyHealer,
+                    Class_Tank => Sprite_EnemyTank,
+                    _ => ""
+                };
+            }
 
             public const string Rarity_Basic = "basic";
         }
 
-        // /characters/equipment
-        // /battles/characters/{id}/equip/{id}
-        public static async Task<List<Equipment>> equipmentsAsync()
+        // /my/characters/equipment
+        // /battles/my/characters/{id}/equip/{id} - post
+        // /battles/my/characters/{id}/equip/{id} - delete
+        // /battles/my/characters/{id}
+        public static async Task<List<Equipment>> equipmentAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/characters/equipment";
+            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
@@ -636,7 +691,7 @@ namespace Overlewd
 
         public static async Task equipAsync(int characterId, int equipmentId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/characters/{characterId}/equip/{equipmentId}";
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -644,10 +699,37 @@ namespace Overlewd
             }
         }
 
+        public static async Task unequipAsync(int characterId, int equipmentId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
+            using (var request = await HttpCore.DeleteAsync(url, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class CharacterPostData
+        {
+            public int? teamPosition;
+        }
+
+        public static async Task characterPostAsync(int characterId, string slotId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
+            var form = new WWWForm();
+            form.AddField("teamPosition", slotId);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         [Serializable]
         public class Equipment
         {
             public int id;
+            public int? characterId;
             public string name;
             public float speed;
             public float power;
@@ -690,6 +772,7 @@ namespace Overlewd
             public List<FTUENotificationItem> notifications;
             public List<int> stages;
             public int? nextChapterId;
+            public int? order;
         }
 
         [Serializable]
@@ -720,6 +803,7 @@ namespace Overlewd
             public string status;
             public string type;
             public List<int> nextStages;
+            public int? order;
 
             public const string Status_Open = "open";
             public const string Status_Started = "started";
@@ -822,6 +906,7 @@ namespace Overlewd
         public class Building
         {
             public int id;
+            public string key;
             public string name;
             public string description;
             public string image;
@@ -831,6 +916,17 @@ namespace Overlewd
             public int? nextLevel;
             public bool isMax;
             public Progress userProgress;
+
+            public const string Key_Castle = "castle";
+            public const string Key_Catacombs = "catacombs";
+            public const string Key_Cathedral = "cathedral";
+            public const string Key_Eye = "eye";
+            public const string Key_Forge = "forge";
+            public const string Key_Harem = "harem";
+            public const string Key_MagicGuild = "magicGuild";
+            public const string Key_Market = "market";
+            public const string Key_Municipality = "municipality";
+            public const string Key_Portal = "portal";
 
             public class Progress
             {

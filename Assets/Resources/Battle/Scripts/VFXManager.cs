@@ -12,16 +12,16 @@ namespace Overlewd
         [SerializeField] private string animationName = "action";
         [SerializeField] private bool loop = false;
 
-        public float delay = 0f;
-        public float duration = 1f;
+        public float delay = 0f; //predelay
+        public float duration = 1f; //ms
         public SpineWidget spineWiget;
 
         private void Start()
         {
             //UITools.SetStretch(GetComponent<RectTransform>());
             spineWiget = SpineWidget.GetInstance(transform);
-            //duration = spineWiget.GetAnimationDuaration(animationName);
             spineWiget.Initialize(path);
+            duration = spineWiget.GetAnimationDuaration(animationName); //!!after initialize u stopid mf
             StartCoroutine(StartAfterDelay());
         }
 

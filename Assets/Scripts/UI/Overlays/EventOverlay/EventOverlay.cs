@@ -20,6 +20,14 @@ namespace Overlewd
         private string[] tabNames = { "Weekly", "Monthly", "Decade", "Active", "ComingSoon" };
         private Transform[] scrollView = new Transform[TabsCount];
         private Transform[] scrollViewContent = new Transform[TabsCount];
+        private List<NSEventOverlay.EventQuest>[] tabEventQuests = 
+            {
+                new List<NSEventOverlay.EventQuest>(),
+                new List<NSEventOverlay.EventQuest>(),
+                new List<NSEventOverlay.EventQuest>(),
+                new List<NSEventOverlay.EventQuest>(),
+                new List<NSEventOverlay.EventQuest>()
+            };
         private Button[] eventButton = new Button[TabsCount];
         private TextMeshProUGUI[] eventButtonText = new TextMeshProUGUI[TabsCount];
         private Image[] eventButtonImage = new Image[TabsCount];
@@ -27,7 +35,7 @@ namespace Overlewd
 
         private Button backButton;
 
-        private int openingTabId = TabWeekly;
+        private int activeTabId = TabWeekly;
 
         void Awake()
         {
@@ -47,24 +55,25 @@ namespace Overlewd
                 eventButtonImage[tabId] = eventButton[tabId].GetComponent<Image>();
                 eventButtonDefaultSprite[tabId] = eventButtonImage[tabId].sprite;
 
-                var tabId_delegate = tabId;
                 eventButton[tabId].onClick.AddListener(() =>
                 {
-                    TabClick(tabId_delegate);
+                    TabClick(tabId);
                 });
             }
         }
 
         public EventOverlay SetData(int openingTabId)
         {
-            this.openingTabId = openingTabId;
+            this.activeTabId = openingTabId;
             return this;
         }
 
         public override async Task BeforeShowMakeAsync()
         {
             InitTabs();
-            eventButton[openingTabId].onClick.Invoke();
+            eventButton[activeTabId].onClick.Invoke();
+
+            StartCoroutine(TabContentVisibleOptimize());
 
             await Task.CompletedTask;
         }
@@ -72,13 +81,13 @@ namespace Overlewd
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            activeTabId = tabId;
             foreach (var _tabId in tabIds)
             {
                 scrollView[_tabId].gameObject.SetActive(_tabId == tabId);
                 eventButtonImage[_tabId].sprite = (_tabId == tabId) ? 
                                                      eventButton[_tabId].spriteState.selectedSprite :
                                                      eventButtonDefaultSprite[_tabId];
-
             }
         }
 
@@ -87,7 +96,7 @@ namespace Overlewd
             var tabScrollViewContent = scrollViewContent[tabId];
             eventButtonText[tabId].text = eventData.name;
 
-            NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
+            var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
             foreach (var quest in GameData.quests)
             {
                 if (quest.eventId.HasValue)
@@ -97,6 +106,9 @@ namespace Overlewd
                         var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
                         eventQuest.eventId = eventData.id;
                         eventQuest.questId = quest.eventId.Value;
+                        eventQuest.SetCanvasActive(false);
+
+                        tabEventQuests[tabId].Add(eventQuest);
                     }
                 }
             }
@@ -129,6 +141,20 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HideOverlay();
+        }
+
+        private IEnumerator TabContentVisibleOptimize()
+        {
+            while (true)
+            {
+                var screenRect = UIManager.GetScreenWorldRect();
+                foreach (var eventQuest in tabEventQuests[activeTabId])
+                {
+                    var itemRect = eventQuest.transform as RectTransform;
+                    eventQuest.SetCanvasActive(itemRect.WorldRect().Overlaps(screenRect));
+                }
+                yield return null;
+            }
         }
     }
 }

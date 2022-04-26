@@ -19,9 +19,8 @@ namespace Overlewd
             protected Image blueButtonImage;
             protected Button darkButton;
             protected TextMeshProUGUI title;
+            protected TextMeshProUGUI notification;
             protected Image darkButtonImage;
-            protected GameObject newQuestMark;
-            protected GameObject questDoneMark;
 
             private Sprite blueButtonDefaultSprite;
             private Sprite darkButtonDefaultSprite;
@@ -39,8 +38,7 @@ namespace Overlewd
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 darkButtonImage = darkButton.GetComponent<Image>();
 
-                newQuestMark = canvas.Find("NewQuestMark").gameObject;
-                questDoneMark = canvas.Find("QuestDoneMark").gameObject;
+                notification = canvas.Find("Notification").GetComponent<TextMeshProUGUI>();
 
                 blueButtonDefaultSprite = blueButtonImage.sprite;
                 darkButtonDefaultSprite = darkButtonImage.sprite;

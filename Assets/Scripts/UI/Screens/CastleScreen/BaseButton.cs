@@ -15,16 +15,13 @@ namespace Overlewd
             protected Button button;
             protected TextMeshProUGUI title;
 
-            protected Image quarterlyEventMark;
-            protected Image monthlyEventMark;
-            protected Image weeklyEventMark;
-            protected Image mainQuestMark;
-            protected Image sideQuestMark;
+            protected TextMeshProUGUI markers;
 
             protected virtual void Awake()
             {
                 button = transform.Find("Button").GetComponent<Button>();
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                markers = transform.Find("Markers").GetComponent<TextMeshProUGUI>();
                 button.onClick.AddListener(ButtonClick);
             }
 

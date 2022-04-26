@@ -11,9 +11,6 @@ namespace Overlewd
         public Sprite ico;
         public Sprite battlePortrait;
         public Sprite bigPortrait;
-        public Sprite spell_1, spell_2, spell_3;
-
-        public GameObject[] attackVFX;
 
         public bool isEnemy = false;
         public bool isBoss = false;
@@ -26,6 +23,7 @@ namespace Overlewd
         public float yOffset = 0f;
 
         public int initiative = 5, attack = 10, defence = 5, agility = 5;
+        public Skill[] skill;
         public Item itemSlot1 = null, itemSlot2 = null;
 
         public int level = 1, maxLevel = 10;

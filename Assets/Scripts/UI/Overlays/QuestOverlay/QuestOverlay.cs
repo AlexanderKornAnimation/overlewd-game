@@ -26,8 +26,7 @@ namespace Overlewd
         private GameObject sideQuestGridMark;
 
         private TextMeshProUGUI headlineTitle;
-        private GameObject headlineMainQuestMark;
-        private GameObject headlineSideQuestMark;
+        private TextMeshProUGUI headlineQuestMark;
 
         private Transform questContentScrollViewPos;
 
@@ -48,20 +47,19 @@ namespace Overlewd
 
             mainQuestGrid = questScrollView_content.Find("MainQuestGrid");
             mainQuestGridTitle = mainQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
-            mainQuestGridMark = mainQuestGrid.Find("QuestHead").Find("MainQuestMark").gameObject;
+            mainQuestGridMark = mainQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
 
             matriarchQuestGrid = questScrollView_content.Find("MatriarchQuestGrid");
             matriarchQuestGridTitle = matriarchQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
-            matriarchQuestGridMark = matriarchQuestGrid.Find("QuestHead").Find("SideQuestMark").gameObject;
+            matriarchQuestGridMark = matriarchQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
 
             sideQuestGrid = questScrollView_content.Find("SideQuestGrid");
             sideQuestGridTitle = sideQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
-            sideQuestGridMark = sideQuestGrid.Find("QuestHead").Find("SideQuestMark").gameObject;
+            sideQuestGridMark = sideQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
 
             var headline = canvas.Find("Headline");
             headlineTitle = headline.Find("Title").GetComponent<TextMeshProUGUI>();
-            headlineMainQuestMark = headline.Find("MainQuestMark").gameObject;
-            headlineSideQuestMark = headline.Find("SideQuestMark").gameObject;
+            headlineQuestMark = headline.Find("QuestMark").GetComponent<TextMeshProUGUI>();
 
             questContentScrollViewPos = canvas.Find("QuestContentScrollViewPos");
         }

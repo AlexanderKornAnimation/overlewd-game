@@ -20,6 +20,8 @@ namespace Overlewd
         private List<NSEventMapScreen.DialogButton> dialogButtons = new List<NSEventMapScreen.DialogButton>();
         private List<NSEventMapScreen.SexButton> sexButtons = new List<NSEventMapScreen.SexButton>();
 
+        private EventMapScreenInData inputData;
+
         private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/EventMapScreen/EventMap", transform);
@@ -33,6 +35,12 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
+        }
+
+        public EventMapScreen SetData(EventMapScreenInData data)
+        {
+            inputData = data;
+            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -115,6 +123,37 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
+
+        public override async Task AfterShowAsync()
+        {
+            if (inputData != null)
+            {
+                var teamEditStageId = inputData.teamEditStageId;
+                if (teamEditStageId.HasValue)
+                {
+                    var stageData = GameData.GetEventStageById(teamEditStageId.Value);
+                    if (stageData != null)
+                    {
+                        if (stageData.battleId.HasValue)
+                        {
+                            var battleData = GameData.GetBattleById(stageData.battleId.Value);
+                            if (battleData.type == AdminBRO.Battle.Type_Battle)
+                            {
+                                UIManager.MakePopup<PrepareBattlePopup>().
+                                    SetData(teamEditStageId.Value).RunShowPopupProcess();
+                            }
+                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                            {
+                                UIManager.MakePopup<PrepareBossFightPopup>().
+                                    SetData(teamEditStageId.Value).RunShowPopupProcess();
+                            }
+                        }
+                    }
+                }
+            }
+
+            await Task.CompletedTask;
+        }
         
         private void BackButtonClick()
         {
@@ -158,5 +197,10 @@ namespace Overlewd
             }
             return null;
         }
+    }
+
+    public class EventMapScreenInData
+    {
+        public int? teamEditStageId;
     }
 }

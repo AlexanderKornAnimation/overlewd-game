@@ -25,8 +25,8 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent <Button>();
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            forgeButton = canvas.Find("PortalButton").GetComponent<Button>();
-            buyButton = canvas.Find("PortalButton").GetComponent<Button>();
+            forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
+            buyButton = canvas.Find("BuyButton").GetComponent<Button>();
 
             commonShardsCount = canvas.Find("Bag").Find("CommonShards").Find("Count").GetComponent<TextMeshProUGUI>();
             rareShardsCount = canvas.Find("Bag").Find("RareShards").Find("Count").GetComponent<TextMeshProUGUI>();
@@ -67,7 +67,7 @@ namespace Overlewd
 
         protected virtual void BuyButtonClick()
         {
-            
+            UIManager.ShowPopup<ChestPopup>();
         }
     }
 }

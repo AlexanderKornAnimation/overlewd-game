@@ -14,21 +14,27 @@ namespace Overlewd
             public int eventId { get; set; }
             public int questId { get; set; }
 
+            private Transform canvas;
+            private bool canvasActive = true;
+
             private Button mapButton;
 
             private TextMeshProUGUI eventName;
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
+            private TextMeshProUGUI eventMark;
 
             private List<Image> rewards = new List<Image>();
 
             void Awake()
             {
-                var canvas = transform.Find("Canvas");
+                canvas = transform.Find("Canvas");
+                var backWithClock = canvas.Find("BackWithClock");
 
                 eventName = canvas.Find("EventName").GetComponent<TextMeshProUGUI>();
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
+                eventMark = backWithClock.Find("EventMark").GetComponent<TextMeshProUGUI>();
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
@@ -69,6 +75,15 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 GameGlobalStates.eventData = GameData.GetEventById(eventId);
                 UIManager.ShowScreen<EventMapScreen>();
+            }
+
+            public void SetCanvasActive(bool value)
+            {
+                if (value != canvasActive)
+                {
+                    canvasActive = value;
+                    canvas.gameObject.SetActive(canvasActive);
+                }
             }
 
             public static EventQuest GetInstance(Transform parent)

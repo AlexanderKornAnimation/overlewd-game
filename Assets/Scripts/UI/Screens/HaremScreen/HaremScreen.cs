@@ -128,7 +128,8 @@ namespace Overlewd
 
         protected virtual void BattleGirlsButtonClick()
         {
-
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<TeamEditScreen>();
         }
     }
 }

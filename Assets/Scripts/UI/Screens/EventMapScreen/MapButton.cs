@@ -13,6 +13,7 @@ namespace Overlewd
             private Button button;
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
+            private TextMeshProUGUI questMark;
 
             void Awake()
             {
@@ -23,6 +24,7 @@ namespace Overlewd
 
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+                questMark = button.transform.Find("QuestMark").GetComponent<TextMeshProUGUI>();
             }
 
             private void ButtonClick()

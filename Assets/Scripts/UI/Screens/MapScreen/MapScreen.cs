@@ -15,10 +15,12 @@ namespace Overlewd
         protected Button chapterButton;
         protected TextMeshProUGUI chapterButtonText;
         protected Button backbutton;
+        protected TextMeshProUGUI chapterButtonMarkers;
 
         protected GameObject chapterMap;
         protected AdminBRO.FTUEChapter nextChapterData;
 
+        private MapScreenInData inputData;
 
         protected virtual void Awake()
         {
@@ -27,12 +29,19 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
             chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
             chapterButtonText = chapterButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            chapterButtonMarkers = chapterButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             backbutton = canvas.Find("BackButton").GetComponent<Button>();
 
             chapterButton.onClick.AddListener(ChapterButtonClick);
             backbutton.onClick.AddListener(BackButtonClick);
 
             map = canvas.Find("Map");
+        }
+
+        public MapScreen SetData(MapScreenInData data)
+        {
+            inputData = data;
+            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -139,6 +148,31 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            if (inputData != null)
+            {
+                var teamEditStageData = inputData.teamEditStageData;
+                if (teamEditStageData != null)
+                {
+                    if (teamEditStageData.battleId.HasValue)
+                    {
+                        var battleData = GameData.GetBattleById(teamEditStageData.battleId.Value);
+                        if (battleData != null)
+                        {
+                            if (battleData.type == AdminBRO.Battle.Type_Battle)
+                            {
+                                UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                                    SetStageData(teamEditStageData).RunShowPopupProcess();
+                            }
+                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                            {
+                                UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                                    SetStageData(teamEditStageData).RunShowPopupProcess();
+                            }
+                        }
+                    }
+                }
+            }
+
             EnterScreen();
 
             await Task.CompletedTask;
@@ -235,5 +269,10 @@ namespace Overlewd
             }
             return chapterData;
         }
+    }
+
+    public class MapScreenInData
+    {
+        public AdminBRO.FTUEStageItem teamEditStageData;
     }
 }

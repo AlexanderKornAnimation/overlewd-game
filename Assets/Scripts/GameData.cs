@@ -173,6 +173,24 @@ namespace Overlewd
         {
             return chapterMaps.Find(cm => cm.id == id);
         }
+
+        public static List<AdminBRO.Building> buildings { get; set; } = new List<AdminBRO.Building>();
+        public static AdminBRO.Building GetBuilsingById(int id)
+        {
+            return buildings.Find(b => b.id == id);
+        }
+
+        public static List<AdminBRO.Character> characters { get; set; } = new List<AdminBRO.Character>();
+        public static AdminBRO.Character GetCharacterById(int id)
+        {
+            return characters.Find(ch => ch.id == id);
+        }
+
+        public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();
+        public static AdminBRO.Equipment GetEquipmentById(int id)
+        {
+            return equipment.Find(eq => eq.id == id);
+        }
     }
 
 }

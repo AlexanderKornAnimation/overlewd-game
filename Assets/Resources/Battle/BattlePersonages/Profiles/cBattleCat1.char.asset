@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
   m_Name: cBattleCat1.char
   m_EditorClassIdentifier: 
+  order: -1
   charName: BattleCat1
   ico: {fileID: 21300000, guid: 02ed73d90305ec242a7f05b870811ac1, type: 3}
   battlePortrait: {fileID: 21300000, guid: 02ed73d90305ec242a7f05b870811ac1, type: 3}
@@ -19,7 +20,7 @@ MonoBehaviour:
   spell_1: {fileID: 0}
   spell_2: {fileID: 0}
   spell_3: {fileID: 0}
-  order: -1
+  attackVFX: []
   isEnemy: 0
   isBoss: 0
   isOverlord: 0
@@ -31,6 +32,9 @@ MonoBehaviour:
   attack: 10
   defence: 5
   agility: 5
+  skill:
+  - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
+  - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   itemSlot1: {fileID: 11400000, guid: c018269f423a82841a0edc591bbe9a09, type: 2}
   itemSlot2: {fileID: 0}
   level: 1

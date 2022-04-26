@@ -23,7 +23,7 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                dialogDone = button.transform.Find("DialogueDone").gameObject;
+                dialogDone = button.transform.Find("Done").gameObject;
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             }
 
