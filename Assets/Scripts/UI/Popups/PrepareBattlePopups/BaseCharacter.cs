@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,7 +26,7 @@ namespace Overlewd
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 characterClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
             }
-            
+
             protected virtual void Start()
             {
                 Customize();
@@ -33,17 +34,17 @@ namespace Overlewd
 
             protected virtual void Customize()
             {
-                // level.text = characterData.level.HasValue ? characterData.level.Value.ToString() : "1";
-                //
-                // characterClass.text = characterData.characterClass switch
-                // {
-                //     AdminBRO.Character.Class_Assassin => AdminBRO.Character.Sprite_EnemyAssasin,
-                //     AdminBRO.Character.Class_Bruiser => AdminBRO.Character.Sprite_EnemyBruiser,
-                //     AdminBRO.Character.Class_Healer => AdminBRO.Character.Sprite_EnemyHealer,
-                //     AdminBRO.Character.Class_Caster => AdminBRO.Character.Sprite_EnemyCaster,
-                //     AdminBRO.Character.Class_Tank => AdminBRO.Character.Sprite_EnemyTank,
-                //     _ => AdminBRO.Character.Sprite_EnemyAssasin
-                // }; 
+                if (characterData == null)
+                    return;
+
+                level.text = characterData.level.ToString();
+                art.sprite = ResourceManager.LoadSprite(characterData.teamEditPersIcon);
+                SetClassIcon();
+            }
+
+            protected virtual void SetClassIcon()
+            {
+               characterClass.text = AdminBRO.Character.GetEnemyClassMarker(characterData.characterClass);
             }
         }
     }

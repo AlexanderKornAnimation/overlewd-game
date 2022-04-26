@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace Overlewd
         protected Button editTeamButton;
         protected Button buffButton;
         protected RectTransform buffRect;
+        protected Transform bossPos;
+        protected Transform allyContent;
 
         protected Image firstTimeReward;
         protected Image[] rewards = new Image[RewardsCount];
@@ -25,6 +28,7 @@ namespace Overlewd
         protected TextMeshProUGUI firstTimeRewardCount;
 
         protected TextMeshProUGUI markers;
+        protected AdminBRO.Battle battleData;
 
         private int stageId;
 
@@ -39,7 +43,11 @@ namespace Overlewd
             var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
             var alliesBack = canvas.Find("AlliesBack");
             var buff = canvas.Find("Buff");
-
+            var enemyBack = canvas.Find("EnemyBack");
+            
+            bossPos = enemyBack.Find("BossPos");
+            allyContent = alliesBack.Find("Characters");
+            
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
@@ -73,10 +81,30 @@ namespace Overlewd
             }
         }
 
-        protected virtual void Customize()
+        protected void Customize()
         {
-            var battleData = GameData.GetBattleById(stageId);
+            foreach (var phase in battleData.battlePhases)
+            {
+                foreach (var enemy in phase.enemyCharacters)
+                {
+                    var enemyChar = NSPrepareBossFightPopup.Boss.GetInstance(bossPos);
+                    enemyChar.characterData = enemy;
+                }
+            }
+            
+            var characters = GameData.characters.Where(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
+            
+            var overlordData = GameData.characters.Find(ch => ch.characterClass == AdminBRO.Character.Class_Overlord);
 
+            var overlordInst = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
+            overlordInst.characterData = overlordData;
+            
+            foreach (var ally in characters)
+            {
+                var allyChar = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
+                allyChar.characterData = ally;
+            }
+            
             if (battleData.firstRewards.Count > 0)
             {
                 var firstReward = battleData.firstRewards[0];
@@ -89,7 +117,7 @@ namespace Overlewd
             if (battleData.rewards.Count < 1)
                 return;
 
-            for (int i = 0; i < rewards.Length; i++)
+            for (int i = 0; i < battleData.rewards.Count; i++)
             {
                 var reward = battleData.rewards[i];
                 rewards[i].gameObject.SetActive(true);
@@ -106,6 +134,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            battleData = GameData.GetBattleById(stageId);
             Customize();
 
             await Task.CompletedTask;

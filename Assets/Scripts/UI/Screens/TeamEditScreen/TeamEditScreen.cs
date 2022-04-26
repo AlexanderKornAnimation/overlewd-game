@@ -321,6 +321,10 @@ namespace Overlewd
                         }).RunShowScreenProcess();
                 }
             }
+            else
+            {
+                UIManager.ShowScreen<HaremScreen>();
+            }
         }
     }
 

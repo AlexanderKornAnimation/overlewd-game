@@ -635,7 +635,7 @@ namespace Overlewd
             public const string Class_Overlord = "Overlord";
             public const string Class_Tank = "Tank";
 
-            public const string Sprite_AllyAssasin = "<sprite=\"ClassesNLevel\" name=\"AllyAssasin\">";
+            public const string Sprite_AllyAssassin = "<sprite=\"ClassesNLevel\" name=\"AllyAssasin\">";
             public const string Sprite_AllyBruiser = "<sprite=\"ClassesNLevel\" name=\"AllyBruiser\">";
             public const string Sprite_AllyCaster = "<sprite=\"ClassesNLevel\" name=\"AllyCaster\">";
             public const string Sprite_AllyHealer = "<sprite=\"ClassesNLevel\" name=\"AllyHealer\">";
@@ -645,7 +645,7 @@ namespace Overlewd
             {
                 return classId switch
                 {
-                    Class_Assassin => Sprite_AllyAssasin,
+                    Class_Assassin => Sprite_AllyAssassin,
                     Class_Bruiser => Sprite_AllyBruiser,
                     Class_Caster => Sprite_AllyCaster,
                     Class_Healer => Sprite_AllyHealer,

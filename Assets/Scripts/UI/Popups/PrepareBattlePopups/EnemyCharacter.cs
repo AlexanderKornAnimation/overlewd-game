@@ -11,16 +11,6 @@ namespace Overlewd
     {
         public class EnemyCharacter : BaseCharacter
         {
-            protected override void Start()
-            {
-                Customize();
-            }
-
-            protected override void Customize()
-            {
-
-            }
-
             public static EnemyCharacter GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<EnemyCharacter>(

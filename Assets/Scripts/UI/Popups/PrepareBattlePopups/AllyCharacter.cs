@@ -8,13 +8,9 @@ namespace Overlewd
     {
         public class AllyCharacter : BaseCharacter
         {
-            protected override void Start()
+            protected override void SetClassIcon()
             {
-                Customize();
-            }
-
-            protected override void Customize()
-            {
+                characterClass.text = AdminBRO.Character.GetMyClassMarker(characterData.characterClass);
             }
 
             public static AllyCharacter GetInstance(Transform parent)

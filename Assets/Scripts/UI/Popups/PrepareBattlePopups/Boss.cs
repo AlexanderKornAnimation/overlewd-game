@@ -4,20 +4,10 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    namespace NSPrepareBattlePopup
+    namespace NSPrepareBossFightPopup
     {
-        public class Boss : BaseCharacter
+        public class Boss : NSPrepareBattlePopup.BaseCharacter
         {
-            protected override void Start()
-            {
-
-            }
-
-            protected override void Customize()
-            {
-                
-            }
-
             public static Boss GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<Boss>("Prefabs/UI/Popups/PrepareBattlePopups/Boss",

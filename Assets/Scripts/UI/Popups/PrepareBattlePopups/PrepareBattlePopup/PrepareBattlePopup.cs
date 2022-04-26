@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -19,7 +20,8 @@ namespace Overlewd
         protected Button editTeamButton;
         protected Button buffButton;
         protected RectTransform buffRect;
-        protected Transform content;
+        protected Transform enemyContent;
+        protected Transform allyContent;
 
         protected Image firstTimeReward;
 
@@ -28,6 +30,7 @@ namespace Overlewd
         protected TextMeshProUGUI firstTimeRewardCount;
 
         protected TextMeshProUGUI markers;
+        protected AdminBRO.Battle battleData;
 
         private int stageId;
 
@@ -43,8 +46,10 @@ namespace Overlewd
             var levelTitle = canvas.Find("LevelTitle");
             var buff = canvas.Find("Buff");
             var enemiesBack = canvas.Find("EnemiesBack");
+            var alliesBack = canvas.Find("AlliesBack");
 
-            content = enemiesBack.Find("Characters").Find("ScrollView").Find("Viewport").Find("Content");
+            enemyContent = enemiesBack.Find("Characters").Find("ScrollView").Find("Viewport").Find("Content");
+            allyContent = alliesBack.Find("Characters");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -79,16 +84,28 @@ namespace Overlewd
             }
         }
 
-        protected virtual void Customize()
+        protected void Customize()
         {
-            var battleData = GameData.GetBattleById(stageId);
-
             foreach (var phase in battleData.battlePhases)
             {
-                foreach (var charId in phase.enemyCharacters)
+                foreach (var enemy in phase.enemyCharacters)
                 {
-                    var character = NSPrepareBattlePopup.EnemyCharacter.GetInstance(content);
+                    var enemyChar = NSPrepareBattlePopup.EnemyCharacter.GetInstance(enemyContent);
+                    enemyChar.characterData = enemy;
                 }
+            }
+
+            var characters = GameData.characters.Where(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
+
+            var overlordData = GameData.characters.Find(ch => ch.characterClass == AdminBRO.Character.Class_Overlord);
+
+            var overlordInst = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
+            overlordInst.characterData = overlordData;
+
+            foreach (var ally in characters)
+            {
+                var allyChar = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
+                allyChar.characterData = ally;
             }
 
             if (battleData.firstRewards.Count > 0)
@@ -114,6 +131,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            battleData = GameData.GetBattleById(stageId);
             Customize();
 
             await Task.CompletedTask;
