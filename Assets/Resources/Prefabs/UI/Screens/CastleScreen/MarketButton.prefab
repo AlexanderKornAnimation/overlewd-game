@@ -341,7 +341,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f68d8e646842323478472f2063785b73, type: 3}
+  m_Sprite: {fileID: 3604449995685823164, guid: a784d47d9580cce4aa2661f7fcfbff7f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -824,10 +824,10 @@ RectTransform:
   m_Father: {fileID: 3870652320380918090}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -228, y: 56}
-  m_SizeDelta: {x: 55, y: 36}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -18, y: 51}
+  m_SizeDelta: {x: 60, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &515999869414132056
 CanvasRenderer:
@@ -857,7 +857,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <sprite="NotificationsNMarkers" name="MarkerSideQuest"> <sprite="NotificationsNMarkers"
+  m_text: <sprite="NotificationsNMarkers" name="MarkerSideQuest">  <sprite="NotificationsNMarkers"
     name="MarkerWeeklyEvent">
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -885,8 +885,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
-  m_fontSizeBase: 34
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -992,7 +992,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a82bb3e096b05444bb8a80d123f007f6, type: 3}
+  m_Sprite: {fileID: 4807886655378250842, guid: a784d47d9580cce4aa2661f7fcfbff7f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1067,7 +1067,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9e223a3e2f735f440b0a9002d067ccee, type: 3}
+  m_Sprite: {fileID: -3999938791448749968, guid: a784d47d9580cce4aa2661f7fcfbff7f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
