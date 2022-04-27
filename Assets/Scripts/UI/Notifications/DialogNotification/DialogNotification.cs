@@ -33,7 +33,7 @@ namespace Overlewd
         protected Transform emotionPos;
 
         protected SpineWidgetGroup emotionAnimation;
-        protected AdminBRO.Dialog dialogData;
+        protected DialogNotificationInData inputData;
 
         protected virtual void Awake()
         {
@@ -51,9 +51,9 @@ namespace Overlewd
             emotionPos = emotionBack.Find("EmotionPos");
         }
 
-        public DialogNotification SetDialogData(AdminBRO.Dialog data)
+        public DialogNotification SetData(DialogNotificationInData data)
         {
-            dialogData = data;
+            inputData = data;
             return this;
         }
 
@@ -71,16 +71,20 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
-            if (dialogData != null)
+            if (inputData != null)
             {
-                var firstReplica = dialogData.replicas.First();
-                text.text = firstReplica.message;
-
-                if (firstReplica.emotionAnimationId.HasValue)
+                var dialogData = inputData.dialogData;
+                if (dialogData != null)
                 {
-                    var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
-                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
-                    emotionAnimation.Initialize(animation);
+                    var firstReplica = dialogData.replicas.First();
+                    text.text = firstReplica.message;
+
+                    if (firstReplica.emotionAnimationId.HasValue)
+                    {
+                        var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
+                        emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                        emotionAnimation.Initialize(animation);
+                    }
                 }
             }
 
@@ -123,5 +127,10 @@ namespace Overlewd
             yield return new WaitForSeconds(4.0f);
             UIManager.HideNotification();
         }
+    }
+
+    public class DialogNotificationInData
+    {
+        public AdminBRO.Dialog dialogData;
     }
 }

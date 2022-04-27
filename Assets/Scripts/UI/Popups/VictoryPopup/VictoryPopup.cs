@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Resharper disable All
-
 namespace Overlewd
 {
     public class VictoryPopup : BasePopup
@@ -16,6 +14,8 @@ namespace Overlewd
         protected Image reward1;
         protected Image reward2;
         protected Image reward3;
+
+        protected VictoryPopupInData inputData;
 
         void Awake()
         {
@@ -38,6 +38,12 @@ namespace Overlewd
             reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
         }
 
+        public VictoryPopup SetData(VictoryPopupInData data)
+        {
+            inputData = data;
+            return this;
+        }
+
         public override void MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
@@ -55,5 +61,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<BattleScreen>();
         }
+    }
+
+    public class VictoryPopupInData
+    {
+        public AdminBRO.FTUEStageItem ftueStageData;
     }
 }

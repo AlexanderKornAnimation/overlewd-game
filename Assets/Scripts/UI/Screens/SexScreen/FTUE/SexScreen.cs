@@ -13,23 +13,15 @@ namespace Overlewd
     {
         public class SexScreen : Overlewd.SexScreen
         {
-            private AdminBRO.FTUEStageItem stageData;
-
-            public SexScreen SetStageData(AdminBRO.FTUEStageItem data)
-            {
-                stageData = data;
-                dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-                return this;
-            }
-
             public override async Task BeforeShowDataAsync()
             {
-                await GameData.FTUEStartStage(stageData.id);
+                dialogData = GameData.GetDialogById(inputData.ftueStageData.dialogId.Value);
+                await GameData.FTUEStartStage(inputData.ftueStageData.id);
             }
 
             public override async Task BeforeHideDataAsync()
             {
-                await GameData.FTUEEndStage(stageData.id);
+                await GameData.FTUEEndStage(inputData.ftueStageData.id);
             }
 
             public override async Task AfterShowAsync()
@@ -53,12 +45,14 @@ namespace Overlewd
                 switch (GameGlobalStates.ftueChapterData.key)
                 {
                     case "chapter1":
-                        switch (stageData.key)
+                        switch (inputData.ftueStageData.key)
                         {
                             case "sex4":
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("memorytutor2")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData 
+                                    { 
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("memorytutor2") 
+                                    }).RunShowNotificationProcess();
                                 break;
                         }
                         break;
@@ -72,7 +66,7 @@ namespace Overlewd
                 switch (GameGlobalStates.ftueChapterData.key)
                 {
                     case "chapter1":
-                        switch (stageData.key)
+                        switch (inputData.ftueStageData.key)
                         {
                             case "sex2":
                                 UIManager.AddUserInputLocker(new UserInputLocker(this));
@@ -80,13 +74,17 @@ namespace Overlewd
                                 UIManager.RemoveUserInputLocker(new UserInputLocker(this));
 
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor2")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("bufftutor2")
+                                    }).RunShowNotificationProcess();
                                 await UIManager.WaitHideNotifications();
 
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor")
+                                    }).RunShowNotificationProcess();
                                 break;
                         }
                         break;

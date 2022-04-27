@@ -60,7 +60,7 @@ namespace Overlewd
         protected SpineWidgetGroup cutInAnimation;
         protected SpineWidgetGroup emotionAnimation;
 
-        private int stageId;
+        protected DialogScreenInData inputData;
 
         void Awake()
         {
@@ -97,9 +97,9 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
-        public DialogScreen SetData(int stageId)
+        public DialogScreen SetData(DialogScreenInData data)
         {
-            this.stageId = stageId;
+            inputData = data;
             return this;
         }
 
@@ -120,14 +120,14 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            var stageData = GameData.GetEventStageById(stageId);
+            var stageData = GameData.GetEventStageById(inputData.eventStageId);
             dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-            await GameData.EventStageStartAsync(stageId);
+            await GameData.EventStageStartAsync(inputData.eventStageId);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(stageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId);
         }
 
         protected virtual void LeaveScreen()
@@ -471,5 +471,11 @@ namespace Overlewd
                 ShowLastReplica();
             }
         }
+    }
+
+    public class DialogScreenInData
+    {
+        public int eventStageId;
+        public AdminBRO.FTUEStageItem ftueStageData;
     }
 }

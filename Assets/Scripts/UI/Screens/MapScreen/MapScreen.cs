@@ -161,12 +161,18 @@ namespace Overlewd
                             if (battleData.type == AdminBRO.Battle.Type_Battle)
                             {
                                 UIManager.MakePopup<FTUE.PrepareBattlePopup>().
-                                    SetStageData(teamEditStageData).RunShowPopupProcess();
+                                    SetData(new PrepareBattlePopupInData
+                                    {
+                                        ftueStageData = teamEditStageData
+                                    }).RunShowPopupProcess();
                             }
                             else if (battleData.type == AdminBRO.Battle.Type_Boss)
                             {
                                 UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
-                                    SetStageData(teamEditStageData).RunShowPopupProcess();
+                                    SetData(new PrepareBossFightPopupInData
+                                    {
+                                        ftueStageData = teamEditStageData
+                                    }).RunShowPopupProcess();
                             }
                         }
                     }
@@ -200,23 +206,31 @@ namespace Overlewd
             {
                 case "chapter1":
                     UIManager.MakeNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("maptutor")).
-                        RunShowNotificationProcess();
+                        SetData(new DialogNotificationInData
+                        {
+                            dialogData = GameGlobalStates.GetFTUENotificationByKey("maptutor")
+                        }).RunShowNotificationProcess();
                     await UIManager.WaitHideNotifications();
 
                     UIManager.MakeNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("questbooktutor")).
-                        RunShowNotificationProcess();
+                        SetData(new DialogNotificationInData
+                        {
+                            dialogData = GameGlobalStates.GetFTUENotificationByKey("questbooktutor")
+                        }).RunShowNotificationProcess();
                     await UIManager.WaitHideNotifications();
 
                     UIManager.MakeNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("qbcontenttutor")).
-                        RunShowNotificationProcess();
+                        SetData(new DialogNotificationInData
+                        {
+                            dialogData = GameGlobalStates.GetFTUENotificationByKey("qbcontenttutor")
+                        }).RunShowNotificationProcess();
                     await UIManager.WaitHideNotifications();
 
                     UIManager.MakeNotification<DialogNotification>().
-                        SetDialogData(GameGlobalStates.GetFTUENotificationByKey("eventbooktutor")).
-                        RunShowNotificationProcess();
+                        SetData(new DialogNotificationInData
+                        { 
+                            dialogData = GameGlobalStates.GetFTUENotificationByKey("eventbooktutor")
+                        }).RunShowNotificationProcess();
                     break;
             }
 

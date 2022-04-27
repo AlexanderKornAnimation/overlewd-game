@@ -140,12 +140,18 @@ namespace Overlewd
                             if (battleData.type == AdminBRO.Battle.Type_Battle)
                             {
                                 UIManager.MakePopup<PrepareBattlePopup>().
-                                    SetData(teamEditStageId.Value).RunShowPopupProcess();
+                                    SetData(new PrepareBattlePopupInData
+                                    {
+                                        eventStageId = teamEditStageId.Value
+                                    }).RunShowPopupProcess();
                             }
                             else if (battleData.type == AdminBRO.Battle.Type_Boss)
                             {
                                 UIManager.MakePopup<PrepareBossFightPopup>().
-                                    SetData(teamEditStageId.Value).RunShowPopupProcess();
+                                    SetData(new PrepareBossFightPopupInData
+                                    {
+                                        eventStageId = teamEditStageId.Value
+                                    }).RunShowPopupProcess();
                             }
                         }
                     }

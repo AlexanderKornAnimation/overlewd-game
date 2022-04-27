@@ -9,13 +9,6 @@ namespace Overlewd
 	{
 		public class BossFightScreen : Overlewd.BossFightScreen
 		{
-            protected AdminBRO.FTUEStageItem stageData;
-            public BossFightScreen SetStageData(AdminBRO.FTUEStageItem data)
-            {
-                stageData = data;
-                return this;
-            }
-
             protected override void Awake()
             {
                 base.Awake();
@@ -31,23 +24,29 @@ namespace Overlewd
             public override void BattleWin()
             {
                 UIManager.MakePopup<VictoryPopup>().
-                    SetStageData(stageData).RunShowPopupProcess();
+                    SetData(new VictoryPopupInData
+                    {
+                        ftueStageData = inputData.ftueStageData
+                    }).RunShowPopupProcess();
             }
 
             public override void BattleDefeat()
             {
                 UIManager.MakePopup<DefeatPopup>().
-                    SetStageData(stageData).RunShowPopupProcess();
+                    SetData(new DefeatPopupInData
+                    {
+                        ftueStageData = inputData.ftueStageData
+                    }).RunShowPopupProcess();
             }
 
             public override async Task BeforeShowDataAsync()
             {
-                await GameData.FTUEStartStage(stageData.id);
+                await GameData.FTUEStartStage(inputData.ftueStageData.id);
             }
 
             public override async Task BeforeHideDataAsync()
             {
-                await GameData.FTUEEndStage(stageData.id);
+                await GameData.FTUEEndStage(inputData.ftueStageData.id);
             }
         }
 	}

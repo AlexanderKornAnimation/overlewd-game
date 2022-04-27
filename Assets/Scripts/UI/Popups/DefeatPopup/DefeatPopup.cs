@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Resharper disable All
-
 namespace Overlewd
 {
     public class DefeatPopup : BasePopup
@@ -14,6 +12,8 @@ namespace Overlewd
         protected Button inventoryButton;
         protected Button haremButton;
         protected Button editTeamButton;
+
+        protected DefeatPopupInData inputData;
 
         void Awake()
         {
@@ -32,6 +32,12 @@ namespace Overlewd
 
             editTeamButton = canvas.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
+        }
+
+        public DefeatPopup SetData(DefeatPopupInData data)
+        {
+            inputData = data;
+            return this;
         }
 
         void Start()
@@ -72,5 +78,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
+    }
+
+    public class DefeatPopupInData
+    {
+        public AdminBRO.FTUEStageItem ftueStageData;
     }
 }

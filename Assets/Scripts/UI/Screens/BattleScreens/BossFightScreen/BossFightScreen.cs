@@ -7,7 +7,7 @@ namespace Overlewd
 {
 	public class BossFightScreen : BaseBossFightScreen
 	{
-        private int stageId;
+        protected BossFightScreenInData inputData;
 
         protected override void Awake()
         {
@@ -15,9 +15,9 @@ namespace Overlewd
             WannaWin(true);
         }
 
-        public BossFightScreen SetData(int stageId)
+        public BossFightScreen SetData(BossFightScreenInData data)
         {
-            this.stageId = stageId;
+            inputData = data;
             return this;
         }
 
@@ -39,12 +39,18 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            await GameData.EventStageStartAsync(stageId);
+            await GameData.EventStageStartAsync(inputData.eventStageId);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(stageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId);
         }
+    }
+
+    public class BossFightScreenInData
+    {
+        public int eventStageId;
+        public AdminBRO.FTUEStageItem ftueStageData;
     }
 }

@@ -32,7 +32,7 @@ namespace Overlewd
         protected TextMeshProUGUI markers;
         protected AdminBRO.Battle battleData;
 
-        private int stageId;
+        protected PrepareBattlePopupInData inputData;
 
         private void Awake()
         {
@@ -131,15 +131,15 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            battleData = GameData.GetBattleById(stageId);
+            battleData = GameData.GetBattleById(inputData.eventStageId);
             Customize();
 
             await Task.CompletedTask;
         }
 
-        public PrepareBattlePopup SetData(int stageId)
+        public PrepareBattlePopup SetData(PrepareBattlePopupInData data)
         {
-            this.stageId = stageId;
+            inputData = data;
             return this;
         }
 
@@ -153,7 +153,10 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData { eventMapStageId = stageId }).RunShowScreenProcess();
+                SetData(new TeamEditScreenInData
+                { 
+                    eventMapStageId = inputData.eventStageId
+                }).RunShowScreenProcess();
         }
 
         protected virtual void BackButtonClick()
@@ -165,7 +168,11 @@ namespace Overlewd
         protected virtual void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.MakeScreen<BattleScreen>().SetData(stageId).RunShowScreenProcess();
+            UIManager.MakeScreen<BattleScreen>().
+                SetData(new BattleScreenInData
+                {
+                    eventStageId = inputData.eventStageId
+                }).RunShowScreenProcess();
         }
 
         public override ScreenShow Show()
@@ -187,5 +194,11 @@ namespace Overlewd
         {
             await UITools.TopHideAsync(buffRect, 0.2f);
         }
+    }
+
+    public class PrepareBattlePopupInData
+    {
+        public int eventStageId;
+        public AdminBRO.FTUEStageItem ftueStageData;
     }
 }

@@ -28,7 +28,10 @@ namespace Overlewd
             {
                 base.ButtonClick();
                 UIManager.MakeScreen<FTUE.DialogScreen>().
-                    SetStageData(stageData).RunShowScreenProcess();
+                    SetData(new DialogScreenInData
+                    {
+                        ftueStageData = stageData
+                    }).RunShowScreenProcess();
             }
 
             public static DialogButton GetInstance(Transform parent)
