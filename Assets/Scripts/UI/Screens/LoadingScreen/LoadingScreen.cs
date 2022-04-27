@@ -205,6 +205,8 @@ namespace Overlewd
             SetDownloadBarProgress(0.1f);
             SetDownloadBarTitle("Download game data");
 
+            await AdminBRO.initAsync();
+
             GameData.playerInfo = await AdminBRO.meAsync();
 
             var locale = await AdminBRO.localizationAsync("en");
