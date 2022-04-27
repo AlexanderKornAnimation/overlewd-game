@@ -48,7 +48,10 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakePopup<PrepareBossFightPopup>().
-                    SetData(stageId).RunShowPopupProcess();
+                    SetData(new PrepareBossFightPopupInData
+                    {
+                        eventStageId = stageId
+                    }).RunShowPopupProcess();
             }
 
             public static BossFightButton GetInstance(Transform parent)

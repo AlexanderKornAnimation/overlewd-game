@@ -37,6 +37,8 @@ namespace Overlewd
 
         private int activeTabId = TabWeekly;
 
+        protected EventOverlayInData inputData;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/EventOverlay/EventOverlay", transform);
@@ -62,14 +64,15 @@ namespace Overlewd
             }
         }
 
-        public EventOverlay SetData(int openingTabId)
+        public EventOverlay SetData(EventOverlayInData data)
         {
-            this.activeTabId = openingTabId;
+            inputData = data;
             return this;
         }
 
         public override async Task BeforeShowMakeAsync()
         {
+            activeTabId = inputData != null ? inputData.activeTabId : activeTabId;
             InitTabs();
             eventButton[activeTabId].onClick.Invoke();
 
@@ -156,5 +159,10 @@ namespace Overlewd
                 yield return null;
             }
         }
+    }
+
+    public class EventOverlayInData
+    {
+        public int activeTabId = EventOverlay.TabWeekly;
     }
 }

@@ -10,13 +10,6 @@ namespace Overlewd
 	{
 		public class BattleScreen : Overlewd.BattleScreen
 		{
-            protected AdminBRO.FTUEStageItem stageData;
-            public BattleScreen SetStageData(AdminBRO.FTUEStageItem data)
-            {
-                stageData = data;
-                return this;
-            }
-
             protected override void Awake()
             {
                 base.Awake();
@@ -32,23 +25,29 @@ namespace Overlewd
             public override void BattleWin()
             {
                 UIManager.MakePopup<VictoryPopup>().
-                    SetStageData(stageData).RunShowPopupProcess();
+                    SetData(new VictoryPopupInData
+                    {
+                        ftueStageData = inputData.ftueStageData
+                    }).RunShowPopupProcess();
             }
 
             public override void BattleDefeat()
             {
                 UIManager.MakePopup<DefeatPopup>().
-                    SetStageData(stageData).RunShowPopupProcess();
+                    SetData(new DefeatPopupInData
+                    {
+                        ftueStageData = inputData.ftueStageData
+                    }).RunShowPopupProcess();
             }
 
             public override async Task BeforeShowDataAsync()
             {
-                await GameData.FTUEStartStage(stageData.id);
+                await GameData.FTUEStartStage(inputData.ftueStageData.id);
             }
 
             public override async Task BeforeHideDataAsync()
             {
-                await GameData.FTUEEndStage(stageData.id);
+                await GameData.FTUEEndStage(inputData.ftueStageData.id);
             }
 
             //
@@ -57,12 +56,14 @@ namespace Overlewd
                 switch (GameGlobalStates.ftueChapterData.key)
                 {
                     case "chapter1":
-                        switch (stageData.key)
+                        switch (inputData.ftueStageData.key)
                         {
                             case "battle1" :
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor1")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData 
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("battletutor1")
+                                    }).RunShowNotificationProcess();
                                 break;
                         }
                         break;
@@ -85,27 +86,35 @@ namespace Overlewd
                 switch (GameGlobalStates.ftueChapterData.key)
                 {
                     case "chapter1":
-                        switch (stageData.key)
+                        switch (inputData.ftueStageData.key)
                         {
                             case "battle1":
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor2")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("battletutor2")
+                                    }).RunShowNotificationProcess();
                                 break;
                             case "battle2":
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("battletutor3")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("battletutor3")
+                                    }).RunShowNotificationProcess();
                                 await UIManager.WaitHideNotifications();
 
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("bufftutor1")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("bufftutor1")
+                                    }).RunShowNotificationProcess();
                                 break;
                             case "battle5":
                                 UIManager.MakeNotification<DialogNotification>().
-                                    SetDialogData(GameGlobalStates.GetFTUENotificationByKey("castletutor")).
-                                    RunShowNotificationProcess();
+                                    SetData(new DialogNotificationInData
+                                    {
+                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("castletutor")
+                                    }).RunShowNotificationProcess();
                                 break;
                         }
                         break;

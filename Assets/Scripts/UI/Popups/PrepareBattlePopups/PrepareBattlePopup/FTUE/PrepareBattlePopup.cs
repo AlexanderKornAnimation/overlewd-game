@@ -11,33 +11,32 @@ namespace Overlewd
     {
         public class PrepareBattlePopup : Overlewd.PrepareBattlePopup
         {
-            private AdminBRO.FTUEStageItem stageData;
-
             public override async Task BeforeShowMakeAsync()
             {
-                battleData = GameData.GetBattleById(stageData.battleId.Value);
+                battleData = GameData.GetBattleById(inputData.ftueStageData.battleId.Value);
                 Customize();
                 
                 await Task.CompletedTask;
-            }
-
-            public PrepareBattlePopup SetStageData(AdminBRO.FTUEStageItem data)
-            {
-                stageData = data;
-                return this;
             }
 
             protected override void EditTeamButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(new TeamEditScreenInData { mapStageData = stageData }).RunShowScreenProcess();
+                    SetData(new TeamEditScreenInData 
+                    {
+                        mapStageData = inputData.ftueStageData
+                    }).RunShowScreenProcess();
             }
 
             protected override void BattleButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-                UIManager.MakeScreen<BattleScreen>().SetStageData(stageData).RunShowScreenProcess();
+                UIManager.MakeScreen<BattleScreen>().
+                    SetData(new BattleScreenInData
+                    {
+                        ftueStageData = inputData.ftueStageData
+                    }).RunShowScreenProcess();
             }
         }
     }

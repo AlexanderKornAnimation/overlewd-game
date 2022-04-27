@@ -70,21 +70,30 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeOverlay<EventOverlay>().
-                SetData(EventOverlay.TabWeekly).RunShowOverlayProcess();
+                SetData(new EventOverlayInData
+                {
+                    activeTabId = EventOverlay.TabWeekly
+                }).RunShowOverlayProcess();
         }
 
         protected virtual void MonthlyEventClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeOverlay<EventOverlay>().
-                SetData(EventOverlay.TabMonthly).RunShowOverlayProcess();
+                SetData(new EventOverlayInData
+                {
+                    activeTabId = EventOverlay.TabMonthly
+                }).RunShowOverlayProcess();
         }
         
         protected virtual void QuarterlyEventClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeOverlay<EventOverlay>().
-                SetData(EventOverlay.TabDecade).RunShowOverlayProcess();
+                SetData(new EventOverlayInData
+                {
+                    activeTabId = EventOverlay.TabDecade
+                }).RunShowOverlayProcess();
         }
         
         public static EventsWidget GetInstance(Transform parent)

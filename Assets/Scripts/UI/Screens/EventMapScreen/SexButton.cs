@@ -44,7 +44,10 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakeScreen<SexScreen>().
-                    SetData(stageId).RunShowScreenProcess();
+                    SetData(new SexScreenInData
+                    {
+                        eventStageId = stageId
+                    }).RunShowScreenProcess();
             }
 
             public static SexButton GetInstance(Transform parent)

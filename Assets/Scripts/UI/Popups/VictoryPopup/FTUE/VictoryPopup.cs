@@ -13,13 +13,6 @@ namespace Overlewd
     {
         public class VictoryPopup : Overlewd.VictoryPopup
         {
-            private AdminBRO.FTUEStageItem stageData;
-
-            public VictoryPopup SetStageData(AdminBRO.FTUEStageItem data)
-            {
-                stageData = data;
-                return this;
-            }
             protected override void NextButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -30,7 +23,10 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakeScreen<BattleScreen>().
-                    SetStageData(stageData).RunShowScreenProcess();
+                    SetData(new BattleScreenInData
+                    {
+                        ftueStageData = inputData.ftueStageData
+                    }).RunShowScreenProcess();
             }
         }
     }

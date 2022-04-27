@@ -44,7 +44,10 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakeScreen<DialogScreen>().
-                    SetData(stageId).RunShowScreenProcess();
+                    SetData(new DialogScreenInData
+                    {
+                        eventStageId = stageId
+                    }).RunShowScreenProcess();
             }
 
             public static DialogButton GetInstance(Transform parent)

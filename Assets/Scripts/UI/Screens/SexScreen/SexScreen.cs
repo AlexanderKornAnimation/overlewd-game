@@ -37,7 +37,7 @@ namespace Overlewd
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
 
-        private int stageId;
+        protected SexScreenInData inputData;
 
         void Awake()
         {
@@ -65,9 +65,9 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
-        public SexScreen SetData(int stageId)
+        public SexScreen SetData(SexScreenInData data)
         {
-            this.stageId = stageId;
+            inputData = data;
             return this;
         }
 
@@ -93,14 +93,14 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            var stageData = GameData.GetEventStageById(stageId);
+            var stageData = GameData.GetEventStageById(inputData.eventStageId);
             dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-            await GameData.EventStageStartAsync(stageId);
+            await GameData.EventStageStartAsync(inputData.eventStageId);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(stageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId);
         }
 
         protected void AutoplayButtonCustomize()
@@ -302,5 +302,11 @@ namespace Overlewd
                 mainSound?.Play();
             }
         }
+    }
+
+    public class SexScreenInData
+    {
+        public int eventStageId;
+        public AdminBRO.FTUEStageItem ftueStageData;
     }
 }

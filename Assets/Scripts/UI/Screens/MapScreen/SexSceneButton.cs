@@ -27,7 +27,10 @@ namespace Overlewd
             {
                 base.ButtonClick();
                 UIManager.MakeScreen<FTUE.SexScreen>().
-                    SetStageData(stageData).RunShowScreenProcess();
+                    SetData(new SexScreenInData
+                    {
+                        ftueStageData = stageData
+                    }).RunShowScreenProcess();
             }
 
             public static SexSceneButton GetInstance(Transform parent)

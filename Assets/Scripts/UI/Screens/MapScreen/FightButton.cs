@@ -51,12 +51,18 @@ namespace Overlewd
                 if (battleData.type == AdminBRO.Battle.Type_Battle)
                 {
                     UIManager.MakePopup<FTUE.PrepareBattlePopup>().
-                        SetStageData(stageData).RunShowPopupProcess();
+                        SetData(new PrepareBattlePopupInData
+                        {
+                            ftueStageData = stageData
+                        }).RunShowPopupProcess();
                 }
                 else if (battleData.type == AdminBRO.Battle.Type_Boss)
                 {
                     UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
-                        SetStageData(stageData).RunShowPopupProcess();
+                        SetData(new PrepareBossFightPopupInData
+                        {
+                            ftueStageData = stageData
+                        }).RunShowPopupProcess();
                 }
             }
 

@@ -42,13 +42,13 @@ namespace Overlewd
                 TierButton.GetInstance(tierButtonsScroll?.content);
             }
 
-            public virtual void Select()
+            public override void Select()
             {
                 base.Select();
                 buttonSelected.SetActive(true);
             }
 
-            public virtual void Deselect()
+            public override void Deselect()
             {
                 base.Deselect();
                 buttonSelected.SetActive(false);

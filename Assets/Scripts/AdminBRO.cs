@@ -60,6 +60,17 @@ namespace Overlewd
 
         public static Tokens tokens;
 
+        // /me/init
+        public static async Task initAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/me/init";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         // GET /me; POST /me
         public static async Task<PlayerInfo> meAsync()
         {

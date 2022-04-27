@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 0fa207ff228fd344ead5cc9d19117285, type: 3}
+        m_Texture: {fileID: 2800000, guid: a784d47d9580cce4aa2661f7fcfbff7f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -73,7 +73,7 @@ MonoBehaviour:
     m_StrikethroughOffset: 0
     m_StrikethroughThickness: 0
     m_TabWidth: 0
-  spriteSheet: {fileID: 2800000, guid: 0fa207ff228fd344ead5cc9d19117285, type: 3}
+  spriteSheet: {fileID: 2800000, guid: a784d47d9580cce4aa2661f7fcfbff7f, type: 3}
   m_SpriteCharacterTable:
   - m_ElementType: 2
     m_Unicode: 65534
@@ -138,8 +138,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 5
-      m_Y: 302
+      m_X: 0
+      m_Y: 372
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -153,8 +153,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 5
-      m_Y: 395
+      m_X: 0
+      m_Y: 279
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -168,8 +168,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 5
-      m_Y: 200
+      m_X: 0
+      m_Y: 186
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -183,8 +183,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 5
-      m_Y: 107
+      m_X: 0
+      m_Y: 93
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -198,8 +198,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 5
-      m_Y: 14
+      m_X: 0
+      m_Y: 0
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -213,8 +213,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 94
-      m_Y: 392
+      m_X: 97
+      m_Y: 372
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -228,8 +228,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 94
-      m_Y: 299
+      m_X: 97
+      m_Y: 279
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -243,8 +243,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 94
-      m_Y: 197
+      m_X: 97
+      m_Y: 186
       m_Width: 75
       m_Height: 75
     m_Scale: 1
@@ -258,8 +258,8 @@ MonoBehaviour:
       m_HorizontalBearingY: 65
       m_HorizontalAdvance: 75
     m_GlyphRect:
-      m_X: 94
-      m_Y: 104
+      m_X: 97
+      m_Y: 93
       m_Width: 75
       m_Height: 75
     m_Scale: 1
