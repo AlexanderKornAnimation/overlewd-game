@@ -39,7 +39,14 @@ namespace Overlewd
             private void Customize()
             {
                 var stageData = GameData.GetEventStageById(stageId);
-
+                var battleId = stageData.battleId;
+                
+                if (battleId.HasValue)
+                {
+                    var battleData = GameData.GetBattleById(battleId.Value);
+                    loot.text = battleData.rewardSpriteString;
+                }
+                
                 title.text = stageData.title;
                 fightDone.SetActive(stageData.status == AdminBRO.EventStageItem.Status_Complete);
                 

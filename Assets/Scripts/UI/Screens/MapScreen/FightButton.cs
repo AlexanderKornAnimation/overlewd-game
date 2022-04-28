@@ -40,6 +40,7 @@ namespace Overlewd
                 {
                     battleData = GameData.GetBattleById(battleId.Value);
                     title.text = battleData.title;
+                    loot.text = battleData.rewardSpriteString;
                     icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
                     bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
                 }
