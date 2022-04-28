@@ -15,7 +15,7 @@ namespace Overlewd
         {
             public override async Task BeforeShowDataAsync()
             {
-                dialogData = GameData.GetDialogById(inputData.ftueStageData.dialogId.Value);
+                dialogData = inputData.ftueStageData.dialogData;
                 await GameData.FTUEStartStage(inputData.ftueStageData.id);
             }
 
@@ -51,7 +51,7 @@ namespace Overlewd
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData 
                                     { 
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("memorytutor2") 
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("memorytutor2")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                         }
@@ -76,14 +76,14 @@ namespace Overlewd
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("bufftutor2")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("bufftutor2")?.dialogId
                                     }).RunShowNotificationProcess();
                                 await UIManager.WaitHideNotifications();
 
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("ulviscreentutor")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                         }

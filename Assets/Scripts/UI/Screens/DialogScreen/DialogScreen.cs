@@ -120,14 +120,13 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            var stageData = GameData.GetEventStageById(inputData.eventStageId);
-            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-            await GameData.EventStageStartAsync(inputData.eventStageId);
+            dialogData = inputData.eventStageData.dialogData;
+            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
         }
 
         protected virtual void LeaveScreen()
@@ -473,9 +472,8 @@ namespace Overlewd
         }
     }
 
-    public class DialogScreenInData
+    public class DialogScreenInData : BaseScreenInData
     {
-        public int eventStageId;
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

@@ -8,10 +8,8 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class BossFightButton : MonoBehaviour
+        public class BossFightButton : BaseStageButton
         {
-            public int stageId { get; set; }
-
             private Button button;
             private GameObject fightDone;
             private TextMeshProUGUI title;
@@ -38,16 +36,10 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventStageData = GameData.GetEventStageById(stageId);
-                var battleId = eventStageData.battleId;
-                
-                if (battleId.HasValue)
-                {
-                    var battleData = GameData.GetBattleById(battleId.Value);
-                    loot.text = battleData.rewardSpriteString;
-                }
-
+                var eventStageData = stageData;
+                var battleData = stageData.battleData;
                 title.text = eventStageData.title;
+                loot.text = battleData.rewardSpriteString;
                 fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
             }
 

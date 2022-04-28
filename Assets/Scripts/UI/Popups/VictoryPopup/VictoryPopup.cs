@@ -63,8 +63,8 @@ namespace Overlewd
         }
     }
 
-    public class VictoryPopupInData
+    public class VictoryPopupInData : BaseScreenInData
     {
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

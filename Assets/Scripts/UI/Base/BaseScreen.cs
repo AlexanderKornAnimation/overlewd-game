@@ -96,4 +96,25 @@ namespace Overlewd
             return GetComponent<ScreenTransition>();
         }
     }
+
+    public abstract class BaseScreenInData
+    {
+        public int? eventStageId;
+        public AdminBRO.EventStageItem eventStageData
+        {
+            get
+            {
+                return eventStageId.HasValue ? GameData.GetEventStageById(eventStageId.Value) : null;
+            }
+        }
+
+        public int? ftueStageId;
+        public AdminBRO.FTUEStageItem ftueStageData
+        {
+            get
+            {
+                return ftueStageId.HasValue ? GameData.GetFTUEStageById(ftueStageId.Value) : null;
+            }
+        }
+    }
 }

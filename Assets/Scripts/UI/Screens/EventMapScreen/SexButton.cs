@@ -8,10 +8,8 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class SexButton : MonoBehaviour
+        public class SexButton : BaseStageButton
         {
-            public int stageId { get; set; }
-
             private Button button;
             private GameObject sceneDone;
             private TextMeshProUGUI title;
@@ -34,8 +32,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventStageData = GameData.GetEventStageById(stageId);
-
+                var eventStageData = stageData;
                 title.text = eventStageData.title;
                 sceneDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
             } 

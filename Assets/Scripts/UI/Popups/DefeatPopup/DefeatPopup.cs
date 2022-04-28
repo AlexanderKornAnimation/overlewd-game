@@ -80,8 +80,8 @@ namespace Overlewd
         }
     }
 
-    public class DefeatPopupInData
+    public class DefeatPopupInData : BaseScreenInData
     {
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

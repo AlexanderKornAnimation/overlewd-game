@@ -14,7 +14,7 @@ namespace Overlewd
         {
             public override async Task BeforeShowDataAsync()
             {
-                dialogData = GameData.GetDialogById(inputData.ftueStageData.dialogId.Value);
+                dialogData = inputData.ftueStageData.dialogData;
                 await GameData.FTUEStartStage(inputData.ftueStageData.id);
             }
 

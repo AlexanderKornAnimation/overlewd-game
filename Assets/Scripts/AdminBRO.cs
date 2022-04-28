@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 namespace Overlewd
 {
@@ -421,6 +422,24 @@ namespace Overlewd
             public const string Status_Started = "started";
             public const string Status_Complete = "complete";
             public const string Status_Closed = "closed";
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.Dialog dialogData
+            {
+                get
+                {
+                    return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.Battle battleData
+            {
+                get
+                {
+                    return battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+                }
+            }
         }
 
         // /quests
@@ -771,6 +790,15 @@ namespace Overlewd
             public string key;
             public int? ftueChapterId;
             public int? dialogId;
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.Dialog dialogData
+            {
+                get
+                {
+                    return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+                }
+            }
         }
 
         [Serializable]
@@ -784,6 +812,11 @@ namespace Overlewd
             public List<int> stages;
             public int? nextChapterId;
             public int? order;
+
+            public FTUENotificationItem GetNotifByKey(string key)
+            {
+                return notifications.Find(n => n.key == key);
+            }
         }
 
         [Serializable]
@@ -823,6 +856,24 @@ namespace Overlewd
 
             public const string Type_Dialog = "dialog";
             public const string Type_Battle = "battle";
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.Dialog dialogData
+            {
+                get
+                {
+                    return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.Battle battleData
+            {
+                get
+                {
+                    return battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+                }
+            }
         }
 
         // /ftue-stages/reset

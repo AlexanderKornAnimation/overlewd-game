@@ -87,35 +87,35 @@ namespace Overlewd
                         {
                             if (stageData.dialogId.HasValue)
                             {
-                                var dialogData = GameData.GetDialogById(stageData.dialogId.Value);
+                                var dialogData = stageData.dialogData;
                                 if (dialogData != null)
                                 {
                                     if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
                                     {
                                         var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
-                                        dialog.stageData = stageData;
+                                        dialog.stageId = stageId;
                                     }
                                     else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
                                     {
                                         var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
-                                        sex.stageData = stageData;
+                                        sex.stageId = stageId;
                                     }
                                 }
                             }
                             else if (stageData.battleId.HasValue)
                             {
-                                var battleData = GameData.GetBattleById(stageData.battleId.Value);
+                                var battleData = stageData.battleData;
                                 if (battleData != null)
                                 {
                                     if (battleData.type == AdminBRO.Battle.Type_Battle)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                        fight.stageData = stageData;
+                                        fight.stageId = stageId;
                                     }
                                     else if (battleData.type == AdminBRO.Battle.Type_Boss)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                        fight.stageData = stageData;
+                                        fight.stageId = stageId;
                                     }
                                 }
                             }
@@ -148,34 +148,24 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (inputData != null)
+            var battleData = inputData?.ftueStageData?.battleData;
+            if (battleData != null)
             {
-                var teamEditStageData = inputData.teamEditStageData;
-                if (teamEditStageData != null)
+                if (battleData.type == AdminBRO.Battle.Type_Battle)
                 {
-                    if (teamEditStageData.battleId.HasValue)
-                    {
-                        var battleData = GameData.GetBattleById(teamEditStageData.battleId.Value);
-                        if (battleData != null)
+                    UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                        SetData(new PrepareBattlePopupInData
                         {
-                            if (battleData.type == AdminBRO.Battle.Type_Battle)
-                            {
-                                UIManager.MakePopup<FTUE.PrepareBattlePopup>().
-                                    SetData(new PrepareBattlePopupInData
-                                    {
-                                        ftueStageData = teamEditStageData
-                                    }).RunShowPopupProcess();
-                            }
-                            else if (battleData.type == AdminBRO.Battle.Type_Boss)
-                            {
-                                UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
-                                    SetData(new PrepareBossFightPopupInData
-                                    {
-                                        ftueStageData = teamEditStageData
-                                    }).RunShowPopupProcess();
-                            }
-                        }
-                    }
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
+                }
+                else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                {
+                    UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                        SetData(new PrepareBossFightPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
                 }
             }
 
@@ -208,28 +198,28 @@ namespace Overlewd
                     UIManager.MakeNotification<DialogNotification>().
                         SetData(new DialogNotificationInData
                         {
-                            dialogData = GameGlobalStates.GetFTUENotificationByKey("maptutor")
+                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("maptutor")?.dialogId
                         }).RunShowNotificationProcess();
                     await UIManager.WaitHideNotifications();
 
                     UIManager.MakeNotification<DialogNotification>().
                         SetData(new DialogNotificationInData
                         {
-                            dialogData = GameGlobalStates.GetFTUENotificationByKey("questbooktutor")
+                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("questbooktutor")?.dialogId
                         }).RunShowNotificationProcess();
                     await UIManager.WaitHideNotifications();
-
+                    
                     UIManager.MakeNotification<DialogNotification>().
                         SetData(new DialogNotificationInData
                         {
-                            dialogData = GameGlobalStates.GetFTUENotificationByKey("qbcontenttutor")
+                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("qbcontenttutor")?.dialogId
                         }).RunShowNotificationProcess();
                     await UIManager.WaitHideNotifications();
 
                     UIManager.MakeNotification<DialogNotification>().
                         SetData(new DialogNotificationInData
                         { 
-                            dialogData = GameGlobalStates.GetFTUENotificationByKey("eventbooktutor")
+                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("eventbooktutor")?.dialogId
                         }).RunShowNotificationProcess();
                     break;
             }
@@ -285,8 +275,8 @@ namespace Overlewd
         }
     }
 
-    public class MapScreenInData
+    public class MapScreenInData : BaseScreenInData
     {
-        public AdminBRO.FTUEStageItem teamEditStageData;
+        
     }
 }

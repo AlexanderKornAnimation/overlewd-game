@@ -308,20 +308,20 @@ namespace Overlewd
 
             if (inputData != null)
             {
-                if (inputData.mapStageData != null)
+                if (inputData.ftueStageId.HasValue)
                 {
                     UIManager.MakeScreen<MapScreen>().
                         SetData(new MapScreenInData 
                         { 
-                            teamEditStageData = inputData.mapStageData 
+                            ftueStageId = inputData.ftueStageId 
                         }).RunShowScreenProcess();
                 }
-                else if (inputData.eventMapStageId.HasValue)
+                else if (inputData.eventStageId.HasValue)
                 {
                     UIManager.MakeScreen<EventMapScreen>().
                         SetData(new EventMapScreenInData
                         {
-                            teamEditStageId = inputData.eventMapStageId
+                            eventStageId = inputData.eventStageId
                         }).RunShowScreenProcess();
                 }
             }
@@ -337,9 +337,8 @@ namespace Overlewd
         }
     }
 
-    public class TeamEditScreenInData
+    public class TeamEditScreenInData : BaseScreenInData
     {
-        public int? eventMapStageId;
-        public AdminBRO.FTUEStageItem mapStageData;
+
     }
 }

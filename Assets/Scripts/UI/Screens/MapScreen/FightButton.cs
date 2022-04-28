@@ -18,9 +18,6 @@ namespace Overlewd
             protected GameObject bossIcon;
             protected TextMeshProUGUI markers;
 
-
-            private AdminBRO.Battle battleData;
-
             protected override void Awake()
             {
                 base.Awake();
@@ -35,26 +32,23 @@ namespace Overlewd
             {
                 base.Start();
 
-                var battleId = stageData?.battleId;
-                if (battleId.HasValue)
-                {
-                    battleData = GameData.GetBattleById(battleId.Value);
-                    title.text = battleData.title;
-                    loot.text = battleData.rewardSpriteString;
-                    icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
-                    bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
-                }
+                var battleData = stageData.battleData;
+                title.text = battleData.title;
+                loot.text = battleData.rewardSpriteString;
+                icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
+                bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
             }
 
             protected override void ButtonClick()
             {
                 base.ButtonClick();
+                var battleData = stageData.battleData;
                 if (battleData.type == AdminBRO.Battle.Type_Battle)
                 {
                     UIManager.MakePopup<FTUE.PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
                         {
-                            ftueStageData = stageData
+                            ftueStageId = stageId
                         }).RunShowPopupProcess();
                 }
                 else if (battleData.type == AdminBRO.Battle.Type_Boss)
@@ -62,7 +56,7 @@ namespace Overlewd
                     UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
                         {
-                            ftueStageData = stageData
+                            ftueStageId = stageId
                         }).RunShowPopupProcess();
                 }
             }

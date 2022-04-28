@@ -8,7 +8,14 @@ namespace Overlewd
     {
         public abstract class BaseStageButton : BaseButton
         {
-            public AdminBRO.FTUEStageItem stageData { get; set; }
+            public int? stageId { get; set; }
+            protected AdminBRO.FTUEStageItem stageData
+            {
+                get
+                {
+                    return stageId.HasValue ? GameData.GetFTUEStageById(stageId.Value) : null;
+                }
+            }
 
             protected Transform done;
 

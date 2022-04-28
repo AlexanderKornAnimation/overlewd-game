@@ -93,14 +93,13 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            var stageData = GameData.GetEventStageById(inputData.eventStageId);
-            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-            await GameData.EventStageStartAsync(inputData.eventStageId);
+            dialogData = inputData.eventStageData.dialogData;
+            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
         }
 
         protected void AutoplayButtonCustomize()
@@ -304,9 +303,8 @@ namespace Overlewd
         }
     }
 
-    public class SexScreenInData
+    public class SexScreenInData : BaseScreenInData
     {
-        public int eventStageId;
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

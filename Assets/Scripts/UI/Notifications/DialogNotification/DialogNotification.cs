@@ -131,6 +131,13 @@ namespace Overlewd
 
     public class DialogNotificationInData
     {
-        public AdminBRO.Dialog dialogData;
+        public int? dialogId;
+        public AdminBRO.Dialog dialogData
+        {
+            get
+            {
+                return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+            }
+        }
     }
 }

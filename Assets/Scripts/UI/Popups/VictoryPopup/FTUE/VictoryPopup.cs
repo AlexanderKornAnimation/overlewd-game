@@ -25,7 +25,7 @@ namespace Overlewd
                 UIManager.MakeScreen<BattleScreen>().
                     SetData(new BattleScreenInData
                     {
-                        ftueStageData = inputData.ftueStageData
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowScreenProcess();
             }
         }

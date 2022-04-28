@@ -15,12 +15,8 @@ namespace Overlewd
             {
                 base.Start();
 
-                var dialogId = stageData?.dialogId;
-                if (dialogId.HasValue)
-                {
-                    var dialogData = GameData.GetDialogById(dialogId.Value);
-                    title.text = dialogData.title;
-                }
+                var dialogData = stageData.dialogData;
+                title.text = dialogData.title;
             }
 
             protected override void ButtonClick()
@@ -29,7 +25,7 @@ namespace Overlewd
                 UIManager.MakeScreen<FTUE.SexScreen>().
                     SetData(new SexScreenInData
                     {
-                        ftueStageData = stageData
+                        ftueStageId = stageId
                     }).RunShowScreenProcess();
             }
 
