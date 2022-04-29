@@ -11,17 +11,16 @@ namespace Overlewd
 {
     public class CastleScreen : BaseFullScreen
     {
-        protected Transform cave;
-        protected Transform stable;
-        protected Transform crunch;
-        protected Transform tower;
-        protected Transform source;
+        protected Transform harem;
         protected Transform market;
         protected Transform forge;
         protected Transform magicGuild;
         protected Transform portal;
         protected Transform capitol;
         protected Transform castleBuilding;
+        protected Transform sanctuary;
+        protected Transform catacombs;
+        protected Transform aerostat;
 
         protected Transform eventWidget;
 
@@ -35,17 +34,17 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            cave = canvas.Find("Cave");
+            harem = canvas.Find("Harem");
             portal = canvas.Find("Portal");
-            stable = canvas.Find("Stable");
-            crunch = canvas.Find("Crunch");
-            tower = canvas.Find("Tower");
-            source = canvas.Find("Source");
             market = canvas.Find("Market");
             forge = canvas.Find("Forge");
             magicGuild = canvas.Find("MagicGuild");
             capitol = canvas.Find("Capitol");
             castleBuilding = canvas.Find("Castle");
+            
+            sanctuary = canvas.Find("Sanctuary");
+            catacombs = canvas.Find("Catacombs");
+            aerostat = canvas.Find("Aerostat");
 
             contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
             contenViewerButton.onClick.AddListener(() => { UIManager.ShowScreen<DebugContentViewer>(); });
@@ -70,17 +69,16 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            NSCastleScreen.GirlBuildingButton.GetInstance(cave);
-            NSCastleScreen.GirlBuildingButton.GetInstance(stable);
-            NSCastleScreen.GirlBuildingButton.GetInstance(crunch);
-            NSCastleScreen.GirlBuildingButton.GetInstance(tower);
-            NSCastleScreen.GirlBuildingButton.GetInstance(source);
+            NSCastleScreen.GirlBuildingButton.GetInstance(harem);
             NSCastleScreen.MarketButton.GetInstance(market);
             NSCastleScreen.ForgeButton.GetInstance(forge);
             NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
             NSCastleScreen.PortalButton.GetInstance(portal);
             NSCastleScreen.CapitolButton.GetInstance(capitol);
             NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
+            NSCastleScreen.SanctuaryButton.GetInstance(sanctuary);
+            NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+            NSCastleScreen.AerostatButton.GetInstance(aerostat);
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);

@@ -32,7 +32,7 @@ namespace Overlewd
 
             protected virtual void Customize()
             {
-                title.text = transform.parent.name;
+                
             }
 
             protected virtual void ButtonClick()

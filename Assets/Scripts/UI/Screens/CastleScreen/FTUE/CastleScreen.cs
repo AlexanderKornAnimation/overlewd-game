@@ -20,17 +20,16 @@ namespace Overlewd
 
                 var canvas = screenInst.transform.Find("Canvas");
 
-                cave = canvas.Find("Cave");
+                harem = canvas.Find("Harem");
                 portal = canvas.Find("Portal");
-                stable = canvas.Find("Stable");
-                crunch = canvas.Find("Crunch");
-                tower = canvas.Find("Tower");
-                source = canvas.Find("Source");
                 market = canvas.Find("Market");
                 forge = canvas.Find("Forge");
                 magicGuild = canvas.Find("MagicGuild");
                 capitol = canvas.Find("Capitol");
                 castleBuilding = canvas.Find("Castle");
+                sanctuary = canvas.Find("Sanctuary");
+                catacombs = canvas.Find("Catacombs");
+                aerostat = canvas.Find("Aerostat");
 
                 contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
 
@@ -48,7 +47,7 @@ namespace Overlewd
 
                 if (/*GameGlobalStates.ulviCaveBuilded*/true)
                 {
-                    NSCastleScreen.GirlBuildingButton.GetInstance(cave);
+                    NSCastleScreen.GirlBuildingButton.GetInstance(harem);
                 }
 
                 if (/*GameGlobalStates.portalBuilded*/true)
