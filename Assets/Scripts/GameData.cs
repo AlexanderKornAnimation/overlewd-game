@@ -80,6 +80,12 @@ namespace Overlewd
             return currenies.Find(c => c.name == "Cat Ears");
         }
 
+        public static List<AdminBRO.TradableItemTemp> tradables { get; set; }
+        public static AdminBRO.TradableItemTemp GetTradableById(int id)
+        {
+            return tradables.Find(t => t.id == id);
+        }
+
         public static List<AdminBRO.EventStageItem> eventStages { get; set; } = new List<AdminBRO.EventStageItem>();
         public static AdminBRO.EventStageItem GetEventStageById(int id)
         {

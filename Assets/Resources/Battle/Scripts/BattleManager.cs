@@ -9,7 +9,7 @@ namespace Overlewd
     public enum BattleEvent
     {
         EventId,
-        //TODO
+
     }
 
     public class BattleManager : MonoBehaviour

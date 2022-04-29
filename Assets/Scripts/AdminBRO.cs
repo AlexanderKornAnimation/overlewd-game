@@ -161,10 +161,17 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class PriceItem
+        public class EventMarketItem
         {
-            public int currencyId;
-            public int amount;
+            public int id;
+            public string name;
+            public string description;
+            public string bannerImage;
+            public string eventMapNodeName;
+            public string createdAt;
+            public string updatedAt;
+            public List<TradableItem> tradable;
+            public List<int> currencies;
         }
 
         [Serializable]
@@ -195,20 +202,12 @@ namespace Overlewd
             public string sortPriority;
             public int currentCount;
             public bool soldOut;
-        }
 
-        [Serializable]
-        public class EventMarketItem
-        {
-            public int id;
-            public string name;
-            public string description;
-            public string bannerImage;
-            public string eventMapNodeName;
-            public string createdAt;
-            public string updatedAt;
-            public List<TradableItem> tradable;
-            public List<int> currencies;
+            public class PriceItem
+            {
+                public int currencyId;
+                public int amount;
+            }
         }
 
         // /currencies
@@ -229,6 +228,52 @@ namespace Overlewd
             public bool nutaku;
             public string createdAt;
             public string updatedAt;
+        }
+
+        // /tradable
+        public static async Task<List<TradableItemTemp>> tradablesAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/tradable";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<TradableItemTemp>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class TradableItemTemp
+        {
+            public int id;
+            public string name;
+            public string type;
+            public bool promo;
+            public bool donat;
+            public bool hidden;
+            public int? marketId;
+            public string imageUrl;
+            public string description;
+            public List<PriceItem> price;
+            public string discount;
+            public string specialOfferLabel;
+            public List<int> itemPack;
+            public int? currencyId;
+            public int? currencyAmount;
+            public int? limit;
+            public int? characterId;
+            public int? equipmentId;
+            public int? potionCount;
+            public string dateStart;
+            public string dateEnd;
+            public string discountStart;
+            public string discountEnd;
+            public string sortPriority;
+
+            public class PriceItem
+            {
+                public string icon;
+                public int? currency;
+                public int? amount;
+            }
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
