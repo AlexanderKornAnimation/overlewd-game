@@ -48,6 +48,11 @@ namespace Overlewd
             {
                 await GameData.FTUEEndStage(inputData.ftueStageId.Value);
             }
+
+            public override void OnBattleEvent(BattleEvent battleEvent)
+            {
+
+            }
         }
 	}
 }

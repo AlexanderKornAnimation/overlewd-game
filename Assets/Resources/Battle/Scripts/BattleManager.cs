@@ -6,6 +6,12 @@ using DG.Tweening;
 
 namespace Overlewd
 {
+    public enum BattleEvent
+    {
+        EventId,
+        //TODO
+    }
+
     public class BattleManager : MonoBehaviour
     {
         private BaseBattleScreen battleScene; //In Out of Stage

@@ -71,5 +71,10 @@ namespace Overlewd
 			backButton.gameObject.SetActive(true);
 			skipButton.gameObject.SetActive(false);
 		}
+
+		public virtual void OnBattleEvent(BattleEvent battleEvent)
+        {
+			
+        }
     }
 }

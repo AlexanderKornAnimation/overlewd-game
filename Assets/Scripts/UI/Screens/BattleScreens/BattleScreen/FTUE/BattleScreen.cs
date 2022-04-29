@@ -122,6 +122,11 @@ namespace Overlewd
 
                 await Task.CompletedTask;
             }
+
+            public override void OnBattleEvent(BattleEvent battleEvent)
+            {
+
+            }
         }
 	}
 }
