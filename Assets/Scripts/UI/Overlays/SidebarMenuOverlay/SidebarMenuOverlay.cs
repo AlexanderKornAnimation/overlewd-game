@@ -26,6 +26,11 @@ namespace Overlewd
         protected TextMeshProUGUI globalMapButton_Title;
         protected Image globalMapButton_Icon;
 
+        protected Button overlordButton;
+        protected TextMeshProUGUI overlordButton_Markers;
+        protected TextMeshProUGUI overlordButton_Title;
+        protected Image overlordButton_Icon;
+        
         protected Button haremButton;
         protected TextMeshProUGUI haremButton_Markers;
         protected TextMeshProUGUI haremButton_Title;
@@ -75,6 +80,12 @@ namespace Overlewd
             globalMapButton_Title = globalMapButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             globalMapButton_Icon = globalMapButton.transform.Find("Icon").GetComponent<Image>();
 
+            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton.onClick.AddListener(OverlordButtonClick);
+            overlordButton_Markers = overlordButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
+            overlordButton_Title = overlordButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            overlordButton_Icon = overlordButton.transform.Find("Icon").GetComponent<Image>();
+            
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
             haremButton_Markers = haremButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
@@ -144,6 +155,11 @@ namespace Overlewd
             UIManager.ShowScreen<MapScreen>();
         }
 
+        protected virtual void OverlordButtonClick()
+        {
+            
+        }
+        
         protected virtual void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

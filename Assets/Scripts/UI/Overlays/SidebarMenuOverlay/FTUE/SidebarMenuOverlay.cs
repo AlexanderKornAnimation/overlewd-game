@@ -33,6 +33,9 @@ namespace Overlewd
 
                 UITools.DisableButton(forgeButton);
                 forgeButton_Markers.gameObject.SetActive(false);
+                
+                UITools.DisableButton(overlordButton);
+                overlordButton_Markers.gameObject.SetActive(false);
             }
 
             protected override void CastleButtonClick()
