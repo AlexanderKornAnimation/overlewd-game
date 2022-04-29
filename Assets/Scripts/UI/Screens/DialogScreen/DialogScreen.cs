@@ -13,6 +13,7 @@ namespace Overlewd
     {
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
+        protected FMODEvent replicaSound;
         
         protected Coroutine autoplayCoroutine;
 
@@ -420,6 +421,21 @@ namespace Overlewd
                 cutInSound = null;
 
                 mainSound?.Play();
+            }
+            
+            //replica sound
+            if (replica.replicaSoundId.HasValue)
+            {
+                var replicaSoundData = GameData.GetSoundById(replica.replicaSoundId.Value);
+                if (replicaSoundData.eventPath != replicaSound?.path)
+                {
+                    replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);
+                }
+            }
+            else
+            {
+                replicaSound?.Stop();
+                replicaSound = null;
             }
         }
 

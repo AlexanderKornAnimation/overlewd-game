@@ -552,6 +552,7 @@ namespace Overlewd
 
             public int? mainSoundId;
             public int? cutInSoundId;
+            public int? replicaSoundId;
 
             public const string CharacterPosition_Left = "left";
             public const string CharacterPosition_Right = "right";
