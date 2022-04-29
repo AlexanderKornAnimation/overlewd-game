@@ -24,7 +24,7 @@ namespace Overlewd
 
         protected virtual void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MapScreen/MapScreen", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/MapScreen/MapScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();

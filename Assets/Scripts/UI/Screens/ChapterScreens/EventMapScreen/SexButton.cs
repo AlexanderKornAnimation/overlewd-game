@@ -8,13 +8,11 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class BossFightButton : BaseStageButton
+        public class SexButton : BaseStageButton
         {
             private Button button;
-            private GameObject fightDone;
+            private GameObject sceneDone;
             private TextMeshProUGUI title;
-            private TextMeshProUGUI loot;
-            private TextMeshProUGUI markers;
 
             void Awake()
             {
@@ -23,10 +21,8 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                fightDone = button.transform.Find("Done").gameObject;
+                sceneDone = button.transform.Find("SceneDone").gameObject;
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
-                markers = button.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             }
 
             void Start()
@@ -37,26 +33,24 @@ namespace Overlewd
             private void Customize()
             {
                 var eventStageData = stageData;
-                var battleData = stageData.battleData;
                 title.text = eventStageData.title;
-                loot.text = battleData.rewardSpriteString;
-                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
-            }
+                sceneDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
+            } 
 
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakePopup<PrepareBossFightPopup>().
-                    SetData(new PrepareBossFightPopupInData
+                UIManager.MakeScreen<SexScreen>().
+                    SetData(new SexScreenInData
                     {
                         eventStageId = stageId
-                    }).RunShowPopupProcess();
+                    }).RunShowScreenProcess();
             }
 
-            public static BossFightButton GetInstance(Transform parent)
+            public static SexButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<BossFightButton>
-                    ("Prefabs/UI/Screens/EventMapScreen/BossFightButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<SexButton>
+                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/SexSceneButton", parent);
             }
         }
     }

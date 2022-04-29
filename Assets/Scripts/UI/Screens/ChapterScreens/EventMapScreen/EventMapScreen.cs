@@ -24,7 +24,7 @@ namespace Overlewd
 
         private void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/EventMapScreen/EventMap", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/EventMap", transform);
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);

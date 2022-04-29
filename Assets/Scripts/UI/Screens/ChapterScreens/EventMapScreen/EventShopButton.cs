@@ -8,12 +8,13 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class MapButton : MonoBehaviour
+        public class EventShopButton : MonoBehaviour
         {
+            public int eventMarketId;
+
             private Button button;
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
-            private TextMeshProUGUI questMark;
 
             void Awake()
             {
@@ -24,19 +25,31 @@ namespace Overlewd
 
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
-                questMark = button.transform.Find("QuestMark").GetComponent<TextMeshProUGUI>();
+            }
+
+            void Start()
+            {
+                Customize();
+            }
+
+            private void Customize()
+            {
+                var eventMarketData = GameData.GetEventMarketById(eventMarketId);
+
+                title.text = eventMarketData.name;
             }
 
             private void ButtonClick()
             {
+                GameGlobalStates.eventShop_MarketId = eventMarketId;
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<MapScreen>();
+                UIManager.ShowScreen<EventMarketScreen>();
             }
 
-            public static MapButton GetInstance(Transform parent)
+            public static EventShopButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<MapButton>
-                    ("Prefabs/UI/Screens/EventMapScreen/MapButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<EventShopButton>
+                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/EventShopButton", parent);
             }
         }
     }

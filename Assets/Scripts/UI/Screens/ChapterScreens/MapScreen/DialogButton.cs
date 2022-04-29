@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Schema;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ namespace Overlewd
 {
     namespace NSMapScreen
     {
-        public class SexSceneButton : BaseStageButton
+        public class DialogButton : BaseStageButton
         {
             protected override void Start()
             {
@@ -22,17 +23,17 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.MakeScreen<FTUE.SexScreen>().
-                    SetData(new SexScreenInData
+                UIManager.MakeScreen<FTUE.DialogScreen>().
+                    SetData(new DialogScreenInData
                     {
                         ftueStageId = stageId
                     }).RunShowScreenProcess();
             }
 
-            public static SexSceneButton GetInstance(Transform parent)
+            public static DialogButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<SexSceneButton>
-                    ("Prefabs/UI/Screens/MapScreen/SexSceneButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<DialogButton>
+                    ("Prefabs/UI/Screens/ChapterScreens/MapScreen/DialogButton", parent);
             }
         }
     }

@@ -8,13 +8,11 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class FightButton : BaseStageButton
+        public class DialogButton : BaseStageButton
         {
             private Button button;
-            private GameObject fightDone;
+            private GameObject dialogDone;
             private TextMeshProUGUI title;
-            private TextMeshProUGUI loot;
-            private TextMeshProUGUI markers;
 
             void Awake()
             {
@@ -23,10 +21,8 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
 
-                fightDone = button.transform.Find("FightDone").gameObject;
+                dialogDone = button.transform.Find("Done").gameObject;
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
-                markers = button.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             }
 
             void Start()
@@ -37,26 +33,24 @@ namespace Overlewd
             private void Customize()
             {
                 var eventStageData = stageData;
-                var battleData = stageData.battleData;
                 title.text = eventStageData.title;
-                loot.text = battleData.rewardSpriteString;
-                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
+                dialogDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
             }
 
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakePopup<PrepareBattlePopup>().
-                    SetData(new PrepareBattlePopupInData
+                UIManager.MakeScreen<DialogScreen>().
+                    SetData(new DialogScreenInData
                     {
                         eventStageId = stageId
-                    }).RunShowPopupProcess();
+                    }).RunShowScreenProcess();
             }
 
-            public static FightButton GetInstance(Transform parent)
+            public static DialogButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<FightButton>
-                    ("Prefabs/UI/Screens/EventMapScreen/FightButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<DialogButton>
+                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/DialogButton", parent);
             }
         }
     }
