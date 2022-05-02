@@ -63,6 +63,11 @@ namespace Overlewd
             {
                 return inputData?.ftueStageData?.key;
             }
+
+            public override BattleManagerInData GetBattleData()
+            {
+                return BattleManagerInData.InstFromBattleData(inputData?.ftueStageData?.battleData);
+            }
         }
 	}
 }

@@ -46,6 +46,11 @@ namespace Overlewd
         {
             await GameData.EventStageEndAsync(inputData.eventStageId.Value);
         }
+
+        public override BattleManagerInData GetBattleData()
+        {
+            return BattleManagerInData.InstFromBattleData(inputData?.eventStageData?.battleData);
+        }
     }
 
     public class BossFightScreenInData : BaseScreenInData
