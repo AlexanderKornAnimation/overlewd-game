@@ -11,6 +11,8 @@ namespace Overlewd
 {
     public class MapScreen : BaseFullScreen
     {
+        protected List<NSMapScreen.BaseStageButton> newStages = new List<NSMapScreen.BaseStageButton>();
+
         protected Transform map;
         protected Button chapterButton;
         protected TextMeshProUGUI chapterButtonText;
@@ -75,6 +77,7 @@ namespace Overlewd
                     foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
                     {
                         var stageData = GameData.GetFTUEStageById(stageId);
+                        var stageDone = stageData.status == AdminBRO.FTUEStageItem.Status_Complete;
                         var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
                         if (stageMapNode == null)
                         {
@@ -94,11 +97,23 @@ namespace Overlewd
                                     {
                                         var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
                                         dialog.stageId = stageId;
+
+                                        if (!stageDone)
+                                        {
+                                            newStages.Add(dialog);
+                                            dialog.gameObject.SetActive(false);
+                                        }
                                     }
                                     else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
                                     {
                                         var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
                                         sex.stageId = stageId;
+
+                                        if (!stageDone)
+                                        {
+                                            newStages.Add(sex);
+                                            sex.gameObject.SetActive(false);
+                                        }
                                     }
                                 }
                             }
@@ -111,11 +126,23 @@ namespace Overlewd
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
                                         fight.stageId = stageId;
+                                        
+                                        if (!stageDone)
+                                        {
+                                            newStages.Add(fight);
+                                            fight.gameObject.SetActive(false);
+                                        }
                                     }
                                     else if (battleData.type == AdminBRO.Battle.Type_Boss)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
                                         fight.stageId = stageId;
+
+                                        if (!stageDone)
+                                        {
+                                            newStages.Add(fight);
+                                            fight.gameObject.SetActive(false);
+                                        }
                                     }
                                 }
                             }
@@ -136,7 +163,6 @@ namespace Overlewd
                     chapterButton.gameObject.SetActive(false);
                 }
             }
-
             await Task.CompletedTask;
         }
 
@@ -167,6 +193,11 @@ namespace Overlewd
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
+            }
+
+            foreach (var stage in newStages)
+            {
+                stage.gameObject.SetActive(true);
             }
 
             EnterScreen();

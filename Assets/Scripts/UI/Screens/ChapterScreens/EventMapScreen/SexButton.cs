@@ -10,36 +10,22 @@ namespace Overlewd
     {
         public class SexButton : BaseStageButton
         {
-            private Button button;
-            private GameObject sceneDone;
-            private TextMeshProUGUI title;
-
-            void Awake()
+            protected override void Customize()
             {
-                var canvas = transform.Find("Canvas");
-
-                button = canvas.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
-
-                sceneDone = button.transform.Find("SceneDone").gameObject;
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            }
-
-            void Start()
-            {
-                Customize();
-            }
-
-            private void Customize()
-            {
+                base.Customize();
                 var eventStageData = stageData;
                 title.text = eventStageData.title;
-                sceneDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
+                
+                if (anim != null)
+                {
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData");
+                    anim.PlayAnimation("action", false);
+                }
             } 
 
-            private void ButtonClick()
+            protected override void ButtonClick()
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                base.ButtonClick();
                 UIManager.MakeScreen<SexScreen>().
                     SetData(new SexScreenInData
                     {
@@ -50,7 +36,7 @@ namespace Overlewd
             public static SexButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<SexButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/SexSceneButton", parent);
+                    ("Prefabs/UI/Screens/ChapterScreens/SexSceneButton", parent);
             }
         }
     }

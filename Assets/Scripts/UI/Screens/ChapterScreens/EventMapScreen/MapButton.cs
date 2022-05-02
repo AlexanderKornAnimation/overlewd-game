@@ -8,35 +8,28 @@ namespace Overlewd
 {
     namespace NSEventMapScreen
     {
-        public class MapButton : MonoBehaviour
+        public class MapButton : BaseButton
         {
-            private Button button;
-            private TextMeshProUGUI title;
             private TextMeshProUGUI description;
             private TextMeshProUGUI questMark;
 
-            void Awake()
+            protected override void Awake()
             {
-                var canvas = transform.Find("Canvas");
-
-                button = canvas.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
-
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                base.Awake();
                 description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
                 questMark = button.transform.Find("QuestMark").GetComponent<TextMeshProUGUI>();
             }
 
-            private void ButtonClick()
+            protected override void ButtonClick()
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                base.ButtonClick();
                 UIManager.ShowScreen<MapScreen>();
             }
 
             public static MapButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<MapButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/MapButton", parent);
+                    ("Prefabs/UI/Screens/ChapterScreens/MapButton", parent);
             }
         }
     }

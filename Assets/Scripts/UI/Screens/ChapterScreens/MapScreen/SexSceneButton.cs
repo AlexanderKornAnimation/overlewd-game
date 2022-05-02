@@ -11,12 +11,17 @@ namespace Overlewd
     {
         public class SexSceneButton : BaseStageButton
         {
-            protected override void Start()
+            protected override void Customize()
             {
-                base.Start();
-
+                base.Customize();
                 var dialogData = stageData.dialogData;
                 title.text = dialogData.title;
+                
+                if (anim != null)
+                {
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData");
+                    anim.PlayAnimation("action", false);
+                }
             }
 
             protected override void ButtonClick()
@@ -32,7 +37,7 @@ namespace Overlewd
             public static SexSceneButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<SexSceneButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/MapScreen/SexSceneButton", parent);
+                    ("Prefabs/UI/Screens/ChapterScreens/SexSceneButton", parent);
             }
         }
     }

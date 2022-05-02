@@ -12,12 +12,17 @@ namespace Overlewd
     {
         public class DialogButton : BaseStageButton
         {
-            protected override void Start()
+            protected override void Customize()
             {
-                base.Start();
-
+                base.Customize();
                 var dialogData = stageData.dialogData;
                 title.text = dialogData.title;
+
+                if (anim != null)
+                {
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/dialog/Idle_SkeletonData");
+                    anim.PlayAnimation("action", false);
+                }
             }
 
             protected override void ButtonClick()
@@ -25,15 +30,15 @@ namespace Overlewd
                 base.ButtonClick();
                 UIManager.MakeScreen<FTUE.DialogScreen>().
                     SetData(new DialogScreenInData
-                    {
-                        ftueStageId = stageId
-                    }).RunShowScreenProcess();
+                {
+                    ftueStageId = stageId
+                }).RunShowScreenProcess();
             }
 
             public static DialogButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<DialogButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/MapScreen/DialogButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<DialogButton>(
+                    "Prefabs/UI/Screens/ChapterScreens/DialogButton", parent);
             }
         }
     }

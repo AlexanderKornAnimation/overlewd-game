@@ -39,7 +39,7 @@ namespace Overlewd
             public static EventButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<EventButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/MapScreen/EventButton", parent);
+                    ("Prefabs/UI/Screens/ChapterScreens/EventButton", parent);
             }
         }
     }

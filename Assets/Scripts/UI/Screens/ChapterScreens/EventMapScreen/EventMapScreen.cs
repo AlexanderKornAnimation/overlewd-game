@@ -7,18 +7,15 @@ using UnityEngine.UI;
 namespace Overlewd
 {
     public class EventMapScreen : BaseFullScreen
-    { 
+    {
+        private List<NSEventMapScreen.BaseStageButton> newStages = new List<NSEventMapScreen.BaseStageButton>();
+
         private Transform map;
         private GameObject chapterMap;
 
         private Button backButton;
 
         private NSEventMapScreen.MapButton mapButton;
-        private List<NSEventMapScreen.EventShopButton> shopButtons = new List<NSEventMapScreen.EventShopButton>();
-        private List<NSEventMapScreen.FightButton> fightButtons = new List<NSEventMapScreen.FightButton>();
-        private List<NSEventMapScreen.BossFightButton> bossFightButtons = new List<NSEventMapScreen.BossFightButton>();
-        private List<NSEventMapScreen.DialogButton> dialogButtons = new List<NSEventMapScreen.DialogButton>();
-        private List<NSEventMapScreen.SexButton> sexButtons = new List<NSEventMapScreen.SexButton>();
 
         private EventMapScreenInData inputData;
 
@@ -63,6 +60,7 @@ namespace Overlewd
             foreach (var stageId in eventChapterData.stages)
             {
                 var stageData = GameData.GetEventStageById(stageId);
+                var stageDone = stageData.status == AdminBRO.EventStageItem.Status_Complete;
 
                 if (stageData.status == AdminBRO.EventStageItem.Status_Closed)
                 {
@@ -82,13 +80,23 @@ namespace Overlewd
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         fightButton.stageId = stageId;
-                        fightButtons.Add(fightButton);
+
+                        if (!stageDone)
+                        {
+                            newStages.Add(fightButton);
+                            fightButton.gameObject.SetActive(false);
+                        }
                     }
                     else if (battleData.type == AdminBRO.Battle.Type_Boss)
                     {
-                        var bossFightButton = NSEventMapScreen.BossFightButton.GetInstance(mapNode);
+                        var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         bossFightButton.stageId = stageId;
-                        bossFightButtons.Add(bossFightButton);
+                        
+                        if (!stageDone)
+                        {
+                            newStages.Add(bossFightButton);
+                            bossFightButton.gameObject.SetActive(false);
+                        }
                     }
                 }
                 else if (stageData.dialogId.HasValue)
@@ -98,13 +106,23 @@ namespace Overlewd
                     {
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
                         dialogButton.stageId = stageId;
-                        dialogButtons.Add(dialogButton);
+                        
+                        if (!stageDone)
+                        {
+                            newStages.Add(dialogButton);
+                            dialogButton.gameObject.SetActive(false);
+                        }
                     }
                     else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
                     {
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
                         sexButton.stageId = stageId;
-                        sexButtons.Add(sexButton);
+                        
+                        if (!stageDone)
+                        {
+                            newStages.Add(sexButton);
+                            sexButton.gameObject.SetActive(false);
+                        }
                     }
                 }
             }
@@ -117,7 +135,6 @@ namespace Overlewd
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(mapNode);
                     shopButton.eventMarketId = eventMarketData.id;
-                    shopButtons.Add(shopButton);
                 }
             }
 
@@ -147,6 +164,11 @@ namespace Overlewd
                 }
             }
 
+            foreach (var stage in newStages)
+            {
+                stage.gameObject.SetActive(true);
+            }
+            
             await Task.CompletedTask;
         }
         

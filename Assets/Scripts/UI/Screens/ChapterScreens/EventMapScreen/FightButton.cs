@@ -10,53 +10,65 @@ namespace Overlewd
     {
         public class FightButton : BaseStageButton
         {
-            private Button button;
-            private GameObject fightDone;
-            private TextMeshProUGUI title;
+            protected GameObject icon;
+            protected GameObject bossIcon;
+            
             private TextMeshProUGUI loot;
             private TextMeshProUGUI markers;
 
-            void Awake()
+            protected override void Awake()
             {
-                var canvas = transform.Find("Canvas");
-
-                button = canvas.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
-
-                fightDone = button.transform.Find("FightDone").gameObject;
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
+                base.Awake();
+                icon = button.transform.Find("Icon").gameObject;
+                bossIcon = button.transform.Find("BossIcon").gameObject;
                 markers = button.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
+                loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
             }
 
-            void Start()
+            protected override void Customize()
             {
-                Customize();
-            }
-
-            private void Customize()
-            {
-                var eventStageData = stageData;
+                base.Customize();
                 var battleData = stageData.battleData;
-                title.text = eventStageData.title;
+                title.text = stageData.title;
                 loot.text = battleData.rewardSpriteString;
-                fightDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
+                
+                icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
+                bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
+                
+                if (anim != null)
+                {
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData");
+                    anim.PlayAnimation("action", false);
+                }
             }
 
-            private void ButtonClick()
+            protected override void ButtonClick()
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakePopup<PrepareBattlePopup>().
-                    SetData(new PrepareBattlePopupInData
-                    {
-                        eventStageId = stageId
-                    }).RunShowPopupProcess();
+                base.ButtonClick();
+                var battleData = stageData.battleData;
+
+                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                {
+                    UIManager.MakePopup<PrepareBattlePopup>().
+                        SetData(new PrepareBattlePopupInData
+                        {
+                            eventStageId = stageId
+                        }).RunShowPopupProcess();
+                }
+                else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                {
+                    UIManager.MakePopup<PrepareBossFightPopup>().
+                        SetData(new PrepareBossFightPopupInData
+                        {
+                            eventStageId = stageId
+                        }).RunShowPopupProcess();
+                }
             }
 
             public static FightButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<FightButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/FightButton", parent);
+                    ("Prefabs/UI/Screens/ChapterScreens/FightButton", parent);
             }
         }
     }

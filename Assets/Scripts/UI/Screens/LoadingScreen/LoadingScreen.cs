@@ -272,7 +272,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
+                UIManager.ShowDialogBox("No Internet ï¿½onnection", "", () => Game.Quit());
             }
 
             await Task.CompletedTask;

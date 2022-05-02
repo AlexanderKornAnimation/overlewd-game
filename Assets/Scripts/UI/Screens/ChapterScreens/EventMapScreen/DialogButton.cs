@@ -10,36 +10,21 @@ namespace Overlewd
     {
         public class DialogButton : BaseStageButton
         {
-            private Button button;
-            private GameObject dialogDone;
-            private TextMeshProUGUI title;
-
-            void Awake()
+            protected override void Customize()
             {
-                var canvas = transform.Find("Canvas");
-
-                button = canvas.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
-
-                dialogDone = button.transform.Find("Done").gameObject;
-                title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                base.Customize();
+                var dialogData = stageData.dialogData;
+                title.text = dialogData.title;
+                if (anim != null)
+                {
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/dialog/Idle_SkeletonData");
+                    anim.PlayAnimation("action", false);
+                }
             }
 
-            void Start()
+            protected override void ButtonClick()
             {
-                Customize();
-            }
-
-            private void Customize()
-            {
-                var eventStageData = stageData;
-                title.text = eventStageData.title;
-                dialogDone.SetActive(eventStageData.status == AdminBRO.EventStageItem.Status_Complete);
-            }
-
-            private void ButtonClick()
-            {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                base.ButtonClick();
                 UIManager.MakeScreen<DialogScreen>().
                     SetData(new DialogScreenInData
                     {
@@ -50,7 +35,7 @@ namespace Overlewd
             public static DialogButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<DialogButton>
-                    ("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/DialogButton", parent);
+                    ("Prefabs/UI/Screens/ChapterScreens/DialogButton", parent);
             }
         }
     }
