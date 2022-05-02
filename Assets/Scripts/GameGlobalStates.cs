@@ -29,7 +29,7 @@ namespace Overlewd
         {
             get
             {
-                return GameData.GetTradableById(bannerNotification_EventMarketId, bannerNotification_TradableId);
+                return GameData.GetTradableById(bannerNotification_TradableId);
             }
         }
 

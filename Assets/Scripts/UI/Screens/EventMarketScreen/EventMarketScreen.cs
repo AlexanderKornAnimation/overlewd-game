@@ -45,7 +45,15 @@ namespace Overlewd
         void Start()
         {
             var marketData = GameGlobalStates.eventShop_MarketData;
-            var tradables = new List<AdminBRO.TradableItem>(marketData.tradable);
+            var tradables = new List<AdminBRO.TradableItem>();
+            foreach (var tId in marketData.tradables)
+            {
+                var tradableData = GameData.GetTradableById(tId);
+                if (tradableData != null)
+                {
+                    tradables.Add(tradableData);
+                }
+            }
 
             tradables.Sort((x, y) =>
                 {
@@ -100,14 +108,21 @@ namespace Overlewd
         private void MoneyBackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            var promoTradable = GameGlobalStates.eventShop_MarketData.tradable.Find(t => t.promo);
-            if (promoTradable != null)
+        
+            foreach (var tId in GameGlobalStates.eventShop_MarketData.tradables)
             {
-                if (GameData.CanTradableBuy(promoTradable))
+                var tData = GameData.GetTradableById(tId);
+                if (tData != null)
                 {
-                    GameGlobalStates.bannerNotification_EventMarketId = GameGlobalStates.eventShop_MarketId;
-                    GameGlobalStates.bannerNotification_TradableId = promoTradable.id;
-                    UIManager.ShowNotification<BannerNotification>();
+                    if (tData.promo)
+                    {
+                        if (GameData.CanTradableBuy(tData))
+                        {
+                            GameGlobalStates.bannerNotification_EventMarketId = GameGlobalStates.eventShop_MarketId;
+                            GameGlobalStates.bannerNotification_TradableId = tId;
+                            UIManager.ShowNotification<BannerNotification>();
+                        }
+                    }
                 }
             }
         }

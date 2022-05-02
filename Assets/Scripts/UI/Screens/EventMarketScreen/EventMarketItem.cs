@@ -51,7 +51,7 @@ namespace Overlewd
 
             public void Customize()
             {
-                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var tradableData = GameData.GetTradableById(tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 
@@ -87,7 +87,7 @@ namespace Overlewd
 
             private async void BuyButtonClick()
             {
-                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var tradableData = GameData.GetTradableById(tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 
@@ -110,7 +110,7 @@ namespace Overlewd
 
             private async void BuyWithCountButtonClick()
             {
-                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var tradableData = GameData.GetTradableById(tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 

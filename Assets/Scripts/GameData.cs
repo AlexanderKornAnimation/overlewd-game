@@ -65,10 +65,6 @@ namespace Overlewd
         {
             return eventMarkets.Find(m => m.id == id);
         }
-        public static AdminBRO.TradableItem GetTradableById(int marketId, int tradableId)
-        {
-            return eventMarkets.Find(m => m.id == marketId)?.tradable.Find(t => t.id == tradableId);
-        }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }
         public static AdminBRO.CurrencyItem GetCurrencyById(int id)
@@ -80,8 +76,8 @@ namespace Overlewd
             return currenies.Find(c => c.name == "Cat Ears");
         }
 
-        public static List<AdminBRO.TradableItemTemp> tradables { get; set; }
-        public static AdminBRO.TradableItemTemp GetTradableById(int id)
+        public static List<AdminBRO.TradableItem> tradables { get; set; }
+        public static AdminBRO.TradableItem GetTradableById(int id)
         {
             return tradables.Find(t => t.id == id);
         }

@@ -76,5 +76,15 @@ namespace Overlewd
         {
 			
         }
+
+		public virtual string GetFTUEChapterKey()
+        {
+			return "";
+        }
+
+		public virtual string GetFTUEStageKey()
+        {
+			return "";
+        }
     }
 }

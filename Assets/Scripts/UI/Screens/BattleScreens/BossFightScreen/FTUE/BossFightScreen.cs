@@ -53,6 +53,16 @@ namespace Overlewd
             {
 
             }
+
+            public override string GetFTUEChapterKey()
+            {
+                return GameGlobalStates.ftueChapterData?.key;
+            }
+
+            public override string GetFTUEStageKey()
+            {
+                return inputData?.ftueStageData?.key;
+            }
         }
 	}
 }

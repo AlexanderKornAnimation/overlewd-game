@@ -98,47 +98,8 @@ namespace Overlewd
             public int id;
             public string name;
             public string locale;
-            public List<InventoryItem> inventory;
             public List<WalletItem> wallet;
         }
-
-        [Serializable]
-        public class InventoryItem
-        {
-            public int id;
-            public int amount;
-            public string createdAt;
-            public string updatedAt;
-            public InventoryTradableItem tradable;
-        }
-
-        [Serializable]
-        public class InventoryTradableItem
-        {
-            public int id;
-            public string name;
-            public string type;
-            public bool promo;
-            public bool donat;
-            public bool hidden;
-            public string imageUrl;
-            public string description;
-            public string discount;
-            public string specialOfferLabel;
-            public List<int> itemPack;
-            public int? currencyId;
-            public int? characterId;
-            public int? equipmentId;
-            public int? potionCount;
-            public int? currencyAmount;
-            public int? limit;
-            public string dateStart;
-            public string dateEnd;
-            public string discountStart;
-            public string discountEnd;
-            public string sortPriority;
-        }
-
 
         [Serializable]
         public class WalletItem
@@ -170,8 +131,38 @@ namespace Overlewd
             public string eventMapNodeName;
             public string createdAt;
             public string updatedAt;
-            public List<TradableItem> tradable;
+            public List<int> tradables;
             public List<int> currencies;
+        }
+
+        // /currencies
+        public static async Task<List<CurrencyItem>> currenciesAsync()
+        {
+            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/currencies", tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<CurrencyItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class CurrencyItem
+        {
+            public int id;
+            public string name;
+            public string iconUrl;
+            public bool nutaku;
+            public string createdAt;
+            public string updatedAt;
+        }
+
+        // /tradable
+        public static async Task<List<TradableItem>> tradablesAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/tradable";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<TradableItem>>(request?.downloadHandler.text);
+            }
         }
 
         [Serializable]
@@ -207,72 +198,6 @@ namespace Overlewd
             {
                 public int currencyId;
                 public int amount;
-            }
-        }
-
-        // /currencies
-        public static async Task<List<CurrencyItem>> currenciesAsync()
-        {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/currencies", tokens?.accessToken))
-            {
-                return JsonHelper.DeserializeObject<List<CurrencyItem>>(request?.downloadHandler.text);
-            }
-        }
-
-        [Serializable]
-        public class CurrencyItem
-        {
-            public int id;
-            public string name;
-            public string iconUrl;
-            public bool nutaku;
-            public string createdAt;
-            public string updatedAt;
-        }
-
-        // /tradable
-        public static async Task<List<TradableItemTemp>> tradablesAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/tradable";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
-            {
-                return JsonHelper.DeserializeObject<List<TradableItemTemp>>(request?.downloadHandler.text);
-            }
-        }
-
-        [Serializable]
-        public class TradableItemTemp
-        {
-            public int id;
-            public string name;
-            public string type;
-            public bool promo;
-            public bool donat;
-            public bool hidden;
-            public int? marketId;
-            public string imageUrl;
-            public string description;
-            public List<PriceItem> price;
-            public string discount;
-            public string specialOfferLabel;
-            public List<int> itemPack;
-            public int? currencyId;
-            public int? currencyAmount;
-            public int? limit;
-            public int? characterId;
-            public int? equipmentId;
-            public int? potionCount;
-            public string dateStart;
-            public string dateEnd;
-            public string discountStart;
-            public string discountEnd;
-            public string sortPriority;
-
-            public class PriceItem
-            {
-                public string icon;
-                public int? currency;
-                public int? amount;
             }
         }
 
@@ -689,6 +614,7 @@ namespace Overlewd
             public int? level;
             public string rarity;
             public List<int> equipment;
+            public List<int> skills;
             public float? speed;
             public float? power;
             public float? constitution;
