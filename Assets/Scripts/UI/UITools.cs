@@ -77,6 +77,18 @@ namespace Overlewd
             }
         }
 
+        public static void LeftShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left,
+                0.0f, uiRect.rect.width);
+        }
+
+        public static void LeftHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left,
+                -uiRect.rect.width, uiRect.rect.width);
+        }
+
         //right
         public static async Task RightShowAsync(RectTransform uiRect, float duration = durationDef)
         {
@@ -112,6 +124,18 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
+        }
+
+        public static void RightShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                0.0f, uiRect.rect.width);
+        }
+
+        public static void RightHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                -uiRect.rect.width, uiRect.rect.width);
         }
 
         //bottom
@@ -151,6 +175,18 @@ namespace Overlewd
             }
         }
 
+        public static void BottomShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                0.0f, uiRect.rect.height);
+        }
+
+        public static void BottomHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                -uiRect.rect.height, uiRect.rect.height);
+        }
+
         //top
         public static async Task TopShowAsync(RectTransform uiRect, float duration = durationDef)
         {
@@ -188,6 +224,18 @@ namespace Overlewd
             }
         }
 
+        public static void TopShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
+                0.0f, uiRect.rect.height);
+        }
+
+        public static void TopHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
+                -uiRect.rect.height, uiRect.rect.height);
+        }
+
         //fade
         public static async Task FadeShowAsync(CanvasGroup uiCanvas, float duration = durationDef)
         {
@@ -219,6 +267,16 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
+        }
+
+        public static void FadeShow(CanvasGroup uiCanvas)
+        {
+            uiCanvas.alpha = 1.0f;
+        }
+
+        public static void FadeHide(CanvasGroup uiCanvas)
+        {
+            uiCanvas.alpha = 0.0f;
         }
     }
 

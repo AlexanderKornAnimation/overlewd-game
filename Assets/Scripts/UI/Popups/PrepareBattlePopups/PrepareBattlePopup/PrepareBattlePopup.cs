@@ -64,8 +64,7 @@ namespace Overlewd
             buffRect = buff.GetComponent<RectTransform>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
-            buffRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
-                -buffRect.rect.height, buffRect.rect.height);
+            UITools.TopHide(buffRect);
 
             markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
 

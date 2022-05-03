@@ -8,6 +8,7 @@ namespace Overlewd
 {
     public class QuestsWidget : BaseWidget
     {
+        protected RectTransform backRect;
         protected Button mainQuestButton;
         protected Transform content;
         protected GameObject scrollMarker;
@@ -15,7 +16,8 @@ namespace Overlewd
         private void Awake()
         {
             var canvas = transform.Find("Canvas");
-            var background = canvas.Find("Background");
+            backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
+            var background = backRect.Find("Background");
             var sideQuests = background.Find("SideQuests");
 
             mainQuestButton = background.Find("MainQuest").GetComponent<Button>();
@@ -51,6 +53,16 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowOverlay<QuestOverlay>();
+        }
+
+        public void Show()
+        {
+            UITools.RightShow(backRect);
+        }
+
+        public void Hide()
+        {
+            UITools.RightHide(backRect);
         }
 
         public static QuestsWidget GetInstance(Transform parent)
