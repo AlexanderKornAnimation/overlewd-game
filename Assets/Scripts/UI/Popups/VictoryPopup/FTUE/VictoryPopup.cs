@@ -13,6 +13,23 @@ namespace Overlewd
     {
         public class VictoryPopup : Overlewd.VictoryPopup
         {
+            public override async Task BeforeShowMakeAsync()
+            {
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "battle1":
+                                UITools.DisableButton(repeatButton);
+                                break;
+                        }
+                        break;
+                }
+
+                await Task.CompletedTask;
+            }
+
             protected override void NextButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

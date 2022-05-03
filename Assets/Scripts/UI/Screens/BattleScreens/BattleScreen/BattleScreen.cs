@@ -49,7 +49,7 @@ namespace Overlewd
 
         public override BattleManagerInData GetBattleData()
         {
-            return BattleManagerInData.InstFromBattleData(inputData?.eventStageData?.battleData);
+            return BattleManagerInData.InstFromEventStage(inputData?.eventStageData);
         }
     }
 

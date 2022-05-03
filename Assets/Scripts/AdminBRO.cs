@@ -789,6 +789,11 @@ namespace Overlewd
             {
                 return notifications.Find(n => n.key == key);
             }
+
+            public FTUEStageItem GetStageByKey(string stageKey)
+            {
+                return GameData.GetFTUEStageByKey(stageKey, key);
+            }
         }
 
         [Serializable]

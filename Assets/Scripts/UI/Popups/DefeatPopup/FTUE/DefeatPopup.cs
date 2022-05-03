@@ -11,17 +11,53 @@ namespace Overlewd
     {
         public class DefeatPopup : Overlewd.DefeatPopup
         {
-            protected override void Customize()
+            public override async Task BeforeShowMakeAsync()
             {
-                UITools.DisableButton(magicGuildButton);
-                UITools.DisableButton(inventoryButton);
-                UITools.DisableButton(editTeamButton);
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "battle2":
+                                UITools.DisableButton(magicGuildButton);
+                                UITools.DisableButton(inventoryButton);
+                                UITools.DisableButton(editTeamButton);
+                                break;
+                        }
+                        break;
+                }
+
+                await Task.CompletedTask;
             }
 
             protected override void HaremButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
-                UIManager.ShowScreen<MapScreen>();
+
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "battle2":
+                                UIManager.MakeScreen<SexScreen>().
+                                    SetData(new SexScreenInData
+                                    {
+                                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("sex2")?.id
+                                    }).RunShowScreenProcess();
+                                break;
+
+                            default:
+                                UIManager.ShowScreen<MapScreen>();
+                                break;
+                        }
+                        break;
+
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
+                }
+                
             }
         }
     }

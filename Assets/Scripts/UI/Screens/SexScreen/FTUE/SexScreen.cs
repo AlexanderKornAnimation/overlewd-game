@@ -32,7 +32,29 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                UIManager.ShowScreen<MapScreen>();
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "sex1":
+                                UIManager.MakeScreen<DialogScreen>().
+                                    SetData(new DialogScreenInData
+                                    {
+                                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("dialogue1")?.id
+                                    }).RunShowScreenProcess();
+                                break;
+
+                            default:
+                                UIManager.ShowScreen<MapScreen>();
+                                break;
+                        }
+                        break;
+
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
+                }
             }
 
             protected override void ShowLastReplica()

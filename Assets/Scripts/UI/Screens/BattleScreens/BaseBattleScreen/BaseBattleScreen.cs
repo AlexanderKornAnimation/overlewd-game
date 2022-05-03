@@ -77,16 +77,6 @@ namespace Overlewd
 			
         }
 
-		public virtual string GetFTUEChapterKey()
-        {
-			return "";
-        }
-
-		public virtual string GetFTUEStageKey()
-        {
-			return "";
-        }
-
 		public virtual BattleManagerInData GetBattleData()
         {
 			return null;
@@ -97,13 +87,32 @@ namespace Overlewd
     {
 		public List<AdminBRO.Character> myTeam { get; private set; }
 		public List<EnemyWave> enemyWaves { get; private set; }
+		public string ftueChapterKey { get; private set; }
+		public string ftueStageKey { get; private set; }
 
 		public class EnemyWave
         {
 			public List<AdminBRO.Character> enemyTeam { get; set; }
 		}
 
-		public static BattleManagerInData InstFromBattleData(AdminBRO.Battle battleData)
+		public static BattleManagerInData InstFromFTUEStage(AdminBRO.FTUEStageItem stage)
+        {
+			var inst = InstFromBattleData(stage?.battleData);
+			if (inst != null)
+            {
+				inst.ftueChapterKey = GameGlobalStates.ftueChapterData?.key;
+				inst.ftueStageKey = stage?.key;
+				return inst;
+            }
+			return null;
+        }
+
+		public static BattleManagerInData InstFromEventStage(AdminBRO.EventStageItem stage)
+        {
+			return InstFromBattleData(stage?.battleData);
+		}
+
+		private static BattleManagerInData InstFromBattleData(AdminBRO.Battle battleData)
         {
 			if (battleData == null)
             {
@@ -119,13 +128,16 @@ namespace Overlewd
 				inst.myTeam.Add(overlordCh);
             }
 
-			foreach (var myCh in GameData.characters)
-            {
-				if (myCh.teamPosition != AdminBRO.Character.TeamPosition_None)
-                {
-					inst.myTeam.Add(myCh);
-                }
-            }
+			if (battleData.type == AdminBRO.Battle.Type_Battle)
+			{
+				foreach (var myCh in GameData.characters)
+				{
+					if (myCh.teamPosition != AdminBRO.Character.TeamPosition_None)
+					{
+						inst.myTeam.Add(myCh);
+					}
+				}
+			}
 
 			//enemy teams
 			foreach (var phase in battleData.battlePhases)

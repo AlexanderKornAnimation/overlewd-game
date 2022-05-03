@@ -21,8 +21,12 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = true;
-                GameGlobalStates.ftueChapterData = null;
-                UIManager.ShowScreen<MapScreen>();
+                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
+                UIManager.MakeScreen<FTUE.SexScreen>().
+                    SetData(new SexScreenInData
+                    {
+                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("sex1")?.id
+                    }).RunShowScreenProcess();
             });
 
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
@@ -32,8 +36,6 @@ namespace Overlewd
                 GameGlobalStates.ftueProgressMode = false;
                 GameGlobalStates.ftueChapterData = null;
                 UIManager.ShowScreen<MapScreen>();
-                /*UIManager.ShowScreen<FTUE.SexScreen>().
-                    SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/
             });
 
             canvas.Find("Reset_FTUE").GetComponent<Button>().onClick.AddListener(() =>

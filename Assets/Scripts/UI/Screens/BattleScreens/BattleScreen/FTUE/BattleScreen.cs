@@ -24,20 +24,64 @@ namespace Overlewd
 
             public override void BattleWin()
             {
-                UIManager.MakePopup<VictoryPopup>().
-                    SetData(new VictoryPopupInData
+                var win = GameGlobalStates.ftueChapterData.key switch
+                {
+                    "chapter1" => inputData.ftueStageData.key switch
                     {
-                        ftueStageId = inputData.ftueStageId
-                    }).RunShowPopupProcess();
-            }
+                        "battle1" => true,
+                        "battle2" => false,
+                        _ => true
+                    },
+                    _ => true
+                };
 
-            public override void BattleDefeat()
-            {
-                UIManager.MakePopup<DefeatPopup>().
+                if (win)
+                {
+                    UIManager.MakePopup<VictoryPopup>().
+                        SetData(new VictoryPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
+                }
+                else
+                {
+                    UIManager.MakePopup<DefeatPopup>().
                     SetData(new DefeatPopupInData
                     {
                         ftueStageId = inputData.ftueStageId
                     }).RunShowPopupProcess();
+                }
+            }
+
+            public override void BattleDefeat()
+            {
+                var defeat = GameGlobalStates.ftueChapterData.key switch
+                {
+                    "chapter1" => inputData.ftueStageData.key switch
+                    {
+                        "battle1" => false,
+                        "battle2" => true,
+                        _ => true
+                    },
+                    _ => true
+                };
+
+                if (defeat)
+                {
+                    UIManager.MakePopup<DefeatPopup>().
+                        SetData(new DefeatPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
+                }
+                else
+                {
+                    UIManager.MakePopup<VictoryPopup>().
+                        SetData(new VictoryPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
+                }
             }
 
             public override async Task BeforeShowDataAsync()
@@ -128,19 +172,9 @@ namespace Overlewd
 
             }
 
-            public override string GetFTUEChapterKey()
-            {
-                return GameGlobalStates.ftueChapterData?.key;
-            }
-
-            public override string GetFTUEStageKey()
-            {
-                return inputData?.ftueStageData?.key;
-            }
-
             public override BattleManagerInData GetBattleData()
             {
-                return BattleManagerInData.InstFromBattleData(inputData?.ftueStageData?.battleData);
+                return BattleManagerInData.InstFromFTUEStage(inputData?.ftueStageData);
             }
         }
 	}
