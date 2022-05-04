@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class BuildingScreen : BaseFullScreen
+    public class MunicipalityScreen : BaseFullScreen
     {
         protected Button municipalityButton;
         protected GameObject municipalityUnaviable;
@@ -44,10 +44,10 @@ namespace Overlewd
         protected GameObject cathedralMaxLevel;
         protected TextMeshProUGUI cathedralName;
 
-        protected Button eyeButton;
-        protected GameObject eyeUnaviable;
-        protected GameObject eyeMaxLevel;
-        protected TextMeshProUGUI eyeName;
+        protected Button aerostatButton;
+        protected GameObject aerostatUnaviable;
+        protected GameObject aerostatMaxLevel;
+        protected TextMeshProUGUI aerostatName;
 
         protected Button catacombsButton;
         protected GameObject catacombsUnaviable;
@@ -63,7 +63,7 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/BuildingScreen/BuildingScreen", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MunicipalityScreen/MunicipalityScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var grid = canvas.Find("Grid");
@@ -103,10 +103,10 @@ namespace Overlewd
             cathedralMaxLevel = cathedralButton.transform.Find("MaxLevel").gameObject;
             cathedralName = cathedralButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            eyeButton = grid.Find("EyeButton").GetComponent<Button>();
-            eyeUnaviable = eyeButton.transform.Find("Unaviable").gameObject;
-            eyeMaxLevel = eyeButton.transform.Find("MaxLevel").gameObject;
-            eyeName = eyeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            aerostatButton = grid.Find("AerostatButton").GetComponent<Button>();
+            aerostatUnaviable = aerostatButton.transform.Find("Unaviable").gameObject;
+            aerostatMaxLevel = aerostatButton.transform.Find("MaxLevel").gameObject;
+            aerostatName = aerostatButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             catacombsButton = grid.Find("CatacombsButton").GetComponent<Button>();
             catacombsUnaviable = catacombsButton.transform.Find("Unaviable").gameObject;
@@ -128,7 +128,7 @@ namespace Overlewd
             portalButton.onClick.AddListener(PortalButtonClick);
             castleButton.onClick.AddListener(CastleButtonClick);
             cathedralButton.onClick.AddListener(CathedralButtonClick);
-            eyeButton.onClick.AddListener(EyeButtonClick);
+            aerostatButton.onClick.AddListener(AerostatButtonClick);
             catacombsButton.onClick.AddListener(CatacombsButtonClick);
             haremButton.onClick.AddListener(HaremButtonClick);
         }
@@ -140,7 +140,7 @@ namespace Overlewd
                 AdminBRO.Building.Key_Castle => castleName,
                 AdminBRO.Building.Key_Catacombs => catacombsName,
                 AdminBRO.Building.Key_Cathedral => cathedralName,
-                AdminBRO.Building.Key_Eye => eyeName,
+                AdminBRO.Building.Key_Aerostat => aerostatName,
                 AdminBRO.Building.Key_Forge => forgeName,
                 AdminBRO.Building.Key_Harem => haremName,
                 AdminBRO.Building.Key_MagicGuild => magicGuildName,
@@ -158,7 +158,7 @@ namespace Overlewd
                 AdminBRO.Building.Key_Castle => castleUnaviable,
                 AdminBRO.Building.Key_Catacombs => catacombsUnaviable,
                 AdminBRO.Building.Key_Cathedral => cathedralUnaviable,
-                AdminBRO.Building.Key_Eye => eyeUnaviable,
+                AdminBRO.Building.Key_Aerostat => aerostatUnaviable,
                 AdminBRO.Building.Key_Forge => forgeUnaviable,
                 AdminBRO.Building.Key_Harem => haremUnaviable,
                 AdminBRO.Building.Key_MagicGuild => magicGuildUnaviable,
@@ -176,7 +176,7 @@ namespace Overlewd
                 AdminBRO.Building.Key_Castle => castleMaxLevel,
                 AdminBRO.Building.Key_Catacombs => catacombsMaxLevel,
                 AdminBRO.Building.Key_Cathedral => cathedralMaxLevel,
-                AdminBRO.Building.Key_Eye => eyeMaxLevel,
+                AdminBRO.Building.Key_Aerostat => aerostatMaxLevel,
                 AdminBRO.Building.Key_Forge => forgeMaxLevel,
                 AdminBRO.Building.Key_Harem => haremMaxLevel,
                 AdminBRO.Building.Key_MagicGuild => magicGuildMaxLevel,
@@ -234,7 +234,7 @@ namespace Overlewd
 
         }
 
-        protected virtual void EyeButtonClick()
+        protected virtual void AerostatButtonClick()
         {
 
         }

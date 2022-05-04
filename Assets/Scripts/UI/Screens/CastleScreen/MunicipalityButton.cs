@@ -6,7 +6,7 @@ namespace Overlewd
 {
     namespace NSCastleScreen
     {
-        public class CastleBuildingButton : BaseButton
+        public class MunicipalityButton : BaseButton
         {
             protected Transform notificationGrid;
             protected Transform buildInProgressNotification;
@@ -24,13 +24,13 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.ShowScreen<BuildingScreen>();
+                UIManager.ShowScreen<MunicipalityScreen>();
             }
 
-            public static CastleBuildingButton GetInstance(Transform parent)
+            public static MunicipalityButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<CastleBuildingButton>
-                    ("Prefabs/UI/Screens/CastleScreen/CastleBuildingButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<MunicipalityButton>
+                    ("Prefabs/UI/Screens/CastleScreen/MunicipalityButton", parent);
             }
         }
     }

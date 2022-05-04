@@ -63,9 +63,9 @@ namespace Overlewd
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
-            //FTUE.EventsWidget.GetInstance(transform);
-            FTUE.QuestsWidget.GetInstance(transform);
-            FTUE.BuffWidget.GetInstance(transform);
+            //EventsWidget.GetInstance(transform);
+            QuestsWidget.GetInstance(transform);
+            BuffWidget.GetInstance(transform);
 
             if (GameGlobalStates.ftueChapterData != null)
             {

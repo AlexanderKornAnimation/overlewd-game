@@ -22,8 +22,8 @@ namespace Overlewd
                 UITools.DisableButton(haremButton);
                 haremButton_Markers.gameObject.SetActive(false);
 
-                UITools.DisableButton(castleBuildingButton);
-                castleBuildingButton_Markers.gameObject.SetActive(false);
+                UITools.DisableButton(municipalityButton);
+                municipalityButton_Markers.gameObject.SetActive(false);
 
                 UITools.DisableButton(magicGuildButton);
                 magicGuildButton_Markers.gameObject.SetActive(false);
@@ -59,7 +59,7 @@ namespace Overlewd
 
             }
 
-            protected override void CastleBuildingButtonClick()
+            protected override void MunicipalityButtonClick()
             {
 
             }

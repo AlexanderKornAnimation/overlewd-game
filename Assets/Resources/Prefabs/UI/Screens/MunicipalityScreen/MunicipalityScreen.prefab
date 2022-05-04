@@ -1455,7 +1455,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2736053861463336597}
   m_Layer: 0
-  m_Name: BuildingScreen
+  m_Name: MunicipalityScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3362,7 +3362,7 @@ GameObject:
   - component: {fileID: 7361405234635227930}
   - component: {fileID: 4325802883673581575}
   m_Layer: 0
-  m_Name: EyeButton
+  m_Name: AerostatButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5612,7 +5612,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Eye
+  m_text: Aerostat
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}

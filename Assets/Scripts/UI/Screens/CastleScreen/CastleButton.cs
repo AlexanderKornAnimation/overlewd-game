@@ -6,7 +6,7 @@ namespace Overlewd
 {
     namespace NSCastleScreen
     {
-        public class CapitolButton : BaseButton
+        public class CastleButton : BaseButton
         {
             protected Transform notification;
 
@@ -22,10 +22,10 @@ namespace Overlewd
                 
             }
 
-            public static CapitolButton GetInstance(Transform parent)
+            public static CastleButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<CapitolButton>
-                    ("Prefabs/UI/Screens/CastleScreen/CapitolButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<CastleButton>
+                    ("Prefabs/UI/Screens/CastleScreen/CastleButton", parent);
             }
         }
     }

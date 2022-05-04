@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CavePopup : BuildingPopup
+    public class HaremPopup : BuildingPopup
     {
 
         protected override void Awake()
         {
             base.Awake();
-            ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopups/CaveImage", imageSpawnPoint);
+            ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopups/HaremImage", imageSpawnPoint);
         }
 
     }

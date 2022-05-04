@@ -959,7 +959,7 @@ namespace Overlewd
             public const string Key_Castle = "castle";
             public const string Key_Catacombs = "catacombs";
             public const string Key_Cathedral = "cathedral";
-            public const string Key_Eye = "eye";
+            public const string Key_Aerostat = "aerostat";
             public const string Key_Forge = "forge";
             public const string Key_Harem = "harem";
             public const string Key_MagicGuild = "magicGuild";

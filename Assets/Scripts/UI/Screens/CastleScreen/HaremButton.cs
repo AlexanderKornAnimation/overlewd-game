@@ -4,7 +4,7 @@ namespace Overlewd
 {
     namespace NSCastleScreen
     {
-        public class GirlBuildingButton : BaseButton
+        public class HaremButton : BaseButton
         {
             protected Transform notificationsGrid;
             protected Transform grabRewardNotification;
@@ -25,10 +25,10 @@ namespace Overlewd
                 UIManager.ShowScreen<HaremScreen>();
             }
 
-            public static GirlBuildingButton GetInstance(Transform parent)
+            public static HaremButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<GirlBuildingButton>
-                    ("Prefabs/UI/Screens/CastleScreen/GirlBuildingButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<HaremButton>
+                    ("Prefabs/UI/Screens/CastleScreen/HaremButton", parent);
             }
         }
     }

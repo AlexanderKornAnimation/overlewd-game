@@ -6,7 +6,7 @@ namespace Overlewd
 {
     namespace NSCastleScreen
     {
-        public class CatacombsButton : BaseButton
+        public class CathedralButton : BaseButton
         {
             protected override void Awake()
             {
@@ -18,10 +18,10 @@ namespace Overlewd
                 base.ButtonClick();
             }
 
-            public static CatacombsButton GetInstance(Transform parent)
+            public static CathedralButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<CatacombsButton>
-                    ("Prefabs/UI/Screens/CastleScreen/CatacombsButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<CathedralButton>
+                    ("Prefabs/UI/Screens/CastleScreen/CathedralButton", parent);
             }
         }
     }

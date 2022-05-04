@@ -16,9 +16,9 @@ namespace Overlewd
         protected Transform forge;
         protected Transform magicGuild;
         protected Transform portal;
-        protected Transform capitol;
-        protected Transform castleBuilding;
-        protected Transform sanctuary;
+        protected Transform castle;
+        protected Transform municipality;
+        protected Transform cathedral;
         protected Transform catacombs;
         protected Transform aerostat;
 
@@ -39,10 +39,9 @@ namespace Overlewd
             market = canvas.Find("Market");
             forge = canvas.Find("Forge");
             magicGuild = canvas.Find("MagicGuild");
-            capitol = canvas.Find("Capitol");
-            castleBuilding = canvas.Find("Castle");
-            
-            sanctuary = canvas.Find("Sanctuary");
+            castle = canvas.Find("Castle");
+            municipality = canvas.Find("Municipality");
+            cathedral = canvas.Find("Cathedral");
             catacombs = canvas.Find("Catacombs");
             aerostat = canvas.Find("Aerostat");
 
@@ -69,14 +68,14 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            NSCastleScreen.GirlBuildingButton.GetInstance(harem);
+            NSCastleScreen.HaremButton.GetInstance(harem);
             NSCastleScreen.MarketButton.GetInstance(market);
             NSCastleScreen.ForgeButton.GetInstance(forge);
             NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
             NSCastleScreen.PortalButton.GetInstance(portal);
-            NSCastleScreen.CapitolButton.GetInstance(capitol);
-            NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
-            NSCastleScreen.SanctuaryButton.GetInstance(sanctuary);
+            NSCastleScreen.CastleButton.GetInstance(castle);
+            NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+            NSCastleScreen.CathedralButton.GetInstance(cathedral);
             NSCastleScreen.CatacombsButton.GetInstance(catacombs);
             NSCastleScreen.AerostatButton.GetInstance(aerostat);
 
