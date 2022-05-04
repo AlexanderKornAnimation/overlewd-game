@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,11 +16,11 @@ namespace Overlewd
             protected GameObject icon;
             protected GameObject bossIcon;
             protected TextMeshProUGUI markers;
-            
+
             protected override void Awake()
             {
                 base.Awake();
-                
+
                 loot = button.transform.Find("Loot").GetComponent<TextMeshProUGUI>();
                 icon = button.transform.Find("Icon").gameObject;
                 bossIcon = button.transform.Find("BossIcon").gameObject;
@@ -36,10 +35,25 @@ namespace Overlewd
                 loot.text = battleData.rewardSpriteString;
                 icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
                 bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
-                
+
+                switch (battleData.type)
+                {
+                    case AdminBRO.Battle.Type_Battle:
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData",
+                            "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_Material");
+                        break;
+                    case AdminBRO.Battle.Type_Boss:
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_SkeletonData",
+                            "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_Material");
+                        break;
+                }
+            }
+
+            protected virtual void SetAnimation(string animPath, string materialPath)
+            {
                 if (anim != null)
                 {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData");
+                    anim.Initialize(animPath, false, materialPath);
                     anim.PlayAnimation("action", false);
                 }
             }
@@ -68,36 +82,34 @@ namespace Overlewd
                     {
                         UIManager.MakeScreen<FTUE.BattleScreen>().
                             SetData(new BattleScreenInData
-                            {
-                                ftueStageId = stageId
-                            }).RunShowScreenProcess();
+                        {
+                            ftueStageId = stageId
+                        }).RunShowScreenProcess();
                     }
                     else
                     {
                         UIManager.MakePopup<FTUE.PrepareBattlePopup>().
                             SetData(new PrepareBattlePopupInData
-                            {
-                                ftueStageId = stageId
-                            }).RunShowPopupProcess();
+                        {
+                            ftueStageId = stageId
+                        }).RunShowPopupProcess();
                     }
                 }
                 else if (battleData.type == AdminBRO.Battle.Type_Boss)
                 {
                     if (directToBattleScreen)
                     {
-                        UIManager.MakeScreen<FTUE.BossFightScreen>().
-                            SetData(new BossFightScreenInData
-                            {
-                                ftueStageId = stageId
-                            }).RunShowScreenProcess();
+                        UIManager.MakeScreen<FTUE.BossFightScreen>().SetData(new BossFightScreenInData
+                        {
+                            ftueStageId = stageId
+                        }).RunShowScreenProcess();
                     }
                     else
                     {
-                        UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
-                            SetData(new PrepareBossFightPopupInData
-                            {
-                                ftueStageId = stageId
-                            }).RunShowPopupProcess();
+                        UIManager.MakePopup<FTUE.PrepareBossFightPopup>().SetData(new PrepareBossFightPopupInData
+                        {
+                            ftueStageId = stageId
+                        }).RunShowPopupProcess();
                     }
                 }
             }
@@ -110,4 +122,3 @@ namespace Overlewd
         }
     }
 }
-

@@ -18,7 +18,8 @@ namespace Overlewd
                 
                 if (anim != null)
                 {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData");
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData", false,
+                        "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_Material");
                     anim.PlayAnimation("action", false);
                 }
             } 

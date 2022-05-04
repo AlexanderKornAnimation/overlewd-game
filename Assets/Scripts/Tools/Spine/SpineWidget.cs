@@ -40,16 +40,21 @@ namespace Overlewd
             Destroy(skeletonDataAsset);
         }
 
-        private void Initialize(string skeletonDataPath, bool multipleRenderCanvas, string assetBundleId)
+        private void Initialize(string skeletonDataPath, bool multipleRenderCanvas, string assetBundleId, string materialPath)
         {
             skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
                 ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
                 ResourceManager.InstantiateRemoteAsset<SkeletonDataAsset>(skeletonDataPath, assetBundleId);
+            
             if (skeletonDataAsset == null)
                 return;
+            
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
+            if (materialPath != null)
+                skeletonGraphic.material = ResourceManager.InstantiateAsset<Material>(materialPath);
+            
             skeletonGraphic.Initialize(false);
 
             skeletonGraphic.AnimationState.Start += StartListener;
@@ -57,14 +62,14 @@ namespace Overlewd
             skeletonGraphic.AnimationState.Event += EventListener;
         }
 
-        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false)
+        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false, string materialPath = null)
         {
-            Initialize(skeletonDataPath, multipleRenderCanvas, null);
+            Initialize(skeletonDataPath, multipleRenderCanvas, null, materialPath);
         }
-
+        
         public void Initialize(string skeletonDataPath, string assetBundleId, bool multipleRenderCanvas = false)
         {
-            Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId);
+            Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId, null);
         }
 
         private void StartListener(TrackEntry e)

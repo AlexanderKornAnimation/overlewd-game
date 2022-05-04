@@ -16,10 +16,11 @@ namespace Overlewd
                 base.Customize();
                 var dialogData = stageData.dialogData;
                 title.text = dialogData.title;
-                
+
                 if (anim != null)
                 {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData");
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData", false,
+                        "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_Material");
                     anim.PlayAnimation("action", false);
                 }
             }
@@ -29,9 +30,9 @@ namespace Overlewd
                 base.ButtonClick();
                 UIManager.MakeScreen<FTUE.SexScreen>().
                     SetData(new SexScreenInData
-                    {
-                        ftueStageId = stageId
-                    }).RunShowScreenProcess();
+                {
+                    ftueStageId = stageId
+                }).RunShowScreenProcess();
             }
 
             public static SexSceneButton GetInstance(Transform parent)

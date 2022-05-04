@@ -35,13 +35,28 @@ namespace Overlewd
                 icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
                 bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
                 
-                if (anim != null)
+                switch (battleData.type)
                 {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData");
-                    anim.PlayAnimation("action", false);
+                    case AdminBRO.Battle.Type_Battle:
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData",
+                            "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_Material");
+                        break;
+                    case AdminBRO.Battle.Type_Boss:
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_SkeletonData",
+                            "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_Material");
+                        break;
                 }
             }
 
+            protected virtual void SetAnimation(string animPath, string materialPath)
+            {
+                if (anim != null)
+                {
+                    anim.Initialize(animPath, false, materialPath);
+                    anim.PlayAnimation("action", false);
+                }
+            }
+            
             protected override void ButtonClick()
             {
                 base.ButtonClick();
