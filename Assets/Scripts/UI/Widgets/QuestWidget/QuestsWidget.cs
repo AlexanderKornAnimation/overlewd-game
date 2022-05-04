@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,6 +64,16 @@ namespace Overlewd
         public void Hide()
         {
             UITools.RightHide(backRect);
+        }
+
+        public async Task ShowAsync()
+        {
+            await UITools.RightShowAsync(backRect);
+        }
+
+        public async Task HideAsync()
+        {
+            await UITools.RightHideAsync(backRect);
         }
 
         public static QuestsWidget GetInstance(Transform parent)

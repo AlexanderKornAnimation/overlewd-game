@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ namespace Overlewd
     public class EventsWidget : BaseWidget
     {
         protected Transform background;
+        protected RectTransform backRect;
         
         protected Button weeklyEventButton;
         protected Button monthlyEventButton;
@@ -19,7 +21,8 @@ namespace Overlewd
         private void Awake()
         {
             var canvas = transform.Find("Canvas");
-            background = canvas.Find("Background");
+            backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
+            background = backRect.Find("Background");
 
             weeklyEventButton = background.Find("WeeklyEvent").GetComponent<Button>();
             weeklyEventTitle = weeklyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -94,6 +97,26 @@ namespace Overlewd
                 {
                     activeTabId = EventOverlay.TabDecade
                 }).RunShowOverlayProcess();
+        }
+        
+        public void Show()
+        {
+            UITools.RightShow(backRect);
+        }
+
+        public void Hide()
+        {
+            UITools.RightHide(backRect);
+        }
+
+        public async Task ShowAsync()
+        {
+            await UITools.RightShowAsync(backRect);
+        }
+
+        public async Task HideAsync()
+        {
+            await UITools.RightHideAsync(backRect);
         }
         
         public static EventsWidget GetInstance(Transform parent)
