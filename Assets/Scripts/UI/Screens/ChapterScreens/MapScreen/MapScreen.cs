@@ -48,18 +48,6 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            if (GameGlobalStates.ftueChapterData == null)
-            {
-                if (GameGlobalStates.ftueProgressMode)
-                {
-                    GameGlobalStates.ftueChapterData = GetActiveChapter();
-                }
-                else
-                {
-                    GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
-                }
-            }
-
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
@@ -77,15 +65,13 @@ namespace Overlewd
                     foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
                     {
                         var stageData = GameData.GetFTUEStageById(stageId);
-                        var stageDone = stageData.status == AdminBRO.FTUEStageItem.Status_Complete;
                         var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
                         if (stageMapNode == null)
                         {
                             continue;
                         }
 
-                        var instantiateStageOnMap = GameGlobalStates.ftueProgressMode ?
-                            (stageData.status != AdminBRO.FTUEStageItem.Status_Closed) : true;
+                        var instantiateStageOnMap = GameGlobalStates.ftueProgressMode ? !stageData.isClosed : true;
                         if (instantiateStageOnMap)
                         {
                             if (stageData.dialogId.HasValue)
@@ -93,23 +79,23 @@ namespace Overlewd
                                 var dialogData = stageData.dialogData;
                                 if (dialogData != null)
                                 {
-                                    if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                                    if (dialogData.isTypeDialog)
                                     {
                                         var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
                                         dialog.stageId = stageId;
 
-                                        if (!stageDone)
+                                        if (!stageData.isComplete)
                                         {
                                             newStages.Add(dialog);
                                             dialog.gameObject.SetActive(false);
                                         }
                                     }
-                                    else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
+                                    else if (dialogData.isTypeSex)
                                     {
                                         var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
                                         sex.stageId = stageId;
 
-                                        if (!stageDone)
+                                        if (!stageData.isComplete)
                                         {
                                             newStages.Add(sex);
                                             sex.gameObject.SetActive(false);
@@ -122,23 +108,23 @@ namespace Overlewd
                                 var battleData = stageData.battleData;
                                 if (battleData != null)
                                 {
-                                    if (battleData.type == AdminBRO.Battle.Type_Battle)
+                                    if (battleData.isTypeBattle)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
                                         fight.stageId = stageId;
                                         
-                                        if (!stageDone)
+                                        if (!stageData.isComplete)
                                         {
                                             newStages.Add(fight);
                                             fight.gameObject.SetActive(false);
                                         }
                                     }
-                                    else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                                    else if (battleData.isTypeBoss)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
                                         fight.stageId = stageId;
 
-                                        if (!stageDone)
+                                        if (!stageData.isComplete)
                                         {
                                             newStages.Add(fight);
                                             fight.gameObject.SetActive(false);
@@ -152,10 +138,10 @@ namespace Overlewd
 
                 if (GameGlobalStates.ftueChapterData.nextChapterId.HasValue)
                 {
-                    nextChapterData = GameData.GetFTUEChapterById(GameGlobalStates.ftueChapterData.nextChapterId.Value);
+                    nextChapterData = GameGlobalStates.ftueChapterData.nextChapterData;
                     chapterButtonText.text = nextChapterData?.name;
                     var showNextChapterButton = GameGlobalStates.ftueProgressMode ?
-                        ChapterComplete(GameGlobalStates.ftueChapterData) : true;
+                        GameGlobalStates.ftueChapterData.isComplete : true;
                     chapterButton.gameObject.SetActive(showNextChapterButton);
                 }
                 else
@@ -177,7 +163,7 @@ namespace Overlewd
             var battleData = inputData?.ftueStageData?.battleData;
             if (battleData != null)
             {
-                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                if (battleData.isTypeBattle)
                 {
                     UIManager.MakePopup<FTUE.PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
@@ -185,7 +171,7 @@ namespace Overlewd
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
-                else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                else if (battleData.isTypeBoss)
                 {
                     UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
@@ -261,48 +247,6 @@ namespace Overlewd
         private void LeaveScreen()
         {
 
-        }
-
-        private bool ChapterComplete(AdminBRO.FTUEChapter chapterData)
-        {
-            foreach (var stageId in chapterData.stages)
-            {
-                var stageData = GameData.GetFTUEStageById(stageId);
-                if (stageData == null)
-                    return false;
-                if (stageData.status != AdminBRO.FTUEStageItem.Status_Complete)
-                    return false;
-            }
-            return true;
-        }
-
-        private bool StageIsActive(string stageKey)
-        {
-            foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
-            {
-                var stageData = GameData.GetFTUEStageById(stageId);
-                if (stageData == null)
-                    return false;
-                if (stageData.key == stageKey)
-                {
-                    return (stageData.status != AdminBRO.FTUEStageItem.Status_Closed) &&
-                           (stageData.status != AdminBRO.FTUEStageItem.Status_Complete);
-                }
-            }
-            return false;
-        }
-
-        private AdminBRO.FTUEChapter GetActiveChapter()
-        {
-            var chapterData = GameData.GetFTUEChapterByKey("chapter1");
-            while (ChapterComplete(chapterData))
-            {
-                if (chapterData.nextChapterId.HasValue)
-                {
-                    chapterData = GameData.GetFTUEChapterById(chapterData.nextChapterId.Value);
-                }
-            }
-            return chapterData;
         }
     }
 

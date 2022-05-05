@@ -37,8 +37,8 @@ namespace Overlewd
 
             protected virtual void Customize()
             {
-                done.gameObject.SetActive(stageData.status == AdminBRO.EventStageItem.Status_Complete);
-                if (stageData.status != AdminBRO.EventStageItem.Status_Complete)
+                done.gameObject.SetActive(stageData.isComplete);
+                if (!stageData.isComplete)
                 {
                     button.gameObject.SetActive(false);
                     anim = SpineWidget.GetInstance(animPos);

@@ -28,6 +28,8 @@ namespace Overlewd
 
         protected FMODEvent music;
 
+        protected CastleScreenInData inputData;
+
         protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/CastleScreen/CastleScreen", transform);
@@ -44,14 +46,33 @@ namespace Overlewd
             cathedral = canvas.Find("Cathedral");
             catacombs = canvas.Find("Catacombs");
             aerostat = canvas.Find("Aerostat");
-
-            contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
-            contenViewerButton.onClick.AddListener(() => { UIManager.ShowScreen<DebugContentViewer>(); });
         }
 
-        private void Start()
+        public CastleScreen SetData(CastleScreenInData data)
         {
-            Customize();
+            inputData = data;
+            return this;
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            NSCastleScreen.HaremButton.GetInstance(harem);
+            NSCastleScreen.MarketButton.GetInstance(market);
+            NSCastleScreen.ForgeButton.GetInstance(forge);
+            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+            NSCastleScreen.PortalButton.GetInstance(portal);
+            NSCastleScreen.CastleButton.GetInstance(castle);
+            NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+            NSCastleScreen.CathedralButton.GetInstance(cathedral);
+            NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+            NSCastleScreen.AerostatButton.GetInstance(aerostat);
+
+            //EventsWidget.GetInstance(transform);
+            QuestsWidget.GetInstance(transform);
+            //BuffWidget.GetInstance(transform);
+            SidebarButtonWidget.GetInstance(transform);
+
+            await Task.CompletedTask;
         }
 
         public override void StartShow()
@@ -65,24 +86,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowHide);
             music?.Stop();
         }
+    }
 
-        protected virtual void Customize()
-        {
-            NSCastleScreen.HaremButton.GetInstance(harem);
-            NSCastleScreen.MarketButton.GetInstance(market);
-            NSCastleScreen.ForgeButton.GetInstance(forge);
-            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
-            NSCastleScreen.PortalButton.GetInstance(portal);
-            NSCastleScreen.CastleButton.GetInstance(castle);
-            NSCastleScreen.MunicipalityButton.GetInstance(municipality);
-            NSCastleScreen.CathedralButton.GetInstance(cathedral);
-            NSCastleScreen.CatacombsButton.GetInstance(catacombs);
-            NSCastleScreen.AerostatButton.GetInstance(aerostat);
-
-            EventsWidget.GetInstance(transform);
-            QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
-            SidebarButtonWidget.GetInstance(transform);
-        }
+    public class CastleScreenInData : BaseScreenInData
+    {
+    
     }
 }

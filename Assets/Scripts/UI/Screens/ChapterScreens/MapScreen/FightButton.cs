@@ -33,8 +33,8 @@ namespace Overlewd
                 var battleData = stageData.battleData;
                 title.text = battleData.title;
                 loot.text = battleData.rewardSpriteString;
-                icon.SetActive(battleData.type == AdminBRO.Battle.Type_Battle);
-                bossIcon.SetActive(battleData.type == AdminBRO.Battle.Type_Boss);
+                icon.SetActive(battleData.isTypeBattle);
+                bossIcon.SetActive(battleData.isTypeBoss);
 
                 switch (battleData.type)
                 {
@@ -74,7 +74,7 @@ namespace Overlewd
                     _ => false
                 };
 
-                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                if (battleData.isTypeBattle)
                 {
                     if (directToBattleScreen)
                     {
@@ -93,7 +93,7 @@ namespace Overlewd
                         }).RunShowPopupProcess();
                     }
                 }
-                else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                else if (battleData.isTypeBoss)
                 {
                     if (directToBattleScreen)
                     {

@@ -128,7 +128,7 @@ namespace Overlewd
 				inst.myTeam.Add(overlordCh);
             }
 
-			if (battleData.type == AdminBRO.Battle.Type_Battle)
+			if (battleData.isTypeBattle)
 			{
 				foreach (var myCh in GameData.characters)
 				{

@@ -60,9 +60,8 @@ namespace Overlewd
             foreach (var stageId in eventChapterData.stages)
             {
                 var stageData = GameData.GetEventStageById(stageId);
-                var stageDone = stageData.status == AdminBRO.EventStageItem.Status_Complete;
 
-                if (stageData.status == AdminBRO.EventStageItem.Status_Closed)
+                if (stageData.isClosed)
                 {
                     //continue;
                 }
@@ -76,23 +75,23 @@ namespace Overlewd
                 if (stageData.battleId.HasValue)
                 {
                     var battleData = stageData.battleData;
-                    if (battleData.type == AdminBRO.Battle.Type_Battle)
+                    if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         fightButton.stageId = stageId;
 
-                        if (!stageDone)
+                        if (!stageData.isComplete)
                         {
                             newStages.Add(fightButton);
                             fightButton.gameObject.SetActive(false);
                         }
                     }
-                    else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                    else if (battleData.isTypeBoss)
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         bossFightButton.stageId = stageId;
                         
-                        if (!stageDone)
+                        if (!stageData.isComplete)
                         {
                             newStages.Add(bossFightButton);
                             bossFightButton.gameObject.SetActive(false);
@@ -102,23 +101,23 @@ namespace Overlewd
                 else if (stageData.dialogId.HasValue)
                 {
                     var dialogData = stageData.dialogData;
-                    if (dialogData.type == AdminBRO.Dialog.Type_Dialog)
+                    if (dialogData.isTypeDialog)
                     {
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
                         dialogButton.stageId = stageId;
                         
-                        if (!stageDone)
+                        if (!stageData.isComplete)
                         {
                             newStages.Add(dialogButton);
                             dialogButton.gameObject.SetActive(false);
                         }
                     }
-                    else if (dialogData.type == AdminBRO.Dialog.Type_Sex)
+                    else if (dialogData.isTypeSex)
                     {
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
                         sexButton.stageId = stageId;
                         
-                        if (!stageDone)
+                        if (!stageData.isComplete)
                         {
                             newStages.Add(sexButton);
                             sexButton.gameObject.SetActive(false);
@@ -146,7 +145,7 @@ namespace Overlewd
             var battleData = inputData?.eventStageData?.battleData;
             if (battleData != null)
             {
-                if (battleData.type == AdminBRO.Battle.Type_Battle)
+                if (battleData.isTypeBattle)
                 {
                     UIManager.MakePopup<PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
@@ -154,7 +153,7 @@ namespace Overlewd
                             eventStageId = inputData.eventStageId
                         }).RunShowPopupProcess();
                 }
-                else if (battleData.type == AdminBRO.Battle.Type_Boss)
+                else if (battleData.isTypeBoss)
                 {
                     UIManager.MakePopup<PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
@@ -199,7 +198,7 @@ namespace Overlewd
                 foreach (var stageId in curChapter.stages)
                 {
                     var stageData = GameData.GetEventStageById(stageId);
-                    if (stageData.status != AdminBRO.EventStageItem.Status_Complete)
+                    if (!stageData.isComplete)
                     {
                         return curChapter;
                     }

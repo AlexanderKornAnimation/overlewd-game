@@ -21,12 +21,28 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = true;
-                GameGlobalStates.ftueChapterData = GameData.GetFTUEChapterByKey("chapter1");
-                UIManager.MakeScreen<FTUE.SexScreen>().
-                    SetData(new SexScreenInData
+                GameGlobalStates.ftueChapterData = GameData.ftue.activeChapter;
+
+                if (GameGlobalStates.ftueChapterData.key == "chapter1")
+                {
+                    var firstSexStage = GameGlobalStates.ftueChapterData.GetStageByKey("sex1");
+                    if (!firstSexStage?.isComplete ?? false)
                     {
-                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("sex1")?.id
-                    }).RunShowScreenProcess();
+                        UIManager.MakeScreen<FTUE.SexScreen>().
+                            SetData(new SexScreenInData
+                            {
+                                ftueStageId = firstSexStage.id
+                            }).RunShowScreenProcess();
+                    }
+                    else
+                    {
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                }
+                else
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
             });
 
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
@@ -34,7 +50,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = false;
-                GameGlobalStates.ftueChapterData = null;
+                GameGlobalStates.ftueChapterData = GameData.ftue.firstChapter;
                 UIManager.ShowScreen<MapScreen>();
             });
 

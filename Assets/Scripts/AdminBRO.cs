@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -410,6 +411,42 @@ namespace Overlewd
                     return battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
                 }
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen
+            {
+                get
+                {
+                    return status == Status_Open;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isStarted
+            {
+                get
+                {
+                    return status == Status_Started;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isComplete
+            {
+                get
+                {
+                    return status == Status_Complete;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isClosed
+            {
+                get
+                {
+                    return status == Status_Closed;
+                }
+            }
         }
 
         // /quests
@@ -551,6 +588,33 @@ namespace Overlewd
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";
             public const string Type_Notification = "notification";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTypeDialog
+            {
+                get
+                {
+                    return type == Type_Dialog;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTypeSex
+            {
+                get
+                {
+                    return type == Type_Sex;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTypeNotification
+            {
+                get
+                {
+                    return type == Type_Notification;
+                }
+            }
         }
 
         // /battles
@@ -587,6 +651,24 @@ namespace Overlewd
             public class Phase 
             {
                 public List<Character> enemyCharacters;
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTypeBattle
+            {
+                get
+                {
+                    return type == Type_Battle;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTypeBoss
+            {
+                get
+                {
+                    return type == Type_Boss;
+                }
             }
         }
 
@@ -794,12 +876,66 @@ namespace Overlewd
             {
                 return GameData.GetFTUEStageByKey(stageKey, key);
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isComplete
+            {
+                get
+                {
+                    foreach (var stageId in stages)
+                    {
+                        var stageData = GameData.GetFTUEStageById(stageId);
+                        if (!stageData?.isComplete ?? true)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter nextChapterData
+            {
+                get
+                {
+                    return nextChapterId.HasValue ? GameData.GetFTUEChapterById(nextChapterId.Value) : null;
+                }
+            }
         }
 
         [Serializable]
         public class FTUEInfo
         {
             public List<FTUEChapter> chapters;
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter activeChapter
+            {
+                get
+                {
+                    var chapterData = GameData.ftue.firstChapter;
+                    while (chapterData.isComplete)
+                    {
+                        if (chapterData.nextChapterId.HasValue)
+                        {
+                            chapterData = chapterData.nextChapterData;
+                            continue;
+                        }
+                        break;
+                    }
+                    return chapterData;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter firstChapter
+            {
+                get
+                {
+                    return GameData.ftue.chapters.OrderBy(ch => ch.order).First();
+                }
+            }
         }
 
         // /ftue-stages
@@ -849,6 +985,42 @@ namespace Overlewd
                 get
                 {
                     return battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen
+            {
+                get
+                {
+                    return status == Status_Open;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isStarted
+            {
+                get
+                {
+                    return status == Status_Started;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isComplete
+            {
+                get
+                {
+                    return status == Status_Complete;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isClosed
+            {
+                get
+                {
+                    return status == Status_Closed;
                 }
             }
         }
