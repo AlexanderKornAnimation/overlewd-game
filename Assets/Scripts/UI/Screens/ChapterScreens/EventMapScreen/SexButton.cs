@@ -16,11 +16,7 @@ namespace Overlewd
                 var eventStageData = stageData;
                 title.text = eventStageData.title;
                 
-                if (anim != null)
-                {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData");
-                    anim.PlayAnimation("action", false);
-                }
+                SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/SexButtonAnim");
             } 
 
             protected override void ButtonClick()

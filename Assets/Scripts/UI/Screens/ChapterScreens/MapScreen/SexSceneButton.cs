@@ -17,18 +17,13 @@ namespace Overlewd
                 var dialogData = stageData.dialogData;
                 title.text = dialogData.title;
 
-                if (anim != null)
-                {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_SkeletonData");
-                    anim.PlayAnimation("action", false);
-                }
+                SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/SexButtonAnim");
             }
 
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.MakeScreen<FTUE.SexScreen>().
-                    SetData(new SexScreenInData
+                UIManager.MakeScreen<FTUE.SexScreen>().SetData(new SexScreenInData
                 {
                     ftueStageId = stageId
                 }).RunShowScreenProcess();

@@ -15,11 +15,9 @@ namespace Overlewd
                 base.Customize();
                 var dialogData = stageData.dialogData;
                 title.text = dialogData.title;
-                if (anim != null)
-                {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/dialog/Idle_SkeletonData");
-                    anim.PlayAnimation("action", false);
-                }
+                
+                SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/dialog/DialogButtonAnim");
+
             }
 
             protected override void ButtonClick()

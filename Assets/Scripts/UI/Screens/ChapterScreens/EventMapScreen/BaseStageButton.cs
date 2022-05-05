@@ -38,12 +38,19 @@ namespace Overlewd
             protected virtual void Customize()
             {
                 done.gameObject.SetActive(stageData.isComplete);
-                if (!stageData.isComplete)
-                {
-                    button.gameObject.SetActive(false);
-                    anim = SpineWidget.GetInstance(animPos);
-                    anim.completeListeners += RemoveAnimation;
-                }
+            }
+            
+            protected void SetAnimation(string prefabPath)
+            {
+                if (stageData.isComplete)
+                    return;
+                
+                button.gameObject.SetActive(false);
+                anim = SpineWidget.GetInstance(prefabPath, animPos);
+                anim.completeListeners += RemoveAnimation;
+                
+                if (anim != null)
+                    anim.PlayAnimation("action", false);
             }
 
             private void RemoveAnimation()

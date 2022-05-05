@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,28 +34,21 @@ namespace Overlewd
                 var battleData = stageData.battleData;
                 title.text = battleData.title;
                 loot.text = battleData.rewardSpriteString;
+
                 icon.SetActive(battleData.isTypeBattle);
                 bossIcon.SetActive(battleData.isTypeBoss);
 
                 switch (battleData.type)
                 {
                     case AdminBRO.Battle.Type_Battle:
-                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData");
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/BattleButtonAnim");
                         break;
                     case AdminBRO.Battle.Type_Boss:
-                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_SkeletonData");
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/BossButtonAnim");
                         break;
                 }
             }
 
-            protected virtual void SetAnimation(string animPath)
-            {
-                if (anim != null)
-                {
-                    anim.Initialize(animPath);
-                    anim.PlayAnimation("action", false);
-                }
-            }
 
             protected override void ButtonClick()
             {
@@ -97,14 +91,16 @@ namespace Overlewd
                 {
                     if (directToBattleScreen)
                     {
-                        UIManager.MakeScreen<FTUE.BossFightScreen>().SetData(new BossFightScreenInData
+                        UIManager.MakeScreen<FTUE.BossFightScreen>().
+                            SetData(new BossFightScreenInData
                         {
                             ftueStageId = stageId
                         }).RunShowScreenProcess();
                     }
                     else
                     {
-                        UIManager.MakePopup<FTUE.PrepareBossFightPopup>().SetData(new PrepareBossFightPopupInData
+                        UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                            SetData(new PrepareBossFightPopupInData
                         {
                             ftueStageId = stageId
                         }).RunShowPopupProcess();
