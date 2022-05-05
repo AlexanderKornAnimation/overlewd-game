@@ -17,8 +17,7 @@ namespace Overlewd
                 title.text = dialogData.title;
                 if (anim != null)
                 {
-                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/dialog/Idle_SkeletonData", false,
-                        "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/sex_scene/Idle_Material");
+                    anim.Initialize("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/dialog/Idle_SkeletonData");
                     anim.PlayAnimation("action", false);
                 }
             }

@@ -38,21 +38,19 @@ namespace Overlewd
                 switch (battleData.type)
                 {
                     case AdminBRO.Battle.Type_Battle:
-                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData",
-                            "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_Material");
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/battle/Idle_SkeletonData");
                         break;
                     case AdminBRO.Battle.Type_Boss:
-                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_SkeletonData",
-                            "Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_Material");
+                        SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/Idle_SkeletonData");
                         break;
                 }
             }
 
-            protected virtual void SetAnimation(string animPath, string materialPath)
+            protected virtual void SetAnimation(string animPath)
             {
                 if (anim != null)
                 {
-                    anim.Initialize(animPath, false, materialPath);
+                    anim.Initialize(animPath);
                     anim.PlayAnimation("action", false);
                 }
             }

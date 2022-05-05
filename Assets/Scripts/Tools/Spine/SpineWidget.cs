@@ -40,7 +40,7 @@ namespace Overlewd
             Destroy(skeletonDataAsset);
         }
 
-        private void Initialize(string skeletonDataPath, bool multipleRenderCanvas, string assetBundleId, string materialPath)
+        private void Initialize(string skeletonDataPath, bool multipleRenderCanvas, string assetBundleId)
         {
             skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
                 ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
@@ -52,9 +52,6 @@ namespace Overlewd
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
-            if (materialPath != null)
-                skeletonGraphic.material = ResourceManager.InstantiateAsset<Material>(materialPath);
-            
             skeletonGraphic.Initialize(false);
 
             skeletonGraphic.AnimationState.Start += StartListener;
@@ -62,14 +59,14 @@ namespace Overlewd
             skeletonGraphic.AnimationState.Event += EventListener;
         }
 
-        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false, string materialPath = null)
+        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false)
         {
-            Initialize(skeletonDataPath, multipleRenderCanvas, null, materialPath);
+            Initialize(skeletonDataPath, multipleRenderCanvas, null);
         }
         
         public void Initialize(string skeletonDataPath, string assetBundleId, bool multipleRenderCanvas = false)
         {
-            Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId, null);
+            Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId);
         }
 
         private void StartListener(TrackEntry e)
