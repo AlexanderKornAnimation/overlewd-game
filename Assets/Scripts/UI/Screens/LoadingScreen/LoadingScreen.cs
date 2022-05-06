@@ -207,6 +207,8 @@ namespace Overlewd
 
             await AdminBRO.initAsync();
 
+            await AdminBRO.buildingsInitAsync();
+
             GameData.playerInfo = await AdminBRO.meAsync();
 
             var locale = await AdminBRO.localizationAsync("en");

@@ -182,6 +182,12 @@ namespace Overlewd
             return buildings.Find(b => b.id == id);
         }
 
+        public static async Task BuildingsReset()
+        {
+            await AdminBRO.buildingsResetAsync();
+            buildings = await AdminBRO.buildingsAsync();
+        }
+
         public static List<AdminBRO.Character> characters { get; set; } = new List<AdminBRO.Character>();
         public static AdminBRO.Character GetCharacterById(int id)
         {

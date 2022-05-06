@@ -1000,6 +1000,7 @@ namespace Overlewd
             public string description;
             public string image;
             public string icon;
+            public bool prebuilt;
             public List<Level> levels;
             public int? currentLevel;
             public int? nextLevel;
@@ -1044,6 +1045,28 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isBuilded => currentLevel.HasValue;
+        }
+
+        // /buildings/init
+        public static async Task buildingsInitAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/init";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        // /buildings/reset
+        public static async Task buildingsResetAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/reset";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
         }
 
         // /buildings/{id}/build
