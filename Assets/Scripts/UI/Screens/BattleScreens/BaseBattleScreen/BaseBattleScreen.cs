@@ -89,6 +89,8 @@ namespace Overlewd
 		public List<EnemyWave> enemyWaves { get; private set; }
 		public string ftueChapterKey { get; private set; }
 		public string ftueStageKey { get; private set; }
+		public AdminBRO.Battle battleData { get; private set; }
+		
 
 		public class EnemyWave
         {
@@ -120,6 +122,8 @@ namespace Overlewd
             }
 
 			var inst = new BattleManagerInData();
+
+			inst.battleData = battleData;
 
 			//my team
 			var overlordCh = GameData.GetCharacterByClass(AdminBRO.Character.Class_Overlord);

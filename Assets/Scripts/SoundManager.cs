@@ -46,6 +46,10 @@ namespace Overlewd
         public const string Battle_Overlord_hit = "event:/Animations/Battle/Generic_Hits/Overlord_hit";
         public const string Batlle_Overlord_AOE_Hits_AOE1 = "event:/Animations/Battle/Overlord_AOE_Hits/AOE1";
 
+        //battle bg music
+        public const string Music_Battle_BGM_1 = "event:/Music/BattleScreen/Battle_BGM_1";
+
+        //screens bg music
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
     }
 
