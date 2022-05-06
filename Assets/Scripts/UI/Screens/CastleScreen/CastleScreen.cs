@@ -96,9 +96,9 @@ namespace Overlewd
                 }
             }
 
-            //EventsWidget.GetInstance(transform);
+            EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
-            //BuffWidget.GetInstance(transform);
+            BuffWidget.GetInstance(transform);
             SidebarButtonWidget.GetInstance(transform);
 
             await Task.CompletedTask;

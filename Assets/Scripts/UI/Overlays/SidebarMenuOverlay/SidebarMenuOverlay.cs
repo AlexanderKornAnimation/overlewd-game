@@ -127,16 +127,6 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_SidebarOverlayHide);
         }
 
-        private void Start()
-        {
-            Customize();
-        }
-
-        protected virtual void Customize()
-        {
-
-        }
-
         protected virtual void CastleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
