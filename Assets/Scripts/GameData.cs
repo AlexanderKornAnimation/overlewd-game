@@ -6,6 +6,18 @@ using UnityEngine;
 
 namespace Overlewd
 {
+    public class GameDataEvent
+    {
+        public Type type = Type.None;
+
+        public enum Type
+        {
+            None,
+            BuyTradable,
+            BuildingWasBuild
+        }
+    }
+
     public static class GameData
     {
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
@@ -39,7 +51,11 @@ namespace Overlewd
             await AdminBRO.tradableBuyAsync(marketId, tradableId);
             GameData.playerInfo = await AdminBRO.meAsync();
 
-            UIManager.UpdateGameData();
+            UIManager.UpdateGameData(
+                new GameDataEvent
+                { 
+                    type = GameDataEvent.Type.BuyTradable 
+                });
         }
 
         public static List<AdminBRO.EventItem> events { get; set; }
@@ -177,14 +193,19 @@ namespace Overlewd
         }
 
         public static List<AdminBRO.Building> buildings { get; set; } = new List<AdminBRO.Building>();
-        public static AdminBRO.Building GetBuilsingById(int id)
+        public static AdminBRO.Building GetBuildingById(int id)
         {
             return buildings.Find(b => b.id == id);
+        }
+        public static AdminBRO.Building GetBuildingByKey(string key)
+        {
+            return buildings.Find(b => b.key == key);
         }
 
         public static async Task BuildingsReset()
         {
             await AdminBRO.buildingsResetAsync();
+            await AdminBRO.buildingsInitAsync();
             buildings = await AdminBRO.buildingsAsync();
         }
 

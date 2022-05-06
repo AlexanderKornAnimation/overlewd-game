@@ -395,10 +395,12 @@ namespace Overlewd
             public const string Status_Closed = "closed";
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Dialog dialogData => dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+            public AdminBRO.Dialog dialogData =>
+                dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Battle battleData => battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+            public AdminBRO.Battle battleData =>
+                battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
@@ -849,7 +851,8 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public FTUEChapter firstChapter => GameData.ftue.chapters.OrderBy(ch => ch.order).First();
+            public FTUEChapter firstChapter => 
+                GameData.ftue.chapters.OrderBy(ch => ch.order).First();
         }
 
         // /ftue-stages
@@ -885,10 +888,12 @@ namespace Overlewd
             public const string Type_Battle = "battle";
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Dialog dialogData => dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+            public AdminBRO.Dialog dialogData => 
+                dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Battle battleData => battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+            public AdminBRO.Battle battleData => 
+                battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;

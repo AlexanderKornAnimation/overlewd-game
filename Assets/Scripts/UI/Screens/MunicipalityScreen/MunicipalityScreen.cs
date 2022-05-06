@@ -197,6 +197,22 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override void UpdateGameData(GameDataEvent eventData)
+        {
+            switch (eventData?.type)
+            {
+                case GameDataEvent.Type.BuildingWasBuild:
+
+                    break;
+            }
+        }
+
+        public override async Task FocusRestoredAsync()
+        {
+
+            await Task.CompletedTask;
+        }
+
         protected virtual void MunicipalityButtonClick()
         {
             
@@ -205,7 +221,11 @@ namespace Overlewd
         protected virtual void ForgeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowPopup<ForgePopup>();
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+                {
+                    buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Forge)?.id
+                }).RunShowPopupProcess();
         }
 
         protected virtual void MagicGuildButtonClick()
@@ -221,7 +241,11 @@ namespace Overlewd
         protected virtual void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowPopup<PortalPopup>();
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+                {
+                    buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Portal)?.id
+                }).RunShowPopupProcess();
         }
 
         protected virtual void CastleButtonClick()

@@ -48,6 +48,12 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            if (GameGlobalStates.ftueChapterData == null)
+            {
+                GameGlobalStates.ftueChapterData = GameGlobalStates.ftueProgressMode ?
+                    GameData.ftue.activeChapter : GameData.ftue.firstChapter;
+            }
+
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 

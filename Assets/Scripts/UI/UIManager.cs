@@ -294,12 +294,12 @@ namespace Overlewd
             uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
-        public static void UpdateGameData()
+        public static void UpdateGameData(GameDataEvent eventData)
         {
-            currentScreen?.UpdateGameData();
-            currentPopup?.UpdateGameData();
-            currentSubPopup?.UpdateGameData();
-            currentOverlay?.UpdateGameData();
+            currentScreen?.UpdateGameData(eventData);
+            currentPopup?.UpdateGameData(eventData);
+            currentSubPopup?.UpdateGameData(eventData);
+            currentOverlay?.UpdateGameData(eventData);
         }
 
         //transition tools
@@ -529,6 +529,8 @@ namespace Overlewd
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup },
                                         new List<BaseMissclick> { prevPopupMissclick });
+
+            if (currentScreen != null) await currentScreen.FocusRestoredAsync();
         }
 
         public static void HidePopup()
@@ -674,6 +676,8 @@ namespace Overlewd
             await WaitScreensPrepare(new List<BaseScreen> { prevOverlay });
             await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
                                         new List<BaseMissclick> { prevOverlayMissclick });
+
+            if (currentScreen != null) await currentScreen.FocusRestoredAsync();
         }
 
         public static void HideOverlay()

@@ -8,7 +8,7 @@ namespace Overlewd
 {
     public abstract class BaseScreen : MonoBehaviour
     {
-        public virtual void UpdateGameData()
+        public virtual void UpdateGameData(GameDataEvent eventData)
         {
         }
 
@@ -47,6 +47,11 @@ namespace Overlewd
         }
 
         public virtual async Task AfterShowAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        public virtual async Task FocusRestoredAsync()
         {
             await Task.CompletedTask;
         }
@@ -100,21 +105,11 @@ namespace Overlewd
     public abstract class BaseScreenInData
     {
         public int? eventStageId;
-        public AdminBRO.EventStageItem eventStageData
-        {
-            get
-            {
-                return eventStageId.HasValue ? GameData.GetEventStageById(eventStageId.Value) : null;
-            }
-        }
+        public AdminBRO.EventStageItem eventStageData => 
+            eventStageId.HasValue ? GameData.GetEventStageById(eventStageId.Value) : null;
 
         public int? ftueStageId;
-        public AdminBRO.FTUEStageItem ftueStageData
-        {
-            get
-            {
-                return ftueStageId.HasValue ? GameData.GetFTUEStageById(ftueStageId.Value) : null;
-            }
-        }
+        public AdminBRO.FTUEStageItem ftueStageData =>
+            ftueStageId.HasValue ? GameData.GetFTUEStageById(ftueStageId.Value) : null;
     }
 }

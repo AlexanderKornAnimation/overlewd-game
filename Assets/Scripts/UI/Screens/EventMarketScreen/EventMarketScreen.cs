@@ -73,13 +73,17 @@ namespace Overlewd
             Customize();
         }
 
-        public override void UpdateGameData()
+        public override void UpdateGameData(GameDataEvent eventData)
         {
-            Customize();
-
-            foreach (var marketItem in marketItems)
+            switch (eventData?.type)
             {
-                marketItem.Customize();
+                case GameDataEvent.Type.BuyTradable:
+                    Customize();
+                    foreach (var marketItem in marketItems)
+                    {
+                        marketItem.Customize();
+                    }
+                    break;
             }
         }
 
