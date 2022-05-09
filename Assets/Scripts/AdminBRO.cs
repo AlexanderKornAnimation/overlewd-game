@@ -1049,8 +1049,8 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isBuilded => currentLevel.HasValue;
-        }
+            public bool isBuilded => currentLevel.HasValue || prebuilt;
+    }
 
         // /buildings/init
         public static async Task buildingsInitAsync()

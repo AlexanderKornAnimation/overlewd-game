@@ -10,52 +10,42 @@ namespace Overlewd
     public class MunicipalityScreen : BaseFullScreen
     {
         protected Button municipalityButton;
-        protected GameObject municipalityUnaviable;
         protected GameObject municipalityMaxLevel;
         protected TextMeshProUGUI municipalityName;
 
         protected Button forgeButton;
-        protected GameObject forgeUnaviable;
         protected GameObject forgeMaxLevel;
         protected TextMeshProUGUI forgeName;
 
         protected Button magicGuildButton;
-        protected GameObject magicGuildUnaviable;
         protected GameObject magicGuildMaxLevel;
         protected TextMeshProUGUI magicGuildName;
 
         protected Button marketButton;
-        protected GameObject marketUnaviable;
         protected GameObject marketMaxLevel;
         protected TextMeshProUGUI marketName;
 
         protected Button portalButton;
-        protected GameObject portalUnaviable;
         protected GameObject portalMaxLevel;
         protected TextMeshProUGUI portalName;
 
         protected Button castleButton;
-        protected GameObject castleUnaviable;
         protected GameObject castleMaxLevel;
         protected TextMeshProUGUI castleName;
 
         protected Button cathedralButton;
-        protected GameObject cathedralUnaviable;
         protected GameObject cathedralMaxLevel;
         protected TextMeshProUGUI cathedralName;
 
         protected Button aerostatButton;
-        protected GameObject aerostatUnaviable;
         protected GameObject aerostatMaxLevel;
         protected TextMeshProUGUI aerostatName;
 
         protected Button catacombsButton;
-        protected GameObject catacombsUnaviable;
         protected GameObject catacombsMaxLevel;
         protected TextMeshProUGUI catacombsName;
 
         protected Button haremButton;
-        protected GameObject haremUnaviable;
         protected GameObject haremMaxLevel;
         protected TextMeshProUGUI haremName;
 
@@ -63,60 +53,62 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MunicipalityScreen/MunicipalityScreen", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MunicipalityScreen/MunicipalityScreen",
+                    transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var grid = canvas.Find("Grid");
 
-            municipalityButton = grid.Find("MunicipalityButton").GetComponent<Button>();
-            municipalityUnaviable = municipalityButton.transform.Find("Unaviable").gameObject;
-            municipalityMaxLevel =  municipalityButton.transform.Find("MaxLevel").gameObject;
-            municipalityName = municipalityButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var municipality = grid.Find("Municipality");
+            municipalityButton = municipality.Find("Button").GetComponent<Button>();
+            municipalityMaxLevel = municipality.transform.Find("MaxLevel").gameObject;
+            municipalityName = municipality.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            forgeButton = grid.Find("ForgeButton").GetComponent<Button>();
-            forgeUnaviable = forgeButton.transform.Find("Unaviable").gameObject;
-            forgeMaxLevel = forgeButton.transform.Find("MaxLevel").gameObject;
-            forgeName = forgeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var forge = grid.Find("Forge");
+            forgeButton = forge.Find("Button").GetComponent<Button>();
+            forgeMaxLevel = forge.Find("MaxLevel").gameObject;
+            forgeName = forge.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            magicGuildButton = grid.Find("MagicGuildButton").GetComponent<Button>();
-            magicGuildUnaviable = magicGuildButton.transform.Find("Unaviable").gameObject;
-            magicGuildMaxLevel = magicGuildButton.transform.Find("MaxLevel").gameObject;
-            magicGuildName = magicGuildButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var magicGuild = grid.Find("MagicGuild");
+            magicGuildButton = magicGuild.Find("Button").GetComponent<Button>();
+            magicGuildMaxLevel = magicGuild.Find("MaxLevel").gameObject;
+            magicGuildName = magicGuild.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            marketButton = grid.Find("MarketButton").GetComponent<Button>();
-            marketUnaviable = marketButton.transform.Find("Unaviable").gameObject;
-            marketMaxLevel = marketButton.transform.Find("MaxLevel").gameObject;
-            marketName = marketButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var market = grid.Find("Market");
+            marketButton = market.Find("Button").GetComponent<Button>();
+            marketMaxLevel = market.Find("MaxLevel").gameObject;
+            marketName = market.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            portalButton = grid.Find("PortalButton").GetComponent<Button>();
-            portalUnaviable = portalButton.transform.Find("Unaviable").gameObject;
-            portalMaxLevel = portalButton.transform.Find("MaxLevel").gameObject;
-            portalName = portalButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var portal = grid.Find("Portal");
+            portalButton = grid.Find("Portal").Find("Button").GetComponent<Button>();
+            portalMaxLevel = portal.Find("MaxLevel").gameObject;
+            portalName = portal.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            castleButton = grid.Find("CastleButton").GetComponent<Button>();
-            castleUnaviable = castleButton.transform.Find("Unaviable").gameObject;
-            castleMaxLevel = castleButton.transform.Find("MaxLevel").gameObject;
-            castleName = castleButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var castle = grid.Find("Castle");
+            castleButton = castle.Find("Button").GetComponent<Button>();
+            castleMaxLevel = castle.Find("MaxLevel").gameObject;
+            castleName = castle.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            cathedralButton = grid.Find("CathedralButton").GetComponent<Button>();
-            cathedralUnaviable = cathedralButton.transform.Find("Unaviable").gameObject;
-            cathedralMaxLevel = cathedralButton.transform.Find("MaxLevel").gameObject;
-            cathedralName = cathedralButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var cathedral = grid.Find("Cathedral");
+            cathedralButton = cathedral.Find("Button").GetComponent<Button>();
+            cathedralMaxLevel = cathedral.Find("MaxLevel").gameObject;
+            cathedralName = cathedral.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            aerostatButton = grid.Find("AerostatButton").GetComponent<Button>();
-            aerostatUnaviable = aerostatButton.transform.Find("Unaviable").gameObject;
-            aerostatMaxLevel = aerostatButton.transform.Find("MaxLevel").gameObject;
-            aerostatName = aerostatButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var aerostat = grid.Find("Aerostat");
+            aerostatButton = aerostat.Find("Button").GetComponent<Button>();
+            aerostatMaxLevel = aerostat.Find("MaxLevel").gameObject;
+            aerostatName = aerostat.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            catacombsButton = grid.Find("CatacombsButton").GetComponent<Button>();
-            catacombsUnaviable = catacombsButton.transform.Find("Unaviable").gameObject;
-            catacombsMaxLevel = catacombsButton.transform.Find("MaxLevel").gameObject;
-            catacombsName = catacombsButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var catacombs = grid.Find("Catacombs");
+            catacombsButton = catacombs.Find("Button").GetComponent<Button>();
+            catacombsMaxLevel = catacombs.Find("MaxLevel").gameObject;
+            catacombsName = catacombs.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            haremButton = grid.Find("HaremButton").GetComponent<Button>();
-            haremUnaviable = haremButton.transform.Find("Unaviable").gameObject;
-            haremMaxLevel = haremButton.transform.Find("MaxLevel").gameObject;
-            haremName = haremButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            var harem = grid.Find("Harem");
+            haremButton = harem.Find("Button").GetComponent<Button>();
+            haremMaxLevel = harem.Find("MaxLevel").gameObject;
+            haremName = harem.Find("Name").GetComponent<TextMeshProUGUI>();
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
 
@@ -151,20 +143,20 @@ namespace Overlewd
             };
         }
 
-        protected GameObject UnaviableByKey(string key)
+        protected GameObject AvailableByKey(string key)
         {
             return key switch
             {
-                AdminBRO.Building.Key_Castle => castleUnaviable,
-                AdminBRO.Building.Key_Catacombs => catacombsUnaviable,
-                AdminBRO.Building.Key_Cathedral => cathedralUnaviable,
-                AdminBRO.Building.Key_Aerostat => aerostatUnaviable,
-                AdminBRO.Building.Key_Forge => forgeUnaviable,
-                AdminBRO.Building.Key_Harem => haremUnaviable,
-                AdminBRO.Building.Key_MagicGuild => magicGuildUnaviable,
-                AdminBRO.Building.Key_Market => marketUnaviable,
-                AdminBRO.Building.Key_Municipality => municipalityUnaviable,
-                AdminBRO.Building.Key_Portal => portalUnaviable,
+                AdminBRO.Building.Key_Castle => castleButton.gameObject,
+                AdminBRO.Building.Key_Catacombs => catacombsButton.gameObject,
+                AdminBRO.Building.Key_Cathedral => cathedralButton.gameObject,
+                AdminBRO.Building.Key_Aerostat => aerostatButton.gameObject,
+                AdminBRO.Building.Key_Forge => forgeButton.gameObject,
+                AdminBRO.Building.Key_Harem => haremButton.gameObject,
+                AdminBRO.Building.Key_MagicGuild => magicGuildButton.gameObject,
+                AdminBRO.Building.Key_Market => marketButton.gameObject,
+                AdminBRO.Building.Key_Municipality => municipalityButton.gameObject,
+                AdminBRO.Building.Key_Portal => portalButton.gameObject,
                 _ => null
             };
         }
@@ -187,12 +179,22 @@ namespace Overlewd
             };
         }
 
-        public override async Task BeforeShowMakeAsync()
+        private void Customize()
         {
             foreach (var buildingData in GameData.buildings)
             {
                 NameByKey(buildingData.key).text = buildingData.name;
+
+                if (!buildingData.isBuilded)
+                    AvailableByKey(buildingData.key).SetActive(false);
+                if (!buildingData.isMax)
+                    MaxLevelByKey(buildingData.key).SetActive(false);
             }
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            Customize();
 
             await Task.CompletedTask;
         }
@@ -202,50 +204,46 @@ namespace Overlewd
             switch (eventData?.type)
             {
                 case GameDataEvent.Type.BuildingWasBuild:
-
+                    Customize();
                     break;
             }
         }
 
         public override async Task FocusRestoredAsync()
         {
-
+            
             await Task.CompletedTask;
         }
 
         protected virtual void MunicipalityButtonClick()
         {
-            
+
         }
 
         protected virtual void ForgeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BuildingPopup>().
-                SetData(new BuildingPopupInData
-                {
-                    buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Forge)?.id
-                }).RunShowPopupProcess();
+            UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Forge)?.id
+            }).RunShowPopupProcess();
         }
 
         protected virtual void MagicGuildButtonClick()
         {
-
         }
 
         protected virtual void MarketButtonClick()
         {
-
         }
 
         protected virtual void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BuildingPopup>().
-                SetData(new BuildingPopupInData
-                {
-                    buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Portal)?.id
-                }).RunShowPopupProcess();
+            UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Portal)?.id
+            }).RunShowPopupProcess();
         }
 
         protected virtual void CastleButtonClick()
@@ -255,22 +253,18 @@ namespace Overlewd
 
         protected virtual void CathedralButtonClick()
         {
-
         }
 
         protected virtual void AerostatButtonClick()
         {
-
         }
 
         protected virtual void CatacombsButtonClick()
         {
-
         }
 
         protected virtual void HaremButtonClick()
         {
-
         }
 
         protected virtual void BackButtonClick()
@@ -279,5 +273,4 @@ namespace Overlewd
             UIManager.ShowScreen<CastleScreen>();
         }
     }
-
 }

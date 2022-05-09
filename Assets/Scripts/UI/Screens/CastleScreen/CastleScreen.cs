@@ -58,41 +58,41 @@ namespace Overlewd
         {
             foreach (var building in GameData.buildings)
             {
-                if (!building.isBuilded)
-                    continue;
-
-                switch (building.key)
+                if (building.isBuilded)
                 {
-                    case AdminBRO.Building.Key_Harem:
-                        NSCastleScreen.HaremButton.GetInstance(harem);
-                        break;
-                    case AdminBRO.Building.Key_Market:
-                        NSCastleScreen.MarketButton.GetInstance(market);
-                        break;
-                    case AdminBRO.Building.Key_Forge:
-                        NSCastleScreen.ForgeButton.GetInstance(forge);
-                        break;
-                    case AdminBRO.Building.Key_MagicGuild:
-                        NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
-                        break;
-                    case AdminBRO.Building.Key_Portal:
-                        NSCastleScreen.PortalButton.GetInstance(portal);
-                        break;
-                    case AdminBRO.Building.Key_Castle:
-                        NSCastleScreen.CastleButton.GetInstance(castle);
-                        break;
-                    case AdminBRO.Building.Key_Municipality:
-                        NSCastleScreen.MunicipalityButton.GetInstance(municipality);
-                        break;
-                    case AdminBRO.Building.Key_Cathedral:
-                        NSCastleScreen.CathedralButton.GetInstance(cathedral);
-                        break;
-                    case AdminBRO.Building.Key_Catacombs:
-                        NSCastleScreen.CatacombsButton.GetInstance(catacombs);
-                        break;
-                    case AdminBRO.Building.Key_Aerostat:
-                        NSCastleScreen.AerostatButton.GetInstance(aerostat);
-                        break;
+                    switch (building.key)
+                    {
+                        case AdminBRO.Building.Key_Harem:
+                            NSCastleScreen.HaremButton.GetInstance(harem);
+                            break;
+                        case AdminBRO.Building.Key_Market:
+                            NSCastleScreen.MarketButton.GetInstance(market);
+                            break;
+                        case AdminBRO.Building.Key_Forge:
+                            NSCastleScreen.ForgeButton.GetInstance(forge);
+                            break;
+                        case AdminBRO.Building.Key_MagicGuild:
+                            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+                            break;
+                        case AdminBRO.Building.Key_Portal:
+                            NSCastleScreen.PortalButton.GetInstance(portal);
+                            break;
+                        case AdminBRO.Building.Key_Castle:
+                            NSCastleScreen.CastleButton.GetInstance(castle);
+                            break;
+                        case AdminBRO.Building.Key_Municipality:
+                            NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+                            break;
+                        case AdminBRO.Building.Key_Cathedral:
+                            NSCastleScreen.CathedralButton.GetInstance(cathedral);
+                            break;
+                        case AdminBRO.Building.Key_Catacombs:
+                            NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+                            break;
+                        case AdminBRO.Building.Key_Aerostat:
+                            NSCastleScreen.AerostatButton.GetInstance(aerostat);
+                            break;
+                    }
                 }
             }
 
