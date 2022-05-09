@@ -8,8 +8,14 @@ namespace Overlewd
 {
     public abstract class BaseScreen : MonoBehaviour
     {
-        public virtual void UpdateGameData(GameDataEvent eventData)
+        public virtual void OnGameDataEvent(GameDataEvent eventData)
         {
+
+        }
+
+        public virtual void OnUIEvent(UIEvent eventData)
+        {
+
         }
 
         public virtual void MakeMissclick()

@@ -58,7 +58,7 @@ namespace Overlewd
         {
             foreach (var building in GameData.buildings)
             {
-                if (building.isBuilded)
+                if (building.isBuilt)
                 {
                     switch (building.key)
                     {

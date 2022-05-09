@@ -156,16 +156,13 @@ namespace Overlewd
 
         private async Task BuildNow()
         {
-            var buildingId = inputData?.buildingId;
-            if (buildingId.HasValue)
+            var buildingData = inputData?.buildingData;
+            if (buildingData != null)
             {
-                await AdminBRO.buildingBuildNowAsync(buildingId.Value);
-                GameData.buildings = await AdminBRO.buildingsAsync();
-                UIManager.UpdateGameData(
-                    new GameDataEvent
-                    {
-                        type = GameDataEvent.Type.BuildingWasBuild
-                    });
+                if (buildingData.canUpgradeNow)
+                {
+                    await GameData.BuildingBuildNow(buildingData.id);
+                }
             }
         }
     }

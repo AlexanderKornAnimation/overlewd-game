@@ -100,6 +100,23 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
+
+            public bool CanBuy(List<PriceItem> price)
+            {
+                foreach (var priceItem in price)
+                {
+                    var walletCurrency = wallet.Find(item => item.currency.id == priceItem.currencyId);
+                    if (walletCurrency == null)
+                    {
+                        return false;
+                    }
+                    if (walletCurrency.amount < priceItem.amount)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
 
         [Serializable]
@@ -110,6 +127,13 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public CurrencyItem currency;
+        }
+
+        [Serializable]
+        public class PriceItem
+        {
+            public int currencyId;
+            public int amount;
         }
 
         // /markets
@@ -195,11 +219,8 @@ namespace Overlewd
             public int currentCount;
             public bool soldOut;
 
-            public class PriceItem
-            {
-                public int currencyId;
-                public int amount;
-            }
+            [JsonProperty(Required = Required.Default)]
+            public bool canBuy => GameData.playerInfo.CanBuy(price);
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
@@ -395,11 +416,11 @@ namespace Overlewd
             public const string Status_Closed = "closed";
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Dialog dialogData =>
+            public Dialog dialogData =>
                 dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Battle battleData =>
+            public Battle battleData =>
                 battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
@@ -855,6 +876,32 @@ namespace Overlewd
                 GameData.ftue.chapters.OrderBy(ch => ch.order).First();
         }
 
+        // ftue/stats
+        public static async Task<FTUEStats> ftueStatsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/ftue/stats";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<FTUEStats>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class FTUEStats
+        {
+            public int? lastStartedStage;
+            public int? lastEndedStage;
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEStageItem lastStartedStageData =>
+                lastStartedStage.HasValue ? GameData.GetFTUEStageById(lastStartedStage.Value) : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEStageItem lastEndedStageData =>
+                lastEndedStage.HasValue ? GameData.GetFTUEStageById(lastEndedStage.Value) : null;
+
+        }
+
         // /ftue-stages
         public static async Task<List<FTUEStageItem>> ftueStagesAsync()
         {
@@ -888,11 +935,15 @@ namespace Overlewd
             public const string Type_Battle = "battle";
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Dialog dialogData => 
+            public FTUEChapter ftueChapterData =>
+                ftueChapterId.HasValue ? GameData.GetFTUEChapterById(ftueChapterId.Value) : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public Dialog dialogData => 
                 dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.Battle battleData => 
+            public Battle battleData => 
                 battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
@@ -1005,12 +1056,11 @@ namespace Overlewd
             public string description;
             public string image;
             public string icon;
-            public bool prebuilt;
             public List<Level> levels;
             public int? currentLevel;
             public int? nextLevel;
-            public bool isMax;
-            public Progress userProgress;
+            public int? maxLevel;
+            public DateTime buildStartedAt;
 
             public const string Key_Castle = "castle";
             public const string Key_Catacombs = "catacombs";
@@ -1023,34 +1073,48 @@ namespace Overlewd
             public const string Key_Municipality = "municipality";
             public const string Key_Portal = "portal";
 
-            public class Progress
-            {
-                public int id;
-                public int buildingId;
-                public int userId;
-                public int? currentLevelId;
-                public string buildingStartedAt;
-            }
-
             public class Level
             {
-                public int id;
-                public int orderPosition;
-                public List<Price> price;
-                public List<Price> momentPrice;
+                public List<PriceItem> price;
+                public List<PriceItem> momentPrice;
                 public int minutesToBuild;
-                public int buildingId;
 
-                public class Price
-                {
-                    public int amount;
-                    public int currency;
-                }
+                [JsonProperty(Required = Required.Default)]
+                public bool canBuild => GameData.playerInfo.CanBuy(price);
+
+                [JsonProperty(Required = Required.Default)]
+                public bool canBuildNow => GameData.playerInfo.CanBuy(momentPrice);
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isBuilded => currentLevel.HasValue;
-    }
+            public bool isMax => currentLevel.HasValue ? currentLevel == maxLevel : false;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isBuilt => currentLevel.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isUnderConstruction => buildStartedAt != null;
+
+            [JsonProperty(Required = Required.Default)]
+            public Level currentLevelData =>
+                currentLevel.HasValue ? levels[currentLevel.Value] : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public Level nextLevelData =>
+                nextLevel.HasValue ? levels[nextLevel.Value] : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public Level maxLevelData =>
+                maxLevel.HasValue ? levels[maxLevel.Value] : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool canUpgradeNow =>
+                nextLevelData?.canBuildNow ?? false;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool canUpgrade =>
+                nextLevelData?.canBuild ?? false;
+        }
 
         // /buildings/init
         public static async Task buildingsInitAsync()

@@ -73,7 +73,7 @@ namespace Overlewd
             Customize();
         }
 
-        public override void UpdateGameData(GameDataEvent eventData)
+        public override void OnGameDataEvent(GameDataEvent eventData)
         {
             switch (eventData?.type)
             {
@@ -120,7 +120,7 @@ namespace Overlewd
                 {
                     if (tData.promo)
                     {
-                        if (GameData.CanTradableBuy(tData))
+                        if (tData.canBuy)
                         {
                             GameGlobalStates.bannerNotification_EventMarketId = GameGlobalStates.eventShop_MarketId;
                             GameGlobalStates.bannerNotification_TradableId = tId;

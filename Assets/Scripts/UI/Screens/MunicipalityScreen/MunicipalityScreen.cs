@@ -185,7 +185,7 @@ namespace Overlewd
             {
                 NameByKey(buildingData.key).text = buildingData.name;
 
-                if (!buildingData.isBuilded)
+                if (!buildingData.isBuilt)
                     AvailableByKey(buildingData.key).SetActive(false);
                 if (!buildingData.isMax)
                     MaxLevelByKey(buildingData.key).SetActive(false);
@@ -199,11 +199,14 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override void UpdateGameData(GameDataEvent eventData)
+        public override void OnGameDataEvent(GameDataEvent eventData)
         {
             switch (eventData?.type)
             {
-                case GameDataEvent.Type.BuildingWasBuild:
+                case GameDataEvent.Type.BuildingBuildNow:
+                    Customize();
+                    break;
+                case GameDataEvent.Type.BuildingBuildStarted:
                     Customize();
                     break;
             }

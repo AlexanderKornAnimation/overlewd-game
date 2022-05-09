@@ -10,6 +10,16 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
+    public class UIEvent
+    {
+        public Type type = Type.None;
+
+        public enum Type
+        {
+            None,
+        }
+    }
+
     public class UserInputLocker
     {
         private MonoBehaviour mbLocker;
@@ -294,12 +304,20 @@ namespace Overlewd
             uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
-        public static void UpdateGameData(GameDataEvent eventData)
+        public static void ThrowGameDataEvent(GameDataEvent eventData)
         {
-            currentScreen?.UpdateGameData(eventData);
-            currentPopup?.UpdateGameData(eventData);
-            currentSubPopup?.UpdateGameData(eventData);
-            currentOverlay?.UpdateGameData(eventData);
+            currentScreen?.OnGameDataEvent(eventData);
+            currentPopup?.OnGameDataEvent(eventData);
+            currentSubPopup?.OnGameDataEvent(eventData);
+            currentOverlay?.OnGameDataEvent(eventData);
+        }
+
+        public static void ThrowUIEvent(UIEvent eventData)
+        {
+            currentScreen?.OnUIEvent(eventData);
+            currentPopup?.OnUIEvent(eventData);
+            currentSubPopup?.OnUIEvent(eventData);
+            currentOverlay?.OnUIEvent(eventData);
         }
 
         //transition tools

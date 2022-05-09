@@ -14,31 +14,15 @@ namespace Overlewd
         {
             None,
             BuyTradable,
-            BuildingWasBuild
+            BuildingBuildNow,
+            BuildingBuildStarted,
         }
     }
 
     public static class GameData
     {
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
-        public static bool CanTradableBuy(AdminBRO.TradableItem tradable)
-        {
-            foreach (var priceItem in tradable.price)
-            {
-                var walletCurrency = playerInfo.wallet.Find(item => item.currency.id == priceItem.currencyId);
 
-                if (walletCurrency == null)
-                {
-                    return false;
-                }
-
-                if (walletCurrency.amount < priceItem.amount)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
         public static int GetCurencyCatEarsCount()
         {
             var currency = GetCurencyCatEars();
@@ -49,9 +33,9 @@ namespace Overlewd
         public static async Task BuyTradableAsync(int marketId, int tradableId)
         {
             await AdminBRO.tradableBuyAsync(marketId, tradableId);
-            GameData.playerInfo = await AdminBRO.meAsync();
+            playerInfo = await AdminBRO.meAsync();
 
-            UIManager.UpdateGameData(
+            UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 { 
                     type = GameDataEvent.Type.BuyTradable 
@@ -136,6 +120,7 @@ namespace Overlewd
 
         public static AdminBRO.FTUEInfo ftue { get; set; }
         public static List<AdminBRO.FTUEStageItem> ftueStages { get; set; } = new List<AdminBRO.FTUEStageItem>();
+        public static AdminBRO.FTUEStats ftueStats { get; set; } = new AdminBRO.FTUEStats();
 
         public static AdminBRO.FTUEChapter GetFTUEChapterByKey(string key)
         {
@@ -162,16 +147,19 @@ namespace Overlewd
         {
             await AdminBRO.ftueStageStartAsync(stageId);
             ftueStages = await AdminBRO.ftueStagesAsync();
+            ftueStats = await AdminBRO.ftueStatsAsync();
         }
         public static async Task FTUEEndStage(int stageId)
         {
             await AdminBRO.ftueStageEndAsync(stageId);
             ftueStages = await AdminBRO.ftueStagesAsync();
+            ftueStats = await AdminBRO.ftueStatsAsync();
         }
         public static async Task FTUEReset()
         {
             await AdminBRO.ftueReset();
             ftueStages = await AdminBRO.ftueStagesAsync();
+            ftueStats = await AdminBRO.ftueStatsAsync();
         }
 
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
@@ -200,6 +188,27 @@ namespace Overlewd
         public static AdminBRO.Building GetBuildingByKey(string key)
         {
             return buildings.Find(b => b.key == key);
+        }
+        public static async Task BuildingBuildNow(int buildingId)
+        {
+            await AdminBRO.buildingBuildNowAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildNow
+                });
+        }
+
+        public static async Task BuildingBuild(int buildingId)
+        {
+            await AdminBRO.buildingBuildAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildStarted
+                });
         }
 
         public static async Task BuildingsReset()

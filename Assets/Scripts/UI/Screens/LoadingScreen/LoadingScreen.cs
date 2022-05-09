@@ -233,6 +233,8 @@ namespace Overlewd
 
             GameData.ftueStages = await AdminBRO.ftueStagesAsync();
 
+            GameData.ftueStats = await AdminBRO.ftueStatsAsync();
+
             GameData.animations = await AdminBRO.animationsAsync();
 
             GameData.sounds = await AdminBRO.soundsAsync();
