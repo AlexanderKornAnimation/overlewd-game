@@ -21,6 +21,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = true;
+                GameGlobalStates.ftueMode = true;
                 GameGlobalStates.ftueChapterData = GameData.ftue.activeChapter;
 
                 if (GameGlobalStates.ftueChapterData.key == "chapter1")
@@ -50,6 +51,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = false;
+                GameGlobalStates.ftueMode = true;
                 GameGlobalStates.ftueChapterData = GameData.ftue.firstChapter;
                 UIManager.ShowScreen<MapScreen>();
             });
@@ -63,6 +65,7 @@ namespace Overlewd
             canvas.Find("Castle").GetComponent<Button>().onClick.AddListener(() =>
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                GameGlobalStates.ftueMode = false;
                 UIManager.ShowScreen<CastleScreen>();
             });
             
