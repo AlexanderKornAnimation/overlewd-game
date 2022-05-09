@@ -1090,7 +1090,7 @@ namespace Overlewd
             public bool isMax => currentLevel.HasValue ? currentLevel == maxLevel : false;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isBuilt => currentLevel.HasValue;
+            public bool isBuilt => (currentLevel.HasValue ? currentLevel.Value : 0) != 0;
 
             [JsonProperty(Required = Required.Default)]
             public bool isUnderConstruction => !String.IsNullOrEmpty(buildStartedAt);
