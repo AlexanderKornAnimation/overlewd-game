@@ -39,14 +39,31 @@ namespace Overlewd
         public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
 
         //battle
-        public const string UI_Battle_Healpotion = "event:/UI/Battle_Interface/Misc/Healpotion";
+        /// <summary>
+        /// Sound for click at mana potion button
+        /// </summary>
         public const string UI_Battle_Manapotion = "event:/UI/Battle_Interface/Misc/Manapotion";
+        /// <summary>
+        /// Sound for melee attack
+        /// </summary>
         public const string UI_Battle_Attack = "event:/UI/Battle_Interface/Actions/Attack";
+        /// <summary>
+        /// Sound for selection character
+        /// </summary>
         public const string UI_Battle_SelectPers = "event:/UI/Battle_Interface/Misc/Hero_select";
+        /// <summary>
+        /// Sound for Overlord's basic attack. Should be played after starting animation
+        /// </summary>
         public const string Battle_Overlord_hit = "event:/Animations/Battle/Generic_Hits/Overlord_hit";
+        /// <summary>
+        /// Sound for Overlord's first AOE attack 
+        /// </summary>
         public const string Batlle_Overlord_AOE_Hits_AOE1 = "event:/Animations/Battle/Overlord_AOE_Hits/AOE1";
 
         //battle bg music
+        /// <summary>
+        /// Background battle music
+        /// </summary>
         public const string Music_Battle_BGM_1 = "event:/Music/BattleScreen/Battle_BGM_1";
 
         //screens bg music
