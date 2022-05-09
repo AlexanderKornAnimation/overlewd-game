@@ -1049,7 +1049,7 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isBuilded => currentLevel.HasValue || prebuilt;
+            public bool isBuilded => currentLevel.HasValue;
     }
 
         // /buildings/init

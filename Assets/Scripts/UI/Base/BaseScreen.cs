@@ -51,11 +51,6 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public virtual async Task FocusRestoredAsync()
-        {
-            await Task.CompletedTask;
-        }
-
         public virtual async Task BeforeHideDataAsync()
         {
             await Task.CompletedTask;

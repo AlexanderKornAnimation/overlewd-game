@@ -209,12 +209,6 @@ namespace Overlewd
             }
         }
 
-        public override async Task FocusRestoredAsync()
-        {
-            
-            await Task.CompletedTask;
-        }
-
         protected virtual void MunicipalityButtonClick()
         {
 

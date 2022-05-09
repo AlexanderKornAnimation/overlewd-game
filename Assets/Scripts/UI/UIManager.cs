@@ -529,8 +529,6 @@ namespace Overlewd
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup },
                                         new List<BaseMissclick> { prevPopupMissclick });
-
-            if (currentScreen != null) await currentScreen.FocusRestoredAsync();
         }
 
         public static void HidePopup()
@@ -676,8 +674,6 @@ namespace Overlewd
             await WaitScreensPrepare(new List<BaseScreen> { prevOverlay });
             await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
                                         new List<BaseMissclick> { prevOverlayMissclick });
-
-            if (currentScreen != null) await currentScreen.FocusRestoredAsync();
         }
 
         public static void HideOverlay()
