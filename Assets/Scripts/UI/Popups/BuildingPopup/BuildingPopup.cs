@@ -36,7 +36,8 @@ namespace Overlewd
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/BuildingPopup/BuildingPopup", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/BuildingPopup/BuildingPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
@@ -96,10 +97,12 @@ namespace Overlewd
 
                         break;
                     case AdminBRO.Building.Key_Forge:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/ForgeImage", imageSpawnPoint);
+                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/ForgeImage",
+                            imageSpawnPoint);
                         break;
                     case AdminBRO.Building.Key_Harem:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/HaremImage", imageSpawnPoint);
+                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/HaremImage",
+                            imageSpawnPoint);
                         break;
                     case AdminBRO.Building.Key_MagicGuild:
 
@@ -111,7 +114,8 @@ namespace Overlewd
 
                         break;
                     case AdminBRO.Building.Key_Portal:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/PortalImage", imageSpawnPoint);
+                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/PortalImage",
+                            imageSpawnPoint);
                         break;
                 }
             }
@@ -134,14 +138,48 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
             await BuildNow();
-            UIManager.HidePopup();
+
+            switch (GameData.ftue.activeChapter.key)
+            {
+                case "chapter1":
+                    switch (GameData.ftueStats.lastEndedStageData.key)
+                    {
+                        case "battle4":
+                            UIManager.ShowScreen<CastleScreen>();
+                            break;
+                        default:
+                            UIManager.HidePopup();
+                            break;
+                    }
+                    break;
+                default:
+                    UIManager.HidePopup();
+                    break;
+            }
         }
 
         protected virtual async void PaidBuildingButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await BuildNow();
-            UIManager.HidePopup();
+
+            switch (GameData.ftue.activeChapter.key)
+            {
+                case "chapter1":
+                    switch (GameData.ftueStats.lastEndedStageData.key)
+                    {
+                        case "battle4":
+                            UIManager.ShowScreen<CastleScreen>();
+                            break;
+                        default:
+                            UIManager.HidePopup();
+                            break;
+                    }
+                    break;
+                default:
+                    UIManager.HidePopup();
+                    break;
+            }
         }
 
         public override ScreenShow Show()
@@ -170,6 +208,7 @@ namespace Overlewd
     public class BuildingPopupInData : BaseScreenInData
     {
         public int? buildingId;
+
         public AdminBRO.Building buildingData =>
             buildingId.HasValue ? GameData.GetBuildingById(buildingId.Value) : null;
     }

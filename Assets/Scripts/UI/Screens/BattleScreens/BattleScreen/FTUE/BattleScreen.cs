@@ -34,13 +34,13 @@ namespace Overlewd
                     },
                     _ => true
                 };
-
+                
                 if (win)
                 {
                     UIManager.MakePopup<VictoryPopup>().
                         SetData(new VictoryPopupInData
                         {
-                            ftueStageId = inputData.ftueStageId
+                            ftueStageId = inputData.ftueStageId,
                         }).RunShowPopupProcess();
                 }
                 else

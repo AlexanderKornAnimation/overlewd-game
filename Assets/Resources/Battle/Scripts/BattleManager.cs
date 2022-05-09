@@ -87,7 +87,7 @@ namespace Overlewd
                     cc.character = c;
                     charControllerList.Add(cc);
                     cc.bm = this;
-                    unselect += cc.UnHiglight; //подписываем на делегата
+                    unselect += cc.UnHiglight; //РїРѕРґРїРёСЃС‹РІР°РµРј РЅР° РґРµР»РµРіР°С‚Р°
                     if (c.isEnemy)
                     {
                         var pos = EnemyStatsContent.Find($"portrait_pos_{c.Order}"); //Drop portrait on Content Queue and turn on

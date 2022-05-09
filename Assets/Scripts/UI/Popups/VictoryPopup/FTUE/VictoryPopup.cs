@@ -34,7 +34,7 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (GameData.ftue.activeChapter.key)
                 {
                     case "chapter1":
                         switch (inputData.ftueStageData.key)

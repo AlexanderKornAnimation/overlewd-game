@@ -198,6 +198,18 @@ namespace Overlewd
                 if (!buildingData.isMax)
                     MaxLevelByKey(buildingData.key).SetActive(false);
             }
+
+            switch (GameData.ftue.activeChapter?.key)
+            {
+                case "chapter1":
+                    switch (GameData.ftueStats.lastEndedStageData?.key)
+                    {
+                        case "battle4":
+                            AvailableByKey(AdminBRO.Building.Key_Castle).SetActive(true);
+                            break;
+                    }
+                    break;
+            }
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -227,21 +239,27 @@ namespace Overlewd
                 case UIEvent.Type.RestoreScreenFocusAfterPopup:
                     if (eventData.uiSenderType == typeof(BuildingPopup))
                     {
-
                     }
+
                     break;
             }
         }
 
         private void MunicipalityButtonClick()
         {
-
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Municipality)?.id
+            }).RunShowPopupProcess();
         }
 
         private void ForgeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
             {
                 buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Forge)?.id
             }).RunShowPopupProcess();
@@ -249,16 +267,29 @@ namespace Overlewd
 
         private void MagicGuildButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_MagicGuild)?.id
+            }).RunShowPopupProcess();
         }
 
         private void MarketButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Market)?.id
+            }).RunShowPopupProcess();
         }
 
         private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
             {
                 buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Portal)?.id
             }).RunShowPopupProcess();
@@ -267,22 +298,51 @@ namespace Overlewd
         private void CastleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle)?.id,
+            }).RunShowPopupProcess();
         }
 
         private void CathedralButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Cathedral)?.id
+            }).RunShowPopupProcess();
         }
 
         private void AerostatButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Aerostat)?.id
+            }).RunShowPopupProcess();
         }
 
         private void CatacombsButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Catacombs)?.id
+            }).RunShowPopupProcess();
         }
 
         private void HaremButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BuildingPopup>().
+                SetData(new BuildingPopupInData
+            {
+                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Harem)?.id
+            }).RunShowPopupProcess();
         }
 
         private void BackButtonClick()
@@ -294,6 +354,5 @@ namespace Overlewd
 
     public class MunicipalityScreenInData : BaseScreenInData
     {
-
     }
 }

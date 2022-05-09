@@ -31,7 +31,7 @@ namespace Overlewd
                         UIManager.MakeScreen<FTUE.SexScreen>().
                             SetData(new SexScreenInData
                             {
-                                ftueStageId = firstSexStage.id
+                                ftueStageId = firstSexStage.id,
                             }).RunShowScreenProcess();
                     }
                     else
@@ -52,6 +52,7 @@ namespace Overlewd
                 GameGlobalStates.ftueProgressMode = false;
                 GameGlobalStates.ftueChapterData = GameData.ftue.firstChapter;
                 UIManager.ShowScreen<MapScreen>();
+
             });
 
             canvas.Find("Reset_FTUE").GetComponent<Button>().onClick.AddListener(() =>

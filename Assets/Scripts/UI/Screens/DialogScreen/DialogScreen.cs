@@ -104,6 +104,12 @@ namespace Overlewd
             return this;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            SoundManager.GetEventInstance(FMODEventPath.Music_DialogScreen);
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowAsync()
         {
             Initialize();

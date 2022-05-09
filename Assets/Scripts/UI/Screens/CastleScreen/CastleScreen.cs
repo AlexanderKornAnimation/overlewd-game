@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -11,28 +10,31 @@ namespace Overlewd
 {
     public class CastleScreen : BaseFullScreen
     {
-        protected Transform harem;
-        protected Transform market;
-        protected Transform forge;
-        protected Transform magicGuild;
-        protected Transform portal;
-        protected Transform castle;
-        protected Transform municipality;
-        protected Transform cathedral;
-        protected Transform catacombs;
-        protected Transform aerostat;
+        private List<NSCastleScreen.BaseButton> buildingButtons = new List<NSCastleScreen.BaseButton>();
 
-        protected Transform eventWidget;
+        private Transform harem;
+        private Transform market;
+        private Transform forge;
+        private Transform magicGuild;
+        private Transform portal;
+        private Transform castle;
+        private Transform municipality;
+        private Transform cathedral;
+        private Transform catacombs;
+        private Transform aerostat;
 
-        protected Button contenViewerButton;
+        private Transform eventWidget;
 
-        protected FMODEvent music;
+        private Button contenViewerButton;
 
-        protected CastleScreenInData inputData;
+        private FMODEvent music;
 
-        protected virtual void Awake()
+        private CastleScreenInData inputData;
+
+        private void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/CastleScreen/CastleScreen", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/CastleScreen/CastleScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
@@ -78,7 +80,13 @@ namespace Overlewd
                             NSCastleScreen.PortalButton.GetInstance(portal);
                             break;
                         case AdminBRO.Building.Key_Castle:
-                            NSCastleScreen.CastleButton.GetInstance(castle);
+                            var castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
+                            if (GameData.ftue.activeChapter.key == "chapter1" &&
+                                GameData.ftueStats.lastEndedStageData.key == "battle4")
+                            {
+                                castleButton.Hide();
+                                buildingButtons.Add(castleButton);
+                            }
                             break;
                         case AdminBRO.Building.Key_Municipality:
                             NSCastleScreen.MunicipalityButton.GetInstance(municipality);
@@ -104,6 +112,16 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            foreach (var buildingButton in buildingButtons)
+            {
+                buildingButton.ShowAsync();
+            }
+            
+            await Task.CompletedTask;
+        }
+
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowShow);
@@ -119,6 +137,5 @@ namespace Overlewd
 
     public class CastleScreenInData : BaseScreenInData
     {
-    
     }
 }

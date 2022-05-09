@@ -915,7 +915,6 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
                 lastEndedStage.HasValue ? GameData.GetFTUEStageById(lastEndedStage.Value) : null;
-
         }
 
         // /ftue-stages

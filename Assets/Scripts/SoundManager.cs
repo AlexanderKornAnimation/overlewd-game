@@ -68,6 +68,9 @@ namespace Overlewd
 
         //screens bg music
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
+
+        //dialogue screen bg music
+        public const string Music_DialogScreen = "event:/Music/DialogueScreen/BGM_Dialogue_Chill_1";
     }
 
     public class FMODBank

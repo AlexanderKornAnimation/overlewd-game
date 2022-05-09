@@ -12,6 +12,12 @@ namespace Overlewd
     {
         public class DialogScreen : Overlewd.DialogScreen
         {
+            public override async Task AfterShowAsync()
+            {
+                SoundManager.GetEventInstance(FMODEventPath.Music_DialogScreen);
+                await Task.CompletedTask;
+            }
+
             public override async Task BeforeShowDataAsync()
             {
                 dialogData = inputData.ftueStageData.dialogData;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,14 +25,24 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
             }
 
-            private void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
+            public async void ShowAsync()
+            {
+                await UITools.FadeShowAsync(gameObject);
+            }
+
+            public void Hide()
+            {
+                UITools.FadeHide(gameObject);
+            }
+            
             protected virtual void Customize()
             {
-                
+   
             }
 
             protected virtual void ButtonClick()

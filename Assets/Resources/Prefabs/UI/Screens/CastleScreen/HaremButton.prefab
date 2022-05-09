@@ -877,6 +877,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4431975960653236517}
+  - component: {fileID: -6029431316408120875}
   m_Layer: 0
   m_Name: HaremButton
   m_TagString: Untagged
@@ -906,6 +907,18 @@ RectTransform:
   m_AnchoredPosition: {x: -190.5, y: 0}
   m_SizeDelta: {x: 381, y: 160}
   m_Pivot: {x: 0, y: 0.5}
+--- !u!225 &-6029431316408120875
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6708065161681522602}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6845757957711527844
 GameObject:
   m_ObjectHideFlags: 0
