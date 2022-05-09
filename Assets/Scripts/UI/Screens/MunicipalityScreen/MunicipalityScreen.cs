@@ -9,47 +9,49 @@ namespace Overlewd
 {
     public class MunicipalityScreen : BaseFullScreen
     {
-        protected Button municipalityButton;
-        protected GameObject municipalityMaxLevel;
-        protected TextMeshProUGUI municipalityName;
+        private Button municipalityButton;
+        private GameObject municipalityMaxLevel;
+        private TextMeshProUGUI municipalityName;
 
-        protected Button forgeButton;
-        protected GameObject forgeMaxLevel;
-        protected TextMeshProUGUI forgeName;
+        private Button forgeButton;
+        private GameObject forgeMaxLevel;
+        private TextMeshProUGUI forgeName;
 
-        protected Button magicGuildButton;
-        protected GameObject magicGuildMaxLevel;
-        protected TextMeshProUGUI magicGuildName;
+        private Button magicGuildButton;
+        private GameObject magicGuildMaxLevel;
+        private TextMeshProUGUI magicGuildName;
 
-        protected Button marketButton;
-        protected GameObject marketMaxLevel;
-        protected TextMeshProUGUI marketName;
+        private Button marketButton;
+        private GameObject marketMaxLevel;
+        private TextMeshProUGUI marketName;
 
-        protected Button portalButton;
-        protected GameObject portalMaxLevel;
-        protected TextMeshProUGUI portalName;
+        private Button portalButton;
+        private GameObject portalMaxLevel;
+        private TextMeshProUGUI portalName;
 
-        protected Button castleButton;
-        protected GameObject castleMaxLevel;
-        protected TextMeshProUGUI castleName;
+        private Button castleButton;
+        private GameObject castleMaxLevel;
+        private TextMeshProUGUI castleName;
 
-        protected Button cathedralButton;
-        protected GameObject cathedralMaxLevel;
-        protected TextMeshProUGUI cathedralName;
+        private Button cathedralButton;
+        private GameObject cathedralMaxLevel;
+        private TextMeshProUGUI cathedralName;
 
-        protected Button aerostatButton;
-        protected GameObject aerostatMaxLevel;
-        protected TextMeshProUGUI aerostatName;
+        private Button aerostatButton;
+        private GameObject aerostatMaxLevel;
+        private TextMeshProUGUI aerostatName;
 
-        protected Button catacombsButton;
-        protected GameObject catacombsMaxLevel;
-        protected TextMeshProUGUI catacombsName;
+        private Button catacombsButton;
+        private GameObject catacombsMaxLevel;
+        private TextMeshProUGUI catacombsName;
 
-        protected Button haremButton;
-        protected GameObject haremMaxLevel;
-        protected TextMeshProUGUI haremName;
+        private Button haremButton;
+        private GameObject haremMaxLevel;
+        private TextMeshProUGUI haremName;
 
-        protected Button backButton;
+        private Button backButton;
+
+        private MunicipalityScreenInData inputData;
 
         void Awake()
         {
@@ -125,7 +127,13 @@ namespace Overlewd
             haremButton.onClick.AddListener(HaremButtonClick);
         }
 
-        protected TextMeshProUGUI NameByKey(string key)
+        public MunicipalityScreen SetData(MunicipalityScreenInData data)
+        {
+            inputData = data;
+            return this;
+        }
+
+        private TextMeshProUGUI NameByKey(string key)
         {
             return key switch
             {
@@ -143,7 +151,7 @@ namespace Overlewd
             };
         }
 
-        protected GameObject AvailableByKey(string key)
+        private GameObject AvailableByKey(string key)
         {
             return key switch
             {
@@ -161,7 +169,7 @@ namespace Overlewd
             };
         }
 
-        protected GameObject MaxLevelByKey(string key)
+        private GameObject MaxLevelByKey(string key)
         {
             return key switch
             {
@@ -225,12 +233,12 @@ namespace Overlewd
             }
         }
 
-        protected virtual void MunicipalityButtonClick()
+        private void MunicipalityButtonClick()
         {
 
         }
 
-        protected virtual void ForgeButtonClick()
+        private void ForgeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
@@ -239,15 +247,15 @@ namespace Overlewd
             }).RunShowPopupProcess();
         }
 
-        protected virtual void MagicGuildButtonClick()
+        private void MagicGuildButtonClick()
         {
         }
 
-        protected virtual void MarketButtonClick()
+        private void MarketButtonClick()
         {
         }
 
-        protected virtual void PortalButtonClick()
+        private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
@@ -256,31 +264,40 @@ namespace Overlewd
             }).RunShowPopupProcess();
         }
 
-        protected virtual void CastleButtonClick()
+        private void CastleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
         }
 
-        protected virtual void CathedralButtonClick()
+        private void CathedralButtonClick()
         {
         }
 
-        protected virtual void AerostatButtonClick()
+        private void AerostatButtonClick()
         {
         }
 
-        protected virtual void CatacombsButtonClick()
+        private void CatacombsButtonClick()
         {
         }
 
-        protected virtual void HaremButtonClick()
+        private void HaremButtonClick()
         {
         }
 
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            UIManager.MakeScreen<CastleScreen>().
+                SetData(new CastleScreenInData
+                {
+                    mode = inputData?.mode
+                }).RunShowScreenProcess();
         }
+    }
+
+    public class MunicipalityScreenInData : BaseScreenInData
+    {
+
     }
 }

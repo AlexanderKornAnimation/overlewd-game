@@ -10,7 +10,6 @@ namespace Overlewd
         //ftue
         public static AdminBRO.FTUEChapter ftueChapterData { get; set; }
         public static bool ftueProgressMode { get; set; } = false;
-        public static bool ftueMode { get; set; } = false;
 
         //events
         public static AdminBRO.EventItem eventData { get; set; }

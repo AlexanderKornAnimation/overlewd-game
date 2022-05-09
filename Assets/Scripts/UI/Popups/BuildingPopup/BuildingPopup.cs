@@ -167,7 +167,7 @@ namespace Overlewd
         }
     }
 
-    public class BuildingPopupInData
+    public class BuildingPopupInData : BaseScreenInData
     {
         public int? buildingId;
         public AdminBRO.Building buildingData =>
