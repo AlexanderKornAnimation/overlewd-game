@@ -14,9 +14,14 @@ namespace Overlewd
     {
         public Type type = Type.None;
 
+        public BaseScreen uiSender;
+        public System.Type uiSenderType;
+
         public enum Type
         {
             None,
+            RestoreScreenFocusAfterPopup,
+            RestoreScreenFocusAfterOverlay
         }
     }
 
@@ -538,6 +543,12 @@ namespace Overlewd
 
         private static async void HidePopupProcess()
         {
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.RestoreScreenFocusAfterPopup,
+                uiSenderType = prevPopup.GetType()
+            };
+
             await WaitScreensPrepare(new List<BaseScreen> 
             {
                 prevSubPopup,
@@ -547,6 +558,8 @@ namespace Overlewd
                                         new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup },
                                         new List<BaseMissclick> { prevPopupMissclick });
+
+            ThrowUIEvent(uiEventData);
         }
 
         public static void HidePopup()
@@ -689,9 +702,17 @@ namespace Overlewd
 
         private static async void HideOverlayProcess()
         {
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.RestoreScreenFocusAfterOverlay,
+                uiSenderType = prevOverlay.GetType()
+            };
+
             await WaitScreensPrepare(new List<BaseScreen> { prevOverlay });
             await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
                                         new List<BaseMissclick> { prevOverlayMissclick });
+
+            ThrowUIEvent(uiEventData);
         }
 
         public static void HideOverlay()

@@ -212,6 +212,19 @@ namespace Overlewd
             }
         }
 
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData?.type)
+            {
+                case UIEvent.Type.RestoreScreenFocusAfterPopup:
+                    if (eventData.uiSenderType == typeof(BuildingPopup))
+                    {
+
+                    }
+                    break;
+            }
+        }
+
         protected virtual void MunicipalityButtonClick()
         {
 

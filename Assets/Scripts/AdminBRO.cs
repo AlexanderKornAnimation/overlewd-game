@@ -1060,7 +1060,7 @@ namespace Overlewd
             public int? currentLevel;
             public int? nextLevel;
             public int? maxLevel;
-            public DateTime buildStartedAt;
+            public string buildStartedAt;
 
             public const string Key_Castle = "castle";
             public const string Key_Catacombs = "catacombs";
@@ -1093,7 +1093,7 @@ namespace Overlewd
             public bool isBuilt => currentLevel.HasValue;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isUnderConstruction => buildStartedAt != null;
+            public bool isUnderConstruction => !String.IsNullOrEmpty(buildStartedAt);
 
             [JsonProperty(Required = Required.Default)]
             public Level currentLevelData =>
