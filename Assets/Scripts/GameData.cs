@@ -157,7 +157,7 @@ namespace Overlewd
         }
         public static async Task FTUEReset()
         {
-            await AdminBRO.ftueReset();
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
             ftueStages = await AdminBRO.ftueStagesAsync();
             ftueStats = await AdminBRO.ftueStatsAsync();
         }
@@ -213,8 +213,8 @@ namespace Overlewd
 
         public static async Task BuildingsReset()
         {
-            await AdminBRO.buildingsResetAsync();
-            await AdminBRO.buildingsInitAsync();
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
+            await AdminBRO.initAsync();
             buildings = await AdminBRO.buildingsAsync();
         }
 

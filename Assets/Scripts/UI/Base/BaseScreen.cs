@@ -113,9 +113,9 @@ namespace Overlewd
         public AdminBRO.FTUEStageItem ftueStageData =>
             ftueStageId.HasValue ? GameData.GetFTUEStageById(ftueStageId.Value) : null;
 
-        public Mode? mode;
-        public bool isFTUEMode => mode == Mode.FTUE;
-        public bool isEventMode => mode == Mode.Event;
+        public Mode? mode = Mode.Event;
+        public bool isFTUEMode => mode.HasValue ? mode.Value == Mode.FTUE : false;
+        public bool isEventMode => mode.HasValue ? mode.Value == Mode.Event : true;
 
         public enum Mode
         {

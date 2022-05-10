@@ -73,6 +73,32 @@ namespace Overlewd
             }
         }
 
+        // /me/reset
+        public static async Task resetAsync(List<string> resetEntities)
+        {
+            var url = "https://overlewd-api.herokuapp.com/me/reset";
+            var form = new WWWForm();
+            foreach (var entityName in resetEntities)
+            {
+                form.AddField("modules[]", entityName);
+            }
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public class ResetEntityName
+        {
+            public const string Wallet = "wallet";
+            public const string Inventory = "inventory";
+            public const string Building = "building";
+            public const string Battle = "battle";
+            public const string Quest = "quest";
+            public const string Event = "event";
+            public const string FTUE = "ftue";
+        }
+
         // GET /me; POST /me
         public static async Task<PlayerInfo> meAsync()
         {
@@ -361,17 +387,6 @@ namespace Overlewd
             }
         }
 
-        // /event-stages/reset
-        public static async Task eventStagesReset()
-        {
-            var form = new WWWForm();
-            var url = "https://overlewd-api.herokuapp.com/event-stages/reset";
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
         // /event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
@@ -606,6 +621,7 @@ namespace Overlewd
             public string rewardSpriteString;
             public List<Reward> firstRewards;
             public List<Phase> battlePhases;
+            public int? battlePassPointsReward;
 
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
@@ -959,17 +975,6 @@ namespace Overlewd
             public bool isClosed => status == Status_Closed;
         }
 
-        // /ftue-stages/reset
-        public static async Task ftueReset()
-        {
-            var form = new WWWForm();
-            var url = "https://overlewd-api.herokuapp.com/ftue-stages/reset";
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
         // /ftue-stages/{id}/start
         public static async Task ftueStageStartAsync(int stageId)
         {
@@ -1087,10 +1092,10 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isMax => currentLevel.HasValue ? currentLevel == maxLevel : false;
+            public bool isMax => isBuilt ? currentLevel == maxLevel : false;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isBuilt => (currentLevel.HasValue ? currentLevel.Value : 0) != 0;
+            public bool isBuilt => currentLevel.HasValue;
 
             [JsonProperty(Required = Required.Default)]
             public bool isUnderConstruction => !String.IsNullOrEmpty(buildStartedAt);
@@ -1114,28 +1119,6 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool canUpgrade =>
                 nextLevelData?.canBuild ?? false;
-        }
-
-        // /buildings/init
-        public static async Task buildingsInitAsync()
-        {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/init";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        // /buildings/reset
-        public static async Task buildingsResetAsync()
-        {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/reset";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
         }
 
         // /buildings/{id}/build
