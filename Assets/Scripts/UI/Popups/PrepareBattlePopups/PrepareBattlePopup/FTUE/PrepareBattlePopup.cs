@@ -13,9 +13,16 @@ namespace Overlewd
         {
             public override async Task BeforeShowMakeAsync()
             {
-                battleData = GameData.GetBattleById(inputData.ftueStageData.battleId.Value);
+                battleData = inputData.ftueStageData.battleData;
                 Customize();
-                
+
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        UITools.DisableButton(editTeamButton);
+                        break;
+                }
+
                 await Task.CompletedTask;
             }
 
@@ -25,7 +32,7 @@ namespace Overlewd
                 UIManager.MakeScreen<TeamEditScreen>().
                     SetData(new TeamEditScreenInData 
                     {
-                        mapStageData = inputData.ftueStageData
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowScreenProcess();
             }
 
@@ -35,7 +42,7 @@ namespace Overlewd
                 UIManager.MakeScreen<BattleScreen>().
                     SetData(new BattleScreenInData
                     {
-                        ftueStageData = inputData.ftueStageData
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowScreenProcess();
             }
         }

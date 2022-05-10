@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -11,49 +10,116 @@ namespace Overlewd
 {
     public class CastleScreen : BaseFullScreen
     {
-        protected Transform cave;
-        protected Transform stable;
-        protected Transform crunch;
-        protected Transform tower;
-        protected Transform source;
-        protected Transform market;
-        protected Transform forge;
-        protected Transform magicGuild;
-        protected Transform portal;
-        protected Transform capitol;
-        protected Transform castleBuilding;
+        private List<NSCastleScreen.BaseButton> buildingButtons = new List<NSCastleScreen.BaseButton>();
 
-        protected Transform eventWidget;
+        private Transform harem;
+        private Transform market;
+        private Transform forge;
+        private Transform magicGuild;
+        private Transform portal;
+        private Transform castle;
+        private Transform municipality;
+        private Transform cathedral;
+        private Transform catacombs;
+        private Transform aerostat;
 
-        protected Button contenViewerButton;
+        private Transform eventWidget;
 
-        protected FMODEvent music;
+        private Button contenViewerButton;
 
-        protected virtual void Awake()
+        private FMODEvent music;
+
+        private CastleScreenInData inputData;
+
+        private void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/CastleScreen/CastleScreen", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/CastleScreen/CastleScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            cave = canvas.Find("Cave");
+            harem = canvas.Find("Harem");
             portal = canvas.Find("Portal");
-            stable = canvas.Find("Stable");
-            crunch = canvas.Find("Crunch");
-            tower = canvas.Find("Tower");
-            source = canvas.Find("Source");
             market = canvas.Find("Market");
             forge = canvas.Find("Forge");
             magicGuild = canvas.Find("MagicGuild");
-            capitol = canvas.Find("Capitol");
-            castleBuilding = canvas.Find("Castle");
-
-            contenViewerButton = canvas.Find("ContentViewer").GetComponent<Button>();
-            contenViewerButton.onClick.AddListener(() => { UIManager.ShowScreen<DebugContentViewer>(); });
+            castle = canvas.Find("Castle");
+            municipality = canvas.Find("Municipality");
+            cathedral = canvas.Find("Cathedral");
+            catacombs = canvas.Find("Catacombs");
+            aerostat = canvas.Find("Aerostat");
         }
 
-        private void Start()
+        public CastleScreen SetData(CastleScreenInData data)
         {
-            Customize();
+            inputData = data;
+            return this;
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            foreach (var building in GameData.buildings)
+            {
+                if (building.isBuilt)
+                {
+                    switch (building.key)
+                    {
+                        case AdminBRO.Building.Key_Harem:
+                            NSCastleScreen.HaremButton.GetInstance(harem);
+                            break;
+                        case AdminBRO.Building.Key_Market:
+                            NSCastleScreen.MarketButton.GetInstance(market);
+                            break;
+                        case AdminBRO.Building.Key_Forge:
+                            NSCastleScreen.ForgeButton.GetInstance(forge);
+                            break;
+                        case AdminBRO.Building.Key_MagicGuild:
+                            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+                            break;
+                        case AdminBRO.Building.Key_Portal:
+                            NSCastleScreen.PortalButton.GetInstance(portal);
+                            break;
+                        case AdminBRO.Building.Key_Castle:
+                            var castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
+                            if (GameData.ftue.activeChapter.key == "chapter1" &&
+                                GameData.ftueStats.lastEndedStageData.key == "battle4")
+                            {
+                                castleButton.Hide();
+                                buildingButtons.Add(castleButton);
+                            }
+                            break;
+                        case AdminBRO.Building.Key_Municipality:
+                            NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+                            break;
+                        case AdminBRO.Building.Key_Cathedral:
+                            NSCastleScreen.CathedralButton.GetInstance(cathedral);
+                            break;
+                        case AdminBRO.Building.Key_Catacombs:
+                            NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+                            break;
+                        case AdminBRO.Building.Key_Aerostat:
+                            NSCastleScreen.AerostatButton.GetInstance(aerostat);
+                            break;
+                    }
+                }
+            }
+
+            EventsWidget.GetInstance(transform);
+            QuestsWidget.GetInstance(transform);
+            BuffWidget.GetInstance(transform);
+            SidebarButtonWidget.GetInstance(transform);
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task AfterShowAsync()
+        {
+            foreach (var buildingButton in buildingButtons)
+            {
+                buildingButton.ShowAsync();
+            }
+            
+            await Task.CompletedTask;
         }
 
         public override void StartShow()
@@ -67,25 +133,9 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowHide);
             music?.Stop();
         }
+    }
 
-        protected virtual void Customize()
-        {
-            NSCastleScreen.GirlBuildingButton.GetInstance(cave);
-            NSCastleScreen.GirlBuildingButton.GetInstance(stable);
-            NSCastleScreen.GirlBuildingButton.GetInstance(crunch);
-            NSCastleScreen.GirlBuildingButton.GetInstance(tower);
-            NSCastleScreen.GirlBuildingButton.GetInstance(source);
-            NSCastleScreen.MarketButton.GetInstance(market);
-            NSCastleScreen.ForgeButton.GetInstance(forge);
-            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
-            NSCastleScreen.PortalButton.GetInstance(portal);
-            NSCastleScreen.CapitolButton.GetInstance(capitol);
-            NSCastleScreen.CastleBuildingButton.GetInstance(castleBuilding);
-
-            EventsWidget.GetInstance(transform);
-            QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
-            SidebarButtonWidget.GetInstance(transform);
-        }
+    public class CastleScreenInData : BaseScreenInData
+    {
     }
 }

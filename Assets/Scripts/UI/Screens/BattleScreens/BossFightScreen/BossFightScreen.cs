@@ -39,18 +39,22 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            await GameData.EventStageStartAsync(inputData.eventStageId);
+            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
+        }
+
+        public override BattleManagerInData GetBattleData()
+        {
+            return BattleManagerInData.InstFromEventStage(inputData?.eventStageData);
         }
     }
 
-    public class BossFightScreenInData
+    public class BossFightScreenInData : BaseScreenInData
     {
-        public int eventStageId;
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

@@ -13,10 +13,44 @@ namespace Overlewd
     {
         public class VictoryPopup : Overlewd.VictoryPopup
         {
+            public override async Task BeforeShowMakeAsync()
+            {
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "battle1":
+                                UITools.DisableButton(repeatButton);
+                                break;
+                        }
+                        break;
+                }
+
+                await Task.CompletedTask;
+            }
+
             protected override void NextButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<MapScreen>();
+
+                switch (GameData.ftue.activeChapter.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "battle4":
+                                UIManager.ShowScreen<CastleScreen>();
+                                break;
+                            default:
+                                UIManager.ShowScreen<MapScreen>();
+                                break;
+                        }
+                        break;
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
+                }
             }
 
             protected override void RepeatButtonClick()
@@ -25,7 +59,7 @@ namespace Overlewd
                 UIManager.MakeScreen<BattleScreen>().
                     SetData(new BattleScreenInData
                     {
-                        ftueStageData = inputData.ftueStageData
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowScreenProcess();
             }
         }

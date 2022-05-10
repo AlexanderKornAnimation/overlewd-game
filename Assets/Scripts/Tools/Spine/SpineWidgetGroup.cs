@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Spine.Unity;
 using System;
+using System.Linq;
 using Spine;
 
 namespace Overlewd
@@ -19,8 +20,19 @@ namespace Overlewd
 
             foreach (var layerData in animationData.layouts)
             {
-                var newLayer = SpineWidget.GetInstance(transform);
-                newLayer.Initialize(layerData.animationPath, layerData.assetBundleId);
+                SpineWidget newLayer;
+                var ext = layerData.animationPath.Split('.').Last();
+                
+                if (ext == "asset")
+                {
+                    newLayer = SpineWidget.GetInstance(transform);
+                    newLayer.Initialize(layerData.animationPath, layerData.assetBundleId);
+                }
+                else
+                {
+                    newLayer = SpineWidget.GetInstance(layerData.animationPath, layerData.assetBundleId, transform);
+                }
+
                 newLayer.PlayAnimation(layerData.animationName, true);
                 layers.Add(newLayer);
             }

@@ -61,8 +61,7 @@ namespace Overlewd
             buffRect = buff.GetComponent<RectTransform>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
-            buffRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
-                -buffRect.rect.height, buffRect.rect.height);
+            UITools.TopHide(buffRect);
 
             markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
 
@@ -134,7 +133,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            battleData = GameData.GetBattleById(inputData.eventStageId);
+            battleData = inputData.eventStageData.battleData;
             Customize();
 
             await Task.CompletedTask;
@@ -146,7 +145,7 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 { 
-                    eventMapStageId = inputData.eventStageId
+                    eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
         }
 
@@ -193,9 +192,8 @@ namespace Overlewd
         }
     }
 
-    public class PrepareBossFightPopupInData
+    public class PrepareBossFightPopupInData : BaseScreenInData
     {
-        public int eventStageId;
-        public AdminBRO.FTUEStageItem ftueStageData;
+       
     }
 }

@@ -36,6 +36,7 @@ namespace Overlewd
         protected SpineWidgetGroup cutInAnimation;
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
+        protected FMODEvent replicaSound;
 
         protected SexScreenInData inputData;
 
@@ -93,14 +94,13 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            var stageData = GameData.GetEventStageById(inputData.eventStageId);
-            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-            await GameData.EventStageStartAsync(inputData.eventStageId);
+            dialogData = inputData.eventStageData.dialogData;
+            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
         }
 
         protected void AutoplayButtonCustomize()
@@ -301,12 +301,26 @@ namespace Overlewd
 
                 mainSound?.Play();
             }
+            
+            //replica sound
+            if (replica.replicaSoundId.HasValue)
+            {
+                var replicaSoundData = GameData.GetSoundById(replica.replicaSoundId.Value);
+                if (replicaSoundData.eventPath != replicaSound?.path)
+                {
+                    replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);
+                }
+            }
+            else
+            {
+                replicaSound?.Stop();
+                replicaSound = null;
+            }
         }
     }
 
-    public class SexScreenInData
+    public class SexScreenInData : BaseScreenInData
     {
-        public int eventStageId;
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

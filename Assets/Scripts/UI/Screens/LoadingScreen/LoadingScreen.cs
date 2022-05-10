@@ -213,6 +213,8 @@ namespace Overlewd
 
             GameData.currenies = await AdminBRO.currenciesAsync();
 
+            GameData.tradables = await AdminBRO.tradablesAsync();
+
             GameData.events = await AdminBRO.eventsAsync();
 
             GameData.eventChapters = await AdminBRO.eventChaptersAsync();
@@ -230,6 +232,8 @@ namespace Overlewd
             GameData.ftue = await AdminBRO.ftueAsync();
 
             GameData.ftueStages = await AdminBRO.ftueStagesAsync();
+
+            GameData.ftueStats = await AdminBRO.ftueStatsAsync();
 
             GameData.animations = await AdminBRO.animationsAsync();
 
@@ -270,7 +274,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.ShowDialogBox("No Internet ñonnection", "", () => Game.Quit());
+                UIManager.ShowDialogBox("No Internet ï¿½onnection", "", () => Game.Quit());
             }
 
             await Task.CompletedTask;

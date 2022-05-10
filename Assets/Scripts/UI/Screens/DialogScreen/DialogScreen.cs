@@ -13,6 +13,7 @@ namespace Overlewd
     {
         protected FMODEvent mainSound;
         protected FMODEvent cutInSound;
+        protected FMODEvent replicaSound;
         
         protected Coroutine autoplayCoroutine;
 
@@ -103,6 +104,12 @@ namespace Overlewd
             return this;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            SoundManager.GetEventInstance(FMODEventPath.Music_DialogScreen);
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowAsync()
         {
             Initialize();
@@ -120,14 +127,13 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            var stageData = GameData.GetEventStageById(inputData.eventStageId);
-            dialogData = GameData.GetDialogById(stageData.dialogId.Value);
-            await GameData.EventStageStartAsync(inputData.eventStageId);
+            dialogData = inputData.eventStageData.dialogData;
+            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId);
+            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
         }
 
         protected virtual void LeaveScreen()
@@ -422,6 +428,21 @@ namespace Overlewd
 
                 mainSound?.Play();
             }
+            
+            //replica sound
+            if (replica.replicaSoundId.HasValue)
+            {
+                var replicaSoundData = GameData.GetSoundById(replica.replicaSoundId.Value);
+                if (replicaSoundData.eventPath != replicaSound?.path)
+                {
+                    replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);
+                }
+            }
+            else
+            {
+                replicaSound?.Stop();
+                replicaSound = null;
+            }
         }
 
         protected virtual void ShowLastReplica()
@@ -473,9 +494,8 @@ namespace Overlewd
         }
     }
 
-    public class DialogScreenInData
+    public class DialogScreenInData : BaseScreenInData
     {
-        public int eventStageId;
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

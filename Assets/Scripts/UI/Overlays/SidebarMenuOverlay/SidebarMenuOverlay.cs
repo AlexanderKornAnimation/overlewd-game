@@ -26,15 +26,20 @@ namespace Overlewd
         protected TextMeshProUGUI globalMapButton_Title;
         protected Image globalMapButton_Icon;
 
+        protected Button overlordButton;
+        protected TextMeshProUGUI overlordButton_Markers;
+        protected TextMeshProUGUI overlordButton_Title;
+        protected Image overlordButton_Icon;
+        
         protected Button haremButton;
         protected TextMeshProUGUI haremButton_Markers;
         protected TextMeshProUGUI haremButton_Title;
         protected Image haremButton_Icon;
 
-        protected Button castleBuildingButton;
-        protected TextMeshProUGUI castleBuildingButton_Markers;
-        protected TextMeshProUGUI castleBuildingButton_Title;
-        protected Image castleBuildingButton_Icon;
+        protected Button municipalityButton;
+        protected TextMeshProUGUI municipalityButton_Markers;
+        protected TextMeshProUGUI municipalityButton_Title;
+        protected Image municipalityButton_Icon;
 
         protected Button magicGuildButton;
         protected TextMeshProUGUI magicGuildButton_Markers;
@@ -75,17 +80,23 @@ namespace Overlewd
             globalMapButton_Title = globalMapButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             globalMapButton_Icon = globalMapButton.transform.Find("Icon").GetComponent<Image>();
 
+            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton.onClick.AddListener(OverlordButtonClick);
+            overlordButton_Markers = overlordButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
+            overlordButton_Title = overlordButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            overlordButton_Icon = overlordButton.transform.Find("Icon").GetComponent<Image>();
+            
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
             haremButton_Markers = haremButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             haremButton_Title = haremButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             haremButton_Icon = haremButton.transform.Find("Icon").GetComponent<Image>();
 
-            castleBuildingButton = canvas.Find("CastleBuildingButton").GetComponent<Button>();
-            castleBuildingButton.onClick.AddListener(CastleBuildingButtonClick);
-            castleBuildingButton_Markers = castleBuildingButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
-            castleBuildingButton_Title = castleBuildingButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            castleBuildingButton_Icon = castleBuildingButton.transform.Find("Icon").GetComponent<Image>();
+            municipalityButton = canvas.Find("MunicipalityButton").GetComponent<Button>();
+            municipalityButton.onClick.AddListener(MunicipalityButtonClick);
+            municipalityButton_Markers = municipalityButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
+            municipalityButton_Title = municipalityButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            municipalityButton_Icon = municipalityButton.transform.Find("Icon").GetComponent<Image>();
 
             magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
@@ -116,16 +127,6 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_SidebarOverlayHide);
         }
 
-        private void Start()
-        {
-            Customize();
-        }
-
-        protected virtual void Customize()
-        {
-
-        }
-
         protected virtual void CastleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -144,16 +145,21 @@ namespace Overlewd
             UIManager.ShowScreen<MapScreen>();
         }
 
+        protected virtual void OverlordButtonClick()
+        {
+            
+        }
+        
         protected virtual void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
-        protected virtual void CastleBuildingButtonClick()
+        protected virtual void MunicipalityButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<BuildingScreen>();
+            UIManager.ShowScreen<MunicipalityScreen>();
         }
 
         protected virtual void MagicGuildButtonClick()

@@ -26,7 +26,7 @@ namespace Overlewd
                 UIManager.MakePopup<VictoryPopup>().
                     SetData(new VictoryPopupInData
                     {
-                        ftueStageData = inputData.ftueStageData
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowPopupProcess();
             }
 
@@ -35,18 +35,28 @@ namespace Overlewd
                 UIManager.MakePopup<DefeatPopup>().
                     SetData(new DefeatPopupInData
                     {
-                        ftueStageData = inputData.ftueStageData
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowPopupProcess();
             }
 
             public override async Task BeforeShowDataAsync()
             {
-                await GameData.FTUEStartStage(inputData.ftueStageData.id);
+                await GameData.FTUEStartStage(inputData.ftueStageId.Value);
             }
 
             public override async Task BeforeHideDataAsync()
             {
-                await GameData.FTUEEndStage(inputData.ftueStageData.id);
+                await GameData.FTUEEndStage(inputData.ftueStageId.Value);
+            }
+
+            public override void OnBattleEvent(BattleEvent battleEvent)
+            {
+
+            }
+
+            public override BattleManagerInData GetBattleData()
+            {
+                return BattleManagerInData.InstFromFTUEStage(inputData?.ftueStageData);
             }
         }
 	}

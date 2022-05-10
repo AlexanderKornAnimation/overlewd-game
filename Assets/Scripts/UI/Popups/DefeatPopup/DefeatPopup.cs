@@ -40,16 +40,6 @@ namespace Overlewd
             return this;
         }
 
-        void Start()
-        {
-            Customize();
-        }
-
-        protected virtual void Customize()
-        {
-
-        }
-
         public override void MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
@@ -80,8 +70,8 @@ namespace Overlewd
         }
     }
 
-    public class DefeatPopupInData
+    public class DefeatPopupInData : BaseScreenInData
     {
-        public AdminBRO.FTUEStageItem ftueStageData;
+        
     }
 }

@@ -8,8 +8,14 @@ namespace Overlewd
 {
     public abstract class BaseScreen : MonoBehaviour
     {
-        public virtual void UpdateGameData()
+        public virtual void OnGameDataEvent(GameDataEvent eventData)
         {
+
+        }
+
+        public virtual void OnUIEvent(UIEvent eventData)
+        {
+
         }
 
         public virtual void MakeMissclick()
@@ -95,5 +101,16 @@ namespace Overlewd
         {
             return GetComponent<ScreenTransition>();
         }
+    }
+
+    public abstract class BaseScreenInData
+    {
+        public int? eventStageId;
+        public AdminBRO.EventStageItem eventStageData => 
+            eventStageId.HasValue ? GameData.GetEventStageById(eventStageId.Value) : null;
+
+        public int? ftueStageId;
+        public AdminBRO.FTUEStageItem ftueStageData =>
+            ftueStageId.HasValue ? GameData.GetFTUEStageById(ftueStageId.Value) : null;
     }
 }

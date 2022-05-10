@@ -21,8 +21,28 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = true;
-                GameGlobalStates.ftueChapterData = null;
-                UIManager.ShowScreen<MapScreen>();
+                GameGlobalStates.ftueChapterData = GameData.ftue.activeChapter;
+
+                if (GameGlobalStates.ftueChapterData.key == "chapter1")
+                {
+                    var firstSexStage = GameGlobalStates.ftueChapterData.GetStageByKey("sex1");
+                    if (!firstSexStage?.isComplete ?? false)
+                    {
+                        UIManager.MakeScreen<FTUE.SexScreen>().
+                            SetData(new SexScreenInData
+                            {
+                                ftueStageId = firstSexStage.id,
+                            }).RunShowScreenProcess();
+                    }
+                    else
+                    {
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                }
+                else
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
             });
 
             canvas.Find("FTUE").GetComponent<Button>().onClick.AddListener(() =>
@@ -30,10 +50,9 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = false;
-                GameGlobalStates.ftueChapterData = null;
+                GameGlobalStates.ftueChapterData = GameData.ftue.firstChapter;
                 UIManager.ShowScreen<MapScreen>();
-                /*UIManager.ShowScreen<FTUE.SexScreen>().
-                    SetStageData(GameGlobalStates.GetFTUEStageByKey("sex1"));*/
+
             });
 
             canvas.Find("Reset_FTUE").GetComponent<Button>().onClick.AddListener(() =>
@@ -58,6 +77,7 @@ namespace Overlewd
         private async void FTUEReset()
         {
             await GameData.FTUEReset();
+            await GameData.BuildingsReset();
         }
     }
 }

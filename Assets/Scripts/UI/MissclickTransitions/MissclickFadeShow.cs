@@ -10,12 +10,11 @@ namespace Overlewd
         protected override void Awake()
         {
             base.Awake();
-            canvasGroup.alpha = 0.0f;
         }
 
         public override async Task ProgressAsync()
         {
-            await UITools.FadeShowAsync(canvasGroup);
+            await UITools.FadeShowAsync(gameObject);
             Destroy(this);
         }
     }

@@ -15,7 +15,7 @@ namespace Overlewd
         {
             public override async Task BeforeShowDataAsync()
             {
-                dialogData = GameData.GetDialogById(inputData.ftueStageData.dialogId.Value);
+                dialogData = inputData.ftueStageData.dialogData;
                 await GameData.FTUEStartStage(inputData.ftueStageData.id);
             }
 
@@ -32,7 +32,29 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                UIManager.ShowScreen<MapScreen>();
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "sex1":
+                                UIManager.MakeScreen<DialogScreen>().
+                                    SetData(new DialogScreenInData
+                                    {
+                                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("dialogue1")?.id
+                                    }).RunShowScreenProcess();
+                                break;
+
+                            default:
+                                UIManager.ShowScreen<MapScreen>();
+                                break;
+                        }
+                        break;
+
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
+                }
             }
 
             protected override void ShowLastReplica()
@@ -51,7 +73,7 @@ namespace Overlewd
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData 
                                     { 
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("memorytutor2") 
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("memorytutor2")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                         }
@@ -76,14 +98,14 @@ namespace Overlewd
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("bufftutor2")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("bufftutor2")?.dialogId
                                     }).RunShowNotificationProcess();
                                 await UIManager.WaitHideNotifications();
 
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("ulviscreentutor")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("ulviscreentutor")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                         }

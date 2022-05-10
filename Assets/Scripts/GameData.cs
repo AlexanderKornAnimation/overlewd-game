@@ -6,27 +6,23 @@ using UnityEngine;
 
 namespace Overlewd
 {
+    public class GameDataEvent
+    {
+        public Type type = Type.None;
+
+        public enum Type
+        {
+            None,
+            BuyTradable,
+            BuildingBuildNow,
+            BuildingBuildStarted,
+        }
+    }
+
     public static class GameData
     {
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
-        public static bool CanTradableBuy(AdminBRO.TradableItem tradable)
-        {
-            foreach (var priceItem in tradable.price)
-            {
-                var walletCurrency = playerInfo.wallet.Find(item => item.currency.id == priceItem.currencyId);
 
-                if (walletCurrency == null)
-                {
-                    return false;
-                }
-
-                if (walletCurrency.amount < priceItem.amount)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
         public static int GetCurencyCatEarsCount()
         {
             var currency = GetCurencyCatEars();
@@ -37,9 +33,13 @@ namespace Overlewd
         public static async Task BuyTradableAsync(int marketId, int tradableId)
         {
             await AdminBRO.tradableBuyAsync(marketId, tradableId);
-            GameData.playerInfo = await AdminBRO.meAsync();
+            playerInfo = await AdminBRO.meAsync();
 
-            UIManager.UpdateGameData();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                { 
+                    type = GameDataEvent.Type.BuyTradable 
+                });
         }
 
         public static List<AdminBRO.EventItem> events { get; set; }
@@ -65,10 +65,6 @@ namespace Overlewd
         {
             return eventMarkets.Find(m => m.id == id);
         }
-        public static AdminBRO.TradableItem GetTradableById(int marketId, int tradableId)
-        {
-            return eventMarkets.Find(m => m.id == marketId)?.tradable.Find(t => t.id == tradableId);
-        }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }
         public static AdminBRO.CurrencyItem GetCurrencyById(int id)
@@ -78,6 +74,12 @@ namespace Overlewd
         public static AdminBRO.CurrencyItem GetCurencyCatEars()
         {
             return currenies.Find(c => c.name == "Cat Ears");
+        }
+
+        public static List<AdminBRO.TradableItem> tradables { get; set; }
+        public static AdminBRO.TradableItem GetTradableById(int id)
+        {
+            return tradables.Find(t => t.id == id);
         }
 
         public static List<AdminBRO.EventStageItem> eventStages { get; set; } = new List<AdminBRO.EventStageItem>();
@@ -118,6 +120,7 @@ namespace Overlewd
 
         public static AdminBRO.FTUEInfo ftue { get; set; }
         public static List<AdminBRO.FTUEStageItem> ftueStages { get; set; } = new List<AdminBRO.FTUEStageItem>();
+        public static AdminBRO.FTUEStats ftueStats { get; set; } = new AdminBRO.FTUEStats();
 
         public static AdminBRO.FTUEChapter GetFTUEChapterByKey(string key)
         {
@@ -144,16 +147,19 @@ namespace Overlewd
         {
             await AdminBRO.ftueStageStartAsync(stageId);
             ftueStages = await AdminBRO.ftueStagesAsync();
+            ftueStats = await AdminBRO.ftueStatsAsync();
         }
         public static async Task FTUEEndStage(int stageId)
         {
             await AdminBRO.ftueStageEndAsync(stageId);
             ftueStages = await AdminBRO.ftueStagesAsync();
+            ftueStats = await AdminBRO.ftueStatsAsync();
         }
         public static async Task FTUEReset()
         {
-            await AdminBRO.ftueReset();
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
             ftueStages = await AdminBRO.ftueStagesAsync();
+            ftueStats = await AdminBRO.ftueStatsAsync();
         }
 
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
@@ -175,15 +181,51 @@ namespace Overlewd
         }
 
         public static List<AdminBRO.Building> buildings { get; set; } = new List<AdminBRO.Building>();
-        public static AdminBRO.Building GetBuilsingById(int id)
+        public static AdminBRO.Building GetBuildingById(int id)
         {
             return buildings.Find(b => b.id == id);
+        }
+        public static AdminBRO.Building GetBuildingByKey(string key)
+        {
+            return buildings.Find(b => b.key == key);
+        }
+        public static async Task BuildingBuildNow(int buildingId)
+        {
+            await AdminBRO.buildingBuildNowAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildNow
+                });
+        }
+
+        public static async Task BuildingBuild(int buildingId)
+        {
+            await AdminBRO.buildingBuildAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildStarted
+                });
+        }
+
+        public static async Task BuildingsReset()
+        {
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
+            await AdminBRO.initAsync();
+            buildings = await AdminBRO.buildingsAsync();
         }
 
         public static List<AdminBRO.Character> characters { get; set; } = new List<AdminBRO.Character>();
         public static AdminBRO.Character GetCharacterById(int id)
         {
             return characters.Find(ch => ch.id == id);
+        }
+        public static AdminBRO.Character GetCharacterByClass(string chClass)
+        {
+            return characters.Find(ch => ch.characterClass == chClass);
         }
 
         public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();

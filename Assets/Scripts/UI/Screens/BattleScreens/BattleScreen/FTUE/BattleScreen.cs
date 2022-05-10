@@ -24,20 +24,64 @@ namespace Overlewd
 
             public override void BattleWin()
             {
-                UIManager.MakePopup<VictoryPopup>().
-                    SetData(new VictoryPopupInData
+                var win = GameGlobalStates.ftueChapterData.key switch
+                {
+                    "chapter1" => inputData.ftueStageData.key switch
                     {
-                        ftueStageData = inputData.ftueStageData
+                        "battle1" => true,
+                        "battle2" => false,
+                        _ => true
+                    },
+                    _ => true
+                };
+                
+                if (win)
+                {
+                    UIManager.MakePopup<VictoryPopup>().
+                        SetData(new VictoryPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId,
+                        }).RunShowPopupProcess();
+                }
+                else
+                {
+                    UIManager.MakePopup<DefeatPopup>().
+                    SetData(new DefeatPopupInData
+                    {
+                        ftueStageId = inputData.ftueStageId
                     }).RunShowPopupProcess();
+                }
             }
 
             public override void BattleDefeat()
             {
-                UIManager.MakePopup<DefeatPopup>().
-                    SetData(new DefeatPopupInData
+                var defeat = GameGlobalStates.ftueChapterData.key switch
+                {
+                    "chapter1" => inputData.ftueStageData.key switch
                     {
-                        ftueStageData = inputData.ftueStageData
-                    }).RunShowPopupProcess();
+                        "battle1" => false,
+                        "battle2" => true,
+                        _ => true
+                    },
+                    _ => true
+                };
+
+                if (defeat)
+                {
+                    UIManager.MakePopup<DefeatPopup>().
+                        SetData(new DefeatPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
+                }
+                else
+                {
+                    UIManager.MakePopup<VictoryPopup>().
+                        SetData(new VictoryPopupInData
+                        {
+                            ftueStageId = inputData.ftueStageId
+                        }).RunShowPopupProcess();
+                }
             }
 
             public override async Task BeforeShowDataAsync()
@@ -62,7 +106,7 @@ namespace Overlewd
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData 
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("battletutor1")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("battletutor1")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                         }
@@ -92,28 +136,28 @@ namespace Overlewd
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("battletutor2")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("battletutor2")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                             case "battle2":
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("battletutor3")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("battletutor3")?.dialogId
                                     }).RunShowNotificationProcess();
                                 await UIManager.WaitHideNotifications();
 
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("bufftutor1")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("bufftutor1")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                             case "battle5":
                                 UIManager.MakeNotification<DialogNotification>().
                                     SetData(new DialogNotificationInData
                                     {
-                                        dialogData = GameGlobalStates.GetFTUENotificationByKey("castletutor")
+                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("castletutor")?.dialogId
                                     }).RunShowNotificationProcess();
                                 break;
                         }
@@ -121,6 +165,16 @@ namespace Overlewd
                 }
 
                 await Task.CompletedTask;
+            }
+
+            public override void OnBattleEvent(BattleEvent battleEvent)
+            {
+
+            }
+
+            public override BattleManagerInData GetBattleData()
+            {
+                return BattleManagerInData.InstFromFTUEStage(inputData?.ftueStageData);
             }
         }
 	}

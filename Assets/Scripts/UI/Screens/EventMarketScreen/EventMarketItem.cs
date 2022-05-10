@@ -51,7 +51,7 @@ namespace Overlewd
 
             public void Customize()
             {
-                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var tradableData = GameData.GetTradableById(tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 
@@ -87,12 +87,12 @@ namespace Overlewd
 
             private async void BuyButtonClick()
             {
-                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var tradableData = GameData.GetTradableById(tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                if (GameData.CanTradableBuy(tradableData))
+                if (tradableData.canBuy)
                 {
                     if (!currencyData.nutaku)
                     {
@@ -110,11 +110,11 @@ namespace Overlewd
 
             private async void BuyWithCountButtonClick()
             {
-                var tradableData = GameData.GetTradableById(eventMarketId, tradableId);
+                var tradableData = GameData.GetTradableById(tradableId);
                 var currencyId = tradableData.price[0].currencyId;
                 var currencyData = GameData.GetCurrencyById(currencyId);
 
-                if (GameData.CanTradableBuy(tradableData))
+                if (tradableData.canBuy)
                 {
                     if (!currencyData.nutaku)
                     {

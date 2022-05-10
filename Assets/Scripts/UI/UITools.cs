@@ -77,6 +77,18 @@ namespace Overlewd
             }
         }
 
+        public static void LeftShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left,
+                0.0f, uiRect.rect.width);
+        }
+
+        public static void LeftHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left,
+                -uiRect.rect.width, uiRect.rect.width);
+        }
+
         //right
         public static async Task RightShowAsync(RectTransform uiRect, float duration = durationDef)
         {
@@ -112,6 +124,18 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
+        }
+
+        public static void RightShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                0.0f, uiRect.rect.width);
+        }
+
+        public static void RightHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right,
+                -uiRect.rect.width, uiRect.rect.width);
         }
 
         //bottom
@@ -151,6 +175,18 @@ namespace Overlewd
             }
         }
 
+        public static void BottomShow(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                0.0f, uiRect.rect.height);
+        }
+
+        public static void BottomHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom,
+                -uiRect.rect.height, uiRect.rect.height);
+        }
+
         //top
         public static async Task TopShowAsync(RectTransform uiRect, float duration = durationDef)
         {
@@ -188,9 +224,29 @@ namespace Overlewd
             }
         }
 
-        //fade
-        public static async Task FadeShowAsync(CanvasGroup uiCanvas, float duration = durationDef)
+        public static void TopShow(RectTransform uiRect)
         {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
+                0.0f, uiRect.rect.height);
+        }
+
+        public static void TopHide(RectTransform uiRect)
+        {
+            uiRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
+                -uiRect.rect.height, uiRect.rect.height);
+        }
+
+        //fade
+        public static async Task FadeShowAsync(GameObject obj, float duration = durationDef)
+        {
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
             float time = 0.0f;
 
             while (time < duration)
@@ -199,14 +255,27 @@ namespace Overlewd
                 float transitionProgressPercent = time / duration;
                 float transitionPercent = EasingFunction.easeOutBack(transitionProgressPercent);
 
-                uiCanvas.alpha = transitionPercent;
+                canvasGroup.alpha = transitionPercent;
 
                 await UniTask.NextFrame();
             }
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
         }
 
-        public static async Task FadeHideAsync(CanvasGroup uiCanvas, float duration = durationDef)
+        public static async Task FadeHideAsync(GameObject obj, float duration = durationDef)
         {
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
             float time = 0.0f;
 
             while (time < duration)
@@ -215,11 +284,51 @@ namespace Overlewd
                 float transitionProgressPercent = time / duration;
                 float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
 
-                uiCanvas.alpha = transitionPercent;
+                canvasGroup.alpha = transitionPercent;
 
                 await UniTask.NextFrame();
             }
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
+        }
+
+        public static void FadeShow(GameObject obj)
+        {
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
+            canvasGroup.alpha = 1.0f;
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
+        }
+
+        public static void FadeHide(GameObject obj)
+        {
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
+            canvasGroup.alpha = 0.0f;
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
         }
     }
-
 }

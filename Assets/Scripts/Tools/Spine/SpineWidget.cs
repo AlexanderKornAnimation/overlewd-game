@@ -45,13 +45,26 @@ namespace Overlewd
             skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
                 ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
                 ResourceManager.InstantiateRemoteAsset<SkeletonDataAsset>(skeletonDataPath, assetBundleId);
+            
             if (skeletonDataAsset == null)
                 return;
+            
             skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
             skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
             skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
+
             skeletonGraphic.Initialize(false);
 
+            skeletonGraphic.AnimationState.Start += StartListener;
+            skeletonGraphic.AnimationState.Complete += CompleteListener;
+            skeletonGraphic.AnimationState.Event += EventListener;
+        }
+
+        private void Initialize()
+        {
+            skeletonGraphic = GetComponent<SkeletonGraphic>();
+            skeletonGraphic.Initialize(false);
+            
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
             skeletonGraphic.AnimationState.Event += EventListener;
@@ -61,7 +74,7 @@ namespace Overlewd
         {
             Initialize(skeletonDataPath, multipleRenderCanvas, null);
         }
-
+        
         public void Initialize(string skeletonDataPath, string assetBundleId, bool multipleRenderCanvas = false)
         {
             Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId);
@@ -169,12 +182,31 @@ namespace Overlewd
             Destroy(obj?.GetComponent<BoneFollowerGraphic>());
         }
         
+        //old
         public static SpineWidget GetInstance(Transform parent)
         {
             var spineGO = new GameObject(nameof(SpineWidget));
             var spineGO_rt = spineGO.AddComponent<RectTransform>();
             spineGO_rt.SetParent(parent, false);
             return spineGO.AddComponent<SpineWidget>();
+        }   
+        
+        //inst local prefab
+        public static SpineWidget GetInstance(string prefabPath, Transform parent)
+        {
+            var inst = ResourceManager.InstantiateAsset<GameObject>(prefabPath, parent);
+            var sw = inst.AddComponent<SpineWidget>();
+            sw.Initialize();
+            return sw;
+        }
+        
+        //inst remote prefab
+        public static SpineWidget GetInstance(string prefabPath, string assetBundleId, Transform parent)
+        {
+            var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(prefabPath, assetBundleId, parent);
+            var sw = inst.AddComponent<SpineWidget>();
+            sw.Initialize();
+            return sw;
         }
     }
 }
