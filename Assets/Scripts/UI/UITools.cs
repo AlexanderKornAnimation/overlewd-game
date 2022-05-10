@@ -237,8 +237,16 @@ namespace Overlewd
         }
 
         //fade
-        public static async Task FadeShowAsync(CanvasGroup uiCanvas, float duration = durationDef)
+        public static async Task FadeShowAsync(GameObject obj, float duration = durationDef)
         {
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
             float time = 0.0f;
 
             while (time < duration)
@@ -247,14 +255,27 @@ namespace Overlewd
                 float transitionProgressPercent = time / duration;
                 float transitionPercent = EasingFunction.easeOutBack(transitionProgressPercent);
 
-                uiCanvas.alpha = transitionPercent;
+                canvasGroup.alpha = transitionPercent;
 
                 await UniTask.NextFrame();
             }
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
         }
 
-        public static async Task FadeHideAsync(CanvasGroup uiCanvas, float duration = durationDef)
+        public static async Task FadeHideAsync(GameObject obj, float duration = durationDef)
         {
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
             float time = 0.0f;
 
             while (time < duration)
@@ -263,20 +284,51 @@ namespace Overlewd
                 float transitionProgressPercent = time / duration;
                 float transitionPercent = 1.0f - EasingFunction.easeInBack(transitionProgressPercent);
 
-                uiCanvas.alpha = transitionPercent;
+                canvasGroup.alpha = transitionPercent;
 
                 await UniTask.NextFrame();
             }
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
         }
 
-        public static void FadeShow(CanvasGroup uiCanvas)
+        public static void FadeShow(GameObject obj)
         {
-            uiCanvas.alpha = 1.0f;
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
+            canvasGroup.alpha = 1.0f;
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
         }
 
-        public static void FadeHide(CanvasGroup uiCanvas)
+        public static void FadeHide(GameObject obj)
         {
-            uiCanvas.alpha = 0.0f;
+            var canvasGroup = obj.GetComponent<CanvasGroup>();
+            var deleteCanvasGroupAfter = false;
+            if (canvasGroup == null)
+            {
+                canvasGroup = obj.AddComponent<CanvasGroup>();
+                deleteCanvasGroupAfter = true;
+            }
+
+            canvasGroup.alpha = 0.0f;
+
+            if (deleteCanvasGroupAfter)
+            {
+                UnityEngine.Object.Destroy(canvasGroup);
+            }
         }
     }
 
