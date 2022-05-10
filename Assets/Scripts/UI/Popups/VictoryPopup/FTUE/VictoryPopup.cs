@@ -40,11 +40,7 @@ namespace Overlewd
                         switch (inputData.ftueStageData.key)
                         {
                             case "battle4":
-                                UIManager.MakeScreen<CastleScreen>().
-                                    SetData(new CastleScreenInData
-                                    {
-                                        mode = BaseScreenInData.Mode.FTUE
-                                    }).RunShowScreenProcess();
+                                UIManager.ShowScreen<CastleScreen>();
                                 break;
                             default:
                                 UIManager.ShowScreen<MapScreen>();

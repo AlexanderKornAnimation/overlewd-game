@@ -288,11 +288,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<CastleScreen>().
-                SetData(new CastleScreenInData
-                {
-                    mode = inputData?.mode
-                }).RunShowScreenProcess();
+            UIManager.ShowScreen<CastleScreen>();
         }
     }
 
