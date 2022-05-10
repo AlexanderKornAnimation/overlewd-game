@@ -33,7 +33,28 @@ namespace Overlewd
             protected override void NextButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<MapScreen>();
+
+                switch (GameGlobalStates.ftueChapterData.key)
+                {
+                    case "chapter1":
+                        switch (inputData.ftueStageData.key)
+                        {
+                            case "battle4":
+                                UIManager.MakeScreen<CastleScreen>().
+                                    SetData(new CastleScreenInData
+                                    {
+                                        mode = BaseScreenInData.Mode.FTUE
+                                    }).RunShowScreenProcess();
+                                break;
+                            default:
+                                UIManager.ShowScreen<MapScreen>();
+                                break;
+                        }
+                        break;
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
+                }
             }
 
             protected override void RepeatButtonClick()

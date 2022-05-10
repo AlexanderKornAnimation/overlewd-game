@@ -71,6 +71,7 @@ namespace Overlewd
                     foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
                     {
                         var stageData = GameData.GetFTUEStageById(stageId);
+
                         var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
                         if (stageMapNode == null)
                         {
