@@ -24,6 +24,10 @@ namespace Overlewd
 
         private MapScreenInData inputData;
 
+        private EventsWidget eventsPanel;
+        private QuestsWidget questsPanel;
+        private BuffWidget buffPanel;
+
         protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/MapScreen/MapScreen", transform);
@@ -57,10 +61,6 @@ namespace Overlewd
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
-            //EventsWidget.GetInstance(transform);
-            QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
-
             if (GameGlobalStates.ftueChapterData != null)
             {
                 if (GameGlobalStates.ftueChapterData.chapterMapId.HasValue)
@@ -70,7 +70,7 @@ namespace Overlewd
 
                     foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
                     {
-                        var stageData = GameData.GetFTUEStageById(stageId);
+                        var stageData = GameData.ftue.GetStageById(stageId);
 
                         var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
                         if (stageMapNode == null)
@@ -156,6 +156,14 @@ namespace Overlewd
                     chapterButton.gameObject.SetActive(false);
                 }
             }
+
+            eventsPanel = EventsWidget.GetInstance(transform);
+            eventsPanel.Hide();
+            questsPanel = QuestsWidget.GetInstance(transform);
+            questsPanel.Hide();
+            buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.Hide();
+
             await Task.CompletedTask;
         }
 
@@ -167,6 +175,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            //return after team edit screen
             var battleData = inputData?.ftueStageData?.battleData;
             if (battleData != null)
             {
@@ -188,20 +197,54 @@ namespace Overlewd
                 }
             }
 
+            //animate opened stages
+            bool waitStagesShowAnims = false;
             foreach (var stage in newStages)
             {
                 stage.gameObject.SetActive(true);
+                waitStagesShowAnims = true;
             }
+            if (waitStagesShowAnims) await UniTask.Delay(2000);
 
-            EnterScreen();
+            //ftue part
+            switch (GameData.ftueStats.lastEndedState)
+            {
+                case ("battle1", "chapter1"):
+                    UIManager.MakeNotification<DialogNotification>().
+                       SetData(new DialogNotificationInData
+                       {
+                           dialogId = GameData.ftue.activeChapter.GetNotifByKey("maptutor").id
+                       }).RunShowNotificationProcess();
+                    await UIManager.WaitHideNotifications();
+                    await questsPanel.ShowAsync();
+                    UIManager.MakeNotification<DialogNotification>().
+                        SetData(new DialogNotificationInData
+                        {
+                            dialogId = GameData.ftue.activeChapter.GetNotifByKey("qbtutor").id
+                        }).RunShowNotificationProcess();
+                    break;
+                case ("sex2", "chapter1"):
+                    await questsPanel.ShowAsync();
+                    await buffPanel.ShowAsync();
+                    UIManager.MakeNotification<DialogNotification>().
+                        SetData(new DialogNotificationInData
+                        {
+                            dialogId = GameData.ftue.activeChapter.GetNotifByKey("bufftutor2").id
+                        }).RunShowNotificationProcess();
+                    break;
+                default:
+                    var showPanelTasks = new List<Task>();
+                    showPanelTasks.Add(questsPanel.ShowAsync());
+                    showPanelTasks.Add(buffPanel.ShowAsync());
+                    await Task.WhenAll(showPanelTasks);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
 
         public override async Task AfterHideAsync()
         {
-            LeaveScreen();
-
             await Task.CompletedTask;
         }
 
@@ -211,49 +254,6 @@ namespace Overlewd
 
             GameGlobalStates.ftueChapterData = nextChapterData;
             UIManager.ShowScreen<MapScreen>();
-        }
-
-        private async void EnterScreen()
-        {
-            return;
-            switch (GameGlobalStates.ftueChapterData.key)
-            {
-                case "chapter1":
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("maptutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    await UIManager.WaitHideNotifications();
-
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("questbooktutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    await UIManager.WaitHideNotifications();
-                    
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("qbcontenttutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    await UIManager.WaitHideNotifications();
-
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        { 
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("eventbooktutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    break;
-            }
-
-            await Task.CompletedTask;
-        }
-
-        private void LeaveScreen()
-        {
-
         }
     }
 

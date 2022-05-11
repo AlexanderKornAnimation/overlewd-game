@@ -11,13 +11,8 @@ namespace Overlewd
         {
             public int? stageId { get; set; }
 
-            protected AdminBRO.FTUEStageItem stageData
-            {
-                get
-                {
-                    return stageId.HasValue ? GameData.GetFTUEStageById(stageId.Value) : null;
-                }
-            }
+            protected AdminBRO.FTUEStageItem stageData =>
+                stageId.HasValue ? GameData.ftue.GetStageById(stageId.Value) : null;
 
             protected Transform done;
             protected Transform animPos;

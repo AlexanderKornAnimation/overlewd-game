@@ -840,17 +840,12 @@ namespace Overlewd
                 return notifications.Find(n => n.key == key);
             }
 
-            public FTUEStageItem GetStageByKey(string stageKey)
-            {
-                return GameData.GetFTUEStageByKey(stageKey, key);
-            }
-
             [JsonProperty(Required = Required.Default)]
             public bool isComplete {
                 get {
                     foreach (var stageId in stages)
                     {
-                        var stageData = GameData.GetFTUEStageById(stageId);
+                        var stageData = GetStageById(stageId);
                         if (!stageData?.isComplete ?? true)
                         {
                             return false;
@@ -862,7 +857,12 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter nextChapterData => 
-                nextChapterId.HasValue ? GameData.GetFTUEChapterById(nextChapterId.Value) : null;
+                nextChapterId.HasValue ? GameData.ftue.GetChapterById(nextChapterId.Value) : null;
+
+            public FTUEStageItem GetStageById(int id) =>
+                GameData.ftueStages.Find(s => s.id == id);
+            public FTUEStageItem GetStageByKey(string key) =>
+                GameData.ftueStages.Find(s => s.key == key && s.ftueChapterId == id);
         }
 
         [Serializable]
@@ -890,6 +890,20 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter firstChapter => 
                 GameData.ftue.chapters.OrderBy(ch => ch.order).First();
+
+            public FTUEChapter GetChapterByKey(string key) =>
+                chapters.Find(ch => ch.key == key);
+            public FTUEChapter GetChapterById(int id) =>
+                chapters.Find(ch => ch.id == id);
+            public FTUEStageItem GetStageById(int id) =>
+                GameData.ftueStages.Find(s => s.id == id);
+            public FTUEStageItem GetStageByKey(string stageKey, int chapterId) =>
+                GetChapterById(chapterId).GetStageByKey(stageKey);
+            public FTUEStageItem GetStageByKey(string stageKey, string chapterKey) =>
+                GetChapterByKey(chapterKey).GetStageByKey(stageKey);
+            public bool StageIsComplete(string stageKey, string chapterKey) =>
+                GetStageByKey(stageKey, chapterKey).isComplete;
+
         }
 
         // ftue/stats
@@ -910,11 +924,18 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
-                lastStartedStage.HasValue ? GameData.GetFTUEStageById(lastStartedStage.Value) : null;
+                lastStartedStage.HasValue ? GameData.ftue.GetStageById(lastStartedStage.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
-                lastEndedStage.HasValue ? GameData.GetFTUEStageById(lastEndedStage.Value) : null;
+                lastEndedStage.HasValue ? GameData.ftue.GetStageById(lastEndedStage.Value) : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public (string stage, string chapter) lastEndedState =>
+                (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key);
+
+            public bool IsLastEnededStage(string stageKey, string chapterKey) =>
+                lastEndedState == (stageKey, chapterKey);
         }
 
         // /ftue-stages
@@ -951,7 +972,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>
-                ftueChapterId.HasValue ? GameData.GetFTUEChapterById(ftueChapterId.Value) : null;
+                ftueChapterId.HasValue ? GameData.ftue.GetChapterById(ftueChapterId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData => 
