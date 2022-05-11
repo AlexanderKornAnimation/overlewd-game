@@ -55,7 +55,7 @@ namespace Overlewd
             if (GameGlobalStates.ftueChapterData == null)
             {
                 GameGlobalStates.ftueChapterData = GameGlobalStates.ftueProgressMode ?
-                    GameData.ftue.activeChapter : GameData.ftue.firstChapter;
+                    GameData.ftue.activeChapter : GameData.ftue.chapter1;
             }
 
             //backbutton.gameObject.SetActive(false);
@@ -210,27 +210,15 @@ namespace Overlewd
             switch (GameData.ftueStats.lastEndedState)
             {
                 case ("battle1", "chapter1"):
-                    UIManager.MakeNotification<DialogNotification>().
-                       SetData(new DialogNotificationInData
-                       {
-                           dialogId = GameData.ftue.activeChapter.GetNotifByKey("maptutor").id
-                       }).RunShowNotificationProcess();
+                    GameData.ftue.chapter1.ShowNotifByKey("maptutor");
                     await UIManager.WaitHideNotifications();
                     await questsPanel.ShowAsync();
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameData.ftue.activeChapter.GetNotifByKey("qbtutor").id
-                        }).RunShowNotificationProcess();
+                    GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
                     break;
                 case ("sex2", "chapter1"):
                     await questsPanel.ShowAsync();
                     await buffPanel.ShowAsync();
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameData.ftue.activeChapter.GetNotifByKey("bufftutor2").id
-                        }).RunShowNotificationProcess();
+                    GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
                     break;
                 default:
                     var showPanelTasks = new List<Task>();

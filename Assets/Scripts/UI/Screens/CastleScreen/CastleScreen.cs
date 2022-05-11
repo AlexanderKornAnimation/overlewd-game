@@ -10,8 +10,6 @@ namespace Overlewd
 {
     public class CastleScreen : BaseFullScreen
     {
-        private List<NSCastleScreen.BaseButton> buildingButtons = new List<NSCastleScreen.BaseButton>();
-
         private Transform harem;
         private Transform market;
         private Transform forge;
@@ -23,9 +21,20 @@ namespace Overlewd
         private Transform catacombs;
         private Transform aerostat;
 
-        private Transform eventWidget;
+        private NSCastleScreen.HaremButton haremButton;
+        private NSCastleScreen.MarketButton marketButton;
+        private NSCastleScreen.ForgeButton forgeButton;
+        private NSCastleScreen.MagicGuildButton magicGuildButton;
+        private NSCastleScreen.PortalButton portalButton;
+        private NSCastleScreen.CastleButton castleButton;
+        private NSCastleScreen.MunicipalityButton municipalityButton;
+        private NSCastleScreen.CathedralButton cathedralButton;
+        private NSCastleScreen.CatacombsButton catacombsButton;
+        private NSCastleScreen.AerostatButton aerostatButton;
 
-        private Button contenViewerButton;
+        private EventsWidget eventsPanel;
+        private QuestsWidget questsPanel;
+        private BuffWidget buffPanel;
 
         private FMODEvent music;
 
@@ -65,48 +74,48 @@ namespace Overlewd
                     switch (building.key)
                     {
                         case AdminBRO.Building.Key_Harem:
-                            NSCastleScreen.HaremButton.GetInstance(harem);
+                            haremButton = NSCastleScreen.HaremButton.GetInstance(harem);
                             break;
                         case AdminBRO.Building.Key_Market:
-                            NSCastleScreen.MarketButton.GetInstance(market);
+                            marketButton = NSCastleScreen.MarketButton.GetInstance(market);
                             break;
                         case AdminBRO.Building.Key_Forge:
-                            NSCastleScreen.ForgeButton.GetInstance(forge);
+                            forgeButton = NSCastleScreen.ForgeButton.GetInstance(forge);
                             break;
                         case AdminBRO.Building.Key_MagicGuild:
-                            NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+                            magicGuildButton = NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
                             break;
                         case AdminBRO.Building.Key_Portal:
-                            NSCastleScreen.PortalButton.GetInstance(portal);
+                            portalButton = NSCastleScreen.PortalButton.GetInstance(portal);
                             break;
                         case AdminBRO.Building.Key_Castle:
-                            var castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
-                            if (GameData.ftue.activeChapter.key == "chapter1" &&
-                                GameData.ftueStats.lastEndedStageData.key == "battle4")
-                            {
+                            castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
+                            if (GameData.ftueStats.IsLastEnededStage("battle4", "chapter1")) {
                                 castleButton.Hide();
-                                buildingButtons.Add(castleButton);
                             }
                             break;
                         case AdminBRO.Building.Key_Municipality:
-                            NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+                            municipalityButton = NSCastleScreen.MunicipalityButton.GetInstance(municipality);
                             break;
                         case AdminBRO.Building.Key_Cathedral:
-                            NSCastleScreen.CathedralButton.GetInstance(cathedral);
+                            cathedralButton = NSCastleScreen.CathedralButton.GetInstance(cathedral);
                             break;
                         case AdminBRO.Building.Key_Catacombs:
-                            NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+                            catacombsButton = NSCastleScreen.CatacombsButton.GetInstance(catacombs);
                             break;
                         case AdminBRO.Building.Key_Aerostat:
-                            NSCastleScreen.AerostatButton.GetInstance(aerostat);
+                            aerostatButton = NSCastleScreen.AerostatButton.GetInstance(aerostat);
                             break;
                     }
                 }
             }
 
-            EventsWidget.GetInstance(transform);
-            QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
+            eventsPanel = EventsWidget.GetInstance(transform);
+            eventsPanel.Hide();
+            questsPanel = QuestsWidget.GetInstance(transform);
+            questsPanel.Hide();
+            buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.Hide();
             SidebarButtonWidget.GetInstance(transform);
 
             await Task.CompletedTask;
@@ -114,9 +123,40 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            foreach (var buildingButton in buildingButtons)
+
+
+            //ftue part
+            switch (GameData.ftueStats.lastEndedState)
             {
-                buildingButton.ShowAsync();
+                case ("battle4", "chapter1"):
+                    {
+                        var showPanelTasks = new List<Task>();
+                        showPanelTasks.Add(questsPanel.ShowAsync());
+                        showPanelTasks.Add(buffPanel.ShowAsync());
+                        await Task.WhenAll(showPanelTasks);
+                    }
+
+                    var castleData = GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle);
+                    if (castleData.isBuilt)
+                    {
+                        await castleButton.ShowAsync();
+                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");   
+                    }
+                    else
+                    {
+                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
+                    }
+                    break;
+
+                default:
+                    {
+                        var showPanelTasks = new List<Task>();
+                        showPanelTasks.Add(questsPanel.ShowAsync());
+                        showPanelTasks.Add(buffPanel.ShowAsync());
+                        showPanelTasks.Add(eventsPanel.ShowAsync());
+                        await Task.WhenAll(showPanelTasks);
+                    }
+                    break;
             }
             
             await Task.CompletedTask;

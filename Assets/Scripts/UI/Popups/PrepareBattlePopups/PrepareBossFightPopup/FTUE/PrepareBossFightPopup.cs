@@ -25,6 +25,21 @@ namespace Overlewd
                 await Task.CompletedTask;
             }
 
+            public override async Task AfterShowAsync()
+            {
+                await base.AfterShowAsync();
+
+                //ftue part
+                switch (GameData.ftueStats.lastEndedState)
+                {
+                    case ("battle4", "chapter1"):
+                        GameData.ftue.chapter1.ShowNotifByKey("potionstutor1");
+                        break;
+                }
+
+                await Task.CompletedTask;
+            }
+
             protected override void EditTeamButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

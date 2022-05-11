@@ -70,11 +70,7 @@ namespace Overlewd
                         switch (inputData.ftueStageData.key)
                         {
                             case "sex4":
-                                UIManager.MakeNotification<DialogNotification>().
-                                    SetData(new DialogNotificationInData 
-                                    { 
-                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("memorytutor2")?.dialogId
-                                    }).RunShowNotificationProcess();
+                                GameGlobalStates.ftueChapterData.ShowNotifByKey("memorytutor2");
                                 break;
                         }
                         break;
@@ -95,18 +91,9 @@ namespace Overlewd
                                 await UniTask.Delay(1000);
                                 UIManager.RemoveUserInputLocker(new UserInputLocker(this));
 
-                                UIManager.MakeNotification<DialogNotification>().
-                                    SetData(new DialogNotificationInData
-                                    {
-                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("bufftutor2")?.dialogId
-                                    }).RunShowNotificationProcess();
+                                GameGlobalStates.ftueChapterData.ShowNotifByKey("bufftutor2");
                                 await UIManager.WaitHideNotifications();
-
-                                UIManager.MakeNotification<DialogNotification>().
-                                    SetData(new DialogNotificationInData
-                                    {
-                                        dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("ulviscreentutor")?.dialogId
-                                    }).RunShowNotificationProcess();
+                                GameGlobalStates.ftueChapterData.ShowNotifByKey("ulviscreentutor");
                                 break;
                         }
                         break;

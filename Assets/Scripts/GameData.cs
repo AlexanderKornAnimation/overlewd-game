@@ -160,14 +160,11 @@ namespace Overlewd
         }
 
         public static List<AdminBRO.Building> buildings { get; set; } = new List<AdminBRO.Building>();
-        public static AdminBRO.Building GetBuildingById(int id)
-        {
-            return buildings.Find(b => b.id == id);
-        }
-        public static AdminBRO.Building GetBuildingByKey(string key)
-        {
-            return buildings.Find(b => b.key == key);
-        }
+        public static AdminBRO.Building GetBuildingById(int id) => 
+            buildings.Find(b => b.id == id);
+        public static AdminBRO.Building GetBuildingByKey(string key) =>
+            buildings.Find(b => b.key == key);
+
         public static async Task BuildingBuildNow(int buildingId)
         {
             await AdminBRO.buildingBuildNowAsync(buildingId);

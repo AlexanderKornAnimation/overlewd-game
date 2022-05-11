@@ -194,27 +194,42 @@ namespace Overlewd
                 NameByKey(buildingData.key).text = buildingData.name;
 
                 if (!buildingData.isBuilt)
-                    AvailableByKey(buildingData.key).SetActive(false);
+                {
+                    if (buildingData.key != AdminBRO.Building.Key_Castle)
+                    {
+                        AvailableByKey(buildingData.key).SetActive(false);
+                    }
+                }
+
                 if (!buildingData.isMax)
                     MaxLevelByKey(buildingData.key).SetActive(false);
-            }
-
-            switch (GameData.ftue.activeChapter?.key)
-            {
-                case "chapter1":
-                    switch (GameData.ftueStats.lastEndedStageData?.key)
-                    {
-                        case "battle4":
-                            AvailableByKey(AdminBRO.Building.Key_Castle).SetActive(true);
-                            break;
-                    }
-                    break;
             }
         }
 
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task AfterShowAsync()
+        {
+            //ftue part
+            switch (GameData.ftueStats.lastEndedState)
+            {
+                case ("battle4", "chapter1"):
+                    var castleData = GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle);
+                    if (!castleData.isBuilt)
+                    {
+                        GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
+                    }
+                    break;
+
+                default:
+
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -239,6 +254,7 @@ namespace Overlewd
                 case UIEvent.Type.RestoreScreenFocusAfterPopup:
                     if (eventData.uiSenderType == typeof(BuildingPopup))
                     {
+
                     }
 
                     break;

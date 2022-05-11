@@ -30,7 +30,7 @@ namespace Overlewd
                 Customize();
             }
 
-            public async void ShowAsync()
+            public async Task ShowAsync()
             {
                 await UITools.FadeShowAsync(gameObject);
             }

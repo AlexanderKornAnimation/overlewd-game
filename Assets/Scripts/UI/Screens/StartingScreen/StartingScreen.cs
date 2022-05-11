@@ -50,7 +50,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
                 GameGlobalStates.ftueProgressMode = false;
-                GameGlobalStates.ftueChapterData = GameData.ftue.firstChapter;
+                GameGlobalStates.ftueChapterData = GameData.ftue.chapter1;
                 UIManager.ShowScreen<MapScreen>();
 
             });

@@ -840,6 +840,15 @@ namespace Overlewd
                 return notifications.Find(n => n.key == key);
             }
 
+            public void ShowNotifByKey(string key)
+            {
+                UIManager.MakeNotification<DialogNotification>().
+                    SetData(new DialogNotificationInData
+                    {
+                        dialogId = GetNotifByKey(key)?.dialogId
+                    }).RunShowNotificationProcess();
+            }
+
             [JsonProperty(Required = Required.Default)]
             public bool isComplete {
                 get {
@@ -873,7 +882,7 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter activeChapter {
                 get {
-                    var chapterData = GameData.ftue.firstChapter;
+                    var chapterData = GameData.ftue.chapter1;
                     while (chapterData.isComplete)
                     {
                         if (chapterData.nextChapterId.HasValue)
@@ -888,8 +897,13 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public FTUEChapter firstChapter => 
-                GameData.ftue.chapters.OrderBy(ch => ch.order).First();
+            public FTUEChapter chapter1 => GetChapterByKey("chapter1");
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter chapter2 => GetChapterByKey("chapter2");
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter chapter3 => GetChapterByKey("chapter3");
 
             public FTUEChapter GetChapterByKey(string key) =>
                 chapters.Find(ch => ch.key == key);
@@ -993,6 +1007,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isClosed => status == Status_Closed;
+
+            [JsonProperty(Required = Required.Default)]
+            public (string stage, string chapter) ftueState =>
+               (key, ftueChapterData?.key);
         }
 
         // /ftue-stages/{id}/start
