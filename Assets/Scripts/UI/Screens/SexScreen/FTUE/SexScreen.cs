@@ -32,23 +32,14 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "sex1":
-                                UIManager.MakeScreen<DialogScreen>().
-                                    SetData(new DialogScreenInData
-                                    {
-                                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("dialogue1")?.id
-                                    }).RunShowScreenProcess();
-                                break;
-
-                            default:
-                                UIManager.ShowScreen<MapScreen>();
-                                break;
-                        }
+                    case ("sex1", "chapter1"):
+                        UIManager.MakeScreen<DialogScreen>().
+                            SetData(new DialogScreenInData
+                            {
+                                ftueStageId = GameData.ftue.mapChapter.GetStageByKey("dialogue1")?.id
+                            }).RunShowScreenProcess();
                         break;
 
                     default:
@@ -64,15 +55,10 @@ namespace Overlewd
 
             private async void ShowStartNotifications()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "sex4":
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("memorytutor2");
-                                break;
-                        }
+                    case ("sex4", "chapter1"):
+                        GameData.ftue.mapChapter.ShowNotifByKey("memorytutor2");
                         break;
                 }
 
@@ -81,21 +67,16 @@ namespace Overlewd
 
             private async void ShowEndNotifictaions()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "sex2":
-                                UIManager.AddUserInputLocker(new UserInputLocker(this));
-                                await UniTask.Delay(1000);
-                                UIManager.RemoveUserInputLocker(new UserInputLocker(this));
+                    case ("sex2", "chapter1"):
+                        UIManager.AddUserInputLocker(new UserInputLocker(this));
+                        await UniTask.Delay(1000);
+                        UIManager.RemoveUserInputLocker(new UserInputLocker(this));
 
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("bufftutor2");
-                                await UIManager.WaitHideNotifications();
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("ulviscreentutor");
-                                break;
-                        }
+                        GameData.ftue.mapChapter.ShowNotifByKey("bufftutor2");
+                        await UIManager.WaitHideNotifications();
+                        GameData.ftue.mapChapter.ShowNotifByKey("ulviscreentutor");
                         break;
                 }
             }

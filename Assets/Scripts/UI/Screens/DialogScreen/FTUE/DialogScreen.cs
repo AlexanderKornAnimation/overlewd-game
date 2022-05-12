@@ -31,23 +31,14 @@ namespace Overlewd
 
             protected override void LeaveScreen()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "dialogue1":
-                                UIManager.MakeScreen<BattleScreen>().
-                                    SetData(new BattleScreenInData
-                                    {
-                                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("battle1")?.id
-                                    }).RunShowScreenProcess();
-                                break;
-
-                            default:
-                                UIManager.ShowScreen<MapScreen>();
-                                break;
-                        }
+                    case ("dialogue1", "chapter1"):
+                        UIManager.MakeScreen<BattleScreen>().
+                            SetData(new BattleScreenInData
+                            {
+                                ftueStageId = GameData.ftue.mapChapter.GetStageByKey("battle1")?.id
+                            }).RunShowScreenProcess();
                         break;
 
                     default:

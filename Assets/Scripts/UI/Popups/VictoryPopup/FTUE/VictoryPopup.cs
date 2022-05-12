@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Resharper disable All
-
 namespace Overlewd
 {
     namespace FTUE
@@ -15,15 +13,10 @@ namespace Overlewd
         {
             public override async Task BeforeShowMakeAsync()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "battle1":
-                                UITools.DisableButton(repeatButton);
-                                break;
-                        }
+                    case ("battle1", "chapter1"):
+                        UITools.DisableButton(repeatButton);
                         break;
                 }
 
@@ -34,19 +27,12 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                switch (GameData.ftue.activeChapter.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "battle4":
-                                UIManager.ShowScreen<CastleScreen>();
-                                break;
-                            default:
-                                UIManager.ShowScreen<MapScreen>();
-                                break;
-                        }
+                    case ("battle4", "chapter1"):
+                        UIManager.ShowScreen<CastleScreen>();
                         break;
+
                     default:
                         UIManager.ShowScreen<MapScreen>();
                         break;

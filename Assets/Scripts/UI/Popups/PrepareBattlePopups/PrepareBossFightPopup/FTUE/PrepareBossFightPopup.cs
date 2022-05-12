@@ -15,9 +15,9 @@ namespace Overlewd
                 battleData = inputData.ftueStageData.battleData;
                 Customize();
 
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
+                    case (_, "chapter1"):
                         UITools.DisableButton(editTeamButton);
                         break;
                 }

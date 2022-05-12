@@ -123,8 +123,6 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-
-
             //ftue part
             switch (GameData.ftueStats.lastEndedState)
             {

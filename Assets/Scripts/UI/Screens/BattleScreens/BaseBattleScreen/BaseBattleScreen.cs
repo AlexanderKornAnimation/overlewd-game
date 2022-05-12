@@ -107,7 +107,7 @@ namespace Overlewd
 			var inst = InstFromBattleData(stage?.battleData);
 			if (inst != null)
             {
-				inst.ftueChapterKey = GameGlobalStates.ftueChapterData?.key;
+				inst.ftueChapterKey = stage.ftueChapterData?.key;
 				inst.ftueStageKey = stage?.key;
 				return inst;
             }

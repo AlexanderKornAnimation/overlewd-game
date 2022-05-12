@@ -13,17 +13,16 @@ namespace Overlewd
         {
             public override async Task BeforeShowMakeAsync()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "battle2":
-                                UITools.DisableButton(magicGuildButton);
-                                UITools.DisableButton(inventoryButton);
-                                UITools.DisableButton(editTeamButton);
-                                break;
-                        }
+                    case ("battle2", "chapter1"):
+                        UITools.DisableButton(magicGuildButton);
+                        UITools.DisableButton(inventoryButton);
+                        UITools.DisableButton(editTeamButton);
+                        break;
+
+                    default:
+
                         break;
                 }
 
@@ -34,30 +33,20 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
 
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "battle2":
-                                UIManager.MakeScreen<SexScreen>().
-                                    SetData(new SexScreenInData
-                                    {
-                                        ftueStageId = GameGlobalStates.ftueChapterData.GetStageByKey("sex2")?.id
-                                    }).RunShowScreenProcess();
-                                break;
-
-                            default:
-                                UIManager.ShowScreen<MapScreen>();
-                                break;
-                        }
+                    case ("battle2", "chapter1"):
+                        UIManager.MakeScreen<SexScreen>().
+                            SetData(new SexScreenInData
+                            {
+                                ftueStageId = GameData.ftue.mapChapter.GetStageByKey("sex2")?.id
+                            }).RunShowScreenProcess();
                         break;
 
                     default:
                         UIManager.ShowScreen<MapScreen>();
                         break;
                 }
-                
             }
         }
     }

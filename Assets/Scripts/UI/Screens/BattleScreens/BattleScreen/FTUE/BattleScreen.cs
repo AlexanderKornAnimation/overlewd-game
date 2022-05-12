@@ -24,14 +24,9 @@ namespace Overlewd
 
             public override void BattleWin()
             {
-                var win = GameGlobalStates.ftueChapterData.key switch
+                var win = inputData.ftueStageData.ftueState switch
                 {
-                    "chapter1" => inputData.ftueStageData.key switch
-                    {
-                        "battle1" => true,
-                        "battle2" => false,
-                        _ => true
-                    },
+                    ("battle2", "chapter1") => false,
                     _ => true
                 };
                 
@@ -55,15 +50,10 @@ namespace Overlewd
 
             public override void BattleDefeat()
             {
-                var defeat = GameGlobalStates.ftueChapterData.key switch
+                var defeat = inputData.ftueStageData.ftueState switch
                 {
-                    "chapter1" => inputData.ftueStageData.key switch
-                    {
-                        "battle1" => false,
-                        "battle2" => true,
-                        _ => true
-                    },
-                    _ => true
+                    ("battle2", "chapter1") => true,
+                    _ => false
                 };
 
                 if (defeat)
@@ -97,15 +87,10 @@ namespace Overlewd
             //
             private async void ShowStartNotifications()
             {
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "battle1" :
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("battletutor1");
-                                break;
-                        }
+                    case ("battle1", "chapter1"):
+                        GameData.ftue.mapChapter.ShowNotifByKey("battletutor1");
                         break;
                 }
 
@@ -123,23 +108,18 @@ namespace Overlewd
                     await UniTask.NextFrame();
                 }
 
-                switch (GameGlobalStates.ftueChapterData.key)
+                switch (inputData.ftueStageData.ftueState)
                 {
-                    case "chapter1":
-                        switch (inputData.ftueStageData.key)
-                        {
-                            case "battle1":
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("battletutor2");
-                                break;
-                            case "battle2":
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("battletutor3");
-                                await UIManager.WaitHideNotifications();
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("bufftutor1");
-                                break;
-                            case "battle5":
-                                GameGlobalStates.ftueChapterData.ShowNotifByKey("castletutor");
-                                break;
-                        }
+                    case ("battle1", "chapter1"):
+                        GameData.ftue.mapChapter.ShowNotifByKey("battletutor2");
+                        break;
+                    case ("battle2", "chapter1"):
+                        GameData.ftue.mapChapter.ShowNotifByKey("battletutor3");
+                        await UIManager.WaitHideNotifications();
+                        GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
+                        break;
+                    case ("battle5", "chapter1"):
+                        GameData.ftue.mapChapter.ShowNotifByKey("castletutor");
                         break;
                 }
 

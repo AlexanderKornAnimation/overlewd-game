@@ -55,16 +55,12 @@ namespace Overlewd
                 base.ButtonClick();
                 var battleData = stageData.battleData;
 
-                var directToBattleScreen = GameGlobalStates.ftueChapterData.key switch
+                var directToBattleScreen = stageData.ftueState switch
                 {
-                    "chapter1" => stageData.key switch
-                    {
-                        "battle1" => true,
-                        "battle2" => true,
-                        "battle3" => true,
-                        "battle4" => true,
-                        _ => false
-                    },
+                    ("battle1", "chapter1") => true,
+                    ("battle2", "chapter1") => true,
+                    ("battle3", "chapter1") => true,
+                    ("battle4", "chapter1") => true,
                     _ => false
                 };
 

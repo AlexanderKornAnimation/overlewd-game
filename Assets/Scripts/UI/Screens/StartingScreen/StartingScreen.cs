@@ -20,28 +20,21 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                GameGlobalStates.ftueProgressMode = true;
-                GameGlobalStates.ftueChapterData = GameData.ftue.activeChapter;
+                GameData.ftue.progressMode = true;
+                GameData.ftue.activeChapter.SetAsMapChapter();
 
-                if (GameGlobalStates.ftueChapterData.key == "chapter1")
+                var firstSexStage = GameData.ftue.chapter1.GetStageByKey("sex1");
+                if (firstSexStage.isComplete)
                 {
-                    var firstSexStage = GameGlobalStates.ftueChapterData.GetStageByKey("sex1");
-                    if (!firstSexStage?.isComplete ?? false)
-                    {
-                        UIManager.MakeScreen<FTUE.SexScreen>().
-                            SetData(new SexScreenInData
-                            {
-                                ftueStageId = firstSexStage.id,
-                            }).RunShowScreenProcess();
-                    }
-                    else
-                    {
-                        UIManager.ShowScreen<MapScreen>();
-                    }
+                    UIManager.ShowScreen<MapScreen>();
                 }
                 else
                 {
-                    UIManager.ShowScreen<MapScreen>();
+                    UIManager.MakeScreen<FTUE.SexScreen>().
+                        SetData(new SexScreenInData
+                        {
+                            ftueStageId = firstSexStage.id,
+                        }).RunShowScreenProcess();
                 }
             });
 
@@ -49,10 +42,9 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                GameGlobalStates.ftueProgressMode = false;
-                GameGlobalStates.ftueChapterData = GameData.ftue.chapter1;
+                GameData.ftue.progressMode = false;
+                GameData.ftue.chapter1.SetAsMapChapter();
                 UIManager.ShowScreen<MapScreen>();
-
             });
 
             canvas.Find("Reset_FTUE").GetComponent<Button>().onClick.AddListener(() =>

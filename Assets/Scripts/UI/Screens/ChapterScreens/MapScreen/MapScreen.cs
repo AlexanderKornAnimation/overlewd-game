@@ -20,7 +20,6 @@ namespace Overlewd
         protected TextMeshProUGUI chapterButtonMarkers;
 
         protected GameObject chapterMap;
-        protected AdminBRO.FTUEChapter nextChapterData;
 
         private MapScreenInData inputData;
 
@@ -52,23 +51,23 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            if (GameGlobalStates.ftueChapterData == null)
+            if (GameData.ftue.mapChapter == null)
             {
-                GameGlobalStates.ftueChapterData = GameGlobalStates.ftueProgressMode ?
+                GameData.ftue.mapChapter = GameData.ftue.progressMode ?
                     GameData.ftue.activeChapter : GameData.ftue.chapter1;
             }
 
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
-            if (GameGlobalStates.ftueChapterData != null)
+            if (GameData.ftue.mapChapter != null)
             {
-                if (GameGlobalStates.ftueChapterData.chapterMapId.HasValue)
+                if (GameData.ftue.mapChapter.chapterMapId.HasValue)
                 {
-                    var mapData = GameData.GetChapterMapById(GameGlobalStates.ftueChapterData.chapterMapId.Value);
+                    var mapData = GameData.GetChapterMapById(GameData.ftue.mapChapter.chapterMapId.Value);
                     chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
 
-                    foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
+                    foreach (var stageId in GameData.ftue.mapChapter.stages)
                     {
                         var stageData = GameData.ftue.GetStageById(stageId);
 
@@ -78,7 +77,7 @@ namespace Overlewd
                             continue;
                         }
 
-                        var instantiateStageOnMap = GameGlobalStates.ftueProgressMode ? !stageData.isClosed : true;
+                        var instantiateStageOnMap = GameData.ftue.progressMode ? !stageData.isClosed : true;
                         if (instantiateStageOnMap)
                         {
                             if (stageData.dialogId.HasValue)
@@ -143,13 +142,11 @@ namespace Overlewd
                     }
                 }
 
-                if (GameGlobalStates.ftueChapterData.nextChapterId.HasValue)
+                if (GameData.ftue.mapChapter.nextChapterId.HasValue)
                 {
-                    nextChapterData = GameGlobalStates.ftueChapterData.nextChapterData;
-                    chapterButtonText.text = nextChapterData?.name;
-                    var showNextChapterButton = GameGlobalStates.ftueProgressMode ?
-                        GameGlobalStates.ftueChapterData.isComplete : true;
-                    chapterButton.gameObject.SetActive(showNextChapterButton);
+                    chapterButtonText.text = GameData.ftue.mapChapter.nextChapterData?.name;
+                    chapterButton.gameObject.SetActive(GameData.ftue.progressMode ?
+                        GameData.ftue.mapChapter.isComplete : true);
                 }
                 else
                 {
@@ -240,7 +237,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            GameGlobalStates.ftueChapterData = nextChapterData;
+            GameData.ftue.mapChapter.nextChapterData?.SetAsMapChapter();
             UIManager.ShowScreen<MapScreen>();
         }
     }

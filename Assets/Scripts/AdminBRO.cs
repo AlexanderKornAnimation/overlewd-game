@@ -849,6 +849,9 @@ namespace Overlewd
                     }).RunShowNotificationProcess();
             }
 
+            public FTUEChapter SetAsMapChapter() =>
+                GameData.ftue.mapChapter = this;
+
             [JsonProperty(Required = Required.Default)]
             public bool isComplete {
                 get {
@@ -895,6 +898,14 @@ namespace Overlewd
                     return chapterData;
                 }
             }
+
+            private static FTUEChapter _mapChapter;
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter mapChapter { get { return _mapChapter; } set { _mapChapter = value; } }
+
+            private bool _progressMode;
+            [JsonProperty(Required = Required.Default)]
+            public bool progressMode { get { return _progressMode; } set { _progressMode = value; } }
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter chapter1 => GetChapterByKey("chapter1");
