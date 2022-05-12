@@ -945,7 +945,7 @@ namespace Overlewd
                 lastEndedStage.HasValue ? GameData.ftue.GetStageById(lastEndedStage.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
-            public (string stage, string chapter) lastEndedState =>
+            public (string stageKey, string chapterKey) lastEndedState =>
                 (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key);
 
             public bool IsLastEnededStage(string stageKey, string chapterKey) =>
@@ -1009,7 +1009,7 @@ namespace Overlewd
             public bool isClosed => status == Status_Closed;
 
             [JsonProperty(Required = Required.Default)]
-            public (string stage, string chapter) ftueState =>
+            public (string stageKey, string chapterKey) ftueState =>
                (key, ftueChapterData?.key);
         }
 

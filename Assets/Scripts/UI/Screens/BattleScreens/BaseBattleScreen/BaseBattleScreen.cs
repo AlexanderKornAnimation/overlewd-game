@@ -77,6 +77,11 @@ namespace Overlewd
 			
         }
 
+		public virtual void OnBattleNotification(string notifKey)
+		{
+
+		}
+
 		public virtual BattleManagerInData GetBattleData()
         {
 			return null;
