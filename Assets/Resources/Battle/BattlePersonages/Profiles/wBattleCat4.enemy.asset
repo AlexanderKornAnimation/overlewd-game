@@ -17,21 +17,28 @@ MonoBehaviour:
   ico: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
   battlePortrait: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
   bigPortrait: {fileID: 21300000, guid: e5ad9dad72c3efd439a767fa359a2f98, type: 3}
-  spell_1: {fileID: 0}
-  spell_2: {fileID: 0}
-  spell_3: {fileID: 0}
-  attackVFX: []
   isEnemy: 1
   isBoss: 0
   isOverlord: 0
   charClass: 0
-  idleScale: 0.37
-  battleScale: 0.61
+  idleScale: 0.95
+  battleScale: 1.4
   yOffset: 0
-  initiative: 50
-  attack: 10
-  defence: 5
+  speed: 10
+  power: 10
+  constitution: 10
   agility: 5
+  accuracity: 10
+  dodge: 5
+  critRate: 10
+  damage: 10
+  maxHp: 50
+  maxMp: 100
+  accuracityScale: 10
+  dodgeScale: 1
+  damageScale: 8
+  critRateScale: 1
+  hpScale: 10
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
@@ -42,22 +49,14 @@ MonoBehaviour:
   xp: 0
   xpToNextlUp: 1000
   hp: 50
-  maxHp: 50
   mp: 100
-  maxMp: 100
   isDead: 0
-  folder: Battle/BattlePersonages/BattleCat2/pers/
-  ani_idle_path: idle0_SkeletonData
-  ani_pAttack_1_path: prepair_SkeletonData
-  ani_pAttack_2_path: prepair2_SkeletonData
-  ani_attack_1_path: attack_SkeletonData
-  ani_attack_2_path: attack2_SkeletonData
-  ani_defence_path: defence_SkeletonData
-  ani_difeat_path: difeat_SkeletonData
-  ani_idle_name: Idle
-  ani_pAttack_1_name: prepair
+  idle_SkeletonData_Path: Battle/BattlePersonages/Witch/pers/Witch
+  characterPrefab: {fileID: 143447158568657012, guid: 9b91150b04c25c74d8cbdceff17503ca, type: 3}
+  ani_idle_name: idle
+  ani_pAttack_1_name: prepair1
   ani_pAttack_2_name: prepair2
-  ani_attack_1_name: attack
+  ani_attack_1_name: attack1
   ani_attack_2_name: attack2
   ani_defence_name: defence
   ani_defeat_name: difeat

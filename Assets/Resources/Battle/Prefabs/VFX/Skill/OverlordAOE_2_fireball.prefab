@@ -48,9 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa0bae11f1cc3c4eb87476c3a71efef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Battle/BattlePersonages/Overlord/fx/fireball/idle_SkeletonData
+  path: Battle/BattlePersonages/Overlord/fx/fireball/Fireball
   animationName: action
   loop: 0
   delay: 0
   duration: 7.333
-  spineWiget: {fileID: 0}
+  scale: 1
+  vfxPrefab: {fileID: 4699195263182318232, guid: 1861b6d19bd82f34a81a4da2fad2acd1, type: 3}

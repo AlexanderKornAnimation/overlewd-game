@@ -24,10 +24,21 @@ MonoBehaviour:
   idleScale: 0.9
   battleScale: 1.31
   yOffset: 0
-  initiative: 999
-  attack: 25
-  defence: 10
+  speed: 195
+  power: 10
+  constitution: 10
   agility: 5
+  accuracity: 10
+  dodge: 5
+  critRate: 10
+  damage: 10
+  maxHp: 250
+  maxMp: 90
+  accuracityScale: 10
+  dodgeScale: 1
+  damageScale: 8
+  critRateScale: 1
+  hpScale: 10
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 3b5f8a6341cf4eb4189c634860a36c8e, type: 2}
@@ -39,18 +50,10 @@ MonoBehaviour:
   xp: 0
   xpToNextlUp: 1000
   hp: 250
-  maxHp: 250
   mp: 45
-  maxMp: 90
   isDead: 0
-  folder: Battle/BattlePersonages/Overlord/pers/
-  ani_idle_path: idle_SkeletonData
-  ani_pAttack_1_path: 
-  ani_pAttack_2_path: 
-  ani_attack_1_path: 
-  ani_attack_2_path: 
-  ani_defence_path: 
-  ani_difeat_path: 
+  idle_SkeletonData_Path: Battle/BattlePersonages/Overlord/pers/Overlord
+  characterPrefab: {fileID: 5672936884837085208, guid: 07374bbd9f9ff0a458b28c33c7ff9a88, type: 3}
   ani_idle_name: idle
   ani_pAttack_1_name: prepair1
   ani_pAttack_2_name: prepair2

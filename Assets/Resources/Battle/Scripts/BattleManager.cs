@@ -1,8 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
 namespace Overlewd
 {
@@ -21,8 +21,8 @@ namespace Overlewd
         [HideInInspector] public List<CharController> targetsForEnemy;
         [HideInInspector] public List<GameObject> QueueElements;
         [SerializeField] private float portraitScale = 1.5f;
-        public CharController ccOnSelect;
-        public CharController ccOnClick;
+        [Tooltip("selected as current turn")] public CharController ccOnSelect;
+        [Tooltip("selected as target")] public CharController ccOnClick = null;
         public Animator ani;
 
         public GameObject portraitPrefab; //attach to BM in inspector; "content" is ui spawn point
@@ -32,8 +32,8 @@ namespace Overlewd
         public GameObject PlayerStats;
         public Transform PlayerStatsContent;
 
-        public SkillController[] skillControllers;
-        public SkillController potion_0, potion_1;
+        public ButtonSkillController[] skillControllers;
+        public ButtonSkillController potion_0, potion_1;
         public GameObject healVFX;
 
         private int enemyNum = 0, enemyIsDead = 0, charNum = 0, charIsDead = 0;
@@ -45,18 +45,14 @@ namespace Overlewd
         public delegate void Unselect();
         public Unselect unselect;
 
-        private void Start() => Initialize();
-
-        private void Initialize()
+        private void Start()
         {
             battleScene = FindObjectOfType<BaseBattleScreen>();
+            for (int i = 0; i < 3; i++)
+                skillControllers[i]?.button?.onClick.AddListener(delegate { ButtonClick(i); });
 
-            if (skillControllers[0]) skillControllers[0].button.onClick.AddListener(Button1);
-            if (skillControllers[1]) skillControllers[1].button.onClick.AddListener(Button2);
-            if (skillControllers[2]) skillControllers[2].button.onClick.AddListener(Button3);
-
-            if (potion_0) potion_0.button.onClick.AddListener(UseMPPotion);
-            if (potion_1) potion_1.button.onClick.AddListener(UseHPPotion);
+            potion_0?.button.onClick.AddListener(UseMPPotion);
+            potion_1?.button.onClick.AddListener(UseHPPotion);
 
             if (QueueUIContent == null)
                 QueueUIContent = transform.Find("BattleUICanvas/QueueUI/Content");
@@ -117,99 +113,88 @@ namespace Overlewd
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
             if (charControllerList[0].isEnemy)
                 battleState = BattleState.ENEMY;
-            else 
+            else
             {
                 battleState = BattleState.PLAYER;
             }
             ccOnSelect = charControllerList[step];
-            SetSkillCtrl(ccOnSelect);
             StartCoroutine(LateInit());
         }
 
         IEnumerator LateInit()
         {
             yield return new WaitForSeconds(0.01f);
+            SetSkillCtrl(ccOnSelect);
             charControllerList[step].Select();
             WinOrLose(wannaWin);
         }
 
+        private void ButtonClick(int id)
+        {
+            unselect?.Invoke();
+            skillControllers[id].Select();
+            bool AOE = ccOnClick.skill[id].attackType == Skill.AttackType.AOE;
+
+            if (battleState == BattleState.PLAYER)
+            {
+                ani.SetTrigger("Player");
+                GameObject vfx = ccOnClick.skill[id].vfxOnTarget;
+                if (AOE)
+                {
+                    ccOnClick = null;
+                    ccOnSelect.Attack(id, ccOnClick);
+                    foreach (var cc in charControllerList)
+                        if (cc.isEnemy && !cc.isDead)
+                        {
+                            cc.Defence(ccOnSelect, vfx);
+                            cc.UnHiglight();
+                        }
+                }
+                else
+                {
+                    ccOnSelect.Attack(id, ccOnClick);
+                    ccOnClick.Defence(ccOnSelect, vfx);
+                }
+                battleState = BattleState.ANIMATION;
+                BattleStart();
+            }
+        }
+
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Z)) Button1();
-            if (Input.GetKeyDown(KeyCode.X)) Button2();
-            if (Input.GetKeyDown(KeyCode.C)) Button3();
-            if (Input.GetKeyDown(KeyCode.W)) WinOrLose(true);
-            if (Input.GetKeyDown(KeyCode.L)) WinOrLose(false);
+            if (Input.GetKeyDown(KeyCode.Z)) ButtonClick(0);
+            if (Input.GetKeyDown(KeyCode.X)) ButtonClick(1);
+            if (Input.GetKeyDown(KeyCode.C)) ButtonClick(2);
             if (Input.GetKeyDown(KeyCode.R))
                 foreach (var cc in charControllerList)
-                    if (cc.isEnemy == true)
+                    if (cc.isEnemy == true && !cc.isDead)
                     {
                         cc.hp = cc.maxHp;
                         cc.UpdateUI();
                     }
         }
 
-        public void Button1()
-        {
-            UnselectButtons();
-            skillControllers[0].Select();
-            if (ccOnClick != null && battleState == BattleState.PLAYER) //|| onClick.isEnemy == false
-            {
-                ani.SetTrigger("Player");
-                ccOnSelect.Attack(0, ccOnClick);
-                ccOnClick.Defence(ccOnSelect);
-                battleState = BattleState.ANIMATION;
-                BattleStart();
-            }
-        }
-        public void Button2()
-        {
-            UnselectButtons();
-            skillControllers[1].Select();
-            if (battleState == BattleState.PLAYER)
-            {
-                ani.SetTrigger("Player");
-                ccOnSelect.Attack(1, ccOnClick);
-                foreach (var cc in charControllerList)
-                    if (cc.isEnemy && !cc.isDead)
-                        cc.Defence(ccOnSelect);
-                battleState = BattleState.ANIMATION;
-                BattleStart();
-            }
-        }
-        public void Button3()
-        {
-            UnselectButtons();
-            skillControllers[2].Select();
-            if (battleState == BattleState.PLAYER && ccOnSelect.isOverlord)
-            {
-                ani.SetTrigger("Player");
-                ccOnSelect.Attack(2, ccOnClick);
-                foreach (var cc in charControllerList)
-                    if (cc.isEnemy && !cc.isDead)
-                        cc.Defence(ccOnSelect);
-                battleState = BattleState.ANIMATION;
-                BattleStart();
-            }
-        }
         IEnumerator EnemyAttack1()
         {
             yield return new WaitForSeconds(0.5f);
             var ct = targetsForEnemy.Count;
             ccOnClick = targetsForEnemy[Random.Range(0, ct)];
-            while (ccOnClick.isDead)
+            while (ccOnClick.isDead) //Death Loop Bug?
                 ccOnClick = targetsForEnemy[Random.Range(0, ct)];
             yield return new WaitForSeconds(0.5f);
 
             ccOnClick.CharPortraitSet(); //Show target stats
             ani.SetTrigger("Enemy");
-            ccOnSelect.Attack(Random.Range(0, 2), ccOnClick);
-            ccOnClick.Defence(ccOnSelect);
+            int attackSkill = Random.Range(0, 2);
+            ccOnSelect.Attack(attackSkill, ccOnClick);
+            GameObject vfx = ccOnSelect.skill[attackSkill].vfxOnTarget;
+            ccOnClick.Defence(ccOnSelect, vfx);
             battleState = BattleState.ANIMATION;
         }
         public void UseMPPotion()
         {
-            if (ccOnClick.isOverlord) {
+            if (ccOnClick.isOverlord)
+            {
                 ccOnClick.HealMP(25);
                 potion_0.InstVFX(ccOnClick.persPos);
                 potion_0.amount--;
@@ -256,12 +241,12 @@ namespace Overlewd
             ccOnClick = null;
         }
 
-        public void StateUpdate(bool isEnemy, CharController invoker) //call when any character is dead
+        public void StateUpdate(CharController invoker) //call when any character is dead
         {
             var index = charControllerList.FindIndex(x => x == invoker);
-            QueueElements[index].SetActive(false);
+            QueueElements[index].SetActive(false); //disable queue portrait
 
-            if (isEnemy) enemyIsDead++; else charIsDead++;
+            if (invoker.isEnemy) enemyIsDead++; else charIsDead++;
             if (enemyNum == enemyIsDead)
             {
                 //next wave function or
@@ -310,9 +295,7 @@ namespace Overlewd
         private void SetSkillCtrl(CharController character)
         {
             for (int i = 0; i < ccOnSelect.skill.Length; i++)
-            { //add selected character skill on button controller
-                skillControllers[i].ReplaceSkill(character.skill[i]);
-            }
+                skillControllers[i].ReplaceSkill(character.skill[i]); //add selected character skill on button controller
         }
 
         private void BattleStart()
@@ -329,9 +312,9 @@ namespace Overlewd
 
         private int SortByInitiative(Character a, Character b)
         {
-            if (a.initiative < b.initiative)
+            if (a.speed < b.speed)
                 return 1;
-            else if (a.initiative > b.initiative)
+            else if (a.speed > b.speed)
                 return -1;
             else if (a.isEnemy)
                 return -1;

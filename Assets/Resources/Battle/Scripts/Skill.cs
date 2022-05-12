@@ -12,9 +12,14 @@ namespace Overlewd
         public string discription;
         public Sprite battleIco;
         public GameObject vfx = null;
+        public GameObject vfxOnTarget = null;
         public float vfxDuration = 0f;
         public AudioClip sfx;
         public bool select;
+
+        public string
+            attackAnimationName = "attack1",
+            prepairAnimationName = "prepair1";
 
         public int power; // damage/healpower/buff/curse etc...
         public int manaCost = 0;

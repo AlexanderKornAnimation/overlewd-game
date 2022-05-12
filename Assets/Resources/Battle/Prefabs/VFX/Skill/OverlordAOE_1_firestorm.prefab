@@ -48,9 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa0bae11f1cc3c4eb87476c3a71efef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Battle/BattlePersonages/Overlord/fx/firestorm/ilde1_SkeletonData
+  path: Battle/BattlePersonages/Overlord/fx/firestorm/FireStorm
   animationName: action
   loop: 0
   delay: 0
   duration: 4.667
-  spineWiget: {fileID: 0}
+  scale: 1
+  vfxPrefab: {fileID: 8923884154616505886, guid: 328433e0fbcf98e49b375c8914e3c630, type: 3}

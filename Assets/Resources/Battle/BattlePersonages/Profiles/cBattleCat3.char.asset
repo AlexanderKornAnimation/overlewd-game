@@ -17,21 +17,28 @@ MonoBehaviour:
   ico: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}
   battlePortrait: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}
   bigPortrait: {fileID: 21300000, guid: 07470717f34a17b4f80abbb9c3b971e6, type: 3}
-  spell_1: {fileID: 0}
-  spell_2: {fileID: 0}
-  spell_3: {fileID: 0}
-  attackVFX: []
   isEnemy: 0
   isBoss: 0
   isOverlord: 0
   charClass: 1
-  idleScale: 0.26
-  battleScale: 0.45
-  yOffset: 1000
-  initiative: 10
-  attack: 10
-  defence: 5
+  idleScale: 1
+  battleScale: 1.5
+  yOffset: 0
+  speed: 15
+  power: 10
+  constitution: 10
   agility: 5
+  accuracity: 10
+  dodge: 5
+  critRate: 10
+  damage: 10
+  maxHp: 200
+  maxMp: 100
+  accuracityScale: 10
+  dodgeScale: 1
+  damageScale: 8
+  critRateScale: 1
+  hpScale: 10
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
@@ -42,18 +49,10 @@ MonoBehaviour:
   xp: 0
   xpToNextlUp: 1000
   hp: 100
-  maxHp: 200
   mp: 100
-  maxMp: 100
   isDead: 0
-  folder: Battle/BattlePersonages/BattleCat1/pers/
-  ani_idle_path: idle0_SkeletonData
-  ani_pAttack_1_path: prepair1_SkeletonData
-  ani_pAttack_2_path: prepair2_SkeletonData
-  ani_attack_1_path: attack1_SkeletonData
-  ani_attack_2_path: attack2_SkeletonData
-  ani_defence_path: defence_SkeletonData
-  ani_difeat_path: difeat_SkeletonData
+  idle_SkeletonData_Path: Battle/BattlePersonages/Catgirl/pers/CatGirl
+  characterPrefab: {fileID: 2413659306979228018, guid: ec76d81e97698fb46b8ef638275c34f2, type: 3}
   ani_idle_name: idle
   ani_pAttack_1_name: prepair1
   ani_pAttack_2_name: prepair2

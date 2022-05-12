@@ -16,33 +16,48 @@ namespace Overlewd
         public bool isBoss = false;
         public bool isOverlord = false;
 
-        private enum CharClass { ASSASIN, TANK, WARRIOR, SUPPORT }
+        private enum CharClass { ASSASIN, TANK, BRUISER, SUPPORT, CASTER }
         [SerializeField] private CharClass charClass;
 
-        public float idleScale = 0.5f, battleScale = 0.7f;
+        public float idleScale = 1f, battleScale = 1f;
         public float yOffset = 0f;
 
-        public int initiative = 5, attack = 10, defence = 5, agility = 5;
+        public int
+            speed = 10,
+            power = 10,
+            constitution = 10,
+            agility = 10;
+
+        public float
+            accuracity = 10,    //+1% from agility
+            dodge = 10,         //+1% from agility
+            critRate = 10,      //1% from speed
+            damage = 10;        //+8 from power
+        public int
+            maxHp = 250,        //25 from const;
+            maxMp = 125;        //HP/2;
+
+        //default scales change from character class
+        public float
+            accuracityScale = 10,
+            dodgeScale = 1,
+            damageScale = 8,
+            critRateScale = 1,
+            hpScale = 10;
+
         public Skill[] skill;
         public Item itemSlot1 = null, itemSlot2 = null;
 
         public int level = 1, maxLevel = 10;
         public int xp = 0, xpToNextlUp = 1000;
-        public int hp = 25, maxHp = 25;
-        public int mp = 100, maxMp = 100;
+        public int hp = 25;
+        public int mp = 100;
 
         public bool isDead = false;
 
-        public string folder = "";
-
         public string
-            ani_idle_path = "idle0_SkeletonData",
-            ani_pAttack_1_path = "prepair1_SkeletonData",
-            ani_pAttack_2_path = "prepair2_SkeletonData",
-            ani_attack_1_path = "attack1_SkeletonData",
-            ani_attack_2_path = "attack2_SkeletonData",
-            ani_defence_path = "defence_SkeletonData",
-            ani_difeat_path = "difeat_SkeletonData";
+            idle_Prefab_Path = "Battle/BattlePersonages/idle_SkeletonData";
+        public GameObject characterPrefab = null;
         public string
             ani_idle_name = "idle",
             ani_pAttack_1_name = "prepair1",
@@ -52,35 +67,67 @@ namespace Overlewd
             ani_defence_name = "defence",
             ani_defeat_name = "defeat";
 
-        public void ApplyBonus()
+        public void ApplyStats()
         {
             switch (charClass)
             {
                 case CharClass.ASSASIN:
-                    agility += Mathf.RoundToInt(level * 2);
+                    accuracityScale = 10;
+                    dodgeScale = 1;
+                    damageScale = 8;
+                    critRateScale = 1;
+                    hpScale = 10;
                     break;
-                case CharClass.WARRIOR:
-                    attack += Mathf.RoundToInt(level * 2);
+                case CharClass.BRUISER:
+                    accuracityScale = 10;
+                    dodgeScale = 1;
+                    damageScale = 8;
+                    critRateScale = 1;
+                    hpScale = 10;
                     break;
                 case CharClass.TANK:
-                    defence += Mathf.RoundToInt(level * 2);
+                    accuracityScale = 10;
+                    dodgeScale = 1;
+                    damageScale = 8;
+                    critRateScale = 1;
+                    hpScale = 10;
                     break;
                 case CharClass.SUPPORT:
-                    hp += Mathf.RoundToInt(level * 5);
-                    defence += Mathf.RoundToInt(level * 1.5f);
+                    accuracityScale = 10;
+                    dodgeScale = 1;
+                    damageScale = 8;
+                    critRateScale = 1;
+                    hpScale = 10;
+                    break;
+                case CharClass.CASTER:
+                    accuracityScale = 10;
+                    dodgeScale = 1;
+                    damageScale = 8;
+                    critRateScale = 1;
+                    hpScale = 10;
                     break;
             }
 
+            accuracity = Mathf.RoundToInt(agility * level * damageScale);
+            critRate = Mathf.RoundToInt(agility * level * damageScale);
+            dodge = Mathf.RoundToInt(agility * level * damageScale);
+            damage = Mathf.RoundToInt(power * level * damageScale);
+
+            maxHp = Mathf.RoundToInt(constitution * level * hpScale);
+            maxMp = maxHp / 2;
+
             if (itemSlot1 != null)
             {
-                attack += itemSlot1.attack;
-                defence += itemSlot1.defence;
+                damage += itemSlot1.attack;
+                constitution += itemSlot1.defence;
             }
             if (itemSlot2 != null)
             {
-                attack += itemSlot2.attack;
-                defence += itemSlot2.defence;
+                damage += itemSlot2.attack;
+                constitution += itemSlot2.defence;
             }
+
+
         }
 
         public void Save(int saveHP, int saveMP)
