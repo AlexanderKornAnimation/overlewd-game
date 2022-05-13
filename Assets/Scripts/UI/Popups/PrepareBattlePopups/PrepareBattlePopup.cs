@@ -13,28 +13,28 @@ namespace Overlewd
 {
     public class PrepareBattlePopup : BasePopup
     {
-        protected const int RewardsCount = 3;
+        private const int RewardsCount = 3;
 
-        protected Button backButton;
-        protected Button battleButton;
-        protected Button editTeamButton;
-        protected Button buffButton;
-        protected RectTransform buffRect;
-        protected Transform enemyContent;
-        protected Transform allyContent;
+        private Button backButton;
+        private Button battleButton;
+        private Button editTeamButton;
+        private Button buffButton;
+        private RectTransform buffRect;
+        private Transform enemyContent;
+        private Transform allyContent;
 
-        protected Image firstTimeReward;
+        private Image firstTimeReward;
 
-        protected Image[] rewards = new Image[RewardsCount];
-        protected TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
-        protected TextMeshProUGUI firstTimeRewardCount;
+        private Image[] rewards = new Image[RewardsCount];
+        private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
+        private TextMeshProUGUI firstTimeRewardCount;
 
-        protected TextMeshProUGUI markers;
-        protected AdminBRO.Battle battleData;
+        private TextMeshProUGUI markers;
+        private AdminBRO.Battle battleData;
 
-        protected PrepareBattlePopupInData inputData;
+        private PrepareBattlePopupInData inputData;
 
-        private void Awake()
+        void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab(
@@ -83,7 +83,7 @@ namespace Overlewd
             }
         }
 
-        protected void Customize()
+        private void Customize()
         {
             foreach (var phase in battleData.battlePhases)
             {
@@ -130,8 +130,15 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            battleData = inputData.eventStageData.battleData;
+            battleData = inputData.eventStageData.battleData ?? inputData.ftueStageData.battleData;
             Customize();
+
+            switch (inputData.ftueStageData.ftueState)
+            {
+                case (_, "chapter1"):
+                    UITools.DisableButton(editTeamButton);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -142,34 +149,36 @@ namespace Overlewd
             return this;
         }
 
-        protected virtual void BuffButtonClick()
+        private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
-        protected virtual void EditTeamButtonClick()
+        private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData
-                { 
+                {
+                    ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
         }
 
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HidePopup();
         }
 
-        protected virtual void BattleButtonClick()
+        private void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
             UIManager.MakeScreen<BattleScreen>().
                 SetData(new BattleScreenInData
                 {
+                    ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
         }

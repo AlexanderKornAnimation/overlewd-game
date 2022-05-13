@@ -178,7 +178,7 @@ namespace Overlewd
             {
                 if (battleData.isTypeBattle)
                 {
-                    UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                    UIManager.MakePopup<PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
                         {
                             ftueStageId = inputData.ftueStageId
@@ -186,7 +186,7 @@ namespace Overlewd
                 }
                 else if (battleData.isTypeBoss)
                 {
-                    UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                    UIManager.MakePopup<PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
                         {
                             ftueStageId = inputData.ftueStageId

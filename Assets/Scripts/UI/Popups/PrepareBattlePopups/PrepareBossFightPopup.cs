@@ -11,26 +11,26 @@ namespace Overlewd
 {
     public class PrepareBossFightPopup : BasePopup
     {
-        protected const int RewardsCount = 3;
+        private const int RewardsCount = 3;
 
-        protected Button backButton;
-        protected Button battleButton;
-        protected Button editTeamButton;
-        protected Button buffButton;
-        protected RectTransform buffRect;
-        protected Transform bossPos;
-        protected Transform allyContent;
+        private Button backButton;
+        private Button battleButton;
+        private Button editTeamButton;
+        private Button buffButton;
+        private RectTransform buffRect;
+        private Transform bossPos;
+        private Transform allyContent;
 
-        protected Image firstTimeReward;
-        protected Image[] rewards = new Image[RewardsCount];
-        protected TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
+        private Image firstTimeReward;
+        private Image[] rewards = new Image[RewardsCount];
+        private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
 
-        protected TextMeshProUGUI firstTimeRewardCount;
+        private TextMeshProUGUI firstTimeRewardCount;
 
-        protected TextMeshProUGUI markers;
-        protected AdminBRO.Battle battleData;
+        private TextMeshProUGUI markers;
+        private AdminBRO.Battle battleData;
 
-        protected PrepareBossFightPopupInData inputData;
+        private PrepareBossFightPopupInData inputData;
 
         void Awake()
         {
@@ -80,7 +80,7 @@ namespace Overlewd
             }
         }
 
-        protected void Customize()
+        private void Customize()
         {
             foreach (var phase in battleData.battlePhases)
             {
@@ -133,40 +133,49 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            battleData = inputData.eventStageData.battleData;
+            battleData = inputData.eventStageData.battleData ?? inputData.ftueStageData.battleData;
             Customize();
+
+            switch (inputData.ftueStageData.ftueState)
+            {
+                case (_, "chapter1"):
+                    UITools.DisableButton(editTeamButton);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
 
-        protected virtual void EditTeamButtonClick()
+        private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
-                { 
+                {
+                    ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
         }
 
-        protected virtual void BuffButtonClick()
+        private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HidePopup();
         }
 
-        protected virtual void BattleButtonClick()
+        private void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
             UIManager.MakeScreen<BossFightScreen>().
                 SetData(new BossFightScreenInData
                 {
+                    ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
         }
@@ -184,6 +193,14 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             await UITools.TopShowAsync(buffRect, 0.2f);
+
+            //ftue part
+            switch (GameData.ftueStats.lastEndedState)
+            {
+                case ("battle4", "chapter1"):
+                    GameData.ftue.chapter1.ShowNotifByKey("potionstutor1");
+                    break;
+            }
         }
 
         public override async Task BeforeHideAsync()

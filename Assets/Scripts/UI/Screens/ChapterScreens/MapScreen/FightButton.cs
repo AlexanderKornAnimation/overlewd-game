@@ -70,17 +70,17 @@ namespace Overlewd
                     {
                         UIManager.MakeScreen<FTUE.BattleScreen>().
                             SetData(new BattleScreenInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowScreenProcess();
+                            {
+                                ftueStageId = stageId
+                            }).RunShowScreenProcess();
                     }
                     else
                     {
-                        UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                        UIManager.MakePopup<PrepareBattlePopup>().
                             SetData(new PrepareBattlePopupInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowPopupProcess();
+                            {
+                                ftueStageId = stageId
+                            }).RunShowPopupProcess();
                     }
                 }
                 else if (battleData.isTypeBoss)
@@ -89,17 +89,17 @@ namespace Overlewd
                     {
                         UIManager.MakeScreen<FTUE.BossFightScreen>().
                             SetData(new BossFightScreenInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowScreenProcess();
+                            {
+                                ftueStageId = stageId
+                            }).RunShowScreenProcess();
                     }
                     else
                     {
-                        UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                        UIManager.MakePopup<PrepareBossFightPopup>().
                             SetData(new PrepareBossFightPopupInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowPopupProcess();
+                            {
+                                ftueStageId = stageId
+                            }).RunShowPopupProcess();
                     }
                 }
             }
