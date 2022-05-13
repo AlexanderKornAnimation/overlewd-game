@@ -390,8 +390,8 @@ namespace Overlewd
         // /event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
-            var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/start";
+            var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
@@ -399,15 +399,28 @@ namespace Overlewd
         }
 
         // /event-stages/{id}/end
-        public static async Task<EventStageItem> eventStageEndAsync(int eventStageId)
+        public static async Task<EventStageItem> eventStageEndAsync(int eventStageId, EventStageEndData data = null)
         {
-            var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/end";
+            var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
             }
         }
+
+        public class EventStageEndData
+        {
+            bool win = true;
+
+            public WWWForm ToWWWForm()
+            {
+                var form = new WWWForm();
+                form.AddField("result", win ? "win" : "lose");
+                return form;
+            }
+        }
+
 
         [Serializable]
         public class EventStageItem
@@ -1036,13 +1049,25 @@ namespace Overlewd
         }
 
         // /ftue-stages/{id}/end
-        public static async Task ftueStageEndAsync(int stageId)
+        public static async Task ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
         {
-            var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/end";
+            var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
+            }
+        }
+
+        public class FTUEStageEndData
+        {
+            bool win = true;
+
+            public WWWForm ToWWWForm()
+            {
+                var form = new WWWForm();
+                form.AddField("result", win ? "win" : "lose");
+                return form;
             }
         }
 

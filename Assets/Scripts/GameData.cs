@@ -100,9 +100,9 @@ namespace Overlewd
             var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
             eventStages = await AdminBRO.eventStagesAsync();
         }
-        public static async Task EventStageEndAsync(int stageId)
+        public static async Task EventStageEndAsync(int stageId, AdminBRO.EventStageEndData data = null)
         {
-            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId);
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
             eventStages = await AdminBRO.eventStagesAsync();
         }
 
@@ -128,9 +128,9 @@ namespace Overlewd
             ftueStages = await AdminBRO.ftueStagesAsync();
             ftueStats = await AdminBRO.ftueStatsAsync();
         }
-        public static async Task FTUEEndStage(int stageId)
+        public static async Task FTUEEndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
         {
-            await AdminBRO.ftueStageEndAsync(stageId);
+            await AdminBRO.ftueStageEndAsync(stageId, data);
             ftueStages = await AdminBRO.ftueStagesAsync();
             ftueStats = await AdminBRO.ftueStatsAsync();
         }
