@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,14 +9,14 @@ namespace Overlewd
 {
     public class VictoryPopup : BasePopup
     {
-        protected Button nextButton;
-        protected Button repeatButton;
+        private Button nextButton;
+        private Button repeatButton;
 
-        protected Image reward1;
-        protected Image reward2;
-        protected Image reward3;
+        private Image reward1;
+        private Image reward2;
+        private Image reward3;
 
-        protected VictoryPopupInData inputData;
+        private VictoryPopupInData inputData;
 
         void Awake()
         {
@@ -38,6 +39,18 @@ namespace Overlewd
             reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
         }
 
+        public override async Task BeforeShowMakeAsync()
+        {
+            switch (GameData.ftueStats.lastEndedState)
+            {
+                case ("battle1", "chapter1"):
+                    UITools.DisableButton(repeatButton);
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+        
         public VictoryPopup SetData(VictoryPopupInData data)
         {
             inputData = data;
@@ -50,16 +63,37 @@ namespace Overlewd
             missClick.missClickEnabled = false;
         }
 
-        protected virtual void NextButtonClick()
+        private void NextButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<EventMapScreen>();
+
+            if (inputData.ftueStageId.HasValue)
+            {
+                switch (inputData.ftueStageData.ftueState)
+                {
+                    case ("battle4", "chapter1"):
+                        UIManager.ShowScreen<CastleScreen>();
+                        break;
+                    default:
+                        UIManager.ShowScreen<MapScreen>();
+                        break;
+                }
+            }
+            else
+            {
+                UIManager.ShowScreen<EventMapScreen>();
+            }
         }
 
-        protected virtual void RepeatButtonClick()
+        private void RepeatButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<BattleScreen>();
+            UIManager.MakeScreen<BattleScreen>().
+                SetData(new BattleScreenInData
+                {
+                    ftueStageId = inputData.ftueStageId,
+                    eventStageId = inputData.eventStageId
+                }).RunShowScreenProcess();
         }
     }
 
