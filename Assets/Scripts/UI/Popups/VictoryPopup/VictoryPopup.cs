@@ -41,7 +41,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            switch (GameData.ftueStats.lastEndedState)
+            switch (inputData.ftueStageData?.ftueState)
             {
                 case ("battle1", "chapter1"):
                     UITools.DisableButton(repeatButton);

@@ -38,7 +38,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            switch (inputData.ftueStageData.ftueState)
+            switch (inputData.ftueStageData?.ftueState)
             {
                 case ("battle2", "chapter1"):
                     UITools.DisableButton(magicGuildButton);

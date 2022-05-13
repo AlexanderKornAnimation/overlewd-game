@@ -14,7 +14,7 @@ namespace Overlewd
 		protected virtual void Awake()
 		{
 			var screenInst = ResourceManager.InstantiateScreenPrefab(
-				"Prefabs/UI/Screens/BattleScreens/BaseBattleScreen/BaseBattleScreen", transform);
+				"Prefabs/UI/Screens/BattleScreens/BaseBattleScreen", transform);
 
 			bm = screenInst.GetComponent<BattleManager>();
 

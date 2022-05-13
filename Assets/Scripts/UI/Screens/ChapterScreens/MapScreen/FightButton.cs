@@ -68,7 +68,7 @@ namespace Overlewd
                 {
                     if (directToBattleScreen)
                     {
-                        UIManager.MakeScreen<FTUE.BattleScreen>().
+                        UIManager.MakeScreen<BattleScreen>().
                             SetData(new BattleScreenInData
                             {
                                 ftueStageId = stageId
@@ -87,7 +87,7 @@ namespace Overlewd
                 {
                     if (directToBattleScreen)
                     {
-                        UIManager.MakeScreen<FTUE.BossFightScreen>().
+                        UIManager.MakeScreen<BossFightScreen>().
                             SetData(new BossFightScreenInData
                             {
                                 ftueStageId = stageId
