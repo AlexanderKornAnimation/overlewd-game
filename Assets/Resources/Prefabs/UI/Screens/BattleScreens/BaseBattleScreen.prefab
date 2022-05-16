@@ -748,8 +748,6 @@ MonoBehaviour:
   skill: {fileID: 11400000, guid: b6132739c375a544c8d7f9d739ee1004, type: 2}
   select: 0
   button: {fileID: 269455139}
-  vfx: {fileID: 0}
-  sfx: {fileID: 0}
   vfxSpawnPoint: {fileID: 0}
   power: 0
   manaCost: 0
@@ -3531,8 +3529,6 @@ MonoBehaviour:
   skill: {fileID: 11400000, guid: 2c6c9b4af2495e54e922d4ae0b29f24b, type: 2}
   select: 0
   button: {fileID: 1869255671}
-  vfx: {fileID: 0}
-  sfx: {fileID: 0}
   vfxSpawnPoint: {fileID: 0}
   power: 0
   manaCost: 0
@@ -4762,7 +4758,7 @@ GameObject:
   - component: {fileID: 2820950003659279769}
   - component: {fileID: 1369232636}
   m_Layer: 0
-  m_Name: Button_2
+  m_Name: Button_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4886,8 +4882,6 @@ MonoBehaviour:
   skill: {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   select: 0
   button: {fileID: 0}
-  vfx: {fileID: 0}
-  sfx: {fileID: 0}
   vfxSpawnPoint: {fileID: 0}
   power: 0
   manaCost: 0
@@ -5371,7 +5365,7 @@ GameObject:
   - component: {fileID: 9184983763147672031}
   - component: {fileID: 270373221}
   m_Layer: 0
-  m_Name: Button_1
+  m_Name: Button_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5495,8 +5489,6 @@ MonoBehaviour:
   skill: {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   select: 0
   button: {fileID: 0}
-  vfx: {fileID: 0}
-  sfx: {fileID: 0}
   vfxSpawnPoint: {fileID: 0}
   power: 0
   manaCost: 0
@@ -6162,8 +6154,8 @@ MonoBehaviour:
   - {fileID: 270373221}
   - {fileID: 1369232636}
   - {fileID: 645748022}
-  potion_0: {fileID: 443578431}
-  potion_1: {fileID: 1180136640}
+  potion_mp: {fileID: 443578431}
+  potion_hp: {fileID: 1180136640}
   healVFX: {fileID: 86848110055568654, guid: 74096253829e79c478b557784947128a, type: 3}
   wannaWin: 1
   battleState: 3
@@ -6181,7 +6173,7 @@ GameObject:
   - component: {fileID: 1734716323041922411}
   - component: {fileID: 645748022}
   m_Layer: 0
-  m_Name: Button_3
+  m_Name: Button_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6305,8 +6297,6 @@ MonoBehaviour:
   skill: {fileID: 11400000, guid: 15f8f4a92329581439a5e4b67e7b075b, type: 2}
   select: 0
   button: {fileID: 0}
-  vfx: {fileID: 0}
-  sfx: {fileID: 0}
   vfxSpawnPoint: {fileID: 0}
   power: 0
   manaCost: 0

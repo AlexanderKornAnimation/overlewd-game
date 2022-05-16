@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class ButtonSkillController : MonoBehaviour
+    public class SkillController : MonoBehaviour
     {
         public Skill skill;
         private string skillName;
@@ -15,8 +15,8 @@ namespace Overlewd
         private Slider slider;
         private TextMeshProUGUI textCount;
         public Button button;
-        [HideInInspector]
-        public GameObject vfx, sfx;
+        private GameObject vfx;
+        private AudioClip sfx;
         [HideInInspector]
         public Transform vfxSpawnPoint;
         [HideInInspector]
@@ -41,6 +41,7 @@ namespace Overlewd
             image.sprite = skill.battleIco;
             image.SetNativeSize();
             vfx = skill.vfx;
+            sfx = skill.sfx;
             power = skill.power;
             manaCost = skill.manaCost;
             amount = skill.amount;
@@ -91,6 +92,13 @@ namespace Overlewd
         public void InstVFX(Transform target)
         {
             if (vfx) Instantiate(vfx, target);
+        }
+        public void UseSkill()
+        {
+            if (skill.attackType == Skill.AttackType.POTION)
+            {
+
+            }
         }
         
     }

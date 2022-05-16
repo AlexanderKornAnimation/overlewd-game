@@ -14,7 +14,7 @@ namespace Overlewd
         public GameObject vfx = null;
         public GameObject vfxOnTarget = null;
         public float vfxDuration = 0f;
-        public AudioClip sfx;
+        public AudioClip sfx = null;
         public bool select;
 
         public string

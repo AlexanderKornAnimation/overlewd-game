@@ -43,12 +43,13 @@ namespace Overlewd
             dodgeScale = 1,
             damageScale = 8,
             critRateScale = 1,
-            hpScale = 10;
+            hpScale = 25;
 
         public Skill[] skill;
         public Item itemSlot1 = null, itemSlot2 = null;
 
         public int level = 1, maxLevel = 10;
+        public float levelStatScale = 1.1f;
         public int xp = 0, xpToNextlUp = 1000;
         public int hp = 25;
         public int mp = 100;
@@ -76,45 +77,47 @@ namespace Overlewd
                     dodgeScale = 1;
                     damageScale = 8;
                     critRateScale = 1;
-                    hpScale = 10;
+                    hpScale = 25;
                     break;
                 case CharClass.BRUISER:
                     accuracityScale = 10;
                     dodgeScale = 1;
                     damageScale = 8;
                     critRateScale = 1;
-                    hpScale = 10;
+                    hpScale = 25;
                     break;
                 case CharClass.TANK:
                     accuracityScale = 10;
                     dodgeScale = 1;
                     damageScale = 8;
                     critRateScale = 1;
-                    hpScale = 10;
+                    hpScale = 25;
                     break;
                 case CharClass.SUPPORT:
                     accuracityScale = 10;
                     dodgeScale = 1;
                     damageScale = 8;
                     critRateScale = 1;
-                    hpScale = 10;
+                    hpScale = 25;
                     break;
                 case CharClass.CASTER:
                     accuracityScale = 10;
                     dodgeScale = 1;
                     damageScale = 8;
                     critRateScale = 1;
-                    hpScale = 10;
+                    hpScale = 25;
                     break;
             }
+            var scale = level * levelStatScale;
+            accuracity = 60 + Mathf.RoundToInt(agility * scale * damageScale); //Base 60 + agi scales
+            critRate = Mathf.RoundToInt(agility * scale * damageScale);
+            dodge = Mathf.RoundToInt(agility * scale * damageScale);
+            damage = Mathf.RoundToInt(power * scale * damageScale);
 
-            accuracity = Mathf.RoundToInt(agility * level * damageScale);
-            critRate = Mathf.RoundToInt(agility * level * damageScale);
-            dodge = Mathf.RoundToInt(agility * level * damageScale);
-            damage = Mathf.RoundToInt(power * level * damageScale);
-
-            maxHp = Mathf.RoundToInt(constitution * level * hpScale);
+            maxHp = Mathf.RoundToInt(constitution * levelStatScale * hpScale);
             maxMp = maxHp / 2;
+            hp = maxHp;
+            mp = maxMp;
 
             if (itemSlot1 != null)
             {
@@ -126,8 +129,6 @@ namespace Overlewd
                 damage += itemSlot2.attack;
                 constitution += itemSlot2.defence;
             }
-
-
         }
 
         public void Save(int saveHP, int saveMP)

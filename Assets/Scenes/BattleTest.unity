@@ -278,6 +278,30 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1743698166, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: potion_hp
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743698166, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: potion_mp
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743698166, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: skillControllers.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743698166, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: skillControllers.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743698166, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: skillControllers.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743698166, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
+      propertyPath: skillControllers.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 425009046637545303, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -288,7 +312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 425009046637545303, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 425009046637545303, guid: 93e06d9a762e62b43980208b21d890c4, type: 3}
       propertyPath: m_AnchorMax.x

@@ -108,8 +108,7 @@ namespace Overlewd
             charStats.charCtrl = this;
             charStats.InitUI();
             sliderHP = persPos.Find("sliderHP").GetComponent<Slider>();
-            if (sliderHP != null) sliderHP.maxValue = maxHp;
-
+            if (sliderHP != null) sliderHP.maxValue = maxHp; else Debug.Log("sliderHP is null");
             hpTMP = persPos.Find("sliderHP/Text").GetComponent<TextMeshProUGUI>();
 
             if (isOverlord)
@@ -134,7 +133,7 @@ namespace Overlewd
         public void UpdateUI()
         {
             string hpTxt = $"{hp}/{maxHp}";
-            if (hpTMP != null) hpTMP.text = hpTxt;
+            if (hpTMP != null) hpTMP.text = hpTxt; else Debug.Log("hpTMP = null");
             if (sliderHP != null) sliderHP.value = hp;
             if (isOverlord)
             {
@@ -179,23 +178,20 @@ namespace Overlewd
 
             PlayIdle();
             BattleOut();
-            if (target != null) target.BattleOut();
             bm.BattleOut();
         }
-        public void Defence(CharController attacker, GameObject vfx = null)
+        public void Defence(CharController attacker, GameObject vfx = null) => StartCoroutine(PlayDefence(attacker, vfx));
+        IEnumerator PlayDefence(CharController attacker, GameObject vfx = null)
         {
             transform.SetParent(battlePos);
-            StartCoroutine(PlayDefence(attacker, vfx));
-        }
-        IEnumerator PlayDefence(CharController cc, GameObject vfx = null)
-        {
             UnHiglight();
-            yield return new WaitForSeconds(cc.preAttackDuration + cc.vfxDuration);
+            yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             if (vfx != null) Instantiate(vfx, transform);
             spineWidget.PlayAnimation(character.ani_defence_name, false);
             yield return new WaitForSeconds(defenceDuration);
             PlayIdle();
-            Damage(cc.attack);
+            Damage(attacker.attack);
+            BattleOut();
         }
 
         public void Select()
@@ -229,9 +225,6 @@ namespace Overlewd
         }
         public void Damage(int value)
         {
-            //play animation damage
-            //play hp UI animation
-            //value = Mathf.Max(value - (isDefence ? defence : 0), 0);
             if (value > 0)
             {
                 hp -= value;

@@ -26,19 +26,19 @@ MonoBehaviour:
   yOffset: 0
   speed: 195
   power: 10
-  constitution: 10
+  constitution: 15
   agility: 5
-  accuracity: 10
-  dodge: 5
-  critRate: 10
-  damage: 10
-  maxHp: 250
-  maxMp: 90
+  accuracity: 40
+  dodge: 40
+  critRate: 40
+  damage: 90
+  maxHp: 375
+  maxMp: 187
   accuracityScale: 10
   dodgeScale: 1
   damageScale: 8
   critRateScale: 1
-  hpScale: 10
+  hpScale: 25
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 3b5f8a6341cf4eb4189c634860a36c8e, type: 2}
@@ -47,12 +47,13 @@ MonoBehaviour:
   itemSlot2: {fileID: 0}
   level: 1
   maxLevel: 10
+  levelStatScale: 1.1
   xp: 0
   xpToNextlUp: 1000
-  hp: 250
-  mp: 45
+  hp: 375
+  mp: 187
   isDead: 0
-  idle_SkeletonData_Path: Battle/BattlePersonages/Overlord/pers/Overlord
+  idle_Prefab_Path: Battle/BattlePersonages/idle_SkeletonData
   characterPrefab: {fileID: 5672936884837085208, guid: 07374bbd9f9ff0a458b28c33c7ff9a88, type: 3}
   ani_idle_name: idle
   ani_pAttack_1_name: prepair1

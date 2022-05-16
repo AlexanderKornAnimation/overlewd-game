@@ -26,7 +26,7 @@ RectTransform:
   m_GameObject: {fileID: 5541813711829063474}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -53,5 +53,4 @@ MonoBehaviour:
   loop: 0
   delay: 0
   duration: 0.4
-  scale: 1
-  vfxPrefab: {fileID: 7335657969901893559, guid: 055cfe36a4ad213458fbd77d717dfd50, type: 3}
+  spineVFXPrefab: {fileID: 7335657969901893559, guid: 055cfe36a4ad213458fbd77d717dfd50, type: 3}

@@ -20,25 +20,25 @@ MonoBehaviour:
   isEnemy: 1
   isBoss: 0
   isOverlord: 0
-  charClass: 0
+  charClass: 4
   idleScale: 0.95
   battleScale: 1.4
   yOffset: 0
   speed: 10
   power: 10
-  constitution: 10
+  constitution: 8
   agility: 5
-  accuracity: 10
-  dodge: 5
-  critRate: 10
-  damage: 10
-  maxHp: 50
+  accuracity: 40
+  dodge: 40
+  critRate: 40
+  damage: 80
+  maxHp: 200
   maxMp: 100
   accuracityScale: 10
   dodgeScale: 1
   damageScale: 8
   critRateScale: 1
-  hpScale: 10
+  hpScale: 25
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
@@ -46,12 +46,13 @@ MonoBehaviour:
   itemSlot2: {fileID: 0}
   level: 1
   maxLevel: 10
+  levelStatScale: 1.1
   xp: 0
   xpToNextlUp: 1000
-  hp: 50
+  hp: 200
   mp: 100
   isDead: 0
-  idle_SkeletonData_Path: Battle/BattlePersonages/Witch/pers/Witch
+  idle_Prefab_Path: Battle/BattlePersonages/idle_SkeletonData
   characterPrefab: {fileID: 143447158568657012, guid: 9b91150b04c25c74d8cbdceff17503ca, type: 3}
   ani_idle_name: idle
   ani_pAttack_1_name: prepair1

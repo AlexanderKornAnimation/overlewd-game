@@ -20,7 +20,7 @@ MonoBehaviour:
   isEnemy: 0
   isBoss: 0
   isOverlord: 0
-  charClass: 1
+  charClass: 2
   idleScale: 1
   battleScale: 1.5
   yOffset: 0
@@ -46,12 +46,13 @@ MonoBehaviour:
   itemSlot2: {fileID: 0}
   level: 1
   maxLevel: 10
+  levelStatScale: 1.1
   xp: 0
   xpToNextlUp: 1000
   hp: 100
   mp: 100
   isDead: 0
-  idle_SkeletonData_Path: Battle/BattlePersonages/Catgirl/pers/CatGirl
+  idle_Prefab_Path: Battle/BattlePersonages/idle_SkeletonData
   characterPrefab: {fileID: 2413659306979228018, guid: ec76d81e97698fb46b8ef638275c34f2, type: 3}
   ani_idle_name: idle
   ani_pAttack_1_name: prepair1
