@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Overlewd.FTUE;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +29,7 @@ namespace Overlewd
                 }
                 else
                 {
-                    UIManager.MakeScreen<FTUE.SexScreen>().
+                    UIManager.MakeScreen<SexScreen>().
                         SetData(new SexScreenInData
                         {
                             ftueStageId = firstSexStage.id,

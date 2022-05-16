@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,36 +12,36 @@ namespace Overlewd
 {
     public class SexScreen : BaseFullScreen
     {
-        protected Coroutine autoplayCoroutine;
+        private Coroutine autoplayCoroutine;
 
-        protected TextMeshProUGUI personageName;
-        protected TextMeshProUGUI text;
+        private TextMeshProUGUI personageName;
+        private TextMeshProUGUI text;
 
-        protected Button textContainer;
-        protected Button skipButton;
-        protected Button autoplayButton;
-        protected TextMeshProUGUI autoplayStatus;
-        protected Image autoplayButtonPressed;
+        private Button textContainer;
+        private Button skipButton;
+        private Button autoplayButton;
+        private TextMeshProUGUI autoplayStatus;
+        private Image autoplayButtonPressed;
 
-        protected Transform mainAnimPos;
-        protected GameObject cutIn;
-        protected Transform cutInAnimPos;
+        private Transform mainAnimPos;
+        private GameObject cutIn;
+        private Transform cutInAnimPos;
 
-        protected AdminBRO.Dialog dialogData;
-        protected List<AdminBRO.DialogReplica> dialogReplicas;
-        protected int currentReplicaId;
+        private AdminBRO.Dialog dialogData;
+        private List<AdminBRO.DialogReplica> dialogReplicas;
+        private int currentReplicaId;
 
-        protected bool isAutoplayButtonPressed = false;
+        private bool isAutoplayButtonPressed = false;
 
-        protected SpineWidgetGroup mainAnimation;
-        protected SpineWidgetGroup cutInAnimation;
-        protected FMODEvent mainSound;
-        protected FMODEvent cutInSound;
-        protected FMODEvent replicaSound;
+        private SpineWidgetGroup mainAnimation;
+        private SpineWidgetGroup cutInAnimation;
+        private FMODEvent mainSound;
+        private FMODEvent cutInSound;
+        private FMODEvent replicaSound;
 
-        protected SexScreenInData inputData;
+        private SexScreenInData inputData;
 
-        void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SexScreen/SexScreen", transform);
 
@@ -81,29 +82,98 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            ShowStartNotifications();
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();
             await Task.CompletedTask;
         }
         
-        protected virtual void LeaveScreen()
+        private void LeaveScreen()
         {
-            UIManager.ShowScreen<EventMapScreen>();
+            switch (inputData.ftueStageData.ftueState)
+            {
+                case ("sex1", "chapter1"):
+                    UIManager.MakeScreen<DialogScreen>().
+                        SetData(new DialogScreenInData
+                        {
+                            ftueStageId = GameData.ftue.mapChapter.GetStageByKey("dialogue1")?.id
+                        }).RunShowScreenProcess();
+                    break;
+
+                default:
+                    if (inputData.ftueStageId.HasValue)
+                    {
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ShowScreen<EventMapScreen>();
+                    }
+                    break;
+            }
         }
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = inputData.eventStageData.dialogData;
-            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
+            
+            if (inputData.eventStageId.HasValue)
+            {
+                await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+            }
+            else
+            {
+                await GameData.FTUEStartStage(inputData.ftueStageId.Value);
+            }
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
+            if (inputData.eventStageId.HasValue)
+            {
+                await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+            }
+            else
+            {
+                await GameData.FTUEStartStage(inputData.ftueStageId.Value);
+            }
         }
 
-        protected void AutoplayButtonCustomize()
+        private async void ShowStartNotifications()
+        {
+            switch (inputData.ftueStageData.ftueState)
+            {
+                case ("sex4", "chapter1"):
+                    GameData.ftue.mapChapter.ShowNotifByKey("memorytutor2");
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+        
+        private async void ShowEndNotifictaions()
+        {
+            switch (inputData.ftueStageData.ftueState)
+            {
+                case ("sex2", "chapter1"):
+                    UIManager.AddUserInputLocker(new UserInputLocker(this));
+                    await UniTask.Delay(1000);
+                    UIManager.RemoveUserInputLocker(new UserInputLocker(this));
+
+                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor2");
+                    await UIManager.WaitHideNotifications();
+                    GameData.ftue.mapChapter.ShowNotifByKey("ulviscreentutor");
+                    break;
+            }
+        }
+        
+        private void AutoplayButtonCustomize()
         {
             if (isAutoplayButtonPressed)
             {
@@ -159,9 +229,9 @@ namespace Overlewd
             }
         }
 
-        protected virtual void ShowLastReplica()
+        private void ShowLastReplica()
         {
-
+            ShowEndNotifictaions();
         }
 
         private void ShowCurrentReplica()

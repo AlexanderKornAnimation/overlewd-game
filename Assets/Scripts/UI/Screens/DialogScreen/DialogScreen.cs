@@ -11,37 +11,37 @@ namespace Overlewd
 {
     public class DialogScreen : BaseFullScreen
     {
-        protected FMODEvent mainSound;
-        protected FMODEvent cutInSound;
-        protected FMODEvent replicaSound;
+        private FMODEvent mainSound;
+        private FMODEvent cutInSound;
+        private FMODEvent replicaSound;
         
-        protected Coroutine autoplayCoroutine;
+        private Coroutine autoplayCoroutine;
 
-        protected Transform charactersPos;
-        protected Transform leftCharacterPos;
-        protected Transform midCharacterPos;
-        protected Transform rightCharacterPos;
+        private Transform charactersPos;
+        private Transform leftCharacterPos;
+        private Transform midCharacterPos;
+        private Transform rightCharacterPos;
 
-        protected Button textContainer;
-        protected TextMeshProUGUI personageName;
+        private Button textContainer;
+        private TextMeshProUGUI personageName;
 
-        protected Transform emotionBack;
-        protected Transform emotionPos;
-        protected TextMeshProUGUI text;
+        private Transform emotionBack;
+        private Transform emotionPos;
+        private TextMeshProUGUI text;
 
-        protected Button skipButton;
-        protected Button autoplayButton;
-        protected Image autoplayButtonPressed;
-        protected TextMeshProUGUI autoplayStatus;
+        private Button skipButton;
+        private Button autoplayButton;
+        private Image autoplayButtonPressed;
+        private TextMeshProUGUI autoplayStatus;
 
-        protected GameObject cutIn;
-        protected Transform cutInAnimPos;
+        private GameObject cutIn;
+        private Transform cutInAnimPos;
 
-        protected AdminBRO.Dialog dialogData;
-        protected List<AdminBRO.DialogReplica> dialogReplicas;
-        protected int currentReplicaId;
+        private AdminBRO.Dialog dialogData;
+        private List<AdminBRO.DialogReplica> dialogReplicas;
+        private int currentReplicaId;
 
-        protected bool isAutoplayButtonPressed = false;
+        private bool isAutoplayButtonPressed = false;
 
         private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
             new Dictionary<string, NSDialogScreen.DialogCharacter>();
@@ -49,7 +49,7 @@ namespace Overlewd
         private Dictionary<string, string> slot_character = new Dictionary<string, string>();
         private Dictionary<string, string> character_slot = new Dictionary<string, string>();
 
-        protected Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
+        private Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
         {
             [AdminBRO.DialogReplica.CharacterSkin_Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
             [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
@@ -58,12 +58,12 @@ namespace Overlewd
             [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/Inge"
         };
 
-        protected SpineWidgetGroup cutInAnimation;
-        protected SpineWidgetGroup emotionAnimation;
+        private SpineWidgetGroup cutInAnimation;
+        private SpineWidgetGroup emotionAnimation;
 
-        protected DialogScreenInData inputData;
+        private DialogScreenInData inputData;
 
-        void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
 
@@ -127,18 +127,52 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = inputData.eventStageData.dialogData;
-            await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
+
+            if (inputData.eventStageId.HasValue)
+            {
+                await GameData.EventStageStartAsync(inputData.eventStageData.id);
+            }
+            else
+            {
+                await GameData.FTUEStartStage(inputData.ftueStageData.id);
+            }
         }
 
         public override async Task BeforeHideDataAsync()
         {
-            await GameData.EventStageEndAsync(inputData.eventStageId.Value);
+            if (inputData.eventStageId.HasValue)
+            {
+                await GameData.EventStageEndAsync(inputData.eventStageData.id);
+            }
+            else
+            {
+                await GameData.FTUEEndStage(inputData.ftueStageData.id);
+            }
         }
 
-        protected virtual void LeaveScreen()
+        private void LeaveScreen()
         {
-            UIManager.ShowScreen<EventMapScreen>();
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case ("dialogue1", "chapter1"):
+                    UIManager.MakeScreen<BattleScreen>().
+                        SetData(new BattleScreenInData
+                        {
+                            ftueStageId = GameData.ftue.mapChapter.GetStageByKey("battle1")?.id
+                        }).RunShowScreenProcess();
+                    break;
+                default:
+                    if (inputData.eventStageId.HasValue)
+                    {
+                        UIManager.ShowScreen<EventMapScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ShowScreen<MapScreen>();
+                    }
+                    break;
+            }
         }
 
         private void HideCharacterByName(string keyName)
@@ -445,7 +479,7 @@ namespace Overlewd
             }
         }
 
-        protected virtual void ShowLastReplica()
+        private void ShowLastReplica()
         {
 
         }
