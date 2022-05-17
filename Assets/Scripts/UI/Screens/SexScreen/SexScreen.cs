@@ -137,11 +137,11 @@ namespace Overlewd
         {
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+                await GameData.EventStageEndAsync(inputData.eventStageId.Value);
             }
             else
             {
-                await GameData.FTUEStartStage(inputData.ftueStageId.Value);
+                await GameData.FTUEEndStage(inputData.ftueStageId.Value);
             }
         }
 

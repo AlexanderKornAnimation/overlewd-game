@@ -130,7 +130,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            battleData = inputData.eventStageData.battleData ?? inputData.ftueStageData.battleData;
+            battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
             Customize();
 
             switch (inputData.ftueStageData.ftueState)
