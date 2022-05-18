@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
   m_Name: cBattleCat5.enemy
   m_EditorClassIdentifier: 
-  order: 3
+  order: -1
+  wave: 1
   charName: BattleCat4
   ico: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}
   battlePortrait: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}

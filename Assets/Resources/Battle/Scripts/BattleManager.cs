@@ -42,10 +42,10 @@ namespace Overlewd
         private int step = 0; //current characters list step
         private int maxStep = 2; //max count of battle queue, take from character's list
         private int wave = 1, maxWave = 2; //Wave count
+        private int round = 1;
         public delegate void Unselect();
         public Unselect unselect;
         public bool castAOE = false;
-        [SerializeField]
         private Color redColor;
 
 
@@ -74,7 +74,7 @@ namespace Overlewd
 
             characters = new List<Character>(Resources.LoadAll<Character>("Battle/BattlePersonages/Profiles"));
             characters.Sort(SortByInitiative);
-           // ColorUtility.TryParseHtmlString("#A64646", out redColor);
+            ColorUtility.TryParseHtmlString("#A64646", out redColor);
 
             var pStats = Instantiate(PlayerStats, PlayerStatsContent);
             pStats.GetComponent<CharacterPortrait>().isPlayer = true;
@@ -103,14 +103,6 @@ namespace Overlewd
                         cc.charStats = pStats.GetComponent<CharacterPortrait>();
                         charNum++;
                     }
-                    /*Fill QueueUI characters icons
-                    var portraitQ = Instantiate(portraitPrefab, QueueUIContent);
-                    portraitQ.name = "Portrait_" + c.name;
-                    portraitQ.GetComponent<Image>().sprite = c.ico;
-                    portraitQ.GetComponent<Button>().onClick.AddListener(cc.Select);
-                    if (c.isEnemy)
-                        portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
-                    QueueElements.Add(portraitQ);*/
                 }
             }
             CreatePortraitQueue();
@@ -122,9 +114,6 @@ namespace Overlewd
                 battleState = BattleState.PLAYER;
             ccOnSelect = charControllerList[step];
             StartCoroutine(LateInit());
-            BattleNotif("chapter1", "battle1", "battletutor1");
-            BattleNotif("chapter1", "battle3", "battletutor4");
-            BattleNotif("chapter1", "battle5", "potionstutor2");
         }
 
         private void NextWave()
@@ -172,7 +161,6 @@ namespace Overlewd
             else
                 battleState = BattleState.PLAYER;
             ccOnSelect = charControllerList[step];
-
         }
 
         private void CreatePortraitQueue()
@@ -291,7 +279,7 @@ namespace Overlewd
             foreach (var cc in charControllerList)
                 if (cc.isEnemy == isWin)
                 {
-                    cc.hp = 10;
+                    cc.hp = 80;
                     cc.UpdateUI();
                 }
         }
@@ -356,13 +344,16 @@ namespace Overlewd
             qe.transform.localScale = Vector3.one; //Reset Scale and push back portrait
             if (++step == maxStep)
             {
-                BattleNotif("chapter1", "battle1", "battletutor2");
-                BattleNotif("chapter1", "battle4", "bosstutor");
+                if (round == 1) { 
+                    BattleNotif("chapter1", "battle1", "battletutor2"); //one round later
+                    BattleNotif("chapter1", "battle4", "bosstutor");
+                }
+                round++;
                 step = 0;
             }
             if (castAOE == true)
             {
-                BattleNotif("chapter1", "battle5", "potionstutor3");
+                BattleNotif("chapter1", "battle5", "potionstutor3"); //AOE Cast
             }
             qe.transform.SetSiblingIndex(maxStep); //Push element to back after Step++
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Portrait
@@ -411,13 +402,18 @@ namespace Overlewd
         {
             if (battleScene.GetBattleData() != null)
                 if (chapterID == battleScene.GetBattleData().ftueChapterKey &&
-                    battleID == battleScene.GetBattleData().ftueStageKey)
+                    battleID == battleScene.GetBattleData().ftueStageKey) { 
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
+                    Debug.Log($"{chapterID} {battleID} {notifID}");
+                }
+            
         }
 
         public void AfterShowBattleScreen()
         {
-
+            BattleNotif("chapter1", "battle1", "battletutor1");
+            BattleNotif("chapter1", "battle3", "battletutor4");
+            BattleNotif("chapter1", "battle5", "potionstutor2");
         }
 
         private void OnDestroy() { DOTween.Clear(true); } //Destroy DOTween
