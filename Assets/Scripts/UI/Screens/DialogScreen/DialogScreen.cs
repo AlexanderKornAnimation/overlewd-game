@@ -104,6 +104,18 @@ namespace Overlewd
             return this;
         }
 
+        public override async Task BeforeShowMakeAsync()
+        {
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case (_, _):
+                    skipButton.gameObject.SetActive(GameData.ftue.chapter1.GetStageByKey("battle3").isComplete);
+                    break;
+            } 
+
+            await Task.CompletedTask;
+        }
+
         public override async Task AfterShowAsync()
         {
             SoundManager.GetEventInstance(FMODEventPath.Music_DialogScreen);

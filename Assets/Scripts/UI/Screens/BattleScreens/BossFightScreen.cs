@@ -7,7 +7,8 @@ namespace Overlewd
 {
 	public class BossFightScreen : BaseBossFightScreen
 	{
-        protected BossFightScreenInData inputData;
+        private BossFightScreenInData inputData;
+        private bool battleIsWin;
 
         public BossFightScreen SetData(BossFightScreenInData data)
         {
@@ -15,9 +16,15 @@ namespace Overlewd
             return this;
         }
 
+        public override void StartBattle()
+        {
+            backButton.gameObject.SetActive(false);
+            skipButton.gameObject.SetActive(true);
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
-            WannaWin(true);
+            backButton.gameObject.SetActive(false);
 
             await Task.CompletedTask;
         }
@@ -37,6 +44,7 @@ namespace Overlewd
 
         public override void BattleWin()
         {
+            battleIsWin = true;
             UIManager.MakePopup<VictoryPopup>().
                 SetData(new VictoryPopupInData
                 {
@@ -67,26 +75,31 @@ namespace Overlewd
             }
         }
 
+        public override async Task AfterShowAsync()
+        {
+            bm.AfterShowBattleScreen();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeHideDataAsync()
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.FTUEEndStage(inputData.ftueStageId.Value);
+                await GameData.FTUEEndStage(inputData.ftueStageId.Value,
+                    new AdminBRO.FTUEStageEndData
+                    {
+                       win = battleIsWin 
+                    });
             }
             else
             {
-                await GameData.EventStageEndAsync(inputData.eventStageId.Value);
+                await GameData.EventStageEndAsync(inputData.eventStageId.Value,
+                    new AdminBRO.EventStageEndData
+                    {
+                        win = battleIsWin
+                    });
             }
-        }
-
-        public override void OnBattleEvent(BattleEvent battleEvent)
-        {
-
-        }
-
-        public override void OnBattleNotification(string notifKey)
-        {
-
         }
 
         public override BattleManagerInData GetBattleData()

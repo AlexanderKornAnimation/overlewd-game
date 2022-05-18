@@ -411,7 +411,7 @@ namespace Overlewd
 
         public class EventStageEndData
         {
-            bool win = true;
+            public bool win = true;
 
             public WWWForm ToWWWForm()
             {
@@ -1061,7 +1061,7 @@ namespace Overlewd
 
         public class FTUEStageEndData
         {
-            bool win = true;
+            public bool win = true;
 
             public WWWForm ToWWWForm()
             {

@@ -47,16 +47,11 @@ namespace Overlewd
 				BattleDefeat();
 		}
 
-		public void StartBattle()
+		public virtual void StartBattle()
         {
 			backButton.gameObject.SetActive(false);
 			skipButton.gameObject.SetActive(true);
 		}
-
-		protected void WannaWin(bool win)
-        {
-			bm.wannaWin = win;
-        }
 
 		public virtual void BattleWin()
         {
@@ -77,9 +72,9 @@ namespace Overlewd
 			
         }
 
-		public virtual void OnBattleNotification(string notifKey)
+		public virtual void OnBattleNotification(string stageKey, string chapterKey, string notifKey)
 		{
-
+			GameData.ftue.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey);
 		}
 
 		public virtual BattleManagerInData GetBattleData()
@@ -90,8 +85,8 @@ namespace Overlewd
 
 	public class BattleManagerInData
     {
-		public List<AdminBRO.Character> myTeam { get; private set; }
-		public List<EnemyWave> enemyWaves { get; private set; }
+		public List<AdminBRO.Character> myTeam { get; private set; } = new List<AdminBRO.Character>();
+		public List<EnemyWave> enemyWaves { get; private set; } = new List<EnemyWave>();
 		public string ftueChapterKey { get; private set; }
 		public string ftueStageKey { get; private set; }
 		public AdminBRO.Battle battleData { get; private set; }
@@ -99,7 +94,7 @@ namespace Overlewd
 
 		public class EnemyWave
         {
-			public List<AdminBRO.Character> enemyTeam { get; set; }
+			public List<AdminBRO.Character> enemyTeam { get; set; } = new List<AdminBRO.Character>();
 		}
 
 		public static BattleManagerInData InstFromFTUEStage(AdminBRO.FTUEStageItem stage)
@@ -151,7 +146,8 @@ namespace Overlewd
 			//enemy teams
 			foreach (var phase in battleData.battlePhases)
             {
-				var wave = new EnemyWave { enemyTeam = new List<AdminBRO.Character>(phase.enemyCharacters) };
+				var wave = new EnemyWave();
+				wave.enemyTeam.AddRange(phase.enemyCharacters);
 				inst.enemyWaves.Add(wave);
             }
 

@@ -52,6 +52,18 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case ("battle2", "chapter1"):
+                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         public DefeatPopup SetData(DefeatPopupInData data)
         {
             inputData = data;
@@ -86,26 +98,23 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
 
-            if (inputData.ftueStageId.HasValue)
+            switch (inputData.ftueStageData?.ftueState)
             {
-                switch (inputData.ftueStageData.ftueState)
-                {
-                    case ("battle2", "chapter1"):
-                        UIManager.MakeScreen<SexScreen>().
-                            SetData(new SexScreenInData
-                            {
-                                ftueStageId = GameData.ftue.mapChapter.GetStageByKey("sex2")?.id
-                            }).RunShowScreenProcess();
-                        break;
+                case ("battle2", "chapter1"):
+                    UIManager.MakeScreen<SexScreen>().
+                        SetData(new SexScreenInData
+                        {
+                            ftueStageId = GameData.ftue.chapter1.GetStageByKey("sex2")?.id
+                        }).RunShowScreenProcess();
+                    break;
 
-                    default:
-                        UIManager.ShowScreen<MapScreen>();
-                        break;
-                }
-            }
-            else
-            {
-                UIManager.ShowScreen<EventMapScreen>();
+                case null:
+                    UIManager.ShowScreen<EventMapScreen>();
+                    break;
+
+                default:
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
             }
         }
     }

@@ -67,21 +67,19 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            if (inputData.ftueStageId.HasValue)
+            switch (inputData.ftueStageData?.ftueState)
             {
-                switch (inputData.ftueStageData.ftueState)
-                {
-                    case ("battle4", "chapter1"):
-                        UIManager.ShowScreen<CastleScreen>();
-                        break;
-                    default:
-                        UIManager.ShowScreen<MapScreen>();
-                        break;
-                }
-            }
-            else
-            {
-                UIManager.ShowScreen<EventMapScreen>();
+                case ("battle4", "chapter1"):
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+
+                case null:
+                    UIManager.ShowScreen<EventMapScreen>();
+                    break;
+
+                default:
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
             }
         }
 

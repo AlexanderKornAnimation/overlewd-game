@@ -73,6 +73,18 @@ namespace Overlewd
             return this;
         }
 
+        public override async Task BeforeShowMakeAsync()
+        {
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case (_, _):
+                    skipButton.gameObject.SetActive(GameData.ftue.chapter1.GetStageByKey("battle3").isComplete);
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowAsync()
         {
             Initialize();
@@ -84,7 +96,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            ShowStartNotifications();
+
             await Task.CompletedTask;
         }
 
@@ -142,34 +154,6 @@ namespace Overlewd
             else
             {
                 await GameData.FTUEEndStage(inputData.ftueStageId.Value);
-            }
-        }
-
-        private async void ShowStartNotifications()
-        {
-            switch (inputData.ftueStageData.ftueState)
-            {
-                case ("sex4", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("memorytutor2");
-                    break;
-            }
-
-            await Task.CompletedTask;
-        }
-        
-        private async void ShowEndNotifictaions()
-        {
-            switch (inputData.ftueStageData.ftueState)
-            {
-                case ("sex2", "chapter1"):
-                    UIManager.AddUserInputLocker(new UserInputLocker(this));
-                    await UniTask.Delay(1000);
-                    UIManager.RemoveUserInputLocker(new UserInputLocker(this));
-
-                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor2");
-                    await UIManager.WaitHideNotifications();
-                    GameData.ftue.mapChapter.ShowNotifByKey("ulviscreentutor");
-                    break;
             }
         }
         
@@ -231,7 +215,7 @@ namespace Overlewd
 
         private void ShowLastReplica()
         {
-            ShowEndNotifictaions();
+            
         }
 
         private void ShowCurrentReplica()

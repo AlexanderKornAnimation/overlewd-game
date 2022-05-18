@@ -8,7 +8,8 @@ namespace Overlewd
 {
 	public class BattleScreen : BaseBattleScreen
 	{
-        protected BattleScreenInData inputData;
+        private BattleScreenInData inputData;
+        private bool battleIsWin;
 
         public BattleScreen SetData(BattleScreenInData data)
         {
@@ -16,9 +17,15 @@ namespace Overlewd
             return this;
         }
 
+        public override void StartBattle()
+        {
+            backButton.gameObject.SetActive(false);
+            skipButton.gameObject.SetActive(true);
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
-            WannaWin(true);
+            backButton.gameObject.SetActive(false);
 
             await Task.CompletedTask;
         }
@@ -40,12 +47,13 @@ namespace Overlewd
         {
             var win = inputData.ftueStageData?.ftueState switch
             {
-                ("battle2", "chapter1") => false,
+                ("battle2", "chapter1") => GameData.ftue.StageIsComplete("sex2", "chapter1"),
                 _ => true
             };
 
             if (win)
             {
+                battleIsWin = true;
                 UIManager.MakePopup<VictoryPopup>().
                     SetData(new VictoryPopupInData
                     {
@@ -68,7 +76,7 @@ namespace Overlewd
         {
             var defeat = inputData.ftueStageData?.ftueState switch
             {
-                ("battle2", "chapter1") => true,
+                ("battle2", "chapter1") => !GameData.ftue.StageIsComplete("sex2", "chapter1"),
                 _ => false
             };
 
@@ -83,6 +91,7 @@ namespace Overlewd
             }
             else
             {
+                battleIsWin = true;
                 UIManager.MakePopup<VictoryPopup>().
                     SetData(new VictoryPopupInData
                     {
@@ -104,26 +113,31 @@ namespace Overlewd
             }
         }
 
+        public override async Task AfterShowAsync()
+        {
+            bm.AfterShowBattleScreen();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeHideDataAsync()
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.FTUEEndStage(inputData.ftueStageData.id);
+                await GameData.FTUEEndStage(inputData.ftueStageId.Value,
+                    new AdminBRO.FTUEStageEndData
+                    {
+                        win = battleIsWin
+                    });
             }
             else
             {
-                await GameData.EventStageEndAsync(inputData.eventStageId.Value);
+                await GameData.EventStageEndAsync(inputData.eventStageId.Value,
+                    new AdminBRO.EventStageEndData
+                    {
+                        win = battleIsWin
+                    });
             }
-        }
-
-        public override void OnBattleEvent(BattleEvent battleEvent)
-        {
-
-        }
-
-        public override void OnBattleNotification(string notifKey)
-        {
-
         }
 
         public override BattleManagerInData GetBattleData()
@@ -131,48 +145,6 @@ namespace Overlewd
             return inputData.ftueStageId.HasValue ?
                 BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
                 BattleManagerInData.InstFromEventStage(inputData.eventStageData);
-        }
-
-        //
-        private async void ShowStartNotifications()
-        {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle1", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("battletutor1");
-                    break;
-            }
-
-            await Task.CompletedTask;
-        }
-
-        private async void ShowEndNotifications()
-        {
-            var waitPopupsEndTr = true;
-            while (waitPopupsEndTr)
-            {
-                var victoryPopupTrState = UIManager.GetPopup<VictoryPopup>()?.IsTransitionState() ?? false;
-                var defeatPopupTrState = UIManager.GetPopup<DefeatPopup>()?.IsTransitionState() ?? false;
-                waitPopupsEndTr = victoryPopupTrState || defeatPopupTrState;
-                await UniTask.NextFrame();
-            }
-
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle1", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("battletutor2");
-                    break;
-                case ("battle2", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("battletutor3");
-                    await UIManager.WaitHideNotifications();
-                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
-                    break;
-                case ("battle5", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("castletutor");
-                    break;
-            }
-
-            await Task.CompletedTask;
         }
     }
 

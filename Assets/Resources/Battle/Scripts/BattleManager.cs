@@ -411,8 +411,14 @@ namespace Overlewd
         public void BattleNotif(string chapterID, string battleID, string notifID = null)
         {
             if (battleScene.GetBattleData() != null)
-                if (chapterID == battleScene.GetBattleData().ftueChapterKey && battleID == battleScene.GetBattleData().ftueStageKey)
-                    battleScene.OnBattleNotification(notifID);
+                if (chapterID == battleScene.GetBattleData().ftueChapterKey &&
+                    battleID == battleScene.GetBattleData().ftueStageKey)
+                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
+        }
+
+        public void AfterShowBattleScreen()
+        {
+
         }
 
         private void OnDestroy() { DOTween.Clear(true); } //Destroy DOTween
