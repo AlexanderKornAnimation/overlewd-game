@@ -62,6 +62,7 @@ namespace Overlewd
             UIInit();
             PlayIdle();
             UpdateUI();
+            StartCoroutine(LateInint());
         }
 
         private void StatInit()
@@ -95,8 +96,6 @@ namespace Overlewd
             transform.SetParent(persPos, false);
             transform.SetSiblingIndex(0);
 
-            
-
             var sW = character.characterPrefab ? SpineWidget.GetInstance(character.characterPrefab, transform) : SpineWidget.GetInstance(character.idle_Prefab_Path, transform);
             sW.transform.localPosition = new Vector3(0, character.yOffset, 0);
             spineWidget = sW;
@@ -122,6 +121,13 @@ namespace Overlewd
             border = persPos.Find("button/border").gameObject;
             border.SetActive(false);
             bt.onClick.AddListener(Select);
+        }
+
+        IEnumerator LateInint()
+        {
+            yield return new WaitForSeconds(0.01f);
+            sliderHP.gameObject.SetActive(true);
+            bt.gameObject.SetActive(true);
         }
 
         public void CharPortraitSet()
@@ -265,6 +271,12 @@ namespace Overlewd
             mp += value;
             mp = Mathf.Min(mp, maxMp);
             UpdateUI();
+        }
+        private void OnDestroy()
+        {
+            bm.unselect -= UnHiglight;
+            sliderHP.gameObject.SetActive(false);
+            bt.gameObject.SetActive(false);
         }
     }
 }

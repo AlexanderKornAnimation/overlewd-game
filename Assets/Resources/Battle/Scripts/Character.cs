@@ -7,6 +7,7 @@ namespace Overlewd
     {
         [SerializeField] private int order = -1; //3,2,1 = on the table; -1 = in the deck;
         public int Order { get => order; set => order = value; }
+        public int wave = 1;
         public string charName;
         public Sprite ico;
         public Sprite battlePortrait;

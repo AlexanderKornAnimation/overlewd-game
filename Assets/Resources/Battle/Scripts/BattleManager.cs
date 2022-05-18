@@ -41,9 +41,13 @@ namespace Overlewd
         public bool wannaWin = true;
         private int step = 0; //current characters list step
         private int maxStep = 2; //max count of battle queue, take from character's list
-        //private int wave = 1, maxWave = 3;
+        private int wave = 1, maxWave = 2; //Wave count
         public delegate void Unselect();
         public Unselect unselect;
+        public bool castAOE = false;
+        [SerializeField]
+        private Color redColor;
+
 
         private void Start()
         {
@@ -70,14 +74,13 @@ namespace Overlewd
 
             characters = new List<Character>(Resources.LoadAll<Character>("Battle/BattlePersonages/Profiles"));
             characters.Sort(SortByInitiative);
-            Color redColor;
-            ColorUtility.TryParseHtmlString("#A64646", out redColor);
+           // ColorUtility.TryParseHtmlString("#A64646", out redColor);
 
             var pStats = Instantiate(PlayerStats, PlayerStatsContent);
             pStats.GetComponent<CharacterPortrait>().isPlayer = true;
             foreach (var c in characters)
             {
-                if (c.Order > 0)
+                if (c.Order > 0 && c.wave == 1)
                 {
                     var charGO = new GameObject(c.name);
                     var cc = charGO.AddComponent<CharController>();
@@ -100,27 +103,91 @@ namespace Overlewd
                         cc.charStats = pStats.GetComponent<CharacterPortrait>();
                         charNum++;
                     }
-                    //Fill QueueUI characters icons
+                    /*Fill QueueUI characters icons
                     var portraitQ = Instantiate(portraitPrefab, QueueUIContent);
                     portraitQ.name = "Portrait_" + c.name;
                     portraitQ.GetComponent<Image>().sprite = c.ico;
                     portraitQ.GetComponent<Button>().onClick.AddListener(cc.Select);
                     if (c.isEnemy)
                         portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
-                    QueueElements.Add(portraitQ);
+                    QueueElements.Add(portraitQ);*/
                 }
             }
-
+            CreatePortraitQueue();
             maxStep = charControllerList.Count;
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
             if (charControllerList[0].isEnemy)
                 battleState = BattleState.ENEMY;
             else
-            {
                 battleState = BattleState.PLAYER;
-            }
             ccOnSelect = charControllerList[step];
             StartCoroutine(LateInit());
+            BattleNotif("chapter1", "battle1", "battletutor1");
+            BattleNotif("chapter1", "battle3", "battletutor4");
+            BattleNotif("chapter1", "battle5", "potionstutor1");
+            BattleNotif("chapter1", "battle5", "potionstutor2");
+        }
+
+        private void NextWave()
+        {
+            //destroy old enemys
+            foreach (var cc in charControllerList)
+                if (cc.isEnemy)
+                {
+                    Destroy(cc.charStats.gameObject);
+                    Destroy(cc.gameObject);
+                }
+            charControllerList.RemoveAll(item => item.isEnemy == true);
+            //destroy portraits queue
+            int childs = QueueUIContent.childCount;
+            foreach(Transform child in QueueUIContent.transform)
+                Destroy(child.gameObject);
+            QueueElements.Clear();
+            //create new enemys
+            foreach (var c in characters)
+            {
+                if (c.Order > 0 && c.wave == wave)
+                {
+                    var charGO = new GameObject(c.name);
+                    var cc = charGO.AddComponent<CharController>();
+                    cc.character = c;
+                    charControllerList.Add(cc);
+                    cc.bm = this; //Link battle manager
+                    unselect += cc.UnHiglight; //Add Listener to delegate
+                    if (c.isEnemy)
+                    {
+                        var pos = EnemyStatsContent.Find($"portrait_pos_{c.Order}"); //Drop portrait on Content Queue and turn on
+                        pos.gameObject.SetActive(true);
+                        var eStats = Instantiate(EnemyStats, pos);
+                        cc.charStats = eStats.GetComponent<CharacterPortrait>();
+                        enemyNum++;
+                    }
+                }
+            }
+            CreatePortraitQueue();
+            step = 0;
+            maxStep = charControllerList.Count;
+            QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
+            if (charControllerList[0].isEnemy)
+                battleState = BattleState.ENEMY;
+            else
+                battleState = BattleState.PLAYER;
+            ccOnSelect = charControllerList[step];
+
+        }
+
+        private void CreatePortraitQueue()
+        {
+            foreach (var cc in charControllerList) //Fill QueueUI characters icons
+            {
+                var portraitQ = Instantiate(portraitPrefab, QueueUIContent);
+                portraitQ.name = "Portrait_" + cc.character.name;
+                portraitQ.GetComponent<Image>().sprite = cc.character.ico;
+                portraitQ.GetComponent<Button>().onClick.AddListener(cc.Select);
+                if (cc.character.isEnemy)
+                    portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
+                QueueElements.Add(portraitQ);
+            }
         }
 
         IEnumerator LateInit()
@@ -151,6 +218,10 @@ namespace Overlewd
                             cc.Defence(ccOnSelect, vfx);
                             cc.UnHiglight();
                         }
+                    if (ccOnSelect.isOverlord)
+                    {
+                        castAOE = true; //for battle notify
+                    }
                 }
                 else
                 {
@@ -230,7 +301,7 @@ namespace Overlewd
         {
             UnselectButtons();
             ani.SetTrigger("BattleOut");
-            if (battleState != BattleState.LOSE && battleState != BattleState.WIN)
+            if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
             {
                 Step();
                 unselect?.Invoke();
@@ -253,17 +324,28 @@ namespace Overlewd
             }
             if (enemyNum == enemyIsDead)
             {
-                //next wave function or
-                battleState = BattleState.WIN;
-                if (battleScene != null)
-                    battleScene.BattleWin();
-                Debug.Log("WINNIG");
+                if (wave == maxWave)
+                {
+                    //next wave function or
+                    battleState = BattleState.WIN;
+                    if (battleScene != null)
+                        battleScene.BattleWin();
+                    Debug.Log("WINNIG");
+                }
+                else
+                {
+                    battleState = BattleState.NEXTWAVE;
+                    wave++;
+                    NextWave();
+                    BattleNotif("chapter1", "battle1", "battletutor3");
+                }
             }
             if (charNum == charIsDead)
             {
                 battleState = BattleState.LOSE;
                 if (battleScene != null)
                     battleScene.BattleDefeat();
+                BattleNotif("chapter1", "battle2", "bufftutor1");
                 Debug.Log("LOOSING");
             }
         }
@@ -273,7 +355,16 @@ namespace Overlewd
             var qe = QueueElements[step];
             qe.transform.SetSiblingIndex(maxStep);
             qe.transform.localScale = Vector3.one; //Reset Scale and push back portrait
-            if (++step == maxStep) step = 0;
+            if (++step == maxStep)
+            {
+                BattleNotif("chapter1", "battle1", "battletutor2");
+                BattleNotif("chapter1", "battle4", "bosstutor");
+                step = 0;
+            }
+            if (castAOE == true)
+            {
+                BattleNotif("chapter1", "battle5", "potionstutor3");
+            }
             qe.transform.SetSiblingIndex(maxStep); //Push element to back after Step++
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Portrait
 
@@ -317,6 +408,13 @@ namespace Overlewd
             }
         }
 
+        public void BattleNotif(string chapterID, string battleID, string notifID = null)
+        {
+            if (battleScene.GetBattleData() != null)
+                if (chapterID == battleScene.GetBattleData().ftueChapterKey && battleID == battleScene.GetBattleData().ftueStageKey)
+                    battleScene.OnBattleNotification(notifID);
+        }
+
         private void OnDestroy() { DOTween.Clear(true); } //Destroy DOTween
 
         private int SortByInitiative(Character a, Character b)
@@ -332,7 +430,7 @@ namespace Overlewd
             return 0;
         }
 
-        public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE }
+        public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE, NEXTWAVE }
         public BattleState battleState = BattleState.INIT;
     }
 }
