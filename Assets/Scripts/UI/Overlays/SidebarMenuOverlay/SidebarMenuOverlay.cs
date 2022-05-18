@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,6 +56,8 @@ namespace Overlewd
         protected TextMeshProUGUI forgeButton_Markers;
         protected TextMeshProUGUI forgeButton_Title;
         protected Image forgeButton_Icon;
+
+        private SidebarMenuOverayInData inputData;
 
         void Awake()
         {
@@ -117,6 +120,48 @@ namespace Overlewd
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
         }
 
+        public SidebarMenuOverlay SetData(SidebarMenuOverayInData data)
+        {
+            inputData = data;
+            return this;
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            if (inputData != null)
+            {
+                if (inputData.lockCastleButton) {
+                    UITools.DisableButton(castleButton);
+                }
+                if (inputData.lockPortalButton) {
+                    UITools.DisableButton(portalButton);
+                }
+                if (inputData.lockGlobalMapButton) {
+                    UITools.DisableButton(globalMapButton);
+                }
+                if (inputData.lockOverlordButton) {
+                    UITools.DisableButton(overlordButton);
+                }
+                if (inputData.lockHaremButton) {
+                    UITools.DisableButton(haremButton);
+                }
+                if (inputData.lockMunicipalityButton) {
+                    UITools.DisableButton(municipalityButton);
+                }
+                if (inputData.lockMagicGuildButton) {
+                    UITools.DisableButton(magicGuildButton);
+                }
+                if (inputData.lockMarketButton) {
+                    UITools.DisableButton(marketButton);
+                }
+                if (inputData.lockForgeButton) {
+                    UITools.DisableButton(forgeButton);
+                }
+            }
+
+            await Task.CompletedTask;
+        }
+
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_SidebarOverlayShow);
@@ -177,5 +222,18 @@ namespace Overlewd
         {
             // UIManager.ShowScreen<ForgeScreen>();
         }
+    }
+
+    public class SidebarMenuOverayInData : BaseScreenInData
+    {
+        public bool lockCastleButton = false;
+        public bool lockPortalButton = false;
+        public bool lockGlobalMapButton = false;
+        public bool lockOverlordButton = false;
+        public bool lockHaremButton = false;
+        public bool lockMunicipalityButton = false;
+        public bool lockMagicGuildButton = false;
+        public bool lockMarketButton = false;
+        public bool lockForgeButton = false;
     }
 }

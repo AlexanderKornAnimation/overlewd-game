@@ -35,6 +35,7 @@ namespace Overlewd
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
         private BuffWidget buffPanel;
+        private SidebarButtonWidget sidebarButton;
 
         private FMODEvent music;
 
@@ -116,7 +117,33 @@ namespace Overlewd
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
-            SidebarButtonWidget.GetInstance(transform);
+            sidebarButton = SidebarButtonWidget.GetInstance(transform);
+
+            switch (GameData.ftueStats.lastEndedState)
+            {
+                case ("battle4", "chapter1"):
+                    if (GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle).isBuilt)
+                    {
+                        sidebarButton.sidebarOverlayInData =
+                        new SidebarMenuOverayInData
+                        {
+                            lockCastleButton = true,
+                            lockPortalButton = true,
+                            lockGlobalMapButton = false,
+                            lockOverlordButton = true,
+                            lockHaremButton = true,
+                            lockMunicipalityButton = true,
+                            lockMagicGuildButton = true,
+                            lockMarketButton = true,
+                            lockForgeButton = true
+                        };
+                    }
+                    else
+                    {
+                        sidebarButton.DisableButton();
+                    }
+                    break;
+            }
 
             await Task.CompletedTask;
         }
