@@ -124,7 +124,6 @@ namespace Overlewd
             StartCoroutine(LateInit());
             BattleNotif("chapter1", "battle1", "battletutor1");
             BattleNotif("chapter1", "battle3", "battletutor4");
-            BattleNotif("chapter1", "battle5", "potionstutor1");
             BattleNotif("chapter1", "battle5", "potionstutor2");
         }
 
