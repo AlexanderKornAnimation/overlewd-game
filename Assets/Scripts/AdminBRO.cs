@@ -693,6 +693,7 @@ namespace Overlewd
             public float? health;
             public float? damage;
             public float? mana;
+            public int? sexSceneId;
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";

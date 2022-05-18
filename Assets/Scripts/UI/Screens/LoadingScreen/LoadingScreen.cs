@@ -188,6 +188,7 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
+#if !UNITY_EDITOR
             var apiVersion = await AdminBRO.versionAsync();
             if (apiVersion.version.ToString() != HttpCore.ApiVersion)
             {
@@ -197,6 +198,7 @@ namespace Overlewd
                     await UniTask.Delay(1000);
                 }
             }
+#endif
 
             await AdminBRO.authLoginAsync();
             await AdminBRO.meAsync(SystemInfo.deviceModel);
