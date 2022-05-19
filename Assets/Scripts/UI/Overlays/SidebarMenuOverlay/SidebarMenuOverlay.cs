@@ -128,35 +128,22 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            if (inputData != null)
+            switch (GameData.ftueStats.lastEndedState)
             {
-                if (inputData.lockCastleButton) {
-                    UITools.DisableButton(castleButton);
-                }
-                if (inputData.lockPortalButton) {
-                    UITools.DisableButton(portalButton);
-                }
-                if (inputData.lockGlobalMapButton) {
-                    UITools.DisableButton(globalMapButton);
-                }
-                if (inputData.lockOverlordButton) {
-                    UITools.DisableButton(overlordButton);
-                }
-                if (inputData.lockHaremButton) {
-                    UITools.DisableButton(haremButton);
-                }
-                if (inputData.lockMunicipalityButton) {
-                    UITools.DisableButton(municipalityButton);
-                }
-                if (inputData.lockMagicGuildButton) {
-                    UITools.DisableButton(magicGuildButton);
-                }
-                if (inputData.lockMarketButton) {
-                    UITools.DisableButton(marketButton);
-                }
-                if (inputData.lockForgeButton) {
-                    UITools.DisableButton(forgeButton);
-                }
+                case ("battle4", "chapter1"):
+                    if (GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle).isBuilt)
+                    {
+                        UITools.DisableButton(castleButton);
+                        UITools.DisableButton(portalButton);
+                        //UITools.DisableButton(globalMapButton);
+                        UITools.DisableButton(overlordButton);
+                        UITools.DisableButton(haremButton);
+                        UITools.DisableButton(municipalityButton);
+                        UITools.DisableButton(magicGuildButton);
+                        UITools.DisableButton(marketButton);
+                        UITools.DisableButton(forgeButton);
+                    }
+                    break;
             }
 
             await Task.CompletedTask;
@@ -226,14 +213,6 @@ namespace Overlewd
 
     public class SidebarMenuOverayInData : BaseScreenInData
     {
-        public bool lockCastleButton = false;
-        public bool lockPortalButton = false;
-        public bool lockGlobalMapButton = false;
-        public bool lockOverlordButton = false;
-        public bool lockHaremButton = false;
-        public bool lockMunicipalityButton = false;
-        public bool lockMagicGuildButton = false;
-        public bool lockMarketButton = false;
-        public bool lockForgeButton = false;
+
     }
 }

@@ -122,23 +122,7 @@ namespace Overlewd
             switch (GameData.ftueStats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle).isBuilt)
-                    {
-                        sidebarButton.sidebarOverlayInData =
-                        new SidebarMenuOverayInData
-                        {
-                            lockCastleButton = true,
-                            lockPortalButton = true,
-                            lockGlobalMapButton = false,
-                            lockOverlordButton = true,
-                            lockHaremButton = true,
-                            lockMunicipalityButton = true,
-                            lockMagicGuildButton = true,
-                            lockMarketButton = true,
-                            lockForgeButton = true
-                        };
-                    }
-                    else
+                    if (!GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle).isBuilt)
                     {
                         sidebarButton.DisableButton();
                     }
