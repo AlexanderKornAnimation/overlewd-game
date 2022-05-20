@@ -70,7 +70,8 @@ namespace Overlewd
         {
             foreach (var building in GameData.buildings)
             {
-                if (building.isBuilt)
+                var showBuilding = GameData.progressMode ? building.isBuilt : true;
+                if (showBuilding)
                 {
                     switch (building.key)
                     {

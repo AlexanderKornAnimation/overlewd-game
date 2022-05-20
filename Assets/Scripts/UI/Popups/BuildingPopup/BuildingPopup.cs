@@ -139,18 +139,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
             await BuildNow();
 
-            switch (GameData.ftue.activeChapter.key)
+            switch (GameData.ftueStats.lastEndedState)
             {
-                case "chapter1":
-                    switch (GameData.ftueStats.lastEndedStageData.key)
-                    {
-                        case "battle4":
-                            UIManager.ShowScreen<CastleScreen>();
-                            break;
-                        default:
-                            UIManager.HidePopup();
-                            break;
-                    }
+                case ("battle4", "chapter1"):
+                    UIManager.ShowScreen<CastleScreen>();
                     break;
                 default:
                     UIManager.HidePopup();
@@ -163,18 +155,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await BuildNow();
 
-            switch (GameData.ftue.activeChapter.key)
+            switch (GameData.ftueStats.lastEndedState)
             {
-                case "chapter1":
-                    switch (GameData.ftueStats.lastEndedStageData.key)
-                    {
-                        case "battle4":
-                            UIManager.ShowScreen<CastleScreen>();
-                            break;
-                        default:
-                            UIManager.HidePopup();
-                            break;
-                    }
+                case ("battle4", "chapter1"):
+                    UIManager.ShowScreen<CastleScreen>();
                     break;
                 default:
                     UIManager.HidePopup();

@@ -21,6 +21,8 @@ namespace Overlewd
 
     public static class GameData
     {
+        public static bool progressMode { get; set; } = false;
+
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
 
         public static int GetCurencyCatEarsCount()

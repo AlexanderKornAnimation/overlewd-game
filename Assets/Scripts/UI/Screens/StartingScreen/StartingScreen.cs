@@ -37,7 +37,6 @@ namespace Overlewd
             BattleScreen_Button.onClick.AddListener(BattleScreen_ButtonClick);
 
 #if !UNITY_EDITOR
-            Castle_Button.gameObject.SetActive(false);
             BattleScreen_Button.gameObject.SetActive(false);
 #endif
         }
@@ -46,7 +45,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            GameData.ftue.progressMode = true;
+            GameData.progressMode = true;
             GameData.ftue.activeChapter.SetAsMapChapter();
 
             var firstSexStage = GameData.ftue.chapter1.GetStageByKey("sex1");
@@ -68,7 +67,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            GameData.ftue.progressMode = false;
+            GameData.progressMode = false;
             GameData.ftue.chapter1.SetAsMapChapter();
             UIManager.ShowScreen<MapScreen>();
         }
@@ -82,6 +81,7 @@ namespace Overlewd
         private void Castle_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            GameData.progressMode = false;
             UIManager.ShowScreen<CastleScreen>();
         }
 

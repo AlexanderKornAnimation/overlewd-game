@@ -53,7 +53,7 @@ namespace Overlewd
         {
             if (GameData.ftue.mapChapter == null)
             {
-                GameData.ftue.mapChapter = GameData.ftue.progressMode ?
+                GameData.ftue.mapChapter = GameData.progressMode ?
                     GameData.ftue.activeChapter : GameData.ftue.chapter1;
             }
 
@@ -77,7 +77,7 @@ namespace Overlewd
                             continue;
                         }
 
-                        var instantiateStageOnMap = GameData.ftue.progressMode ? !stageData.isClosed : true;
+                        var instantiateStageOnMap = GameData.progressMode ? !stageData.isClosed : true;
                         if (instantiateStageOnMap)
                         {
                             if (stageData.dialogId.HasValue)
@@ -145,7 +145,7 @@ namespace Overlewd
                 if (GameData.ftue.mapChapter.nextChapterId.HasValue)
                 {
                     chapterButtonText.text = GameData.ftue.mapChapter.nextChapterData?.name;
-                    chapterButton.gameObject.SetActive(GameData.ftue.progressMode ?
+                    chapterButton.gameObject.SetActive(GameData.progressMode ?
                         GameData.ftue.mapChapter.isComplete : true);
                 }
                 else

@@ -917,10 +917,6 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter mapChapter { get { return _mapChapter; } set { _mapChapter = value; } }
 
-            private bool _progressMode;
-            [JsonProperty(Required = Required.Default)]
-            public bool progressMode { get { return _progressMode; } set { _progressMode = value; } }
-
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter chapter1 => GetChapterByKey("chapter1");
 
@@ -970,8 +966,11 @@ namespace Overlewd
                 lastEndedStage.HasValue ? GameData.ftue.GetStageById(lastEndedStage.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey) lastEndedState =>
-                (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key);
+            public (string stageKey, string chapterKey)? lastEndedState =>
+                GameData.progressMode switch {
+                    true => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
+                    _ => null
+                };
 
             public bool IsLastEnededStage(string stageKey, string chapterKey) =>
                 lastEndedState == (stageKey, chapterKey);
