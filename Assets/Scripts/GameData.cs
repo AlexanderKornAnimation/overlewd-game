@@ -161,41 +161,6 @@ namespace Overlewd
             return chapterMaps.Find(cm => cm.id == id);
         }
 
-        public static List<AdminBRO.Building> buildings { get; set; } = new List<AdminBRO.Building>();
-        public static AdminBRO.Building GetBuildingById(int id) => 
-            buildings.Find(b => b.id == id);
-        public static AdminBRO.Building GetBuildingByKey(string key) =>
-            buildings.Find(b => b.key == key);
-
-        public static async Task BuildingBuildNow(int buildingId)
-        {
-            await AdminBRO.buildingBuildNowAsync(buildingId);
-            buildings = await AdminBRO.buildingsAsync();
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuildingBuildNow
-                });
-        }
-
-        public static async Task BuildingBuild(int buildingId)
-        {
-            await AdminBRO.buildingBuildAsync(buildingId);
-            buildings = await AdminBRO.buildingsAsync();
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuildingBuildStarted
-                });
-        }
-
-        public static async Task BuildingsReset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
-            await AdminBRO.initAsync();
-            buildings = await AdminBRO.buildingsAsync();
-        }
-
         public static List<AdminBRO.Character> characters { get; set; } = new List<AdminBRO.Character>();
         public static AdminBRO.Character GetCharacterById(int id)
         {
@@ -211,6 +176,84 @@ namespace Overlewd
         {
             return equipment.Find(eq => eq.id == id);
         }
+
+        public static Gacha gacha { get; } = new Gacha();
+        public static Buildings buildings { get; } = new Buildings();
     }
 
+    //buildings
+    public class Buildings
+    {
+        public List<AdminBRO.Building> buildings { get; private set; }
+
+        public async Task Get()
+        {
+            buildings = await AdminBRO.buildingsAsync();
+        }
+
+        public AdminBRO.Building GetBuildingById(int id) =>
+            buildings.Find(b => b.id == id);
+        public AdminBRO.Building GetBuildingByKey(string key) =>
+            buildings.Find(b => b.key == key);
+        public AdminBRO.Building castle =>
+            GetBuildingByKey(AdminBRO.Building.Key_Castle);
+        public AdminBRO.Building catacombs =>
+            GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
+        public AdminBRO.Building cathedral =>
+            GetBuildingByKey(AdminBRO.Building.Key_Cathedral);
+        public AdminBRO.Building aerostat =>
+            GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
+        public AdminBRO.Building forge =>
+            GetBuildingByKey(AdminBRO.Building.Key_Forge);
+        public AdminBRO.Building harem =>
+            GetBuildingByKey(AdminBRO.Building.Key_Harem);
+        public AdminBRO.Building magicGuild =>
+            GetBuildingByKey(AdminBRO.Building.Key_MagicGuild);
+        public AdminBRO.Building market =>
+            GetBuildingByKey(AdminBRO.Building.Key_Market);
+        public AdminBRO.Building municipality =>
+            GetBuildingByKey(AdminBRO.Building.Key_Municipality);
+        public AdminBRO.Building portal =>
+            GetBuildingByKey(AdminBRO.Building.Key_Portal);
+
+        public async Task BuildNow(int buildingId)
+        {
+            await AdminBRO.buildingBuildNowAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildNow
+                });
+        }
+
+        public async Task Build(int buildingId)
+        {
+            await AdminBRO.buildingBuildAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildStarted
+                });
+        }
+
+        public async Task Reset()
+        {
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
+            await AdminBRO.initAsync();
+            buildings = await AdminBRO.buildingsAsync();
+        }
+    }
+
+    //gacha
+    public class Gacha
+    {
+        public List<AdminBRO.GachItem> items { get; private set; }
+
+        public async Task Get()
+        {
+            items = await AdminBRO.gachaAsync();
+        }
+    }
 }

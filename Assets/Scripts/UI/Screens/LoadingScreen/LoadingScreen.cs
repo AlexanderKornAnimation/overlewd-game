@@ -243,11 +243,13 @@ namespace Overlewd
 
             GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
 
-            GameData.buildings = await AdminBRO.buildingsAsync();
+            await GameData.buildings.Get();
 
             GameData.characters = await AdminBRO.charactersAsync();
 
             GameData.equipment = await AdminBRO.equipmentAsync();
+
+            await GameData.gacha.Get();
 
             SetDownloadBarProgress(0.3f);
 

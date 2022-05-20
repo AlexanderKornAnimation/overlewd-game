@@ -16,6 +16,22 @@ namespace Overlewd
             return SystemInfo.deviceUniqueIdentifier;
         }
 
+        // common entities
+        [Serializable]
+        public class PriceItem
+        {
+            public int currencyId;
+            public int amount;
+        }
+
+        [Serializable]
+        public class RewardItem
+        {
+            public string icon;
+            public int? amount;
+            public int? tradableId;
+        }
+
         // /version
         public static async Task<ApiVersion> versionAsync()
         {
@@ -153,13 +169,6 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public CurrencyItem currency;
-        }
-
-        [Serializable]
-        public class PriceItem
-        {
-            public int currencyId;
-            public int amount;
         }
 
         // /markets
@@ -362,18 +371,11 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public List<int> chapters;
-            public List<Reward> rewards;
+            public List<RewardItem> rewards;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
             public const string Type_Weekly = "weekly";
-
-            public class Reward
-            {
-                public string icon;
-                public int? amount;
-                public int? tradableId;
-            }
         }
         
 
@@ -482,7 +484,7 @@ namespace Overlewd
             public string subtitle;
             public string description;
             public int? goalCount;
-            public List<Reward> rewards;
+            public List<RewardItem> rewards;
             public string status;
             public int progressCount;
             public int? eventId;
@@ -491,13 +493,6 @@ namespace Overlewd
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
-
-            public class Reward
-            {
-                public string icon;
-                public int? amount;
-                public int? tradableId;
-            }
         }
 
         // //quests/{id}/claim-reward
@@ -630,21 +625,14 @@ namespace Overlewd
             public int id;
             public string title;
             public string type;
-            public List<Reward> rewards;
+            public List<RewardItem> rewards;
             public string rewardSpriteString;
-            public List<Reward> firstRewards;
+            public List<RewardItem> firstRewards;
             public List<Phase> battlePhases;
             public int? battlePassPointsReward;
 
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
-
-            public class Reward
-            {
-                public string icon;
-                public int? amount;
-                public int? tradableId;
-            }
 
             public class Phase 
             {
@@ -1234,6 +1222,58 @@ namespace Overlewd
             public string title;
             public string assetBundleId;
             public string chapterMapPath;
+        }
+
+        // gacha
+        public static async Task<List<GachItem>> gachaAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/gacha";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<GachItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class GachItem
+        {
+            public int id;
+            public string tabTitle;
+            public string image;
+            public string tabImageOn;
+            public string tabImageOff;
+            public string tabBackgroundImage;
+            public string tabType;
+            public List<PriceItem> priceForOne;
+            public List<PriceItem> priceForTen;
+            public int? discount;
+            public int? limitOfCycles;
+            public List<PoolItem> pool;
+            public List<PoolItem> targetPool;
+            public string type;
+            public List<TierItem> tiers;
+            public string dateStart;
+            public string dateEnd;
+            public int? eventId;
+
+            public class PoolItem
+            {
+                public int tradableId;
+                public int probability;
+            }
+
+            public class TierItem
+            {
+                public string title;
+            }
+
+            public const string TabType_Matriachs = "matriachs";
+            public const string TabType_CharactersEquipment = "battle_characters_equipment";
+            public const string TabType_OverlordEquipment = "overlord_equipment";
+            public const string TabType_Shards = "shards";
+
+            public const string Type_Linear = "linear";
+            public const string Type_Stepwise = "stepwise";
         }
     }
 }

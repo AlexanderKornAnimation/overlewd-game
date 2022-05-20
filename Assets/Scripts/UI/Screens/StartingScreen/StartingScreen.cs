@@ -94,7 +94,7 @@ namespace Overlewd
         private async void FTUEReset()
         {
             await GameData.FTUEReset();
-            await GameData.BuildingsReset();
+            await GameData.buildings.Reset();
         }
     }
 }

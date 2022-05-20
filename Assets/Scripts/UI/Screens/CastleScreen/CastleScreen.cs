@@ -68,7 +68,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            foreach (var building in GameData.buildings)
+            foreach (var building in GameData.buildings.buildings)
             {
                 var showBuilding = GameData.progressMode ? building.isBuilt : true;
                 if (showBuilding)
@@ -123,7 +123,7 @@ namespace Overlewd
             switch (GameData.ftueStats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (!GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle).isBuilt)
+                    if (!GameData.buildings.castle.isBuilt)
                     {
                         sidebarButton.DisableButton();
                     }
@@ -146,8 +146,7 @@ namespace Overlewd
                         await Task.WhenAll(showPanelTasks);
                     }
 
-                    var castleData = GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle);
-                    if (castleData.isBuilt)
+                    if (GameData.buildings.castle.isBuilt)
                     {
                         await castleButton.ShowAsync();
                         GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");   

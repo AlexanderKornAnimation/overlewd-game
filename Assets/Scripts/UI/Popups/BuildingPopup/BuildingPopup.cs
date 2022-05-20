@@ -183,7 +183,7 @@ namespace Overlewd
             {
                 if (buildingData.canUpgradeNow)
                 {
-                    await GameData.BuildingBuildNow(buildingData.id);
+                    await GameData.buildings.BuildNow(buildingData.id);
                 }
             }
         }
@@ -194,6 +194,6 @@ namespace Overlewd
         public int? buildingId;
 
         public AdminBRO.Building buildingData =>
-            buildingId.HasValue ? GameData.GetBuildingById(buildingId.Value) : null;
+            buildingId.HasValue ? GameData.buildings.GetBuildingById(buildingId.Value) : null;
     }
 }

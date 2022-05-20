@@ -189,7 +189,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            foreach (var buildingData in GameData.buildings)
+            foreach (var buildingData in GameData.buildings.buildings)
             {
                 NameByKey(buildingData.key).text = buildingData.name;
 
@@ -219,15 +219,10 @@ namespace Overlewd
             switch (GameData.ftueStats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    var castleData = GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle);
-                    if (!castleData.isBuilt)
+                    if (!GameData.buildings.castle.isBuilt)
                     {
                         GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
-                    break;
-
-                default:
-
                     break;
             }
 
@@ -267,7 +262,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Municipality)?.id
+                buildingId = GameData.buildings.municipality?.id
             }).RunShowPopupProcess();
         }
 
@@ -277,7 +272,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Forge)?.id
+                buildingId = GameData.buildings.forge?.id
             }).RunShowPopupProcess();
         }
 
@@ -287,7 +282,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_MagicGuild)?.id
+                buildingId = GameData.buildings.magicGuild?.id
             }).RunShowPopupProcess();
         }
 
@@ -297,7 +292,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Market)?.id
+                buildingId = GameData.buildings.market?.id
             }).RunShowPopupProcess();
         }
 
@@ -307,7 +302,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Portal)?.id
+                buildingId = GameData.buildings.portal?.id
             }).RunShowPopupProcess();
         }
 
@@ -317,7 +312,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle)?.id,
+                buildingId = GameData.buildings.castle?.id,
             }).RunShowPopupProcess();
         }
 
@@ -327,7 +322,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Cathedral)?.id
+                buildingId = GameData.buildings.cathedral?.id
             }).RunShowPopupProcess();
         }
 
@@ -337,7 +332,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Aerostat)?.id
+                buildingId = GameData.buildings.aerostat?.id
             }).RunShowPopupProcess();
         }
 
@@ -347,7 +342,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Catacombs)?.id
+                buildingId = GameData.buildings.catacombs?.id
             }).RunShowPopupProcess();
         }
 
@@ -357,7 +352,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.GetBuildingByKey(AdminBRO.Building.Key_Harem)?.id
+                buildingId = GameData.buildings.harem?.id
             }).RunShowPopupProcess();
         }
 

@@ -131,7 +131,7 @@ namespace Overlewd
             switch (GameData.ftueStats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (GameData.GetBuildingByKey(AdminBRO.Building.Key_Castle).isBuilt)
+                    if (GameData.buildings.castle.isBuilt)
                     {
                         UITools.DisableButton(castleButton);
                         UITools.DisableButton(portalButton);
