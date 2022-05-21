@@ -8,25 +8,27 @@ namespace Overlewd
 {
     public class PortalScreen : BaseFullScreen
     {
-        protected Button memoriesButton;
-        protected Image memoriesButtonSelected;
-        protected Button battleGirlsButton;
-        protected Image battleGirlsButtonSelected;
-        protected Button equipButton;
-        protected Image equipButtonSelected;
+        private Button shardsButton;
+        private Image shardsButtonSelected;
+        private Button battleGirlsButton;
+        private Image battleGirlsButtonSelected;
+        private Button battleGirlsEquipButton;
+        private Image battleGirlsEquipButtonSelected;
+        private Button overlordEquipButton;
+        private Image overlordEquipButtonSelected;
+        private Button backButton;
 
-        protected GameObject memoriesScroll;
-        protected Transform memoriesScrollContent;
-        protected GameObject battleGirlsScroll;
-        protected Transform battleGirlsScrollContent;
-        protected GameObject equipScroll;
-        protected Transform equipScrollContent;
+        private GameObject battleGirlsEquipContent;
+        private GameObject shardsContent;
+        private GameObject battleGirlsContent;
+        private GameObject overlordEquipContent;
 
-        protected Transform tierButtonsScrollPos;
+        private NSPortalScreen.BaseBanner selectedBanner;
 
-        protected NSPortalScreen.BaseBanner selectedBanner;
-
-        protected List<NSPortalScreen.BaseBanner> banners = new List<NSPortalScreen.BaseBanner>();
+        private List<NSPortalScreen.BaseBanner> battleGirlsBanners = new List<NSPortalScreen.BaseBanner>();
+        private List<NSPortalScreen.BaseBanner> battleGirlsEquipBanners = new List<NSPortalScreen.BaseBanner>();
+        private List<NSPortalScreen.BaseBanner> overlordBanners = new List<NSPortalScreen.BaseBanner>();
+        private List<NSPortalScreen.BaseBanner> memoryBanners = new List<NSPortalScreen.BaseBanner>();
 
         protected virtual void Awake()
         {
@@ -34,109 +36,204 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
             var tabArea = canvas.Find("TabArea");
+            var bannersBack = canvas.Find("BannersBackground");
 
-            memoriesButton = tabArea.Find("MemoriesButton").GetComponent<Button>();
-            memoriesButton.onClick.AddListener(MemoriesButtonClick);
-            memoriesButtonSelected = memoriesButton.transform.Find("ButtonSelected").GetComponent<Image>();
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+            
+            shardsButton = tabArea.Find("ShardsButton").GetComponent<Button>();
+            shardsButton.onClick.AddListener(ShardsButtonClick);
+            shardsButtonSelected = shardsButton.transform.Find("ButtonSelected").GetComponent<Image>();
+            
             battleGirlsButton = tabArea.Find("BattleGirlsButton").GetComponent<Button>();
             battleGirlsButton.onClick.AddListener(BattleGirlsButtonClick);
             battleGirlsButtonSelected = battleGirlsButton.transform.Find("ButtonSelected").GetComponent<Image>();
-            equipButton = tabArea.Find("EquipButton").GetComponent<Button>();
-            equipButton.onClick.AddListener(EquipButtonClick);
-            equipButtonSelected = equipButton.transform.Find("ButtonSelected").GetComponent<Image>();
 
-            memoriesScroll = canvas.Find("MemoriesScroll").gameObject;
-            memoriesScrollContent = memoriesScroll.transform.Find("Viewport").Find("Content");
-            battleGirlsScroll = canvas.Find("BattleGirlsScroll").gameObject;
-            battleGirlsScrollContent = battleGirlsScroll.transform.Find("Viewport").Find("Content");
-            equipScroll = canvas.Find("EquipScroll").gameObject;
-            equipScrollContent = equipScroll.transform.Find("Viewport").Find("Content");
+            battleGirlsEquipButton = tabArea.Find("BattleGirlsEquipButton").GetComponent<Button>();
+            battleGirlsEquipButton.onClick.AddListener(BattleGirlsEquipButtonClick);
+            battleGirlsEquipButtonSelected = battleGirlsEquipButton.transform.Find("ButtonSelected").GetComponent<Image>();
+            
+            overlordEquipButton = tabArea.Find("OverlordEquipButton").GetComponent<Button>();
+            overlordEquipButton.onClick.AddListener(OverlordEquipButtonClick);
+            overlordEquipButtonSelected = overlordEquipButton.transform.Find("ButtonSelected").GetComponent<Image>();
 
-            tierButtonsScrollPos = canvas.Find("TierButtonsScrollPos");
+            shardsContent = bannersBack.Find("ShardsContent").gameObject;
+            battleGirlsContent = bannersBack.Find("BattleGirlsContent").gameObject;
+            overlordEquipContent = bannersBack.Find("OverlordEquipContent").gameObject;
+            battleGirlsEquipContent = bannersBack.Find("BattleGirlsEquipContent").gameObject;
         }
 
         protected virtual void Start()
         {
-            SidebarButtonWidget.GetInstance(transform);
-
             Customize();
 
-            MemoriesButtonClick();
+            BattleGirlsButtonClick();
         }
 
-        protected virtual void AddBanner(NSPortalScreen.BaseBanner newBanner)
+        protected virtual void AddBanner(NSPortalScreen.BaseBanner newBanner, List<NSPortalScreen.BaseBanner> banners)
         {
             newBanner.selectBanner += SelectBanner;
-            newBanner.tierButtonsScroll = NSPortalScreen.TierButtonsScroll.GetInstance(tierButtonsScrollPos);
-
+            
+            SetPosition(newBanner, banners);
             banners.Add(newBanner);
         }
 
+        private void SetPosition(NSPortalScreen.BaseBanner banner, List<NSPortalScreen.BaseBanner> banners)
+        {
+            const float offsetX = 586f;
+
+            if (banners.Count == 0)
+                return;
+            
+            var lastBannerPos = banners.Last().GetComponent<RectTransform>().anchoredPosition;
+            var bannerRect = banner.GetComponent<RectTransform>();
+            bannerRect.anchoredPosition = new Vector2(lastBannerPos.x + offsetX, lastBannerPos.y);
+        }
+        
         protected virtual void Customize()
         {
-            AddBanner(NSPortalScreen.BattleGirlsBannerTypeA.GetInstance(memoriesScrollContent));
-            AddBanner(NSPortalScreen.BattleGirlsBannerTypeB.GetInstance(memoriesScrollContent));
-            AddBanner(NSPortalScreen.PremiumSummonBanner.GetInstance(memoriesScrollContent));
-            AddBanner(NSPortalScreen.EventSummonBanner.GetInstance(memoriesScrollContent));
-
-            AddBanner(NSPortalScreen.BattleGirlsBannerTypeA.GetInstance(battleGirlsScrollContent));
-            AddBanner(NSPortalScreen.PremiumSummonBanner.GetInstance(battleGirlsScrollContent));
-
-            AddBanner(NSPortalScreen.PremiumSummonBanner.GetInstance(equipScrollContent));
-            AddBanner(NSPortalScreen.BattleGirlsBannerTypeA.GetInstance(equipScrollContent));
-            AddBanner(NSPortalScreen.BattleGirlsBannerTypeB.GetInstance(equipScrollContent));
-
-            if (banners.Any())
+            foreach (var gacha in GameData.gacha.items)
             {
-                SelectBanner(banners.First());
+                switch (gacha.gachaType)
+                {
+                    case (AdminBRO.GachItem.Type_Linear, AdminBRO.GachItem.TabType_OverlordEquipment):
+                        var bannerTypeA = NSPortalScreen.BannerTypeA.GetInstance(overlordEquipContent.transform);
+                        bannerTypeA.gachaItem = gacha;
+                        AddBanner(bannerTypeA, overlordBanners);
+                        break;
+                    case (AdminBRO.GachItem.Type_Stepwise, AdminBRO.GachItem.TabType_OverlordEquipment):
+                        var bannerTypeB = NSPortalScreen.BannerTypeB.GetInstance(overlordEquipContent.transform);
+                        bannerTypeB.gachaItem = gacha;
+                        AddBanner(bannerTypeB, overlordBanners);
+                        break;
+                }
             }
         }
-
-        protected virtual void MemoriesButtonClick()
+        
+        private void MoveBanners(NSPortalScreen.BaseBanner banner, List<NSPortalScreen.BaseBanner> banners)
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            memoriesButtonSelected.gameObject.SetActive(true);
-            memoriesScroll.SetActive(true);
+            var isLeftDirection = banner.GetComponent<RectTransform>().anchoredPosition.x >
+                                  selectedBanner?.GetComponent<RectTransform>().anchoredPosition.x;
 
-            battleGirlsButtonSelected.gameObject.SetActive(false);
-            battleGirlsScroll.SetActive(false);
-
-            equipButtonSelected.gameObject.SetActive(false);
-            equipScroll.SetActive(false);
+            var bannerRect = banner.GetComponent<RectTransform>();
+            
+            while (bannerRect.anchoredPosition.x != 0)
+            {
+                foreach (var _banner in banners)
+                {
+                    if(isLeftDirection)
+                        _banner.MoveLeft();
+                    else
+                        _banner.MoveRight();
+                }
+            }
         }
-
-        protected virtual void BattleGirlsButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            memoriesButtonSelected.gameObject.SetActive(false);
-            memoriesScroll.SetActive(false);
-
-            battleGirlsButtonSelected.gameObject.SetActive(true);
-            battleGirlsScroll.SetActive(true);
-
-            equipButtonSelected.gameObject.SetActive(false);
-            equipScroll.SetActive(false);
-        }
-
-        protected virtual void EquipButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            memoriesButtonSelected.gameObject.SetActive(false);
-            memoriesScroll.SetActive(false);
-
-            battleGirlsButtonSelected.gameObject.SetActive(false);
-            battleGirlsScroll.SetActive(false);
-
-            equipButtonSelected.gameObject.SetActive(true);
-            equipScroll.SetActive(true);
-        }
-
+        
         protected virtual void SelectBanner(NSPortalScreen.BaseBanner banner)
         {
             selectedBanner?.Deselect();
+
+            switch (banner.gachaItem.tabType)
+            {
+                case AdminBRO.GachItem.TabType_OverlordEquipment:
+                    MoveBanners(banner,overlordBanners);
+                    break;
+            }
+            
             selectedBanner = banner;
             selectedBanner?.Select();
         }
-    }
+        
+        protected virtual void ShardsButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            shardsButtonSelected.gameObject.SetActive(true);
+            shardsContent.SetActive(true);
+            
+            battleGirlsButtonSelected.gameObject.SetActive(false);
+            battleGirlsContent.SetActive(false);
+            
+            overlordEquipButtonSelected.gameObject.SetActive(false);
+            overlordEquipContent.SetActive(false);
+            
+            battleGirlsEquipButtonSelected.gameObject.SetActive(false);
+            battleGirlsEquipContent.SetActive(false);
+            
+            
+            if (memoryBanners.Any())
+            {
+                SelectBanner(memoryBanners.First());
+            }
+        }
 
+        private void BattleGirlsEquipButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            battleGirlsEquipButtonSelected.gameObject.SetActive(true);
+            battleGirlsContent.SetActive(true);
+            
+            shardsButtonSelected.gameObject.SetActive(false);
+            shardsContent.SetActive(false);
+
+            battleGirlsButtonSelected.gameObject.SetActive(false);
+            battleGirlsContent.SetActive(false);
+
+            overlordEquipButtonSelected.gameObject.SetActive(false);
+            overlordEquipContent.SetActive(false);
+            
+            if (battleGirlsBanners.Any())
+            {
+                SelectBanner(battleGirlsBanners.First());
+            }
+        }
+        
+        protected virtual void BattleGirlsButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            battleGirlsButtonSelected.gameObject.SetActive(true);
+            battleGirlsContent.SetActive(true);
+            
+            shardsButtonSelected.gameObject.SetActive(false);
+            shardsContent.SetActive(false);
+
+            overlordEquipButtonSelected.gameObject.SetActive(false);
+            overlordEquipContent.SetActive(false);
+            
+            battleGirlsEquipButtonSelected.gameObject.SetActive(false);
+            battleGirlsContent.SetActive(false);
+            
+            if (battleGirlsEquipBanners.Any())
+            {
+                SelectBanner(battleGirlsEquipBanners.First());
+            }
+        }
+
+        protected virtual void OverlordEquipButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            overlordEquipButtonSelected.gameObject.SetActive(true);
+            overlordEquipContent.SetActive(true);
+            
+            shardsButtonSelected.gameObject.SetActive(false);
+            shardsContent.SetActive(false);
+
+            battleGirlsButtonSelected.gameObject.SetActive(false);
+            battleGirlsContent.SetActive(false);
+
+            battleGirlsEquipButtonSelected.gameObject.SetActive(false);
+            battleGirlsContent.SetActive(false);
+            
+            if (overlordBanners.Any())
+            {
+                SelectBanner(overlordBanners.First());
+            }
+        }
+
+        private void BackButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<CastleScreen>();
+        }
+
+    }
 }
