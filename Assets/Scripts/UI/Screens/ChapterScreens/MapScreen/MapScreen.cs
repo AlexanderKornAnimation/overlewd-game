@@ -54,7 +54,7 @@ namespace Overlewd
             if (GameData.ftue.mapChapter == null)
             {
                 GameData.ftue.mapChapter = GameData.progressMode ?
-                    GameData.ftue.activeChapter : GameData.ftue.chapter1;
+                    GameData.ftue.activeChapter : GameData.ftue.info.chapter1;
             }
 
             //backbutton.gameObject.SetActive(false);
@@ -69,7 +69,7 @@ namespace Overlewd
 
                     foreach (var stageId in GameData.ftue.mapChapter.stages)
                     {
-                        var stageData = GameData.ftue.GetStageById(stageId);
+                        var stageData = GameData.ftue.info.GetStageById(stageId);
 
                         var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
                         if (stageMapNode == null)
@@ -204,18 +204,18 @@ namespace Overlewd
             if (waitStagesShowAnims) await UniTask.Delay(2000);
 
             //ftue part
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle1", "chapter1"):
-                    GameData.ftue.chapter1.ShowNotifByKey("maptutor");
+                    GameData.ftue.info.chapter1.ShowNotifByKey("maptutor");
                     await UIManager.WaitHideNotifications();
                     await questsPanel.ShowAsync();
-                    GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
+                    GameData.ftue.info.chapter1.ShowNotifByKey("qbtutor");
                     break;
                 case ("sex2", "chapter1"):
                     await questsPanel.ShowAsync();
                     await buffPanel.ShowAsync();
-                    GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
+                    GameData.ftue.info.chapter1.ShowNotifByKey("bufftutor2");
                     break;
                 default:
                     var showPanelTasks = new List<Task>();

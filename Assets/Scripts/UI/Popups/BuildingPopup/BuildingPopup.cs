@@ -139,7 +139,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
             await BuildNow();
 
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     UIManager.ShowScreen<CastleScreen>();
@@ -155,7 +155,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await BuildNow();
 
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     UIManager.ShowScreen<CastleScreen>();

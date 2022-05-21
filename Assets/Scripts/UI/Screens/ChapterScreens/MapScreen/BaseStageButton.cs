@@ -12,7 +12,7 @@ namespace Overlewd
             public int? stageId { get; set; }
 
             protected AdminBRO.FTUEStageItem stageData =>
-                stageId.HasValue ? GameData.ftue.GetStageById(stageId.Value) : null;
+                stageId.HasValue ? GameData.ftue.info.GetStageById(stageId.Value) : null;
 
             protected Transform done;
             protected Transform animPos;

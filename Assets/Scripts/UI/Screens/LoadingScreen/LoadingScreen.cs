@@ -231,11 +231,7 @@ namespace Overlewd
 
             GameData.battles = await AdminBRO.battlesAsync();
 
-            GameData.ftue = await AdminBRO.ftueAsync();
-
-            GameData.ftueStages = await AdminBRO.ftueStagesAsync();
-
-            GameData.ftueStats = await AdminBRO.ftueStatsAsync();
+            await GameData.ftue.Get();
 
             GameData.animations = await AdminBRO.animationsAsync();
 

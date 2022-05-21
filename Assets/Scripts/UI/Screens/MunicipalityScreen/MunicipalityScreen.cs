@@ -216,12 +216,12 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             //ftue part
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     if (!GameData.buildings.castle.isBuilt)
                     {
-                        GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
+                        GameData.ftue.info.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
                     break;
             }

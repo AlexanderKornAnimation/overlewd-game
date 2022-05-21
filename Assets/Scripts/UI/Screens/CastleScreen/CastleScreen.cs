@@ -92,7 +92,7 @@ namespace Overlewd
                             break;
                         case AdminBRO.Building.Key_Castle:
                             castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
-                            if (GameData.ftueStats.IsLastEnededStage("battle4", "chapter1")) {
+                            if (GameData.ftue.stats.IsLastEnededStage("battle4", "chapter1")) {
                                 castleButton.Hide();
                             }
                             break;
@@ -120,7 +120,7 @@ namespace Overlewd
             buffPanel.Hide();
             sidebarButton = SidebarButtonWidget.GetInstance(transform);
 
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     if (!GameData.buildings.castle.isBuilt)
@@ -136,7 +136,7 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             //ftue part
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     {
@@ -149,11 +149,11 @@ namespace Overlewd
                     if (GameData.buildings.castle.isBuilt)
                     {
                         await castleButton.ShowAsync();
-                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");   
+                        GameData.ftue.info.chapter1.ShowNotifByKey("barrackstutor2");   
                     }
                     else
                     {
-                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
+                        GameData.ftue.info.chapter1.ShowNotifByKey("barrackstutor1");
                     }
                     break;
 

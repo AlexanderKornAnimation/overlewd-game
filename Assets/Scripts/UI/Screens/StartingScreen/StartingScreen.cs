@@ -48,7 +48,7 @@ namespace Overlewd
             GameData.progressMode = true;
             GameData.ftue.activeChapter.SetAsMapChapter();
 
-            var firstSexStage = GameData.ftue.chapter1.GetStageByKey("sex1");
+            var firstSexStage = GameData.ftue.info.chapter1.GetStageByKey("sex1");
             if (firstSexStage.isComplete)
             {
                 UIManager.ShowScreen<MapScreen>();
@@ -68,7 +68,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
             GameData.progressMode = false;
-            GameData.ftue.chapter1.SetAsMapChapter();
+            GameData.ftue.info.chapter1.SetAsMapChapter();
             UIManager.ShowScreen<MapScreen>();
         }
 
@@ -93,7 +93,7 @@ namespace Overlewd
 
         private async void FTUEReset()
         {
-            await GameData.FTUEReset();
+            await GameData.ftue.Reset();
             await GameData.buildings.Reset();
         }
     }

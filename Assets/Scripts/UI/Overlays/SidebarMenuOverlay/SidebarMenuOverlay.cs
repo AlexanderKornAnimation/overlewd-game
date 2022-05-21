@@ -128,7 +128,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            switch (GameData.ftueStats.lastEndedState)
+            switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     if (GameData.buildings.castle.isBuilt)

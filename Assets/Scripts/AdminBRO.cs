@@ -871,39 +871,18 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter nextChapterData => 
-                nextChapterId.HasValue ? GameData.ftue.GetChapterById(nextChapterId.Value) : null;
+                nextChapterId.HasValue ? GameData.ftue.info.GetChapterById(nextChapterId.Value) : null;
 
             public FTUEStageItem GetStageById(int id) =>
-                GameData.ftueStages.Find(s => s.id == id);
+                GameData.ftue.stages.Find(s => s.id == id);
             public FTUEStageItem GetStageByKey(string key) =>
-                GameData.ftueStages.Find(s => s.key == key && s.ftueChapterId == id);
+                GameData.ftue.stages.Find(s => s.key == key && s.ftueChapterId == id);
         }
 
         [Serializable]
         public class FTUEInfo
         {
             public List<FTUEChapter> chapters;
-
-            [JsonProperty(Required = Required.Default)]
-            public FTUEChapter activeChapter {
-                get {
-                    var chapterData = GameData.ftue.chapter1;
-                    while (chapterData.isComplete)
-                    {
-                        if (chapterData.nextChapterId.HasValue)
-                        {
-                            chapterData = chapterData.nextChapterData;
-                            continue;
-                        }
-                        break;
-                    }
-                    return chapterData;
-                }
-            }
-
-            private static FTUEChapter _mapChapter;
-            [JsonProperty(Required = Required.Default)]
-            public FTUEChapter mapChapter { get { return _mapChapter; } set { _mapChapter = value; } }
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter chapter1 => GetChapterByKey("chapter1");
@@ -919,7 +898,7 @@ namespace Overlewd
             public FTUEChapter GetChapterById(int id) =>
                 chapters.Find(ch => ch.id == id);
             public FTUEStageItem GetStageById(int id) =>
-                GameData.ftueStages.Find(s => s.id == id);
+                GameData.ftue.stages.Find(s => s.id == id);
             public FTUEStageItem GetStageByKey(string stageKey, int chapterId) =>
                 GetChapterById(chapterId).GetStageByKey(stageKey);
             public FTUEStageItem GetStageByKey(string stageKey, string chapterKey) =>
@@ -947,11 +926,11 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
-                lastStartedStage.HasValue ? GameData.ftue.GetStageById(lastStartedStage.Value) : null;
+                lastStartedStage.HasValue ? GameData.ftue.info.GetStageById(lastStartedStage.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
-                lastEndedStage.HasValue ? GameData.ftue.GetStageById(lastEndedStage.Value) : null;
+                lastEndedStage.HasValue ? GameData.ftue.info.GetStageById(lastEndedStage.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? lastEndedState =>
@@ -998,7 +977,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>
-                ftueChapterId.HasValue ? GameData.ftue.GetChapterById(ftueChapterId.Value) : null;
+                ftueChapterId.HasValue ? GameData.ftue.info.GetChapterById(ftueChapterId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData => 
@@ -1231,6 +1210,24 @@ namespace Overlewd
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<GachItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task gachaBuyAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/gacha/{id}/buy";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task gachaBuyTenAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/gacha/{id}/buy-ten";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+
             }
         }
 

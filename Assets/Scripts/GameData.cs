@@ -120,29 +120,6 @@ namespace Overlewd
             return battles.Find(d => d.id == id);
         }
 
-        public static AdminBRO.FTUEInfo ftue { get; set; }
-        public static List<AdminBRO.FTUEStageItem> ftueStages { get; set; } = new List<AdminBRO.FTUEStageItem>();
-        public static AdminBRO.FTUEStats ftueStats { get; set; } = new AdminBRO.FTUEStats();
-
-        public static async Task FTUEStartStage(int stageId)
-        {
-            await AdminBRO.ftueStageStartAsync(stageId);
-            ftueStages = await AdminBRO.ftueStagesAsync();
-            ftueStats = await AdminBRO.ftueStatsAsync();
-        }
-        public static async Task FTUEEndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
-        {
-            await AdminBRO.ftueStageEndAsync(stageId, data);
-            ftueStages = await AdminBRO.ftueStagesAsync();
-            ftueStats = await AdminBRO.ftueStatsAsync();
-        }
-        public static async Task FTUEReset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
-            ftueStages = await AdminBRO.ftueStagesAsync();
-            ftueStats = await AdminBRO.ftueStatsAsync();
-        }
-
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
         public static AdminBRO.Animation GetAnimationById(int id)
         {
@@ -177,8 +154,61 @@ namespace Overlewd
             return equipment.Find(eq => eq.id == id);
         }
 
+        public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
         public static Buildings buildings { get; } = new Buildings();
+    }
+
+    //ftue
+    public class FTUE
+    {
+        public AdminBRO.FTUEInfo info { get; private set; }
+        public List<AdminBRO.FTUEStageItem> stages { get; private set; }
+        public AdminBRO.FTUEStats stats { get; private set; }
+        public AdminBRO.FTUEChapter activeChapter
+        {
+            get
+            {
+                var chapterData = info.chapter1;
+                while (chapterData.isComplete)
+                {
+                    if (chapterData.nextChapterId.HasValue)
+                    {
+                        chapterData = chapterData.nextChapterData;
+                        continue;
+                    }
+                    break;
+                }
+                return chapterData;
+            }
+        }
+        public AdminBRO.FTUEChapter mapChapter { get; set; }
+
+        public async Task Get()
+        {
+            info = await AdminBRO.ftueAsync();
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+
+        public async Task StartStage(int stageId)
+        {
+            await AdminBRO.ftueStageStartAsync(stageId);
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+        public async Task EndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
+        {
+            await AdminBRO.ftueStageEndAsync(stageId, data);
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+        public async Task Reset()
+        {
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
     }
 
     //buildings
@@ -254,6 +284,18 @@ namespace Overlewd
         public async Task Get()
         {
             items = await AdminBRO.gachaAsync();
+        }
+
+        public async Task Buy(int id)
+        {
+            await AdminBRO.gachaBuyAsync(id);
+            await Get();
+        }
+
+        public async Task BuyTen(int id)
+        {
+            await AdminBRO.gachaBuyTenAsync(id);
+            await Get();
         }
     }
 }

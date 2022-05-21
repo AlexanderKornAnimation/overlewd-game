@@ -47,7 +47,7 @@ namespace Overlewd
         {
             var win = inputData.ftueStageData?.ftueState switch
             {
-                ("battle2", "chapter1") => GameData.ftue.StageIsComplete("sex2", "chapter1"),
+                ("battle2", "chapter1") => GameData.ftue.info.StageIsComplete("sex2", "chapter1"),
                 _ => true
             };
 
@@ -76,7 +76,7 @@ namespace Overlewd
         {
             var defeat = inputData.ftueStageData?.ftueState switch
             {
-                ("battle2", "chapter1") => !GameData.ftue.StageIsComplete("sex2", "chapter1"),
+                ("battle2", "chapter1") => !GameData.ftue.info.StageIsComplete("sex2", "chapter1"),
                 _ => false
             };
 
@@ -105,7 +105,7 @@ namespace Overlewd
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.FTUEStartStage(inputData.ftueStageData.id);
+                await GameData.ftue.StartStage(inputData.ftueStageData.id);
             }
             else
             {
@@ -124,7 +124,7 @@ namespace Overlewd
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.FTUEEndStage(inputData.ftueStageId.Value,
+                await GameData.ftue.EndStage(inputData.ftueStageId.Value,
                     new AdminBRO.FTUEStageEndData
                     {
                         win = battleIsWin

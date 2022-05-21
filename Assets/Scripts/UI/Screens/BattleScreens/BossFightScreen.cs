@@ -67,7 +67,7 @@ namespace Overlewd
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.FTUEStartStage(inputData.ftueStageId.Value);
+                await GameData.ftue.StartStage(inputData.ftueStageId.Value);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace Overlewd
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.FTUEEndStage(inputData.ftueStageId.Value,
+                await GameData.ftue.EndStage(inputData.ftueStageId.Value,
                     new AdminBRO.FTUEStageEndData
                     {
                        win = battleIsWin 

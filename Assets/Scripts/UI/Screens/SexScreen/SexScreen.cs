@@ -78,7 +78,7 @@ namespace Overlewd
             switch (inputData.ftueStageData?.ftueState)
             {
                 case (_, _):
-                    skipButton.gameObject.SetActive(GameData.ftue.chapter1.GetStageByKey("battle3").isComplete);
+                    skipButton.gameObject.SetActive(GameData.ftue.info.chapter1.GetStageByKey("battle3").isComplete);
                     break;
             }
 
@@ -141,7 +141,7 @@ namespace Overlewd
             }
             else
             {
-                await GameData.FTUEStartStage(inputData.ftueStageId.Value);
+                await GameData.ftue.StartStage(inputData.ftueStageId.Value);
             }
         }
 
@@ -153,7 +153,7 @@ namespace Overlewd
             }
             else
             {
-                await GameData.FTUEEndStage(inputData.ftueStageId.Value);
+                await GameData.ftue.EndStage(inputData.ftueStageId.Value);
             }
         }
         
