@@ -16,7 +16,7 @@ namespace Overlewd
         protected Transform map;
         protected Button chapterButton;
         protected TextMeshProUGUI chapterButtonText;
-        protected Button backbutton;
+        protected Button sidebarButton;
         protected TextMeshProUGUI chapterButtonMarkers;
 
         protected GameObject chapterMap;
@@ -32,13 +32,14 @@ namespace Overlewd
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/MapScreen/MapScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+
             chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
             chapterButtonText = chapterButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             chapterButtonMarkers = chapterButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
-            backbutton = canvas.Find("BackButton").GetComponent<Button>();
-
             chapterButton.onClick.AddListener(ChapterButtonClick);
-            backbutton.onClick.AddListener(BackButtonClick);
+
+            sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
+            sidebarButton.onClick.AddListener(SidebarButtonClick);
 
             map = canvas.Find("Map");
         }
@@ -164,10 +165,10 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private void BackButtonClick()
+        private void SidebarButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<StartingScreen>();
+            UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
 
         public override async Task AfterShowAsync()

@@ -10,6 +10,8 @@ namespace Overlewd
 {
     public class CastleScreen : BaseFullScreen
     {
+        private Button sidebarButton;
+
         private Transform harem;
         private Transform market;
         private Transform forge;
@@ -35,7 +37,6 @@ namespace Overlewd
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
         private BuffWidget buffPanel;
-        private SidebarButtonWidget sidebarButton;
 
         private FMODEvent music;
 
@@ -47,6 +48,9 @@ namespace Overlewd
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/CastleScreen/CastleScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+
+            sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
+            sidebarButton.onClick.AddListener(SidebarButtonClick);
 
             harem = canvas.Find("Harem");
             portal = canvas.Find("Portal");
@@ -118,14 +122,13 @@ namespace Overlewd
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
-            sidebarButton = SidebarButtonWidget.GetInstance(transform);
 
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     if (!GameData.buildings.castle.isBuilt)
                     {
-                        sidebarButton.DisableButton();
+                        UITools.DisableButton(sidebarButton);
                     }
                     break;
             }
@@ -181,6 +184,12 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowHide);
             music?.Stop();
+        }
+
+        private void SidebarButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
     }
 

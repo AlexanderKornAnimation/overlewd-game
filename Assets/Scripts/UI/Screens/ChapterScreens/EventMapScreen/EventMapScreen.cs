@@ -13,7 +13,7 @@ namespace Overlewd
         private Transform map;
         private GameObject chapterMap;
 
-        private Button backButton;
+        private Button sidebarButton;
 
         private NSEventMapScreen.MapButton mapButton;
 
@@ -30,8 +30,8 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
             map = canvas.Find("Map");
 
-            backButton = canvas.Find("BackButton").GetComponent<Button>();
-            backButton.onClick.AddListener(BackButtonClick);
+            sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
+            sidebarButton.onClick.AddListener(SidebarButtonClick);
         }
 
         public EventMapScreen SetData(EventMapScreenInData data)
@@ -170,11 +170,11 @@ namespace Overlewd
             
             await Task.CompletedTask;
         }
-        
-        private void BackButtonClick()
+
+        private void SidebarButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
 
         private AdminBRO.EventChapter GetActiveChapter(AdminBRO.EventItem eventData)
