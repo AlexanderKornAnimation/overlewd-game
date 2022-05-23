@@ -113,6 +113,8 @@ namespace Overlewd
         public AdminBRO.FTUEStageItem ftueStageData =>
             ftueStageId.HasValue ? GameData.ftue.info.GetStageById(ftueStageId.Value) : null;
 
+        public BaseScreenInData prevScreenInData;
+
         public bool IsType<T>() where T : BaseScreenInData =>
             this.GetType() == typeof(T);
     }
