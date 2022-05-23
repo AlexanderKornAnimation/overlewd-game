@@ -8,7 +8,7 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-        public class BannerTypeB: BaseBanner
+        public class TabStepwise : BaseTab
         {
             private Button buyButton;
             private TextMeshProUGUI buyButtonText;
@@ -39,10 +39,10 @@ namespace Overlewd
 
             }
             
-            public static BannerTypeB GetInstance(Transform parent)
+            public static TabStepwise GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<BannerTypeB>
-                    ("Prefabs/UI/Screens/PortalScreen/BannerTypeB", parent);
+                return ResourceManager.InstantiateWidgetPrefab<TabStepwise>
+                    ("Prefabs/UI/Screens/PortalScreen/TabStepwise", parent);
             }
         }
     }

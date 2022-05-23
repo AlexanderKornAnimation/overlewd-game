@@ -9,7 +9,7 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-        public abstract class BaseBanner : MonoBehaviour
+        public abstract class BaseTab : MonoBehaviour
         {
             protected Button button;
             protected Image bannerBackground;
@@ -22,9 +22,11 @@ namespace Overlewd
             protected Transform content;
             protected RectTransform rect;
 
-            public AdminBRO.GachItem gachaItem { get; set; }
+            public int gachaId { get; set; }
+            public AdminBRO.GachItem gachaData =>
+                GameData.gacha.GetGachaById(gachaId);
             
-            public event Action<BaseBanner> selectBanner;
+            public event Action<BaseTab> selectTab;
 
             protected virtual void Awake()
             {
@@ -32,7 +34,7 @@ namespace Overlewd
                 
                 content = canvas.Find("Content");
                 button = canvas.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(BannerClick);
+                button.onClick.AddListener(TabClick);
                 bannerBackground = button.GetComponent<Image>();
                 contentBackground = content.Find("Background").GetComponent<Image>();
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
@@ -41,10 +43,10 @@ namespace Overlewd
                 Deselect();
             }
 
-            protected virtual void BannerClick()
+            protected virtual void TabClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                selectBanner?.Invoke(this);
+                selectTab?.Invoke(this);
             }
 
             public void MoveLeft()

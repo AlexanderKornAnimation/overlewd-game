@@ -286,6 +286,9 @@ namespace Overlewd
             items = await AdminBRO.gachaAsync();
         }
 
+        public AdminBRO.GachItem GetGachaById(int id) =>
+            items.Find(g => g.id == id);
+
         public async Task Buy(int id)
         {
             await AdminBRO.gachaBuyAsync(id);

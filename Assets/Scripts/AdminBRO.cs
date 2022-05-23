@@ -1271,9 +1271,6 @@ namespace Overlewd
 
             public const string Type_Linear = "linear";
             public const string Type_Stepwise = "stepwise";
-            
-            [JsonProperty(Required = Required.Default)]
-            public (string, string) gachaType => (type, tabType);
         }
     }
 }
