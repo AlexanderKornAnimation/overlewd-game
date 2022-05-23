@@ -10,52 +10,52 @@ namespace Overlewd
 {
     public class SidebarMenuOverlay : BaseOverlay
     {
-        protected bool isTransitionStarted = false;
-        
-        protected Button castleButton;
-        protected TextMeshProUGUI castleButton_Markers;
-        protected TextMeshProUGUI castleButton_Title;
-        protected Image castleButton_Icon;
+        private Button startingButton;
 
-        protected Button portalButton;
-        protected TextMeshProUGUI portalButton_Markers;
-        protected TextMeshProUGUI portalButton_Title;
-        protected Image portalButton_Icon;
+        private Button castleButton;
+        private TextMeshProUGUI castleButton_Markers;
+        private TextMeshProUGUI castleButton_Title;
+        private Image castleButton_Icon;
 
-        protected Button globalMapButton;
-        protected TextMeshProUGUI globalMapButton_Markers;
-        protected TextMeshProUGUI globalMapButton_Title;
-        protected Image globalMapButton_Icon;
+        private Button portalButton;
+        private TextMeshProUGUI portalButton_Markers;
+        private TextMeshProUGUI portalButton_Title;
+        private Image portalButton_Icon;
 
-        protected Button overlordButton;
-        protected TextMeshProUGUI overlordButton_Markers;
-        protected TextMeshProUGUI overlordButton_Title;
-        protected Image overlordButton_Icon;
-        
-        protected Button haremButton;
-        protected TextMeshProUGUI haremButton_Markers;
-        protected TextMeshProUGUI haremButton_Title;
-        protected Image haremButton_Icon;
+        private Button globalMapButton;
+        private TextMeshProUGUI globalMapButton_Markers;
+        private TextMeshProUGUI globalMapButton_Title;
+        private Image globalMapButton_Icon;
 
-        protected Button municipalityButton;
-        protected TextMeshProUGUI municipalityButton_Markers;
-        protected TextMeshProUGUI municipalityButton_Title;
-        protected Image municipalityButton_Icon;
+        private Button overlordButton;
+        private TextMeshProUGUI overlordButton_Markers;
+        private TextMeshProUGUI overlordButton_Title;
+        private Image overlordButton_Icon;
 
-        protected Button magicGuildButton;
-        protected TextMeshProUGUI magicGuildButton_Markers;
-        protected TextMeshProUGUI magicGuildButton_Title;
-        protected Image magicGuildButton_Icon;
+        private Button haremButton;
+        private TextMeshProUGUI haremButton_Markers;
+        private TextMeshProUGUI haremButton_Title;
+        private Image haremButton_Icon;
 
-        protected Button marketButton;
-        protected TextMeshProUGUI marketButton_Markers;
-        protected TextMeshProUGUI marketButton_Title;
-        protected Image marketButton_Icon;
+        private Button municipalityButton;
+        private TextMeshProUGUI municipalityButton_Markers;
+        private TextMeshProUGUI municipalityButton_Title;
+        private Image municipalityButton_Icon;
 
-        protected Button forgeButton;
-        protected TextMeshProUGUI forgeButton_Markers;
-        protected TextMeshProUGUI forgeButton_Title;
-        protected Image forgeButton_Icon;
+        private Button magicGuildButton;
+        private TextMeshProUGUI magicGuildButton_Markers;
+        private TextMeshProUGUI magicGuildButton_Title;
+        private Image magicGuildButton_Icon;
+
+        private Button marketButton;
+        private TextMeshProUGUI marketButton_Markers;
+        private TextMeshProUGUI marketButton_Title;
+        private Image marketButton_Icon;
+
+        private Button forgeButton;
+        private TextMeshProUGUI forgeButton_Markers;
+        private TextMeshProUGUI forgeButton_Title;
+        private Image forgeButton_Icon;
 
         private SidebarMenuOverayInData inputData;
 
@@ -64,6 +64,9 @@ namespace Overlewd
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/SidebarMenuOverlay/SidebarMenuOverlay", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+
+            startingButton = canvas.Find("StartingButton").GetComponent<Button>();
+            startingButton.onClick.AddListener(StartingButtonClick);
 
             castleButton = canvas.Find("CastleButton").GetComponent<Button>();
             castleButton.onClick.AddListener(CastleButtonClick);
@@ -128,11 +131,23 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            if (UIManager.HasScreen<CastleScreen>())
+            {
+                castleButton.gameObject.SetActive(false);
+                startingButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                castleButton.gameObject.SetActive(true);
+                startingButton.gameObject.SetActive(false);
+            }
+
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     if (GameData.buildings.castle.isBuilt)
                     {
+                        UITools.DisableButton(startingButton);
                         UITools.DisableButton(castleButton);
                         UITools.DisableButton(portalButton);
                         //UITools.DisableButton(globalMapButton);
@@ -159,53 +174,59 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_SidebarOverlayHide);
         }
 
-        protected virtual void CastleButtonClick()
+        private void StartingButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<StartingScreen>();
+        }
+
+        private void CastleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
-        protected virtual void PortalButtonClick()
+        private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 
-        protected virtual void GlobalMapButtonClick()
+        private void GlobalMapButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MapScreen>();
         }
 
-        protected virtual void OverlordButtonClick()
+        private void OverlordButtonClick()
         {
             
         }
         
-        protected virtual void HaremButtonClick()
+        private void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
 
-        protected virtual void MunicipalityButtonClick()
+        private void MunicipalityButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MunicipalityScreen>();
         }
 
-        protected virtual void MagicGuildButtonClick()
+        private void MagicGuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
-        protected virtual void MarketButtonClick()
+        private void MarketButtonClick()
         {
             // UIManager.ShowScreen<MarketScreen>();
         }
 
-        protected virtual void ForgeButtonClick()
+        private void ForgeButtonClick()
         {
             // UIManager.ShowScreen<ForgeScreen>();
         }
