@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e180528410c80244b9cb774093047405, type: 3}
-  m_Name: Ult_2
+  m_Name: Bite
   m_EditorClassIdentifier: 
-  skillName: Fireballs
-  discription: Powerfull balls of furious fire
-  battleIco: {fileID: 21300000, guid: 04242a19af53bfb499645fe30ce1a7e3, type: 3}
-  vfx: {fileID: 5541813711829063474, guid: 63c74d27b7224ac4a85ae346bf4d80b3, type: 3}
-  vfxOnTarget: {fileID: 0}
-  vfxDuration: 7.333
+  skillName: bite
+  discription: Powerfull storm of furious fire
+  battleIco: {fileID: 21300000, guid: df0436bbff76deb40a5a6900a3b9c1fd, type: 3}
+  vfx: {fileID: 0}
+  vfxOnTarget: {fileID: 5541813711829063474, guid: 06b43cc664a01fa49ada60d82f8529d9, type: 3}
+  vfxDuration: 0
   sfx: {fileID: 0}
   select: 0
-  attackAnimationName: attack4
-  prepairAnimationName: prepair4
-  power: 5
-  manaCost: 25
+  attackAnimationName: attack3
+  prepairAnimationName: prepair3
+  power: 2
+  manaCost: 20
   amount: 0
   cooldown: 3
   cooldownCount: 0

@@ -16,12 +16,13 @@ MonoBehaviour:
   discription: Powerfull storm of furious fire
   battleIco: {fileID: 21300000, guid: df0436bbff76deb40a5a6900a3b9c1fd, type: 3}
   vfx: {fileID: 5541813711829063474, guid: dfa91f97a81e5e5419d6dc294cf0695f, type: 3}
+  vfxOnTarget: {fileID: 0}
   vfxDuration: 4.667
   sfx: {fileID: 0}
   select: 0
   attackAnimationName: attack3
   prepairAnimationName: prepair3
-  power: 20
+  power: 2
   manaCost: 20
   amount: 0
   cooldown: 3

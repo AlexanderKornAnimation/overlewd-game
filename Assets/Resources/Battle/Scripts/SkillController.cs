@@ -22,6 +22,8 @@ namespace Overlewd
         [HideInInspector]
         public int power, manaCost, amount, cooldown, cooldownCount = 0;
 
+        public bool isSelected = false;
+
         private void Awake()
         {
             button = GetComponent<Button>();
@@ -86,8 +88,15 @@ namespace Overlewd
             SaveSkill();
         }
 
-        public void Select() => selectBorder?.SetActive(true);
-        public void Unselect() => selectBorder?.SetActive(false);
+        public void Select() {
+            isSelected = true;
+            selectBorder?.SetActive(true);
+        }
+        public void Unselect()
+        {
+            isSelected = false;
+            selectBorder?.SetActive(false);
+        }
 
         public void InstVFX(Transform target)
         {

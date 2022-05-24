@@ -5,15 +5,11 @@ namespace Overlewd
     [CreateAssetMenu(fileName = "New Character", menuName = "ScriptableObjects/Character")]
     public class Character : ScriptableObject
     {
-        [SerializeField] private int order = -1; //3,2,1 = on the table; -1 = in the deck;
-        public int Order { get => order; set => order = value; }
-        public int wave = 1;
         public string charName;
         public Sprite ico;
         public Sprite battlePortrait;
         public Sprite bigPortrait;
 
-        public bool isEnemy = false;
         public bool isBoss = false;
         public bool isOverlord = false;
 

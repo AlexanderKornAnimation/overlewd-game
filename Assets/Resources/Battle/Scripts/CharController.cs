@@ -31,14 +31,14 @@ namespace Overlewd
         public Character character;
         public Skill[] skill;
         private float idleScale = .5f, battleScale = .7f;
-        [SerializeField] private int battleOrder = -1; //3,2,1 = on the table; -1 = in the deck;
+        public int battleOrder = 1;
         public int hp = 100, maxHp = 100;
         public int mp = 100, maxMp = 100;
-        public int attack = 10;
+        public int damage = 10;
         public int defence = 5;
 
         [HideInInspector] public bool isDamageBuff = false;
-        [HideInInspector] public int buffDamageScale = 2;
+        [HideInInspector] public int buffDamageScale = 1;
 
         public bool isDead = false;
 
@@ -67,16 +67,21 @@ namespace Overlewd
 
         private void StatInit()
         {
+            //isEnemy = character.isEnemy;
+            //battleOrder = character.Order;
             character.ApplyStats();
             skill = character.skill;
             isOverlord = character.isOverlord;
-            isEnemy = character.isEnemy;
-            battleOrder = character.Order;
             idleScale = character.idleScale;
             battleScale = character.battleScale;
             hp = character.hp; maxHp = character.maxHp;
             mp = character.mp; maxMp = character.maxMp;
-            attack = (int)Math.Ceiling(character.damage);
+            damage = (int)Math.Ceiling(character.damage);
+        }
+
+        public void PowerBuff()
+        {
+            buffDamageScale *= 2;
         }
 
         private void ShapeInit()
@@ -87,11 +92,16 @@ namespace Overlewd
 
             Transform spawnPos = bm.transform;
             battleLayer = spawnPos.Find("BattleCanvas/BattleLayer").transform;
-            battlePos = isEnemy ? battleLayer.Find("battlePos2").transform : battleLayer.Find("battlePos1").transform;
             if (isEnemy)
+            {
+                battlePos = battleLayer.Find("battlePos2").transform;
                 persPos = battleLayer.Find("enemy" + battleOrder.ToString()).transform;
+            }
             else
+            {
+                battlePos = battleLayer.Find("battlePos1").transform;
                 persPos = battleLayer.Find("pers" + battleOrder.ToString()).transform;
+            }
 
             transform.SetParent(persPos, false);
             transform.SetSiblingIndex(0);
@@ -170,7 +180,7 @@ namespace Overlewd
             vfxDuration = character.skill[id].vfxDuration;
             attackDuration = spineWidget.GetAnimationDuaration(character.skill[id].attackAnimationName);
 
-            attack = character.skill[id].power + character.power;
+            damage = Mathf.RoundToInt(character.skill[id].power + character.damage * buffDamageScale);
             spineWidget.PlayAnimation(character.skill[id].prepairAnimationName, false);
             if (isOverlord) mp -= character.skill[id].manaCost;
             yield return new WaitForSeconds(preAttackDuration);
@@ -181,7 +191,6 @@ namespace Overlewd
             }
             spineWidget.PlayAnimation(character.skill[id].attackAnimationName, false);
             yield return new WaitForSeconds(attackDuration);
-
             PlayIdle();
             BattleOut();
             bm.BattleOut();
@@ -194,9 +203,10 @@ namespace Overlewd
             yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             if (vfx != null) Instantiate(vfx, transform);
             spineWidget.PlayAnimation(character.ani_defence_name, false);
-            yield return new WaitForSeconds(defenceDuration);
+            yield return new WaitForSeconds(defenceDuration/2);
+            Damage(attacker.damage);
+            yield return new WaitForSeconds(defenceDuration/2);
             PlayIdle();
-            Damage(attacker.attack);
             BattleOut();
         }
 

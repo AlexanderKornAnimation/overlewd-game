@@ -45,11 +45,10 @@ namespace Overlewd
             else
             {
                 BattlePortraitIco.sprite = charCtrl.character.battlePortrait;
-                if (transform.GetSiblingIndex() > charCtrl.character.Order) 
+                if (transform.GetSiblingIndex() > charCtrl.battleOrder) 
                 {
                     transform.SetSiblingIndex(5);
                 }
-                
             }
             sliderMP?.gameObject.SetActive(charCtrl.isOverlord);
             UpdateUI();
