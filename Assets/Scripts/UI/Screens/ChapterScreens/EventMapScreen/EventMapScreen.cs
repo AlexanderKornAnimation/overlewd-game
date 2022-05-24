@@ -16,8 +16,9 @@ namespace Overlewd
         private Button sidebarButton;
 
         private NSEventMapScreen.MapButton mapButton;
+        private BuffWidget buffPanel;
 
-        private EventMapScreenInData inputData;
+        private EventMapScreenInData inputData = new EventMapScreenInData();
 
         private void Awake()
         {
@@ -25,7 +26,8 @@ namespace Overlewd
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
+            buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.inputData = inputData;
 
             var canvas = screenInst.transform.Find("Canvas");
             map = canvas.Find("Map");
@@ -78,6 +80,7 @@ namespace Overlewd
                     if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        fightButton.screenInData = inputData;
                         fightButton.stageId = stageId;
 
                         if (!stageData.isComplete)
@@ -90,6 +93,7 @@ namespace Overlewd
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         bossFightButton.stageId = stageId;
+                        bossFightButton.screenInData = inputData;
                         
                         if (!stageData.isComplete)
                         {

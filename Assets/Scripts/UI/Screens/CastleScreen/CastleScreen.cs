@@ -19,7 +19,7 @@ namespace Overlewd
         private Transform portal;
         private Transform castle;
         private Transform municipality;
-        private Transform cathedral;
+        private Transform laboratory;
         private Transform catacombs;
         private Transform aerostat;
 
@@ -30,7 +30,7 @@ namespace Overlewd
         private NSCastleScreen.PortalButton portalButton;
         private NSCastleScreen.CastleButton castleButton;
         private NSCastleScreen.MunicipalityButton municipalityButton;
-        private NSCastleScreen.CathedralButton cathedralButton;
+        private NSCastleScreen.LaboratoryButton laboratoryButton;
         private NSCastleScreen.CatacombsButton catacombsButton;
         private NSCastleScreen.AerostatButton aerostatButton;
 
@@ -40,7 +40,7 @@ namespace Overlewd
 
         private FMODEvent music;
 
-        private CastleScreenInData inputData;
+        private CastleScreenInData inputData = new CastleScreenInData();
 
         private void Awake()
         {
@@ -59,7 +59,7 @@ namespace Overlewd
             magicGuild = canvas.Find("MagicGuild");
             castle = canvas.Find("Castle");
             municipality = canvas.Find("Municipality");
-            cathedral = canvas.Find("Cathedral");
+            laboratory = canvas.Find("Laboratory");
             catacombs = canvas.Find("Catacombs");
             aerostat = canvas.Find("Aerostat");
         }
@@ -81,6 +81,7 @@ namespace Overlewd
                     {
                         case AdminBRO.Building.Key_Harem:
                             haremButton = NSCastleScreen.HaremButton.GetInstance(harem);
+                            haremButton.screenInData = inputData;
                             break;
                         case AdminBRO.Building.Key_Market:
                             marketButton = NSCastleScreen.MarketButton.GetInstance(market);
@@ -103,8 +104,8 @@ namespace Overlewd
                         case AdminBRO.Building.Key_Municipality:
                             municipalityButton = NSCastleScreen.MunicipalityButton.GetInstance(municipality);
                             break;
-                        case AdminBRO.Building.Key_Cathedral:
-                            cathedralButton = NSCastleScreen.CathedralButton.GetInstance(cathedral);
+                        case AdminBRO.Building.Key_Laboratory:
+                            laboratoryButton = NSCastleScreen.LaboratoryButton.GetInstance(laboratory);
                             break;
                         case AdminBRO.Building.Key_Catacombs:
                             catacombsButton = NSCastleScreen.CatacombsButton.GetInstance(catacombs);
@@ -121,6 +122,7 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.inputData = inputData;
             buffPanel.Hide();
 
             switch (GameData.ftue.stats.lastEndedState)

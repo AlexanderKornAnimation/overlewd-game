@@ -12,6 +12,7 @@ namespace Overlewd
         {
             public int characterId { get; set; }
             public TeamEditScreen screen { private get; set; }
+            public TeamEditScreenInData inputData { get; set; }
 
             private Image girlIcon;
             private TextMeshProUGUI level;
@@ -68,7 +69,20 @@ namespace Overlewd
 
             private void GirlScreenButtonClick()
             {
-                
+                if (inputData == null)
+                {
+                    UIManager.ShowScreen<BattleGirlScreen>();
+                }
+                else
+                {
+                    UIManager.MakeScreen<BattleGirlScreen>().
+                        SetData(new BattleGirlScreenInData 
+                        {
+                            prevScreenInData = inputData,
+                            ftueStageId = inputData.ftueStageId,
+                            eventStageId = inputData.eventStageId
+                        }).RunShowScreenProcess();
+                }
             }
 
             public static Character GetInstance(Transform parent)

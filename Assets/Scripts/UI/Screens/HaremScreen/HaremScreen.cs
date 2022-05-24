@@ -39,6 +39,8 @@ namespace Overlewd
         protected Image battleGirlsGirl;
         protected TextMeshProUGUI battleGirlsTitle;
 
+        private HaremScreenInData inputData;
+
         protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/HaremScreen/Harem", transform);
@@ -89,21 +91,71 @@ namespace Overlewd
             Customize();
         }
 
+        public HaremScreen SetData(HaremScreenInData data)
+        {
+            inputData = data;
+            return this;
+        }
+
         protected virtual void Customize()
         {
-
         }
 
         protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            }
+            
+            else if (inputData.ftueStageId.HasValue)
+            {
+                UIManager.MakeScreen<MapScreen>().
+                    SetData(new MapScreenInData
+                    {
+                        ftueStageId = inputData.ftueStageId
+                    }).RunShowScreenProcess();
+            }
+            else if (inputData.eventStageId.HasValue)
+            {
+                UIManager.MakeScreen<EventMapScreen>().
+                    SetData(new EventMapScreenInData
+                    {
+                        eventStageId = inputData.eventStageId
+                    }).RunShowScreenProcess();
+            }
+            else if (inputData.prevScreenInData != null)
+            {
+                if (inputData.prevScreenInData.IsType<MapScreenInData>())
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
+            }
+            else
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            }
         }
 
         protected virtual void UlviButtonClick()
         {
-            UIManager.ShowScreen<GirlScreen>();
-            GameGlobalStates.haremGirlNameSelected = ulviName.text;
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<GirlScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<GirlScreen>().
+                    SetData(new GirlScreenInData
+                    {
+                        girlName = ulviName.text,
+                        prevScreenInData = inputData,
+                        ftueStageId = inputData.ftueStageId,
+                        eventStageId = inputData.eventStageId
+                    }).RunShowScreenProcess();
+            }
         }
 
         protected virtual void AdrielButtonClick()
@@ -113,23 +165,37 @@ namespace Overlewd
 
         protected virtual void IngieButtonClick()
         {
-
         }
 
         protected virtual void FayeButtonClick()
         {
-
         }
 
         protected virtual void LiliButtonClick()
         {
-
         }
 
         protected virtual void BattleGirlsButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<TeamEditScreen>();
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<TeamEditScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<TeamEditScreen>().
+                    SetData(new TeamEditScreenInData
+                    {
+                        prevScreenInData = inputData,
+                        ftueStageId = inputData?.ftueStageId,
+                        eventStageId = inputData?.eventStageId
+                    }).RunShowScreenProcess();
+            }
         }
+    }
+
+    public class HaremScreenInData : BaseScreenInData
+    {
     }
 }

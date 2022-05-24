@@ -9,11 +9,13 @@ namespace Overlewd
 {
     public class BuffWidget : MonoBehaviour
     {
-        protected RectTransform backRect;
-        protected Image icon;
-        protected Button button;
-        protected TextMeshProUGUI description;
-        protected TextMeshProUGUI timer;
+        private RectTransform backRect;
+        private Image icon;
+        private Button button;
+        private TextMeshProUGUI description;
+        private TextMeshProUGUI timer;
+
+        public BaseScreenInData inputData { get; set; }
         
         void Awake()
         {
@@ -30,7 +32,11 @@ namespace Overlewd
         protected virtual void ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
+            UIManager.MakeScreen<HaremScreen>().
+                SetData(new HaremScreenInData
+            {
+                prevScreenInData = inputData
+            }).RunShowScreenProcess();
         }
 
         public void Show()

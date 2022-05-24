@@ -6,11 +6,14 @@ namespace Overlewd
 {
     namespace NSCastleScreen
     {
-        public class CatacombsButton : BaseButton
+        public class LaboratoryButton : BaseButton
         {
+            private Transform notification;
+            
             protected override void Awake()
             {
                 base.Awake();
+                notification = transform.Find("MergingAvailableNotification");
                 UITools.DisableButton(button);
             }
 
@@ -19,10 +22,10 @@ namespace Overlewd
                 base.ButtonClick();
             }
 
-            public static CatacombsButton GetInstance(Transform parent)
+            public static LaboratoryButton GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<CatacombsButton>
-                    ("Prefabs/UI/Screens/CastleScreen/CatacombsButton", parent);
+                return ResourceManager.InstantiateWidgetPrefab<LaboratoryButton>
+                    ("Prefabs/UI/Screens/CastleScreen/LaboratoryButton", parent);
             }
         }
     }

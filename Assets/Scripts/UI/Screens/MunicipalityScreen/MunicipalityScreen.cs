@@ -139,7 +139,7 @@ namespace Overlewd
             {
                 AdminBRO.Building.Key_Castle => castleName,
                 AdminBRO.Building.Key_Catacombs => catacombsName,
-                AdminBRO.Building.Key_Cathedral => cathedralName,
+                AdminBRO.Building.Key_Laboratory => cathedralName,
                 AdminBRO.Building.Key_Aerostat => aerostatName,
                 AdminBRO.Building.Key_Forge => forgeName,
                 AdminBRO.Building.Key_Harem => haremName,
@@ -157,7 +157,7 @@ namespace Overlewd
             {
                 AdminBRO.Building.Key_Castle => castleButton.gameObject,
                 AdminBRO.Building.Key_Catacombs => catacombsButton.gameObject,
-                AdminBRO.Building.Key_Cathedral => cathedralButton.gameObject,
+                AdminBRO.Building.Key_Laboratory => cathedralButton.gameObject,
                 AdminBRO.Building.Key_Aerostat => aerostatButton.gameObject,
                 AdminBRO.Building.Key_Forge => forgeButton.gameObject,
                 AdminBRO.Building.Key_Harem => haremButton.gameObject,
@@ -175,7 +175,7 @@ namespace Overlewd
             {
                 AdminBRO.Building.Key_Castle => castleMaxLevel,
                 AdminBRO.Building.Key_Catacombs => catacombsMaxLevel,
-                AdminBRO.Building.Key_Cathedral => cathedralMaxLevel,
+                AdminBRO.Building.Key_Laboratory => cathedralMaxLevel,
                 AdminBRO.Building.Key_Aerostat => aerostatMaxLevel,
                 AdminBRO.Building.Key_Forge => forgeMaxLevel,
                 AdminBRO.Building.Key_Harem => haremMaxLevel,
@@ -322,7 +322,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.cathedral?.id
+                buildingId = GameData.buildings.laboratory?.id
             }).RunShowPopupProcess();
         }
 

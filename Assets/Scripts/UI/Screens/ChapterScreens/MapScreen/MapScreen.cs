@@ -21,7 +21,7 @@ namespace Overlewd
 
         protected GameObject chapterMap;
 
-        private MapScreenInData inputData;
+        private MapScreenInData inputData = new MapScreenInData();
 
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
@@ -118,6 +118,7 @@ namespace Overlewd
                                     if (battleData.isTypeBattle)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.screenInData = inputData;
                                         fight.stageId = stageId;
                                         
                                         if (!stageData.isComplete)
@@ -129,6 +130,7 @@ namespace Overlewd
                                     else if (battleData.isTypeBoss)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.screenInData = inputData;
                                         fight.stageId = stageId;
 
                                         if (!stageData.isComplete)
@@ -160,6 +162,7 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.inputData = inputData;
             buffPanel.Hide();
 
             await Task.CompletedTask;
@@ -182,6 +185,7 @@ namespace Overlewd
                     UIManager.MakePopup<PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
                         {
+                            prevScreenInData = inputData,
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
@@ -190,6 +194,7 @@ namespace Overlewd
                     UIManager.MakePopup<PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
                         {
+                            prevScreenInData = inputData,
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }

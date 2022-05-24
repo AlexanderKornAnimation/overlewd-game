@@ -93,7 +93,7 @@ namespace Overlewd
                     case AdminBRO.Building.Key_Catacombs:
 
                         break;
-                    case AdminBRO.Building.Key_Cathedral:
+                    case AdminBRO.Building.Key_Laboratory:
 
                         break;
                     case AdminBRO.Building.Key_Forge:
@@ -139,15 +139,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
             await BuildNow();
 
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case ("battle4", "chapter1"):
-                    UIManager.ShowScreen<CastleScreen>();
-                    break;
-                default:
-                    UIManager.HidePopup();
-                    break;
-            }
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         protected virtual async void PaidBuildingButtonClick()
@@ -155,15 +147,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await BuildNow();
 
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case ("battle4", "chapter1"):
-                    UIManager.ShowScreen<CastleScreen>();
-                    break;
-                default:
-                    UIManager.HidePopup();
-                    break;
-            }
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         public override ScreenShow Show()

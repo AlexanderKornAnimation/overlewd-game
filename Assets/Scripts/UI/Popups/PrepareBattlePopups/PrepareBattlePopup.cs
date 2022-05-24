@@ -151,15 +151,22 @@ namespace Overlewd
         private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
+            UIManager.MakeScreen<HaremScreen>().
+                SetData(new HaremScreenInData
+                {
+                    prevScreenInData = inputData.prevScreenInData,
+                    ftueStageId = inputData.ftueStageId,
+                    eventStageId = inputData.eventStageId
+                }).RunShowScreenProcess();
         }
 
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData
+                SetData(new TeamEditScreenInData 
                 {
+                    prevScreenInData = inputData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();

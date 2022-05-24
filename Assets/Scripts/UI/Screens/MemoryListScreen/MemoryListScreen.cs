@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Overlewd.NSMemoryListScreen;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,23 +10,32 @@ namespace Overlewd
 {
     public class MemoryListScreen : BaseFullScreen
     {
-        protected Dictionary<string, List<NSMemoryListScreen.BaseScroll>> content =
-            new Dictionary<string, List<NSMemoryListScreen.BaseScroll>>();
+        private Dictionary<string, List<Transform>> scrolls = new Dictionary<string, List<Transform>>();
+        private Dictionary<string, List<Transform>> scrollContents = new Dictionary<string, List<Transform>>();
 
-        protected Button backButton;
-        protected TextMeshProUGUI backButtonGirlName;
+        private Button backButton;
+        private TextMeshProUGUI backButtonGirlName;
 
-        protected Button ulviTab;
-        protected Button adrielTab;
-        protected Button fayeTab;
-        protected Button ingieTab;
-        protected Button liliTab;
-        protected Button prevTab;
+        private Button ulviTab;
+        private Button adrielTab;
+        private Button fayeTab;
+        private Button ingieTab;
+        private Button liliTab;
+        private Button prevTab;
 
-        protected virtual void Awake()
+        private Transform closedEventMemoryScrollPos;
+        private Transform openedEventMemoryScrollPos;
+        private Transform mainMemoryScrollPos;
+
+        private string[] girlNames = new string[5] {"Ulvi", "Adriel", "Faye", "Ingie", "Lili"};
+
+        private MemoryListScreenInData inputData;
+
+        private void Awake()
         {
             var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MemoryListScreen/MemoryListScreen", transform);
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MemoryListScreen/MemoryListScreen",
+                    transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var tabArea = canvas.Find("TabArea");
@@ -48,8 +58,62 @@ namespace Overlewd
 
             liliTab = tabArea.Find("Lili").GetComponent<Button>();
             liliTab.onClick.AddListener(LiliButtonClick);
+            
+            closedEventMemoryScrollPos = canvas.Find("ClosedEventMemoryScrollPos");
+            openedEventMemoryScrollPos = canvas.Find("OpenedEventMemoryScrollPos");
+            mainMemoryScrollPos = canvas.Find("MainMemoryScrollPos");
+        }
 
-            var selectedGirl = GameGlobalStates.haremGirlNameSelected switch
+        private void Start()
+        {
+            Customize();
+        }
+
+        private void Customize()
+        {
+            for (int i = 0; i < girlNames.Length; i++)
+            {
+                if (!scrolls.ContainsKey(girlNames[i]))
+                {
+                    scrolls.Add(girlNames[i], new List<Transform>());
+                    scrollContents.Add(girlNames[i], new List<Transform>());
+                }
+
+                var closedEventMemoryScroll = closedEventMemoryScrollPos.Find(girlNames[i] + "ClosedEventMemoryScroll");
+                var closedEventMemoryContent = closedEventMemoryScroll.transform.Find("Viewport").Find("Content");
+                
+                var openedEventMemoryScroll = openedEventMemoryScrollPos.Find(girlNames[i] + "OpenedEventMemoryScroll");
+                var openedEventMemoryContent = openedEventMemoryScroll.transform.Find("Viewport").Find("Content");
+                
+                var mainMemoryScroll = mainMemoryScrollPos.Find(girlNames[i] + "MainMemoryScroll");
+                var mainMemoryContent = mainMemoryScroll.transform.Find("Viewport").Find("Content");
+
+                scrolls[girlNames[i]].Add(closedEventMemoryScroll);
+                scrollContents[girlNames[i]].Add(closedEventMemoryContent);
+                
+                scrolls[girlNames[i]].Add(openedEventMemoryScroll);
+                scrollContents[girlNames[i]].Add(openedEventMemoryContent);
+                
+                scrolls[girlNames[i]].Add(mainMemoryScroll);
+                scrollContents[girlNames[i]].Add(mainMemoryContent);
+
+                var closedEventMemory = EventMemoryClosed.GetInstance(closedEventMemoryContent);
+
+                closedEventMemory.screenInData = inputData;
+                
+                // closedEventMemory.inputData = new MemoryListScreenInData
+                // {
+                //    prevScreenInData = inputData.prevScreenInData,
+                //    ftueStageId = inputData?.ftueStageId,
+                //    eventStageId = inputData?.eventStageId
+                // };
+                
+                closedEventMemoryScroll.gameObject.SetActive(false);
+                openedEventMemoryScroll.gameObject.SetActive(false);
+                mainMemoryScroll.gameObject.SetActive(false);
+            }
+            
+            var selectedGirl = inputData?.girlName switch
             {
                 "Ulvi" => ulviTab,
                 "Adriel" => adrielTab,
@@ -58,42 +122,30 @@ namespace Overlewd
                 "Lili" => liliTab,
                 _ => ulviTab
             };
-
+            
             EnterTab(selectedGirl);
-        }
 
-        protected virtual void EnterTab(Button girlTab)
-        {
-            var canvas = transform.GetChild(0).transform.Find("Canvas");
-            
-            var closedEventMemoryScrollPos = canvas.Find("ClosedEventMemoryScrollPos");
-            var openedEventMemoryScrollPos = canvas.Find("OpenedEventMemoryScrollPos");
-            var mainMemoryScrollPos = canvas.Find("MainMemoryScrollPos");
-            
-            if (!content.ContainsKey(girlTab.name))
-            {
-                var closedEventMemoryScroll = NSMemoryListScreen.ClosedEventMemoryScroll.GetInstance(closedEventMemoryScrollPos);
-                var openedEventMemoryScroll = NSMemoryListScreen.OpenedEventMemoryScroll.GetInstance(openedEventMemoryScrollPos);
-                var mainMemoryScroll = NSMemoryListScreen.MainMemoryScroll.GetInstance(mainMemoryScrollPos);
-
-                content.Add(girlTab.name, new List<NSMemoryListScreen.BaseScroll>());
-                
-                content[girlTab.name].Add(closedEventMemoryScroll);
-                content[girlTab.name].Add(openedEventMemoryScroll);
-                content[girlTab.name].Add(mainMemoryScroll);
-            }
-
-            var girlContent = content[girlTab.name];
-            
-            foreach (var _content in girlContent)
-            {
-                _content.Show();
-            }
-            
-            Select(girlTab);
         }
         
-        protected virtual void Select(Button girlTab)
+        public MemoryListScreen SetData(MemoryListScreenInData data)
+        {
+            inputData = data;
+            return this;
+        }
+        
+        private void EnterTab(Button girlTab)
+        {
+            var girlContent = scrolls[girlTab.name];
+
+            foreach (var _content in girlContent)
+            {
+                _content.gameObject.SetActive(true);
+            }
+
+            Select(girlTab);
+        }
+
+        private void Select(Button girlTab)
         {
             prevTab = girlTab;
             girlTab.transform.Find("SelectedTab").gameObject.SetActive(true);
@@ -101,72 +153,77 @@ namespace Overlewd
             backButtonGirlName.text = girlTab.name + "`s";
         }
 
-        protected virtual void LeaveTab(Button girlTab)
+        private void LeaveTab(Button girlTab)
         {
             Deselect();
 
-            var girlContent = content[girlTab.name];
-            
+            var girlContent = scrolls[girlTab.name];
+
             foreach (var _content in girlContent)
             {
-                _content.Hide();
+                _content.gameObject.SetActive(false);
             }
         }
-        
-        protected virtual void Deselect()
+
+        private void Deselect()
         {
             var selectedTab = prevTab.transform.Find("SelectedTab");
             selectedTab.gameObject.SetActive(false);
         }
 
-        protected virtual void UlviButtonClick()
+        private void UlviButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(ulviTab);
         }
 
-        protected virtual void AdrielButtonClick()
+        private void AdrielButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(adrielTab);
         }
 
-        protected virtual void FayeButtonClick()
+        private void FayeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(fayeTab);
         }
 
-        protected virtual void IngieButtonClick()
+        private void IngieButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(ingieTab);
         }
 
-        protected virtual void LiliButtonClick()
+        private void LiliButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             LeaveTab(prevTab);
             EnterTab(liliTab);
         }
 
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<GirlScreen>();
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<GirlScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<GirlScreen>().
+                    SetData(inputData.prevScreenInData as GirlScreenInData).
+                    RunShowScreenProcess();
+            }
         }
+    }
 
-        protected virtual void Start()
-        {
-            Customize();
-        }
-
-        protected virtual void Customize()
-        {
-        }
+    public class MemoryListScreenInData : BaseScreenInData
+    {
+        public string girlName;
     }
 }

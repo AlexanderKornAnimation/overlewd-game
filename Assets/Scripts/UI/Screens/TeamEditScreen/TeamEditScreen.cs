@@ -254,10 +254,12 @@ namespace Overlewd
                 var newCh = NSTeamEditScreen.Character.GetInstance(scrollContents[tabId]);
                 newCh.screen = this;
                 newCh.characterId = ch.id.Value;
+                newCh.inputData = inputData;
 
                 var newChAll = NSTeamEditScreen.Character.GetInstance(scrollContents[tabAllUnits]);
                 newChAll.screen = this;
                 newChAll.characterId = ch.id.Value;
+                newChAll.inputData = inputData;
             }
 
             CustomizeSlots();
@@ -301,7 +303,14 @@ namespace Overlewd
 
             if (inputData != null)
             {
-                if (inputData.ftueStageId.HasValue)
+                if (inputData.prevScreenInData.IsType<HaremScreenInData>())
+                {
+                    
+                    UIManager.MakeScreen<HaremScreen>().
+                        SetData(inputData.prevScreenInData as HaremScreenInData).
+                        RunShowScreenProcess();
+                }
+                else if (inputData.ftueStageId.HasValue)
                 {
                     UIManager.MakeScreen<MapScreen>().
                         SetData(new MapScreenInData 

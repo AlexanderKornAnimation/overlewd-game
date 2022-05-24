@@ -18,6 +18,7 @@ namespace Overlewd
             protected GameObject bossIcon;
             protected TextMeshProUGUI markers;
 
+
             protected override void Awake()
             {
                 base.Awake();
@@ -71,7 +72,7 @@ namespace Overlewd
                         UIManager.MakeScreen<BattleScreen>().
                             SetData(new BattleScreenInData
                             {
-                                ftueStageId = stageId
+                                ftueStageId = stageId,
                             }).RunShowScreenProcess();
                     }
                     else
@@ -79,7 +80,8 @@ namespace Overlewd
                         UIManager.MakePopup<PrepareBattlePopup>().
                             SetData(new PrepareBattlePopupInData
                             {
-                                ftueStageId = stageId
+                                prevScreenInData = screenInData,
+                                ftueStageId = stageId,
                             }).RunShowPopupProcess();
                     }
                 }
@@ -90,7 +92,7 @@ namespace Overlewd
                         UIManager.MakeScreen<BossFightScreen>().
                             SetData(new BossFightScreenInData
                             {
-                                ftueStageId = stageId
+                                ftueStageId = stageId,
                             }).RunShowScreenProcess();
                     }
                     else
@@ -98,7 +100,8 @@ namespace Overlewd
                         UIManager.MakePopup<PrepareBossFightPopup>().
                             SetData(new PrepareBossFightPopupInData
                             {
-                                ftueStageId = stageId
+                                prevScreenInData = screenInData,
+                                ftueStageId = stageId,
                             }).RunShowPopupProcess();
                     }
                 }

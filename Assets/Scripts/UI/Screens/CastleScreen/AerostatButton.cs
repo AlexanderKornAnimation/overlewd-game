@@ -10,7 +10,8 @@ namespace Overlewd
         {
             protected override void ButtonClick()
             {
-                // base.ButtonClick();
+                 base.ButtonClick();
+                 UIManager.ShowOverlay<EventOverlay>();
             }
 
             public static AerostatButton GetInstance(Transform parent)

@@ -218,8 +218,8 @@ namespace Overlewd
             GetBuildingByKey(AdminBRO.Building.Key_Castle);
         public AdminBRO.Building catacombs =>
             GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
-        public AdminBRO.Building cathedral =>
-            GetBuildingByKey(AdminBRO.Building.Key_Cathedral);
+        public AdminBRO.Building laboratory =>
+            GetBuildingByKey(AdminBRO.Building.Key_Laboratory);
         public AdminBRO.Building aerostat =>
             GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
         public AdminBRO.Building forge =>

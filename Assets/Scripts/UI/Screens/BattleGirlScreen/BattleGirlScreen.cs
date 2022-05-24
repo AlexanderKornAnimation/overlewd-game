@@ -9,8 +9,6 @@ namespace Overlewd
 {
     public class BattleGirlScreen : BaseFullScreen
     {
-        private AdminBRO.Character character;
-        
         private Button backButton;
         private Button forgeButton;
         private Button sexSceneButton;
@@ -37,6 +35,8 @@ namespace Overlewd
 
         private Image weapon;
         private Button weaponScreenButton;
+
+        private BattleGirlScreenInData inputData;
 
         private void Awake()
         {
@@ -84,9 +84,9 @@ namespace Overlewd
             Customize();
         }
 
-        public BattleGirlScreen SetData(AdminBRO.Character character)
+        public BattleGirlScreen SetData(BattleGirlScreenInData data)
         {
-            this.character = character;
+            inputData = data;
             return this;
         }
         
@@ -98,13 +98,35 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<TeamEditScreen>();
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<TeamEditScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<TeamEditScreen>().
+                    SetData(inputData.prevScreenInData as TeamEditScreenInData).
+                    RunShowScreenProcess();
+            }
         }
 
         private void WeaponScreenButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<WeaponScreen>();
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<WeaponScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<WeaponScreen>().
+                    SetData(new WeaponScreenInData
+                    {
+                        prevScreenInData = inputData,
+                        ftueStageId = inputData.ftueStageId,
+                        eventStageId = inputData.eventStageId
+                    }).RunShowScreenProcess();
+            }
         }
 
         private void LevelUpButtonClick()
@@ -120,5 +142,10 @@ namespace Overlewd
         {
             
         }
+    }
+
+    public class BattleGirlScreenInData : BaseScreenInData
+    {
+        public int? characterId;
     }
 }

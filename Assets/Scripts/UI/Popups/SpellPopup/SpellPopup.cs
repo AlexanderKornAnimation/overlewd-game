@@ -70,19 +70,19 @@ namespace Overlewd
         protected virtual void PaidBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.HidePopup();
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         protected virtual void FreeBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-            UIManager.HidePopup();
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.HidePopup();
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         public override ScreenShow Show()
