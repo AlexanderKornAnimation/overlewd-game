@@ -13,7 +13,6 @@ namespace Overlewd
         private Button FTUE_Button;
         private Button Reset_FTUE_Button;
         private Button Castle_Button;
-        private Button BattleScreen_Button;
 
         void Awake()
         {
@@ -32,13 +31,6 @@ namespace Overlewd
 
             Castle_Button = canvas.Find("Castle").GetComponent<Button>();
             Castle_Button.onClick.AddListener(Castle_ButtonClick);
-
-            BattleScreen_Button = canvas.Find("BattleScreen").GetComponent<Button>();
-            BattleScreen_Button.onClick.AddListener(BattleScreen_ButtonClick);
-
-#if !UNITY_EDITOR
-            BattleScreen_Button.gameObject.SetActive(false);
-#endif
         }
 
         private void FTUE_Progress_ButtonClick()
@@ -71,9 +63,7 @@ namespace Overlewd
 
             GameData.progressMode = false;
             GameData.ftue.info.chapter1.SetAsMapChapter();
-            // UIManager.ShowScreen<MapScreen>();
             UIManager.ShowScreen<MapScreen>();
-
         }
 
         private void Reset_FTUE_ButtonClick()
@@ -87,12 +77,6 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             GameData.progressMode = false;
             UIManager.ShowScreen<CastleScreen>();
-        }
-
-        private void BattleScreen_ButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<BaseBattleScreen>();
         }
 
         private async void FTUEReset()

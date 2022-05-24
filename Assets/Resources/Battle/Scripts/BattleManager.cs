@@ -353,7 +353,6 @@ namespace Overlewd
                 battleState = BattleState.LOSE;
                 if (battleScene != null)
                     battleScene.BattleDefeat();
-                BattleNotif("chapter1", "battle2", "bufftutor1");
                 if (CheckBattleGameData("chapter1", "battle2"))
                     battleList[1].powerBuff = true;
                 Debug.Log("LOOSING");
