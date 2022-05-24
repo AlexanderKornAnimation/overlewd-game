@@ -91,9 +91,8 @@ namespace Overlewd
                 }
             }
             
-            var characters = GameData.characters.Where(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
-            
-            var overlordData = GameData.characters.Find(ch => ch.characterClass == AdminBRO.Character.Class_Overlord);
+            var characters = GameData.characters.myTeamCharacters;
+            var overlordData = GameData.characters.overlord;
 
             var overlordInst = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
             overlordInst.characterData = overlordData;

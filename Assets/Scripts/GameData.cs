@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -138,16 +139,6 @@ namespace Overlewd
             return chapterMaps.Find(cm => cm.id == id);
         }
 
-        public static List<AdminBRO.Character> characters { get; set; } = new List<AdminBRO.Character>();
-        public static AdminBRO.Character GetCharacterById(int id)
-        {
-            return characters.Find(ch => ch.id == id);
-        }
-        public static AdminBRO.Character GetCharacterByClass(string chClass)
-        {
-            return characters.Find(ch => ch.characterClass == chClass);
-        }
-
         public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();
         public static AdminBRO.Equipment GetEquipmentById(int id)
         {
@@ -157,6 +148,7 @@ namespace Overlewd
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
         public static Buildings buildings { get; } = new Buildings();
+        public static Characters characters { get; } = new Characters();
     }
 
     //ftue
@@ -216,11 +208,8 @@ namespace Overlewd
     {
         public List<AdminBRO.Building> buildings { get; private set; }
 
-        public async Task Get()
-        {
+        public async Task Get() =>
             buildings = await AdminBRO.buildingsAsync();
-        }
-
         public AdminBRO.Building GetBuildingById(int id) =>
             buildings.Find(b => b.id == id);
         public AdminBRO.Building GetBuildingByKey(string key) =>
@@ -281,11 +270,8 @@ namespace Overlewd
     {
         public List<AdminBRO.GachItem> items { get; private set; }
 
-        public async Task Get()
-        {
+        public async Task Get() =>
             items = await AdminBRO.gachaAsync();
-        }
-
         public AdminBRO.GachItem GetGachaById(int id) =>
             items.Find(g => g.id == id);
 
@@ -300,5 +286,71 @@ namespace Overlewd
             await AdminBRO.gachaBuyTenAsync(id);
             await Get();
         }
+    }
+
+    //characters
+    public class Characters
+    {
+        public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
+
+        public async Task Get() =>
+            characters = await AdminBRO.charactersAsync();
+        public AdminBRO.Character GetById(int id) =>
+            characters.Find(ch => ch.id == id);
+        public AdminBRO.Character GetByClass(string chClass) => 
+            characters.Find(ch => ch.characterClass == chClass);
+
+        public async Task LvlUp(int chId)
+        {
+            await AdminBRO.characterLvlupAsync(chId);
+            await Get();
+        }
+
+        public async Task Mrg(int srcID, int tgtId)
+        {
+            await AdminBRO.charactersMrgAsync(srcID, tgtId);
+            await Get();
+        }
+
+        public async Task ToSlot1(int chId)
+        {
+            await AdminBRO.characterToSlotAsync(chId, AdminBRO.Character.TeamPosition_Slot1);
+            await Get();
+        }
+
+        public async Task ToSlot2(int chId)
+        {
+            await AdminBRO.characterToSlotAsync(chId, AdminBRO.Character.TeamPosition_Slot2);
+            await Get();
+        }
+
+        public async Task ToSlotNone(int chId)
+        {
+            await AdminBRO.characterToSlotAsync(chId, AdminBRO.Character.TeamPosition_None);
+            await Get();
+        }
+
+        public async Task Equip(int chId, int eqId)
+        {
+            await AdminBRO.equipAsync(chId, eqId);
+            await Get();
+        }
+
+        public async Task Unequip(int chId, int eqId)
+        {
+            await AdminBRO.unequipAsync(chId, eqId);
+            await Get();
+        }
+
+        public List<AdminBRO.Character> myTeamCharacters =>
+            characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
+        public AdminBRO.Character overlord =>
+            GetByClass(AdminBRO.Character.Class_Overlord);
+        public List<AdminBRO.Character> orderById =>
+            characters.OrderBy(ch => ch.id).ToList();
+        public AdminBRO.Character slot1Ch =>
+            characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
+        public AdminBRO.Character slot2Ch =>
+            characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
     }
 }

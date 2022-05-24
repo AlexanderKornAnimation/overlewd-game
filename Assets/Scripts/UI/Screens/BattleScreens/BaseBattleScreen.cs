@@ -126,7 +126,7 @@ namespace Overlewd
 			inst.battleData = battleData;
 
 			//my team
-			var overlordCh = GameData.GetCharacterByClass(AdminBRO.Character.Class_Overlord);
+			var overlordCh = GameData.characters.overlord;
 			if (overlordCh != null)
             {
 				inst.myTeam.Add(overlordCh);
@@ -134,13 +134,7 @@ namespace Overlewd
 
 			if (battleData.isTypeBattle)
 			{
-				foreach (var myCh in GameData.characters)
-				{
-					if (myCh.teamPosition != AdminBRO.Character.TeamPosition_None)
-					{
-						inst.myTeam.Add(myCh);
-					}
-				}
+				inst.myTeam.AddRange(GameData.characters.myTeamCharacters);
 			}
 
 			//enemy teams

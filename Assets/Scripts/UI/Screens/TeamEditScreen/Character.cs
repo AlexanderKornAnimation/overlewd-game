@@ -44,7 +44,7 @@ namespace Overlewd
 
             public void Customize()
             {
-                var chData = GameData.GetCharacterById(characterId);
+                var chData = GameData.characters.GetById(characterId);
                 girlIcon.sprite = ResourceManager.LoadSprite(chData.teamEditPersIcon);
                 level.text = chData.level.ToString();
                 girlClass.text = AdminBRO.Character.GetMyClassMarker(chData.characterClass);

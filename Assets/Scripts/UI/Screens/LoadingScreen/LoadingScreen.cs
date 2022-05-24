@@ -241,7 +241,7 @@ namespace Overlewd
 
             await GameData.buildings.Get();
 
-            GameData.characters = await AdminBRO.charactersAsync();
+            await GameData.characters.Get();
 
             GameData.equipment = await AdminBRO.equipmentAsync();
 
