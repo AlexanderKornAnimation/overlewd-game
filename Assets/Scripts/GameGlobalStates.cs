@@ -7,10 +7,6 @@ namespace Overlewd
 {
     public static class GameGlobalStates
     {
-        //ftue
-        public static AdminBRO.FTUEChapter ftueChapterData { get; set; }
-        public static bool ftueProgressMode { get; set; } = false;
-
         //events
         public static AdminBRO.EventItem eventData { get; set; }
 

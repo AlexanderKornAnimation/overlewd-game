@@ -13,11 +13,12 @@ namespace Overlewd
         private Transform map;
         private GameObject chapterMap;
 
-        private Button backButton;
+        private Button sidebarButton;
 
         private NSEventMapScreen.MapButton mapButton;
+        private BuffWidget buffPanel;
 
-        private EventMapScreenInData inputData;
+        private EventMapScreenInData inputData = new EventMapScreenInData();
 
         private void Awake()
         {
@@ -25,13 +26,14 @@ namespace Overlewd
 
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
+            buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.inputData = inputData;
 
             var canvas = screenInst.transform.Find("Canvas");
             map = canvas.Find("Map");
 
-            backButton = canvas.Find("BackButton").GetComponent<Button>();
-            backButton.onClick.AddListener(BackButtonClick);
+            sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
+            sidebarButton.onClick.AddListener(SidebarButtonClick);
         }
 
         public EventMapScreen SetData(EventMapScreenInData data)
@@ -78,6 +80,7 @@ namespace Overlewd
                     if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        fightButton.screenInData = inputData;
                         fightButton.stageId = stageId;
 
                         if (!stageData.isComplete)
@@ -90,6 +93,7 @@ namespace Overlewd
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         bossFightButton.stageId = stageId;
+                        bossFightButton.screenInData = inputData;
                         
                         if (!stageData.isComplete)
                         {
@@ -170,11 +174,11 @@ namespace Overlewd
             
             await Task.CompletedTask;
         }
-        
-        private void BackButtonClick()
+
+        private void SidebarButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
 
         private AdminBRO.EventChapter GetActiveChapter(AdminBRO.EventItem eventData)

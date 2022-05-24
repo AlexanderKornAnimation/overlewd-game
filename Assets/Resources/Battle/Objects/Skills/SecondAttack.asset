@@ -16,8 +16,12 @@ MonoBehaviour:
   discription: AOE Damage
   battleIco: {fileID: 21300000, guid: 04242a19af53bfb499645fe30ce1a7e3, type: 3}
   vfx: {fileID: 0}
+  vfxOnTarget: {fileID: 5541813711829063474, guid: dbcf0b4fee0b54744b0971b588d526e5, type: 3}
+  vfxDuration: 0
   sfx: {fileID: 0}
   select: 0
+  attackAnimationName: attack2
+  prepairAnimationName: prepair2
   power: 44
   manaCost: 0
   amount: 0

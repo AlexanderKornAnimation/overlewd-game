@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,35 +10,37 @@ namespace Overlewd
 {
     public class GirlScreen : BaseFullScreen
     {
-        protected Image girlImage;
+        private Image girlImage;
         
-        protected Image trustProgress;
-        protected TextMeshProUGUI currentProgressLevel;
-        protected TextMeshProUGUI nextProgressLevel;
+        private Image trustProgress;
+        private TextMeshProUGUI currentProgressLevel;
+        private TextMeshProUGUI nextProgressLevel;
         
-        protected Image rewardTier1;
-        protected TextMeshProUGUI receivedTier1;
+        private Image rewardTier1;
+        private TextMeshProUGUI receivedTier1;
         
-        protected Image rewardTier2;
-        protected TextMeshProUGUI receivedTier2;
+        private Image rewardTier2;
+        private TextMeshProUGUI receivedTier2;
 
-        protected Image rewardTier3;
-        protected TextMeshProUGUI receivedTier3;
+        private Image rewardTier3;
+        private TextMeshProUGUI receivedTier3;
         
-        protected TextMeshProUGUI buffPower;
-        protected TextMeshProUGUI buffType;
+        private TextMeshProUGUI buffPower;
+        private TextMeshProUGUI buffType;
 
-        protected Button bannerButton;
-        protected Image bannerArt;
-        protected GameObject bannerNotification; 
+        private Button bannerButton;
+        private Image bannerArt;
+        private GameObject bannerNotification; 
 
-        protected Button seduceButton;
-        protected Button dialogButton;
-        protected Button portalButton;
-        protected Button chestButton;
-        protected Button backButton;
+        private Button seduceButton;
+        private Button dialogButton;
+        private Button portalButton;
+        private Button chestButton;
+        private Button backButton;
+
+        private GirlScreenInData inputData;
         
-        void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/GirlScreen/Girl", transform);
 
@@ -80,38 +83,75 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
         }
 
-        protected virtual void Start()
+        private void Start()
         {
             Customize();
         }
 
-        protected virtual void Customize()
+        private void Customize()
         {
             
         }
-        
-        protected virtual void BannerButtonClick()
+
+        public GirlScreen SetData(GirlScreenInData data)
         {
-            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            // UIManager.ShowScreen<MemoryListScreen>();
+            inputData = data;
+            return this;
         }
         
-        protected virtual void PortalButtonClick()
+        private void BannerButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<MemoryListScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<MemoryListScreen>().
+                    SetData(new MemoryListScreenInData
+                    {
+                        girlName = inputData.girlName,
+                        ftueStageId = inputData.ftueStageId,
+                        eventStageId = inputData.eventStageId,
+                        prevScreenInData = inputData
+                    }).RunShowScreenProcess();
+            }
+        }
+        
+        private void PortalButtonClick()
         {
             // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             // UIManager.ShowScreen<PortalScreen>();
         }
         
-        protected virtual void ChestButtonClick()
+        private void ChestButtonClick()
         {
             // SoundManager.PlayOneShot(SoundManager.FMODEventPath.UI.ButtonClick);
             // UIManager.ShowPopup<ChestPopup>();
         }
         
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
+
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<HaremScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<HaremScreen>().
+                    SetData(inputData.prevScreenInData as HaremScreenInData).
+                    RunShowScreenProcess();
+            }
+                
         }
+    }
+
+    public class GirlScreenInData : BaseScreenInData
+    {
+        public string girlName;
     }
 }

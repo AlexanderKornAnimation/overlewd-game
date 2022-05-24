@@ -9,18 +9,14 @@ namespace Overlewd
     {
         public class CastleButton : BaseButton
         {
-            protected Transform notification;
-
             protected override void Awake()
             {
                 base.Awake();
-
-                notification = transform.Find("CollectCrystalsNotification");
             }
 
             protected override void ButtonClick()
             {
-                
+                UIManager.ShowScreen<MapScreen>();
             }
 
             public static CastleButton GetInstance(Transform parent)

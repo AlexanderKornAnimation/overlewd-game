@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -21,6 +22,8 @@ namespace Overlewd
 
     public static class GameData
     {
+        public static bool progressMode { get; set; } = false;
+
         public static AdminBRO.PlayerInfo playerInfo { get; set; }
 
         public static int GetCurencyCatEarsCount()
@@ -100,9 +103,9 @@ namespace Overlewd
             var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
             eventStages = await AdminBRO.eventStagesAsync();
         }
-        public static async Task EventStageEndAsync(int stageId)
+        public static async Task EventStageEndAsync(int stageId, AdminBRO.EventStageEndData data = null)
         {
-            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId);
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
             eventStages = await AdminBRO.eventStagesAsync();
         }
 
@@ -116,50 +119,6 @@ namespace Overlewd
         public static AdminBRO.Battle GetBattleById(int id)
         {
             return battles.Find(d => d.id == id);
-        }
-
-        public static AdminBRO.FTUEInfo ftue { get; set; }
-        public static List<AdminBRO.FTUEStageItem> ftueStages { get; set; } = new List<AdminBRO.FTUEStageItem>();
-        public static AdminBRO.FTUEStats ftueStats { get; set; } = new AdminBRO.FTUEStats();
-
-        public static AdminBRO.FTUEChapter GetFTUEChapterByKey(string key)
-        {
-            return ftue.chapters.Find(ch => ch.key == key);
-        }
-        public static AdminBRO.FTUEChapter GetFTUEChapterById(int id)
-        {
-            return ftue.chapters.Find(ch => ch.id == id);
-        }
-        public static AdminBRO.FTUEStageItem GetFTUEStageById(int id)
-        {
-            return ftueStages.Find(s => s.id == id);
-        }
-        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key, int chapterId)
-        {
-            return ftueStages.Find(s => s.key == key && s.ftueChapterId == chapterId);
-        }
-        public static AdminBRO.FTUEStageItem GetFTUEStageByKey(string key, string chapterKey)
-        {
-            var chpaterData = GetFTUEChapterByKey(chapterKey);
-            return (chpaterData != null) ? GetFTUEStageByKey(key, chpaterData.id) : null;
-        }
-        public static async Task FTUEStartStage(int stageId)
-        {
-            await AdminBRO.ftueStageStartAsync(stageId);
-            ftueStages = await AdminBRO.ftueStagesAsync();
-            ftueStats = await AdminBRO.ftueStatsAsync();
-        }
-        public static async Task FTUEEndStage(int stageId)
-        {
-            await AdminBRO.ftueStageEndAsync(stageId);
-            ftueStages = await AdminBRO.ftueStagesAsync();
-            ftueStats = await AdminBRO.ftueStatsAsync();
-        }
-        public static async Task FTUEReset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
-            ftueStages = await AdminBRO.ftueStagesAsync();
-            ftueStats = await AdminBRO.ftueStatsAsync();
         }
 
         public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
@@ -180,16 +139,103 @@ namespace Overlewd
             return chapterMaps.Find(cm => cm.id == id);
         }
 
-        public static List<AdminBRO.Building> buildings { get; set; } = new List<AdminBRO.Building>();
-        public static AdminBRO.Building GetBuildingById(int id)
+        public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();
+        public static AdminBRO.Equipment GetEquipmentById(int id)
         {
-            return buildings.Find(b => b.id == id);
+            return equipment.Find(eq => eq.id == id);
         }
-        public static AdminBRO.Building GetBuildingByKey(string key)
+
+        public static FTUE ftue { get; } = new FTUE();
+        public static Gacha gacha { get; } = new Gacha();
+        public static Buildings buildings { get; } = new Buildings();
+        public static Characters characters { get; } = new Characters();
+    }
+
+    //ftue
+    public class FTUE
+    {
+        public AdminBRO.FTUEInfo info { get; private set; }
+        public List<AdminBRO.FTUEStageItem> stages { get; private set; }
+        public AdminBRO.FTUEStats stats { get; private set; }
+        public AdminBRO.FTUEChapter activeChapter
         {
-            return buildings.Find(b => b.key == key);
+            get
+            {
+                var chapterData = info.chapter1;
+                while (chapterData.isComplete)
+                {
+                    if (chapterData.nextChapterId.HasValue)
+                    {
+                        chapterData = chapterData.nextChapterData;
+                        continue;
+                    }
+                    break;
+                }
+                return chapterData;
+            }
         }
-        public static async Task BuildingBuildNow(int buildingId)
+        public AdminBRO.FTUEChapter mapChapter { get; set; }
+
+        public async Task Get()
+        {
+            info = await AdminBRO.ftueAsync();
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+
+        public async Task StartStage(int stageId)
+        {
+            await AdminBRO.ftueStageStartAsync(stageId);
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+        public async Task EndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
+        {
+            await AdminBRO.ftueStageEndAsync(stageId, data);
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+        public async Task Reset()
+        {
+            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+        }
+    }
+
+    //buildings
+    public class Buildings
+    {
+        public List<AdminBRO.Building> buildings { get; private set; }
+
+        public async Task Get() =>
+            buildings = await AdminBRO.buildingsAsync();
+        public AdminBRO.Building GetBuildingById(int id) =>
+            buildings.Find(b => b.id == id);
+        public AdminBRO.Building GetBuildingByKey(string key) =>
+            buildings.Find(b => b.key == key);
+        public AdminBRO.Building castle =>
+            GetBuildingByKey(AdminBRO.Building.Key_Castle);
+        public AdminBRO.Building catacombs =>
+            GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
+        public AdminBRO.Building laboratory =>
+            GetBuildingByKey(AdminBRO.Building.Key_Laboratory);
+        public AdminBRO.Building aerostat =>
+            GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
+        public AdminBRO.Building forge =>
+            GetBuildingByKey(AdminBRO.Building.Key_Forge);
+        public AdminBRO.Building harem =>
+            GetBuildingByKey(AdminBRO.Building.Key_Harem);
+        public AdminBRO.Building magicGuild =>
+            GetBuildingByKey(AdminBRO.Building.Key_MagicGuild);
+        public AdminBRO.Building market =>
+            GetBuildingByKey(AdminBRO.Building.Key_Market);
+        public AdminBRO.Building municipality =>
+            GetBuildingByKey(AdminBRO.Building.Key_Municipality);
+        public AdminBRO.Building portal =>
+            GetBuildingByKey(AdminBRO.Building.Key_Portal);
+
+        public async Task BuildNow(int buildingId)
         {
             await AdminBRO.buildingBuildNowAsync(buildingId);
             buildings = await AdminBRO.buildingsAsync();
@@ -200,7 +246,7 @@ namespace Overlewd
                 });
         }
 
-        public static async Task BuildingBuild(int buildingId)
+        public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
             buildings = await AdminBRO.buildingsAsync();
@@ -211,28 +257,100 @@ namespace Overlewd
                 });
         }
 
-        public static async Task BuildingsReset()
+        public async Task Reset()
         {
             await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
             await AdminBRO.initAsync();
             buildings = await AdminBRO.buildingsAsync();
         }
+    }
 
-        public static List<AdminBRO.Character> characters { get; set; } = new List<AdminBRO.Character>();
-        public static AdminBRO.Character GetCharacterById(int id)
+    //gacha
+    public class Gacha
+    {
+        public List<AdminBRO.GachItem> items { get; private set; }
+
+        public async Task Get() =>
+            items = await AdminBRO.gachaAsync();
+        public AdminBRO.GachItem GetGachaById(int id) =>
+            items.Find(g => g.id == id);
+
+        public async Task Buy(int id)
         {
-            return characters.Find(ch => ch.id == id);
-        }
-        public static AdminBRO.Character GetCharacterByClass(string chClass)
-        {
-            return characters.Find(ch => ch.characterClass == chClass);
+            await AdminBRO.gachaBuyAsync(id);
+            await Get();
         }
 
-        public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();
-        public static AdminBRO.Equipment GetEquipmentById(int id)
+        public async Task BuyTen(int id)
         {
-            return equipment.Find(eq => eq.id == id);
+            await AdminBRO.gachaBuyTenAsync(id);
+            await Get();
         }
     }
 
+    //characters
+    public class Characters
+    {
+        public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
+
+        public async Task Get() =>
+            characters = await AdminBRO.charactersAsync();
+        public AdminBRO.Character GetById(int id) =>
+            characters.Find(ch => ch.id == id);
+        public AdminBRO.Character GetByClass(string chClass) => 
+            characters.Find(ch => ch.characterClass == chClass);
+
+        public async Task LvlUp(int chId)
+        {
+            await AdminBRO.characterLvlupAsync(chId);
+            await Get();
+        }
+
+        public async Task Mrg(int srcID, int tgtId)
+        {
+            await AdminBRO.charactersMrgAsync(srcID, tgtId);
+            await Get();
+        }
+
+        public async Task ToSlot1(int chId)
+        {
+            await AdminBRO.characterToSlotAsync(chId, AdminBRO.Character.TeamPosition_Slot1);
+            await Get();
+        }
+
+        public async Task ToSlot2(int chId)
+        {
+            await AdminBRO.characterToSlotAsync(chId, AdminBRO.Character.TeamPosition_Slot2);
+            await Get();
+        }
+
+        public async Task ToSlotNone(int chId)
+        {
+            await AdminBRO.characterToSlotAsync(chId, AdminBRO.Character.TeamPosition_None);
+            await Get();
+        }
+
+        public async Task Equip(int chId, int eqId)
+        {
+            await AdminBRO.equipAsync(chId, eqId);
+            await Get();
+        }
+
+        public async Task Unequip(int chId, int eqId)
+        {
+            await AdminBRO.unequipAsync(chId, eqId);
+            await Get();
+        }
+
+        public List<AdminBRO.Character> myTeamCharacters =>
+            characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
+        public AdminBRO.Character overlord =>
+            GetByClass(AdminBRO.Character.Class_Overlord);
+        public List<AdminBRO.Character> orderById =>
+            characters.OrderBy(ch => ch.id).ToList();
+        public AdminBRO.Character slot1Ch =>
+            characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
+        public AdminBRO.Character slot2Ch =>
+            characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
+    }
 }

@@ -16,26 +16,30 @@ namespace Overlewd
         protected Transform map;
         protected Button chapterButton;
         protected TextMeshProUGUI chapterButtonText;
-        protected Button backbutton;
+        protected Button sidebarButton;
         protected TextMeshProUGUI chapterButtonMarkers;
 
         protected GameObject chapterMap;
-        protected AdminBRO.FTUEChapter nextChapterData;
 
-        private MapScreenInData inputData;
+        private MapScreenInData inputData = new MapScreenInData();
+
+        private EventsWidget eventsPanel;
+        private QuestsWidget questsPanel;
+        private BuffWidget buffPanel;
 
         protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/MapScreen/MapScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+
             chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
             chapterButtonText = chapterButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             chapterButtonMarkers = chapterButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
-            backbutton = canvas.Find("BackButton").GetComponent<Button>();
-
             chapterButton.onClick.AddListener(ChapterButtonClick);
-            backbutton.onClick.AddListener(BackButtonClick);
+
+            sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
+            sidebarButton.onClick.AddListener(SidebarButtonClick);
 
             map = canvas.Find("Map");
         }
@@ -48,29 +52,25 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            if (GameGlobalStates.ftueChapterData == null)
+            if (GameData.ftue.mapChapter == null)
             {
-                GameGlobalStates.ftueChapterData = GameGlobalStates.ftueProgressMode ?
-                    GameData.ftue.activeChapter : GameData.ftue.firstChapter;
+                GameData.ftue.mapChapter = GameData.progressMode ?
+                    GameData.ftue.activeChapter : GameData.ftue.info.chapter1;
             }
 
             //backbutton.gameObject.SetActive(false);
             chapterButton.gameObject.SetActive(true);
 
-            //EventsWidget.GetInstance(transform);
-            QuestsWidget.GetInstance(transform);
-            BuffWidget.GetInstance(transform);
-
-            if (GameGlobalStates.ftueChapterData != null)
+            if (GameData.ftue.mapChapter != null)
             {
-                if (GameGlobalStates.ftueChapterData.chapterMapId.HasValue)
+                if (GameData.ftue.mapChapter.chapterMapId.HasValue)
                 {
-                    var mapData = GameData.GetChapterMapById(GameGlobalStates.ftueChapterData.chapterMapId.Value);
+                    var mapData = GameData.GetChapterMapById(GameData.ftue.mapChapter.chapterMapId.Value);
                     chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
 
-                    foreach (var stageId in GameGlobalStates.ftueChapterData.stages)
+                    foreach (var stageId in GameData.ftue.mapChapter.stages)
                     {
-                        var stageData = GameData.GetFTUEStageById(stageId);
+                        var stageData = GameData.ftue.info.GetStageById(stageId);
 
                         var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
                         if (stageMapNode == null)
@@ -78,7 +78,7 @@ namespace Overlewd
                             continue;
                         }
 
-                        var instantiateStageOnMap = GameGlobalStates.ftueProgressMode ? !stageData.isClosed : true;
+                        var instantiateStageOnMap = GameData.progressMode ? !stageData.isClosed : true;
                         if (instantiateStageOnMap)
                         {
                             if (stageData.dialogId.HasValue)
@@ -118,6 +118,7 @@ namespace Overlewd
                                     if (battleData.isTypeBattle)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.screenInData = inputData;
                                         fight.stageId = stageId;
                                         
                                         if (!stageData.isComplete)
@@ -129,6 +130,7 @@ namespace Overlewd
                                     else if (battleData.isTypeBoss)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                        fight.screenInData = inputData;
                                         fight.stageId = stageId;
 
                                         if (!stageData.isComplete)
@@ -143,65 +145,97 @@ namespace Overlewd
                     }
                 }
 
-                if (GameGlobalStates.ftueChapterData.nextChapterId.HasValue)
+                if (GameData.ftue.mapChapter.nextChapterId.HasValue)
                 {
-                    nextChapterData = GameGlobalStates.ftueChapterData.nextChapterData;
-                    chapterButtonText.text = nextChapterData?.name;
-                    var showNextChapterButton = GameGlobalStates.ftueProgressMode ?
-                        GameGlobalStates.ftueChapterData.isComplete : true;
-                    chapterButton.gameObject.SetActive(showNextChapterButton);
+                    chapterButtonText.text = GameData.ftue.mapChapter.nextChapterData?.name;
+                    chapterButton.gameObject.SetActive(GameData.progressMode ?
+                        GameData.ftue.mapChapter.isComplete : true);
                 }
                 else
                 {
                     chapterButton.gameObject.SetActive(false);
                 }
             }
+
+            eventsPanel = EventsWidget.GetInstance(transform);
+            eventsPanel.Hide();
+            questsPanel = QuestsWidget.GetInstance(transform);
+            questsPanel.Hide();
+            buffPanel = BuffWidget.GetInstance(transform);
+            buffPanel.inputData = inputData;
+            buffPanel.Hide();
+
             await Task.CompletedTask;
         }
 
-        private void BackButtonClick()
+        private void SidebarButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<StartingScreen>();
+            UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
 
         public override async Task AfterShowAsync()
         {
+            //return after team edit screen
             var battleData = inputData?.ftueStageData?.battleData;
             if (battleData != null)
             {
                 if (battleData.isTypeBattle)
                 {
-                    UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                    UIManager.MakePopup<PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
                         {
+                            prevScreenInData = inputData,
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
                 else if (battleData.isTypeBoss)
                 {
-                    UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                    UIManager.MakePopup<PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
                         {
+                            prevScreenInData = inputData,
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
             }
 
+            //animate opened stages
+            bool waitStagesShowAnims = false;
             foreach (var stage in newStages)
             {
                 stage.gameObject.SetActive(true);
+                waitStagesShowAnims = true;
             }
+            if (waitStagesShowAnims) await UniTask.Delay(2000);
 
-            EnterScreen();
+            //ftue part
+            switch (GameData.ftue.stats.lastEndedState)
+            {
+                case ("battle1", "chapter1"):
+                    GameData.ftue.info.chapter1.ShowNotifByKey("maptutor");
+                    await UIManager.WaitHideNotifications();
+                    await questsPanel.ShowAsync();
+                    GameData.ftue.info.chapter1.ShowNotifByKey("qbtutor");
+                    break;
+                case ("sex2", "chapter1"):
+                    await questsPanel.ShowAsync();
+                    await buffPanel.ShowAsync();
+                    GameData.ftue.info.chapter1.ShowNotifByKey("bufftutor2");
+                    break;
+                default:
+                    var showPanelTasks = new List<Task>();
+                    showPanelTasks.Add(questsPanel.ShowAsync());
+                    showPanelTasks.Add(buffPanel.ShowAsync());
+                    await Task.WhenAll(showPanelTasks);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
 
         public override async Task AfterHideAsync()
         {
-            LeaveScreen();
-
             await Task.CompletedTask;
         }
 
@@ -209,51 +243,8 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            GameGlobalStates.ftueChapterData = nextChapterData;
+            GameData.ftue.mapChapter.nextChapterData?.SetAsMapChapter();
             UIManager.ShowScreen<MapScreen>();
-        }
-
-        private async void EnterScreen()
-        {
-            return;
-            switch (GameGlobalStates.ftueChapterData.key)
-            {
-                case "chapter1":
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("maptutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    await UIManager.WaitHideNotifications();
-
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("questbooktutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    await UIManager.WaitHideNotifications();
-                    
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        {
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("qbcontenttutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    await UIManager.WaitHideNotifications();
-
-                    UIManager.MakeNotification<DialogNotification>().
-                        SetData(new DialogNotificationInData
-                        { 
-                            dialogId = GameGlobalStates.ftueChapterData.GetNotifByKey("eventbooktutor")?.dialogId
-                        }).RunShowNotificationProcess();
-                    break;
-            }
-
-            await Task.CompletedTask;
-        }
-
-        private void LeaveScreen()
-        {
-
         }
     }
 

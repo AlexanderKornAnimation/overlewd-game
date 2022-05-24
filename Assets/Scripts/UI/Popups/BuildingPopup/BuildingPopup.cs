@@ -93,7 +93,7 @@ namespace Overlewd
                     case AdminBRO.Building.Key_Catacombs:
 
                         break;
-                    case AdminBRO.Building.Key_Cathedral:
+                    case AdminBRO.Building.Key_Laboratory:
 
                         break;
                     case AdminBRO.Building.Key_Forge:
@@ -139,23 +139,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
             await BuildNow();
 
-            switch (GameData.ftue.activeChapter.key)
-            {
-                case "chapter1":
-                    switch (GameData.ftueStats.lastEndedStageData.key)
-                    {
-                        case "battle4":
-                            UIManager.ShowScreen<CastleScreen>();
-                            break;
-                        default:
-                            UIManager.HidePopup();
-                            break;
-                    }
-                    break;
-                default:
-                    UIManager.HidePopup();
-                    break;
-            }
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         protected virtual async void PaidBuildingButtonClick()
@@ -163,23 +147,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await BuildNow();
 
-            switch (GameData.ftue.activeChapter.key)
-            {
-                case "chapter1":
-                    switch (GameData.ftueStats.lastEndedStageData.key)
-                    {
-                        case "battle4":
-                            UIManager.ShowScreen<CastleScreen>();
-                            break;
-                        default:
-                            UIManager.HidePopup();
-                            break;
-                    }
-                    break;
-                default:
-                    UIManager.HidePopup();
-                    break;
-            }
+            UIManager.ShowScreen<CastleScreen>();
         }
 
         public override ScreenShow Show()
@@ -199,7 +167,7 @@ namespace Overlewd
             {
                 if (buildingData.canUpgradeNow)
                 {
-                    await GameData.BuildingBuildNow(buildingData.id);
+                    await GameData.buildings.BuildNow(buildingData.id);
                 }
             }
         }
@@ -210,6 +178,6 @@ namespace Overlewd
         public int? buildingId;
 
         public AdminBRO.Building buildingData =>
-            buildingId.HasValue ? GameData.GetBuildingById(buildingId.Value) : null;
+            buildingId.HasValue ? GameData.buildings.GetBuildingById(buildingId.Value) : null;
     }
 }

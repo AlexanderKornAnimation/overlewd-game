@@ -122,37 +122,30 @@ namespace Overlewd
             return this;
         }
 
-        private int? GetCharacterInSlot1()
-        {
-            return GameData.characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1)?.id;
-        }
+        private int? GetCharacterInSlot1() =>
+            GameData.characters.slot1Ch?.id;
 
-        private int? GetCharacterInSlot2()
-        {
-            return GameData.characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2)?.id;
-        }
+        private int? GetCharacterInSlot2() =>
+            GameData.characters.slot2Ch?.id;
 
         public async void TryEquipOrUnequip(int chId)
         {
-            var chData = GameData.GetCharacterById(chId);
+            var chData = GameData.characters.GetById(chId);
             if (chData.teamPosition != AdminBRO.Character.TeamPosition_None)
             {
-                await AdminBRO.characterPostAsync(chId, AdminBRO.Character.TeamPosition_None);
-                GameData.characters = await AdminBRO.charactersAsync();
+                await GameData.characters.ToSlotNone(chId);
                 Customize();
             }
             else
             {
                 if (!GetCharacterInSlot1().HasValue)
                 {
-                    await AdminBRO.characterPostAsync(chId, AdminBRO.Character.TeamPosition_Slot1);
-                    GameData.characters = await AdminBRO.charactersAsync();
+                    await GameData.characters.ToSlot1(chId);
                     Customize();
                 }
                 else if (!GetCharacterInSlot2().HasValue)
                 {
-                    await AdminBRO.characterPostAsync(chId, AdminBRO.Character.TeamPosition_Slot2);
-                    GameData.characters = await AdminBRO.charactersAsync();
+                    await GameData.characters.ToSlot2(chId);
                     Customize();
                 }
             }
@@ -181,7 +174,7 @@ namespace Overlewd
             var slot1_chId = GetCharacterInSlot1();
             if (slot1_chId.HasValue)
             {
-                var chData = GameData.GetCharacterById(slot1_chId.Value);
+                var chData = GameData.characters.GetById(slot1_chId.Value);
                 slot1_SlotEmptyHint.gameObject.SetActive(false);
                 slot1_SlotFull.gameObject.SetActive(true);
                 slot1_characterIcon.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
@@ -205,7 +198,7 @@ namespace Overlewd
             var slot2_chId = GetCharacterInSlot2();
             if (slot2_chId.HasValue)
             {
-                var chData = GameData.GetCharacterById(slot2_chId.Value);
+                var chData = GameData.characters.GetById(slot2_chId.Value);
                 slot2_SlotEmptyHint.gameObject.SetActive(false);
                 slot2_SlotFull.gameObject.SetActive(true);
                 slot2_characterIcon.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
@@ -242,7 +235,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            var orderedCharactersById = GameData.characters.OrderBy(ch => ch.id).ToList();
+            var orderedCharactersById = GameData.characters.orderById;
             foreach (var ch in orderedCharactersById)
             {
                 if (ch.characterClass == AdminBRO.Character.Class_Overlord)
@@ -261,10 +254,12 @@ namespace Overlewd
                 var newCh = NSTeamEditScreen.Character.GetInstance(scrollContents[tabId]);
                 newCh.screen = this;
                 newCh.characterId = ch.id.Value;
+                newCh.inputData = inputData;
 
                 var newChAll = NSTeamEditScreen.Character.GetInstance(scrollContents[tabAllUnits]);
                 newChAll.screen = this;
                 newChAll.characterId = ch.id.Value;
+                newChAll.inputData = inputData;
             }
 
             CustomizeSlots();
@@ -308,7 +303,14 @@ namespace Overlewd
 
             if (inputData != null)
             {
-                if (inputData.ftueStageId.HasValue)
+                if (inputData.prevScreenInData.IsType<HaremScreenInData>())
+                {
+                    
+                    UIManager.MakeScreen<HaremScreen>().
+                        SetData(inputData.prevScreenInData as HaremScreenInData).
+                        RunShowScreenProcess();
+                }
+                else if (inputData.ftueStageId.HasValue)
                 {
                     UIManager.MakeScreen<MapScreen>().
                         SetData(new MapScreenInData 

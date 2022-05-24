@@ -8,16 +8,18 @@ namespace Overlewd
 {
     public class MemoryScreen : BaseFullScreen
     {
-        protected Button portalButton;
-        protected Button forgeButton;
-        protected Button buyButton;
-        protected Button backButton;
+        private Button portalButton;
+        private Button forgeButton;
+        private Button buyButton;
+        private Button backButton;
 
-        protected TextMeshProUGUI commonShardsCount;
-        protected TextMeshProUGUI rareShardsCount;
-        protected TextMeshProUGUI legendaryShardsCount;
+        private TextMeshProUGUI commonShardsCount;
+        private TextMeshProUGUI rareShardsCount;
+        private TextMeshProUGUI legendaryShardsCount;
+
+        private MemoryScreenInData inputData;
         
-        protected virtual void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MemoryScreen/Memory", transform);
 
@@ -38,36 +40,56 @@ namespace Overlewd
             buyButton.onClick.AddListener(BuyButtonClick);
         }
 
-        protected virtual void Start()
+        private void Start()
         {
             Customize();
         }
 
-        protected virtual void Customize()
+        private void Customize()
         {
             
         }
 
-        protected virtual void BackButtonClick()
+        public MemoryScreen SetData(MemoryScreenInData data)
+        {
+            inputData = data;
+            return this;
+        }
+        
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<MemoryListScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<MemoryListScreen>().
+                    SetData(inputData.prevScreenInData as MemoryListScreenInData)
+                    .RunShowScreenProcess();
+            }
         }
 
-        protected virtual void PortalButtonClick()
+        private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
 
-        protected virtual void ForgeButtonClick()
+        private void ForgeButtonClick()
         {
             
         }
 
-        protected virtual void BuyButtonClick()
+        private void BuyButtonClick()
         {
             UIManager.ShowPopup<ChestPopup>();
         }
+    }
+
+    public class MemoryScreenInData : BaseScreenInData
+    {
+        public string girlName;
     }
 }

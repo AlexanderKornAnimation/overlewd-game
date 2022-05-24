@@ -14,14 +14,19 @@ namespace Overlewd
 
         public float delay = 0f; //predelay
         public float duration = 1f; //ms
-        public SpineWidget spineWiget;
+        private SpineWidget spineWiget;
+        [SerializeField] private GameObject spineVFXPrefab;
 
         private void Start()
         {
+            var parent = GetComponentInParent<Transform>().localScale;
             //UITools.SetStretch(GetComponent<RectTransform>());
-            spineWiget = SpineWidget.GetInstance(transform);
-            spineWiget.Initialize(path);
-            duration = spineWiget.GetAnimationDuaration(animationName); //!!after initialize u stopid mf
+            if (spineVFXPrefab) 
+                spineWiget = SpineWidget.GetInstance(spineVFXPrefab, transform);
+            else
+                spineWiget = SpineWidget.GetInstance(path, transform);
+
+            duration = spineWiget.GetAnimationDuaration(animationName);
             StartCoroutine(StartAfterDelay());
         }
 

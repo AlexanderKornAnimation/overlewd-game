@@ -33,8 +33,8 @@ namespace Overlewd
                     newLayer = SpineWidget.GetInstance(layerData.animationPath, layerData.assetBundleId, transform);
                 }
 
-                newLayer.PlayAnimation(layerData.animationName, true);
-                layers.Add(newLayer);
+                newLayer?.PlayAnimation(layerData.animationName, true);
+                if (newLayer != null) layers.Add(newLayer);
             }
         }
 

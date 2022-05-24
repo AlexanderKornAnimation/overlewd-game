@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,16 +9,17 @@ namespace Overlewd
 {
     public class DefeatPopup : BasePopup
     {
-        protected Button magicGuildButton;
-        protected Button inventoryButton;
-        protected Button haremButton;
-        protected Button editTeamButton;
+        private Button magicGuildButton;
+        private Button inventoryButton;
+        private Button haremButton;
+        private Button editTeamButton;
 
-        protected DefeatPopupInData inputData;
+        private DefeatPopupInData inputData;
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/DefeatPopup/DefeatPopup", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/DefeatPopup/DefeatPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
@@ -34,6 +36,34 @@ namespace Overlewd
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
         }
 
+        public override async Task BeforeShowMakeAsync()
+        {
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case ("battle2", "chapter1"):
+                    UITools.DisableButton(magicGuildButton);
+                    UITools.DisableButton(inventoryButton);
+                    UITools.DisableButton(editTeamButton);
+                    break;
+                default:
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task AfterShowAsync()
+        {
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case ("battle2", "chapter1"):
+                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         public DefeatPopup SetData(DefeatPopupInData data)
         {
             inputData = data;
@@ -46,32 +76,51 @@ namespace Overlewd
             missClick.missClickEnabled = false;
         }
 
-        protected virtual void EditTeamButtonClick()
+        private void EditTeamButtonClick()
         {
-            
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<TeamEditScreen>();
         }
-        
-        protected virtual void MagicGuildButtonClick()
+
+        private void MagicGuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
-        protected virtual void InventoryButtonClick()
+        private void InventoryButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<InventoryAndUserScreen>();
+            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            // UIManager.ShowScreen<InventoryAndUserScreen>();
         }
 
-        protected virtual void HaremButtonClick()
+        private void HaremButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
+
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case ("battle2", "chapter1"):
+                    UIManager.MakeScreen<SexScreen>().
+                        SetData(new SexScreenInData
+                        {
+                            ftueStageId = GameData.ftue.info.chapter1.GetStageByKey("sex2")?.id
+                        }).RunShowScreenProcess();
+                    break;
+
+                case null:
+                    UIManager.ShowScreen<EventMapScreen>();
+                    break;
+
+                default:
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+            }
         }
     }
 
     public class DefeatPopupInData : BaseScreenInData
     {
-        
+
     }
 }

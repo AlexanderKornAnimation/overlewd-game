@@ -11,6 +11,7 @@ namespace Overlewd
             protected override void Awake()
             {
                 base.Awake();
+                UITools.DisableButton(button);
             }
 
             protected override void ButtonClick()

@@ -195,17 +195,26 @@ namespace Overlewd
         public static SpineWidget GetInstance(string prefabPath, Transform parent)
         {
             var inst = ResourceManager.InstantiateAsset<GameObject>(prefabPath, parent);
+            var sw = inst?.AddComponent<SpineWidget>();
+            sw?.Initialize();
+            return sw;
+        }
+
+        //inst local from GameObject
+        public static SpineWidget GetInstance(GameObject obj, Transform parent)
+        {
+            var inst = Instantiate(obj, parent);
             var sw = inst.AddComponent<SpineWidget>();
             sw.Initialize();
             return sw;
         }
-        
+
         //inst remote prefab
         public static SpineWidget GetInstance(string prefabPath, string assetBundleId, Transform parent)
         {
             var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(prefabPath, assetBundleId, parent);
-            var sw = inst.AddComponent<SpineWidget>();
-            sw.Initialize();
+            var sw = inst?.AddComponent<SpineWidget>();
+            sw?.Initialize();
             return sw;
         }
     }

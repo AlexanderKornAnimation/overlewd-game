@@ -10,16 +10,14 @@ namespace Overlewd
         public class MunicipalityButton : BaseButton
         {
             protected Transform notificationGrid;
-            protected Transform buildInProgressNotification;
-            protected Transform buildAvailableNotification;
+            protected Transform collectNotification;
 
             protected override void Awake()
             {
                 base.Awake();
 
                 notificationGrid = transform.Find("NotificationGrid");
-                buildInProgressNotification = notificationGrid.Find("BuildInProgressNotification");
-                buildAvailableNotification = notificationGrid.Find("BuildAvailableNotification");
+                collectNotification = notificationGrid.Find("CollectNotification");
             }
 
             protected override void ButtonClick()

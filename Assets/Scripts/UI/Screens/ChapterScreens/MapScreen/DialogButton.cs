@@ -24,7 +24,7 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.MakeScreen<FTUE.DialogScreen>().
+                UIManager.MakeScreen<DialogScreen>().
                     SetData(new DialogScreenInData
                 {
                     ftueStageId = stageId

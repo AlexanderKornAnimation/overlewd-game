@@ -18,6 +18,8 @@ namespace Overlewd
             protected TextMeshProUGUI rareShardCount;
             protected TextMeshProUGUI commonShardCount;
 
+            public MemoryListScreenInData screenInData;
+
             protected virtual void Awake()
             {
                 var canvas = transform.Find("Canvas");
@@ -38,7 +40,21 @@ namespace Overlewd
             protected virtual void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowScreen<MemoryScreen>();
+
+                if (screenInData == null)
+                {
+                    UIManager.ShowScreen<MemoryScreen>();
+                }
+                else
+                {
+                    UIManager.MakeScreen<MemoryScreen>().
+                        SetData(new MemoryScreenInData
+                        {
+                            prevScreenInData = screenInData,
+                            ftueStageId = screenInData.ftueStageId,
+                            eventStageId = screenInData.eventStageId
+                        }).RunShowScreenProcess();
+                }
             }
             
             protected virtual void Start()

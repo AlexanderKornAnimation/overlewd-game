@@ -8,7 +8,7 @@ namespace Overlewd
     {
         public class PortalButton : BaseButton
         {
-            protected Transform freeSummonNotification;
+            private Transform freeSummonNotification;
 
             protected override void Awake()
             {
@@ -19,8 +19,8 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
-                // base.ButtonClick();
-                // UIManager.ShowScreen<PortalScreen>();
+                base.ButtonClick();
+                UIManager.ShowScreen<PortalScreen>();
             }
 
             public static PortalButton GetInstance(Transform parent)

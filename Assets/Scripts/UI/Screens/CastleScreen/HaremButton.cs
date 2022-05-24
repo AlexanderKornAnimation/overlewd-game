@@ -6,9 +6,11 @@ namespace Overlewd
     {
         public class HaremButton : BaseButton
         {
-            protected Transform notificationsGrid;
-            protected Transform grabRewardNotification;
-            protected Transform memoryAvailableNotification;
+            private  Transform notificationsGrid;
+            private Transform grabRewardNotification;
+            private Transform memoryAvailableNotification;
+            public CastleScreenInData screenInData { get; set; }
+            
 
             protected override void Awake()
             {

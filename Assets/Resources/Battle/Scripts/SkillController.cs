@@ -15,12 +15,14 @@ namespace Overlewd
         private Slider slider;
         private TextMeshProUGUI textCount;
         public Button button;
-        [HideInInspector]
-        public GameObject vfx, sfx;
+        private GameObject vfx;
+        private AudioClip sfx;
         [HideInInspector]
         public Transform vfxSpawnPoint;
         [HideInInspector]
         public int power, manaCost, amount, cooldown, cooldownCount = 0;
+
+        public bool isSelected = false;
 
         private void Awake()
         {
@@ -41,6 +43,7 @@ namespace Overlewd
             image.sprite = skill.battleIco;
             image.SetNativeSize();
             vfx = skill.vfx;
+            sfx = skill.sfx;
             power = skill.power;
             manaCost = skill.manaCost;
             amount = skill.amount;
@@ -85,12 +88,26 @@ namespace Overlewd
             SaveSkill();
         }
 
-        public void Select() => selectBorder?.SetActive(true);
-        public void Unselect() => selectBorder?.SetActive(false);
+        public void Select() {
+            isSelected = true;
+            selectBorder?.SetActive(true);
+        }
+        public void Unselect()
+        {
+            isSelected = false;
+            selectBorder?.SetActive(false);
+        }
 
         public void InstVFX(Transform target)
         {
             if (vfx) Instantiate(vfx, target);
+        }
+        public void UseSkill()
+        {
+            if (skill.attackType == Skill.AttackType.POTION)
+            {
+
+            }
         }
         
     }

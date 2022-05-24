@@ -18,6 +18,7 @@ namespace Overlewd
             protected GameObject bossIcon;
             protected TextMeshProUGUI markers;
 
+
             protected override void Awake()
             {
                 base.Awake();
@@ -55,16 +56,12 @@ namespace Overlewd
                 base.ButtonClick();
                 var battleData = stageData.battleData;
 
-                var directToBattleScreen = GameGlobalStates.ftueChapterData.key switch
+                var directToBattleScreen = stageData.ftueState switch
                 {
-                    "chapter1" => stageData.key switch
-                    {
-                        "battle1" => true,
-                        "battle2" => true,
-                        "battle3" => true,
-                        "battle4" => true,
-                        _ => false
-                    },
+                    ("battle1", "chapter1") => true,
+                    ("battle2", "chapter1") => true,
+                    ("battle3", "chapter1") => true,
+                    ("battle4", "chapter1") => true,
                     _ => false
                 };
 
@@ -72,38 +69,40 @@ namespace Overlewd
                 {
                     if (directToBattleScreen)
                     {
-                        UIManager.MakeScreen<FTUE.BattleScreen>().
+                        UIManager.MakeScreen<BattleScreen>().
                             SetData(new BattleScreenInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowScreenProcess();
+                            {
+                                ftueStageId = stageId,
+                            }).RunShowScreenProcess();
                     }
                     else
                     {
-                        UIManager.MakePopup<FTUE.PrepareBattlePopup>().
+                        UIManager.MakePopup<PrepareBattlePopup>().
                             SetData(new PrepareBattlePopupInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowPopupProcess();
+                            {
+                                prevScreenInData = screenInData,
+                                ftueStageId = stageId,
+                            }).RunShowPopupProcess();
                     }
                 }
                 else if (battleData.isTypeBoss)
                 {
                     if (directToBattleScreen)
                     {
-                        UIManager.MakeScreen<FTUE.BossFightScreen>().
+                        UIManager.MakeScreen<BossFightScreen>().
                             SetData(new BossFightScreenInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowScreenProcess();
+                            {
+                                ftueStageId = stageId,
+                            }).RunShowScreenProcess();
                     }
                     else
                     {
-                        UIManager.MakePopup<FTUE.PrepareBossFightPopup>().
+                        UIManager.MakePopup<PrepareBossFightPopup>().
                             SetData(new PrepareBossFightPopupInData
-                        {
-                            ftueStageId = stageId
-                        }).RunShowPopupProcess();
+                            {
+                                prevScreenInData = screenInData,
+                                ftueStageId = stageId,
+                            }).RunShowPopupProcess();
                     }
                 }
             }

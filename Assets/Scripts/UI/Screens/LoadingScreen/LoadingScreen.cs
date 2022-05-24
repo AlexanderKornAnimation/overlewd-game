@@ -188,6 +188,7 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
+#if !UNITY_EDITOR
             var apiVersion = await AdminBRO.versionAsync();
             if (apiVersion.version.ToString() != HttpCore.ApiVersion)
             {
@@ -197,6 +198,7 @@ namespace Overlewd
                     await UniTask.Delay(1000);
                 }
             }
+#endif
 
             await AdminBRO.authLoginAsync();
             await AdminBRO.meAsync(SystemInfo.deviceModel);
@@ -229,11 +231,7 @@ namespace Overlewd
 
             GameData.battles = await AdminBRO.battlesAsync();
 
-            GameData.ftue = await AdminBRO.ftueAsync();
-
-            GameData.ftueStages = await AdminBRO.ftueStagesAsync();
-
-            GameData.ftueStats = await AdminBRO.ftueStatsAsync();
+            await GameData.ftue.Get();
 
             GameData.animations = await AdminBRO.animationsAsync();
 
@@ -241,11 +239,13 @@ namespace Overlewd
 
             GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
 
-            GameData.buildings = await AdminBRO.buildingsAsync();
+            await GameData.buildings.Get();
 
-            GameData.characters = await AdminBRO.charactersAsync();
+            await GameData.characters.Get();
 
             GameData.equipment = await AdminBRO.equipmentAsync();
+
+            await GameData.gacha.Get();
 
             SetDownloadBarProgress(0.3f);
 

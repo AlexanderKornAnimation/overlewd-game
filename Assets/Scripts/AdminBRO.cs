@@ -16,6 +16,22 @@ namespace Overlewd
             return SystemInfo.deviceUniqueIdentifier;
         }
 
+        // common entities
+        [Serializable]
+        public class PriceItem
+        {
+            public int currencyId;
+            public int amount;
+        }
+
+        [Serializable]
+        public class RewardItem
+        {
+            public string icon;
+            public int? amount;
+            public int? tradableId;
+        }
+
         // /version
         public static async Task<ApiVersion> versionAsync()
         {
@@ -153,13 +169,6 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public CurrencyItem currency;
-        }
-
-        [Serializable]
-        public class PriceItem
-        {
-            public int currencyId;
-            public int amount;
         }
 
         // /markets
@@ -362,18 +371,11 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
             public List<int> chapters;
-            public List<Reward> rewards;
+            public List<RewardItem> rewards;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
             public const string Type_Weekly = "weekly";
-
-            public class Reward
-            {
-                public string icon;
-                public int? amount;
-                public int? tradableId;
-            }
         }
         
 
@@ -390,8 +392,8 @@ namespace Overlewd
         // /event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
-            var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/start";
+            var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
@@ -399,15 +401,28 @@ namespace Overlewd
         }
 
         // /event-stages/{id}/end
-        public static async Task<EventStageItem> eventStageEndAsync(int eventStageId)
+        public static async Task<EventStageItem> eventStageEndAsync(int eventStageId, EventStageEndData data = null)
         {
-            var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/end";
+            var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
             }
         }
+
+        public class EventStageEndData
+        {
+            public bool win = true;
+
+            public WWWForm ToWWWForm()
+            {
+                var form = new WWWForm();
+                form.AddField("result", win ? "win" : "lose");
+                return form;
+            }
+        }
+
 
         [Serializable]
         public class EventStageItem
@@ -469,7 +484,7 @@ namespace Overlewd
             public string subtitle;
             public string description;
             public int? goalCount;
-            public List<Reward> rewards;
+            public List<RewardItem> rewards;
             public string status;
             public int progressCount;
             public int? eventId;
@@ -478,13 +493,6 @@ namespace Overlewd
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
-
-            public class Reward
-            {
-                public string icon;
-                public int? amount;
-                public int? tradableId;
-            }
         }
 
         // //quests/{id}/claim-reward
@@ -617,21 +625,14 @@ namespace Overlewd
             public int id;
             public string title;
             public string type;
-            public List<Reward> rewards;
+            public List<RewardItem> rewards;
             public string rewardSpriteString;
-            public List<Reward> firstRewards;
+            public List<RewardItem> firstRewards;
             public List<Phase> battlePhases;
             public int? battlePassPointsReward;
 
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
-
-            public class Reward
-            {
-                public string icon;
-                public int? amount;
-                public int? tradableId;
-            }
 
             public class Phase 
             {
@@ -646,6 +647,11 @@ namespace Overlewd
         }
 
         // /my/characters
+        // /battles/my/characters/{id}/equip/{id} - post
+        // /battles/my/characters/{id}/equip/{id} - delete
+        // /battles/my/characters/{id}
+        // /battles/my/characters/{id}/levelup
+        // /battles/my/characters/{tgtId}/merge/{srcId}
         public static async Task<List<Character>> charactersAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
@@ -680,6 +686,7 @@ namespace Overlewd
             public float? health;
             public float? damage;
             public float? mana;
+            public int? sexSceneId;
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -733,19 +740,6 @@ namespace Overlewd
             public const string Rarity_Basic = "basic";
         }
 
-        // /my/characters/equipment
-        // /battles/my/characters/{id}/equip/{id} - post
-        // /battles/my/characters/{id}/equip/{id} - delete
-        // /battles/my/characters/{id}
-        public static async Task<List<Equipment>> equipmentAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
-            {
-                return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
-            }
-        }
-
         public static async Task equipAsync(int characterId, int equipmentId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
@@ -765,13 +759,7 @@ namespace Overlewd
             }
         }
 
-        [Serializable]
-        public class CharacterPostData
-        {
-            public int? teamPosition;
-        }
-
-        public static async Task characterPostAsync(int characterId, string slotId)
+        public static async Task characterToSlotAsync(int characterId, string slotId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
             var form = new WWWForm();
@@ -779,6 +767,36 @@ namespace Overlewd
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
+            }
+        }
+
+        public static async Task characterLvlupAsync(int characterId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        // /my/characters/equipment
+        public static async Task<List<Equipment>> equipmentAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
             }
         }
 
@@ -840,17 +858,24 @@ namespace Overlewd
                 return notifications.Find(n => n.key == key);
             }
 
-            public FTUEStageItem GetStageByKey(string stageKey)
+            public void ShowNotifByKey(string key)
             {
-                return GameData.GetFTUEStageByKey(stageKey, key);
+                UIManager.MakeNotification<DialogNotification>().
+                    SetData(new DialogNotificationInData
+                    {
+                        dialogId = GetNotifByKey(key)?.dialogId
+                    }).RunShowNotificationProcess();
             }
+
+            public FTUEChapter SetAsMapChapter() =>
+                GameData.ftue.mapChapter = this;
 
             [JsonProperty(Required = Required.Default)]
             public bool isComplete {
                 get {
                     foreach (var stageId in stages)
                     {
-                        var stageData = GameData.GetFTUEStageById(stageId);
+                        var stageData = GetStageById(stageId);
                         if (!stageData?.isComplete ?? true)
                         {
                             return false;
@@ -862,7 +887,12 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter nextChapterData => 
-                nextChapterId.HasValue ? GameData.GetFTUEChapterById(nextChapterId.Value) : null;
+                nextChapterId.HasValue ? GameData.ftue.info.GetChapterById(nextChapterId.Value) : null;
+
+            public FTUEStageItem GetStageById(int id) =>
+                GameData.ftue.stages.Find(s => s.id == id);
+            public FTUEStageItem GetStageByKey(string key) =>
+                GameData.ftue.stages.Find(s => s.key == key && s.ftueChapterId == id);
         }
 
         [Serializable]
@@ -871,25 +901,27 @@ namespace Overlewd
             public List<FTUEChapter> chapters;
 
             [JsonProperty(Required = Required.Default)]
-            public FTUEChapter activeChapter {
-                get {
-                    var chapterData = GameData.ftue.firstChapter;
-                    while (chapterData.isComplete)
-                    {
-                        if (chapterData.nextChapterId.HasValue)
-                        {
-                            chapterData = chapterData.nextChapterData;
-                            continue;
-                        }
-                        break;
-                    }
-                    return chapterData;
-                }
-            }
+            public FTUEChapter chapter1 => GetChapterByKey("chapter1");
 
             [JsonProperty(Required = Required.Default)]
-            public FTUEChapter firstChapter => 
-                GameData.ftue.chapters.OrderBy(ch => ch.order).First();
+            public FTUEChapter chapter2 => GetChapterByKey("chapter2");
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter chapter3 => GetChapterByKey("chapter3");
+
+            public FTUEChapter GetChapterByKey(string key) =>
+                chapters.Find(ch => ch.key == key);
+            public FTUEChapter GetChapterById(int id) =>
+                chapters.Find(ch => ch.id == id);
+            public FTUEStageItem GetStageById(int id) =>
+                GameData.ftue.stages.Find(s => s.id == id);
+            public FTUEStageItem GetStageByKey(string stageKey, int chapterId) =>
+                GetChapterById(chapterId).GetStageByKey(stageKey);
+            public FTUEStageItem GetStageByKey(string stageKey, string chapterKey) =>
+                GetChapterByKey(chapterKey).GetStageByKey(stageKey);
+            public bool StageIsComplete(string stageKey, string chapterKey) =>
+                GetStageByKey(stageKey, chapterKey).isComplete;
+
         }
 
         // ftue/stats
@@ -910,11 +942,21 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
-                lastStartedStage.HasValue ? GameData.GetFTUEStageById(lastStartedStage.Value) : null;
+                lastStartedStage.HasValue ? GameData.ftue.info.GetStageById(lastStartedStage.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
-                lastEndedStage.HasValue ? GameData.GetFTUEStageById(lastEndedStage.Value) : null;
+                lastEndedStage.HasValue ? GameData.ftue.info.GetStageById(lastEndedStage.Value) : null;
+
+            [JsonProperty(Required = Required.Default)]
+            public (string stageKey, string chapterKey)? lastEndedState =>
+                GameData.progressMode switch {
+                    true => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
+                    _ => null
+                };
+
+            public bool IsLastEnededStage(string stageKey, string chapterKey) =>
+                lastEndedState == (stageKey, chapterKey);
         }
 
         // /ftue-stages
@@ -951,7 +993,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>
-                ftueChapterId.HasValue ? GameData.GetFTUEChapterById(ftueChapterId.Value) : null;
+                ftueChapterId.HasValue ? GameData.ftue.info.GetChapterById(ftueChapterId.Value) : null;
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData => 
@@ -972,6 +1014,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isClosed => status == Status_Closed;
+
+            [JsonProperty(Required = Required.Default)]
+            public (string stageKey, string chapterKey) ftueState =>
+               (key, ftueChapterData?.key);
         }
 
         // /ftue-stages/{id}/start
@@ -986,13 +1032,25 @@ namespace Overlewd
         }
 
         // /ftue-stages/{id}/end
-        public static async Task ftueStageEndAsync(int stageId)
+        public static async Task ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
         {
-            var form = new WWWForm();
             var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/end";
+            var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
+            }
+        }
+
+        public class FTUEStageEndData
+        {
+            public bool win = true;
+
+            public WWWForm ToWWWForm()
+            {
+                var form = new WWWForm();
+                form.AddField("result", win ? "win" : "lose");
+                return form;
             }
         }
 
@@ -1068,7 +1126,7 @@ namespace Overlewd
 
             public const string Key_Castle = "castle";
             public const string Key_Catacombs = "catacombs";
-            public const string Key_Cathedral = "cathedral";
+            public const string Key_Laboratory = "laboratory";
             public const string Key_Aerostat = "aerostat";
             public const string Key_Forge = "forge";
             public const string Key_Harem = "harem";
@@ -1159,6 +1217,76 @@ namespace Overlewd
             public string title;
             public string assetBundleId;
             public string chapterMapPath;
+        }
+
+        // gacha
+        public static async Task<List<GachItem>> gachaAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/gacha";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<GachItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task gachaBuyAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/gacha/{id}/buy";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task gachaBuyTenAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/gacha/{id}/buy-ten";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class GachItem
+        {
+            public int id;
+            public string tabTitle;
+            public string image;
+            public string tabImageOn;
+            public string tabImageOff;
+            public string tabBackgroundImage;
+            public string tabType;
+            public List<PriceItem> priceForOne;
+            public List<PriceItem> priceForTen;
+            public int? discount;
+            public int? limitOfCycles;
+            public List<PoolItem> pool;
+            public List<PoolItem> targetPool;
+            public string type;
+            public List<TierItem> tiers;
+            public string dateStart;
+            public string dateEnd;
+            public int? eventId;
+
+            public class PoolItem
+            {
+                public int tradableId;
+                public int probability;
+            }
+
+            public class TierItem
+            {
+                public string title;
+            }
+
+            public const string TabType_Matriachs = "matriachs";
+            public const string TabType_CharactersEquipment = "battle_characters_equipment";
+            public const string TabType_OverlordEquipment = "overlord_equipment";
+            public const string TabType_Shards = "shards";
+
+            public const string Type_Linear = "linear";
+            public const string Type_Stepwise = "stepwise";
         }
     }
 }

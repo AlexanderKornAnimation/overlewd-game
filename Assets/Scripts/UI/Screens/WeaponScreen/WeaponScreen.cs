@@ -28,6 +28,8 @@ namespace Overlewd
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
 
+        private WeaponScreenInData inputData;
+
         private void Awake()
         {
             var screenInst =
@@ -63,6 +65,12 @@ namespace Overlewd
             EnterTab(activeTabId);
         }
 
+        public WeaponScreen SetData(WeaponScreenInData data)
+        {
+            inputData = data;
+            return this;
+        }
+        
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -88,7 +96,21 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<BattleGirlScreen>();
+            if (inputData == null)
+            {
+                UIManager.ShowScreen<BattleGirlScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<BattleGirlScreen>().
+                    SetData(inputData.prevScreenInData as BattleGirlScreenInData).
+                    RunShowScreenProcess();
+            }
         }
+    }
+
+    public class WeaponScreenInData : BaseScreenInData
+    {
+        
     }
 }
