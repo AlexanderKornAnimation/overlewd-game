@@ -114,14 +114,18 @@ namespace Overlewd
         
         private void PortalButtonClick()
         {
-            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            // UIManager.ShowScreen<PortalScreen>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<PortalScreen>().
+                SetData(new PortalScreenInData
+            {
+                activeButtonId = PortalScreenInData.shardsButtonId
+            }).RunShowScreenProcess();
         }
         
         private void ChestButtonClick()
         {
-            // SoundManager.PlayOneShot(SoundManager.FMODEventPath.UI.ButtonClick);
-            // UIManager.ShowPopup<ChestPopup>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowPopup<ChestPopup>();
         }
         
         private void BackButtonClick()

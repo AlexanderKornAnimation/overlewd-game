@@ -9,8 +9,6 @@ namespace Overlewd
             private  Transform notificationsGrid;
             private Transform grabRewardNotification;
             private Transform memoryAvailableNotification;
-            public CastleScreenInData screenInData { get; set; }
-            
 
             protected override void Awake()
             {

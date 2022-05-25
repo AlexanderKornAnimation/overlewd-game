@@ -99,13 +99,6 @@ namespace Overlewd
 
                 closedEventMemory.screenInData = inputData;
                 
-                // closedEventMemory.inputData = new MemoryListScreenInData
-                // {
-                //    prevScreenInData = inputData.prevScreenInData,
-                //    ftueStageId = inputData?.ftueStageId,
-                //    eventStageId = inputData?.eventStageId
-                // };
-                
                 closedEventMemoryScroll.gameObject.SetActive(false);
                 openedEventMemoryScroll.gameObject.SetActive(false);
                 mainMemoryScroll.gameObject.SetActive(false);

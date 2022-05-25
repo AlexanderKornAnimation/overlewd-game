@@ -7,31 +7,28 @@ namespace Overlewd
 {
     public class SummoningScreen : BaseFullScreenParent<SummoningScreenInData>
     {
-        protected Button backButton;
-        protected Button haremButton;
-        protected Button portalButton;
+        private Button backButton;
+        private Button portalButton;
 
-        protected virtual void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
-            haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             
             backButton.onClick.AddListener(BackButtonClick);
-            haremButton.onClick.AddListener(HaremButtonClick);
             portalButton.onClick.AddListener(PortalButtonClick);
         }
 
-        protected virtual void Start()
+        private void Start()
         {
             Customize();
         }
 
-        protected virtual void Customize()
+        private void Customize()
         {
             var shardPositions = transform.Find("Canvas").Find("ShardPositions");
             
@@ -42,19 +39,12 @@ namespace Overlewd
             }
         }
         
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
         }
 
-        protected virtual void HaremButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
-        }
-
-        protected virtual void PortalButtonClick()
+        private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();

@@ -10,7 +10,7 @@ namespace Overlewd
     public class DefeatPopup : BasePopupParent<DefeatPopupInData>
     {
         private Button magicGuildButton;
-        private Button inventoryButton;
+        private Button overlordButton;
         private Button haremButton;
         private Button editTeamButton;
 
@@ -24,8 +24,8 @@ namespace Overlewd
             magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
 
-            inventoryButton = canvas.Find("InventoryButton").GetComponent<Button>();
-            inventoryButton.onClick.AddListener(InventoryButtonClick);
+            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton.onClick.AddListener(OverlordButtonClick);
 
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
@@ -40,7 +40,7 @@ namespace Overlewd
             {
                 case ("battle2", "chapter1"):
                     UITools.DisableButton(magicGuildButton);
-                    UITools.DisableButton(inventoryButton);
+                    UITools.DisableButton(overlordButton);
                     UITools.DisableButton(editTeamButton);
                     break;
                 default:
@@ -80,7 +80,7 @@ namespace Overlewd
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
-        private void InventoryButtonClick()
+        private void OverlordButtonClick()
         {
             // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             // UIManager.ShowScreen<InventoryAndUserScreen>();
@@ -99,13 +99,11 @@ namespace Overlewd
                             ftueStageId = GameData.ftue.info.chapter1.GetStageByKey("sex2")?.id
                         }).RunShowScreenProcess();
                     break;
-
                 case null:
-                    UIManager.ShowScreen<EventMapScreen>();
-                    break;
-
-                default:
                     UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ShowScreen<HaremScreen>();
                     break;
             }
         }

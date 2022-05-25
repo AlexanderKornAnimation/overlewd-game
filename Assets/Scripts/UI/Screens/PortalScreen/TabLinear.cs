@@ -18,6 +18,7 @@ namespace Overlewd
             
             private Image item;
 
+
             protected override void Awake()
             {
                 base.Awake();
@@ -26,6 +27,7 @@ namespace Overlewd
                 priceForOne = buyOneButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
                 
                 buyTenButton = content.Find("BuyTenButton").GetComponent<Button>();
+                buyTenButton.onClick.AddListener(BuyTenButtonClick);
                 priceForTen = buyTenButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
                 discount = buyTenButton.transform.Find("DiscountIcon").Find("Discount").GetComponent<TextMeshProUGUI>();
@@ -41,6 +43,11 @@ namespace Overlewd
             protected virtual void Customize()
             {
 
+            }
+
+            private void BuyTenButtonClick()
+            {
+                UIManager.ShowScreen<SummoningScreen>();
             }
 
             public static TabLinear GetInstance(Transform parent)

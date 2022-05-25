@@ -97,32 +97,27 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<CastleScreen>();
-            }
-            
-            else if (inputData.ftueStageId.HasValue)
-            {
-                UIManager.MakeScreen<MapScreen>().
-                    SetData(new MapScreenInData
-                    {
-                        ftueStageId = inputData.ftueStageId
-                    }).RunShowScreenProcess();
-            }
-            else if (inputData.eventStageId.HasValue)
-            {
-                UIManager.MakeScreen<EventMapScreen>().
-                    SetData(new EventMapScreenInData
-                    {
-                        eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
-            }
-            else if (inputData.prevScreenInData != null)
+            if (inputData?.prevScreenInData != null)
             {
                 if (inputData.prevScreenInData.IsType<MapScreenInData>())
                 {
-                    UIManager.ShowScreen<MapScreen>();
+                    UIManager.MakeScreen<MapScreen>().
+                        SetData(new MapScreenInData
+                    {
+                        ftueStageId = inputData.ftueStageId
+                    }).RunShowScreenProcess();
+                }
+                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                {
+                    UIManager.MakeScreen<EventMapScreen>().
+                        SetData(new EventMapScreenInData
+                    {
+                        eventStageId = inputData.eventStageId
+                    }).RunShowScreenProcess();
+                }
+                else
+                {
+                    UIManager.ShowScreen<CastleScreen>();
                 }
             }
             else

@@ -17,8 +17,8 @@ namespace Overlewd
 
         private int activeTabId;
 
-        private Button backButtonLeft;
-        private Button backButtonRight;
+        private Button backButton;
+        private Button portalButton;
 
         private string[] tabNames = {"AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks"};
 
@@ -38,11 +38,11 @@ namespace Overlewd
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var weaponsBack = canvas.Find("WeaponsBack");
 
-            backButtonRight = canvas.Find("BackButtonRight").GetComponent<Button>();
-            backButtonRight.onClick.AddListener(BackButtonClick);
+            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
+            portalButton.onClick.AddListener(PortalButtonClick);
             
-            backButtonLeft = canvas.Find("BackButtonLeft").GetComponent<Button>();
-            backButtonLeft.onClick.AddListener(BackButtonClick);
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
 
             foreach (var i in tabIds)
             {
@@ -85,6 +85,12 @@ namespace Overlewd
             scrollViews[tabId].SetActive(false);
         }
 
+        private void PortalButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<PortalScreen>();
+        }
+        
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

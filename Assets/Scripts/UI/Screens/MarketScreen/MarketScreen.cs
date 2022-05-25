@@ -9,21 +9,21 @@ namespace Overlewd
     public class MarketScreen : BaseFullScreenParent<MarketScreenInData>
     {
         private Transform bottomGrid;
-        private Button mainMenuButton;
+        private Button backButton;
 
-        void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MarketScreen/Market", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            mainMenuButton = canvas.Find("MainMenuButton").GetComponent<Button>();
-            mainMenuButton.onClick.AddListener(MainMenuButtonClick);
+            backButton = canvas.Find("MainMenuButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
 
             bottomGrid = canvas.Find("BottomGrid");
         }
 
-        void Start()
+        private void Start()
         {
             Customize();
         }
@@ -35,11 +35,30 @@ namespace Overlewd
             NSMarketScreen.BundleTypeC.GetInstance(bottomGrid);
             NSMarketScreen.BundleTypeD.GetInstance(bottomGrid);
         }
-
-        private void MainMenuButtonClick()
+        
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            
+            if (inputData?.prevScreenInData != null)
+            {
+                if (inputData.prevScreenInData.IsType<MapScreenInData>())
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                {
+                    UIManager.ShowScreen<EventMapScreen>();
+                }
+                else
+                {
+                    UIManager.ShowScreen<CastleScreen>();
+                }
+            }
+            else
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            }
         }
     }
 

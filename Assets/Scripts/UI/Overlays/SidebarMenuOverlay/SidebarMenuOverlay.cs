@@ -198,7 +198,11 @@ namespace Overlewd
         private void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
+            UIManager.MakeScreen<HaremScreen>().
+                SetData(new HaremScreenInData
+            {
+                prevScreenInData = UIManager.currentScreenInData
+            }).RunShowScreenProcess();
         }
 
         private void MunicipalityButtonClick()
@@ -215,7 +219,11 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            // UIManager.ShowScreen<MarketScreen>();
+            UIManager.MakeScreen<MarketScreen>().
+                SetData(new MarketScreenInData
+                {
+                    prevScreenInData = UIManager.currentScreenInData
+                }).RunShowScreenProcess();
         }
 
         private void ForgeButtonClick()
