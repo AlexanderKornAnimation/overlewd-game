@@ -166,7 +166,7 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 {
-                    prevScreenInData = inputData,
+                    prevScreenInData = inputData.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
