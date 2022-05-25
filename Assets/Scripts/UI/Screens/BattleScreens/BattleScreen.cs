@@ -8,14 +8,7 @@ namespace Overlewd
 {
 	public class BattleScreen : BaseBattleScreen
 	{
-        private BattleScreenInData inputData;
         private bool battleIsWin;
-
-        public BattleScreen SetData(BattleScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
 
         public override void StartBattle()
         {
@@ -146,10 +139,5 @@ namespace Overlewd
                 BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
                 BattleManagerInData.InstFromEventStage(inputData.eventStageData);
         }
-    }
-
-    public class BattleScreenInData : BaseScreenInData
-    {
-        
     }
 }

@@ -687,6 +687,7 @@ namespace Overlewd
             public float? damage;
             public float? mana;
             public int? sexSceneId;
+            public string key;
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -1016,8 +1017,12 @@ namespace Overlewd
             public bool isClosed => status == Status_Closed;
 
             [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey) ftueState =>
-               (key, ftueChapterData?.key);
+            public (string stageKey, string chapterKey)? ftueState =>
+                GameData.progressMode switch
+                {
+                    true => (key, ftueChapterData?.key),
+                    _ => null
+                };
         }
 
         // /ftue-stages/{id}/start

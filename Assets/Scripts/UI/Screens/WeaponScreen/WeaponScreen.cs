@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class WeaponScreen : BaseFullScreen
+    public class WeaponScreen : BaseFullScreenParent<WeaponScreenInData>
     {
         private const int tabAllUnits = 0;
         private const int tabAssassins = 1;
@@ -27,8 +27,6 @@ namespace Overlewd
         private GameObject[] pressedTabs = new GameObject[tabsCount];
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
-
-        private WeaponScreenInData inputData;
 
         private void Awake()
         {
@@ -63,12 +61,6 @@ namespace Overlewd
             }
 
             EnterTab(activeTabId);
-        }
-
-        public WeaponScreen SetData(WeaponScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
         
         private void TabClick(int tabId)
@@ -109,7 +101,7 @@ namespace Overlewd
         }
     }
 
-    public class WeaponScreenInData : BaseScreenInData
+    public class WeaponScreenInData : BaseFullScreenInData
     {
         
     }

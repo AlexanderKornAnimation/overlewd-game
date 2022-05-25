@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SummoningScreen : BaseFullScreen
+    public class SummoningScreen : BaseFullScreenParent<SummoningScreenInData>
     {
         protected Button backButton;
         protected Button haremButton;
@@ -59,5 +59,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<PortalScreen>();
         }
+    }
+
+    public class SummoningScreenInData : BaseFullScreenInData
+    {
+
     }
 }

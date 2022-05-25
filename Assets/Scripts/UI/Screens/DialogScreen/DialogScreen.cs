@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DialogScreen : BaseFullScreen
+    public class DialogScreen : BaseFullScreenParent<DialogScreenInData>
     {
         private FMODEvent mainSound;
         private FMODEvent cutInSound;
@@ -61,8 +61,6 @@ namespace Overlewd
         private SpineWidgetGroup cutInAnimation;
         private SpineWidgetGroup emotionAnimation;
 
-        private DialogScreenInData inputData;
-
         private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/DialogScreen/DialogScreen", transform);
@@ -96,12 +94,6 @@ namespace Overlewd
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
             cutIn.SetActive(false);
-        }
-
-        public DialogScreen SetData(DialogScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -169,7 +161,7 @@ namespace Overlewd
             {
                 case ("dialogue1", "chapter1"):
                     UIManager.MakeScreen<BattleScreen>().
-                        SetData(new BattleScreenInData
+                        SetData(new BaseBattleScreenInData
                         {
                             ftueStageId = GameData.ftue.mapChapter.GetStageByKey("battle1")?.id
                         }).RunShowScreenProcess();
@@ -540,7 +532,7 @@ namespace Overlewd
         }
     }
 
-    public class DialogScreenInData : BaseScreenInData
+    public class DialogScreenInData : BaseFullScreenInData
     {
         
     }

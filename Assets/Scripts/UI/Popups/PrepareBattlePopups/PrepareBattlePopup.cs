@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class PrepareBattlePopup : BasePopup
+    public class PrepareBattlePopup : BasePopupParent<PrepareBattlePopupInData>
     {
         private const int RewardsCount = 3;
 
@@ -31,8 +31,6 @@ namespace Overlewd
 
         private TextMeshProUGUI markers;
         private AdminBRO.Battle battleData;
-
-        private PrepareBattlePopupInData inputData;
 
         void Awake()
         {
@@ -142,19 +140,13 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public PrepareBattlePopup SetData(PrepareBattlePopupInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
                 {
-                    prevScreenInData = inputData.prevScreenInData,
+                    prevScreenInData = UIManager.currentScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -166,7 +158,7 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 {
-                    prevScreenInData = inputData.prevScreenInData,
+                    prevScreenInData = UIManager.currentScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -182,7 +174,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
             UIManager.MakeScreen<BattleScreen>().
-                SetData(new BattleScreenInData
+                SetData(new BaseBattleScreenInData
                 {
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
@@ -210,7 +202,7 @@ namespace Overlewd
         }
     }
 
-    public class PrepareBattlePopupInData : BaseScreenInData
+    public class PrepareBattlePopupInData : BasePopupInData
     {
         
     }

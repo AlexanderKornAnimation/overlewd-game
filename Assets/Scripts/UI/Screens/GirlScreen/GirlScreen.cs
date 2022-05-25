@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class GirlScreen : BaseFullScreen
+    public class GirlScreen : BaseFullScreenParent<GirlScreenInData>
     {
         private Image girlImage;
         
@@ -37,8 +37,6 @@ namespace Overlewd
         private Button portalButton;
         private Button chestButton;
         private Button backButton;
-
-        private GirlScreenInData inputData;
         
         private void Awake()
         {
@@ -92,12 +90,6 @@ namespace Overlewd
         {
             
         }
-
-        public GirlScreen SetData(GirlScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
         
         private void BannerButtonClick()
         {
@@ -150,7 +142,7 @@ namespace Overlewd
         }
     }
 
-    public class GirlScreenInData : BaseScreenInData
+    public class GirlScreenInData : BaseFullScreenInData
     {
         public string girlName;
     }

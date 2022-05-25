@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BattleGirlScreen : BaseFullScreen
+    public class BattleGirlScreen : BaseFullScreenParent<BattleGirlScreenInData>
     {
         private Button backButton;
         private Button forgeButton;
@@ -35,8 +35,6 @@ namespace Overlewd
 
         private Image weapon;
         private Button weaponScreenButton;
-
-        private BattleGirlScreenInData inputData;
 
         private void Awake()
         {
@@ -83,12 +81,6 @@ namespace Overlewd
         {
             Customize();
         }
-
-        public BattleGirlScreen SetData(BattleGirlScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
         
         private void Customize()
         {
@@ -105,7 +97,7 @@ namespace Overlewd
             else
             {
                 UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(inputData.prevScreenInData as TeamEditScreenInData).
+                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
                     RunShowScreenProcess();
             }
         }
@@ -144,7 +136,7 @@ namespace Overlewd
         }
     }
 
-    public class BattleGirlScreenInData : BaseScreenInData
+    public class BattleGirlScreenInData : BaseFullScreenInData
     {
         public int? characterId;
     }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class VictoryPopup : BasePopup
+    public class VictoryPopup : BasePopupParent<VictoryPopupInData>
     {
         private Button nextButton;
         private Button repeatButton;
@@ -15,8 +15,6 @@ namespace Overlewd
         private Image reward1;
         private Image reward2;
         private Image reward3;
-
-        private VictoryPopupInData inputData;
 
         void Awake()
         {
@@ -50,12 +48,6 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-        
-        public VictoryPopup SetData(VictoryPopupInData data)
-        {
-            inputData = data;
-            return this;
-        }
 
         public override void MakeMissclick()
         {
@@ -87,7 +79,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<BattleScreen>().
-                SetData(new BattleScreenInData
+                SetData(new BaseBattleScreenInData
                 {
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
@@ -95,7 +87,7 @@ namespace Overlewd
         }
     }
 
-    public class VictoryPopupInData : BaseScreenInData
+    public class VictoryPopupInData : BasePopupInData
     {
         
     }

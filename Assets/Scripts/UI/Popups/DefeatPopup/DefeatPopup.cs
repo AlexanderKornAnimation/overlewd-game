@@ -7,14 +7,12 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DefeatPopup : BasePopup
+    public class DefeatPopup : BasePopupParent<DefeatPopupInData>
     {
         private Button magicGuildButton;
         private Button inventoryButton;
         private Button haremButton;
         private Button editTeamButton;
-
-        private DefeatPopupInData inputData;
 
         void Awake()
         {
@@ -62,12 +60,6 @@ namespace Overlewd
             }
 
             await Task.CompletedTask;
-        }
-
-        public DefeatPopup SetData(DefeatPopupInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override void MakeMissclick()
@@ -119,7 +111,7 @@ namespace Overlewd
         }
     }
 
-    public class DefeatPopupInData : BaseScreenInData
+    public class DefeatPopupInData : BasePopupInData
     {
 
     }

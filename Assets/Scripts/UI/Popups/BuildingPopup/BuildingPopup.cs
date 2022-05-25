@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BuildingPopup : BasePopup
+    public class BuildingPopup : BasePopupParent<BuildingPopupInData>
     {
         private Transform background;
         private Transform imageSpawnPoint;
@@ -31,8 +31,6 @@ namespace Overlewd
         private Button paidBuildingButton;
         private TextMeshProUGUI paidBuildingButtonText;
         private Image paidBuildingButtonIcon;
-
-        private BuildingPopupInData inputData;
 
         void Awake()
         {
@@ -69,12 +67,6 @@ namespace Overlewd
             paidBuildingButton.onClick.AddListener(PaidBuildingButtonClick);
             paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             paidBuildingButtonIcon = paidBuildingButton.transform.Find("Icon").GetComponent<Image>();
-        }
-
-        public BuildingPopup SetData(BuildingPopupInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -173,7 +165,7 @@ namespace Overlewd
         }
     }
 
-    public class BuildingPopupInData : BaseScreenInData
+    public class BuildingPopupInData : BasePopupInData
     {
         public int? buildingId;
 

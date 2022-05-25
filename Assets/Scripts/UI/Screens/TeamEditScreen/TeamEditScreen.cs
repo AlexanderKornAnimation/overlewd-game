@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Overlewd
 {
-    public class TeamEditScreen : BaseFullScreen
+    public class TeamEditScreen : BaseFullScreenParent<TeamEditScreenInData>
     {
         private const int tabAllUnits = 0;
         private const int tabAssassins = 1;
@@ -56,8 +56,6 @@ namespace Overlewd
         private TextMeshProUGUI slot2_Class;
         private Transform slot2_Potency;
         private TextMeshProUGUI slot2_PotencyValue;
-
-        private TeamEditScreenInData inputData;
 
         private void Awake()
         {
@@ -115,13 +113,6 @@ namespace Overlewd
             slot2_Potency = slot2.Find("PotencyBack");
             slot2_PotencyValue = slot2_Potency.Find("Value").GetComponent<TextMeshProUGUI>();
         }
-
-        public TeamEditScreen SetData(TeamEditScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         private int? GetCharacterInSlot1() =>
             GameData.characters.slot1Ch?.id;
 
@@ -338,7 +329,7 @@ namespace Overlewd
         }
     }
 
-    public class TeamEditScreenInData : BaseScreenInData
+    public class TeamEditScreenInData : BaseFullScreenInData
     {
 
     }

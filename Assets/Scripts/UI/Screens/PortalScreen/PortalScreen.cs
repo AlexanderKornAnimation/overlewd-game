@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class PortalScreen : BaseFullScreen
+    public class PortalScreen : BaseFullScreenParent<PortalScreenInData>
     {
         private Button shardsButton;
         private Image shardsButtonSelected;
@@ -284,6 +284,11 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
+
+    }
+
+    public class PortalScreenInData : BaseFullScreenInData
+    {
 
     }
 }

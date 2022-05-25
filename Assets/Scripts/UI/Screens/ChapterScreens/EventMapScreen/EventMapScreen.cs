@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class EventMapScreen : BaseFullScreen
+    public class EventMapScreen : BaseFullScreenParent<EventMapScreenInData>
     {
         private List<NSEventMapScreen.BaseStageButton> newStages = new List<NSEventMapScreen.BaseStageButton>();
 
@@ -18,8 +18,6 @@ namespace Overlewd
         private NSEventMapScreen.MapButton mapButton;
         private BuffWidget buffPanel;
 
-        private EventMapScreenInData inputData = new EventMapScreenInData();
-
         private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/EventMap", transform);
@@ -27,19 +25,12 @@ namespace Overlewd
             EventsWidget.GetInstance(transform);
             QuestsWidget.GetInstance(transform);
             buffPanel = BuffWidget.GetInstance(transform);
-            buffPanel.inputData = inputData;
 
             var canvas = screenInst.transform.Find("Canvas");
             map = canvas.Find("Map");
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
-        }
-
-        public EventMapScreen SetData(EventMapScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -80,7 +71,6 @@ namespace Overlewd
                     if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
-                        fightButton.screenInData = inputData;
                         fightButton.stageId = stageId;
 
                         if (!stageData.isComplete)
@@ -93,7 +83,6 @@ namespace Overlewd
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         bossFightButton.stageId = stageId;
-                        bossFightButton.screenInData = inputData;
                         
                         if (!stageData.isComplete)
                         {
@@ -219,7 +208,7 @@ namespace Overlewd
         }
     }
 
-    public class EventMapScreenInData : BaseScreenInData
+    public class EventMapScreenInData : BaseFullScreenInData
     {
 
     }

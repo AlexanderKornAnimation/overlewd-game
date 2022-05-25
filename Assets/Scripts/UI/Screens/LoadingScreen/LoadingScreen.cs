@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
-    public class LoadingScreen : BaseFullScreen
+    public class LoadingScreen : BaseFullScreenParent<LoadingScreenInData>
     {
         private Image loadingProgress;
         private TextMeshProUGUI text;
@@ -343,5 +343,10 @@ namespace Overlewd
             public AdminBRO.NetworkResource resourceMeta;
             public State state;
         }
+    }
+
+    public class LoadingScreenInData : BaseFullScreenInData
+    {
+
     }
 }

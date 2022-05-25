@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BottlesSubPopup : BaseSubPopup
+    public class BottlesSubPopup : BaseSubPopupParent<BottlesSubPopupInData>
     {
         private Button backButton;
 
@@ -99,5 +99,10 @@ namespace Overlewd
         {
             UIManager.HideSubPopup();
         }
+    }
+
+    public class BottlesSubPopupInData : BaseSubPopupInData
+    {
+
     }
 }

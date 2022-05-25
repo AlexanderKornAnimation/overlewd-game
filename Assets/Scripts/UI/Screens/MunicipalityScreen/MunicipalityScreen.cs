@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class MunicipalityScreen : BaseFullScreen
+    public class MunicipalityScreen : BaseFullScreenParent<MunicipalityScreenInData>
     {
         private Button municipalityButton;
         private GameObject municipalityMaxLevel;
@@ -50,8 +50,6 @@ namespace Overlewd
         private TextMeshProUGUI haremName;
 
         private Button backButton;
-
-        private MunicipalityScreenInData inputData;
 
         void Awake()
         {
@@ -125,12 +123,6 @@ namespace Overlewd
             aerostatButton.onClick.AddListener(AerostatButtonClick);
             catacombsButton.onClick.AddListener(CatacombsButtonClick);
             haremButton.onClick.AddListener(HaremButtonClick);
-        }
-
-        public MunicipalityScreen SetData(MunicipalityScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         private TextMeshProUGUI NameByKey(string key)
@@ -363,7 +355,7 @@ namespace Overlewd
         }
     }
 
-    public class MunicipalityScreenInData : BaseScreenInData
+    public class MunicipalityScreenInData : BaseFullScreenInData
     {
     }
 }

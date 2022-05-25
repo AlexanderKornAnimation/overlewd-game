@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class HaremScreen : BaseFullScreen
+    public class HaremScreen : BaseFullScreenParent<HaremScreenInData>
     {
         protected Button backButton;
 
@@ -38,8 +38,6 @@ namespace Overlewd
         protected Button battleGirlsButton;
         protected Image battleGirlsGirl;
         protected TextMeshProUGUI battleGirlsTitle;
-
-        private HaremScreenInData inputData;
 
         protected virtual void Awake()
         {
@@ -89,12 +87,6 @@ namespace Overlewd
         protected virtual void Start()
         {
             Customize();
-        }
-
-        public HaremScreen SetData(HaremScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         protected virtual void Customize()
@@ -195,7 +187,8 @@ namespace Overlewd
         }
     }
 
-    public class HaremScreenInData : BaseScreenInData
+    public class HaremScreenInData : BaseFullScreenInData
     {
+
     }
 }

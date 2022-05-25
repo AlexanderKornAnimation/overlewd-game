@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CastleScreen : BaseFullScreen
+    public class CastleScreen : BaseFullScreenParent<CastleScreenInData>
     {
         private Button sidebarButton;
 
@@ -40,8 +40,6 @@ namespace Overlewd
 
         private FMODEvent music;
 
-        private CastleScreenInData inputData = new CastleScreenInData();
-
         private void Awake()
         {
             var screenInst =
@@ -62,12 +60,6 @@ namespace Overlewd
             laboratory = canvas.Find("Laboratory");
             catacombs = canvas.Find("Catacombs");
             aerostat = canvas.Find("Aerostat");
-        }
-
-        public CastleScreen SetData(CastleScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -122,7 +114,6 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
-            buffPanel.inputData = inputData;
             buffPanel.Hide();
 
             switch (GameData.ftue.stats.lastEndedState)
@@ -195,7 +186,7 @@ namespace Overlewd
         }
     }
 
-    public class CastleScreenInData : BaseScreenInData
+    public class CastleScreenInData : BaseFullScreenInData
     {
     }
 }

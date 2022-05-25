@@ -25,7 +25,7 @@ namespace Overlewd
     }
 
 
-    public class DialogNotification : BaseNotification
+    public class DialogNotification : BaseNotificationParent<DialogNotificationInData>
     {
         protected Button button;
         protected TextMeshProUGUI text;
@@ -33,7 +33,6 @@ namespace Overlewd
         protected Transform emotionPos;
 
         protected SpineWidgetGroup emotionAnimation;
-        protected DialogNotificationInData inputData;
 
         protected virtual void Awake()
         {
@@ -49,12 +48,6 @@ namespace Overlewd
             text = banner.Find("Text").GetComponent<TextMeshProUGUI>();
             emotionBack = banner.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-        }
-
-        public DialogNotification SetData(DialogNotificationInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         protected virtual void ButtonClick()
@@ -129,15 +122,10 @@ namespace Overlewd
         }
     }
 
-    public class DialogNotificationInData
+    public class DialogNotificationInData : BaseNotificationInData
     {
         public int? dialogId;
-        public AdminBRO.Dialog dialogData
-        {
-            get
-            {
-                return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
-            }
-        }
+        public AdminBRO.Dialog dialogData =>
+            dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
     }
 }

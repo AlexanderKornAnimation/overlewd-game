@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class NutakuBuyingNotification : BaseNotification
+    public class NutakuBuyingNotification : BaseNotificationParent<NutakuBuyingNotificationInData>
     {
         private Button buyButton;
 
@@ -23,5 +23,10 @@ namespace Overlewd
         {
             UIManager.ShowNotification<NutakuBuyingStatusNotification>();
         }
+    }
+
+    public class NutakuBuyingNotificationInData : BaseNotificationInData
+    {
+    
     }
 }

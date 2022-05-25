@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BannerNotification : BaseNotification
+    public class BannerNotification : BaseNotificationParent<BannerNotificationInData>
     {
         private VerticalLayoutGroup resourcesGrid;
         private VerticalLayoutGroup vGrid;
@@ -91,5 +91,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }
+    }
+
+    public class BannerNotificationInData : BaseNotificationInData
+    {
+
     }
 }

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SexScreen : BaseFullScreen
+    public class SexScreen : BaseFullScreenParent<SexScreenInData>
     {
         private Coroutine autoplayCoroutine;
 
@@ -39,8 +39,6 @@ namespace Overlewd
         private FMODEvent cutInSound;
         private FMODEvent replicaSound;
 
-        private SexScreenInData inputData;
-
         private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SexScreen/SexScreen", transform);
@@ -65,12 +63,6 @@ namespace Overlewd
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
             cutIn.SetActive(false);
-        }
-
-        public SexScreen SetData(SexScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -373,7 +365,7 @@ namespace Overlewd
         }
     }
 
-    public class SexScreenInData : BaseScreenInData
+    public class SexScreenInData : BaseFullScreenInData
     {
         
     }

@@ -16,8 +16,6 @@ namespace Overlewd
             private TextMeshProUGUI loot;
             private TextMeshProUGUI markers;
 
-            public EventMapScreenInData screenInData { get; set; }
-
             protected override void Awake()
             {
                 base.Awake();
@@ -58,7 +56,6 @@ namespace Overlewd
                     UIManager.MakePopup<PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
                         {
-                            prevScreenInData = screenInData,
                             eventStageId = stageId
                         }).RunShowPopupProcess();
                 }
@@ -67,7 +64,6 @@ namespace Overlewd
                     UIManager.MakePopup<PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
                         {
-                            prevScreenInData = screenInData,
                             eventStageId = stageId
                         }).RunShowPopupProcess();
                 }

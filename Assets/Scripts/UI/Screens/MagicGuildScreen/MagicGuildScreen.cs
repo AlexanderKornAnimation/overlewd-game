@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Resharper disable All
-
 namespace Overlewd
 {
-    public class MagicGuildScreen : BaseFullScreen
+    public class MagicGuildScreen : BaseFullScreenParent<MagicGuildScreenInData>
     {
         private Button activeSpell;
         private Button ultimateSpell;
@@ -48,5 +46,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
+    }
+
+    public class MagicGuildScreenInData : BaseFullScreenInData
+    {
+
     }
 }

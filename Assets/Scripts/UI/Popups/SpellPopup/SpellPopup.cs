@@ -5,11 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Resharper disable All
-
 namespace Overlewd
 {
-    public class SpellPopup : BasePopup
+    public class SpellPopup : BasePopupParent<SpellPopupInData>
     {
         protected List<Transform> resources = new List<Transform>();
         protected List<GameObject> notEnough = new List<GameObject>();
@@ -94,5 +92,10 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenLeftHide>();
         }
+    }
+
+    public class SpellPopupInData : BasePopupInData
+    {
+
     }
 }

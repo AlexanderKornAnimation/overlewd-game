@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-	public class BaseBattleScreen : BaseFullScreen
+	public class BaseBattleScreen : BaseFullScreenParent<BaseBattleScreenInData>
 	{
 		protected Button backButton;
 		protected Button skipButton;
@@ -82,6 +82,11 @@ namespace Overlewd
 			return null;
         }
     }
+
+	public class BaseBattleScreenInData : BaseFullScreenInData
+	{
+
+	}
 
 	public class BattleManagerInData
     {

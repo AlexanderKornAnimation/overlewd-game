@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class QuestOverlay : BaseOverlay
+    public class QuestOverlay : BaseOverlayParent<QuestOverlayInData>
     {
         private Button backButton;
 
@@ -141,5 +141,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HideOverlay();
         }
+    }
+
+    public class QuestOverlayInData : BaseOverlayInData
+    {
+
     }
 }

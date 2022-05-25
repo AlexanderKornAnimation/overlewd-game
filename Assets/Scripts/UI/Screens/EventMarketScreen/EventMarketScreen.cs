@@ -6,7 +6,7 @@ using TMPro;
 
 namespace Overlewd
 {
-    public class EventMarketScreen : BaseFullScreen
+    public class EventMarketScreen : BaseFullScreenParent<EventMarketScreenInData>
     {
         private Button backButton;
         private Button portalButton;
@@ -130,5 +130,10 @@ namespace Overlewd
                 }
             }
         }
+    }
+
+    public class EventMarketScreenInData : BaseFullScreenInData
+    {
+
     }
 }

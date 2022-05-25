@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SidebarMenuOverlay : BaseOverlay
+    public class SidebarMenuOverlay : BaseOverlayParent<SidebarMenuOverayInData>
     {
         private Button startingButton;
 
@@ -56,8 +56,6 @@ namespace Overlewd
         private TextMeshProUGUI forgeButton_Markers;
         private TextMeshProUGUI forgeButton_Title;
         private Image forgeButton_Icon;
-
-        private SidebarMenuOverayInData inputData;
 
         void Awake()
         {
@@ -121,12 +119,6 @@ namespace Overlewd
             forgeButton_Markers = forgeButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
-        }
-
-        public SidebarMenuOverlay SetData(SidebarMenuOverayInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -232,7 +224,7 @@ namespace Overlewd
         }
     }
 
-    public class SidebarMenuOverayInData : BaseScreenInData
+    public class SidebarMenuOverayInData : BaseOverlayInData
     {
 
     }

@@ -70,9 +70,9 @@ namespace Overlewd
                     if (directToBattleScreen)
                     {
                         UIManager.MakeScreen<BattleScreen>().
-                            SetData(new BattleScreenInData
+                            SetData(new BaseBattleScreenInData
                             {
-                                ftueStageId = stageId,
+                                ftueStageId = stageId
                             }).RunShowScreenProcess();
                     }
                     else
@@ -80,8 +80,7 @@ namespace Overlewd
                         UIManager.MakePopup<PrepareBattlePopup>().
                             SetData(new PrepareBattlePopupInData
                             {
-                                prevScreenInData = screenInData,
-                                ftueStageId = stageId,
+                                ftueStageId = stageId
                             }).RunShowPopupProcess();
                     }
                 }
@@ -90,9 +89,9 @@ namespace Overlewd
                     if (directToBattleScreen)
                     {
                         UIManager.MakeScreen<BossFightScreen>().
-                            SetData(new BossFightScreenInData
+                            SetData(new BaseBattleScreenInData
                             {
-                                ftueStageId = stageId,
+                                ftueStageId = stageId
                             }).RunShowScreenProcess();
                     }
                     else
@@ -100,8 +99,7 @@ namespace Overlewd
                         UIManager.MakePopup<PrepareBossFightPopup>().
                             SetData(new PrepareBossFightPopupInData
                             {
-                                prevScreenInData = screenInData,
-                                ftueStageId = stageId,
+                                ftueStageId = stageId
                             }).RunShowPopupProcess();
                     }
                 }

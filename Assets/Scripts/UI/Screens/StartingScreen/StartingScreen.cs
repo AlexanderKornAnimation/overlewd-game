@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class StartingScreen : BaseFullScreen
+    public class StartingScreen : BaseFullScreenParent<StartingScreenInData>
     {
         private Button FTUE_Progress_Button;
         private Button FTUE_Button;
@@ -84,5 +84,10 @@ namespace Overlewd
             await GameData.ftue.Reset();
             await GameData.buildings.Reset();
         }
+    }
+
+    public class StartingScreenInData : BaseFullScreenInData
+    {
+
     }
 }

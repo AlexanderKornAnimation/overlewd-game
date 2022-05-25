@@ -10,7 +10,6 @@ namespace Overlewd
         public abstract class BaseStageButton : BaseButton
         {
             public int? stageId { get; set; }
-            public MapScreenInData screenInData { get; set; }
 
             protected AdminBRO.FTUEStageItem stageData =>
                 stageId.HasValue ? GameData.ftue.info.GetStageById(stageId.Value) : null;

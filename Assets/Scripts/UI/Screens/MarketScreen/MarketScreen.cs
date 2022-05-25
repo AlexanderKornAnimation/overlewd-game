@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MarketScreen : BaseFullScreen
+    public class MarketScreen : BaseFullScreenParent<MarketScreenInData>
     {
         private Transform bottomGrid;
         private Button mainMenuButton;
@@ -41,5 +41,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
+    }
+
+    public class MarketScreenInData : BaseFullScreenInData
+    {
+
     }
 }
