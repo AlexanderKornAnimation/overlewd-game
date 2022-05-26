@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,13 +85,10 @@ namespace Overlewd
             battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
         }
 
-        protected virtual void Start()
+        public override async Task BeforeShowMakeAsync()
         {
-            Customize();
-        }
 
-        protected virtual void Customize()
-        {
+            await Task.CompletedTask;
         }
 
         protected virtual void BackButtonClick()

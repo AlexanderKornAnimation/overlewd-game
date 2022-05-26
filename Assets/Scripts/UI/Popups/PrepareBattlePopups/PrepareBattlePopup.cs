@@ -146,7 +146,7 @@ namespace Overlewd
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
                 {
-                    prevScreenInData = UIManager.currentScreenInData,
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -158,7 +158,7 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 {
-                    prevScreenInData = UIManager.currentScreenInData,
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();

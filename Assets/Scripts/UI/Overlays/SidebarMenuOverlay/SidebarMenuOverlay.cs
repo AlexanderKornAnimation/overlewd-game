@@ -201,7 +201,7 @@ namespace Overlewd
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
             {
-                prevScreenInData = UIManager.currentScreenInData
+                prevScreenInData = UIManager.prevScreenInData
             }).RunShowScreenProcess();
         }
 
@@ -222,7 +222,7 @@ namespace Overlewd
             UIManager.MakeScreen<MarketScreen>().
                 SetData(new MarketScreenInData
                 {
-                    prevScreenInData = UIManager.currentScreenInData
+                    prevScreenInData = UIManager.prevScreenInData
                 }).RunShowScreenProcess();
         }
 

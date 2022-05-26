@@ -90,14 +90,6 @@ namespace Overlewd
         {
             return eventStages.Find(s => s.id == id);
         }
-        public static void SetEventStage(AdminBRO.EventStageItem stageData)
-        {
-            var stageIndex = eventStages.FindIndex(s => s.id == stageData.id);
-            if (stageIndex != -1)
-            {
-                eventStages[stageIndex] = stageData;
-            }
-        }
         public static async Task EventStageStartAsync(int stageId)
         {
             var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
