@@ -14,9 +14,9 @@ namespace Overlewd
         }
     }
 
-    public abstract class BaseFullScreenParent<T> : BaseFullScreen where T : BaseFullScreenInData
+    public abstract class BaseFullScreenParent<T> : BaseFullScreen where T : BaseFullScreenInData, new()
     {
-        public T inputData { get; private set; }
+        public T inputData { get; private set; } = new T();
         public override BaseFullScreenInData baseInputData => inputData;
 
         public BaseFullScreen SetData(T data)

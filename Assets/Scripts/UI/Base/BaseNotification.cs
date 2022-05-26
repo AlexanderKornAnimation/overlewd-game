@@ -39,9 +39,9 @@ namespace Overlewd
         }
     }
 
-    public abstract class BaseNotificationParent<T> : BaseNotification where T : BaseNotificationInData
+    public abstract class BaseNotificationParent<T> : BaseNotification where T : BaseNotificationInData, new()
     {
-        public T inputData { get; private set; }
+        public T inputData { get; private set; } = new T();
         public override BaseNotificationInData baseInputData => inputData;
 
         public BaseNotification SetData(T data)

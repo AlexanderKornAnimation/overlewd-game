@@ -39,9 +39,9 @@ namespace Overlewd
         }
     }
 
-    public abstract class BaseSubPopupParent<T> : BaseSubPopup where T : BaseSubPopupInData
+    public abstract class BaseSubPopupParent<T> : BaseSubPopup where T : BaseSubPopupInData, new()
     {
-        public T inputData { get; private set; }
+        public T inputData { get; private set; } = new T();
         public override BaseSubPopupInData baseInputData => inputData;
 
         public BaseSubPopup SetData(T data)
