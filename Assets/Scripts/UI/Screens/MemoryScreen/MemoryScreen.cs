@@ -66,7 +66,11 @@ namespace Overlewd
         private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<PortalScreen>();
+            UIManager.MakeScreen<PortalScreen>().
+                SetData(new PortalScreenInData
+            {
+                activeButtonId = PortalScreenInData.shardsButtonId
+            }).RunShowScreenProcess();
         }
 
         private void ForgeButtonClick()

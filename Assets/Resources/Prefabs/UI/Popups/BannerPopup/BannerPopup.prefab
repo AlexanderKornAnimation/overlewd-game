@@ -246,7 +246,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Buy bundle for <sprite="CurrencyNResources" name="NutakuGold"> 1000
+  m_text: Buy bundle for <sprite="AssetEventCurrency" name="NutakuGold"> 1000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -265,7 +265,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
+  m_spriteAsset: {fileID: 11400000, guid: 971e57141bfcb6d45a7c8cbac08e7b13, type: 2}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -778,7 +778,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 135.5, y: -399}
-  m_SizeDelta: {x: 539, y: 180}
+  m_SizeDelta: {x: 539, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7448007120698377936
 CanvasRenderer:
@@ -808,7 +808,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 647f9fea09fd7fd43898d99d8764d926, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 85318d0cff07530448afbda27a2d6f63, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -872,7 +872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6372416785658324918}
   m_Layer: 0
-  m_Name: BannerNotification
+  m_Name: BannerPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

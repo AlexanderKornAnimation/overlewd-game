@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +7,11 @@ using TMPro;
 
 namespace Overlewd
 {
-    namespace NSTeamEditScreen
+    namespace NSLaboratoryScreen
     {
         public class Character : MonoBehaviour
         {
             public int characterId { get; set; }
-            public TeamEditScreen screen { private get; set; }
-            public TeamEditScreenInData inputData { get; set; }
 
             private Image girlIcon;
             private TextMeshProUGUI level;
@@ -22,72 +21,36 @@ namespace Overlewd
             private Button equipButton;
             private GameObject notificationNew;
 
-            void Awake()
+            private void Awake()
             {
                 var canvas = transform.Find("Canvas");
                 var girl = canvas.Find("Girl");
                 
                 girlIcon = girl.GetComponent<Image>();
                 equipButton = canvas.Find("EquipButton").GetComponent<Button>();
-                equipButton.onClick.AddListener(EquipButtonClick);
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 girlClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
                 equipStatus = canvas.Find("EquipStatus");
-                girlScreenButton = canvas.Find("GirlScreenButton").GetComponent<Button>();
-                girlScreenButton.onClick.AddListener(GirlScreenButtonClick);
                 notificationNew = canvas.Find("NotificationNew").GetComponent<GameObject>();
             }
 
-            void Start()
+            private void Start()
             {
                 Customize();
             }
-
-            public void Customize()
+            
+            private void Customize()
             {
                 var chData = GameData.characters.GetById(characterId);
                 girlIcon.sprite = ResourceManager.LoadSprite(chData.teamEditPersIcon);
                 level.text = chData.level.ToString();
                 girlClass.text = AdminBRO.Character.GetMyClassMarker(chData.characterClass);
-                if (chData.teamPosition != AdminBRO.Character.TeamPosition_None)
-                {
-                    girlIcon.color = Color.gray;
-                    equipStatus.gameObject.SetActive(true);
-                }
-                else
-                {
-                    girlIcon.color = Color.white;
-                    equipStatus.gameObject.SetActive(false);
-                }
-            }
-
-            private void EquipButtonClick()
-            {
-                screen.TryEquipOrUnequip(characterId);
-            }
-
-            private void GirlScreenButtonClick()
-            {
-                if (inputData == null)
-                {
-                    UIManager.ShowScreen<BattleGirlScreen>();
-                }
-                else
-                {
-                    UIManager.MakeScreen<BattleGirlScreen>().
-                        SetData(new BattleGirlScreenInData 
-                        {
-                            prevScreenInData = inputData,
-                            ftueStageId = inputData.ftueStageId,
-                            eventStageId = inputData.eventStageId
-                        }).RunShowScreenProcess();
-                }
             }
 
             public static Character GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<Character>(
-                    "Prefabs/UI/Screens/TeamEditScreen/Character", parent);
+                    "Prefabs/UI/Screens/LaboratoryScreen/Character", parent);
             }
         }
     }

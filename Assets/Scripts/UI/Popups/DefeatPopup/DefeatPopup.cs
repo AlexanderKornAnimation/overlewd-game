@@ -71,7 +71,12 @@ namespace Overlewd
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<TeamEditScreen>();
+            UIManager.MakeScreen<TeamEditScreen>().
+                SetData(new TeamEditScreenInData
+            {
+                prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
+                ftueStageId = UIManager.prevScreenInData.ftueStageId
+            }).RunShowScreenProcess();
         }
 
         private void MagicGuildButtonClick()
@@ -99,11 +104,13 @@ namespace Overlewd
                             ftueStageId = GameData.ftue.info.chapter1.GetStageByKey("sex2")?.id
                         }).RunShowScreenProcess();
                     break;
-                case null:
-                    UIManager.ShowScreen<MapScreen>();
-                    break;
                 default:
-                    UIManager.ShowScreen<HaremScreen>();
+                    UIManager.MakeScreen<HaremScreen>().
+                        SetData(new HaremScreenInData
+                    {
+                        prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
+                        ftueStageId = UIManager.prevScreenInData.ftueStageId
+                    }).RunShowScreenProcess();
                     break;
             }
         }
