@@ -193,6 +193,11 @@ namespace Overlewd
             public string updatedAt;
             public List<int> tradables;
             public List<int> currencies;
+
+            [JsonProperty(Required = Required.Default)]
+            public List<TradableItem> tradablesData =>
+                tradables.Select(id => GameData.markets.GetTradableById(id)).
+                Where(data => data != null).OrderByDescending(item => item.promo).ToList();
         }
 
         // /currencies
@@ -332,14 +337,39 @@ namespace Overlewd
             public List<int> stages;
             public int? order;
             public List<EventChapterReward> rewards;
-        }
 
-        [Serializable]
-        public class EventChapterReward
-        {
-            public string icon;
-            public int amount;
-            public int currency;
+            public class EventChapterReward
+            {
+                public string icon;
+                public int amount;
+                public int currency;
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isComplete {
+                get {
+                    foreach (var stageId in stages)
+                    {
+                        var stageData = GetStageById(stageId);
+                        if (!stageData?.isComplete ?? true)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter nextChapterData =>
+                nextChapterId.HasValue ? GameData.events.GetChapterById(nextChapterId.Value) : null;
+
+            public AdminBRO.EventStageItem GetStageById(int id) =>
+                GameData.events.GetStageById(id);
+
+            [JsonProperty(Required = Required.Default)]
+            public List<EventStageItem> stagesData =>
+                stages.Select(id => GameData.events.GetStageById(id)).Where(data => data != null).ToList();
         }
 
         // /events
@@ -376,6 +406,41 @@ namespace Overlewd
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
             public const string Type_Weekly = "weekly";
+
+            [JsonProperty(Required = Required.Default)]
+            public List<EventChapter> chaptersData =>
+                chapters.Select(chId => GetChapterById(id)).OrderBy(ch => ch.order).ToList();
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter firstChapter =>
+                chaptersData.First();
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter activeChapter {
+                get {
+                    var chapterData = firstChapter;
+                    while (chapterData.isComplete)
+                    {
+                        if (chapterData.nextChapterId.HasValue)
+                        {
+                            chapterData = chapterData.nextChapterData;
+                            continue;
+                        }
+                        break;
+                    }
+                    return chapterData;
+                }
+            }
+
+            public EventChapter GetChapterById(int id) =>
+                GameData.events.GetChapterById(id);
+
+            public EventItem SetAsMapEvent() =>
+                GameData.events.mapEventData = this;
+
+            [JsonProperty(Required = Required.Default)]
+            public List<EventMarketItem> marketsData =>
+                markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
         }
         
 
@@ -595,7 +660,7 @@ namespace Overlewd
             public string type;
             public List<DialogReplica> replicas;
             public int? matriarchId;
-            public List<RewardItem> matriarchEmpathyPointsReward;
+            public int? matriarchEmpathyPointsReward;
 
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";

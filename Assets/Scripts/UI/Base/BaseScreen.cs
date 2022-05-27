@@ -107,7 +107,7 @@ namespace Overlewd
     {
         public int? eventStageId;
         public AdminBRO.EventStageItem eventStageData => 
-            eventStageId.HasValue ? GameData.GetEventStageById(eventStageId.Value) : null;
+            eventStageId.HasValue ? GameData.events.GetStageById(eventStageId.Value) : null;
 
         public int? ftueStageId;
         public AdminBRO.FTUEStageItem ftueStageData =>

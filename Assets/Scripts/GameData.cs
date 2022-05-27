@@ -33,40 +33,10 @@ namespace Overlewd
             return walletCurrency?.amount ?? 0;
         }
 
-        public static async Task BuyTradableAsync(int marketId, int tradableId)
-        {
-            await AdminBRO.tradableBuyAsync(marketId, tradableId);
-            playerInfo = await AdminBRO.meAsync();
-
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                { 
-                    type = GameDataEvent.Type.BuyTradable 
-                });
-        }
-
-        public static List<AdminBRO.EventItem> events { get; set; }
-        public static AdminBRO.EventItem GetEventById(int id)
-        {
-            return events.Find(e => e.id == id);
-        }
-
-        public static List<AdminBRO.EventChapter> eventChapters { get; set; }
-        public static AdminBRO.EventChapter GetEventChapterById(int id)
-        {
-            return eventChapters.Find(c => c.id == id);
-        }
-
         public static List<AdminBRO.QuestItem> quests { get; set; } = new List<AdminBRO.QuestItem>();
         public static AdminBRO.QuestItem GetQuestById(int id)
         {
             return quests.Find(q => q.id == id);
-        }
-
-        public static List<AdminBRO.EventMarketItem> eventMarkets { get; set; } = new List<AdminBRO.EventMarketItem>();
-        public static AdminBRO.EventMarketItem GetEventMarketById(int id)
-        {
-            return eventMarkets.Find(m => m.id == id);
         }
 
         public static List<AdminBRO.CurrencyItem> currenies { get; set; }
@@ -77,28 +47,6 @@ namespace Overlewd
         public static AdminBRO.CurrencyItem GetCurencyCatEars()
         {
             return currenies.Find(c => c.name == "Cat Ears");
-        }
-
-        public static List<AdminBRO.TradableItem> tradables { get; set; }
-        public static AdminBRO.TradableItem GetTradableById(int id)
-        {
-            return tradables.Find(t => t.id == id);
-        }
-
-        public static List<AdminBRO.EventStageItem> eventStages { get; set; } = new List<AdminBRO.EventStageItem>();
-        public static AdminBRO.EventStageItem GetEventStageById(int id)
-        {
-            return eventStages.Find(s => s.id == id);
-        }
-        public static async Task EventStageStartAsync(int stageId)
-        {
-            var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
-            eventStages = await AdminBRO.eventStagesAsync();
-        }
-        public static async Task EventStageEndAsync(int stageId, AdminBRO.EventStageEndData data = null)
-        {
-            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
-            eventStages = await AdminBRO.eventStagesAsync();
         }
 
         public static List<AdminBRO.Dialog> dialogs { get; set; } = new List<AdminBRO.Dialog>();
@@ -141,6 +89,8 @@ namespace Overlewd
         public static Gacha gacha { get; } = new Gacha();
         public static Buildings buildings { get; } = new Buildings();
         public static Characters characters { get; } = new Characters();
+        public static Events events { get; } = new Events();
+        public static Markets markets { get; } = new Markets();
     }
 
     //ftue
@@ -344,5 +294,74 @@ namespace Overlewd
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
+    }
+
+    //events
+    public class Events
+    {
+        public List<AdminBRO.EventItem> events { get; private set; } = new List<AdminBRO.EventItem>();
+        public List<AdminBRO.EventChapter> chapters { get; private set; } = new List<AdminBRO.EventChapter>();
+        public List<AdminBRO.EventStageItem> stages { get; private set; } = new List<AdminBRO.EventStageItem>();
+
+        public async Task Get()
+        {
+            events = await AdminBRO.eventsAsync();
+            chapters = await AdminBRO.eventChaptersAsync();
+            stages = await AdminBRO.eventStagesAsync();
+        }
+
+        public AdminBRO.EventItem GetEventById(int? id) =>
+            events.Find(e => e.id == id);
+        public AdminBRO.EventChapter GetChapterById(int? id) =>
+            chapters.Find(c => c.id == id);
+        public AdminBRO.EventStageItem GetStageById(int? id) =>
+            stages.Find(s => s.id == id);
+
+        public async Task StageStart(int stageId)
+        {
+            var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
+            stages = await AdminBRO.eventStagesAsync();
+        }
+        public async Task StageEnd(int stageId, AdminBRO.EventStageEndData data = null)
+        {
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
+            stages = await AdminBRO.eventStagesAsync();
+        }
+
+        public AdminBRO.EventItem mapEventData { get; set; }
+    }
+
+    //markets
+    public class Markets
+    {
+        public List<AdminBRO.EventMarketItem> eventMarkets { get; private set; } = new List<AdminBRO.EventMarketItem>();
+
+        public List<AdminBRO.TradableItem> tradables { get; private set; } = new List<AdminBRO.TradableItem>();
+
+        public async Task Get()
+        {
+            eventMarkets = await AdminBRO.eventMarketsAsync();
+            tradables = await AdminBRO.tradablesAsync();
+        }
+
+        public AdminBRO.EventMarketItem GetEventMarketById(int? id) =>
+            eventMarkets.Find(m => m.id == id);
+        public AdminBRO.TradableItem GetTradableById(int? id) =>
+            tradables.Find(t => t.id == id);
+
+        public async Task BuyTradable(int? marketId, int? tradableId)
+        {
+            if (!marketId.HasValue || !tradableId.HasValue)
+                return;
+
+            await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
+            GameData.playerInfo = await AdminBRO.meAsync();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuyTradable
+                });
+        }
     }
 }

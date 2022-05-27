@@ -113,7 +113,7 @@ namespace Overlewd
 
         private void InitTabs()
         {
-            foreach (var eventData in GameData.events)
+            foreach (var eventData in GameData.events.events)
             {
                 switch (eventData.type)
                 {

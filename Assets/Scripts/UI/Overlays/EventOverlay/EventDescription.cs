@@ -10,6 +10,8 @@ namespace Overlewd
         public class EventDescription : MonoBehaviour
         {
             public int eventId { get; set; }
+            public AdminBRO.EventItem eventData =>
+                GameData.events.GetEventById(eventId);
 
             private TextMeshProUGUI text;
 
@@ -27,9 +29,8 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventData = GameData.GetEventById(eventId);
-
-                text.text = eventData.description;
+                var _eventData = eventData;
+                text.text = _eventData.description;
             }
 
             public static EventDescription GetInstance(Transform parent)

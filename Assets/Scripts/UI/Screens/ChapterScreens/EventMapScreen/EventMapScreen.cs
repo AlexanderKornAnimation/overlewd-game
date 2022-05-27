@@ -35,7 +35,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            var eventChapterData = GetActiveChapter(GameGlobalStates.eventData);
+            var eventChapterData = GameData.events.mapEventData.activeChapter;
             if (eventChapterData == null)
             {
                 return;
@@ -50,10 +50,8 @@ namespace Overlewd
 
             mapButton = NSEventMapScreen.MapButton.GetInstance(chapterMap.transform.Find("eventMap"));
 
-            foreach (var stageId in eventChapterData.stages)
+            foreach (var stageData in eventChapterData.stagesData)
             {
-                var stageData = GameData.GetEventStageById(stageId);
-
                 if (stageData.isClosed)
                 {
                     //continue;
@@ -71,7 +69,7 @@ namespace Overlewd
                     if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
-                        fightButton.stageId = stageId;
+                        fightButton.stageId = stageData.id;
 
                         if (!stageData.isComplete)
                         {
@@ -82,7 +80,7 @@ namespace Overlewd
                     else if (battleData.isTypeBoss)
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
-                        bossFightButton.stageId = stageId;
+                        bossFightButton.stageId = stageData.id;
                         
                         if (!stageData.isComplete)
                         {
@@ -97,7 +95,7 @@ namespace Overlewd
                     if (dialogData.isTypeDialog)
                     {
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
-                        dialogButton.stageId = stageId;
+                        dialogButton.stageId = stageData.id;
                         
                         if (!stageData.isComplete)
                         {
@@ -108,7 +106,7 @@ namespace Overlewd
                     else if (dialogData.isTypeSex)
                     {
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
-                        sexButton.stageId = stageId;
+                        sexButton.stageId = stageData.id;
                         
                         if (!stageData.isComplete)
                         {
@@ -119,9 +117,8 @@ namespace Overlewd
                 }
             }
 
-            foreach (var eventMarketId in GameGlobalStates.eventData.markets)
+            foreach (var eventMarketData in GameData.events.mapEventData.marketsData)
             {
-                var eventMarketData = GameData.GetEventMarketById(eventMarketId);
                 var mapNode = chapterMap.transform.Find(eventMarketData.eventMapNodeName);
                 if (mapNode != null)
                 {
@@ -168,43 +165,6 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowOverlay<SidebarMenuOverlay>();
-        }
-
-        private AdminBRO.EventChapter GetActiveChapter(AdminBRO.EventItem eventData)
-        {
-            AdminBRO.EventChapter firstChapter = null;
-            foreach (var chapterId in eventData.chapters)
-            {
-                var findAsNextChapter = eventData.chapters.Exists(chId => 
-                {
-                    var chData = GameData.GetEventChapterById(chId);
-                    return chData.nextChapterId.HasValue ?
-                        chData.nextChapterId.Value == chapterId :
-                        false;
-                });
-                firstChapter = findAsNextChapter ? firstChapter : GameData.GetEventChapterById(chapterId);
-            }
-
-            var curChapter = firstChapter;
-            while (curChapter != null)
-            {
-                foreach (var stageId in curChapter.stages)
-                {
-                    var stageData = GameData.GetEventStageById(stageId);
-                    if (!stageData.isComplete)
-                    {
-                        return curChapter;
-                    }
-                }
-
-                if (curChapter.nextChapterId.HasValue)
-                {
-                    curChapter = GameData.GetEventChapterById(curChapter.nextChapterId.Value);
-                    continue;
-                }
-                return curChapter;
-            }
-            return null;
         }
     }
 

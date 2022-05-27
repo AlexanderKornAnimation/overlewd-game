@@ -49,7 +49,7 @@ namespace Overlewd
         
         protected virtual void Customize()
         {
-            foreach (var eventData in GameData.events)
+            foreach (var eventData in GameData.events.events)
             {
                 switch (eventData.type)
                 {

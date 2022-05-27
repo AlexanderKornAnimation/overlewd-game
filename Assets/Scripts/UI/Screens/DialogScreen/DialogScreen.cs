@@ -135,7 +135,7 @@ namespace Overlewd
 
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageStartAsync(inputData.eventStageData.id);
+                await GameData.events.StageStart(inputData.eventStageData.id);
             }
             else
             {
@@ -147,7 +147,7 @@ namespace Overlewd
         {
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageEndAsync(inputData.eventStageData.id);
+                await GameData.events.StageEnd(inputData.eventStageData.id);
             }
             else
             {

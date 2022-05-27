@@ -102,7 +102,7 @@ namespace Overlewd
             }
             else
             {
-                await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+                await GameData.events.StageStart(inputData.eventStageId.Value);
             }
         }
 
@@ -125,7 +125,7 @@ namespace Overlewd
             }
             else
             {
-                await GameData.EventStageEndAsync(inputData.eventStageId.Value,
+                await GameData.events.StageEnd(inputData.eventStageId.Value,
                     new AdminBRO.EventStageEndData
                     {
                         win = battleIsWin

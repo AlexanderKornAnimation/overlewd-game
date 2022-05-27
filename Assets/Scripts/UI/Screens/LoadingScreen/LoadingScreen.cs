@@ -215,17 +215,11 @@ namespace Overlewd
 
             GameData.currenies = await AdminBRO.currenciesAsync();
 
-            GameData.tradables = await AdminBRO.tradablesAsync();
+            await GameData.markets.Get();
 
-            GameData.events = await AdminBRO.eventsAsync();
-
-            GameData.eventChapters = await AdminBRO.eventChaptersAsync();
-
-            GameData.eventMarkets = await AdminBRO.eventMarketsAsync();
+            await GameData.events.Get();
 
             GameData.quests = await AdminBRO.questsAsync();
-
-            GameData.eventStages = await AdminBRO.eventStagesAsync();
 
             GameData.dialogs = await AdminBRO.dialogsAsync();
 

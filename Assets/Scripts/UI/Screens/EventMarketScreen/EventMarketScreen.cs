@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -16,9 +17,6 @@ namespace Overlewd
         private TextMeshProUGUI moneyBackValue;
 
         private Transform scrollViewContent;
-
-        private List<NSEventMarketScreen.EventMarketItem> marketItems = 
-            new List<NSEventMarketScreen.EventMarketItem>();
 
         void Awake()
         {
@@ -42,35 +40,21 @@ namespace Overlewd
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
         }
 
-        void Start()
+        public override async Task BeforeShowMakeAsync()
         {
-            var marketData = GameGlobalStates.eventShop_MarketData;
-            var tradables = new List<AdminBRO.TradableItem>();
-            foreach (var tId in marketData.tradables)
-            {
-                var tradableData = GameData.GetTradableById(tId);
-                if (tradableData != null)
-                {
-                    tradables.Add(tradableData);
-                }
-            }
-
-            tradables.Sort((x, y) =>
-                {
-                    return x.promo ? -1 : 1;
-                }
-            );
+            var _marketData = inputData.eventMarketData;
+            var tradables = _marketData.tradablesData;
 
             foreach (var tradableData in tradables)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
                 eventMarketItem.tradableId = tradableData.id;
-                eventMarketItem.eventMarketId = marketData.id;
-
-                marketItems.Add(eventMarketItem);
+                eventMarketItem.eventMarketId = _marketData.id;
             }
 
             Customize();
+
+            await Task.CompletedTask;
         }
 
         public override void OnGameDataEvent(GameDataEvent eventData)
@@ -79,7 +63,7 @@ namespace Overlewd
             {
                 case GameDataEvent.Type.BuyTradable:
                     Customize();
-                    foreach (var marketItem in marketItems)
+                    foreach (var marketItem in scrollViewContent.GetComponentsInChildren<NSEventMarketScreen.EventMarketItem>())
                     {
                         marketItem.Customize();
                     }
@@ -112,20 +96,22 @@ namespace Overlewd
         private void MoneyBackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-        
-            foreach (var tId in GameGlobalStates.eventShop_MarketData.tradables)
+
+            var _marketData = inputData.eventMarketData;
+            var tradables = _marketData.tradablesData;
+
+            foreach (var tData in tradables)
             {
-                var tData = GameData.GetTradableById(tId);
-                if (tData != null)
+                if (tData.promo)
                 {
-                    if (tData.promo)
+                    if (tData.canBuy)
                     {
-                        if (tData.canBuy)
-                        {
-                            GameGlobalStates.bannerNotification_EventMarketId = GameGlobalStates.eventShop_MarketId;
-                            GameGlobalStates.bannerNotification_TradableId = tId;
-                            UIManager.ShowNotification<BannerNotification>();
-                        }
+                        UIManager.MakeNotification<BannerNotification>().
+                            SetData(new BannerNotificationInData
+                            {
+                                eventMarketId = _marketData.id,
+                                tradableId = tData.id
+                            }).RunShowNotificationProcess();
                     }
                 }
             }
@@ -134,6 +120,8 @@ namespace Overlewd
 
     public class EventMarketScreenInData : BaseFullScreenInData
     {
-
+        public int? eventMarketId;
+        public AdminBRO.EventMarketItem eventMarketData =>
+            GameData.markets.GetEventMarketById(eventMarketId.Value);
     }
 }
