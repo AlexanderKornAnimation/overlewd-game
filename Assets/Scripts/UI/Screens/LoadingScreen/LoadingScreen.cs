@@ -1,3 +1,5 @@
+//#define DEV_BUILD
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -188,7 +190,7 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !DEV_BUILD
             var apiVersion = await AdminBRO.versionAsync();
             if (apiVersion.version.ToString() != HttpCore.ApiVersion)
             {
