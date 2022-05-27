@@ -170,6 +170,6 @@ namespace Overlewd
         public int? buildingId;
 
         public AdminBRO.Building buildingData =>
-            buildingId.HasValue ? GameData.buildings.GetBuildingById(buildingId.Value) : null;
+            GameData.buildings.GetBuildingById(buildingId);
     }
 }

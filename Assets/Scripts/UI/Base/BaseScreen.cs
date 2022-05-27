@@ -107,11 +107,11 @@ namespace Overlewd
     {
         public int? eventStageId;
         public AdminBRO.EventStageItem eventStageData => 
-            eventStageId.HasValue ? GameData.events.GetStageById(eventStageId.Value) : null;
+            GameData.events.GetStageById(eventStageId);
 
         public int? ftueStageId;
         public AdminBRO.FTUEStageItem ftueStageData =>
-            ftueStageId.HasValue ? GameData.ftue.info.GetStageById(ftueStageId.Value) : null;
+            GameData.ftue.info.GetStageById(ftueStageId);
 
         protected bool IsType<T>() where T : BaseScreenInData =>
             this.GetType() == typeof(T);

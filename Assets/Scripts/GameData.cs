@@ -152,7 +152,7 @@ namespace Overlewd
 
         public async Task Get() =>
             buildings = await AdminBRO.buildingsAsync();
-        public AdminBRO.Building GetBuildingById(int id) =>
+        public AdminBRO.Building GetBuildingById(int? id) =>
             buildings.Find(b => b.id == id);
         public AdminBRO.Building GetBuildingByKey(string key) =>
             buildings.Find(b => b.key == key);
@@ -214,7 +214,7 @@ namespace Overlewd
 
         public async Task Get() =>
             items = await AdminBRO.gachaAsync();
-        public AdminBRO.GachItem GetGachaById(int id) =>
+        public AdminBRO.GachItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
         public async Task Buy(int id)
@@ -237,7 +237,7 @@ namespace Overlewd
 
         public async Task Get() =>
             characters = await AdminBRO.charactersAsync();
-        public AdminBRO.Character GetById(int id) =>
+        public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
         public AdminBRO.Character GetByClass(string chClass) => 
             characters.Find(ch => ch.characterClass == chClass);
