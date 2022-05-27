@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +9,9 @@ namespace Overlewd
 {
     public class MarketScreen : BaseFullScreenParent<MarketScreenInData>
     {
-        private Transform bottomGrid;
         private Button backButton;
 
-        private void Awake()
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MarketScreen/Market", transform);
 
@@ -19,21 +19,13 @@ namespace Overlewd
 
             backButton = canvas.Find("MainMenuButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            bottomGrid = canvas.Find("BottomGrid");
         }
 
-        private void Start()
+        
+        public override async Task BeforeShowMakeAsync()
         {
-            Customize();
-        }
 
-        private void Customize()
-        {
-            NSMarketScreen.BundleTypeA.GetInstance(bottomGrid);
-            NSMarketScreen.BundleTypeB.GetInstance(bottomGrid);
-            NSMarketScreen.BundleTypeC.GetInstance(bottomGrid);
-            NSMarketScreen.BundleTypeD.GetInstance(bottomGrid);
+            await Task.CompletedTask;
         }
         
         private void BackButtonClick()
