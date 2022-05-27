@@ -132,12 +132,5 @@ namespace Overlewd
                     });
             }
         }
-
-        public override BattleManagerInData GetBattleData()
-        {
-            return inputData.ftueStageId.HasValue ?
-                BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
-                BattleManagerInData.InstFromEventStage(inputData.eventStageData);
-        }
     }
 }

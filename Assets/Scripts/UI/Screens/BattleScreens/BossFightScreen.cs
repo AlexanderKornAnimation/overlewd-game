@@ -94,17 +94,5 @@ namespace Overlewd
                     });
             }
         }
-
-        public override BattleManagerInData GetBattleData()
-        {
-            if (inputData.ftueStageId.HasValue)
-            {
-                return BattleManagerInData.InstFromFTUEStage(inputData?.ftueStageData);
-            }
-            else
-            {
-                return BattleManagerInData.InstFromEventStage(inputData?.eventStageData);
-            }
-        }
     }
 }

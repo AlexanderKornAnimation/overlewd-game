@@ -594,6 +594,8 @@ namespace Overlewd
             public string title;
             public string type;
             public List<DialogReplica> replicas;
+            public int? matriarchId;
+            public List<RewardItem> matriarchEmpathyPointsReward;
 
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";
@@ -675,7 +677,7 @@ namespace Overlewd
             public int? level;
             public string rarity;
             public List<int> equipment;
-            public List<int> skills;
+            public List<CharacterSkill> skills;
             public float? speed;
             public float? power;
             public float? constitution;
@@ -739,6 +741,20 @@ namespace Overlewd
             }
 
             public const string Rarity_Basic = "basic";
+        }
+
+        [Serializable]
+        public class CharacterSkill
+        {
+            public string effect;
+            public string type;
+            public string skillIcon;
+            public int damage;
+            public int effectProb;
+            public int effectActingDuration;
+            public int effectCooldownDuration;
+            public List<PriceItem> levelUpPrice;
+            public int level;
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)
