@@ -57,7 +57,7 @@ namespace Overlewd
             {
                 var _tradableData = tradableData;
                 var currencyId = _tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
+                var currencyData = GameData.currencies.GetById(currencyId);
 
                 if (_tradableData.soldOut)
                 {
@@ -93,7 +93,7 @@ namespace Overlewd
             {
                 var _tradableData = tradableData;
                 var currencyId = _tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
+                var currencyData = GameData.currencies.GetById(currencyId);
 
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 if (_tradableData.canBuy)
@@ -119,7 +119,7 @@ namespace Overlewd
             {
                 var _tradableData = tradableData;
                 var currencyId = _tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
+                var currencyData = GameData.currencies.GetById(currencyId);
 
                 if (_tradableData.canBuy)
                 {

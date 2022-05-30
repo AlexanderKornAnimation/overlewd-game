@@ -328,7 +328,7 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
+                    var animation = GameData.animations.GetById(replica.cutInAnimationId);
                     cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
                     cutInAnimation.Initialize(animation);
                 }
@@ -350,7 +350,7 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    var animation = GameData.GetAnimationById(replica.emotionAnimationId.Value);
+                    var animation = GameData.animations.GetById(replica.emotionAnimationId);
                     emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
                     emotionAnimation.Initialize(animation);
                 }
@@ -434,7 +434,7 @@ namespace Overlewd
             //main sound
             if (replica.mainSoundId.HasValue)
             {
-                var mainSoundData = GameData.GetSoundById(replica.mainSoundId.Value);
+                var mainSoundData = GameData.sounds.GetById(replica.mainSoundId);
                 if (mainSoundData.eventPath != mainSound?.path)
                 {
                     mainSound?.Stop();
@@ -450,7 +450,7 @@ namespace Overlewd
             //cutIn sound
             if (replica.cutInSoundId.HasValue)
             {
-                var cutInSoundData = GameData.GetSoundById(replica.cutInSoundId.Value);
+                var cutInSoundData = GameData.sounds.GetById(replica.cutInSoundId);
                 if (cutInSoundData.eventPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
@@ -470,7 +470,7 @@ namespace Overlewd
             //replica sound
             if (replica.replicaSoundId.HasValue)
             {
-                var replicaSoundData = GameData.GetSoundById(replica.replicaSoundId.Value);
+                var replicaSoundData = GameData.sounds.GetById(replica.replicaSoundId);
                 if (replicaSoundData.eventPath != replicaSound?.path)
                 {
                     replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);

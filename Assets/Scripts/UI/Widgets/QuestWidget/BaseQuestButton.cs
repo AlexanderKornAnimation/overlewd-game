@@ -8,9 +8,12 @@ namespace Overlewd
     {
         public abstract class BaseQuestButton : MonoBehaviour
         {
+            public int questId { get; set; }
+            public AdminBRO.QuestItem questData =>
+                GameData.quests.GetById(questId);
+
             protected TextMeshProUGUI title;
             protected Button button;
-            public AdminBRO.QuestItem questData { get; set; }
 
             private void Awake()
             {

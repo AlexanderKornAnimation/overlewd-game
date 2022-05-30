@@ -74,7 +74,7 @@ namespace Overlewd
 
                     if (firstReplica.emotionAnimationId.HasValue)
                     {
-                        var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
+                        var animation = GameData.animations.GetById(firstReplica.emotionAnimationId);
                         emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
                         emotionAnimation.Initialize(animation);
                     }
@@ -126,6 +126,6 @@ namespace Overlewd
     {
         public int? dialogId;
         public AdminBRO.Dialog dialogData =>
-            dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+            GameData.dialogs.GetById(dialogId);
     }
 }

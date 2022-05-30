@@ -16,7 +16,7 @@ namespace Overlewd
                 GameData.events.GetEventById(eventId);
             public int questId { get; set; }
             public AdminBRO.QuestItem questData =>
-                GameData.GetQuestById(questId);
+                GameData.quests.GetById(questId);
 
             private Transform canvas;
             private bool canvasActive = true;

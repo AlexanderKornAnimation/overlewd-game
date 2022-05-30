@@ -91,7 +91,7 @@ namespace Overlewd
 	{
 		public int? battleId { get; set; }
 		public AdminBRO.Battle battleData =>
-			battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+			GameData.battles.GetById(battleId);
 	}
 
 	public class BattleManagerInData

@@ -23,74 +23,22 @@ namespace Overlewd
     public static class GameData
     {
         public static bool progressMode { get; set; } = false;
-
-        public static AdminBRO.PlayerInfo playerInfo { get; set; }
-
-        public static int GetCurencyCatEarsCount()
-        {
-            var currency = GetCurencyCatEars();
-            var walletCurrency = playerInfo.wallet.Find(item => item.currency.id == currency.id);
-            return walletCurrency?.amount ?? 0;
-        }
-
-        public static List<AdminBRO.QuestItem> quests { get; set; } = new List<AdminBRO.QuestItem>();
-        public static AdminBRO.QuestItem GetQuestById(int id)
-        {
-            return quests.Find(q => q.id == id);
-        }
-
-        public static List<AdminBRO.CurrencyItem> currenies { get; set; }
-        public static AdminBRO.CurrencyItem GetCurrencyById(int id)
-        {
-            return currenies.Find(c => c.id == id);
-        }
-        public static AdminBRO.CurrencyItem GetCurencyCatEars()
-        {
-            return currenies.Find(c => c.name == "Cat Ears");
-        }
-
-        public static List<AdminBRO.Dialog> dialogs { get; set; } = new List<AdminBRO.Dialog>();
-        public static AdminBRO.Dialog GetDialogById(int id)
-        {
-            return dialogs.Find(d => d.id == id);
-        }
-
-        public static List<AdminBRO.Battle> battles { get; set; } = new List<AdminBRO.Battle>();
-        public static AdminBRO.Battle GetBattleById(int id)
-        {
-            return battles.Find(d => d.id == id);
-        }
-
-        public static List<AdminBRO.Animation> animations { get; set; } = new List<AdminBRO.Animation>();
-        public static AdminBRO.Animation GetAnimationById(int id)
-        {
-            return animations.Find(a => a.id == id);
-        }
-
-        public static List<AdminBRO.Sound> sounds { get; set; } = new List<AdminBRO.Sound>();
-        public static AdminBRO.Sound GetSoundById(int id)
-        {
-            return sounds.Find(s => s.id == id);
-        }
-
-        public static List<AdminBRO.ChapterMap> chapterMaps { get; set; } = new List<AdminBRO.ChapterMap>();
-        public static AdminBRO.ChapterMap GetChapterMapById(int id)
-        {
-            return chapterMaps.Find(cm => cm.id == id);
-        }
-
-        public static List<AdminBRO.Equipment> equipment { get; set; } = new List<AdminBRO.Equipment>();
-        public static AdminBRO.Equipment GetEquipmentById(int id)
-        {
-            return equipment.Find(eq => eq.id == id);
-        }
-
+        public static Quests quests { get; } = new Quests();
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
         public static Buildings buildings { get; } = new Buildings();
         public static Characters characters { get; } = new Characters();
+        public static Equipment equipment { get; } = new Equipment();
         public static Events events { get; } = new Events();
         public static Markets markets { get; } = new Markets();
+        public static Currencies currencies { get; } = new Currencies();
+        public static Player player { get; } = new Player();
+        public static Dialogs dialogs { get; } = new Dialogs();
+        public static Battles battles { get; } = new Battles();
+        public static Animations animations { get; } = new Animations();
+        public static Sounds sounds { get; } = new Sounds();
+        public static ChapterMaps chapterMaps { get; } = new ChapterMaps();
+        public static Matriarchs matriarchs { get; } = new Matriarchs();
     }
 
     //ftue
@@ -199,6 +147,17 @@ namespace Overlewd
                 });
         }
 
+        public async Task<int> MunicipalityTimeLeft()
+        {
+            var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
+            return timeLeft.timeLeft;
+        }
+
+        public async Task MunicipalityCollect()
+        {
+            await AdminBRO.municipalityCollectAsync();
+        }
+
         public async Task Reset()
         {
             await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
@@ -234,9 +193,12 @@ namespace Overlewd
     public class Characters
     {
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
-
-        public async Task Get() =>
+       
+        public async Task Get()
+        {
             characters = await AdminBRO.charactersAsync();
+        }
+
         public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
         public AdminBRO.Character GetByClass(string chClass) => 
@@ -294,6 +256,20 @@ namespace Overlewd
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
+    }
+
+    //equipment
+    public class Equipment
+    {
+        public List<AdminBRO.Equipment> equipment { get; private set; } = new List<AdminBRO.Equipment>();
+
+        public async Task Get()
+        {
+            equipment = await AdminBRO.equipmentAsync();
+        }
+
+        public AdminBRO.Equipment GetById(int? id) =>
+            equipment.Find(eq => eq.id == id);
     }
 
     //events
@@ -355,7 +331,7 @@ namespace Overlewd
                 return;
 
             await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
-            GameData.playerInfo = await AdminBRO.meAsync();
+            await GameData.player.Get();
 
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
@@ -363,5 +339,160 @@ namespace Overlewd
                     type = GameDataEvent.Type.BuyTradable
                 });
         }
+    }
+
+    //quests
+    public class Quests
+    {
+        public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
+
+        public async Task Get()
+        {
+            quests = await AdminBRO.questsAsync();
+        }
+
+        public AdminBRO.QuestItem GetById(int? id) =>
+            quests.Find(q => q.id == id);
+
+        public async void ClaimReward(int? id)
+        {
+            var cr_struct = await AdminBRO.questClaimRewardAsync(id.Value);
+        }
+    }
+    
+    //currencies
+    public class Currencies
+    {
+        public List<AdminBRO.CurrencyItem> currencies { get; private set; } = new List<AdminBRO.CurrencyItem>();
+
+        public async Task Get()
+        {
+            currencies = await AdminBRO.currenciesAsync();
+        }
+
+        public AdminBRO.CurrencyItem GetById(int? id) =>
+            currencies.Find(c => c.id == id);
+        public AdminBRO.CurrencyItem CatEars =>
+            currencies.Find(c => c.name == "Cat Ears");
+    }
+
+    //player
+    public class Player
+    {
+        public AdminBRO.PlayerInfo info { get; private set; }
+
+        public async Task Get()
+        {
+            info = await AdminBRO.meAsync();
+            var locale = await AdminBRO.localizationAsync("en");
+        }
+
+        public AdminBRO.WalletItem CatEars =>
+            info.wallet.Find(item => item.currency.id == GameData.currencies.CatEars.id);
+
+        public bool CanBuy(List<AdminBRO.PriceItem> price)
+        {
+            foreach (var priceItem in price)
+            {
+                var walletCurrency = info.wallet.Find(item => item.currency.id == priceItem.currencyId);
+                if (walletCurrency == null)
+                {
+                    return false;
+                }
+                if (walletCurrency.amount < priceItem.amount)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    //dialogs
+    public class Dialogs
+    {
+        public static List<AdminBRO.Dialog> dialogs { get; private set; } = new List<AdminBRO.Dialog>();
+
+        public async Task Get()
+        {
+            dialogs = await AdminBRO.dialogsAsync();
+        }
+
+        public AdminBRO.Dialog GetById(int? id) =>
+            dialogs.Find(d => d.id == id);
+    }
+
+    //battles
+    public class Battles
+    {
+        public List<AdminBRO.Battle> battles { get; private set; } = new List<AdminBRO.Battle>();
+
+        public async Task Get()
+        {
+            battles = await AdminBRO.battlesAsync();
+        }
+
+        public AdminBRO.Battle GetById(int? id) =>
+            battles.Find(d => d.id == id);
+    }
+
+    //animations
+    public class Animations
+    {
+        public List<AdminBRO.Animation> animations { get; private set; } = new List<AdminBRO.Animation>();
+
+        public async Task Get()
+        {
+            animations = await AdminBRO.animationsAsync();
+        }
+
+        public AdminBRO.Animation GetById(int? id) =>
+            animations.Find(a => a.id == id);
+    }
+
+    //sounds
+    public class Sounds
+    {
+        public List<AdminBRO.Sound> sounds { get; private set; } = new List<AdminBRO.Sound>();
+
+        public async Task Get()
+        {
+            sounds = await AdminBRO.soundsAsync();
+        }
+
+        public AdminBRO.Sound GetById(int? id) =>
+            sounds.Find(s => s.id == id);
+    }
+
+    //chapterMaps
+    public class ChapterMaps
+    {
+        public List<AdminBRO.ChapterMap> chapterMaps { get; private set; } = new List<AdminBRO.ChapterMap>();
+
+        public async Task Get()
+        {
+            chapterMaps = await AdminBRO.chapterMapsAsync();
+        }
+
+        public AdminBRO.ChapterMap GetById(int? id) =>
+            chapterMaps.Find(cm => cm.id == id);
+    }
+
+    //matriarchs
+    public class Matriarchs
+    {
+        public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
+        public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
+
+        public async Task Get()
+        {
+            matriarchs = await AdminBRO.matriarchsAsync();
+            memories = await AdminBRO.memoriesAsync();
+        }
+
+        public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>
+            matriarchs.Find(m => m.id == id);
+        public AdminBRO.MemoryItem GetMemoryById(int? id) =>
+            memories.Find(m => m.id == id);
     }
 }

@@ -211,37 +211,37 @@ namespace Overlewd
 
             await AdminBRO.initAsync();
 
-            GameData.playerInfo = await AdminBRO.meAsync();
+            await GameData.player.Get();
 
-            var locale = await AdminBRO.localizationAsync("en");
-
-            GameData.currenies = await AdminBRO.currenciesAsync();
+            await GameData.currencies.Get();
 
             await GameData.markets.Get();
 
             await GameData.events.Get();
 
-            GameData.quests = await AdminBRO.questsAsync();
+            await GameData.quests.Get();
 
-            GameData.dialogs = await AdminBRO.dialogsAsync();
+            await GameData.dialogs.Get();
 
-            GameData.battles = await AdminBRO.battlesAsync();
+            await GameData.battles.Get();
 
             await GameData.ftue.Get();
 
-            GameData.animations = await AdminBRO.animationsAsync();
+            await GameData.animations.Get();
 
-            GameData.sounds = await AdminBRO.soundsAsync();
+            await GameData.sounds.Get();
 
-            GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
+            await GameData.chapterMaps.Get();
 
             await GameData.buildings.Get();
 
             await GameData.characters.Get();
 
-            GameData.equipment = await AdminBRO.equipmentAsync();
+            await GameData.equipment.Get();
 
             await GameData.gacha.Get();
+
+            await GameData.matriarchs.Get();
 
             SetDownloadBarProgress(0.3f);
 

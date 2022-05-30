@@ -41,11 +41,11 @@ namespace Overlewd
                 return;
             }
 
-            if (!eventChapterData.chapterMapId.HasValue)
+            var mapData = GameData.chapterMaps.GetById(eventChapterData.chapterMapId);
+            if (mapData == null)
             {
                 return;
             }
-            var mapData = GameData.GetChapterMapById(eventChapterData.chapterMapId.Value);
             chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
 
             mapButton = NSEventMapScreen.MapButton.GetInstance(chapterMap.transform.Find("eventMap"));

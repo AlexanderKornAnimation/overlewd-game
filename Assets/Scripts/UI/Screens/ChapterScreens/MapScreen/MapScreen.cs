@@ -55,9 +55,9 @@ namespace Overlewd
 
             if (GameData.ftue.mapChapter != null)
             {
-                if (GameData.ftue.mapChapter.chapterMapId.HasValue)
+                var mapData = GameData.chapterMaps.GetById(GameData.ftue.mapChapter.chapterMapId);
+                if (mapData != null)
                 {
-                    var mapData = GameData.GetChapterMapById(GameData.ftue.mapChapter.chapterMapId.Value);
                     chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
 
                     foreach (var stageId in GameData.ftue.mapChapter.stages)

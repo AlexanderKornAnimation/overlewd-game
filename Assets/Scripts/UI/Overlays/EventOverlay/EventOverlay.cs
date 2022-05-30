@@ -92,7 +92,7 @@ namespace Overlewd
             eventButtonText[tabId].text = eventData.name;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
-            foreach (var quest in GameData.quests)
+            foreach (var quest in GameData.quests.quests)
             {
                 if (quest.eventId.HasValue)
                 {
