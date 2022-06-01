@@ -52,6 +52,11 @@ namespace Overlewd
         private TextMeshProUGUI marketButton_Title;
         private Image marketButton_Icon;
 
+        private Button laboratoryButton;
+        private TextMeshProUGUI laboratory_Markers;
+        private TextMeshProUGUI laboratory_Title;
+        private Image laboratoryButton_Icon;
+
         private Button forgeButton;
         private TextMeshProUGUI forgeButton_Markers;
         private TextMeshProUGUI forgeButton_Title;
@@ -114,11 +119,20 @@ namespace Overlewd
             marketButton_Title = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             marketButton_Icon = marketButton.transform.Find("Icon").GetComponent<Image>();
 
+            laboratoryButton = canvas.Find("LaboratoryButton").GetComponent<Button>();
+            laboratoryButton.onClick.AddListener(LaboratoryButtonClick);
+            laboratory_Markers = laboratoryButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
+            laboratory_Title = laboratoryButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            laboratoryButton_Icon = laboratoryButton.transform.Find("Icon").GetComponent<Image>();
+            
             forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
             forgeButton.onClick.AddListener(ForgeButtonClick);
             forgeButton_Markers = forgeButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
+            
+            UITools.DisableButton(overlordButton);
+            UITools.DisableButton(forgeButton);
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -226,6 +240,12 @@ namespace Overlewd
                 }).RunShowScreenProcess();
         }
 
+        private void LaboratoryButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<LaboratoryScreen>();
+        }
+        
         private void ForgeButtonClick()
         {
             // UIManager.ShowScreen<ForgeScreen>();

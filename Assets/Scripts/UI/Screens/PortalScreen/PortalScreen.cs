@@ -55,6 +55,7 @@ namespace Overlewd
 
                 contents[i] = bannersBack.Find(buttonsNames[i] + "Content").gameObject;
             }
+            
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -211,7 +212,6 @@ namespace Overlewd
         
         private void EnterTab(int buttonId)
         {
- 
             activeTabId = buttonId;
             pressedButtons[buttonId].SetActive(true);
             contents[buttonId].SetActive(true);

@@ -20,6 +20,8 @@ namespace Overlewd
 
                 craftInProgressNotification = notificationsGrid.Find("CraftInProgressNotification");
                 craftAvailableNotification = notificationsGrid.Find("CraftAvailableNotification");
+
+                UITools.DisableButton(button);
             }
 
             protected override void ButtonClick()

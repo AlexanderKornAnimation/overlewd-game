@@ -96,7 +96,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (inputData == null)
             {
-                UIManager.ShowScreen<BattleGirlScreen>();
+                UIManager.ShowScreen<TeamEditScreen>();
             }
             else
             {

@@ -20,6 +20,7 @@ namespace Overlewd
                 base.Awake();
                 
                 buyButton = content.Find("BuyButton").GetComponent<Button>();
+                buyButton.onClick.AddListener(BuyButtonClick);
                 buyButtonText = buyButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
                 timer = content.Find("Timer").Find("Time").GetComponent<TextMeshProUGUI>();
 
@@ -37,6 +38,16 @@ namespace Overlewd
             protected virtual void Customize()
             {
 
+            }
+
+            public void BuyButtonClick()
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                UIManager.MakeScreen<SummoningScreen>().
+                    SetData(new SummoningScreenInData
+                {
+                    tabType = gachaData.tabType
+                }).RunShowScreenProcess();
             }
             
             public static TabStepwise GetInstance(Transform parent)

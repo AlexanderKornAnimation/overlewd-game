@@ -9,44 +9,46 @@ namespace Overlewd
 {
     public class HaremScreen : BaseFullScreenParent<HaremScreenInData>
     {
-        protected Button backButton;
+        private Button backButton;
+        private TextMeshProUGUI backButtonText;
 
-        protected Button ulviButton;
-        protected Image ulviGirl;
-        protected Image ulviBuff;
-        protected TextMeshProUGUI ulviDescription;
-        protected TextMeshProUGUI ulviName;
+        private Button ulviButton;
+        private Image ulviGirl;
+        private Image ulviBuff;
+        private TextMeshProUGUI ulviDescription;
+        private TextMeshProUGUI ulviName;
 
-        protected Button adrielButton;
-        protected Image adrielGirl;
-        protected Image adrielBuff;
-        protected TextMeshProUGUI adrielDescription;
-        protected TextMeshProUGUI adrielName;
-        protected Transform adrielNotActive;
+        private Button adrielButton;
+        private Image adrielGirl;
+        private Image adrielBuff;
+        private TextMeshProUGUI adrielDescription;
+        private TextMeshProUGUI adrielName;
+        private Transform adrielNotActive;
 
-        protected Button ingieButton;
-        protected TextMeshProUGUI ingieName;
-        protected Transform ingieNotActive;
+        private Button ingieButton;
+        private TextMeshProUGUI ingieName;
+        private Transform ingieNotActive;
 
-        protected Button fayeButton;
-        protected TextMeshProUGUI fayeName;
-        protected Transform fayeNotActive;
+        private Button fayeButton;
+        private TextMeshProUGUI fayeName;
+        private Transform fayeNotActive;
 
-        protected Button liliButton;
-        protected TextMeshProUGUI liliName;
-        protected Transform liliNotActive;
+        private Button liliButton;
+        private TextMeshProUGUI liliName;
+        private Transform liliNotActive;
 
-        protected Button battleGirlsButton;
-        protected Image battleGirlsGirl;
-        protected TextMeshProUGUI battleGirlsTitle;
+        private Button battleGirlsButton;
+        private Image battleGirlsGirl;
+        private TextMeshProUGUI battleGirlsTitle;
 
-        protected virtual void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/HaremScreen/Harem", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButtonText = backButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             backButton.onClick.AddListener(BackButtonClick);
 
             ulviButton = canvas.Find("UlviButton").GetComponent<Button>();
@@ -87,11 +89,18 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-
+            if (inputData?.prevScreenInData != null)
+            {
+                if (inputData.prevScreenInData.IsType<MapScreenInData>() || inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                {
+                    backButtonText.text = "Back to\nthe Map";
+                }
+            }
+            
             await Task.CompletedTask;
         }
 
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
@@ -124,7 +133,7 @@ namespace Overlewd
             }
         }
 
-        protected virtual void UlviButtonClick()
+        private void UlviButtonClick()
         {
             if (inputData == null)
             {
@@ -143,24 +152,24 @@ namespace Overlewd
             }
         }
 
-        protected virtual void AdrielButtonClick()
+        private void AdrielButtonClick()
         {
             // UIManager.ShowScreen<GirlScreen>();
         }
 
-        protected virtual void IngieButtonClick()
+        private void IngieButtonClick()
         {
         }
 
-        protected virtual void FayeButtonClick()
+        private void FayeButtonClick()
         {
         }
 
-        protected virtual void LiliButtonClick()
+        private void LiliButtonClick()
         {
         }
 
-        protected virtual void BattleGirlsButtonClick()
+        private void BattleGirlsButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (inputData == null)
