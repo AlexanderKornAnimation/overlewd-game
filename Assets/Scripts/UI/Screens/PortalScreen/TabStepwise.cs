@@ -13,7 +13,7 @@ namespace Overlewd
             private Button buyButton;
             private TextMeshProUGUI buyButtonText;
             private TextMeshProUGUI timer;
-            private List<GameObject> steps = new List<GameObject>(11);
+            private List<Transform> steps = new List<Transform>();
 
             protected override void Awake()
             {
@@ -23,9 +23,9 @@ namespace Overlewd
                 buyButtonText = buyButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
                 timer = content.Find("Timer").Find("Time").GetComponent<TextMeshProUGUI>();
 
-                for (int i = 1; i < steps.Count; i++)
+                for (int i = 0; i < 10; i++)
                 {
-                    steps.Add(content.Find("Steps").Find($"Step{i}").gameObject);
+                    steps.Add(content.Find("Steps").Find($"Step{i + 1}"));
                 }
             }
 

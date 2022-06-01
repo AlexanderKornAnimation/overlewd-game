@@ -722,7 +722,7 @@ namespace Overlewd
             public string fullScreenPersIcon;
             public string name;
             public string characterClass;
-            public List<int> animations;
+            public List<Animation> animations;
             public int? level;
             public string rarity;
             public List<int> equipment;
@@ -739,6 +739,12 @@ namespace Overlewd
             public float? mana;
             public int? sexSceneId;
             public string key;
+
+            public class Animation
+            {
+                public string name;
+                public int? animation;
+            }
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -1418,8 +1424,7 @@ namespace Overlewd
             public int? order;
             public int? paramAge;
             public string paramZodiac;
-            public string paramLeaderTip;
-            public string paramType;
+            public int? seduceSexSceneId;
         }
 
         [Serializable]
