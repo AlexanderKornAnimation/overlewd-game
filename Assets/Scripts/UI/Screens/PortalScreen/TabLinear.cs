@@ -57,7 +57,6 @@ namespace Overlewd
             
             private void BuyTenButtonClick()
             {
-                Debug.Log(gachaData.tabType);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {

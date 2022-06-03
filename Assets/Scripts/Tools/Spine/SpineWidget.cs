@@ -45,10 +45,11 @@ namespace Overlewd
             skeletonGraphic.AnimationState.Event += EventListener;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             Destroy(skeletonDataAsset);
         }
+
 
         private void StartListener(TrackEntry e)
         {

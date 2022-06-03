@@ -1014,7 +1014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4915435770252022563}
   m_Layer: 0
-  m_Name: ItemSoloStartPos
+  m_Name: ItemSingleStartPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1034,11 +1034,11 @@ RectTransform:
   m_Father: {fileID: 5904189696791290489}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 346}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 713}
   m_SizeDelta: {x: 346, y: 346}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4997618654326340459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1749,7 +1749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1138449340524206829}
   m_Layer: 0
-  m_Name: ItemSoloEndPos
+  m_Name: ItemSingleEndPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

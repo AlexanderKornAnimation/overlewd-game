@@ -9,8 +9,8 @@ namespace Overlewd
 {
     public class SummoningScreen : BaseFullScreenParent<SummoningScreenInData>
     {
-        private List<NSSummoningScreen.Shard> shards = new List<NSSummoningScreen.Shard>();
-        
+        private List<NSSummoningScreen.Item> items = new List<NSSummoningScreen.Item>();
+
         private Button haremButton;
         private TextMeshProUGUI haremButtonText;
         private Button overlordButton;
@@ -25,50 +25,63 @@ namespace Overlewd
             canvas = screenInst.transform.Find("Canvas");
             overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
             overlordButton.onClick.AddListener(OverlordButtonClick);
-            
+
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButtonText = haremButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             haremButton.onClick.AddListener(HaremButtonClick);
-            
+
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             portalButtonText = portalButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             portalButton.onClick.AddListener(PortalButtonClick);
-            
+
             UITools.DisableButton(overlordButton);
+        }
+
+        private NSSummoningScreen.Item GetItem(Transform pos)
+        {
+            return inputData.tabType switch
+            {
+                AdminBRO.GachItem.TabType_CharactersEquipment => NSSummoningScreen.Equip.GetInsance(pos),
+                AdminBRO.GachItem.TabType_OverlordEquipment => NSSummoningScreen.Equip.GetInsance(pos),
+                AdminBRO.GachItem.TabType_Matriachs => NSSummoningScreen.BattleGirls.GetInsance(pos),
+                AdminBRO.GachItem.TabType_Shards => NSSummoningScreen.Shard.GetInstance(pos),
+                _ => null
+            };
         }
 
         public override async Task AfterShowAsync()
         {
-            Debug.Log(inputData.tabType);
             if (inputData.isTen)
             {
-                var itemStartPos = canvas.Find("ItemStartPositions");
-                var itemEndPos = canvas.Find("ItemEndPositions");
-            
+                var itemsStartPos = canvas.Find("ItemStartPositions");
+                var itemsEndPos = canvas.Find("ItemEndPositions");
+
                 for (int i = 1; i <= 10; i++)
                 {
-                    var startPos = itemStartPos.Find($"Item{i}");
-                    var endPos = itemEndPos.Find($"Item{i}").position;
-                    var shard = NSSummoningScreen.Shard.GetInstance(startPos);
-                
-                    shard.endPos = endPos;
-                    shard.tabType = inputData.tabType;
-                    await shard.Show();
-                    shards.Add(shard);
+                    var startPos = itemsStartPos.Find($"Item{i}");
+                    var endPos = itemsEndPos.Find($"Item{i}").position;
+
+                    var item = GetItem(startPos);
+                    item.endPos = endPos;
+                    item.tabType = inputData.tabType;
+
+                    await item.Show();
+                    items.Add(item);
                 }
             }
             else
             {
-                var itemSoloStartPos = canvas.Find("ItemSoloStartPos");
-                var itemSoloEndPos = canvas.Find("ItemSoloEndPos").position;
+                var itemSindgleStartPos = canvas.Find("ItemSingleStartPos");
+                var itemSingleEndPos = canvas.Find("ItemSingleEndPos").position;
 
-                var shard = NSSummoningScreen.Shard.GetInstance(itemSoloStartPos);
-                shard.endPos = itemSoloEndPos;
-                shard.tabType = inputData.tabType;
-                await shard.Show();
-                shards.Add(shard);
+                var item = GetItem(itemSindgleStartPos);
+                item.endPos = itemSingleEndPos;
+                item.tabType = inputData.tabType;
+
+                await item.Show();
+                items.Add(item);
             }
-            
+
             await Task.CompletedTask;
         }
 
@@ -103,12 +116,10 @@ namespace Overlewd
 
         private void HaremButtonClick()
         {
-            Debug.Log("harem");
-            
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
-        
+
         private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -122,7 +133,7 @@ namespace Overlewd
                         AdminBRO.GachItem.TabType_CharactersEquipment => PortalScreenInData.battleGirlsEquipButtonId,
                         AdminBRO.GachItem.TabType_Matriachs => PortalScreenInData.battleGirlsButtonId,
                         AdminBRO.GachItem.TabType_Shards => PortalScreenInData.shardsButtonId,
-                        _ => 0
+                        _ => PortalScreenInData.battleGirlsButtonId
                     }
                 })
                 .RunShowScreenProcess();

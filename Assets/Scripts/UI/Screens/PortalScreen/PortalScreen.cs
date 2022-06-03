@@ -91,23 +91,14 @@ namespace Overlewd
         {
             foreach (var gacha in GameData.gacha.items)
             {
-                var buttonId = gacha.tabType switch
-                {
-                    AdminBRO.GachItem.TabType_Matriachs => buttonBattleGirls,
-                    AdminBRO.GachItem.TabType_CharactersEquipment => buttonBattleGirlsEquip,
-                    AdminBRO.GachItem.TabType_OverlordEquipment => buttonOverlordEquip,
-                    AdminBRO.GachItem.TabType_Shards => buttonShards,
-                    _ => buttonBattleGirls
-                };
-                
                 switch (gacha.tabType)
                 {
                     case AdminBRO.GachItem.TabType_Matriachs:
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonId].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonId].transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonBattleGirls].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonBattleGirls].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
@@ -118,8 +109,8 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonId].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonId].transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonBattleGirlsEquip].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonBattleGirlsEquip].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
@@ -130,8 +121,8 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonId].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonId].transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonOverlordEquip].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonOverlordEquip].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
@@ -142,8 +133,8 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonId].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonId].transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonShards].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonShards].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
