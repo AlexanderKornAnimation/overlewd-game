@@ -35,49 +35,19 @@ namespace Overlewd
         private SkeletonDataAsset skeletonDataAsset;
         private SkeletonGraphic skeletonGraphic;
 
-        private void OnDestroy()
-        {
-            Destroy(skeletonDataAsset);
-        }
-
-        private void Initialize(string skeletonDataPath, bool multipleRenderCanvas, string assetBundleId)
-        {
-            skeletonDataAsset = String.IsNullOrEmpty(assetBundleId) ?
-                ResourceManager.InstantiateAsset<SkeletonDataAsset>(skeletonDataPath) :
-                ResourceManager.InstantiateRemoteAsset<SkeletonDataAsset>(skeletonDataPath, assetBundleId);
-            
-            if (skeletonDataAsset == null)
-                return;
-            
-            skeletonGraphic = gameObject.AddComponent<SkeletonGraphic>();
-            skeletonGraphic.allowMultipleCanvasRenderers = multipleRenderCanvas;
-            skeletonGraphic.skeletonDataAsset = skeletonDataAsset;
-
-            skeletonGraphic.Initialize(false);
-
-            skeletonGraphic.AnimationState.Start += StartListener;
-            skeletonGraphic.AnimationState.Complete += CompleteListener;
-            skeletonGraphic.AnimationState.Event += EventListener;
-        }
-
-        private void Initialize()
+        void Awake()
         {
             skeletonGraphic = GetComponent<SkeletonGraphic>();
             skeletonGraphic.Initialize(false);
-            
+
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
             skeletonGraphic.AnimationState.Event += EventListener;
         }
 
-        public void Initialize(string skeletonDataPath, bool multipleRenderCanvas = false)
+        void OnDestroy()
         {
-            Initialize(skeletonDataPath, multipleRenderCanvas, null);
-        }
-        
-        public void Initialize(string skeletonDataPath, string assetBundleId, bool multipleRenderCanvas = false)
-        {
-            Initialize(skeletonDataPath, multipleRenderCanvas, assetBundleId);
+            Destroy(skeletonDataAsset);
         }
 
         private void StartListener(TrackEntry e)
@@ -182,40 +152,22 @@ namespace Overlewd
             Destroy(obj?.GetComponent<BoneFollowerGraphic>());
         }
         
-        //old
-        public static SpineWidget GetInstance(Transform parent)
-        {
-            var spineGO = new GameObject(nameof(SpineWidget));
-            var spineGO_rt = spineGO.AddComponent<RectTransform>();
-            spineGO_rt.SetParent(parent, false);
-            return spineGO.AddComponent<SpineWidget>();
-        }   
-        
-        //inst local prefab
         public static SpineWidget GetInstance(string prefabPath, Transform parent)
         {
             var inst = ResourceManager.InstantiateAsset<GameObject>(prefabPath, parent);
-            var sw = inst?.AddComponent<SpineWidget>();
-            sw?.Initialize();
-            return sw;
+            return inst?.AddComponent<SpineWidget>();
         }
 
-        //inst local from GameObject
         public static SpineWidget GetInstance(GameObject obj, Transform parent)
         {
             var inst = Instantiate(obj, parent);
-            var sw = inst.AddComponent<SpineWidget>();
-            sw.Initialize();
-            return sw;
+            return inst?.AddComponent<SpineWidget>();
         }
 
-        //inst remote prefab
         public static SpineWidget GetInstance(string prefabPath, string assetBundleId, Transform parent)
         {
             var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(prefabPath, assetBundleId, parent);
-            var sw = inst?.AddComponent<SpineWidget>();
-            sw?.Initialize();
-            return sw;
+            return inst?.AddComponent<SpineWidget>();
         }
     }
 }

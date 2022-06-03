@@ -20,19 +20,8 @@ namespace Overlewd
 
             foreach (var layerData in animationData.layouts)
             {
-                SpineWidget newLayer;
-                var ext = layerData.animationPath.Split('.').Last();
-                
-                if (ext == "asset")
-                {
-                    newLayer = SpineWidget.GetInstance(transform);
-                    newLayer.Initialize(layerData.animationPath, layerData.assetBundleId);
-                }
-                else
-                {
-                    newLayer = SpineWidget.GetInstance(layerData.animationPath, layerData.assetBundleId, transform);
-                }
-
+                var newLayer = SpineWidget.GetInstance(layerData.animationPath,
+                    layerData.assetBundleId, transform);
                 newLayer?.PlayAnimation(layerData.animationName, true);
                 if (newLayer != null) layers.Add(newLayer);
             }
