@@ -88,7 +88,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-
+            SoundManager.GetEventInstance(FMODEventPath.Music_SexScreen);
             await Task.CompletedTask;
         }
 
