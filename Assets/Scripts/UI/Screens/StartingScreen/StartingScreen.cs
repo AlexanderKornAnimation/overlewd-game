@@ -92,7 +92,7 @@ namespace Overlewd
             UIManager.MakeScreen<BaseBattleScreen>().
                 SetData(new BaseBattleScreenInData
                 {
-                    battleId = null
+                    battleId = 19
                 }).RunShowScreenProcess();
         }
 

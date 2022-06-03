@@ -12,15 +12,15 @@ namespace Overlewd
         public bool bossLevel;
         public bool fullRandom = false;
 
-        public List<Character> players;
-        public List<Character> enemysWave1;
-        public List<Character> enemysWave2 = null;
-        public List<Character> enemysWave3 = null;
+        public List<CharacterRes> players;
+        public List<CharacterRes> enemysWave1;
+        public List<CharacterRes> enemysWave2 = null;
+        public List<CharacterRes> enemysWave3 = null;
 
         [Range(1, 3)]
         public int maxWave = 1;
 
-        public Character boss = null;
+        public CharacterRes boss = null;
 
         public bool hideAOE = false;
         public bool hidePotions = false;

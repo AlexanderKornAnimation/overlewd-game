@@ -24,6 +24,13 @@ namespace Overlewd
         [Tooltip("selected as target")] public CharController ccOnClick = null;
         public Animator ani;
 
+        public List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        //new init
+        private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
+        private List<AdminBRO.Character> playerTeam => battleScene.GetBattleData().myTeam;
+        private List<AdminBRO.Character> enemyTeam;
+
         public GameObject portraitPrefab; //attach to BM in inspector; "content" is ui spawn point
         public Transform QueueUIContent;
         public GameObject EnemyStats;
@@ -37,7 +44,7 @@ namespace Overlewd
         private int enemyNum = 0, enemyIsDead = 0, charNum = 0, charIsDead = 0;
         private int step = 0; //current characters list step
         private int maxStep = 2; //max count of battle queue, take from character's list
-        private int wave = 1, maxWave = 2; //Wave count
+        private int wave = 0, maxWave = 2; //Wave count
         private int round = 1;
         public delegate void Unselect();
         public Unselect unselect;
@@ -51,20 +58,15 @@ namespace Overlewd
         private bool hideAOE = false;
         private bool notifIsShow = false;
 
-        public List<Battle> battleList; //Battle Settings
-        [Tooltip("Be sure to set the default value before replacing it in battleList")]
-        public Battle battleSettings;
-
-
         private void Start()
         {
             battleScene = FindObjectOfType<BaseBattleScreen>();
 
-            foreach (var bl in battleList)
-                if (bl.battleID == battleScene.GetBattleData()?.ftueStageKey)
-                    battleSettings = bl;
-
-            maxWave = battleSettings.maxWave;
+            enemyTeam = battleScene.GetBattleData().enemyWaves[wave].enemyTeam; //wave 0
+            maxWave = battleScene.GetBattleData().enemyWaves.Count-1;
+            Debug.Log($"Battle ID: {battleData.id}");
+            //Debug.Log($"Find Null key: {characterResList.Find(item => item.key == "osu") == null}");
+            //Debug.Log($"Find Ovl key: {characterResList.Find(item => item.key == "OVERLORD")}");
 
             if (QueueUIContent == null) QueueUIContent = transform.Find("BattleUICanvas/QueueUI/Content");
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
@@ -87,14 +89,16 @@ namespace Overlewd
             potion_mp?.button.onClick.AddListener(UseMPPotion);
             potion_hp?.button.onClick.AddListener(UseHPPotion);
 
-            if (battleSettings.hidePotions)
+            /*if (battleSettings.hidePotions)
             {
                 potion_hp.gameObject.SetActive(false);
                 potion_mp.gameObject.SetActive(false);
-            }
+            }*/
+            if (characterResList == null)
+                characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
 
-            DropCharactersFromList(battleSettings.players, isEnemy: false);     //Create Player Characters
-            DropCharactersFromList(battleSettings.enemysWave1, isEnemy: true);  //Create Enemys Characters
+            DropCharactersFromList(playerTeam, isEnemy: false);
+            DropCharactersFromList(enemyTeam, isEnemy: true);
 
             charControllerList.Sort(SortBySpeed); //Sorting then create portraits
 
@@ -103,8 +107,10 @@ namespace Overlewd
 
             maxStep = charControllerList.Count;
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
-            if (charControllerList[0].isEnemy)
+            if (charControllerList[0].isEnemy) { 
                 battleState = BattleState.ENEMY;
+                StartCoroutine(EnemyAttack1());
+            }
             else
                 battleState = BattleState.PLAYER;
             ccOnSelect = charControllerList[step];
@@ -115,17 +121,22 @@ namespace Overlewd
             yield return new WaitForSeconds(0.01f);
             SetSkillCtrl(ccOnSelect);
             charControllerList[step].Select();
-            if (battleSettings.powerBuff)
-                WinOrLose(wannaWin);
+            //if (battleSettings.powerBuff)
+            //    WinOrLose(wannaWin);
         }
-        void DropCharactersFromList(List<Character> characterList, bool isEnemy)
+        void DropCharactersFromList(List<AdminBRO.Character> characterList, bool isEnemy)
         {
             var orderCount = 3;
+            var k = 1;
             foreach (var c in characterList)
             {
-                var charGO = new GameObject(c.name);
+                var charGO = new GameObject($"{c.name}_{k}");
                 var cc = charGO.AddComponent<CharController>();
-                cc.character = c;
+                cc.broCharacter = c;
+
+                var cRes = characterResList?.Find(item => item.key == c.key);
+                cc.characterRes = cRes == null ? characterResList[2] : cRes;
+
                 charControllerList.Add(cc);
                 cc.bm = this;
                 unselect += cc.UnHiglight;
@@ -147,6 +158,7 @@ namespace Overlewd
                     charNum++;
                 }
                 orderCount--;
+                k++;
             }
         }
 
@@ -166,7 +178,8 @@ namespace Overlewd
                 Destroy(child.gameObject);
             QueueElements.Clear(); //clear list
 
-            var waveList = (wave == 2) ? battleSettings.enemysWave2 : battleSettings.enemysWave3; //select wave
+            var waveList = battleScene.GetBattleData().enemyWaves[wave].enemyTeam;
+
             DropCharactersFromList(waveList, true); //create
             charControllerList.Sort(SortBySpeed);   //sort
             CreatePortraitQueue();                  //drop new portraits with sorting
@@ -186,8 +199,8 @@ namespace Overlewd
             foreach (var cc in charControllerList) //Fill QueueUI characters icons
             {
                 var portraitQ = Instantiate(portraitPrefab, QueueUIContent);
-                portraitQ.name = "Portrait_" + cc.character.name;
-                portraitQ.GetComponent<Image>().sprite = cc.character.ico;
+                portraitQ.name = "Portrait_" + cc.Name;
+                portraitQ.GetComponent<Image>().sprite = cc.characterRes.ico;
                 portraitQ.GetComponent<Button>().onClick.AddListener(cc.Select);
                 if (cc.isEnemy)
                     portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
@@ -195,7 +208,19 @@ namespace Overlewd
             }
         }
 
-
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Z)) ButtonClick(0);
+            if (Input.GetKeyDown(KeyCode.X)) ButtonClick(1);
+            if (Input.GetKeyDown(KeyCode.C) && ccOnClick.isOverlord) ButtonClick(2);
+            if (Input.GetKeyDown(KeyCode.R))
+                foreach (var cc in charControllerList)
+                    if (cc.isEnemy == true && !cc.isDead)
+                    {
+                        cc.health = cc.healthMax;
+                        cc.UpdateUI();
+                    }
+        }
 
         private void ButtonClick(int id)
         {
@@ -242,33 +267,39 @@ namespace Overlewd
 
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Z)) ButtonClick(0);
-            if (Input.GetKeyDown(KeyCode.X)) ButtonClick(1);
-            if (Input.GetKeyDown(KeyCode.C) && ccOnClick.isOverlord) ButtonClick(2);
-            if (Input.GetKeyDown(KeyCode.R))
-                foreach (var cc in charControllerList)
-                    if (cc.isEnemy == true && !cc.isDead)
-                    {
-                        cc.hp = cc.maxHp;
-                        cc.UpdateUI();
-                    }
-        }
 
         IEnumerator EnemyAttack1()
         {
             yield return new WaitForSeconds(0.5f);
             var ct = enemyTargetList.Count;
             ccOnClick = enemyTargetList[Random.Range(0, ct)];
+            ccOnClick.Highlight();
             yield return new WaitForSeconds(0.5f);
 
             ccOnClick.CharPortraitSet(); //Show target stats
             ani.SetTrigger("Enemy");
-            int attackSkill = Random.Range(0, 2);
-            ccOnSelect.Attack(attackSkill, ccOnClick);
-            GameObject vfx = ccOnSelect.skill[attackSkill].vfxOnTarget;
-            ccOnClick.Defence(ccOnSelect, vfx);
+            int id = Random.Range(0, ccOnSelect.skill.Length);
+
+            bool AOE = ccOnSelect.skill[id].attackType == Skill.AttackType.AOE;
+            GameObject vfx = ccOnSelect.skill[id].vfxOnTarget;
+
+            if (AOE)
+            {
+                ccOnClick = null;
+                ccOnSelect.Attack(id, ccOnClick);
+                foreach (var cc in enemyTargetList)
+                {
+                    cc.Defence(ccOnSelect, vfx);
+                    cc.UnHiglight();
+                }
+            }
+            else
+            {
+                ccOnSelect.Attack(id, ccOnClick);
+                ccOnSelect.UnHiglight();
+                ccOnClick.Defence(ccOnSelect, vfx);
+            }
+            
             battleState = BattleState.ANIMATION;
         }
         public void UseMPPotion()
@@ -354,7 +385,7 @@ namespace Overlewd
                 if (battleScene != null)
                     battleScene.BattleDefeat();
                 if (CheckBattleGameData("chapter1", "battle2"))
-                    battleList[1].powerBuff = true;
+                    //battleList[1].powerBuff = true; BUFF ON
                 Debug.Log("LOOSING");
             }
         }
@@ -437,13 +468,13 @@ namespace Overlewd
             BattleNotif("chapter1", "battle5", "potionstutor2");
         }
 
-        private void OnDestroy() { DOTween.Clear(true); } //Destroy DOTween
+        private void OnDestroy() => DOTween.Clear(true); //Destroy DOTween
 
         private int SortBySpeed(CharController a, CharController b)
         {
-            if (a.character.speed < b.character.speed)
+            if (a.broCharacter.speed < b.broCharacter.speed)
                 return 1;
-            else if (a.character.speed > b.character.speed)
+            else if (a.broCharacter.speed > b.broCharacter.speed)
                 return -1;
             else if (a.isEnemy)
                 return 1;
