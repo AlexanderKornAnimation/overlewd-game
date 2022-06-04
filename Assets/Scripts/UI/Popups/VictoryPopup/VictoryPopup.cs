@@ -63,13 +63,13 @@ namespace Overlewd
                 case ("battle4", "chapter1"):
                     UIManager.ShowScreen<CastleScreen>();
                     break;
-       
+
                 default:
-                    if (UIManager.currentScreenInData.prevScreenInData.IsType<MapScreenInData>())
+                    if (inputData.ftueStageId.HasValue)
                     {
                         UIManager.ShowScreen<MapScreen>();
                     }
-                    else if (UIManager.currentScreenInData.prevScreenInData.IsType<EventMapScreenInData>())
+                    else if (inputData.eventStageId.HasValue)
                     {
                         UIManager.ShowScreen<EventMapScreen>();
                     }

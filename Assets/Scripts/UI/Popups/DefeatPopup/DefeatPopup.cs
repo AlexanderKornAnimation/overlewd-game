@@ -104,6 +104,7 @@ namespace Overlewd
                             ftueStageId = GameData.ftue.info.chapter1.GetStageByKey("sex2")?.id
                         }).RunShowScreenProcess();
                     break;
+
                 default:
                     UIManager.MakeScreen<HaremScreen>().
                         SetData(new HaremScreenInData
