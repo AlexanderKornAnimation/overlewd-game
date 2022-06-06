@@ -58,8 +58,8 @@ namespace Overlewd
             [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/Inge"
         };
 
-        private SpineWidgetGroup cutInAnimation;
-        private SpineWidgetGroup emotionAnimation;
+        private SpineScene cutInAnimation;
+        private SpineScene emotionAnimation;
 
         private void Awake()
         {
@@ -328,8 +328,8 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.animations.GetById(replica.cutInAnimationId);
-                    cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                    var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
+                    cutInAnimation = SpineScene.GetInstance(cutInAnimPos);
                     cutInAnimation.Initialize(animation);
                 }
             }
@@ -350,8 +350,8 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    var animation = GameData.animations.GetById(replica.emotionAnimationId);
-                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                    var animation = GameData.animations.GetSceneById(replica.emotionAnimationId);
+                    emotionAnimation = SpineScene.GetInstance(emotionPos);
                     emotionAnimation.Initialize(animation);
                 }
             }

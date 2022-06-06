@@ -33,8 +33,8 @@ namespace Overlewd
 
         private bool isAutoplayButtonPressed = false;
 
-        private SpineWidgetGroup mainAnimation;
-        private SpineWidgetGroup cutInAnimation;
+        private SpineScene mainAnimation;
+        private SpineScene cutInAnimation;
         private FMODEvent mainSound;
         private FMODEvent cutInSound;
         private FMODEvent replicaSound;
@@ -261,10 +261,10 @@ namespace Overlewd
                     Destroy(mainAnimation?.gameObject);
                     mainAnimation = null;
 
-                    var animation = GameData.animations.GetById(replica.mainAnimationId);
+                    var animation = GameData.animations.GetSceneById(replica.mainAnimationId);
                     if (animation != null)
                     {
-                        mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
+                        mainAnimation = SpineScene.GetInstance(mainAnimPos);
                         mainAnimation.Initialize(animation);
                     }
                 }
@@ -285,10 +285,10 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.animations.GetById(replica.cutInAnimationId);
+                    var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
                     if (animation != null)
                     {
-                        cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
+                        cutInAnimation = SpineScene.GetInstance(cutInAnimPos);
                         cutInAnimation.Initialize(animation);
                     }
                 }

@@ -439,15 +439,15 @@ namespace Overlewd
     //animations
     public class Animations
     {
-        public List<AdminBRO.Animation> animations { get; private set; } = new List<AdminBRO.Animation>();
+        public List<AdminBRO.AnimationScene> scenes { get; private set; } = new List<AdminBRO.AnimationScene>();
 
         public async Task Get()
         {
-            animations = await AdminBRO.animationsAsync();
+            scenes = await AdminBRO.animationScenesAsync();
         }
 
-        public AdminBRO.Animation GetById(int? id) =>
-            animations.Find(a => a.id == id);
+        public AdminBRO.AnimationScene GetSceneById(int? id) =>
+            scenes.Find(a => a.id == id);
     }
 
     //sounds

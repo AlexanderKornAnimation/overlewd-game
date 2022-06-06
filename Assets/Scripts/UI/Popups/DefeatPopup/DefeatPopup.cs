@@ -110,7 +110,6 @@ namespace Overlewd
                         SetData(new HaremScreenInData
                     {
                         prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
-                        ftueStageId = UIManager.prevScreenInData.ftueStageId
                     }).RunShowScreenProcess();
                     break;
             }

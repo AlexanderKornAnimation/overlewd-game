@@ -32,7 +32,7 @@ namespace Overlewd
         protected Transform emotionBack;
         protected Transform emotionPos;
 
-        protected SpineWidgetGroup emotionAnimation;
+        protected SpineScene emotionAnimation;
 
         protected virtual void Awake()
         {
@@ -74,8 +74,8 @@ namespace Overlewd
 
                     if (firstReplica.emotionAnimationId.HasValue)
                     {
-                        var animation = GameData.animations.GetById(firstReplica.emotionAnimationId);
-                        emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
+                        var animation = GameData.animations.GetSceneById(firstReplica.emotionAnimationId);
+                        emotionAnimation = SpineScene.GetInstance(emotionPos);
                         emotionAnimation.Initialize(animation);
                     }
                 }

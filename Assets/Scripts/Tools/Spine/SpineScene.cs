@@ -9,12 +9,12 @@ using Spine;
 
 namespace Overlewd
 {
-    public class SpineWidgetGroup : BaseWidget
+    public class SpineScene : BaseWidget
     {
-        public AdminBRO.Animation animationData { get; private set; }
+        public AdminBRO.AnimationScene animationData { get; private set; }
         public List<SpineWidget> layers { get; private set; } = new List<SpineWidget>();
 
-        public void Initialize(AdminBRO.Animation animationData)
+        public void Initialize(AdminBRO.AnimationScene animationData)
         {
             this.animationData = animationData;
 
@@ -43,12 +43,12 @@ namespace Overlewd
             }
         }
 
-        public static SpineWidgetGroup GetInstance(Transform parent)
+        public static SpineScene GetInstance(Transform parent)
         {
-            var groupGO = new GameObject(nameof(SpineWidgetGroup));
+            var groupGO = new GameObject(nameof(SpineScene));
             var groupGO_rt = groupGO.AddComponent<RectTransform>();
             groupGO_rt.SetParent(parent, false);
-            return groupGO.AddComponent<SpineWidgetGroup>();
+            return groupGO.AddComponent<SpineScene>();
         }
     }
 }

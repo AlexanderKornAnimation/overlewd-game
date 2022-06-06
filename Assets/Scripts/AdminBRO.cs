@@ -1132,29 +1132,28 @@ namespace Overlewd
         }
 
         //animations
-        public static async Task<List<Animation>> animationsAsync()
+        public static async Task<List<AnimationScene>> animationScenesAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/animations";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<AnimationScene>>(request?.downloadHandler.text);
             }
         }
 
         [Serializable]
-        public class Animation
+        public class AnimationScene
         {
             public int id;
             public string title;
-            public List<AnimationData> layouts;
-        }
+            public List<LayoutData> layouts;
 
-        [Serializable]
-        public class AnimationData
-        {
-            public string assetBundleId;
-            public string animationPath;
-            public string animationName;
+            public class LayoutData
+            {
+                public string assetBundleId;
+                public string animationPath;
+                public string animationName;
+            }
         }
 
         //sounds
