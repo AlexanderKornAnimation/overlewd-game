@@ -32,10 +32,9 @@ namespace Overlewd
         }
         private List<SpineEventInfo> eventListeners = new List<SpineEventInfo>();
 
-        private SkeletonDataAsset skeletonDataAsset;
         private SkeletonGraphic skeletonGraphic;
 
-        void Awake()
+        private void Initialize()
         {
             skeletonGraphic = GetComponent<SkeletonGraphic>();
             skeletonGraphic.Initialize(false);
@@ -43,11 +42,6 @@ namespace Overlewd
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
             skeletonGraphic.AnimationState.Event += EventListener;
-        }
-
-        private void OnDestroy()
-        {
-            Destroy(skeletonDataAsset);
         }
 
 
@@ -107,7 +101,7 @@ namespace Overlewd
         {
             if (skeletonGraphic == null)
                 return;
-            skeletonGraphic.AnimationState.SetAnimation(0, animationName, loop);
+            skeletonGraphic.AnimationState.SetAnimation(0, animationName.Trim(), loop);
         }
 
         public void Pause()
@@ -156,19 +150,25 @@ namespace Overlewd
         public static SpineWidget GetInstance(string prefabPath, Transform parent)
         {
             var inst = ResourceManager.InstantiateAsset<GameObject>(prefabPath, parent);
-            return inst?.AddComponent<SpineWidget>();
+            var sw = inst?.AddComponent<SpineWidget>();
+            sw?.Initialize();
+            return sw;
         }
 
         public static SpineWidget GetInstance(GameObject obj, Transform parent)
         {
             var inst = Instantiate(obj, parent);
-            return inst?.AddComponent<SpineWidget>();
+            var sw = inst?.AddComponent<SpineWidget>();
+            sw?.Initialize();
+            return sw;
         }
 
         public static SpineWidget GetInstance(string prefabPath, string assetBundleId, Transform parent)
         {
             var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(prefabPath, assetBundleId, parent);
-            return inst?.AddComponent<SpineWidget>();
+            var sw = inst?.AddComponent<SpineWidget>();
+            sw?.Initialize();
+            return sw;
         }
     }
 }
