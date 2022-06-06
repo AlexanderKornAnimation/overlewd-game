@@ -34,7 +34,7 @@ namespace Overlewd
 
         private SkeletonGraphic skeletonGraphic;
 
-        private void Initialize()
+        public void Initialize()
         {
             skeletonGraphic = GetComponent<SkeletonGraphic>();
             skeletonGraphic.Initialize(false);

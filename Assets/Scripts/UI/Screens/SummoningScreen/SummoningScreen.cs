@@ -65,23 +65,31 @@ namespace Overlewd
                     item.endPos = endPos;
                     item.tabType = inputData.tabType;
 
-                    await item.Show();
+                    await item.ShowAsync();
                     items.Add(item);
+                }
+
+                await Task.Delay(1000);
+                foreach (var item in items)
+                {
+                    await item.OpenAsync();
                 }
             }
             else
             {
-                var itemSindgleStartPos = canvas.Find("ItemSingleStartPos");
+                var itemSingleStartPos = canvas.Find("ItemSingleStartPos");
                 var itemSingleEndPos = canvas.Find("ItemSingleEndPos").position;
 
-                var item = GetItem(itemSindgleStartPos);
+                var item = GetItem(itemSingleStartPos);
                 item.endPos = itemSingleEndPos;
                 item.tabType = inputData.tabType;
 
-                await item.Show();
+                await item.ShowAsync();
+                await Task.Delay(1000);
+                await item.OpenAsync();
                 items.Add(item);
             }
-
+            
             await Task.CompletedTask;
         }
 
