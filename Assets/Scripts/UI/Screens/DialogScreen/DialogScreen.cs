@@ -329,8 +329,7 @@ namespace Overlewd
                     cutInAnimation = null;
 
                     var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
-                    cutInAnimation = SpineScene.GetInstance(cutInAnimPos);
-                    cutInAnimation.Initialize(animation);
+                    cutInAnimation = SpineScene.GetInstance(animation, cutInAnimPos);
                 }
             }
             else
@@ -351,8 +350,7 @@ namespace Overlewd
                     emotionAnimation = null;
 
                     var animation = GameData.animations.GetSceneById(replica.emotionAnimationId);
-                    emotionAnimation = SpineScene.GetInstance(emotionPos);
-                    emotionAnimation.Initialize(animation);
+                    emotionAnimation = SpineScene.GetInstance(animation, emotionPos);
                 }
             }
             else

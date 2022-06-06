@@ -256,7 +256,7 @@ namespace Overlewd
         {
             if (replica.mainAnimationId.HasValue)
             {
-                if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
+                if (replica.mainAnimationId.Value != mainAnimation?.sceneData.id)
                 {
                     Destroy(mainAnimation?.gameObject);
                     mainAnimation = null;
@@ -264,8 +264,7 @@ namespace Overlewd
                     var animation = GameData.animations.GetSceneById(replica.mainAnimationId);
                     if (animation != null)
                     {
-                        mainAnimation = SpineScene.GetInstance(mainAnimPos);
-                        mainAnimation.Initialize(animation);
+                        mainAnimation = SpineScene.GetInstance(animation, mainAnimPos);
                     }
                 }
             }
@@ -280,7 +279,7 @@ namespace Overlewd
         {
             if (replica.cutInAnimationId.HasValue)
             {
-                if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
+                if (replica.cutInAnimationId != cutInAnimation?.sceneData.id)
                 {
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
@@ -288,8 +287,7 @@ namespace Overlewd
                     var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
                     if (animation != null)
                     {
-                        cutInAnimation = SpineScene.GetInstance(cutInAnimPos);
-                        cutInAnimation.Initialize(animation);
+                        cutInAnimation = SpineScene.GetInstance(animation, cutInAnimPos);
                     }
                 }
             }

@@ -11,21 +11,8 @@ namespace Overlewd
 {
     public class SpineScene : BaseWidget
     {
-        public AdminBRO.AnimationScene animationData { get; private set; }
+        public AdminBRO.AnimationScene sceneData { get; private set; }
         public List<SpineWidget> layers { get; private set; } = new List<SpineWidget>();
-
-        public void Initialize(AdminBRO.AnimationScene animationData)
-        {
-            this.animationData = animationData;
-
-            foreach (var layerData in animationData.layouts)
-            {
-                var newLayer = SpineWidget.GetInstance(layerData.animationPath,
-                    layerData.assetBundleId, transform);
-                newLayer?.PlayAnimation(layerData.animationName, true);
-                if (newLayer != null) layers.Add(newLayer);
-            }
-        }
 
         public void Play()
         {
@@ -43,12 +30,23 @@ namespace Overlewd
             }
         }
 
-        public static SpineScene GetInstance(Transform parent)
+        public static SpineScene GetInstance(AdminBRO.AnimationScene sceneData, Transform parent)
         {
-            var groupGO = new GameObject(nameof(SpineScene));
-            var groupGO_rt = groupGO.AddComponent<RectTransform>();
-            groupGO_rt.SetParent(parent, false);
-            return groupGO.AddComponent<SpineScene>();
+            var sceneGO = new GameObject(nameof(SpineScene));
+            var sceneGO_rt = sceneGO.AddComponent<RectTransform>();
+            sceneGO_rt.SetParent(parent, false);
+
+            var spineScene = sceneGO.AddComponent<SpineScene>();
+            spineScene.sceneData = sceneData;
+            foreach (var layerData in sceneData.layouts)
+            {
+                var newLayer = SpineWidget.GetInstance(layerData.animationPath,
+                    layerData.assetBundleId, sceneGO_rt);
+                newLayer?.PlayAnimation(layerData.animationName, true);
+                if (newLayer != null) spineScene.layers.Add(newLayer);
+            }
+
+            return spineScene;
         }
     }
 }

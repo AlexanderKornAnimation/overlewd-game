@@ -75,8 +75,7 @@ namespace Overlewd
                     if (firstReplica.emotionAnimationId.HasValue)
                     {
                         var animation = GameData.animations.GetSceneById(firstReplica.emotionAnimationId);
-                        emotionAnimation = SpineScene.GetInstance(emotionPos);
-                        emotionAnimation.Initialize(animation);
+                        emotionAnimation = SpineScene.GetInstance(animation, emotionPos);
                     }
                 }
             }
