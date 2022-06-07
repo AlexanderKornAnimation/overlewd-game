@@ -79,6 +79,9 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
+            if (dialogData == null)
+                return;
+            
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
@@ -100,7 +103,7 @@ namespace Overlewd
         
         private void LeaveScreen()
         {
-            switch (inputData.ftueStageData.ftueState)
+            switch (inputData.ftueStageData?.ftueState)
             {
                 case ("sex1", "chapter1"):
                     UIManager.MakeScreen<DialogScreen>().
@@ -115,9 +118,15 @@ namespace Overlewd
                     {
                         UIManager.ShowScreen<MapScreen>();
                     }
-                    else
+                    else if (inputData.eventStageId.HasValue)
                     {
                         UIManager.ShowScreen<EventMapScreen>();
+                    }
+                    else
+                    {
+                        UIManager.MakeScreen<GirlScreen>().
+                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                            .RunShowScreenProcess();
                     }
                     break;
             }
@@ -126,12 +135,12 @@ namespace Overlewd
         public override async Task BeforeShowDataAsync()
         {
             dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
-            
+
             if (inputData.eventStageId.HasValue)
             {
                 await GameData.events.StageStart(inputData.eventStageId.Value);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.StartStage(inputData.ftueStageId.Value);
             }
@@ -143,7 +152,7 @@ namespace Overlewd
             {
                 await GameData.events.StageEnd(inputData.eventStageId.Value);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageId.Value);
             }
@@ -194,6 +203,12 @@ namespace Overlewd
         private void TextContainerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
+            if (dialogData == null)
+            {
+                LeaveScreen();
+                return;
+            }
+            
             currentReplicaId++;
             if (currentReplicaId < dialogReplicas.Count)
             {

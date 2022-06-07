@@ -32,7 +32,7 @@ namespace Overlewd
         private Image bannerArt;
         private GameObject bannerNotification; 
 
-        private Button seduceButton;
+        private Button sexButton;
         private Button dialogButton;
         private Button portalButton;
         private Button chestButton;
@@ -69,7 +69,7 @@ namespace Overlewd
             bannerArt = bannerButton.GetComponent<Image>();
             bannerNotification = banner.Find("Notification").GetComponent<GameObject>();
 
-            seduceButton = canvas.Find("SeduceButton").GetComponent<Button>();
+            sexButton = canvas.Find("SexButton").GetComponent<Button>();
             dialogButton = canvas.Find("DialogButton").GetComponent<Button>();
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             chestButton = canvas.Find("ChestButton").GetComponent<Button>();
@@ -79,6 +79,8 @@ namespace Overlewd
             portalButton.onClick.AddListener(PortalButtonClick);
             chestButton.onClick.AddListener(ChestButtonClick);
             backButton.onClick.AddListener(BackButtonClick);
+            sexButton.onClick.AddListener(SexButtonClick);
+            dialogButton.onClick.AddListener(DialogButtonClick);
         }
 
         private void Start()
@@ -89,6 +91,25 @@ namespace Overlewd
         private void Customize()
         {
             
+        }
+
+        private void SexButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<SexScreen>().
+                SetData(new SexScreenInData
+            {
+                prevScreenInData = inputData
+            }).RunShowScreenProcess();
+        }
+
+        private void DialogButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<DialogScreen>().SetData(new DialogScreenInData
+            {
+                prevScreenInData = inputData
+            }).RunShowScreenProcess();
         }
         
         private void BannerButtonClick()

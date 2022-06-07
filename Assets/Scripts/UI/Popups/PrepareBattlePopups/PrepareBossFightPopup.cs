@@ -17,6 +17,9 @@ namespace Overlewd
         private Button battleButton;
         private Button editTeamButton;
         private Button buffButton;
+        private Button staminaBuyButton;
+        private Button manaBuyButton;
+        private Button healthBuyButton;
         private RectTransform buffRect;
         private Transform bossPos;
         private Transform allyContent;
@@ -42,6 +45,16 @@ namespace Overlewd
             var alliesBack = canvas.Find("AlliesBack");
             var buff = canvas.Find("Buff");
             var enemyBack = canvas.Find("EnemyBack");
+            var bottlePanel = canvas.Find("BottlePanel");
+
+            staminaBuyButton = bottlePanel.Find("Stamina").Find("BuyButton").GetComponent<Button>();
+            staminaBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            manaBuyButton = bottlePanel.Find("Mana").Find("BuyButton").GetComponent<Button>();
+            manaBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            healthBuyButton = bottlePanel.Find("Health").Find("BuyButton").GetComponent<Button>();
+            healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             bossPos = enemyBack.Find("BossPos");
             allyContent = alliesBack.Find("Characters");
@@ -137,6 +150,12 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        private void PotionBuyButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowSubPopup<BottlesSubPopup>();
+        }
+        
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

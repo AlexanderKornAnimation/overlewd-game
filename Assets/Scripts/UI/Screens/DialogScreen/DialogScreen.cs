@@ -116,6 +116,9 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
+            if (dialogData == null)
+                return;
+            
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
@@ -137,7 +140,7 @@ namespace Overlewd
             {
                 await GameData.events.StageStart(inputData.eventStageData.id);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.StartStage(inputData.ftueStageData.id);
             }
@@ -149,7 +152,7 @@ namespace Overlewd
             {
                 await GameData.events.StageEnd(inputData.eventStageData.id);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageData.id);
             }
@@ -171,9 +174,15 @@ namespace Overlewd
                     {
                         UIManager.ShowScreen<EventMapScreen>();
                     }
-                    else
+                    else if (inputData.ftueStageId.HasValue)
                     {
                         UIManager.ShowScreen<MapScreen>();
+                    }
+                    else
+                    {
+                        UIManager.MakeScreen<GirlScreen>().
+                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                            .RunShowScreenProcess();
                     }
                     break;
             }
@@ -416,6 +425,12 @@ namespace Overlewd
         private void TextContainerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
+            if (dialogData == null)
+            {
+                LeaveScreen();
+                return;
+            }
+            
             currentReplicaId++;
             if (currentReplicaId < dialogReplicas.Count)
             {

@@ -95,8 +95,9 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenBottomHide>();
         }
 
-        void BackButtonClick()
+        private void BackButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HideSubPopup();
         }
     }
