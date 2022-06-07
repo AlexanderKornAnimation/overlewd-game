@@ -468,8 +468,6 @@ namespace Overlewd
             BattleNotif("chapter1", "battle5", "potionstutor2");
         }
 
-        private void OnDestroy() => DOTween.Clear(true); //Destroy DOTween
-
         private int SortBySpeed(CharController a, CharController b)
         {
             if (a.broCharacter.speed < b.broCharacter.speed)

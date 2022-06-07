@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ namespace Overlewd
                 numChangeScreen = 0;
                 ForceGC();
             }
+
+            DOTween.Clear(true);
         }
     }
 
