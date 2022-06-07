@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class WeaponScreen : BaseFullScreen
+    public class WeaponScreen : BaseFullScreenParent<WeaponScreenInData>
     {
         private const int tabAllUnits = 0;
         private const int tabAssassins = 1;
@@ -17,8 +17,8 @@ namespace Overlewd
 
         private int activeTabId;
 
-        private Button backButtonLeft;
-        private Button backButtonRight;
+        private Button backButton;
+        private Button portalButton;
 
         private string[] tabNames = {"AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks"};
 
@@ -27,8 +27,6 @@ namespace Overlewd
         private GameObject[] pressedTabs = new GameObject[tabsCount];
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
-
-        private WeaponScreenInData inputData;
 
         private void Awake()
         {
@@ -40,11 +38,11 @@ namespace Overlewd
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var weaponsBack = canvas.Find("WeaponsBack");
 
-            backButtonRight = canvas.Find("BackButtonRight").GetComponent<Button>();
-            backButtonRight.onClick.AddListener(BackButtonClick);
+            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
+            portalButton.onClick.AddListener(PortalButtonClick);
             
-            backButtonLeft = canvas.Find("BackButtonLeft").GetComponent<Button>();
-            backButtonLeft.onClick.AddListener(BackButtonClick);
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
 
             foreach (var i in tabIds)
             {
@@ -63,12 +61,6 @@ namespace Overlewd
             }
 
             EnterTab(activeTabId);
-        }
-
-        public WeaponScreen SetData(WeaponScreenInData data)
-        {
-            inputData = data;
-            return this;
         }
         
         private void TabClick(int tabId)
@@ -93,12 +85,18 @@ namespace Overlewd
             scrollViews[tabId].SetActive(false);
         }
 
+        private void PortalButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<PortalScreen>();
+        }
+        
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (inputData == null)
             {
-                UIManager.ShowScreen<BattleGirlScreen>();
+                UIManager.ShowScreen<TeamEditScreen>();
             }
             else
             {
@@ -109,7 +107,7 @@ namespace Overlewd
         }
     }
 
-    public class WeaponScreenInData : BaseScreenInData
+    public class WeaponScreenInData : BaseFullScreenInData
     {
         
     }

@@ -1,15 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MarketScreen : BaseFullScreen
+    public class MarketScreen : BaseFullScreenParent<MarketScreenInData>
     {
-        private Transform bottomGrid;
-        private Button mainMenuButton;
+        private Button backButton;
 
         void Awake()
         {
@@ -17,29 +17,45 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            mainMenuButton = canvas.Find("MainMenuButton").GetComponent<Button>();
-            mainMenuButton.onClick.AddListener(MainMenuButtonClick);
-
-            bottomGrid = canvas.Find("BottomGrid");
+            backButton = canvas.Find("MainMenuButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
         }
 
-        void Start()
+        
+        public override async Task BeforeShowMakeAsync()
         {
-            Customize();
-        }
 
-        private void Customize()
-        {
-            NSMarketScreen.BundleTypeA.GetInstance(bottomGrid);
-            NSMarketScreen.BundleTypeB.GetInstance(bottomGrid);
-            NSMarketScreen.BundleTypeC.GetInstance(bottomGrid);
-            NSMarketScreen.BundleTypeD.GetInstance(bottomGrid);
+            await Task.CompletedTask;
         }
-
-        private void MainMenuButtonClick()
+        
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            
+            if (inputData?.prevScreenInData != null)
+            {
+                if (inputData.prevScreenInData.IsType<MapScreenInData>())
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                {
+                    UIManager.ShowScreen<EventMapScreen>();
+                }
+                else
+                {
+                    UIManager.ShowScreen<CastleScreen>();
+                }
+            }
+            else
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            }
         }
+    }
+
+    public class MarketScreenInData : BaseFullScreenInData
+    {
+
     }
 }

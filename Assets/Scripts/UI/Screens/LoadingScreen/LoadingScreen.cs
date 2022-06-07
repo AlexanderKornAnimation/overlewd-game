@@ -1,3 +1,5 @@
+//#define DEV_BUILD
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
-    public class LoadingScreen : BaseFullScreen
+    public class LoadingScreen : BaseFullScreenParent<LoadingScreenInData>
     {
         private Image loadingProgress;
         private TextMeshProUGUI text;
@@ -188,7 +190,7 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !DEV_BUILD
             var apiVersion = await AdminBRO.versionAsync();
             if (apiVersion.version.ToString() != HttpCore.ApiVersion)
             {
@@ -209,43 +211,37 @@ namespace Overlewd
 
             await AdminBRO.initAsync();
 
-            GameData.playerInfo = await AdminBRO.meAsync();
+            await GameData.player.Get();
 
-            var locale = await AdminBRO.localizationAsync("en");
+            await GameData.currencies.Get();
 
-            GameData.currenies = await AdminBRO.currenciesAsync();
+            await GameData.markets.Get();
 
-            GameData.tradables = await AdminBRO.tradablesAsync();
+            await GameData.events.Get();
 
-            GameData.events = await AdminBRO.eventsAsync();
+            await GameData.quests.Get();
 
-            GameData.eventChapters = await AdminBRO.eventChaptersAsync();
+            await GameData.dialogs.Get();
 
-            GameData.eventMarkets = await AdminBRO.eventMarketsAsync();
-
-            GameData.quests = await AdminBRO.questsAsync();
-
-            GameData.eventStages = await AdminBRO.eventStagesAsync();
-
-            GameData.dialogs = await AdminBRO.dialogsAsync();
-
-            GameData.battles = await AdminBRO.battlesAsync();
+            await GameData.battles.Get();
 
             await GameData.ftue.Get();
 
-            GameData.animations = await AdminBRO.animationsAsync();
+            await GameData.animations.Get();
 
-            GameData.sounds = await AdminBRO.soundsAsync();
+            await GameData.sounds.Get();
 
-            GameData.chapterMaps = await AdminBRO.chapterMapsAsync();
+            await GameData.chapterMaps.Get();
 
             await GameData.buildings.Get();
 
             await GameData.characters.Get();
 
-            GameData.equipment = await AdminBRO.equipmentAsync();
+            await GameData.equipment.Get();
 
             await GameData.gacha.Get();
+
+            await GameData.matriarchs.Get();
 
             SetDownloadBarProgress(0.3f);
 
@@ -343,5 +339,10 @@ namespace Overlewd
             public AdminBRO.NetworkResource resourceMeta;
             public State state;
         }
+    }
+
+    public class LoadingScreenInData : BaseFullScreenInData
+    {
+
     }
 }

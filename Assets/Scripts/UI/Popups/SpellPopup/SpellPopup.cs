@@ -5,11 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Resharper disable All
-
 namespace Overlewd
 {
-    public class SpellPopup : BasePopup
+    public class SpellPopup : BasePopupParent<SpellPopupInData>
     {
         protected List<Transform> resources = new List<Transform>();
         protected List<GameObject> notEnough = new List<GameObject>();
@@ -82,7 +80,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            UIManager.HidePopup();
         }
 
         public override ScreenShow Show()
@@ -94,5 +92,10 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenLeftHide>();
         }
+    }
+
+    public class SpellPopupInData : BasePopupInData
+    {
+
     }
 }

@@ -18,8 +18,8 @@ namespace Overlewd
         public bool select;
 
         public string
-            attackAnimationName = "attack1",
-            prepairAnimationName = "prepair1";
+            prepairAnimationName = "",
+            attackAnimationName = "attack1";
 
         public int power; // damage/healpower/buff/curse etc...
         public int manaCost = 0;

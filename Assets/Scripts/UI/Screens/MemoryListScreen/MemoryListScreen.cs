@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MemoryListScreen : BaseFullScreen
+    public class MemoryListScreen : BaseFullScreenParent<MemoryListScreenInData>
     {
         private Dictionary<string, List<Transform>> scrolls = new Dictionary<string, List<Transform>>();
         private Dictionary<string, List<Transform>> scrollContents = new Dictionary<string, List<Transform>>();
@@ -28,8 +28,6 @@ namespace Overlewd
         private Transform mainMemoryScrollPos;
 
         private string[] girlNames = new string[5] {"Ulvi", "Adriel", "Faye", "Ingie", "Lili"};
-
-        private MemoryListScreenInData inputData;
 
         private void Awake()
         {
@@ -101,13 +99,6 @@ namespace Overlewd
 
                 closedEventMemory.screenInData = inputData;
                 
-                // closedEventMemory.inputData = new MemoryListScreenInData
-                // {
-                //    prevScreenInData = inputData.prevScreenInData,
-                //    ftueStageId = inputData?.ftueStageId,
-                //    eventStageId = inputData?.eventStageId
-                // };
-                
                 closedEventMemoryScroll.gameObject.SetActive(false);
                 openedEventMemoryScroll.gameObject.SetActive(false);
                 mainMemoryScroll.gameObject.SetActive(false);
@@ -126,13 +117,7 @@ namespace Overlewd
             EnterTab(selectedGirl);
 
         }
-        
-        public MemoryListScreen SetData(MemoryListScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
-        
+ 
         private void EnterTab(Button girlTab)
         {
             var girlContent = scrolls[girlTab.name];
@@ -222,7 +207,7 @@ namespace Overlewd
         }
     }
 
-    public class MemoryListScreenInData : BaseScreenInData
+    public class MemoryListScreenInData : BaseFullScreenInData
     {
         public string girlName;
     }

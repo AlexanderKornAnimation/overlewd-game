@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class ForgeScreen : BaseFullScreen
+    public class ForgeScreen : BaseFullScreenParent<ForgeScreenInData>
     {
         private Button castleBtn;
 
@@ -24,5 +24,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
+    }
+
+    public class ForgeScreenInData : BaseFullScreenInData
+    {
+
     }
 }

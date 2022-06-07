@@ -142,23 +142,6 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
-
-            public bool CanBuy(List<PriceItem> price)
-            {
-                foreach (var priceItem in price)
-                {
-                    var walletCurrency = wallet.Find(item => item.currency.id == priceItem.currencyId);
-                    if (walletCurrency == null)
-                    {
-                        return false;
-                    }
-                    if (walletCurrency.amount < priceItem.amount)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
         }
 
         [Serializable]
@@ -193,6 +176,11 @@ namespace Overlewd
             public string updatedAt;
             public List<int> tradables;
             public List<int> currencies;
+
+            [JsonProperty(Required = Required.Default)]
+            public List<TradableItem> tradablesData =>
+                tradables.Select(id => GameData.markets.GetTradableById(id)).
+                Where(data => data != null).OrderByDescending(item => item.promo).ToList();
         }
 
         // /currencies
@@ -253,9 +241,10 @@ namespace Overlewd
             public string sortPriority;
             public int currentCount;
             public bool soldOut;
+            public int? matriarchShardId;
 
             [JsonProperty(Required = Required.Default)]
-            public bool canBuy => GameData.playerInfo.CanBuy(price);
+            public bool canBuy => GameData.player.CanBuy(price);
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
@@ -332,14 +321,39 @@ namespace Overlewd
             public List<int> stages;
             public int? order;
             public List<EventChapterReward> rewards;
-        }
 
-        [Serializable]
-        public class EventChapterReward
-        {
-            public string icon;
-            public int amount;
-            public int currency;
+            public class EventChapterReward
+            {
+                public string icon;
+                public int amount;
+                public int currency;
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isComplete {
+                get {
+                    foreach (var stageId in stages)
+                    {
+                        var stageData = GetStageById(stageId);
+                        if (!stageData?.isComplete ?? true)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter nextChapterData =>
+                GameData.events.GetChapterById(nextChapterId);
+
+            public AdminBRO.EventStageItem GetStageById(int? id) =>
+                GameData.events.GetStageById(id);
+
+            [JsonProperty(Required = Required.Default)]
+            public List<EventStageItem> stagesData =>
+                stages.Select(id => GameData.events.GetStageById(id)).Where(data => data != null).ToList();
         }
 
         // /events
@@ -376,6 +390,41 @@ namespace Overlewd
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
             public const string Type_Weekly = "weekly";
+
+            [JsonProperty(Required = Required.Default)]
+            public List<EventChapter> chaptersData =>
+                chapters.Select(chId => GetChapterById(id)).OrderBy(ch => ch.order).ToList();
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter firstChapter =>
+                chaptersData.First();
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter activeChapter {
+                get {
+                    var chapterData = firstChapter;
+                    while (chapterData.isComplete)
+                    {
+                        if (chapterData.nextChapterId.HasValue)
+                        {
+                            chapterData = chapterData.nextChapterData;
+                            continue;
+                        }
+                        break;
+                    }
+                    return chapterData;
+                }
+            }
+
+            public EventChapter GetChapterById(int? id) =>
+                GameData.events.GetChapterById(id);
+
+            public EventItem SetAsMapEvent() =>
+                GameData.events.mapEventData = this;
+
+            [JsonProperty(Required = Required.Default)]
+            public List<EventMarketItem> marketsData =>
+                markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
         }
         
 
@@ -447,11 +496,11 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData =>
-                dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+                GameData.dialogs.GetById(dialogId);
 
             [JsonProperty(Required = Required.Default)]
             public Battle battleData =>
-                battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+                GameData.battles.GetById(battleId);
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
@@ -594,6 +643,8 @@ namespace Overlewd
             public string title;
             public string type;
             public List<DialogReplica> replicas;
+            public int? matriarchId;
+            public int? matriarchEmpathyPointsReward;
 
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";
@@ -671,11 +722,11 @@ namespace Overlewd
             public string fullScreenPersIcon;
             public string name;
             public string characterClass;
-            public List<int> animations;
+            public List<Animation> animations;
             public int? level;
             public string rarity;
             public List<int> equipment;
-            public List<int> skills;
+            public List<CharacterSkill> skills;
             public float? speed;
             public float? power;
             public float? constitution;
@@ -687,6 +738,13 @@ namespace Overlewd
             public float? damage;
             public float? mana;
             public int? sexSceneId;
+            public string key;
+
+            public class Animation
+            {
+                public string name;
+                public int? animation;
+            }
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -738,6 +796,20 @@ namespace Overlewd
             }
 
             public const string Rarity_Basic = "basic";
+        }
+
+        [Serializable]
+        public class CharacterSkill
+        {
+            public string effect;
+            public string type;
+            public string skillIcon;
+            public int damage;
+            public int effectProb;
+            public int effectActingDuration;
+            public int effectCooldownDuration;
+            public List<PriceItem> levelUpPrice;
+            public int level;
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)
@@ -805,6 +877,7 @@ namespace Overlewd
         {
             public int id;
             public int? characterId;
+            public int? characterClassId;
             public string name;
             public float speed;
             public float power;
@@ -838,7 +911,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public AdminBRO.Dialog dialogData =>
-                dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+                GameData.dialogs.GetById(dialogId);
         }
 
         [Serializable]
@@ -887,9 +960,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter nextChapterData => 
-                nextChapterId.HasValue ? GameData.ftue.info.GetChapterById(nextChapterId.Value) : null;
+                GameData.ftue.info.GetChapterById(nextChapterId);
 
-            public FTUEStageItem GetStageById(int id) =>
+            public FTUEStageItem GetStageById(int? id) =>
                 GameData.ftue.stages.Find(s => s.id == id);
             public FTUEStageItem GetStageByKey(string key) =>
                 GameData.ftue.stages.Find(s => s.key == key && s.ftueChapterId == id);
@@ -911,9 +984,9 @@ namespace Overlewd
 
             public FTUEChapter GetChapterByKey(string key) =>
                 chapters.Find(ch => ch.key == key);
-            public FTUEChapter GetChapterById(int id) =>
+            public FTUEChapter GetChapterById(int? id) =>
                 chapters.Find(ch => ch.id == id);
-            public FTUEStageItem GetStageById(int id) =>
+            public FTUEStageItem GetStageById(int? id) =>
                 GameData.ftue.stages.Find(s => s.id == id);
             public FTUEStageItem GetStageByKey(string stageKey, int chapterId) =>
                 GetChapterById(chapterId).GetStageByKey(stageKey);
@@ -942,11 +1015,11 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
-                lastStartedStage.HasValue ? GameData.ftue.info.GetStageById(lastStartedStage.Value) : null;
+                GameData.ftue.info.GetStageById(lastStartedStage);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
-                lastEndedStage.HasValue ? GameData.ftue.info.GetStageById(lastEndedStage.Value) : null;
+                GameData.ftue.info.GetStageById(lastEndedStage);
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? lastEndedState =>
@@ -993,15 +1066,15 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>
-                ftueChapterId.HasValue ? GameData.ftue.info.GetChapterById(ftueChapterId.Value) : null;
+                GameData.ftue.info.GetChapterById(ftueChapterId);
 
             [JsonProperty(Required = Required.Default)]
-            public Dialog dialogData => 
-                dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
+            public Dialog dialogData =>
+                GameData.dialogs.GetById(dialogId);
 
             [JsonProperty(Required = Required.Default)]
             public Battle battleData => 
-                battleId.HasValue ? GameData.GetBattleById(battleId.Value) : null;
+                GameData.battles.GetById(battleId);
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
@@ -1016,8 +1089,12 @@ namespace Overlewd
             public bool isClosed => status == Status_Closed;
 
             [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey) ftueState =>
-               (key, ftueChapterData?.key);
+            public (string stageKey, string chapterKey)? ftueState =>
+                GameData.progressMode switch
+                {
+                    true => (key, ftueChapterData?.key),
+                    _ => null
+                };
         }
 
         // /ftue-stages/{id}/start
@@ -1055,29 +1132,28 @@ namespace Overlewd
         }
 
         //animations
-        public static async Task<List<Animation>> animationsAsync()
+        public static async Task<List<AnimationScene>> animationScenesAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/animations";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<AnimationScene>>(request?.downloadHandler.text);
             }
         }
 
         [Serializable]
-        public class Animation
+        public class AnimationScene
         {
             public int id;
             public string title;
-            public List<AnimationData> layouts;
-        }
+            public List<LayoutData> layouts;
 
-        [Serializable]
-        public class AnimationData
-        {
-            public string assetBundleId;
-            public string animationPath;
-            public string animationName;
+            public class LayoutData
+            {
+                public string assetBundleId;
+                public string animationPath;
+                public string animationName;
+            }
         }
 
         //sounds
@@ -1142,10 +1218,10 @@ namespace Overlewd
                 public int minutesToBuild;
 
                 [JsonProperty(Required = Required.Default)]
-                public bool canBuild => GameData.playerInfo.CanBuy(price);
+                public bool canBuild => GameData.player.CanBuy(price);
 
                 [JsonProperty(Required = Required.Default)]
-                public bool canBuildNow => GameData.playerInfo.CanBuy(momentPrice);
+                public bool canBuildNow => GameData.player.CanBuy(momentPrice);
             }
 
             [JsonProperty(Required = Required.Default)]
@@ -1193,6 +1269,34 @@ namespace Overlewd
         public static async Task buildingBuildNowAsync(int id)
         {
             var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-now";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        // /municipality/time-left
+        public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/municipality/time-left";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<MunicipalityTimeLeft>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class MunicipalityTimeLeft
+        {
+            public int timeLeft;
+        }
+
+
+        // /municipality/collect
+        public static async Task municipalityCollectAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/municipality/collect";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1287,6 +1391,69 @@ namespace Overlewd
 
             public const string Type_Linear = "linear";
             public const string Type_Stepwise = "stepwise";
+        }
+
+        // /matriarchs
+        // /matriarchs/memories
+        public static async Task<List<MatriarchItem>> matriarchsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<MatriarchItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<MemoryItem>> memoriesAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs/memories";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<MemoryItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class MatriarchItem
+        {
+            public int id;
+            public string name;
+            public string placeholderImage;
+            public string image;
+            public int? order;
+            public int? paramAge;
+            public string paramZodiac;
+            public int? seduceSexSceneId;
+        }
+
+        [Serializable]
+        public class MemoryItem
+        {
+            public int id;
+            public int userId;
+            public int? matriarchMemoryId;
+            public string status;
+            public int? matriarchId;
+            public string title;
+            public string label;
+            public int? sexSceneId;
+            public List<OpenShard> shardsToOpen;
+            public int? visibleByEmpathyLevel;
+            public int? visibleByEventStartId;
+            public int? visibleByEventStageCompleteId;
+
+            public class OpenShard
+            {
+                public int amount;
+                public string shardRarity;
+
+                public const string Rariry_White = "white";
+                public const string Rariry_Green = "green";
+                public const string Rariry_Purple = "purple";
+                public const string Rariry_Gold = "gold";
+            }
+
+            public const string Status_Visible = "visible";
         }
     }
 }

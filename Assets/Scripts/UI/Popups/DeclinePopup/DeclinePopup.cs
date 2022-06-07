@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DeclinePopup : BasePopup
+    public class DeclinePopup : BasePopupParent<DeclinePopupInData>
     {
         private Button mapButton;
         private Button marketButton;
@@ -35,5 +35,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<MarketScreen>();
         }
+    }
+
+    public class DeclinePopupInData : BasePopupInData
+    {
+
     }
 }

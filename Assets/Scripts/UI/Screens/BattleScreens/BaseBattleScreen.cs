@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-	public class BaseBattleScreen : BaseFullScreen
+	public class BaseBattleScreen : BaseFullScreenParent<BaseBattleScreenInData>
 	{
 		protected Button backButton;
 		protected Button skipButton;
@@ -77,11 +77,22 @@ namespace Overlewd
 			GameData.ftue.info.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey);
 		}
 
-		public virtual BattleManagerInData GetBattleData()
-        {
-			return null;
-        }
-    }
+		public BattleManagerInData GetBattleData()
+		{
+			return inputData.battleId.HasValue ?
+				BattleManagerInData.InstFromBattleData(inputData.battleData) :
+				inputData.ftueStageId.HasValue ?
+					BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
+					BattleManagerInData.InstFromEventStage(inputData.eventStageData);
+		}
+	}
+
+	public class BaseBattleScreenInData : BaseFullScreenInData
+	{
+		public int? battleId { get; set; }
+		public AdminBRO.Battle battleData =>
+			GameData.battles.GetById(battleId);
+	}
 
 	public class BattleManagerInData
     {
@@ -114,7 +125,7 @@ namespace Overlewd
 			return InstFromBattleData(stage?.battleData);
 		}
 
-		private static BattleManagerInData InstFromBattleData(AdminBRO.Battle battleData)
+		public static BattleManagerInData InstFromBattleData(AdminBRO.Battle battleData)
         {
 			if (battleData == null)
             {

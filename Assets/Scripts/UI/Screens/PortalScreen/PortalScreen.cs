@@ -7,31 +7,33 @@ using System.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class PortalScreen : BaseFullScreen
+    public class PortalScreen : BaseFullScreenParent<PortalScreenInData>
     {
-        private Button shardsButton;
-        private Image shardsButtonSelected;
-        private Button battleGirlsButton;
-        private Image battleGirlsButtonSelected;
-        private Button battleGirlsEquipButton;
-        private Image battleGirlsEquipButtonSelected;
-        private Button overlordEquipButton;
-        private Image overlordEquipButtonSelected;
-        private Button backButton;
+        private const int buttonBattleGirls = 0;
+        private const int buttonBattleGirlsEquip = 1;
+        private const int buttonOverlordEquip = 2;
+        private const int buttonShards = 3;
+        private const int buttonsCount = 4;
 
-        private GameObject battleGirlsEquipContent;
-        private GameObject shardsContent;
-        private GameObject battleGirlsContent;
-        private GameObject overlordEquipContent;
+        private int activeTabId;
 
+        private string[] buttonsNames = { "BattleGirls", "BattleGirlsEquip", "OverlordEquip", "Shards" };
+
+        private int[] buttonsIds = { buttonBattleGirls, buttonBattleGirlsEquip, buttonOverlordEquip, buttonShards };
+        private Button[] buttons = new Button[buttonsCount];
+        private GameObject[] pressedButtons = new GameObject[buttonsCount];
+        private GameObject[] contents = new GameObject[buttonsCount];
+        
         private NSPortalScreen.BaseTab selectedTab;
 
         private List<NSPortalScreen.BaseTab> battleGirlsTabs = new List<NSPortalScreen.BaseTab>();
         private List<NSPortalScreen.BaseTab> battleGirlsEquipTabs = new List<NSPortalScreen.BaseTab>();
         private List<NSPortalScreen.BaseTab> overlordTabs = new List<NSPortalScreen.BaseTab>();
-        private List<NSPortalScreen.BaseTab> memoryTabs = new List<NSPortalScreen.BaseTab>();
+        private List<NSPortalScreen.BaseTab> shardsTabs = new List<NSPortalScreen.BaseTab>();
 
-        void Awake()
+        private Button backButton;
+
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/PortalScreen/PortalScreen", transform);
 
@@ -42,33 +44,25 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
             
-            shardsButton = tabArea.Find("ShardsButton").GetComponent<Button>();
-            shardsButton.onClick.AddListener(ShardsButtonClick);
-            shardsButtonSelected = shardsButton.transform.Find("ButtonSelected").GetComponent<Image>();
-            
-            battleGirlsButton = tabArea.Find("BattleGirlsButton").GetComponent<Button>();
-            battleGirlsButton.onClick.AddListener(BattleGirlsButtonClick);
-            battleGirlsButtonSelected = battleGirlsButton.transform.Find("ButtonSelected").GetComponent<Image>();
+            foreach (var i in buttonsIds)
+            {
+                buttons[i] = tabArea.Find(buttonsNames[i]).GetComponent<Button>();
+                pressedButtons[i] = buttons[i].transform.Find("ButtonSelected").gameObject;
+                buttons[i].onClick.AddListener(() =>
+                {
+                    ButtonClick(i);
+                });
 
-            battleGirlsEquipButton = tabArea.Find("BattleGirlsEquipButton").GetComponent<Button>();
-            battleGirlsEquipButton.onClick.AddListener(BattleGirlsEquipButtonClick);
-            battleGirlsEquipButtonSelected = battleGirlsEquipButton.transform.Find("ButtonSelected").GetComponent<Image>();
+                contents[i] = bannersBack.Find(buttonsNames[i] + "Content").gameObject;
+            }
             
-            overlordEquipButton = tabArea.Find("OverlordEquipButton").GetComponent<Button>();
-            overlordEquipButton.onClick.AddListener(OverlordEquipButtonClick);
-            overlordEquipButtonSelected = overlordEquipButton.transform.Find("ButtonSelected").GetComponent<Image>();
-
-            shardsContent = bannersBack.Find("ShardsContent").gameObject;
-            battleGirlsContent = bannersBack.Find("BattleGirlsContent").gameObject;
-            overlordEquipContent = bannersBack.Find("OverlordEquipContent").gameObject;
-            battleGirlsEquipContent = bannersBack.Find("BattleGirlsEquipContent").gameObject;
         }
 
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
-
-            BattleGirlsButtonClick();
+            activeTabId = inputData?.activeButtonId ?? buttonBattleGirls;
+            ButtonClick(activeTabId);
 
             await Task.CompletedTask;
         }
@@ -103,8 +97,8 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(battleGirlsContent.transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(battleGirlsContent.transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonBattleGirls].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonBattleGirls].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
@@ -115,8 +109,8 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(battleGirlsEquipContent.transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(battleGirlsEquipContent.transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonBattleGirlsEquip].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonBattleGirlsEquip].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
@@ -127,8 +121,8 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(overlordEquipContent.transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(overlordEquipContent.transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonOverlordEquip].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonOverlordEquip].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
@@ -139,15 +133,21 @@ namespace Overlewd
                         {
                             NSPortalScreen.BaseTab newTab = gacha.type switch
                             {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(shardsContent.transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(shardsContent.transform),
+                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonShards].transform),
+                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonShards].transform),
                                 _ => null
                             };
                             newTab.gachaId = gacha.id;
-                            AddTab(newTab, memoryTabs);
+                            AddTab(newTab, shardsTabs);
                         }
                         break;
                 }
+            }
+            
+            foreach (var i in buttonsIds)
+            {
+                pressedButtons[i].gameObject.SetActive(false);
+                contents[i].gameObject.SetActive(false);
             }
         }
         
@@ -186,7 +186,7 @@ namespace Overlewd
                     MoveTabs(tab, overlordTabs);
                     break;
                 case AdminBRO.GachItem.TabType_Shards:
-                    MoveTabs(tab, memoryTabs);
+                    MoveTabs(tab, shardsTabs);
                     break;
             }
             
@@ -194,96 +194,60 @@ namespace Overlewd
             selectedTab?.Select();
         }
         
-        private void ShardsButtonClick()
+        private void ButtonClick(int buttonId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            shardsButtonSelected.gameObject.SetActive(true);
-            shardsContent.SetActive(true);
-            
-            battleGirlsButtonSelected.gameObject.SetActive(false);
-            battleGirlsContent.SetActive(false);
-            
-            overlordEquipButtonSelected.gameObject.SetActive(false);
-            overlordEquipContent.SetActive(false);
-            
-            battleGirlsEquipButtonSelected.gameObject.SetActive(false);
-            battleGirlsEquipContent.SetActive(false);
-            
-            
-            if (memoryTabs.Any())
-            {
-                SelectTab(memoryTabs.First());
-            }
-        }
-
-        private void BattleGirlsEquipButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            battleGirlsEquipButtonSelected.gameObject.SetActive(true);
-            battleGirlsContent.SetActive(true);
-            
-            shardsButtonSelected.gameObject.SetActive(false);
-            shardsContent.SetActive(false);
-
-            battleGirlsButtonSelected.gameObject.SetActive(false);
-            battleGirlsContent.SetActive(false);
-
-            overlordEquipButtonSelected.gameObject.SetActive(false);
-            overlordEquipContent.SetActive(false);
-            
-            if (battleGirlsTabs.Any())
-            {
-                SelectTab(battleGirlsTabs.First());
-            }
+            LeaveTab(activeTabId);
+            EnterTab(buttonId);
         }
         
-        private void BattleGirlsButtonClick()
+        private void EnterTab(int buttonId)
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            battleGirlsButtonSelected.gameObject.SetActive(true);
-            battleGirlsContent.SetActive(true);
+            activeTabId = buttonId;
+            pressedButtons[buttonId].SetActive(true);
+            contents[buttonId].SetActive(true);
             
-            shardsButtonSelected.gameObject.SetActive(false);
-            shardsContent.SetActive(false);
-
-            overlordEquipButtonSelected.gameObject.SetActive(false);
-            overlordEquipContent.SetActive(false);
-            
-            battleGirlsEquipButtonSelected.gameObject.SetActive(false);
-            battleGirlsContent.SetActive(false);
-            
-            if (battleGirlsEquipTabs.Any())
+            switch (buttonId)
             {
-                SelectTab(battleGirlsEquipTabs.First());
+                case buttonBattleGirls:
+                    if(battleGirlsTabs.Any())
+                        SelectTab(battleGirlsTabs.First());
+                    break;
+                case buttonBattleGirlsEquip:
+                    if(battleGirlsEquipTabs.Any())
+                        SelectTab(battleGirlsEquipTabs.First());
+                    break;
+                case buttonOverlordEquip:
+                    if(overlordTabs.Any())
+                        SelectTab(overlordTabs.First());
+                    break;
+                case buttonShards:
+                    if(shardsTabs.Any())
+                        SelectTab(shardsTabs.First());
+                    break;
             }
         }
 
-        private void OverlordEquipButtonClick()
+        private void LeaveTab(int buttonId)
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            overlordEquipButtonSelected.gameObject.SetActive(true);
-            overlordEquipContent.SetActive(true);
-            
-            shardsButtonSelected.gameObject.SetActive(false);
-            shardsContent.SetActive(false);
-
-            battleGirlsButtonSelected.gameObject.SetActive(false);
-            battleGirlsContent.SetActive(false);
-
-            battleGirlsEquipButtonSelected.gameObject.SetActive(false);
-            battleGirlsContent.SetActive(false);
-            
-            if (overlordTabs.Any())
-            {
-                SelectTab(overlordTabs.First());
-            }
+            pressedButtons[buttonId].SetActive(false);
+            contents[buttonId].SetActive(false);
         }
-
+        
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
+    }
 
+    public class PortalScreenInData : BaseFullScreenInData
+    {
+        public int? activeButtonId;
+
+        public const int battleGirlsButtonId = 0;
+        public const int battleGirlsEquipButtonId = 1;
+        public const int overlordEquipButtonId = 2;
+        public const int shardsButtonId = 3;
     }
 }

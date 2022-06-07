@@ -20,11 +20,11 @@ MonoBehaviour:
   vfxDuration: 0
   sfx: {fileID: 0}
   select: 0
-  attackAnimationName: attack4
-  prepairAnimationName: prepair4
+  prepairAnimationName: 
+  attackAnimationName: attack2
   power: 5
   manaCost: 25
   amount: 0
-  cooldown: 3
+  cooldown: 0
   cooldownCount: 0
   attackType: 1

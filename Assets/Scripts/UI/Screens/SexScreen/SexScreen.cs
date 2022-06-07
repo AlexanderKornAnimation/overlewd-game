@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class SexScreen : BaseFullScreen
+    public class SexScreen : BaseFullScreenParent<SexScreenInData>
     {
         private Coroutine autoplayCoroutine;
 
@@ -33,13 +33,11 @@ namespace Overlewd
 
         private bool isAutoplayButtonPressed = false;
 
-        private SpineWidgetGroup mainAnimation;
-        private SpineWidgetGroup cutInAnimation;
+        private SpineScene mainAnimation;
+        private SpineScene cutInAnimation;
         private FMODEvent mainSound;
         private FMODEvent cutInSound;
         private FMODEvent replicaSound;
-
-        private SexScreenInData inputData;
 
         private void Awake()
         {
@@ -67,12 +65,6 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
-        public SexScreen SetData(SexScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         public override async Task BeforeShowMakeAsync()
         {
             switch (inputData.ftueStageData?.ftueState)
@@ -87,6 +79,9 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
+            if (dialogData == null)
+                return;
+            
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
@@ -96,7 +91,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-
+            SoundManager.GetEventInstance(FMODEventPath.Music_SexScreen);
             await Task.CompletedTask;
         }
 
@@ -108,7 +103,7 @@ namespace Overlewd
         
         private void LeaveScreen()
         {
-            switch (inputData.ftueStageData.ftueState)
+            switch (inputData.ftueStageData?.ftueState)
             {
                 case ("sex1", "chapter1"):
                     UIManager.MakeScreen<DialogScreen>().
@@ -123,9 +118,15 @@ namespace Overlewd
                     {
                         UIManager.ShowScreen<MapScreen>();
                     }
-                    else
+                    else if (inputData.eventStageId.HasValue)
                     {
                         UIManager.ShowScreen<EventMapScreen>();
+                    }
+                    else
+                    {
+                        UIManager.MakeScreen<GirlScreen>().
+                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                            .RunShowScreenProcess();
                     }
                     break;
             }
@@ -134,12 +135,12 @@ namespace Overlewd
         public override async Task BeforeShowDataAsync()
         {
             dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
-            
+
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+                await GameData.events.StageStart(inputData.eventStageId.Value);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.StartStage(inputData.ftueStageId.Value);
             }
@@ -149,9 +150,9 @@ namespace Overlewd
         {
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageEndAsync(inputData.eventStageId.Value);
+                await GameData.events.StageEnd(inputData.eventStageId.Value);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageId.Value);
             }
@@ -202,6 +203,12 @@ namespace Overlewd
         private void TextContainerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
+            if (dialogData == null)
+            {
+                LeaveScreen();
+                return;
+            }
+            
             currentReplicaId++;
             if (currentReplicaId < dialogReplicas.Count)
             {
@@ -264,16 +271,15 @@ namespace Overlewd
         {
             if (replica.mainAnimationId.HasValue)
             {
-                if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
+                if (replica.mainAnimationId.Value != mainAnimation?.sceneData.id)
                 {
                     Destroy(mainAnimation?.gameObject);
                     mainAnimation = null;
 
-                    var animation = GameData.GetAnimationById(replica.mainAnimationId.Value);
+                    var animation = GameData.animations.GetSceneById(replica.mainAnimationId);
                     if (animation != null)
                     {
-                        mainAnimation = SpineWidgetGroup.GetInstance(mainAnimPos);
-                        mainAnimation.Initialize(animation);
+                        mainAnimation = SpineScene.GetInstance(animation, mainAnimPos);
                     }
                 }
             }
@@ -288,16 +294,15 @@ namespace Overlewd
         {
             if (replica.cutInAnimationId.HasValue)
             {
-                if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
+                if (replica.cutInAnimationId != cutInAnimation?.sceneData.id)
                 {
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
+                    var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
                     if (animation != null)
                     {
-                        cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
-                        cutInAnimation.Initialize(animation);
+                        cutInAnimation = SpineScene.GetInstance(animation, cutInAnimPos);
                     }
                 }
             }
@@ -324,7 +329,7 @@ namespace Overlewd
             //main sound
             if (replica.mainSoundId.HasValue)
             {
-                var mainSoundData = GameData.GetSoundById(replica.mainSoundId.Value);
+                var mainSoundData = GameData.sounds.GetById(replica.mainSoundId);
                 if (mainSoundData.eventPath != mainSound?.path)
                 {
                     mainSound?.Stop();
@@ -339,7 +344,7 @@ namespace Overlewd
 
             if (replica.cutInSoundId.HasValue)
             {
-                var cutInSoundData = GameData.GetSoundById(replica.cutInSoundId.Value);
+                var cutInSoundData = GameData.sounds.GetById(replica.cutInSoundId);
                 if (cutInSoundData.eventPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
@@ -359,7 +364,7 @@ namespace Overlewd
             //replica sound
             if (replica.replicaSoundId.HasValue)
             {
-                var replicaSoundData = GameData.GetSoundById(replica.replicaSoundId.Value);
+                var replicaSoundData = GameData.sounds.GetById(replica.replicaSoundId);
                 if (replicaSoundData.eventPath != replicaSound?.path)
                 {
                     replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);
@@ -373,7 +378,7 @@ namespace Overlewd
         }
     }
 
-    public class SexScreenInData : BaseScreenInData
+    public class SexScreenInData : BaseFullScreenInData
     {
         
     }

@@ -9,7 +9,7 @@ using TMPro;
 
 namespace Overlewd
 {
-    public class MapScreen : BaseFullScreen
+    public class MapScreen : BaseFullScreenParent<MapScreenInData>
     {
         protected List<NSMapScreen.BaseStageButton> newStages = new List<NSMapScreen.BaseStageButton>();
 
@@ -20,8 +20,6 @@ namespace Overlewd
         protected TextMeshProUGUI chapterButtonMarkers;
 
         protected GameObject chapterMap;
-
-        private MapScreenInData inputData = new MapScreenInData();
 
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
@@ -44,12 +42,6 @@ namespace Overlewd
             map = canvas.Find("Map");
         }
 
-        public MapScreen SetData(MapScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         public override async Task BeforeShowMakeAsync()
         {
             if (GameData.ftue.mapChapter == null)
@@ -63,9 +55,9 @@ namespace Overlewd
 
             if (GameData.ftue.mapChapter != null)
             {
-                if (GameData.ftue.mapChapter.chapterMapId.HasValue)
+                var mapData = GameData.chapterMaps.GetById(GameData.ftue.mapChapter.chapterMapId);
+                if (mapData != null)
                 {
-                    var mapData = GameData.GetChapterMapById(GameData.ftue.mapChapter.chapterMapId.Value);
                     chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
 
                     foreach (var stageId in GameData.ftue.mapChapter.stages)
@@ -118,7 +110,6 @@ namespace Overlewd
                                     if (battleData.isTypeBattle)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                        fight.screenInData = inputData;
                                         fight.stageId = stageId;
                                         
                                         if (!stageData.isComplete)
@@ -130,7 +121,6 @@ namespace Overlewd
                                     else if (battleData.isTypeBoss)
                                     {
                                         var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                        fight.screenInData = inputData;
                                         fight.stageId = stageId;
 
                                         if (!stageData.isComplete)
@@ -162,7 +152,6 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
-            buffPanel.inputData = inputData;
             buffPanel.Hide();
 
             await Task.CompletedTask;
@@ -176,6 +165,15 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            //animate opened stages
+            bool waitStagesShowAnims = false;
+            foreach (var stage in newStages)
+            {
+                stage.gameObject.SetActive(true);
+                waitStagesShowAnims = true;
+            }
+            if (waitStagesShowAnims) await UniTask.Delay(2000);
+
             //return after team edit screen
             var battleData = inputData?.ftueStageData?.battleData;
             if (battleData != null)
@@ -185,7 +183,6 @@ namespace Overlewd
                     UIManager.MakePopup<PrepareBattlePopup>().
                         SetData(new PrepareBattlePopupInData
                         {
-                            prevScreenInData = inputData,
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
@@ -194,20 +191,10 @@ namespace Overlewd
                     UIManager.MakePopup<PrepareBossFightPopup>().
                         SetData(new PrepareBossFightPopupInData
                         {
-                            prevScreenInData = inputData,
                             ftueStageId = inputData.ftueStageId
                         }).RunShowPopupProcess();
                 }
             }
-
-            //animate opened stages
-            bool waitStagesShowAnims = false;
-            foreach (var stage in newStages)
-            {
-                stage.gameObject.SetActive(true);
-                waitStagesShowAnims = true;
-            }
-            if (waitStagesShowAnims) await UniTask.Delay(2000);
 
             //ftue part
             switch (GameData.ftue.stats.lastEndedState)
@@ -248,7 +235,7 @@ namespace Overlewd
         }
     }
 
-    public class MapScreenInData : BaseScreenInData
+    public class MapScreenInData : BaseFullScreenInData
     {
         
     }

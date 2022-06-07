@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BannerNotification : BaseNotification
+    public class BannerNotification : BaseNotificationParent<BannerNotificationInData>
     {
         private VerticalLayoutGroup resourcesGrid;
         private VerticalLayoutGroup vGrid;
@@ -14,11 +15,6 @@ namespace Overlewd
         private HorizontalLayoutGroup hGrid2;
 
         private Button buyButton;
-
-        private AdminBRO.TradableItem tradableData;
-
-        private List<NSBannerNotification.ResourceIcon> resourceIcons = 
-            new List<NSBannerNotification.ResourceIcon>();
 
         void Awake()
         {
@@ -33,13 +29,13 @@ namespace Overlewd
 
             buyButton = canvas.Find("BuyButton").GetComponent<Button>();
             buyButton.onClick.AddListener(BuyButtonClick);
-
-            tradableData = GameGlobalStates.bannerNotifcation_TradableData;
         }
 
-        void Start()
+        public override async Task BeforeShowMakeAsync()
         {
             Customize();
+
+            await Task.CompletedTask;
         }
 
         private void Customize()
@@ -78,18 +74,23 @@ namespace Overlewd
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(resourcesGrid.GetComponent<RectTransform>());
-
-            resourceIcons.Add(resourceIcon);
         }
         
         private async void BuyButtonClick()
         {
-            var marketId = GameGlobalStates.bannerNotification_EventMarketId;
-            var tradableId = GameGlobalStates.bannerNotification_TradableId;
-            await GameData.BuyTradableAsync(marketId, tradableId);
-
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            await GameData.markets.BuyTradable(inputData.eventMarketId, inputData.tradableId);
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }
+    }
+
+    public class BannerNotificationInData : BaseNotificationInData
+    {
+        public int? eventMarketId { get; set; }
+        public AdminBRO.EventMarketItem eventMarketData =>
+            GameData.markets.GetEventMarketById(eventMarketId.Value);
+        public int? tradableId { get; set; }
+        public AdminBRO.TradableItem tradableData =>
+            GameData.markets.GetTradableById(tradableId.Value);
     }
 }

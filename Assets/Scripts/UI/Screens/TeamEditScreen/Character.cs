@@ -59,7 +59,6 @@ namespace Overlewd
                     girlIcon.color = Color.white;
                     equipStatus.gameObject.SetActive(false);
                 }
-
             }
 
             private void EquipButtonClick()

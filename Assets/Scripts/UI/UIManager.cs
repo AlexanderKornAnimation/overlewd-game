@@ -438,6 +438,11 @@ namespace Overlewd
             return currentScreen as T;
         }
 
+        public static BaseFullScreenInData currentScreenInData =>
+            currentScreen?.baseInputData;
+        public static BaseFullScreenInData prevScreenInData =>
+            prevScreen?.baseInputData;
+
         public static bool HasScreen<T>() where T : BaseFullScreen
         {
             return currentScreen?.GetType() == typeof(T);

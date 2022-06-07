@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MemoryScreen : BaseFullScreen
+    public class MemoryScreen : BaseFullScreenParent<MemoryScreenInData>
     {
         private Button portalButton;
         private Button forgeButton;
@@ -16,8 +16,6 @@ namespace Overlewd
         private TextMeshProUGUI commonShardsCount;
         private TextMeshProUGUI rareShardsCount;
         private TextMeshProUGUI legendaryShardsCount;
-
-        private MemoryScreenInData inputData;
         
         private void Awake()
         {
@@ -49,12 +47,6 @@ namespace Overlewd
         {
             
         }
-
-        public MemoryScreen SetData(MemoryScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
         
         private void BackButtonClick()
         {
@@ -74,7 +66,11 @@ namespace Overlewd
         private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<PortalScreen>();
+            UIManager.MakeScreen<PortalScreen>().
+                SetData(new PortalScreenInData
+            {
+                activeButtonId = PortalScreenInData.shardsButtonId
+            }).RunShowScreenProcess();
         }
 
         private void ForgeButtonClick()
@@ -88,7 +84,7 @@ namespace Overlewd
         }
     }
 
-    public class MemoryScreenInData : BaseScreenInData
+    public class MemoryScreenInData : BaseFullScreenInData
     {
         public string girlName;
     }

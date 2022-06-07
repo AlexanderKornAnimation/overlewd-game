@@ -6,6 +6,8 @@ namespace Overlewd
 {
     public abstract class BaseNotification : BaseScreen
     {
+        public virtual BaseNotificationInData baseInputData => null;
+
         public override void StartShow()
         {
             
@@ -35,5 +37,25 @@ namespace Overlewd
         {
             UIManager.ShowNotificationProcess();
         }
+    }
+
+    public abstract class BaseNotificationParent<T> : BaseNotification where T : BaseNotificationInData, new()
+    {
+        public T inputData { get; private set; } = new T();
+        public override BaseNotificationInData baseInputData => inputData;
+
+        public BaseNotification SetData(T data)
+        {
+            inputData = data;
+            return this;
+        }
+    }
+
+    public abstract class BaseNotificationInData : BaseScreenInData
+    {
+        public new bool IsType<T>() where T : BaseNotificationInData =>
+            base.IsType<T>();
+        public new T As<T>() where T : BaseNotificationInData =>
+            base.As<T>();
     }
 }

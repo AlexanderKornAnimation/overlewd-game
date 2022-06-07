@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class ChestPopup : BasePopup
+    public class ChestPopup : BasePopupParent<ChestPopupInData>
     {
         private TextMeshProUGUI timer;
         private GameObject timerBackground;
@@ -60,5 +60,10 @@ namespace Overlewd
         {
             return gameObject.AddComponent<ScreenLeftHide>();
         }
+    }
+
+    public class ChestPopupInData : BasePopupInData
+    {
+
     }
 }

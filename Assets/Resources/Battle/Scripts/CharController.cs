@@ -10,6 +10,7 @@ namespace Overlewd
 {
     public class CharController : MonoBehaviour
     {
+        public string Name;
         public bool isEnemy = false;
         public bool isBoss = false;
         public bool isOverlord = false;
@@ -28,14 +29,18 @@ namespace Overlewd
         public BattleManager bm; //init on BattleManager Initialize();
         private GameObject border;
 
-        public Character character;
+        public CharacterRes characterRes;
+
+        public AdminBRO.Character broCharacter;
+
+        public float speed => (float)broCharacter.speed;
+
         public Skill[] skill;
-        private float idleScale = .5f, battleScale = .7f;
+        private float idleScale = 1f, battleScale = 1.4f;
         public int battleOrder = 1;
-        public int hp = 100, maxHp = 100;
-        public int mp = 100, maxMp = 100;
-        public int damage = 10;
-        public int defence = 5;
+        public float health = 100, healthMax = 100;
+        public float mana = 100, manaMax = 100;
+        public float damage = 10;
 
         [HideInInspector] public bool isDamageBuff = false;
         [HideInInspector] public int buffDamageScale = 1;
@@ -67,16 +72,43 @@ namespace Overlewd
 
         private void StatInit()
         {
-            //isEnemy = character.isEnemy;
-            //battleOrder = character.Order;
-            character.ApplyStats();
-            skill = character.skill;
+            /*
+            * class for icons
+            * level
+            * stats: speed, power etc...
+            * items
+            * 
+            * character key associete:
+            * 
+            * animations
+            * icons
+            * battle scills unique animations
+            * 
+            */
+            Name = broCharacter.name;
+            isOverlord = broCharacter.characterClass == AdminBRO.Character.Class_Overlord;
+
+            health = (float)broCharacter.health; healthMax = health;
+            mana = (float)broCharacter.mana; manaMax = mana;
+            damage = (float)broCharacter.damage;
+
+            //characterRes find and attach by broCharacter.key/name;
+
+            idleScale = 1f;
+            battleScale = 1.1f;
+
+            /*
+            isEnemy = character.isEnemy;
+            battleOrder = character.Order;
+            characterContent.ApplyStats(); //apply class bonus
             isOverlord = character.isOverlord;
-            idleScale = character.idleScale;
-            battleScale = character.battleScale;
-            hp = character.hp; maxHp = character.maxHp;
-            mp = character.mp; maxMp = character.maxMp;
-            damage = (int)Math.Ceiling(character.damage);
+            health = characterContent.hp; healthMax = characterContent.maxHp;
+            mana = characterContent.mp; manaMax = characterContent.maxMp;
+            idleScale = characterContent.idleScale;
+            battleScale = characterContent.battleScale;
+            damage = (int)Math.Ceiling(characterContent.damage);
+            */
+            skill = characterRes.skill;
         }
 
         public void PowerBuff()
@@ -94,8 +126,16 @@ namespace Overlewd
             battleLayer = spawnPos.Find("BattleCanvas/BattleLayer").transform;
             if (isEnemy)
             {
-                battlePos = battleLayer.Find("battlePos2").transform;
-                persPos = battleLayer.Find("enemy" + battleOrder.ToString()).transform;
+                if (isBoss)
+                {
+                    battlePos = battleLayer.Find("battlePosBoss").transform;
+                    persPos = battleLayer.Find("boss").transform;
+                }
+                else
+                {
+                    battlePos = battleLayer.Find("battlePos2").transform;
+                    persPos = battleLayer.Find("enemy" + battleOrder.ToString()).transform;
+                }
             }
             else
             {
@@ -106,10 +146,12 @@ namespace Overlewd
             transform.SetParent(persPos, false);
             transform.SetSiblingIndex(0);
 
-            var sW = character.characterPrefab ? SpineWidget.GetInstance(character.characterPrefab, transform) : SpineWidget.GetInstance(character.idle_Prefab_Path, transform);
-            sW.transform.localPosition = new Vector3(0, character.yOffset, 0);
+            var sW = characterRes.characterPrefab ?
+                SpineWidget.GetInstance(characterRes.characterPrefab, transform) :
+                SpineWidget.GetInstance(characterRes.idle_Prefab_Path, transform);
+            sW.transform.localPosition = new Vector3(0, characterRes.yOffset, 0);
             spineWidget = sW;
-            defenceDuration = spineWidget.GetAnimationDuaration(character.ani_defence_name);
+            defenceDuration = spineWidget.GetAnimationDuaration(characterRes.ani_defence_name);
         }
 
         private void UIInit()
@@ -117,13 +159,13 @@ namespace Overlewd
             charStats.charCtrl = this;
             charStats.InitUI();
             sliderHP = persPos.Find("sliderHP").GetComponent<Slider>();
-            if (sliderHP != null) sliderHP.maxValue = maxHp; else Debug.Log("sliderHP is null");
+            if (sliderHP != null) sliderHP.maxValue = healthMax; else Debug.Log("sliderHP is null");
             hpTMP = persPos.Find("sliderHP/Text").GetComponent<TextMeshProUGUI>();
 
             if (isOverlord)
             {
                 sliderMP = persPos.Find("sliderMP").GetComponent<Slider>();
-                if (sliderMP != null) sliderMP.maxValue = maxMp;
+                if (sliderMP != null) sliderMP.maxValue = manaMax;
                 mpTMP = persPos.Find("sliderMP/Text").GetComponent<TextMeshProUGUI>();
             }
 
@@ -148,21 +190,21 @@ namespace Overlewd
 
         public void UpdateUI()
         {
-            string hpTxt = $"{hp}/{maxHp}";
+            string hpTxt = $"{health}/{healthMax}";
             if (hpTMP != null) hpTMP.text = hpTxt; else Debug.Log("hpTMP = null");
-            if (sliderHP != null) sliderHP.value = hp;
+            if (sliderHP != null) sliderHP.value = health;
             if (isOverlord)
             {
-                string mpTxt = $"{mp}/{maxMp}";
+                string mpTxt = $"{mana}/{manaMax}";
                 if (mpTMP != null) mpTMP.text = mpTxt;
-                if (sliderMP != null) sliderMP.value = mp;
+                if (sliderMP != null) sliderMP.value = mana;
             }
             charStats.UpdateUI();
         }
         public void PlayIdle()
         {
             if (!isDead)
-                spineWidget.PlayAnimation(character.ani_idle_name, true);
+                spineWidget.PlayAnimation(characterRes.ani_idle_name, true);
         }
 
         public void Attack(int attackID, CharController target = null)
@@ -174,22 +216,28 @@ namespace Overlewd
 
         IEnumerator PlayAttack(int id, CharController target = null)
         {
-            if (id > character.skill.Length) id = 0; //if id overflow on skill array
+            if (id > characterRes.skill.Length) id = 0; //if id overflow on skill array
 
-            preAttackDuration = spineWidget.GetAnimationDuaration(character.skill[id].prepairAnimationName);  //send to target Defence Animation
-            vfxDuration = character.skill[id].vfxDuration;
-            attackDuration = spineWidget.GetAnimationDuaration(character.skill[id].attackAnimationName);
+            vfxDuration = characterRes.skill[id].vfxDuration;
+            attackDuration = spineWidget.GetAnimationDuaration(characterRes.skill[id].attackAnimationName);
+            damage = Mathf.RoundToInt(characterRes.skill[id].power + (float)broCharacter.damage * buffDamageScale);
 
-            damage = Mathf.RoundToInt(character.skill[id].power + character.damage * buffDamageScale);
-            spineWidget.PlayAnimation(character.skill[id].prepairAnimationName, false);
-            if (isOverlord) mp -= character.skill[id].manaCost;
-            yield return new WaitForSeconds(preAttackDuration);
-            if (character.skill[id].vfx != null)
+            if (characterRes.skill[id].prepairAnimationName == "")
+                preAttackDuration = 0f;
+            else
             {
-                Instantiate(character.skill[id].vfx, battleLayer);
+                preAttackDuration = spineWidget.GetAnimationDuaration(characterRes.skill[id].prepairAnimationName);  //send to target Defence Animation
+                spineWidget.PlayAnimation(characterRes.skill[id].prepairAnimationName, false);
+            }
+
+            if (isOverlord) mana -= characterRes.skill[id].manaCost;
+            yield return new WaitForSeconds(preAttackDuration);
+            if (characterRes.skill[id].vfx != null)
+            {
+                Instantiate(characterRes.skill[id].vfx, battleLayer);
                 yield return new WaitForSeconds(vfxDuration);
             }
-            spineWidget.PlayAnimation(character.skill[id].attackAnimationName, false);
+            spineWidget.PlayAnimation(characterRes.skill[id].attackAnimationName, false);
             yield return new WaitForSeconds(attackDuration);
             PlayIdle();
             BattleOut();
@@ -202,10 +250,10 @@ namespace Overlewd
             UnHiglight();
             yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             if (vfx != null) Instantiate(vfx, transform);
-            spineWidget.PlayAnimation(character.ani_defence_name, false);
-            yield return new WaitForSeconds(defenceDuration/2);
+            spineWidget.PlayAnimation(characterRes.ani_defence_name, false);
+            yield return new WaitForSeconds(defenceDuration / 2);
             Damage(attacker.damage);
-            yield return new WaitForSeconds(defenceDuration/2);
+            yield return new WaitForSeconds(defenceDuration / 2);
             PlayIdle();
             BattleOut();
         }
@@ -222,8 +270,8 @@ namespace Overlewd
                 CharPortraitSet();
         }
 
-        public void Highlight() => border.SetActive(true);
-        public void UnHiglight() => border.SetActive(false);
+        public void Highlight() => border?.SetActive(true);
+        public void UnHiglight() => border?.SetActive(false);
 
         public void BattleIn()
         {
@@ -239,13 +287,13 @@ namespace Overlewd
             rt.DOAnchorPos(Vector2.zero, 0.25f);
             rt.DOScale(idleScale, 0.25f);
         }
-        public void Damage(int value)
+        public void Damage(float value)
         {
             if (value > 0)
             {
-                hp -= value;
-                hp = Mathf.Max(hp, 0);
-                if (hp <= 0)
+                health -= value;
+                health = Mathf.Max(health, 0);
+                if (health <= 0)
                 {
                     isDead = true;
                     bt.onClick.RemoveAllListeners();
@@ -261,25 +309,25 @@ namespace Overlewd
             yield return new WaitForSeconds(0.2f); //need for avoid idle animation state if isDead
             if (isOverlord)
             {
-                spineWidget.PlayAnimation(character.ani_defeat_name, false);
-                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(character.ani_defeat_name));
+                spineWidget.PlayAnimation(characterRes.ani_defeat_name, false);
+                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(characterRes.ani_defeat_name));
                 spineWidget.PlayAnimation("defeat2", true); //!костыль
             }
             else
-                spineWidget.PlayAnimation(character.ani_defeat_name, false);
+                spineWidget.PlayAnimation(characterRes.ani_defeat_name, false);
         }
 
         public void Heal(int value)
         {
             //heal fx or animation
-            hp += value;
-            hp = Mathf.Min(hp, maxHp);
+            health += value;
+            health = Mathf.Min(health, healthMax);
             UpdateUI();
         }
         public void HealMP(int value)
         {
-            mp += value;
-            mp = Mathf.Min(mp, maxMp);
+            mana += value;
+            mana = Mathf.Min(mana, manaMax);
             UpdateUI();
         }
         private void OnDestroy()

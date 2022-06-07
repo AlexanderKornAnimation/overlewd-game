@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DialogScreen : BaseFullScreen
+    public class DialogScreen : BaseFullScreenParent<DialogScreenInData>
     {
         private FMODEvent mainSound;
         private FMODEvent cutInSound;
@@ -58,10 +58,8 @@ namespace Overlewd
             [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/Inge"
         };
 
-        private SpineWidgetGroup cutInAnimation;
-        private SpineWidgetGroup emotionAnimation;
-
-        private DialogScreenInData inputData;
+        private SpineScene cutInAnimation;
+        private SpineScene emotionAnimation;
 
         private void Awake()
         {
@@ -98,12 +96,6 @@ namespace Overlewd
             cutIn.SetActive(false);
         }
 
-        public DialogScreen SetData(DialogScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         public override async Task BeforeShowMakeAsync()
         {
             switch (inputData.ftueStageData?.ftueState)
@@ -124,6 +116,9 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
+            if (dialogData == null)
+                return;
+            
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
@@ -143,9 +138,9 @@ namespace Overlewd
 
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageStartAsync(inputData.eventStageData.id);
+                await GameData.events.StageStart(inputData.eventStageData.id);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.StartStage(inputData.ftueStageData.id);
             }
@@ -155,9 +150,9 @@ namespace Overlewd
         {
             if (inputData.eventStageId.HasValue)
             {
-                await GameData.EventStageEndAsync(inputData.eventStageData.id);
+                await GameData.events.StageEnd(inputData.eventStageData.id);
             }
-            else
+            else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageData.id);
             }
@@ -169,7 +164,7 @@ namespace Overlewd
             {
                 case ("dialogue1", "chapter1"):
                     UIManager.MakeScreen<BattleScreen>().
-                        SetData(new BattleScreenInData
+                        SetData(new BaseBattleScreenInData
                         {
                             ftueStageId = GameData.ftue.mapChapter.GetStageByKey("battle1")?.id
                         }).RunShowScreenProcess();
@@ -179,9 +174,15 @@ namespace Overlewd
                     {
                         UIManager.ShowScreen<EventMapScreen>();
                     }
-                    else
+                    else if (inputData.ftueStageId.HasValue)
                     {
                         UIManager.ShowScreen<MapScreen>();
+                    }
+                    else
+                    {
+                        UIManager.MakeScreen<GirlScreen>().
+                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                            .RunShowScreenProcess();
                     }
                     break;
             }
@@ -336,9 +337,8 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.GetAnimationById(replica.cutInAnimationId.Value);
-                    cutInAnimation = SpineWidgetGroup.GetInstance(cutInAnimPos);
-                    cutInAnimation.Initialize(animation);
+                    var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
+                    cutInAnimation = SpineScene.GetInstance(animation, cutInAnimPos);
                 }
             }
             else
@@ -358,9 +358,8 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    var animation = GameData.GetAnimationById(replica.emotionAnimationId.Value);
-                    emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
-                    emotionAnimation.Initialize(animation);
+                    var animation = GameData.animations.GetSceneById(replica.emotionAnimationId);
+                    emotionAnimation = SpineScene.GetInstance(animation, emotionPos);
                 }
             }
             else
@@ -426,6 +425,12 @@ namespace Overlewd
         private void TextContainerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
+            if (dialogData == null)
+            {
+                LeaveScreen();
+                return;
+            }
+            
             currentReplicaId++;
             if (currentReplicaId < dialogReplicas.Count)
             {
@@ -442,7 +447,7 @@ namespace Overlewd
             //main sound
             if (replica.mainSoundId.HasValue)
             {
-                var mainSoundData = GameData.GetSoundById(replica.mainSoundId.Value);
+                var mainSoundData = GameData.sounds.GetById(replica.mainSoundId);
                 if (mainSoundData.eventPath != mainSound?.path)
                 {
                     mainSound?.Stop();
@@ -458,7 +463,7 @@ namespace Overlewd
             //cutIn sound
             if (replica.cutInSoundId.HasValue)
             {
-                var cutInSoundData = GameData.GetSoundById(replica.cutInSoundId.Value);
+                var cutInSoundData = GameData.sounds.GetById(replica.cutInSoundId);
                 if (cutInSoundData.eventPath != cutInSound?.path)
                 {
                     cutInSound?.Stop();
@@ -478,7 +483,7 @@ namespace Overlewd
             //replica sound
             if (replica.replicaSoundId.HasValue)
             {
-                var replicaSoundData = GameData.GetSoundById(replica.replicaSoundId.Value);
+                var replicaSoundData = GameData.sounds.GetById(replica.replicaSoundId);
                 if (replicaSoundData.eventPath != replicaSound?.path)
                 {
                     replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);
@@ -540,7 +545,7 @@ namespace Overlewd
         }
     }
 
-    public class DialogScreenInData : BaseScreenInData
+    public class DialogScreenInData : BaseFullScreenInData
     {
         
     }

@@ -7,14 +7,12 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DefeatPopup : BasePopup
+    public class DefeatPopup : BasePopupParent<DefeatPopupInData>
     {
         private Button magicGuildButton;
-        private Button inventoryButton;
+        private Button overlordButton;
         private Button haremButton;
         private Button editTeamButton;
-
-        private DefeatPopupInData inputData;
 
         void Awake()
         {
@@ -26,8 +24,8 @@ namespace Overlewd
             magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
 
-            inventoryButton = canvas.Find("InventoryButton").GetComponent<Button>();
-            inventoryButton.onClick.AddListener(InventoryButtonClick);
+            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton.onClick.AddListener(OverlordButtonClick);
 
             haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
@@ -42,7 +40,7 @@ namespace Overlewd
             {
                 case ("battle2", "chapter1"):
                     UITools.DisableButton(magicGuildButton);
-                    UITools.DisableButton(inventoryButton);
+                    UITools.DisableButton(overlordButton);
                     UITools.DisableButton(editTeamButton);
                     break;
                 default:
@@ -64,12 +62,6 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public DefeatPopup SetData(DefeatPopupInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         public override void MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
@@ -79,7 +71,12 @@ namespace Overlewd
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<TeamEditScreen>();
+            UIManager.MakeScreen<TeamEditScreen>().
+                SetData(new TeamEditScreenInData
+            {
+                prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
+                ftueStageId = UIManager.prevScreenInData.ftueStageId
+            }).RunShowScreenProcess();
         }
 
         private void MagicGuildButtonClick()
@@ -88,7 +85,7 @@ namespace Overlewd
             UIManager.ShowScreen<MagicGuildScreen>();
         }
 
-        private void InventoryButtonClick()
+        private void OverlordButtonClick()
         {
             // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             // UIManager.ShowScreen<InventoryAndUserScreen>();
@@ -108,18 +105,18 @@ namespace Overlewd
                         }).RunShowScreenProcess();
                     break;
 
-                case null:
-                    UIManager.ShowScreen<EventMapScreen>();
-                    break;
-
                 default:
-                    UIManager.ShowScreen<MapScreen>();
+                    UIManager.MakeScreen<HaremScreen>().
+                        SetData(new HaremScreenInData
+                    {
+                        prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
+                    }).RunShowScreenProcess();
                     break;
             }
         }
     }
 
-    public class DefeatPopupInData : BaseScreenInData
+    public class DefeatPopupInData : BasePopupInData
     {
 
     }

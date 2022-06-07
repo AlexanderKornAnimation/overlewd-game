@@ -7,7 +7,7 @@ using TMPro;
 
 namespace Overlewd
 {
-    public class EventOverlay : BaseOverlay
+    public class EventOverlay : BaseOverlayParent<EventOverlayInData>
     {
         public const int TabWeekly = 0;
         public const int TabMonthly = 1;
@@ -37,8 +37,6 @@ namespace Overlewd
 
         private int activeTabId = TabWeekly;
 
-        protected EventOverlayInData inputData;
-
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/EventOverlay/EventOverlay", transform);
@@ -62,12 +60,6 @@ namespace Overlewd
                     TabClick(tabId);
                 });
             }
-        }
-
-        public EventOverlay SetData(EventOverlayInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -100,7 +92,7 @@ namespace Overlewd
             eventButtonText[tabId].text = eventData.name;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
-            foreach (var quest in GameData.quests)
+            foreach (var quest in GameData.quests.quests)
             {
                 if (quest.eventId.HasValue)
                 {
@@ -121,7 +113,7 @@ namespace Overlewd
 
         private void InitTabs()
         {
-            foreach (var eventData in GameData.events)
+            foreach (var eventData in GameData.events.events)
             {
                 switch (eventData.type)
                 {
@@ -161,7 +153,7 @@ namespace Overlewd
         }
     }
 
-    public class EventOverlayInData
+    public class EventOverlayInData : BaseOverlayInData
     {
         public int activeTabId = EventOverlay.TabWeekly;
     }

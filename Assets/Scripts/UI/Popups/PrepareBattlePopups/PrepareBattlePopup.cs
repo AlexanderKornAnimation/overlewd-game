@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class PrepareBattlePopup : BasePopup
+    public class PrepareBattlePopup : BasePopupParent<PrepareBattlePopupInData>
     {
         private const int RewardsCount = 3;
 
@@ -19,6 +19,9 @@ namespace Overlewd
         private Button battleButton;
         private Button editTeamButton;
         private Button buffButton;
+        private Button staminaBuyButton;
+        private Button manaBuyButton;
+        private Button healthBuyButton;
         private RectTransform buffRect;
         private Transform enemyContent;
         private Transform allyContent;
@@ -32,9 +35,7 @@ namespace Overlewd
         private TextMeshProUGUI markers;
         private AdminBRO.Battle battleData;
 
-        private PrepareBattlePopupInData inputData;
-
-        void Awake()
+        private void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab(
@@ -47,7 +48,17 @@ namespace Overlewd
             var buff = canvas.Find("Buff");
             var enemiesBack = canvas.Find("EnemiesBack");
             var alliesBack = canvas.Find("AlliesBack");
+            var bottlePanel = canvas.Find("BottlePanel");
 
+            staminaBuyButton = bottlePanel.Find("Stamina").Find("BuyButton").GetComponent<Button>();
+            staminaBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            manaBuyButton = bottlePanel.Find("Mana").Find("BuyButton").GetComponent<Button>();
+            manaBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            healthBuyButton = bottlePanel.Find("Health").Find("BuyButton").GetComponent<Button>();
+            healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
+            
             enemyContent = enemiesBack.Find("Characters").Find("ScrollView").Find("Viewport").Find("Content");
             allyContent = alliesBack.Find("Characters");
 
@@ -142,19 +153,19 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public PrepareBattlePopup SetData(PrepareBattlePopupInData data)
+        private void PotionBuyButtonClick()
         {
-            inputData = data;
-            return this;
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowSubPopup<BottlesSubPopup>();
         }
-
+        
         private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
                 {
-                    prevScreenInData = inputData.prevScreenInData,
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -166,7 +177,7 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 {
-                    prevScreenInData = inputData,
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -182,8 +193,9 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
             UIManager.MakeScreen<BattleScreen>().
-                SetData(new BattleScreenInData
+                SetData(new BaseBattleScreenInData
                 {
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -210,7 +222,7 @@ namespace Overlewd
         }
     }
 
-    public class PrepareBattlePopupInData : BaseScreenInData
+    public class PrepareBattlePopupInData : BasePopupInData
     {
         
     }

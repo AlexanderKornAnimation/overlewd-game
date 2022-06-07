@@ -25,15 +25,14 @@ namespace Overlewd
     }
 
 
-    public class DialogNotification : BaseNotification
+    public class DialogNotification : BaseNotificationParent<DialogNotificationInData>
     {
         protected Button button;
         protected TextMeshProUGUI text;
         protected Transform emotionBack;
         protected Transform emotionPos;
 
-        protected SpineWidgetGroup emotionAnimation;
-        protected DialogNotificationInData inputData;
+        protected SpineScene emotionAnimation;
 
         protected virtual void Awake()
         {
@@ -49,12 +48,6 @@ namespace Overlewd
             text = banner.Find("Text").GetComponent<TextMeshProUGUI>();
             emotionBack = banner.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-        }
-
-        public DialogNotification SetData(DialogNotificationInData data)
-        {
-            inputData = data;
-            return this;
         }
 
         protected virtual void ButtonClick()
@@ -81,9 +74,8 @@ namespace Overlewd
 
                     if (firstReplica.emotionAnimationId.HasValue)
                     {
-                        var animation = GameData.GetAnimationById(firstReplica.emotionAnimationId.Value);
-                        emotionAnimation = SpineWidgetGroup.GetInstance(emotionPos);
-                        emotionAnimation.Initialize(animation);
+                        var animation = GameData.animations.GetSceneById(firstReplica.emotionAnimationId);
+                        emotionAnimation = SpineScene.GetInstance(animation, emotionPos);
                     }
                 }
             }
@@ -129,15 +121,10 @@ namespace Overlewd
         }
     }
 
-    public class DialogNotificationInData
+    public class DialogNotificationInData : BaseNotificationInData
     {
         public int? dialogId;
-        public AdminBRO.Dialog dialogData
-        {
-            get
-            {
-                return dialogId.HasValue ? GameData.GetDialogById(dialogId.Value) : null;
-            }
-        }
+        public AdminBRO.Dialog dialogData =>
+            GameData.dialogs.GetById(dialogId);
     }
 }

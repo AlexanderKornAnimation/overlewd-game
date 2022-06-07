@@ -23,9 +23,11 @@ namespace Overlewd
                 base.Awake();
                 
                 buyOneButton = content.Find("BuyOneButton").GetComponent<Button>();
-                priceForOne = buyOneButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+                buyOneButton.onClick.AddListener(BuyOneButtonClick);
+                    priceForOne = buyOneButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
                 
                 buyTenButton = content.Find("BuyTenButton").GetComponent<Button>();
+                buyTenButton.onClick.AddListener(BuyTenButtonClick);
                 priceForTen = buyTenButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
                 discount = buyTenButton.transform.Find("DiscountIcon").Find("Discount").GetComponent<TextMeshProUGUI>();
@@ -41,6 +43,27 @@ namespace Overlewd
             protected virtual void Customize()
             {
 
+            }
+
+            private void BuyOneButtonClick()
+            {
+                UIManager.MakeScreen<SummoningScreen>().
+                    SetData(new SummoningScreenInData
+                    {
+                        prevScreenInData = UIManager.prevScreenInData,
+                        tabType = gachaData.tabType,
+                    }).RunShowScreenProcess();
+            }
+            
+            private void BuyTenButtonClick()
+            {
+                UIManager.MakeScreen<SummoningScreen>().
+                    SetData(new SummoningScreenInData
+                {
+                    prevScreenInData = UIManager.prevScreenInData,
+                    tabType = gachaData.tabType,
+                    isTen = true
+                }).RunShowScreenProcess();
             }
 
             public static TabLinear GetInstance(Transform parent)

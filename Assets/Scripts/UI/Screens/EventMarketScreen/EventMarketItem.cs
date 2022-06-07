@@ -10,8 +10,12 @@ namespace Overlewd
     {
         public class EventMarketItem : MonoBehaviour
         {
-            public int eventMarketId;
-            public int tradableId;
+            public int? eventMarketId { get; set; }
+            public AdminBRO.EventMarketItem eventMarketData =>
+                GameData.markets.GetEventMarketById(eventMarketId.Value);
+            public int? tradableId { get; set; }
+            public AdminBRO.TradableItem tradableData =>
+                GameData.markets.GetTradableById(tradableId);
 
             private Image item;
             private TextMeshProUGUI description;
@@ -51,25 +55,25 @@ namespace Overlewd
 
             public void Customize()
             {
-                var tradableData = GameData.GetTradableById(tradableId);
-                var currencyId = tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
+                var _tradableData = tradableData;
+                var currencyId = _tradableData.price[0].currencyId;
+                var currencyData = GameData.currencies.GetById(currencyId);
 
-                if (tradableData.soldOut)
+                if (_tradableData.soldOut)
                 {
                     soldOut.gameObject.SetActive(true);
                     buyButton.gameObject.SetActive(false);
                     buyWithCountButton.gameObject.SetActive(false);
                 }
-                else if (tradableData.limit.HasValue)
+                else if (_tradableData.limit.HasValue)
                 {
                     soldOut.gameObject.SetActive(false);
                     buyButton.gameObject.SetActive(false);
                     buyWithCountButton.gameObject.SetActive(true);
 
-                    buyWithCountPrice.text = tradableData.price[0].amount.ToString();
+                    buyWithCountPrice.text = _tradableData.price[0].amount.ToString();
 
-                    buyWithCountCount.text = $"{tradableData.currentCount}/{tradableData.limit.Value}";
+                    buyWithCountCount.text = $"{_tradableData.currentCount}/{_tradableData.limit.Value}";
                 }
                 else
                 {
@@ -77,55 +81,61 @@ namespace Overlewd
                     buyButton.gameObject.SetActive(true);
                     buyWithCountButton.gameObject.SetActive(false);
 
-                    buyPrice.text = tradableData.price[0].amount.ToString();
+                    buyPrice.text = _tradableData.price[0].amount.ToString();
                 }
 
                 item.gameObject.SetActive(true);
-                item.sprite = ResourceManager.LoadSprite(tradableData.imageUrl);
-                description.text = tradableData.description;
+                item.sprite = ResourceManager.LoadSprite(_tradableData.imageUrl);
+                description.text = _tradableData.description;
             }
 
             private async void BuyButtonClick()
             {
-                var tradableData = GameData.GetTradableById(tradableId);
-                var currencyId = tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
+                var _tradableData = tradableData;
+                var currencyId = _tradableData.price[0].currencyId;
+                var currencyData = GameData.currencies.GetById(currencyId);
 
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                if (tradableData.canBuy)
+                if (_tradableData.canBuy)
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.BuyTradableAsync(eventMarketId, tradableId);
+                        await GameData.markets.BuyTradable(eventMarketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
                     {
-                        GameGlobalStates.bannerNotification_EventMarketId = eventMarketId;
-                        GameGlobalStates.bannerNotification_TradableId = tradableId;
-                        UIManager.ShowNotification<BannerNotification>();
+                        UIManager.MakeNotification<BannerNotification>().
+                            SetData(new BannerNotificationInData
+                            {
+                                eventMarketId = eventMarketId,
+                                tradableId = tradableId
+                            }).RunShowNotificationProcess();
                     }
                 }
             }
 
             private async void BuyWithCountButtonClick()
             {
-                var tradableData = GameData.GetTradableById(tradableId);
-                var currencyId = tradableData.price[0].currencyId;
-                var currencyData = GameData.GetCurrencyById(currencyId);
+                var _tradableData = tradableData;
+                var currencyId = _tradableData.price[0].currencyId;
+                var currencyData = GameData.currencies.GetById(currencyId);
 
-                if (tradableData.canBuy)
+                if (_tradableData.canBuy)
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.BuyTradableAsync(eventMarketId, tradableId);
+                        await GameData.markets.BuyTradable(eventMarketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
                     {
-                        GameGlobalStates.bannerNotification_EventMarketId = eventMarketId;
-                        GameGlobalStates.bannerNotification_TradableId = tradableId;
-                        UIManager.ShowNotification<BannerNotification>();
+                        UIManager.ShowNotification<BannerNotification>().
+                            SetData(new BannerNotificationInData
+                            {
+                                eventMarketId = eventMarketId,
+                                tradableId = tradableId
+                            }).RunShowNotificationProcess();
                     }
                 }
             }

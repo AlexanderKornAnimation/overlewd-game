@@ -1,53 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class HaremScreen : BaseFullScreen
+    public class HaremScreen : BaseFullScreenParent<HaremScreenInData>
     {
-        protected Button backButton;
+        private Button backButton;
+        private TextMeshProUGUI backButtonText;
 
-        protected Button ulviButton;
-        protected Image ulviGirl;
-        protected Image ulviBuff;
-        protected TextMeshProUGUI ulviDescription;
-        protected TextMeshProUGUI ulviName;
+        private Button ulviButton;
+        private Image ulviGirl;
+        private Image ulviBuff;
+        private TextMeshProUGUI ulviDescription;
+        private TextMeshProUGUI ulviName;
 
-        protected Button adrielButton;
-        protected Image adrielGirl;
-        protected Image adrielBuff;
-        protected TextMeshProUGUI adrielDescription;
-        protected TextMeshProUGUI adrielName;
-        protected Transform adrielNotActive;
+        private Button adrielButton;
+        private Image adrielGirl;
+        private Image adrielBuff;
+        private TextMeshProUGUI adrielDescription;
+        private TextMeshProUGUI adrielName;
+        private Transform adrielNotActive;
 
-        protected Button ingieButton;
-        protected TextMeshProUGUI ingieName;
-        protected Transform ingieNotActive;
+        private Button ingieButton;
+        private TextMeshProUGUI ingieName;
+        private Transform ingieNotActive;
 
-        protected Button fayeButton;
-        protected TextMeshProUGUI fayeName;
-        protected Transform fayeNotActive;
+        private Button fayeButton;
+        private TextMeshProUGUI fayeName;
+        private Transform fayeNotActive;
 
-        protected Button liliButton;
-        protected TextMeshProUGUI liliName;
-        protected Transform liliNotActive;
+        private Button liliButton;
+        private TextMeshProUGUI liliName;
+        private Transform liliNotActive;
 
-        protected Button battleGirlsButton;
-        protected Image battleGirlsGirl;
-        protected TextMeshProUGUI battleGirlsTitle;
+        private Button battleGirlsButton;
+        private Image battleGirlsGirl;
+        private TextMeshProUGUI battleGirlsTitle;
 
-        private HaremScreenInData inputData;
-
-        protected virtual void Awake()
+        private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/HaremScreen/Harem", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButtonText = backButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             backButton.onClick.AddListener(BackButtonClick);
 
             ulviButton = canvas.Find("UlviButton").GetComponent<Button>();
@@ -86,51 +87,44 @@ namespace Overlewd
             battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
         }
 
-        protected virtual void Start()
+        public override async Task BeforeShowMakeAsync()
         {
-            Customize();
+            if (inputData?.prevScreenInData != null)
+            {
+                if (inputData.prevScreenInData.IsType<MapScreenInData>() || inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                {
+                    backButtonText.text = "Back to\nthe Map";
+                }
+            }
+            
+            await Task.CompletedTask;
         }
 
-        public HaremScreen SetData(HaremScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
-        protected virtual void Customize()
-        {
-        }
-
-        protected virtual void BackButtonClick()
+        private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<CastleScreen>();
-            }
-            
-            else if (inputData.ftueStageId.HasValue)
-            {
-                UIManager.MakeScreen<MapScreen>().
-                    SetData(new MapScreenInData
-                    {
-                        ftueStageId = inputData.ftueStageId
-                    }).RunShowScreenProcess();
-            }
-            else if (inputData.eventStageId.HasValue)
-            {
-                UIManager.MakeScreen<EventMapScreen>().
-                    SetData(new EventMapScreenInData
-                    {
-                        eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
-            }
-            else if (inputData.prevScreenInData != null)
+            if (inputData?.prevScreenInData != null)
             {
                 if (inputData.prevScreenInData.IsType<MapScreenInData>())
                 {
-                    UIManager.ShowScreen<MapScreen>();
+                    UIManager.MakeScreen<MapScreen>().
+                        SetData(new MapScreenInData
+                    {
+                        ftueStageId = inputData.ftueStageId
+                    }).RunShowScreenProcess();
+                }
+                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                {
+                    UIManager.MakeScreen<EventMapScreen>().
+                        SetData(new EventMapScreenInData
+                    {
+                        eventStageId = inputData.eventStageId
+                    }).RunShowScreenProcess();
+                }
+                else
+                {
+                    UIManager.ShowScreen<CastleScreen>();
                 }
             }
             else
@@ -139,7 +133,7 @@ namespace Overlewd
             }
         }
 
-        protected virtual void UlviButtonClick()
+        private void UlviButtonClick()
         {
             if (inputData == null)
             {
@@ -158,24 +152,24 @@ namespace Overlewd
             }
         }
 
-        protected virtual void AdrielButtonClick()
+        private void AdrielButtonClick()
         {
             // UIManager.ShowScreen<GirlScreen>();
         }
 
-        protected virtual void IngieButtonClick()
+        private void IngieButtonClick()
         {
         }
 
-        protected virtual void FayeButtonClick()
+        private void FayeButtonClick()
         {
         }
 
-        protected virtual void LiliButtonClick()
+        private void LiliButtonClick()
         {
         }
 
-        protected virtual void BattleGirlsButtonClick()
+        private void BattleGirlsButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (inputData == null)
@@ -195,7 +189,8 @@ namespace Overlewd
         }
     }
 
-    public class HaremScreenInData : BaseScreenInData
+    public class HaremScreenInData : BaseFullScreenInData
     {
+
     }
 }

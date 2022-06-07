@@ -1,3 +1,5 @@
+//#define DEV_BUILD
+
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -8,7 +10,7 @@ namespace Overlewd
 {
     public static class HttpCore
     {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !DEV_BUILD
         public const string ApiVersion = "4"; //active api version
 #else
         public const string ApiVersion = "5"; //dev api version

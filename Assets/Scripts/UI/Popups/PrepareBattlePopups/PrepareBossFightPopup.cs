@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class PrepareBossFightPopup : BasePopup
+    public class PrepareBossFightPopup : BasePopupParent<PrepareBossFightPopupInData>
     {
         private const int RewardsCount = 3;
 
@@ -17,6 +17,9 @@ namespace Overlewd
         private Button battleButton;
         private Button editTeamButton;
         private Button buffButton;
+        private Button staminaBuyButton;
+        private Button manaBuyButton;
+        private Button healthBuyButton;
         private RectTransform buffRect;
         private Transform bossPos;
         private Transform allyContent;
@@ -30,8 +33,6 @@ namespace Overlewd
         private TextMeshProUGUI markers;
         private AdminBRO.Battle battleData;
 
-        private PrepareBossFightPopupInData inputData;
-
         void Awake()
         {
             var screenInst =
@@ -44,6 +45,16 @@ namespace Overlewd
             var alliesBack = canvas.Find("AlliesBack");
             var buff = canvas.Find("Buff");
             var enemyBack = canvas.Find("EnemyBack");
+            var bottlePanel = canvas.Find("BottlePanel");
+
+            staminaBuyButton = bottlePanel.Find("Stamina").Find("BuyButton").GetComponent<Button>();
+            staminaBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            manaBuyButton = bottlePanel.Find("Mana").Find("BuyButton").GetComponent<Button>();
+            manaBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            healthBuyButton = bottlePanel.Find("Health").Find("BuyButton").GetComponent<Button>();
+            healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             bossPos = enemyBack.Find("BossPos");
             allyContent = alliesBack.Find("Characters");
@@ -124,12 +135,6 @@ namespace Overlewd
             }
         }
 
-        public PrepareBossFightPopup SetData(PrepareBossFightPopupInData data)
-        {
-            inputData = data;
-            return this;
-        }
-
         public override async Task BeforeShowMakeAsync()
         {
             battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
@@ -145,13 +150,19 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        private void PotionBuyButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowSubPopup<BottlesSubPopup>();
+        }
+        
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 {
-                    prevScreenInData = inputData,
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -163,7 +174,7 @@ namespace Overlewd
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
                 {
-                    prevScreenInData = inputData.prevScreenInData,
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -179,8 +190,9 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
             UIManager.MakeScreen<BossFightScreen>().
-                SetData(new BossFightScreenInData
+                SetData(new BaseBattleScreenInData
                 {
+                    prevScreenInData = UIManager.prevScreenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).RunShowScreenProcess();
@@ -215,7 +227,7 @@ namespace Overlewd
         }
     }
 
-    public class PrepareBossFightPopupInData : BaseScreenInData
+    public class PrepareBossFightPopupInData : BasePopupInData
     {
        
     }

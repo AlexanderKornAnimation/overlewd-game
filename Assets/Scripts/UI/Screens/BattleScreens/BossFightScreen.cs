@@ -7,14 +7,7 @@ namespace Overlewd
 {
 	public class BossFightScreen : BaseBossFightScreen
 	{
-        private BossFightScreenInData inputData;
         private bool battleIsWin;
-
-        public BossFightScreen SetData(BossFightScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
 
         public override void StartBattle()
         {
@@ -71,7 +64,7 @@ namespace Overlewd
             }
             else
             {
-                await GameData.EventStageStartAsync(inputData.eventStageId.Value);
+                await GameData.events.StageStart(inputData.eventStageId.Value);
             }
         }
 
@@ -94,29 +87,12 @@ namespace Overlewd
             }
             else
             {
-                await GameData.EventStageEndAsync(inputData.eventStageId.Value,
+                await GameData.events.StageEnd(inputData.eventStageId.Value,
                     new AdminBRO.EventStageEndData
                     {
                         win = battleIsWin
                     });
             }
         }
-
-        public override BattleManagerInData GetBattleData()
-        {
-            if (inputData.ftueStageId.HasValue)
-            {
-                return BattleManagerInData.InstFromFTUEStage(inputData?.ftueStageData);
-            }
-            else
-            {
-                return BattleManagerInData.InstFromEventStage(inputData?.eventStageData);
-            }
-        }
-    }
-
-    public class BossFightScreenInData : BaseScreenInData
-    {
-        
     }
 }

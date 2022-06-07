@@ -35,18 +35,18 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            var quests = GameData.quests;
-
-            for (int qId = 0; qId < quests.Count; qId++)
+            var questNum = 0;
+            foreach (var questData in GameData.quests.quests)
             {
-                NSQuestWidget.BaseQuestButton questButton = (qId % 3) switch
+                NSQuestWidget.BaseQuestButton questButton = (questNum % 3) switch
                 {
                     0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
                     1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
                     2 => NSQuestWidget.SideQuestButton3.GetInstance(content),
                     _ => null
                 };
-                questButton.questData = quests[qId];
+                questButton.questId = questData.id;
+                questNum++;
             }
         }
 

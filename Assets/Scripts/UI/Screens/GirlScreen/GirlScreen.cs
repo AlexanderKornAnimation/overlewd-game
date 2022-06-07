@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class GirlScreen : BaseFullScreen
+    public class GirlScreen : BaseFullScreenParent<GirlScreenInData>
     {
         private Image girlImage;
         
@@ -32,13 +32,11 @@ namespace Overlewd
         private Image bannerArt;
         private GameObject bannerNotification; 
 
-        private Button seduceButton;
+        private Button sexButton;
         private Button dialogButton;
         private Button portalButton;
         private Button chestButton;
         private Button backButton;
-
-        private GirlScreenInData inputData;
         
         private void Awake()
         {
@@ -71,7 +69,7 @@ namespace Overlewd
             bannerArt = bannerButton.GetComponent<Image>();
             bannerNotification = banner.Find("Notification").GetComponent<GameObject>();
 
-            seduceButton = canvas.Find("SeduceButton").GetComponent<Button>();
+            sexButton = canvas.Find("SexButton").GetComponent<Button>();
             dialogButton = canvas.Find("DialogButton").GetComponent<Button>();
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             chestButton = canvas.Find("ChestButton").GetComponent<Button>();
@@ -81,6 +79,8 @@ namespace Overlewd
             portalButton.onClick.AddListener(PortalButtonClick);
             chestButton.onClick.AddListener(ChestButtonClick);
             backButton.onClick.AddListener(BackButtonClick);
+            sexButton.onClick.AddListener(SexButtonClick);
+            dialogButton.onClick.AddListener(DialogButtonClick);
         }
 
         private void Start()
@@ -93,10 +93,23 @@ namespace Overlewd
             
         }
 
-        public GirlScreen SetData(GirlScreenInData data)
+        private void SexButtonClick()
         {
-            inputData = data;
-            return this;
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<SexScreen>().
+                SetData(new SexScreenInData
+            {
+                prevScreenInData = inputData
+            }).RunShowScreenProcess();
+        }
+
+        private void DialogButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<DialogScreen>().SetData(new DialogScreenInData
+            {
+                prevScreenInData = inputData
+            }).RunShowScreenProcess();
         }
         
         private void BannerButtonClick()
@@ -122,14 +135,18 @@ namespace Overlewd
         
         private void PortalButtonClick()
         {
-            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            // UIManager.ShowScreen<PortalScreen>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<PortalScreen>().
+                SetData(new PortalScreenInData
+            {
+                activeButtonId = PortalScreenInData.shardsButtonId
+            }).RunShowScreenProcess();
         }
         
         private void ChestButtonClick()
         {
-            // SoundManager.PlayOneShot(SoundManager.FMODEventPath.UI.ButtonClick);
-            // UIManager.ShowPopup<ChestPopup>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowPopup<ChestPopup>();
         }
         
         private void BackButtonClick()
@@ -150,7 +167,7 @@ namespace Overlewd
         }
     }
 
-    public class GirlScreenInData : BaseScreenInData
+    public class GirlScreenInData : BaseFullScreenInData
     {
         public string girlName;
     }

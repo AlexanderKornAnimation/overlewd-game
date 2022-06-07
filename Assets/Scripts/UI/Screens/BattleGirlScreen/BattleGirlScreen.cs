@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BattleGirlScreen : BaseFullScreen
+    public class BattleGirlScreen : BaseFullScreenParent<BattleGirlScreenInData>
     {
         private Button backButton;
-        private Button forgeButton;
+        private Button laboratoryButton;
         private Button sexSceneButton;
         
         private Button levelUpButton;
@@ -36,8 +36,6 @@ namespace Overlewd
         private Image weapon;
         private Button weaponScreenButton;
 
-        private BattleGirlScreenInData inputData;
-
         private void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab
@@ -58,7 +56,9 @@ namespace Overlewd
             levelUpButton = canvas.Find("LevelUpButton").GetComponent<Button>();
             levelUpButtonMaxLevel = levelUpButton.transform.Find("MaxLevel").GetComponent<GameObject>();
             
-            forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
+            laboratoryButton = canvas.Find("ForgeButton").GetComponent<Button>();
+            laboratoryButton.onClick.AddListener(LaboratoryButtonClick);
+            
             sexSceneButton = canvas.Find("SexSceneButton").GetComponent<Button>();
 
             speed = mainStats.Find("Speed").Find("Stat").GetComponent<TextMeshProUGUI>();
@@ -83,12 +83,6 @@ namespace Overlewd
         {
             Customize();
         }
-
-        public BattleGirlScreen SetData(BattleGirlScreenInData data)
-        {
-            inputData = data;
-            return this;
-        }
         
         private void Customize()
         {
@@ -105,7 +99,7 @@ namespace Overlewd
             else
             {
                 UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(inputData.prevScreenInData as TeamEditScreenInData).
+                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
                     RunShowScreenProcess();
             }
         }
@@ -129,6 +123,12 @@ namespace Overlewd
             }
         }
 
+        private void LaboratoryButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<LaboratoryScreen>();
+        }
+        
         private void LevelUpButtonClick()
         {
         }
@@ -144,7 +144,7 @@ namespace Overlewd
         }
     }
 
-    public class BattleGirlScreenInData : BaseScreenInData
+    public class BattleGirlScreenInData : BaseFullScreenInData
     {
         public int? characterId;
     }

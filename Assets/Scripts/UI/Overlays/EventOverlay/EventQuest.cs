@@ -12,7 +12,11 @@ namespace Overlewd
         public class EventQuest : MonoBehaviour
         {
             public int eventId { get; set; }
+            public AdminBRO.EventItem eventData =>
+                GameData.events.GetEventById(eventId);
             public int questId { get; set; }
+            public AdminBRO.QuestItem questData =>
+                GameData.quests.GetById(questId);
 
             private Transform canvas;
             private bool canvasActive = true;
@@ -47,12 +51,12 @@ namespace Overlewd
 
             private void Customize()
             {
-                var eventData = GameData.GetEventById(eventId);
-                var questData = GameData.GetQuestById(questId);
+                var _eventData = eventData;
+                var _questData = questData;
 
-                eventName.text = eventData?.name;
-                title.text = questData?.name;
-                description.text = questData?.description;
+                eventName.text = _eventData?.name;
+                title.text = _questData?.name;
+                description.text = _questData?.description;
 
                 for (int i = 1; i <= 5; i++)
                 {
@@ -73,7 +77,7 @@ namespace Overlewd
             {
                 Destroy(mapButton.gameObject.GetComponent<Selector>());
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                GameGlobalStates.eventData = GameData.GetEventById(eventId);
+                eventData.SetAsMapEvent();
                 UIManager.ShowScreen<EventMapScreen>();
             }
 

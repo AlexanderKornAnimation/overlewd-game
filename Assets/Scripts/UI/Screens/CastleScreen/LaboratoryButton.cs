@@ -14,12 +14,12 @@ namespace Overlewd
             {
                 base.Awake();
                 notification = transform.Find("MergingAvailableNotification");
-                UITools.DisableButton(button);
             }
-
+            
             protected override void ButtonClick()
             {
                 base.ButtonClick();
+                UIManager.ShowScreen<LaboratoryScreen>();
             }
 
             public static LaboratoryButton GetInstance(Transform parent)

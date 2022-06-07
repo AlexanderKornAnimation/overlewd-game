@@ -11,13 +11,8 @@ namespace Overlewd
         public abstract class BaseStageButton : BaseButton
         {
             public int? stageId { get; set; }
-            protected AdminBRO.EventStageItem stageData
-            {
-                get
-                {
-                    return stageId.HasValue ? GameData.GetEventStageById(stageId.Value) : null;
-                }
-            }
+            protected AdminBRO.EventStageItem stageData =>
+                GameData.events.GetStageById(stageId.Value);
             
             protected Transform done;
             protected Transform animPos;

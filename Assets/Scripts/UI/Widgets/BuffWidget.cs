@@ -14,8 +14,6 @@ namespace Overlewd
         private Button button;
         private TextMeshProUGUI description;
         private TextMeshProUGUI timer;
-
-        public BaseScreenInData inputData { get; set; }
         
         void Awake()
         {
@@ -34,9 +32,9 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
-            {
-                prevScreenInData = inputData
-            }).RunShowScreenProcess();
+                {
+                    prevScreenInData = UIManager.prevScreenInData
+                }).RunShowScreenProcess();
         }
 
         public void Show()
