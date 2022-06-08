@@ -1,5 +1,3 @@
-//#define DEV_BUILD
-
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
