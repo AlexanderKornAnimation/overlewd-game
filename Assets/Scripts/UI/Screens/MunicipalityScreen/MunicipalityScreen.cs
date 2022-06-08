@@ -185,16 +185,14 @@ namespace Overlewd
             {
                 NameByKey(buildingData.key).text = buildingData.name;
 
-                if (!buildingData.isBuilt)
+                var isOpen = !GameData.progressMode || buildingData.isBuilt;
+                
+                if (buildingData.key != AdminBRO.Building.Key_Castle)
                 {
-                    if (buildingData.key != AdminBRO.Building.Key_Castle)
-                    {
-                        AvailableByKey(buildingData.key).SetActive(false);
-                    }
+                    AvailableByKey(buildingData.key).SetActive(isOpen);
                 }
-
-                if (!buildingData.isMax)
-                    MaxLevelByKey(buildingData.key).SetActive(false);
+                
+                MaxLevelByKey(buildingData.key).SetActive(buildingData.isMax);
             }
         }
 
@@ -215,6 +213,7 @@ namespace Overlewd
                     {
                         GameData.ftue.info.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
+
                     break;
             }
 
@@ -241,7 +240,6 @@ namespace Overlewd
                 case UIEvent.Type.RestoreScreenFocusAfterPopup:
                     if (eventData.uiSenderType == typeof(BuildingPopup))
                     {
-
                     }
 
                     break;
@@ -251,8 +249,7 @@ namespace Overlewd
         private void MunicipalityButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BuildingPopup>().
-                SetData(new BuildingPopupInData
+            UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.municipality?.id
             }).RunShowPopupProcess();

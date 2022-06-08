@@ -23,16 +23,16 @@ namespace Overlewd
         private Transform catacombs;
         private Transform aerostat;
 
-        private NSCastleScreen.HaremButton haremButton;
-        private NSCastleScreen.MarketButton marketButton;
-        private NSCastleScreen.ForgeButton forgeButton;
-        private NSCastleScreen.MagicGuildButton magicGuildButton;
-        private NSCastleScreen.PortalButton portalButton;
-        private NSCastleScreen.CastleButton castleButton;
-        private NSCastleScreen.MunicipalityButton municipalityButton;
-        private NSCastleScreen.LaboratoryButton laboratoryButton;
-        private NSCastleScreen.CatacombsButton catacombsButton;
-        private NSCastleScreen.AerostatButton aerostatButton;
+        private NSCastleScreen.BaseButton haremButton;
+        private NSCastleScreen.BaseButton marketButton;
+        private NSCastleScreen.BaseButton forgeButton;
+        private NSCastleScreen.BaseButton magicGuildButton;
+        private NSCastleScreen.BaseButton portalButton;
+        private NSCastleScreen.BaseButton castleButton;
+        private NSCastleScreen.BaseButton municipalityButton;
+        private NSCastleScreen.BaseButton laboratoryButton;
+        private NSCastleScreen.BaseButton catacombsButton;
+        private NSCastleScreen.BaseButton aerostatButton;
 
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
@@ -67,6 +67,7 @@ namespace Overlewd
             foreach (var building in GameData.buildings.buildings)
             {
                 var showBuilding = GameData.progressMode ? building.isBuilt : true;
+                
                 if (showBuilding)
                 {
                     switch (building.key)
@@ -88,9 +89,6 @@ namespace Overlewd
                             break;
                         case AdminBRO.Building.Key_Castle:
                             castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
-                            if (GameData.ftue.stats.IsLastEnededStage("battle4", "chapter1")) {
-                                castleButton.Hide();
-                            }
                             break;
                         case AdminBRO.Building.Key_Municipality:
                             municipalityButton = NSCastleScreen.MunicipalityButton.GetInstance(municipality);
@@ -125,6 +123,9 @@ namespace Overlewd
                     break;
             }
 
+            var button = GetBuildingButtonByKey(inputData?.buildedBuildingKey);
+            button?.Hide();
+            
             await Task.CompletedTask;
         }
 
@@ -162,10 +163,35 @@ namespace Overlewd
                     }
                     break;
             }
+
+            var buildingButton = GetBuildingButtonByKey(inputData.buildedBuildingKey);
+
+            if (buildingButton != null)
+            { 
+                await buildingButton.ShowAsync();
+            }
             
             await Task.CompletedTask;
         }
 
+        private NSCastleScreen.BaseButton GetBuildingButtonByKey(string key)
+        {
+            return key switch
+            {
+                AdminBRO.Building.Key_Castle => castleButton,
+                AdminBRO.Building.Key_Aerostat => aerostatButton,
+                AdminBRO.Building.Key_Municipality => municipalityButton,
+                AdminBRO.Building.Key_Catacombs => catacombsButton,
+                AdminBRO.Building.Key_Harem => haremButton,
+                AdminBRO.Building.Key_MagicGuild => magicGuildButton,
+                AdminBRO.Building.Key_Forge => forgeButton,
+                AdminBRO.Building.Key_Portal => portalButton,
+                AdminBRO.Building.Key_Laboratory => laboratoryButton,
+                AdminBRO.Building.Key_Market => marketButton,
+                _ => null
+            };
+        }
+        
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowShow);
@@ -187,5 +213,6 @@ namespace Overlewd
 
     public class CastleScreenInData : BaseFullScreenInData
     {
+        public string buildedBuildingKey;
     }
 }
