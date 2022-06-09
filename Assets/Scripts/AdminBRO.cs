@@ -1219,6 +1219,8 @@ namespace Overlewd
 
             public class Level
             {
+                public string title;
+                public string description;
                 public List<PriceItem> price;
                 public List<PriceItem> momentPrice;
                 public int minutesToBuild;
