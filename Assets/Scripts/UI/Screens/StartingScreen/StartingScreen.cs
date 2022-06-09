@@ -14,6 +14,7 @@ namespace Overlewd
         private Button Reset_FTUE_Button;
         private Button Castle_Button;
         private Button Battle_Button;
+        private Button Console_Button;
 
         void Awake()
         {
@@ -36,8 +37,15 @@ namespace Overlewd
             Battle_Button = canvas.Find("Battle").GetComponent<Button>();
             Battle_Button.onClick.AddListener(Battle_ButtonClick);
 
+            Console_Button = canvas.Find("Console").GetComponent<Button>();
+            Console_Button.onClick.AddListener(Console_ButtonClick);
+
 #if !UNITY_EDITOR
             Battle_Button.gameObject.SetActive(false);
+#endif
+
+#if !(DEV_BUILD || UNITY_EDITOR)
+            Console_Button.gameObject.SetActive(false);
 #endif
         }
 
@@ -94,6 +102,12 @@ namespace Overlewd
                 {
                     battleId = 19
                 }).RunShowScreenProcess();
+        }
+
+        private void Console_ButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.SwitchConsoleVisible();
         }
 
         private async void FTUEReset()
