@@ -197,7 +197,13 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public string icon356Url;
+            public string icon256Url;
+            public string icon186Url;
+            public string icon153Url;
+            public string icon70Url;
             public string iconUrl;
+            public string key;
             public bool nutaku;
             public string createdAt;
             public string updatedAt;
