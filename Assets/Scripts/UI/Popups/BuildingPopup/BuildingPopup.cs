@@ -42,8 +42,6 @@ namespace Overlewd
             background = canvas.Find("Background");
             imageSpawnPoint = background.Find("ImageSpawnPoint");
 
-            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<TextMeshProUGUI>();
-            fullPotentialTitle = canvas.Find("FullPotentialTitle").GetComponent<TextMeshProUGUI>();
             buildingName = canvas.Find("BuildingName").GetComponent<TextMeshProUGUI>();
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
@@ -115,15 +113,12 @@ namespace Overlewd
                     count[i].color = buildingData.canUpgrade ? Color.white : Color.red;
                 }
 
-                var momentPrice = nextLevelData.momentPrice;
-                var momentPriceAmount = momentPrice.Count > 0 ? momentPrice.First().amount : 0;
+                var momentPriceAmount = nextLevelData.momentPrice.Count > 0 ? nextLevelData.momentPrice.First().amount : 0;
 
                 paidBuildingButtonText.text = $"Summon building\nfor <color=red>{momentPriceAmount}</color> crystals";
 
                 description.text = buildingData.description ?? "EMPTY";
                 buildingName.text = buildingData.name ?? "EMPTY";
-                fullPotentialDescription.text = nextLevelData.description ?? "EMPTY";
-                fullPotentialTitle.text = nextLevelData.title ?? "EMPTY";
             }
 
             await Task.CompletedTask;
