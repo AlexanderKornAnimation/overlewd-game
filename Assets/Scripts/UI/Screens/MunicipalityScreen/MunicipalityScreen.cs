@@ -184,12 +184,11 @@ namespace Overlewd
             foreach (var buildingData in GameData.buildings.buildings)
             {
                 NameByKey(buildingData.key).text = buildingData.name;
-
-                var isOpen = !GameData.progressMode || buildingData.isBuilt;
                 
                 if (buildingData.key != AdminBRO.Building.Key_Castle)
                 {
-                    AvailableByKey(buildingData.key).SetActive(isOpen);
+                    var isAvailable = !buildingData.isMax;
+                    AvailableByKey(buildingData.key).SetActive(isAvailable);
                 }
                 
                 MaxLevelByKey(buildingData.key).SetActive(buildingData.isMax);

@@ -65,10 +65,8 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             foreach (var building in GameData.buildings.buildings)
-            {
-                var showBuilding = GameData.progressMode ? building.isBuilt : true;
-                
-                if (showBuilding)
+            {                
+                if (building.isBuilt)
                 {
                     switch (building.key)
                     {
