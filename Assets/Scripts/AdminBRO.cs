@@ -745,6 +745,8 @@ namespace Overlewd
             public float? mana;
             public int? sexSceneId;
             public string key;
+            public List<PriceItem> levelUpPrice;
+            public List<PriceItem> mergePrice;
 
             public class Animation
             {
@@ -807,15 +809,18 @@ namespace Overlewd
         [Serializable]
         public class CharacterSkill
         {
+            public string name;
+            public string description;
+            public string icon;
             public string effect;
             public string type;
-            public string skillIcon;
             public int damage;
             public int effectProb;
             public int effectActingDuration;
             public int effectCooldownDuration;
             public List<PriceItem> levelUpPrice;
             public int level;
+            public int manaCost;
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)
@@ -1198,8 +1203,6 @@ namespace Overlewd
             public string key;
             public string name;
             public string description;
-            public string image;
-            public string icon;
             public List<Level> levels;
             public int? currentLevel;
             public int? nextLevel;
@@ -1223,7 +1226,6 @@ namespace Overlewd
                 public string description;
                 public List<PriceItem> price;
                 public List<PriceItem> momentPrice;
-                public int minutesToBuild;
 
                 [JsonProperty(Required = Required.Default)]
                 public bool canBuild => GameData.player.CanBuy(price);
