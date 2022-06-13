@@ -814,13 +814,17 @@ namespace Overlewd
             public string icon;
             public string effect;
             public string type;
-            public int damage;
             public int effectProb;
             public int effectActingDuration;
             public int effectCooldownDuration;
             public List<PriceItem> levelUpPrice;
             public int level;
             public int manaCost;
+            public string actionType;
+            public bool AOE;
+            public int amount;
+            public string trigger;
+            public int effectAmount;
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)
