@@ -9,21 +9,17 @@ namespace Overlewd
 {
     public class StartingScreen : BaseFullScreenParent<StartingScreenInData>
     {
-        private Button FTUE_Progress_Button;
         private Button FTUE_Button;
         private Button Reset_FTUE_Button;
         private Button Castle_Button;
+        private Button FTUE_Dev_Button;
         private Button Battle_Button;
-        private Button Console_Button;
 
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/StartingScreen/StartingScreen", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-
-            FTUE_Progress_Button = canvas.Find("FTUE_Progress").GetComponent<Button>();
-            FTUE_Progress_Button.onClick.AddListener(FTUE_Progress_ButtonClick);
 
             FTUE_Button = canvas.Find("FTUE").GetComponent<Button>();
             FTUE_Button.onClick.AddListener(FTUE_ButtonClick);
@@ -34,26 +30,26 @@ namespace Overlewd
             Castle_Button = canvas.Find("Castle").GetComponent<Button>();
             Castle_Button.onClick.AddListener(Castle_ButtonClick);
 
+            FTUE_Dev_Button = canvas.Find("FTUE_Dev").GetComponent<Button>();
+            FTUE_Dev_Button.onClick.AddListener(FTUE_Dev_ButtonClick);
+
             Battle_Button = canvas.Find("Battle").GetComponent<Button>();
             Battle_Button.onClick.AddListener(Battle_ButtonClick);
-
-            Console_Button = canvas.Find("Console").GetComponent<Button>();
-            Console_Button.onClick.AddListener(Console_ButtonClick);
 
 #if !UNITY_EDITOR
             Battle_Button.gameObject.SetActive(false);
 #endif
 
 #if !(DEV_BUILD || UNITY_EDITOR)
-            Console_Button.gameObject.SetActive(false);
+            FTUE_Dev_Button.gameObject.SetActive(false);
 #endif
         }
 
-        private void FTUE_Progress_ButtonClick()
+        private void FTUE_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            GameData.progressMode = true;
+            GameData.devMode = false;
             GameData.ftue.activeChapter.SetAsMapChapter();
 
             var firstSexStage = GameData.ftue.info.chapter1.GetStageByKey("sex1");
@@ -71,15 +67,6 @@ namespace Overlewd
             }
         }
 
-        private void FTUE_ButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            GameData.progressMode = false;
-            GameData.ftue.info.chapter1.SetAsMapChapter();
-            UIManager.ShowScreen<MapScreen>();
-        }
-
         private void Reset_FTUE_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -89,25 +76,28 @@ namespace Overlewd
         private void Castle_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            GameData.progressMode = false;
+            GameData.devMode = true;
             UIManager.ShowScreen<CastleScreen>();
+        }
+
+        private void FTUE_Dev_ButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+
+            GameData.devMode = true;
+            GameData.ftue.info.chapter1.SetAsMapChapter();
+            UIManager.ShowScreen<MapScreen>();
         }
 
         private void Battle_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            GameData.progressMode = false;
+            GameData.devMode = true;
             UIManager.MakeScreen<BaseBattleScreen>().
                 SetData(new BaseBattleScreenInData
                 {
                     battleId = 19
                 }).RunShowScreenProcess();
-        }
-
-        private void Console_ButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.SwitchConsoleVisible();
         }
 
         private async void FTUEReset()

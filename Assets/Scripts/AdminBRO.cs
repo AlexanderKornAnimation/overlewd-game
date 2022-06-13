@@ -1034,8 +1034,8 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? lastEndedState =>
-                GameData.progressMode switch {
-                    true => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
+                GameData.devMode switch {
+                    false => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
                     _ => null
                 };
 
@@ -1101,9 +1101,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? ftueState =>
-                GameData.progressMode switch
+                GameData.devMode switch
                 {
-                    true => (key, ftueChapterData?.key),
+                    false => (key, ftueChapterData?.key),
                     _ => null
                 };
         }
@@ -1143,17 +1143,17 @@ namespace Overlewd
         }
 
         //animations
-        public static async Task<List<AnimationScene>> animationScenesAsync()
+        public static async Task<List<Animation>> animationsAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/animations";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<AnimationScene>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
             }
         }
 
         [Serializable]
-        public class AnimationScene
+        public class Animation
         {
             public int id;
             public string title;

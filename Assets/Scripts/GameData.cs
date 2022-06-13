@@ -22,7 +22,7 @@ namespace Overlewd
 
     public static class GameData
     {
-        public static bool progressMode { get; set; } = false;
+        public static bool devMode { get; set; } = false;
         public static Quests quests { get; } = new Quests();
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
@@ -439,15 +439,15 @@ namespace Overlewd
     //animations
     public class Animations
     {
-        public List<AdminBRO.AnimationScene> scenes { get; private set; } = new List<AdminBRO.AnimationScene>();
+        public List<AdminBRO.Animation> animations { get; private set; } = new List<AdminBRO.Animation>();
 
         public async Task Get()
         {
-            scenes = await AdminBRO.animationScenesAsync();
+            animations = await AdminBRO.animationsAsync();
         }
 
-        public AdminBRO.AnimationScene GetSceneById(int? id) =>
-            scenes.Find(a => a.id == id);
+        public AdminBRO.Animation GetById(int? id) =>
+            animations.Find(a => a.id == id);
     }
 
     //sounds

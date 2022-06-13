@@ -85,7 +85,6 @@ namespace Overlewd
         private static GameObject uiOverlayLayerGO;
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiDialogLayerGO;
-        private static GameObject uiDebugLayerGO;
 
         private static BaseFullScreen prevScreen;
         private static BaseFullScreen currentScreen;
@@ -305,7 +304,6 @@ namespace Overlewd
             uiOverlayLayerGO = ConfigureLayer("UIOverlayLayer", 3);
             uiNotificationLayerGO = ConfigureLayer("UINotificationLayer", 4);
             uiDialogLayerGO = ConfigureLayer("UIDialogLayer", 5);
-            uiDebugLayerGO = ConfigureLayer("UIDebugLayer", 6);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
@@ -846,21 +844,6 @@ namespace Overlewd
         {
             GameObject.Destroy(currentDialogBoxGO);
             currentDialogBoxGO = null;
-        }
-
-        //Debug layer
-        public static Console console { get; private set; }
-
-        public static void SwitchConsoleVisible()
-        {
-            if (console != null)
-            {
-                UnityEngine.Object.Destroy(console.gameObject);
-            }
-            else
-            {
-                console = Console.GetInstance(uiDebugLayerGO.transform);
-            }
         }
     }
 

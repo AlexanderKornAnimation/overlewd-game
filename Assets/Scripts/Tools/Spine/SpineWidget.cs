@@ -163,12 +163,22 @@ namespace Overlewd
             return sw;
         }
 
-        public static SpineWidget GetInstance(string prefabPath, string assetBundleId, Transform parent)
+        public static SpineWidget GetInstance(AdminBRO.Animation.LayoutData layerData, Transform parent)
         {
-            var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(prefabPath, assetBundleId, parent);
+            if (layerData == null)
+                return null;
+
+            var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(layerData.animationPath, layerData.assetBundleId, parent);
             var sw = inst?.AddComponent<SpineWidget>();
             sw?.Initialize();
+            sw?.PlayAnimation(layerData.animationName, true);
             return sw;
+        }
+
+        public static SpineWidget GetInstance(AdminBRO.Animation animationData, Transform parent)
+        {
+            var layerFirst = animationData?.layouts.First();
+            return GetInstance(layerFirst, parent);
         }
     }
 }
