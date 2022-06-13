@@ -10,8 +10,8 @@ namespace Overlewd
     public class StartingScreen : BaseFullScreenParent<StartingScreenInData>
     {
         private Button FTUE_Button;
-        private Button Reset_FTUE_Button;
         private Button Castle_Button;
+        private Button Reset_Button;
         private Button FTUE_Dev_Button;
         private Button Battle_Button;
 
@@ -24,11 +24,11 @@ namespace Overlewd
             FTUE_Button = canvas.Find("FTUE").GetComponent<Button>();
             FTUE_Button.onClick.AddListener(FTUE_ButtonClick);
 
-            Reset_FTUE_Button = canvas.Find("Reset_FTUE").GetComponent<Button>();
-            Reset_FTUE_Button.onClick.AddListener(Reset_FTUE_ButtonClick);
-
             Castle_Button = canvas.Find("Castle").GetComponent<Button>();
             Castle_Button.onClick.AddListener(Castle_ButtonClick);
+
+            Reset_Button = canvas.Find("Reset").GetComponent<Button>();
+            Reset_Button.onClick.AddListener(Reset_ButtonClick);
 
             FTUE_Dev_Button = canvas.Find("FTUE_Dev").GetComponent<Button>();
             FTUE_Dev_Button.onClick.AddListener(FTUE_Dev_ButtonClick);
@@ -67,17 +67,17 @@ namespace Overlewd
             }
         }
 
-        private void Reset_FTUE_ButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            FTUEReset();
-        }
-
         private void Castle_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             GameData.devMode = true;
             UIManager.ShowScreen<CastleScreen>();
+        }
+
+        private void Reset_ButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            ResetAndQuit();
         }
 
         private void FTUE_Dev_ButtonClick()
@@ -100,10 +100,10 @@ namespace Overlewd
                 }).RunShowScreenProcess();
         }
 
-        private async void FTUEReset()
+        private async void ResetAndQuit()
         {
-            await GameData.ftue.Reset();
-            await GameData.buildings.Reset();
+            await AdminBRO.resetAsync();
+            Game.Quit();
         }
     }
 

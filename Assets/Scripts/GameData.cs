@@ -85,12 +85,6 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
         }
-        public async Task Reset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
-            stages = await AdminBRO.ftueStagesAsync();
-            stats = await AdminBRO.ftueStatsAsync();
-        }
     }
 
     //buildings
@@ -156,13 +150,6 @@ namespace Overlewd
         public async Task MunicipalityCollect()
         {
             await AdminBRO.municipalityCollectAsync();
-        }
-
-        public async Task Reset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
-            await AdminBRO.initAsync();
-            buildings = await AdminBRO.buildingsAsync();
         }
     }
 

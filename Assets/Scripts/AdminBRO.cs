@@ -90,29 +90,14 @@ namespace Overlewd
         }
 
         // /me/reset
-        public static async Task resetAsync(List<string> resetEntities)
+        public static async Task resetAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/me/reset";
             var form = new WWWForm();
-            foreach (var entityName in resetEntities)
-            {
-                form.AddField("modules[]", entityName);
-            }
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
             }
-        }
-
-        public class ResetEntityName
-        {
-            public const string Wallet = "wallet";
-            public const string Inventory = "inventory";
-            public const string Building = "building";
-            public const string Battle = "battle";
-            public const string Quest = "quest";
-            public const string Event = "event";
-            public const string FTUE = "ftue";
         }
 
         // GET /me; POST /me
@@ -142,6 +127,13 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
+            public Poison poison;
+
+            public class Poison
+            {
+                public int hp;
+                public int mana;
+            }
         }
 
         [Serializable]
