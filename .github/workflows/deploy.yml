@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - devel
+      - test_github_build_action
 
 jobs:
   push:
