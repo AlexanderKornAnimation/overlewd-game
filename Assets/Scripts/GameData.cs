@@ -15,8 +15,8 @@ namespace Overlewd
         {
             None,
             BuyTradable,
-            BuildingBuildNow,
-            BuildingBuildStarted,
+            BuildingBuild,
+            BuildingBuildCrystal
         }
     }
 
@@ -119,17 +119,6 @@ namespace Overlewd
         public AdminBRO.Building portal =>
             GetBuildingByKey(AdminBRO.Building.Key_Portal);
 
-        public async Task BuildNow(int buildingId)
-        {
-            await AdminBRO.buildingBuildNowAsync(buildingId);
-            buildings = await AdminBRO.buildingsAsync();
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuildingBuildNow
-                });
-        }
-
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
@@ -137,7 +126,18 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    type = GameDataEvent.Type.BuildingBuildStarted
+                    type = GameDataEvent.Type.BuildingBuild
+                });
+        }
+
+        public async Task BuildCrystals(int buildingId)
+        {
+            await AdminBRO.buildingBuildCrystalsAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildCrystal
                 });
         }
 

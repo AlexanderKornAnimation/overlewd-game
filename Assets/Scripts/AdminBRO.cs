@@ -1203,7 +1203,6 @@ namespace Overlewd
             public int? currentLevel;
             public int? nextLevel;
             public int? maxLevel;
-            public string buildStartedAt;
 
             public const string Key_Castle = "castle";
             public const string Key_Catacombs = "catacombs";
@@ -1218,16 +1217,14 @@ namespace Overlewd
 
             public class Level
             {
-                public string title;
-                public string description;
                 public List<PriceItem> price;
-                public List<PriceItem> momentPrice;
+                public List<PriceItem> crystalPrice;
 
                 [JsonProperty(Required = Required.Default)]
                 public bool canBuild => GameData.player.CanBuy(price);
 
                 [JsonProperty(Required = Required.Default)]
-                public bool canBuildNow => GameData.player.CanBuy(momentPrice);
+                public bool canBuildCrystal => GameData.player.CanBuy(crystalPrice);
             }
 
             [JsonProperty(Required = Required.Default)]
@@ -1235,9 +1232,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isBuilt => currentLevel.HasValue;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isUnderConstruction => !String.IsNullOrEmpty(buildStartedAt);
 
             [JsonProperty(Required = Required.Default)]
             public Level currentLevelData =>
@@ -1252,8 +1246,8 @@ namespace Overlewd
                 maxLevel.HasValue ? levels[maxLevel.Value] : null;
 
             [JsonProperty(Required = Required.Default)]
-            public bool canUpgradeNow =>
-                nextLevelData?.canBuildNow ?? false;
+            public bool canUpgradeCrystal =>
+                nextLevelData?.canBuildCrystal ?? false;
 
             [JsonProperty(Required = Required.Default)]
             public bool canUpgrade =>
@@ -1271,10 +1265,10 @@ namespace Overlewd
             }
         }
 
-        // /buildings/{id}/build-now
-        public static async Task buildingBuildNowAsync(int id)
+        // /buildings/{id}/build-crystals
+        public static async Task buildingBuildCrystalsAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-now";
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {

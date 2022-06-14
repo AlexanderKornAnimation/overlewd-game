@@ -25,12 +25,10 @@ namespace Overlewd
 
         private Button backButton;
 
-        private Button freeBuildButton;
-        private TextMeshProUGUI freeBuildButtonText;
-
-        private Button paidBuildingButton;
-        private TextMeshProUGUI paidBuildingButtonText;
-        private Image paidBuildingButtonIcon;
+        private Button buildButton;
+        private TextMeshProUGUI buildButtonText;
+        private Button crystalBuildButton;
+        private TextMeshProUGUI crystalBuildButtonText;
 
         private void Awake()
         {
@@ -49,21 +47,19 @@ namespace Overlewd
             for (var i = 0; i < resource.Length; i++)
             {
                 resource[i] = resourcesGrid.Find($"Recource{i + 1}").GetComponent<Image>();
-
                 count[i] = resource[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
             }
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
-            freeBuildButton = canvas.Find("FreeBuildButton").GetComponent<Button>();
-            freeBuildButton.onClick.AddListener(FreeBuildButtonClick);
-            freeBuildButtonText = freeBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            buildButton = canvas.Find("BuildButton").GetComponent<Button>();
+            buildButton.onClick.AddListener(BuildButtonClick);
+            buildButtonText = buildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
-            paidBuildingButton = canvas.Find("PaidBuildingButton").GetComponent<Button>();
-            paidBuildingButton.onClick.AddListener(PaidBuildingButtonClick);
-            paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            paidBuildingButtonIcon = paidBuildingButton.transform.Find("Icon").GetComponent<Image>();
+            crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
+            crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
+            crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -113,9 +109,8 @@ namespace Overlewd
                     count[i].color = buildingData.canUpgrade ? Color.white : Color.red;
                 }
 
-                var momentPriceAmount = nextLevelData.momentPrice.Count > 0 ? nextLevelData.momentPrice.First().amount : 0;
-
-                paidBuildingButtonText.text = $"Summon building\nfor <color=red>{momentPriceAmount}</color> crystals";
+                var crystalPriceAmount = nextLevelData?.crystalPrice?.FirstOrDefault()?.amount.ToString() ?? "-";
+                crystalBuildButtonText.text = $"Summon building\nfor <color=red>{crystalPriceAmount}</color> crystals";
 
                 description.text = buildingData.description ?? "EMPTY";
                 buildingName.text = buildingData.name ?? "EMPTY";
@@ -130,16 +125,16 @@ namespace Overlewd
             UIManager.HidePopup();
         }
 
-        protected virtual async void FreeBuildButtonClick()
+        protected virtual async void BuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
-            await BuildNow();
+            await Build();
         }
 
-        protected virtual async void PaidBuildingButtonClick()
+        protected virtual async void CrystalBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            await BuildNow();
+            await BuildCrystals();
         }
 
         public override ScreenShow Show()
@@ -152,14 +147,34 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenLeftHide>();
         }
 
-        private async Task BuildNow()
+        private async Task Build()
         {
             var buildingData = inputData?.buildingData;
             if (buildingData != null)
             {
-                if (buildingData.canUpgradeNow)
+                if (buildingData.canUpgrade)
                 {
-                    await GameData.buildings.BuildNow(buildingData.id);
+                    await GameData.buildings.Build(buildingData.id);
+                    UIManager.MakeScreen<CastleScreen>().SetData(new CastleScreenInData
+                    {
+                        buildedBuildingKey = buildingData.key
+                    }).RunShowScreenProcess();
+                }
+                else
+                {
+                    UIManager.ShowPopup<DeclinePopup>();
+                }
+            }
+        }
+
+        private async Task BuildCrystals()
+        {
+            var buildingData = inputData?.buildingData;
+            if (buildingData != null)
+            {
+                if (buildingData.canUpgradeCrystal)
+                {
+                    await GameData.buildings.BuildCrystals(buildingData.id);
                     UIManager.MakeScreen<CastleScreen>().SetData(new CastleScreenInData
                     {
                         buildedBuildingKey = buildingData.key

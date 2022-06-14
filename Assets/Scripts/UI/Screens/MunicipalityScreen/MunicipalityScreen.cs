@@ -212,10 +212,8 @@ namespace Overlewd
         {
             switch (eventData?.type)
             {
-                case GameDataEvent.Type.BuildingBuildNow:
-                    Customize();
-                    break;
-                case GameDataEvent.Type.BuildingBuildStarted:
+                case GameDataEvent.Type.BuildingBuild:
+                case GameDataEvent.Type.BuildingBuildCrystal:
                     Customize();
                     break;
             }

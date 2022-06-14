@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7979331928675355147}
   - component: {fileID: 685066483733035065}
   m_Layer: 0
-  m_Name: FreeBuildButton
+  m_Name: BuildButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ RectTransform:
   - {fileID: 8717557780227589672}
   - {fileID: 5774483853353476192}
   m_Father: {fileID: 2223305508108457341}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -285,7 +285,7 @@ GameObject:
   - component: {fileID: 6217846229844095391}
   - component: {fileID: 5047182006651335360}
   m_Layer: 0
-  m_Name: PaidBuildingButton
+  m_Name: CrystalBuildButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -305,7 +305,7 @@ RectTransform:
   - {fileID: 5511780892753821960}
   - {fileID: 2719183985662396689}
   m_Father: {fileID: 2223305508108457341}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1780,8 +1780,8 @@ RectTransform:
   - {fileID: 7593037699241099290}
   - {fileID: 3054348207114419432}
   - {fileID: 5386254765227997751}
-  - {fileID: 3847901605057536766}
   - {fileID: 7783844585849023812}
+  - {fileID: 3847901605057536766}
   - {fileID: 3282537128409096283}
   m_Father: {fileID: 1000854964181683330}
   m_RootOrder: 0
