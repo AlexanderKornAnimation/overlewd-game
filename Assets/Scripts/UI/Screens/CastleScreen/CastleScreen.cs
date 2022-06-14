@@ -120,7 +120,7 @@ namespace Overlewd
                         case AdminBRO.Building.Key_MagicGuild:
                             magicGuildButton = NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
                             magicGuildBuilding = NSCastleScreen.MagicGuildBuilding.GetInstance(magicGuildBuildingPos);
-                            marketBuilding.buildingId = buildingData.id;
+                            magicGuildBuilding.buildingId = buildingData.id;
                             break;
                         case AdminBRO.Building.Key_Portal:
                             portalButton = NSCastleScreen.PortalButton.GetInstance(portal);
