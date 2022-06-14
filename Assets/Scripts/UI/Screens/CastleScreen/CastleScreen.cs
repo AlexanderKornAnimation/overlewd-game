@@ -175,8 +175,8 @@ namespace Overlewd
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
             
-            building.Item1?.Hide();
-            building.Item2?.Hide();
+            building.building?.Hide();
+            building.button?.Hide();
 
             await Task.CompletedTask;
         }
@@ -218,12 +218,12 @@ namespace Overlewd
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
 
-            if (building.Item1 != null && building.Item2 != null)
+            if (building.building != null && building.button != null)
             {
                 var showBuildingsTasks = new List<Task>
                 {
-                    building.Item1.ShowAsync(),
-                    building.Item2.ShowAsync(),
+                    building.building.ShowAsync(),
+                    building.button.ShowAsync(),
                 };
 
                 await Task.WhenAll(showBuildingsTasks);
@@ -232,7 +232,7 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private (NSCastleScreen.BaseBuilding, NSCastleScreen.BaseButton) GetBuildingByKey(string key)
+        private (NSCastleScreen.BaseBuilding building, NSCastleScreen.BaseButton button) GetBuildingByKey(string key)
         {
             return key switch
             {
