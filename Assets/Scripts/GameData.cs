@@ -377,6 +377,17 @@ namespace Overlewd
         public AdminBRO.WalletItem CatEars =>
             info.wallet.Find(item => item.currency.id == GameData.currencies.CatEars.id);
 
+        public string GetWalletLabel(string sepString = " ")
+        {
+            var result = "";
+            foreach (var walletItemCurrency in info.wallet.FindAll(w => w.currency != null))
+            {
+                var currency = walletItemCurrency.currency;
+
+            }
+            return result;
+        }
+
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
             foreach (var priceItem in price)
