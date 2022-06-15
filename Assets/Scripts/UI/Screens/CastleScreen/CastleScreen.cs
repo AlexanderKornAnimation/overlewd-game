@@ -162,6 +162,7 @@ namespace Overlewd
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
+            DevWidget.GetInstance(transform);
 
             switch (GameData.ftue.stats.lastEndedState)
             {

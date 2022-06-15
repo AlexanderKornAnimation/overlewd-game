@@ -153,6 +153,7 @@ namespace Overlewd
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
+            DevWidget.GetInstance(transform);
 
             await Task.CompletedTask;
         }
