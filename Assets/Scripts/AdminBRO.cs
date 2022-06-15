@@ -134,16 +134,12 @@ namespace Overlewd
                 public int hp;
                 public int mana;
             }
-        }
 
-        [Serializable]
-        public class WalletItem
-        {
-            public int id;
-            public int amount;
-            public string createdAt;
-            public string updatedAt;
-            public CurrencyItem currency;
+            public class WalletItem
+            {
+                public int currencyId;
+                public int amount;
+            }
         }
 
         // /markets

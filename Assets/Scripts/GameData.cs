@@ -123,6 +123,7 @@ namespace Overlewd
         {
             await AdminBRO.buildingBuildAsync(buildingId);
             buildings = await AdminBRO.buildingsAsync();
+            await GameData.player.Get();
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
@@ -134,6 +135,7 @@ namespace Overlewd
         {
             await AdminBRO.buildingBuildCrystalsAsync(buildingId);
             buildings = await AdminBRO.buildingsAsync();
+            await GameData.player.Get();
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
@@ -371,18 +373,19 @@ namespace Overlewd
         public async Task Get()
         {
             info = await AdminBRO.meAsync();
-            var locale = await AdminBRO.localizationAsync("en");
+            //var locale = await AdminBRO.localizationAsync("en");
         }
 
-        public AdminBRO.WalletItem CatEars =>
-            info.wallet.Find(item => item.currency.id == GameData.currencies.CatEars.id);
+        public AdminBRO.PlayerInfo.WalletItem CatEars =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
         public string GetWalletLabel(string sepString = " ")
         {
             var result = "";
-            foreach (var walletItemCurrency in info.wallet.FindAll(w => w.currency != null))
+            foreach (var item in info.wallet)
             {
-                var currency = walletItemCurrency.currency;
+                var amount = item.amount;
+                var currencyData = GameData.currencies.GetById(item.currencyId);
 
             }
             return result;
@@ -392,7 +395,7 @@ namespace Overlewd
         {
             foreach (var priceItem in price)
             {
-                var walletCurrency = info.wallet.Find(item => item.currency.id == priceItem.currencyId);
+                var walletCurrency = info.wallet.Find(item => item.currencyId == priceItem.currencyId);
                 if (walletCurrency == null)
                 {
                     return false;
