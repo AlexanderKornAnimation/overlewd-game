@@ -361,8 +361,29 @@ namespace Overlewd
 
         public AdminBRO.CurrencyItem GetById(int? id) =>
             currencies.Find(c => c.id == id);
+       
+        public AdminBRO.CurrencyItem Copper =>
+            currencies.Find(c => c.key == "copper");
+        public AdminBRO.CurrencyItem Crystals =>
+            currencies.Find(c => c.key == "crystal");
+        public AdminBRO.CurrencyItem Gems =>
+            currencies.Find(c => c.key == "gems");
+        public AdminBRO.CurrencyItem Gold =>
+            currencies.Find(c => c.key == "gold");
+        public AdminBRO.CurrencyItem Stone =>
+            currencies.Find(c => c.key == "stone");
+        public AdminBRO.CurrencyItem Wood =>
+            currencies.Find(c => c.key == "wood");
+
+
         public AdminBRO.CurrencyItem CatEars =>
-            currencies.Find(c => c.name == "Cat Ears");
+            currencies.Find(c => c.key == "ears");
+        public AdminBRO.CurrencyItem HornyCoins =>
+            currencies.Find(c => c.key == "horny");
+        public AdminBRO.CurrencyItem JapaneseYen =>
+            currencies.Find(c => c.key == "yen");
+        public AdminBRO.CurrencyItem NutakuGold =>
+            currencies.Find(c => c.key == "ngold");
     }
 
     //player
@@ -378,18 +399,6 @@ namespace Overlewd
 
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
-
-        public string GetWalletLabel(string sepString = " ")
-        {
-            var result = "";
-            foreach (var item in info.wallet)
-            {
-                var amount = item.amount;
-                var currencyData = GameData.currencies.GetById(item.currencyId);
-
-            }
-            return result;
-        }
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
