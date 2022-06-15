@@ -30,6 +30,13 @@ namespace Overlewd
         private Button crystalBuildButton;
         private TextMeshProUGUI crystalBuildButtonText;
 
+        private TextMeshProUGUI crystal;
+        private TextMeshProUGUI wood;
+        private TextMeshProUGUI stone;
+        private TextMeshProUGUI copper;
+        private TextMeshProUGUI gold;
+        private TextMeshProUGUI gem;
+
         private void Awake()
         {
             var screenInst =
@@ -60,6 +67,15 @@ namespace Overlewd
             crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
             crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
             crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+
+            var currencyBack = canvas.Find("CurrencyBack");
+            crystal = currencyBack.Find("Crystal").GetComponent<TextMeshProUGUI>();
+            wood = currencyBack.Find("Wood").GetComponent<TextMeshProUGUI>();
+            stone = currencyBack.Find("Stone").GetComponent<TextMeshProUGUI>();
+            copper = currencyBack.Find("Copper").GetComponent<TextMeshProUGUI>();
+            gold = currencyBack.Find("Gold").GetComponent<TextMeshProUGUI>();
+            gem = currencyBack.Find("Gem").GetComponent<TextMeshProUGUI>();
+            
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -114,6 +130,13 @@ namespace Overlewd
 
                 description.text = buildingData.description ?? "EMPTY";
                 buildingName.text = buildingData.name ?? "EMPTY";
+
+                crystal.text = $"{AdminBRO.CurrencyItem.Sprite_Crystal}{GameData.player.Crystal.amount}";
+                wood.text = $"{AdminBRO.CurrencyItem.Sprite_Wood}{GameData.player.Wood.amount}";
+                stone.text = $"{AdminBRO.CurrencyItem.Sprite_Stone}{GameData.player.Stone.amount}";
+                copper.text = $"{AdminBRO.CurrencyItem.Sprite_Copper}{GameData.player.Copper.amount}";
+                gold.text = $"{AdminBRO.CurrencyItem.Sprite_Gold}{GameData.player.Gold.amount}";
+                gem.text = $"{AdminBRO.CurrencyItem.Sprite_Gem}{GameData.player.Gem.amount}";
             }
 
             await Task.CompletedTask;

@@ -384,6 +384,7 @@ namespace Overlewd
             currencies.Find(c => c.key == "yen");
         public AdminBRO.CurrencyItem NutakuGold =>
             currencies.Find(c => c.key == "ngold");
+        
     }
 
     //player
@@ -397,6 +398,24 @@ namespace Overlewd
             //var locale = await AdminBRO.localizationAsync("en");
         }
 
+        public AdminBRO.PlayerInfo.WalletItem Crystal =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Wood =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Wood.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Stone =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Stone.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Copper =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Copper.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Gold =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Gem =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
+        
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 

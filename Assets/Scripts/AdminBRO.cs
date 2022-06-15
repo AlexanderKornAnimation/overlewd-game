@@ -195,6 +195,30 @@ namespace Overlewd
             public bool nutaku;
             public string createdAt;
             public string updatedAt;
+
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Crystal = "<sprite=\"AssetResources\" name=\"Crystal\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Wood = "<sprite=\"AssetResources\" name=\"Wood\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Stone = "<sprite=\"AssetResources\" name=\"Stone\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Copper = "<sprite=\"AssetResources\" name=\"Copper\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Gold = "<sprite=\"AssetResources\" name=\"Gold\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Gem = "<sprite=\"AssetResources\" name=\"Gem\">";
+
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Ears = "<sprite=\"EventCurrency\" name=\"CatEras\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_NutakuGold = "<sprite=\"EventCurrency\" name=\"NutakuGold\">";
         }
 
         // /tradable
