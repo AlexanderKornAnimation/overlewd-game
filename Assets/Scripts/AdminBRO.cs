@@ -840,8 +840,8 @@ namespace Overlewd
             public string effect;
             public string type;
             public int effectProb;
-            public int effectActingDuration;
-            public int effectCooldownDuration;
+            public float effectActingDuration;
+            public float effectCooldownDuration;
             public List<PriceItem> levelUpPrice;
             public int level;
             public int manaCost;
