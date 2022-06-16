@@ -110,7 +110,9 @@ namespace Overlewd
                 }
 
                 var crystalPriceAmount = nextLevelData?.crystalPrice?.FirstOrDefault()?.amount.ToString() ?? "-";
-                crystalBuildButtonText.text = $"Summon building\nfor <color=red>{crystalPriceAmount}</color> crystals";
+                crystalBuildButtonText.text = buildingData.canUpgradeCrystal
+                    ? $"Summon building\nfor <color=white>{crystalPriceAmount}</color> crystals"
+                    : $"Summon building\nfor <color=red>{crystalPriceAmount}</color> crystals";
 
                 description.text = buildingData.description ?? "EMPTY";
                 buildingName.text = buildingData.name ?? "EMPTY";
