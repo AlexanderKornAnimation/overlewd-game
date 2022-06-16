@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2769616242093593762}
   m_Layer: 5
-  m_Name: PortalImage
+  m_Name: Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 626, y: 501}
+  m_SizeDelta: {x: 628, y: 387}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7934724553495356158
 GameObject:
@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 1985710333320454516}
   - component: {fileID: 904922952055027150}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Level1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,10 +68,10 @@ RectTransform:
   m_Father: {fileID: 2769616242093593762}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 313, y: -245}
-  m_SizeDelta: {x: 626, y: 501}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 207.5}
+  m_SizeDelta: {x: 628, y: 415}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1985710333320454516
 CanvasRenderer:
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 64ca26ec957f53847b843f0fc63df218, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5c199875652a24347bc2eba2c3cb5b04, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

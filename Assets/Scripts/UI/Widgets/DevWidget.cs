@@ -97,7 +97,6 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await GameData.player.AddCrystals();
-            await HideAsync();
         }
 
         private void Battle_ButtonClick()

@@ -175,9 +175,18 @@ namespace Overlewd
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
-            
-            building.building?.Hide();
-            building.button?.Hide();
+
+            if (building.building != null && building.button != null)
+            {
+                var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                building.building.Hide();
+                
+                if (buildingData.currentLevel == 0)
+                {
+                    building.button.Hide();
+                }
+            }
+           
 
             await Task.CompletedTask;
         }
@@ -221,13 +230,13 @@ namespace Overlewd
 
             if (building.building != null && building.button != null)
             {
-                var showBuildingsTasks = new List<Task>
+                var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                await building.building.ShowAsync();
+                
+                if (buildingData.currentLevel == 0)
                 {
-                    building.building.ShowAsync(),
-                    building.button.ShowAsync(),
-                };
-
-                await Task.WhenAll(showBuildingsTasks);
+                    await building.button.ShowAsync();
+                }
             }
             
             await Task.CompletedTask;

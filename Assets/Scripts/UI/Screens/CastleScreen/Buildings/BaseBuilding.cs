@@ -23,16 +23,16 @@ namespace Overlewd
             {
                 if (buildingData != null)
                 {
-                    for (int i = 0; i <= buildingData.maxLevel; i++)
+                    for (int i = 1; i <= buildingData.levels.Count; i++)
                     {
                         levels.Add(transform.Find($"Level{i}").gameObject);
                     }
                 
                     if (buildingData.currentLevel.HasValue)
                     {
-                        for (int i = 0; i < levels.Count; i++)
+                        for (int i = 0; i < buildingData.levels.Count; i++)
                         {
-                            levels[i].SetActive(buildingData.currentLevel.Value == i);
+                            levels[i].SetActive(buildingData.currentLevel == i);
                         }
                     }
                 }
@@ -40,7 +40,7 @@ namespace Overlewd
             
             public async Task ShowAsync()
             {
-                await UITools.FadeShowAsync(gameObject);
+                await UITools.FadeShowAsync(gameObject, 0.7f);
             }
 
             public void Hide()

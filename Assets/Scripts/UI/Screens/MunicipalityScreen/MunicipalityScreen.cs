@@ -164,8 +164,10 @@ namespace Overlewd
             foreach (var buildingData in GameData.buildings.buildings)
             {
                 var isAvailable = !buildingData.isMax;
-                NameByKey(buildingData.key).text =
-                    isAvailable ? $"{buildingData.name} \nlevel <size=38>{buildingData.currentLevel + 1}" : buildingData.name;
+                var isNameFormat = buildingData.isBuilt && !buildingData.isMax && buildingData.levels.Count >= 0;
+                
+                NameByKey(buildingData.key).text = isNameFormat ?
+                    $"{buildingData.name} \nlevel <size=38>{buildingData.currentLevel + 1}" : buildingData.name;
 
                 AvailableByKey(buildingData.key).SetActive(isAvailable);
                 

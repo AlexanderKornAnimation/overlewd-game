@@ -55,6 +55,7 @@ namespace Overlewd
             {
                 resource[i] = resourcesGrid.Find($"Recource{i + 1}").GetComponent<Image>();
                 count[i] = resource[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                resource[i].gameObject.SetActive(false);
             }
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
@@ -83,44 +84,27 @@ namespace Overlewd
             var buildingData = inputData?.buildingData;
             if (buildingData != null)
             {
-                switch (buildingData.key)
+                var building =
+                    ResourceManager.InstantiateWidgetPrefab($"Prefabs/UI/Popups/BuildingPopup/{buildingData.name}",
+                        imageSpawnPoint);
+
+                for (int i = 1; i <= buildingData.levels.Count; i++)
                 {
-                    case AdminBRO.Building.Key_Aerostat:
-                        break;
-                    case AdminBRO.Building.Key_Castle:
-                        break;
-                    case AdminBRO.Building.Key_Catacombs:
-
-                        break;
-                    case AdminBRO.Building.Key_Laboratory:
-                        break;
-                    case AdminBRO.Building.Key_Forge:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/ForgeImage",
-                            imageSpawnPoint);
-                        break;
-                    case AdminBRO.Building.Key_Harem:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/HaremImage",
-                            imageSpawnPoint);
-                        break;
-                    case AdminBRO.Building.Key_MagicGuild:
-                        break;
-                    case AdminBRO.Building.Key_Market:
-                        break;
-                    case AdminBRO.Building.Key_Municipality:
-                        break;
-                    case AdminBRO.Building.Key_Portal:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/PortalImage",
-                            imageSpawnPoint);
-                        break;
+                    if (buildingData.nextLevel.HasValue)
+                    {
+                        building.transform.Find($"Level{i}").gameObject.
+                            SetActive(buildingData.nextLevel + 1 == i);
+                    }
                 }
-
+                
                 var nextLevelData = buildingData.nextLevelData;
                 var prices = nextLevelData.price;
                 
                 for (var i = 0; i < prices.Count; i++)
                 {
                     var currencyData = GameData.currencies.GetById(prices[i].currencyId);
-                    resource[i].sprite = ResourceManager.LoadSprite(currencyData.icon186Url);
+                    resource[i].gameObject.SetActive(true);
+                    resource[i].sprite = ResourceManager.LoadSprite(currencyData.icon256Url);
                     count[i].text = prices[i].amount.ToString();
                     count[i].color = buildingData.canUpgrade ? Color.white : Color.red;
                 }
