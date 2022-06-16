@@ -10,10 +10,10 @@ namespace Overlewd
     public class DevWidget : BaseWidget
     {
         private Button FTUE_Button;
-        private Button Reset_Button;
         private Button FTUE_Dev_Button;
-        private Button Battle_Button;
+        private Button Reset_Button;
         private Button AddCrystals_Button;
+        private Button Battle_Button;
         private Button showHideButton;
         
         private RectTransform backRect;
@@ -26,18 +26,20 @@ namespace Overlewd
                 
             FTUE_Button = backRect.Find("FTUE").GetComponent<Button>();
             FTUE_Button.onClick.AddListener(FTUE_ButtonClick);
+            FTUE_Button.gameObject.SetActive(GameData.devMode);
+
+            FTUE_Dev_Button = backRect.Find("FTUE_dev").GetComponent<Button>();
+            FTUE_Dev_Button.onClick.AddListener(FTUE_Dev_ButtonClick);  
+            FTUE_Dev_Button.gameObject.SetActive(!GameData.devMode);
 
             Reset_Button = backRect.Find("Reset").GetComponent<Button>();
             Reset_Button.onClick.AddListener(Reset_ButtonClick);
 
-            FTUE_Dev_Button = backRect.Find("FTUE_dev").GetComponent<Button>();
-            FTUE_Dev_Button.onClick.AddListener(FTUE_Dev_ButtonClick);
+            AddCrystals_Button = backRect.Find("AddCrystals").GetComponent<Button>();
+            AddCrystals_Button.onClick.AddListener(AddCrystals_ButtonClick);
 
             Battle_Button = backRect.Find("Battle").GetComponent<Button>();
             Battle_Button.onClick.AddListener(Battle_ButtonClick);
-
-            AddCrystals_Button = backRect.Find("AddCrystals").GetComponent<Button>();
-            AddCrystals_Button.onClick.AddListener(AddCrystals_ButtonClick);
 
             showHideButton = backRect.Find("ShowHideButton").GetComponent<Button>();
             showHideButton.onClick.AddListener(ShowHideButtonClick);
@@ -46,10 +48,6 @@ namespace Overlewd
             
 #if !UNITY_EDITOR
             Battle_Button.gameObject.SetActive(false);
-#endif
-
-#if !(DEV_BUILD || UNITY_EDITOR)
-            FTUE_Dev_Button.gameObject.SetActive(false);
 #endif
         }
         
@@ -76,28 +74,7 @@ namespace Overlewd
         private void FTUE_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            GameData.devMode = false;
-            GameData.ftue.activeChapter.SetAsMapChapter();
-
-            var firstSexStage = GameData.ftue.info.chapter1.GetStageByKey("sex1");
-            if (firstSexStage.isComplete)
-            {
-                UIManager.ShowScreen<MapScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<SexScreen>().SetData(new SexScreenInData
-                {
-                    ftueStageId = firstSexStage.id,
-                }).RunShowScreenProcess();
-            }
-        }
-
-        private void Reset_ButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            ResetAndQuit();
+            LoadingScreen.RunFTUE();
         }
 
         private void FTUE_Dev_ButtonClick()
@@ -109,14 +86,11 @@ namespace Overlewd
             UIManager.ShowScreen<MapScreen>();
         }
 
-        private void Battle_ButtonClick()
+        private async void Reset_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            GameData.devMode = true;
-            UIManager.MakeScreen<BaseBattleScreen>().SetData(new BaseBattleScreenInData
-            {
-                battleId = 19
-            }).RunShowScreenProcess();
+            await AdminBRO.resetAsync();
+            Game.Quit();
         }
 
         private async void AddCrystals_ButtonClick()
@@ -126,10 +100,13 @@ namespace Overlewd
             await HideAsync();
         }
 
-        private async void ResetAndQuit()
+        private void Battle_ButtonClick()
         {
-            await AdminBRO.resetAsync();
-            Game.Quit();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<BaseBattleScreen>().SetData(new BaseBattleScreenInData
+            {
+                battleId = 19
+            }).RunShowScreenProcess();
         }
 
         public static DevWidget GetInstance(Transform parent)

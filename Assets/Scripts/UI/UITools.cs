@@ -11,12 +11,23 @@ namespace Overlewd
 {
     public static class UITools
     {
-        public static void DisableButton(Button button)
+        public static void DisableButton(Button button, bool disable = true)
         {
-            button.interactable = false;
-            foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+            if (disable)
             {
-                cr.SetColor(Color.gray);
+                button.interactable = false;
+                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.gray);
+                }
+            }
+            else
+            {
+                button.interactable = true;
+                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.white);
+                }
             }
         }
 

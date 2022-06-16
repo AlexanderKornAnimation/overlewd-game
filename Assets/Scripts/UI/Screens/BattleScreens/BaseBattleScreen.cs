@@ -35,7 +35,7 @@ namespace Overlewd
         protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<StartingScreen>();
+            UIManager.ShowScreen<MapScreen>();
         }
 
 		private void SkipButtonClick()
