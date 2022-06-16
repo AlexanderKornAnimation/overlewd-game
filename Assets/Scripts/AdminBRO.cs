@@ -78,29 +78,10 @@ namespace Overlewd
 
         public static Tokens tokens;
 
-        // /me/init
-        public static async Task initAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/me/init";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        // /me/reset
-        public static async Task resetAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/me/reset";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
         // GET /me; POST /me
+        // /me/init
+        // /me/reset
+        // /me/currency
         public static async Task<PlayerInfo> meAsync()
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/me", tokens?.accessToken))
@@ -139,6 +120,38 @@ namespace Overlewd
             {
                 public int currencyId;
                 public int amount;
+            }
+        }
+
+        public static async Task initAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/me/init";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+
+        public static async Task resetAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/me/reset";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task meCurrencyAsync(int currencyId, int amount)
+        {
+            var form = new WWWForm();
+            form.AddField("currencyId", currencyId);
+            form.AddField("amount", amount);
+            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me/currency", form, tokens?.accessToken))
+            {
+                
             }
         }
 

@@ -13,6 +13,7 @@ namespace Overlewd
         private Button Reset_Button;
         private Button FTUE_Dev_Button;
         private Button Battle_Button;
+        private Button AddCrystals_Button;
         private Button showHideButton;
         
         private RectTransform backRect;
@@ -34,6 +35,9 @@ namespace Overlewd
 
             Battle_Button = backRect.Find("Battle").GetComponent<Button>();
             Battle_Button.onClick.AddListener(Battle_ButtonClick);
+
+            AddCrystals_Button = backRect.Find("AddCrystals").GetComponent<Button>();
+            AddCrystals_Button.onClick.AddListener(AddCrystals_ButtonClick);
 
             showHideButton = backRect.Find("ShowHideButton").GetComponent<Button>();
             showHideButton.onClick.AddListener(ShowHideButtonClick);
@@ -113,6 +117,13 @@ namespace Overlewd
             {
                 battleId = 19
             }).RunShowScreenProcess();
+        }
+
+        private async void AddCrystals_ButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            await GameData.player.AddCrystals();
+            await HideAsync();
         }
 
         private async void ResetAndQuit()

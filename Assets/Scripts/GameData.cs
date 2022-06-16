@@ -398,6 +398,13 @@ namespace Overlewd
             //var locale = await AdminBRO.localizationAsync("en");
         }
 
+        public async Task AddCrystals(int amount = 1000)
+        {
+            var crystalCurrencyId = GameData.currencies.Crystals.id;
+            await AdminBRO.meCurrencyAsync(crystalCurrencyId, amount);
+            await Get();
+        }
+
         public AdminBRO.PlayerInfo.WalletItem Crystal =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
         
