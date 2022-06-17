@@ -53,7 +53,6 @@ namespace Overlewd
 
         //statistic, trackers, notif flags
         private bool battleStart = false;
-        public bool wannaWin = true;
         private bool hidePotion = false;
         private bool hideAOE = false;
         private bool notifIsShow = false;
@@ -368,7 +367,12 @@ namespace Overlewd
                     //next wave function or
                     battleState = BattleState.WIN;
                     if (battleScene != null)
-                        battleScene.BattleWin();
+                        battleScene.EndBattle(new BattleManagerOutData
+                        {
+                            battleWin = true,
+                            manaSpent = 0,
+                            hpSpent = 0
+                        });
                     Debug.Log("WINNIG");
                 }
                 else
@@ -383,7 +387,12 @@ namespace Overlewd
             {
                 battleState = BattleState.LOSE;
                 if (battleScene != null)
-                    battleScene.BattleDefeat();
+                    battleScene.EndBattle(new BattleManagerOutData
+                    {
+                        battleWin = false,
+                        manaSpent = 0,
+                        hpSpent = 0
+                    });
                 if (CheckBattleGameData("chapter1", "battle2"))
                     //battleList[1].powerBuff = true; BUFF ON
                 Debug.Log("LOOSING");

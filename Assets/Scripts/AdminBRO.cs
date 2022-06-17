@@ -225,7 +225,7 @@ namespace Overlewd
             public const string Sprite_Gold = "<sprite=\"AssetResources\" name=\"Gold\">";
             
             [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Gem = "<sprite=\"AssetResources\" name=\"Gem\">";
+            public const string Sprite_Gems = "<sprite=\"AssetResources\" name=\"Gem\">";
 
             [JsonProperty(Required = Required.Default)]
             public const string Sprite_Ears = "<sprite=\"EventCurrency\" name=\"CatEras\">";
@@ -493,12 +493,16 @@ namespace Overlewd
 
         public class EventStageEndData
         {
-            public bool win = true;
+            public bool win { get; set; } = true;
+            public int mana { get; set; } = 0;
+            public int hp { get; set; } = 0;
 
             public WWWForm ToWWWForm()
             {
                 var form = new WWWForm();
                 form.AddField("result", win ? "win" : "lose");
+                form.AddField("mana", -mana);
+                form.AddField("hp",-hp);
                 return form;
             }
         }
@@ -1161,12 +1165,16 @@ namespace Overlewd
 
         public class FTUEStageEndData
         {
-            public bool win = true;
+            public bool win { get; set; } = true;
+            public int mana { get; set; } = 0;
+            public int hp { get; set; } = 0;
 
             public WWWForm ToWWWForm()
             {
                 var form = new WWWForm();
                 form.AddField("result", win ? "win" : "lose");
+                form.AddField("mana", -mana);
+                form.AddField("hp", -hp);
                 return form;
             }
         }

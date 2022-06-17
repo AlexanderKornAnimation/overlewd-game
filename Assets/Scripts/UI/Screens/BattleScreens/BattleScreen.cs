@@ -8,12 +8,39 @@ namespace Overlewd
 {
 	public class BattleScreen : BaseBattleScreen
 	{
-        private bool battleIsWin;
-
         public override void StartBattle()
         {
-            backButton.gameObject.SetActive(false);
-            skipButton.gameObject.SetActive(true);
+            base.StartBattle();
+        }
+
+        public override void EndBattle(BattleManagerOutData data)
+        {
+            base.EndBattle(data);
+
+            endBattleData.battleWin = inputData.ftueStageData?.ftueState switch
+            {
+                ("battle2", "chapter1") => GameData.ftue.info.StageIsComplete("sex2", "chapter1"),
+                _ => endBattleData.battleWin
+            };
+
+            if (endBattleData.battleWin)
+            {
+                UIManager.MakePopup<VictoryPopup>().
+                    SetData(new VictoryPopupInData
+                    {
+                        ftueStageId = inputData.ftueStageId,
+                        eventStageId = inputData.eventStageId
+                    }).RunShowPopupProcess();
+            }
+            else
+            {
+                UIManager.MakePopup<DefeatPopup>().
+                SetData(new DefeatPopupInData
+                {
+                    ftueStageId = inputData.ftueStageId,
+                    eventStageId = inputData.eventStageId
+                }).RunShowPopupProcess();
+            }
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -33,64 +60,6 @@ namespace Overlewd
             else
             {
                 UIManager.ShowScreen<EventMapScreen>();
-            }
-        }
-
-        public override void BattleWin()
-        {
-            var win = inputData.ftueStageData?.ftueState switch
-            {
-                ("battle2", "chapter1") => GameData.ftue.info.StageIsComplete("sex2", "chapter1"),
-                _ => true
-            };
-
-            if (win)
-            {
-                battleIsWin = true;
-                UIManager.MakePopup<VictoryPopup>().
-                    SetData(new VictoryPopupInData
-                    {
-                        ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
-                    }).RunShowPopupProcess();
-            }
-            else
-            {
-                UIManager.MakePopup<DefeatPopup>().
-                SetData(new DefeatPopupInData
-                {
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).RunShowPopupProcess();
-            }
-        }
-
-        public override void BattleDefeat()
-        {
-            var defeat = inputData.ftueStageData?.ftueState switch
-            {
-                ("battle2", "chapter1") => !GameData.ftue.info.StageIsComplete("sex2", "chapter1"),
-                _ => false
-            };
-
-            if (defeat)
-            {
-                UIManager.MakePopup<DefeatPopup>().
-                    SetData(new DefeatPopupInData
-                    {
-                        ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
-                    }).RunShowPopupProcess();
-            }
-            else
-            {
-                battleIsWin = true;
-                UIManager.MakePopup<VictoryPopup>().
-                    SetData(new VictoryPopupInData
-                    {
-                        ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
-                    }).RunShowPopupProcess();
             }
         }
 
@@ -120,16 +89,24 @@ namespace Overlewd
                 await GameData.ftue.EndStage(inputData.ftueStageId.Value,
                     new AdminBRO.FTUEStageEndData
                     {
-                        win = battleIsWin
+                        win = endBattleData.battleWin,
+                        mana = endBattleData.manaSpent,
+                        hp = endBattleData.hpSpent
                     });
+
+                await GameData.player.Get();
             }
             else
             {
                 await GameData.events.StageEnd(inputData.eventStageId.Value,
                     new AdminBRO.EventStageEndData
                     {
-                        win = battleIsWin
+                        win = endBattleData.battleWin,
+                        mana = endBattleData.manaSpent,
+                        hp = endBattleData.hpSpent
                     });
+
+                await GameData.player.Get();
             }
         }
     }

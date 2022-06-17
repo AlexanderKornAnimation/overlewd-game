@@ -35,7 +35,7 @@ namespace Overlewd
         private TextMeshProUGUI stone;
         private TextMeshProUGUI copper;
         private TextMeshProUGUI gold;
-        private TextMeshProUGUI gem;
+        private TextMeshProUGUI gems;
 
         private void Awake()
         {
@@ -75,8 +75,7 @@ namespace Overlewd
             stone = currencyBack.Find("Stone").GetComponent<TextMeshProUGUI>();
             copper = currencyBack.Find("Copper").GetComponent<TextMeshProUGUI>();
             gold = currencyBack.Find("Gold").GetComponent<TextMeshProUGUI>();
-            gem = currencyBack.Find("Gem").GetComponent<TextMeshProUGUI>();
-            
+            gems = currencyBack.Find("Gems").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -122,7 +121,7 @@ namespace Overlewd
                 stone.text = $"{AdminBRO.CurrencyItem.Sprite_Stone}{GameData.player.Stone.amount}";
                 copper.text = $"{AdminBRO.CurrencyItem.Sprite_Copper}{GameData.player.Copper.amount}";
                 gold.text = $"{AdminBRO.CurrencyItem.Sprite_Gold}{GameData.player.Gold.amount}";
-                gem.text = $"{AdminBRO.CurrencyItem.Sprite_Gem}{GameData.player.Gem.amount}";
+                gems.text = $"{AdminBRO.CurrencyItem.Sprite_Gems}{GameData.player.Gems.amount}";
             }
 
             await Task.CompletedTask;

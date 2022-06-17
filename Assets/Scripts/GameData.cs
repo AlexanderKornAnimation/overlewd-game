@@ -420,7 +420,7 @@ namespace Overlewd
         public AdminBRO.PlayerInfo.WalletItem Gold =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
         
-        public AdminBRO.PlayerInfo.WalletItem Gem =>
+        public AdminBRO.PlayerInfo.WalletItem Gems =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
         
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
