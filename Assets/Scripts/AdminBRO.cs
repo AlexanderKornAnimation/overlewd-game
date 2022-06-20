@@ -651,6 +651,7 @@ namespace Overlewd
             public int? cutInAnimationId;
             public int? mainAnimationId;
 
+            public int? backgroundMusicId;
             public int? mainSoundId;
             public int? cutInSoundId;
             public int? replicaSoundId;
