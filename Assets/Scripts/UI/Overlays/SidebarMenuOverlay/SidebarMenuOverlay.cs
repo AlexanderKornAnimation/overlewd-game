@@ -219,11 +219,8 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.MakeScreen<MarketScreen>().
-                SetData(new MarketScreenInData
-                {
-                    prevScreenInData = UIManager.prevScreenInData
-                }).RunShowScreenProcess();
+            UIManager.HideOverlay();
+            UIManager.ShowPopup<MarketPopup>();
         }
 
         private void LaboratoryButtonClick()
