@@ -70,6 +70,10 @@ namespace Overlewd
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
         public const string Music_SexScreen = "event:/Music/LewdScreen/BGM_SexScene_1";
         public const string Music_DialogScreen = "event:/Music/DialogueScreen/BGM_Dialogue_Chill_1";
+
+        //gacha
+        public const string Gacha_x1_open = "event:/Animations/Gacha/x1/Gacha_x1_open";
+        public const string Gacha_x10_open = "event:/Animations/Gacha/x10/Gacha_x10_open";
     }
 
     public class FMODBank

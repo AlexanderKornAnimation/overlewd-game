@@ -53,6 +53,8 @@ namespace Overlewd
         {
             if (inputData.isTen)
             {
+                SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
+
                 var itemsStartPos = canvas.Find("ItemStartPositions");
                 var itemsEndPos = canvas.Find("ItemEndPositions");
 
@@ -77,6 +79,8 @@ namespace Overlewd
             }
             else
             {
+                SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
+
                 var itemSingleStartPos = canvas.Find("ItemSingleStartPos");
                 var itemSingleEndPos = canvas.Find("ItemSingleEndPos").position;
 
