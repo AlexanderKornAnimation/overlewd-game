@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8368440669447206356}
   - component: {fileID: 5008125152899454008}
   - component: {fileID: 87459444127744663}
+  - component: {fileID: 477247534910767035}
   m_Layer: 0
   m_Name: Level1
   m_TagString: Untagged
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &477247534910767035
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2703692170582792894}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5615254547277548225
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,7 +97,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4099120460497193010}
-  - component: {fileID: -8821838175005917746}
   m_Layer: 0
   m_Name: PortalBuilding
   m_TagString: Untagged
@@ -112,15 +124,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 262, y: 348}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &-8821838175005917746
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5615254547277548225}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0

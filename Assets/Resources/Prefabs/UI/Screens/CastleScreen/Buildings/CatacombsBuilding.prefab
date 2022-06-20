@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3124607049934965701}
-  - component: {fileID: 8118658053038783845}
   m_Layer: 0
   m_Name: CatacombsBuilding
   m_TagString: Untagged
@@ -37,18 +36,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 138, y: 148}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &8118658053038783845
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4517851341126003535}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &5555652175323209360
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,6 +47,7 @@ GameObject:
   - component: {fileID: 7948382194942254689}
   - component: {fileID: 7745218602268859597}
   - component: {fileID: 7234146044397192928}
+  - component: {fileID: 2536443929153467479}
   m_Layer: 0
   m_Name: Level1
   m_TagString: Untagged
@@ -124,3 +112,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &2536443929153467479
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555652175323209360}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

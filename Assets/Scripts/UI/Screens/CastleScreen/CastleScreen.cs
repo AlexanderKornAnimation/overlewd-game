@@ -106,51 +106,61 @@ namespace Overlewd
                             haremButton = NSCastleScreen.HaremButton.GetInstance(harem);
                             haremBuilding = NSCastleScreen.HaremBuilding.GetInstance(haremBuildingPos);
                             haremBuilding.buildingId = buildingData.id;
+                            haremBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Market:
                             marketButton = NSCastleScreen.MarketButton.GetInstance(market);
                             marketBuilding = NSCastleScreen.MarketBuilding.GetInstance(marketBuildingPos);
                             marketBuilding.buildingId = buildingData.id;
+                            marketBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Forge:
                             forgeButton = NSCastleScreen.ForgeButton.GetInstance(forge);
                             forgeBuilding = NSCastleScreen.ForgeBuilding.GetInstance(forgeBuildingPos);
                             forgeBuilding.buildingId = buildingData.id;
+                            forgeBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_MagicGuild:
                             magicGuildButton = NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
                             magicGuildBuilding = NSCastleScreen.MagicGuildBuilding.GetInstance(magicGuildBuildingPos);
                             magicGuildBuilding.buildingId = buildingData.id;
+                            magicGuildBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Portal:
                             portalButton = NSCastleScreen.PortalButton.GetInstance(portal);
                             portalBuilding = NSCastleScreen.PortalBuilding.GetInstance(portalBuildingPos);
                             portalBuilding.buildingId = buildingData.id;
+                            portalBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Castle:
                             castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
                             castleBuilding = NSCastleScreen.CastleBuilding.GetInstance(castleBuildingPos);
                             castleBuilding.buildingId = buildingData.id;
+                            castleBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Municipality:
                             municipalityButton = NSCastleScreen.MunicipalityButton.GetInstance(municipality);
                             municipalityBuilding = NSCastleScreen.MunicipalityBuilding.GetInstance(municipalityBuildingPos);
                             municipalityBuilding.buildingId = buildingData.id;
+                            municipalityBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Laboratory:
                             laboratoryButton = NSCastleScreen.LaboratoryButton.GetInstance(laboratory);
                             laboratoryBuilding = NSCastleScreen.LaboratoryBuilding.GetInstance(laboratoryBuildingPos);
                             laboratoryBuilding.buildingId = buildingData.id;
+                            laboratoryBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Catacombs:
                             catacombsButton = NSCastleScreen.CatacombsButton.GetInstance(catacombs);
                             catacombsBuilding = NSCastleScreen.CatacombsBuilding.GetInstance(catacombsBuildingPos);
                             catacombsBuilding.buildingId = buildingData.id;
+                            catacombsBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Aerostat:
                             aerostatButton = NSCastleScreen.AerostatButton.GetInstance(aerostat);
                             aerostatBuilding = NSCastleScreen.AerostatBuilding.GetInstance(aerostatBuildingPos);
                             aerostatBuilding.buildingId = buildingData.id;
+                            aerostatBuilding.Customize();
                             break;
                     }
                 }
@@ -179,14 +189,13 @@ namespace Overlewd
             if (building.building != null && building.button != null)
             {
                 var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
-                building.building.Hide();
                 
+                building.building.Hide();
                 if (buildingData.currentLevel == 0)
                 {
                     building.button.Hide();
                 }
             }
-           
 
             await Task.CompletedTask;
         }
@@ -230,12 +239,15 @@ namespace Overlewd
 
             if (building.building != null && building.button != null)
             {
-                var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
-                await building.building.ShowAsync();
-                
-                if (buildingData.currentLevel == 0)
+                if (building.building.buildingId != null)
                 {
-                    await building.button.ShowAsync();
+                    var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                    await building.building.ShowAsync();
+                
+                    if (buildingData.currentLevel == 0)
+                    {
+                        await building.button.ShowAsync();
+                    }
                 }
             }
             

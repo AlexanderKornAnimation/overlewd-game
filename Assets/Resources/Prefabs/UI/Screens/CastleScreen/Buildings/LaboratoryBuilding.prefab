@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8721169211162850705}
-  - component: {fileID: 442158824870442326}
   m_Layer: 0
   m_Name: LaboratoryBuilding
   m_TagString: Untagged
@@ -37,18 +36,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 580, y: 564}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &442158824870442326
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5540318299687282479}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &5569895904555773846
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,6 +47,7 @@ GameObject:
   - component: {fileID: 6894579069713985507}
   - component: {fileID: 6988453822444655504}
   - component: {fileID: 5078781803257472512}
+  - component: {fileID: 211858328995547932}
   m_Layer: 0
   m_Name: Level1
   m_TagString: Untagged
@@ -124,3 +112,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &211858328995547932
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5569895904555773846}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

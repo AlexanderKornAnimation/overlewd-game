@@ -13,13 +13,9 @@ namespace Overlewd
             public int? buildingId { get; set; }
             protected AdminBRO.Building buildingData => GameData.buildings.GetBuildingById(buildingId);
             protected List<GameObject> levels = new List<GameObject>();
+            protected GameObject currentLevel;
 
-            protected virtual void Start()
-            {
-                Customize();
-            }
-
-            protected virtual void Customize()
+            public virtual void Customize()
             {
                 if (buildingData != null)
                 {
@@ -30,7 +26,8 @@ namespace Overlewd
                 
                     if (buildingData.currentLevel.HasValue)
                     {
-                        for (int i = 0; i < buildingData.levels.Count; i++)
+                        currentLevel = levels[buildingData.currentLevel.Value];
+                        for (int i = buildingData.currentLevel.Value; i < buildingData.levels.Count; i++)
                         {
                             levels[i].SetActive(buildingData.currentLevel == i);
                         }
@@ -40,12 +37,12 @@ namespace Overlewd
             
             public async Task ShowAsync()
             {
-                await UITools.FadeShowAsync(gameObject, 0.7f);
+                await UITools.FadeShowAsync(currentLevel, 0.7f);
             }
 
             public void Hide()
             {
-                UITools.FadeHide(gameObject);
+                UITools.FadeHide(currentLevel);
             }
         }
     }

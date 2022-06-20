@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5202657170492114090}
   - component: {fileID: 7626990315306436969}
   - component: {fileID: 1588145186911552447}
+  - component: {fileID: 292759806260846343}
   m_Layer: 0
   m_Name: Level1
   m_TagString: Untagged
@@ -75,6 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &292759806260846343
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840707241697311049}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6066479479402502290
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,7 +97,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5141979224129959533}
-  - component: {fileID: -2252099529487316026}
   m_Layer: 0
   m_Name: MarketBuilding
   m_TagString: Untagged
@@ -112,15 +124,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 988, y: 354}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &-2252099529487316026
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6066479479402502290}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
