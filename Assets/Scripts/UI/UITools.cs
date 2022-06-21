@@ -6,17 +6,46 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using TMPro;
 
 namespace Overlewd
 {
     public static class UITools
     {
-        public static void DisableButton(Button button)
+        public static void FillWallet(Transform transform)
         {
-            button.interactable = false;
-            foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+            var crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();
+            var wood = transform.Find("Wood").GetComponent<TextMeshProUGUI>();
+            var stone = transform.Find("Stone").GetComponent<TextMeshProUGUI>();
+            var copper = transform.Find("Copper").GetComponent<TextMeshProUGUI>();
+            var gold = transform.Find("Gold").GetComponent<TextMeshProUGUI>();
+            var gems = transform.Find("Gems").GetComponent<TextMeshProUGUI>();
+            
+            crystal.text = $"{AdminBRO.CurrencyItem.Sprite_Crystal}{GameData.player.Crystal.amount}";
+            wood.text = $"{AdminBRO.CurrencyItem.Sprite_Wood}{GameData.player.Wood.amount}";
+            stone.text = $"{AdminBRO.CurrencyItem.Sprite_Stone}{GameData.player.Stone.amount}";
+            copper.text = $"{AdminBRO.CurrencyItem.Sprite_Copper}{GameData.player.Copper.amount}";
+            gold.text = $"{AdminBRO.CurrencyItem.Sprite_Gold}{GameData.player.Gold.amount}";
+            gems.text = $"{AdminBRO.CurrencyItem.Sprite_Gems}{GameData.player.Gems.amount}";
+        }
+        
+        public static void DisableButton(Button button, bool disable = true)
+        {
+            if (disable)
             {
-                cr.SetColor(Color.gray);
+                button.interactable = false;
+                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.gray);
+                }
+            }
+            else
+            {
+                button.interactable = true;
+                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
+                {
+                    cr.SetColor(Color.white);
+                }
             }
         }
 

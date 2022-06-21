@@ -15,14 +15,14 @@ namespace Overlewd
         {
             None,
             BuyTradable,
-            BuildingBuildNow,
-            BuildingBuildStarted,
+            BuildingBuild,
+            BuildingBuildCrystal
         }
     }
 
     public static class GameData
     {
-        public static bool progressMode { get; set; } = false;
+        public static bool devMode { get; set; } = false;
         public static Quests quests { get; } = new Quests();
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
@@ -85,12 +85,6 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
         }
-        public async Task Reset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.FTUE });
-            stages = await AdminBRO.ftueStagesAsync();
-            stats = await AdminBRO.ftueStatsAsync();
-        }
     }
 
     //buildings
@@ -125,25 +119,27 @@ namespace Overlewd
         public AdminBRO.Building portal =>
             GetBuildingByKey(AdminBRO.Building.Key_Portal);
 
-        public async Task BuildNow(int buildingId)
-        {
-            await AdminBRO.buildingBuildNowAsync(buildingId);
-            buildings = await AdminBRO.buildingsAsync();
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuildingBuildNow
-                });
-        }
-
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
             buildings = await AdminBRO.buildingsAsync();
+            await GameData.player.Get();
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    type = GameDataEvent.Type.BuildingBuildStarted
+                    type = GameDataEvent.Type.BuildingBuild
+                });
+        }
+
+        public async Task BuildCrystals(int buildingId)
+        {
+            await AdminBRO.buildingBuildCrystalsAsync(buildingId);
+            buildings = await AdminBRO.buildingsAsync();
+            await GameData.player.Get();
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuildingBuildCrystal
                 });
         }
 
@@ -156,13 +152,6 @@ namespace Overlewd
         public async Task MunicipalityCollect()
         {
             await AdminBRO.municipalityCollectAsync();
-        }
-
-        public async Task Reset()
-        {
-            await AdminBRO.resetAsync(new List<string> { AdminBRO.ResetEntityName.Building });
-            await AdminBRO.initAsync();
-            buildings = await AdminBRO.buildingsAsync();
         }
     }
 
@@ -372,8 +361,30 @@ namespace Overlewd
 
         public AdminBRO.CurrencyItem GetById(int? id) =>
             currencies.Find(c => c.id == id);
+       
+        public AdminBRO.CurrencyItem Copper =>
+            currencies.Find(c => c.key == "copper");
+        public AdminBRO.CurrencyItem Crystals =>
+            currencies.Find(c => c.key == "crystal");
+        public AdminBRO.CurrencyItem Gems =>
+            currencies.Find(c => c.key == "gems");
+        public AdminBRO.CurrencyItem Gold =>
+            currencies.Find(c => c.key == "gold");
+        public AdminBRO.CurrencyItem Stone =>
+            currencies.Find(c => c.key == "stone");
+        public AdminBRO.CurrencyItem Wood =>
+            currencies.Find(c => c.key == "wood");
+
+
         public AdminBRO.CurrencyItem CatEars =>
-            currencies.Find(c => c.name == "Cat Ears");
+            currencies.Find(c => c.key == "ears");
+        public AdminBRO.CurrencyItem HornyCoins =>
+            currencies.Find(c => c.key == "horny");
+        public AdminBRO.CurrencyItem JapaneseYen =>
+            currencies.Find(c => c.key == "yen");
+        public AdminBRO.CurrencyItem NutakuGold =>
+            currencies.Find(c => c.key == "ngold");
+        
     }
 
     //player
@@ -384,17 +395,42 @@ namespace Overlewd
         public async Task Get()
         {
             info = await AdminBRO.meAsync();
-            var locale = await AdminBRO.localizationAsync("en");
+            //var locale = await AdminBRO.localizationAsync("en");
         }
 
-        public AdminBRO.WalletItem CatEars =>
-            info.wallet.Find(item => item.currency.id == GameData.currencies.CatEars.id);
+        public async Task AddCrystals(int amount = 1000)
+        {
+            var crystalCurrencyId = GameData.currencies.Crystals.id;
+            await AdminBRO.meCurrencyAsync(crystalCurrencyId, amount);
+            await Get();
+        }
+
+        public AdminBRO.PlayerInfo.WalletItem Crystal =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Wood =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Wood.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Stone =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Stone.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Copper =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Copper.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Gold =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem Gems =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
+        
+        public AdminBRO.PlayerInfo.WalletItem CatEars =>
+            info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
             foreach (var priceItem in price)
             {
-                var walletCurrency = info.wallet.Find(item => item.currency.id == priceItem.currencyId);
+                var walletCurrency = info.wallet.Find(item => item.currencyId == priceItem.currencyId);
                 if (walletCurrency == null)
                 {
                     return false;
@@ -439,15 +475,15 @@ namespace Overlewd
     //animations
     public class Animations
     {
-        public List<AdminBRO.AnimationScene> scenes { get; private set; } = new List<AdminBRO.AnimationScene>();
+        public List<AdminBRO.Animation> animations { get; private set; } = new List<AdminBRO.Animation>();
 
         public async Task Get()
         {
-            scenes = await AdminBRO.animationScenesAsync();
+            animations = await AdminBRO.animationsAsync();
         }
 
-        public AdminBRO.AnimationScene GetSceneById(int? id) =>
-            scenes.Find(a => a.id == id);
+        public AdminBRO.Animation GetById(int? id) =>
+            animations.Find(a => a.id == id);
     }
 
     //sounds

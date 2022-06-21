@@ -10,6 +10,7 @@ namespace Overlewd
 		protected Button backButton;
 		protected Button skipButton;
 		protected BattleManager bm;
+		protected BattleManagerOutData endBattleData;
 
 		protected virtual void Awake()
 		{
@@ -35,16 +36,16 @@ namespace Overlewd
         protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<StartingScreen>();
+            UIManager.ShowScreen<MapScreen>();
         }
 
 		private void SkipButtonClick()
 		{
 			SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-			if (bm.wannaWin)
-				BattleWin();
-			else
-				BattleDefeat();
+			EndBattle(new BattleManagerOutData
+			{
+				battleWin = true
+			});
 		}
 
 		public virtual void StartBattle()
@@ -53,16 +54,9 @@ namespace Overlewd
 			skipButton.gameObject.SetActive(true);
 		}
 
-		public virtual void BattleWin()
+		public virtual void EndBattle(BattleManagerOutData data)
         {
-			Debug.Log("Win Battle");
-			backButton.gameObject.SetActive(true);
-			skipButton.gameObject.SetActive(false);
-		}
-
-		public virtual void BattleDefeat()
-        {
-			Debug.Log("Lose Battle");
+			endBattleData = data;
 			backButton.gameObject.SetActive(true);
 			skipButton.gameObject.SetActive(false);
 		}
@@ -101,6 +95,8 @@ namespace Overlewd
 		public string ftueChapterKey { get; private set; }
 		public string ftueStageKey { get; private set; }
 		public AdminBRO.Battle battleData { get; private set; }
+		public int mana { get; private set; }
+		public int hp { get; private set; }
 		
 
 		public class EnemyWave
@@ -156,7 +152,18 @@ namespace Overlewd
 				inst.enemyWaves.Add(wave);
             }
 
+			//poison
+			inst.mana = GameData.player.info.poison.mana;
+			inst.hp = GameData.player.info.poison.hp;
+
 			return inst;
         }
+    }
+
+	public class BattleManagerOutData
+    {
+		public bool battleWin { get; set; } = false;
+		public int manaSpent { get; set; } = 0;
+		public int hpSpent { get; set; } = 0;
     }
 }

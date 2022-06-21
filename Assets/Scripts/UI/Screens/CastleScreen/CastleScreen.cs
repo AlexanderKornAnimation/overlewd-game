@@ -22,18 +22,39 @@ namespace Overlewd
         private Transform laboratory;
         private Transform catacombs;
         private Transform aerostat;
+        private Transform haremBuildingPos;
+        private Transform marketBuildingPos;
+        private Transform forgeBuildingPos;
+        private Transform magicGuildBuildingPos;
+        private Transform portalBuildingPos;
+        private Transform castleBuildingPos;
+        private Transform municipalityBuildingPos;
+        private Transform laboratoryBuildingPos;
+        private Transform catacombsBuildingPos;
+        private Transform aerostatBuildingPos;
 
-        private NSCastleScreen.HaremButton haremButton;
-        private NSCastleScreen.MarketButton marketButton;
-        private NSCastleScreen.ForgeButton forgeButton;
-        private NSCastleScreen.MagicGuildButton magicGuildButton;
-        private NSCastleScreen.PortalButton portalButton;
-        private NSCastleScreen.CastleButton castleButton;
-        private NSCastleScreen.MunicipalityButton municipalityButton;
-        private NSCastleScreen.LaboratoryButton laboratoryButton;
-        private NSCastleScreen.CatacombsButton catacombsButton;
-        private NSCastleScreen.AerostatButton aerostatButton;
+        private NSCastleScreen.BaseButton haremButton;
+        private NSCastleScreen.BaseButton marketButton;
+        private NSCastleScreen.BaseButton forgeButton;
+        private NSCastleScreen.BaseButton magicGuildButton;
+        private NSCastleScreen.BaseButton portalButton;
+        private NSCastleScreen.BaseButton castleButton;
+        private NSCastleScreen.BaseButton municipalityButton;
+        private NSCastleScreen.BaseButton laboratoryButton;
+        private NSCastleScreen.BaseButton catacombsButton;
+        private NSCastleScreen.BaseButton aerostatButton;
 
+        private NSCastleScreen.BaseBuilding haremBuilding;
+        private NSCastleScreen.BaseBuilding marketBuilding;
+        private NSCastleScreen.BaseBuilding forgeBuilding;
+        private NSCastleScreen.BaseBuilding magicGuildBuilding;
+        private NSCastleScreen.BaseBuilding portalBuilding;
+        private NSCastleScreen.BaseBuilding castleBuilding;
+        private NSCastleScreen.BaseBuilding municipalityBuilding;
+        private NSCastleScreen.BaseBuilding laboratoryBuilding;
+        private NSCastleScreen.BaseBuilding catacombsBuilding;
+        private NSCastleScreen.BaseBuilding aerostatBuilding;
+        
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
         private BuffWidget buffPanel;
@@ -60,49 +81,86 @@ namespace Overlewd
             laboratory = canvas.Find("Laboratory");
             catacombs = canvas.Find("Catacombs");
             aerostat = canvas.Find("Aerostat");
+
+            haremBuildingPos = canvas.Find("HaremBuildingPos");
+            portalBuildingPos = canvas.Find("PortalBuildingPos");
+            marketBuildingPos = canvas.Find("MarketBuildingPos");
+            forgeBuildingPos = canvas.Find("ForgeBuildingPos");
+            magicGuildBuildingPos = canvas.Find("MagicGuildBuildingPos");
+            castleBuildingPos = canvas.Find("CastleBuildingPos");
+            municipalityBuildingPos = canvas.Find("MunicipalityBuildingPos");
+            laboratoryBuildingPos = canvas.Find("LaboratoryBuildingPos");
+            catacombsBuildingPos = canvas.Find("CatacombsBuildingPos");
+            aerostatBuildingPos = canvas.Find("AerostatBuildingPos");
         }
 
         public override async Task BeforeShowMakeAsync()
         {
-            foreach (var building in GameData.buildings.buildings)
+            foreach (var buildingData in GameData.buildings.buildings)
             {
-                var showBuilding = GameData.progressMode ? building.isBuilt : true;
-                if (showBuilding)
+                if (buildingData.isBuilt)
                 {
-                    switch (building.key)
+                    switch (buildingData.key)
                     {
                         case AdminBRO.Building.Key_Harem:
                             haremButton = NSCastleScreen.HaremButton.GetInstance(harem);
+                            haremBuilding = NSCastleScreen.HaremBuilding.GetInstance(haremBuildingPos);
+                            haremBuilding.buildingId = buildingData.id;
+                            haremBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Market:
                             marketButton = NSCastleScreen.MarketButton.GetInstance(market);
+                            marketBuilding = NSCastleScreen.MarketBuilding.GetInstance(marketBuildingPos);
+                            marketBuilding.buildingId = buildingData.id;
+                            marketBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Forge:
                             forgeButton = NSCastleScreen.ForgeButton.GetInstance(forge);
+                            forgeBuilding = NSCastleScreen.ForgeBuilding.GetInstance(forgeBuildingPos);
+                            forgeBuilding.buildingId = buildingData.id;
+                            forgeBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_MagicGuild:
                             magicGuildButton = NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+                            magicGuildBuilding = NSCastleScreen.MagicGuildBuilding.GetInstance(magicGuildBuildingPos);
+                            magicGuildBuilding.buildingId = buildingData.id;
+                            magicGuildBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Portal:
                             portalButton = NSCastleScreen.PortalButton.GetInstance(portal);
+                            portalBuilding = NSCastleScreen.PortalBuilding.GetInstance(portalBuildingPos);
+                            portalBuilding.buildingId = buildingData.id;
+                            portalBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Castle:
                             castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
-                            if (GameData.ftue.stats.IsLastEnededStage("battle4", "chapter1")) {
-                                castleButton.Hide();
-                            }
+                            castleBuilding = NSCastleScreen.CastleBuilding.GetInstance(castleBuildingPos);
+                            castleBuilding.buildingId = buildingData.id;
+                            castleBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Municipality:
                             municipalityButton = NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+                            municipalityBuilding = NSCastleScreen.MunicipalityBuilding.GetInstance(municipalityBuildingPos);
+                            municipalityBuilding.buildingId = buildingData.id;
+                            municipalityBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Laboratory:
                             laboratoryButton = NSCastleScreen.LaboratoryButton.GetInstance(laboratory);
+                            laboratoryBuilding = NSCastleScreen.LaboratoryBuilding.GetInstance(laboratoryBuildingPos);
+                            laboratoryBuilding.buildingId = buildingData.id;
+                            laboratoryBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Catacombs:
                             catacombsButton = NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+                            catacombsBuilding = NSCastleScreen.CatacombsBuilding.GetInstance(catacombsBuildingPos);
+                            catacombsBuilding.buildingId = buildingData.id;
+                            catacombsBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Aerostat:
                             aerostatButton = NSCastleScreen.AerostatButton.GetInstance(aerostat);
+                            aerostatBuilding = NSCastleScreen.AerostatBuilding.GetInstance(aerostatBuildingPos);
+                            aerostatBuilding.buildingId = buildingData.id;
+                            aerostatBuilding.Customize();
                             break;
                     }
                 }
@@ -114,6 +172,7 @@ namespace Overlewd
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
+            DevWidget.GetInstance(transform);
 
             switch (GameData.ftue.stats.lastEndedState)
             {
@@ -123,6 +182,19 @@ namespace Overlewd
                         UITools.DisableButton(sidebarButton);
                     }
                     break;
+            }
+
+            var building = GetBuildingByKey(inputData?.buildedBuildingKey);
+
+            if (building.building != null && building.button != null)
+            {
+                var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                
+                building.building.Hide();
+                if (buildingData.currentLevel == 0)
+                {
+                    building.button.Hide();
+                }
             }
 
             await Task.CompletedTask;
@@ -162,10 +234,44 @@ namespace Overlewd
                     }
                     break;
             }
+
+            var building = GetBuildingByKey(inputData?.buildedBuildingKey);
+
+            if (building.building != null && building.button != null)
+            {
+                if (building.building.buildingId != null)
+                {
+                    var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                    await building.building.ShowAsync();
+                
+                    if (buildingData.currentLevel == 0)
+                    {
+                        await building.button.ShowAsync();
+                    }
+                }
+            }
             
             await Task.CompletedTask;
         }
 
+        private (NSCastleScreen.BaseBuilding building, NSCastleScreen.BaseButton button) GetBuildingByKey(string key)
+        {
+            return key switch
+            {
+                AdminBRO.Building.Key_Castle => (castleBuilding, castleButton),
+                AdminBRO.Building.Key_Aerostat => (aerostatBuilding, aerostatButton),
+                AdminBRO.Building.Key_Municipality => (municipalityBuilding, municipalityButton),
+                AdminBRO.Building.Key_Catacombs => (catacombsBuilding, catacombsButton),
+                AdminBRO.Building.Key_Harem => (haremBuilding, haremButton),
+                AdminBRO.Building.Key_MagicGuild => (magicGuildBuilding, magicGuildButton),
+                AdminBRO.Building.Key_Forge => (forgeBuilding, forgeButton),
+                AdminBRO.Building.Key_Portal => (portalBuilding, portalButton),
+                AdminBRO.Building.Key_Laboratory => (laboratoryBuilding, laboratoryButton),
+                AdminBRO.Building.Key_Market => (marketBuilding, marketButton),
+                _ => (null, null)
+            };
+        }
+        
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowShow);
@@ -187,5 +293,6 @@ namespace Overlewd
 
     public class CastleScreenInData : BaseFullScreenInData
     {
+        public string buildedBuildingKey;
     }
 }

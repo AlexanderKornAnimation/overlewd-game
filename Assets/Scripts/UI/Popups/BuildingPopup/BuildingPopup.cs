@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -14,108 +15,97 @@ namespace Overlewd
         private Transform imageSpawnPoint;
 
         private TextMeshProUGUI fullPotentialDescription;
+        private TextMeshProUGUI fullPotentialTitle;
         private TextMeshProUGUI buildingName;
         private TextMeshProUGUI description;
 
         private Transform resourcesGrid;
-        private Transform[] resource = new Transform[4];
-        private GameObject[] notEnough = new GameObject[4];
+        private Image[] resource = new Image[4];
         private TextMeshProUGUI[] count = new TextMeshProUGUI[4];
-        private Image[] recourceIcon = new Image[4];
 
         private Button backButton;
 
-        private Button freeBuildButton;
-        private TextMeshProUGUI freeBuildButtonText;
+        private Button buildButton;
+        private TextMeshProUGUI buildButtonText;
+        private Button crystalBuildButton;
+        private TextMeshProUGUI crystalBuildButtonText;
+        private Transform currencyBack;
 
-        private Button paidBuildingButton;
-        private TextMeshProUGUI paidBuildingButtonText;
-        private Image paidBuildingButtonIcon;
-
-        void Awake()
+        private void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/BuildingPopup/BuildingPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
+            currencyBack = canvas.Find("CurrencyBack");
+            
             background = canvas.Find("Background");
             imageSpawnPoint = background.Find("ImageSpawnPoint");
 
-            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<TextMeshProUGUI>();
             buildingName = canvas.Find("BuildingName").GetComponent<TextMeshProUGUI>();
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
             resourcesGrid = canvas.Find("Grid");
             for (var i = 0; i < resource.Length; i++)
             {
-                resource[i] = resourcesGrid.Find($"Recource{i + 1}");
-
-                notEnough[i] = resource[i].Find("NotEnough").gameObject;
-                count[i] = resource[i].Find("Count").GetComponent<TextMeshProUGUI>();
-                recourceIcon[i] = resource[i].Find("RecourceIcon").GetComponent<Image>();
+                resource[i] = resourcesGrid.Find($"Recource{i + 1}").GetComponent<Image>();
+                count[i] = resource[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                resource[i].gameObject.SetActive(false);
             }
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
-            freeBuildButton = canvas.Find("FreeBuildButton").GetComponent<Button>();
-            freeBuildButton.onClick.AddListener(FreeBuildButtonClick);
-            freeBuildButtonText = freeBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            buildButton = canvas.Find("BuildButton").GetComponent<Button>();
+            buildButton.onClick.AddListener(BuildButtonClick);
+            buildButtonText = buildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
-            paidBuildingButton = canvas.Find("PaidBuildingButton").GetComponent<Button>();
-            paidBuildingButton.onClick.AddListener(PaidBuildingButtonClick);
-            paidBuildingButtonText = paidBuildingButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            paidBuildingButtonIcon = paidBuildingButton.transform.Find("Icon").GetComponent<Image>();
+            crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
+            crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
+            crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowMakeAsync()
         {
-            var buildindData = inputData?.buildingData;
-            if (buildindData != null)
+            var buildingData = inputData?.buildingData;
+            if (buildingData != null)
             {
-                switch (buildindData.key)
+                var building =
+                    ResourceManager.InstantiateWidgetPrefab($"Prefabs/UI/Popups/BuildingPopup/{buildingData.name}",
+                        imageSpawnPoint);
+
+                for (int i = 1; i <= buildingData.levels.Count; i++)
                 {
-                    case AdminBRO.Building.Key_Aerostat:
-
-                        break;
-                    case AdminBRO.Building.Key_Castle:
-
-                        break;
-                    case AdminBRO.Building.Key_Catacombs:
-
-                        break;
-                    case AdminBRO.Building.Key_Laboratory:
-
-                        break;
-                    case AdminBRO.Building.Key_Forge:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/ForgeImage",
-                            imageSpawnPoint);
-                        break;
-                    case AdminBRO.Building.Key_Harem:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/HaremImage",
-                            imageSpawnPoint);
-                        break;
-                    case AdminBRO.Building.Key_MagicGuild:
-
-                        break;
-                    case AdminBRO.Building.Key_Market:
-
-                        break;
-                    case AdminBRO.Building.Key_Municipality:
-
-                        break;
-                    case AdminBRO.Building.Key_Portal:
-                        ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/BuildingPopup/PortalImage",
-                            imageSpawnPoint);
-                        break;
+                    if (buildingData.nextLevel.HasValue)
+                    {
+                        building.transform.Find($"Level{i}").gameObject.
+                            SetActive(buildingData.nextLevel + 1 == i);
+                    }
                 }
-            }
+                
+                var nextLevelData = buildingData.nextLevelData;
+                var prices = nextLevelData.price;
+                
+                for (var i = 0; i < prices.Count; i++)
+                {
+                    var currencyData = GameData.currencies.GetById(prices[i].currencyId);
+                    resource[i].gameObject.SetActive(true);
+                    resource[i].sprite = ResourceManager.LoadSprite(currencyData.icon256Url);
+                    count[i].text = prices[i].amount.ToString();
+                    count[i].color = buildingData.canUpgrade ? Color.white : Color.red;
+                }
 
-            recourceIcon[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
-            recourceIcon[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
-            recourceIcon[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
-            recourceIcon[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
+                var crystalPriceAmount = nextLevelData?.crystalPrice?.FirstOrDefault()?.amount.ToString() ?? "-";
+                crystalBuildButtonText.text = buildingData.canUpgradeCrystal
+                    ? $"Summon building\nfor <color=white>{crystalPriceAmount}</color> crystals"
+                    : $"Summon building\nfor <color=red>{crystalPriceAmount}</color> crystals";
+
+                description.text = buildingData.description ?? "EMPTY";
+                buildingName.text = buildingData.name ?? "EMPTY";
+                
+                UITools.FillWallet(currencyBack);
+            }
 
             await Task.CompletedTask;
         }
@@ -126,20 +116,16 @@ namespace Overlewd
             UIManager.HidePopup();
         }
 
-        protected virtual async void FreeBuildButtonClick()
+        protected virtual async void BuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeBuildButton);
-            await BuildNow();
-
-            UIManager.ShowScreen<CastleScreen>();
+            await Build();
         }
 
-        protected virtual async void PaidBuildingButtonClick()
+        protected virtual async void CrystalBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            await BuildNow();
-
-            UIManager.ShowScreen<CastleScreen>();
+            await BuildCrystals();
         }
 
         public override ScreenShow Show()
@@ -152,14 +138,42 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenLeftHide>();
         }
 
-        private async Task BuildNow()
+        private async Task Build()
         {
             var buildingData = inputData?.buildingData;
             if (buildingData != null)
             {
-                if (buildingData.canUpgradeNow)
+                if (buildingData.canUpgrade)
                 {
-                    await GameData.buildings.BuildNow(buildingData.id);
+                    await GameData.buildings.Build(buildingData.id);
+                    UIManager.MakeScreen<CastleScreen>().SetData(new CastleScreenInData
+                    {
+                        buildedBuildingKey = buildingData.key
+                    }).RunShowScreenProcess();
+                }
+                else
+                {
+                    UIManager.ShowPopup<DeclinePopup>();
+                }
+            }
+        }
+
+        private async Task BuildCrystals()
+        {
+            var buildingData = inputData?.buildingData;
+            if (buildingData != null)
+            {
+                if (buildingData.canUpgradeCrystal)
+                {
+                    await GameData.buildings.BuildCrystals(buildingData.id);
+                    UIManager.MakeScreen<CastleScreen>().SetData(new CastleScreenInData
+                    {
+                        buildedBuildingKey = buildingData.key
+                    }).RunShowScreenProcess();
+                }
+                else
+                {
+                    UIManager.ShowPopup<DeclinePopup>();
                 }
             }
         }

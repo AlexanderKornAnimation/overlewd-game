@@ -1,7 +1,7 @@
 using DG.Tweening;
-using System;
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,37 +10,45 @@ namespace Overlewd
 {
     public class CharController : MonoBehaviour
     {
-        public string Name;
+
         public bool isEnemy = false;
         public bool isBoss = false;
         public bool isOverlord = false;
-        //Char UI
+
         public Button bt;
-        public Slider sliderHP;
-        public Slider sliderMP;
-        public TextMeshProUGUI hpTMP;
-        public TextMeshProUGUI mpTMP;
-        //Portrait UI
-        public Button uiButton;
-        public Slider uiHpSlider;
-        public TextMeshPro uihpTMP;
         public CharacterPortrait charStats;
 
-        public BattleManager bm; //init on BattleManager Initialize();
         private GameObject border;
 
+        public CharacterStatObserver observer;
+
+        public BattleManager bm; //init on BattleManager Initialize();
+        public GameObject popUpPrefab;
+
         public CharacterRes characterRes;
+        public AdminBRO.Character character;
 
-        public AdminBRO.Character broCharacter;
+        public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();// => character.skills;
+        public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
 
-        public float speed => (float)broCharacter.speed;
 
-        public Skill[] skill;
+        public string Name => character.name;
+        public float speed => (float)character.speed;
+        public float power => (float)character.power;
+        public float constitution => (float)character.constitution;
+        public float agility => (float)character.agility;
+        public float accuracy => (float)character.accuracy;
+        public float dodge => (float)character.dodge;
+        public float critrate => (float)character.critrate;
+        public float damage => (float)character.damage;
+
+        public float damageTotal = 10;
+
+
         private float idleScale = 1f, battleScale = 1.4f;
         public int battleOrder = 1;
         public float health = 100, healthMax = 100;
         public float mana = 100, manaMax = 100;
-        public float damage = 10;
 
         [HideInInspector] public bool isDamageBuff = false;
         [HideInInspector] public int buffDamageScale = 1;
@@ -58,7 +66,22 @@ namespace Overlewd
             vfxDuration = 0f;
         private RectTransform rt;
 
-        public Action setAttackItem;
+        public int
+            focus_blind, defUp_defDown,
+            regen_poison, bless_healBlock,
+            immunity, silence, curse;
+        public bool stun;
+
+        [Tooltip("Reduce or add total damage in percentage up to 100")]
+        public float defUp_defDown_dot = 0f;
+        [Tooltip("(-) Heal or (+) Damage as a percentage of maximum health at the end of the round")]
+        public float regen_poison_dot = 0f;
+        [Tooltip("Heal Up damage in percentage up to 100")]
+        public float bless_dot = 0f;
+        [Tooltip("Total damage reduced by a percentage")]
+        public float curse_dot = 0f;
+
+
 
         private void Start()
         {
@@ -66,56 +89,33 @@ namespace Overlewd
             ShapeInit();
             UIInit();
             PlayIdle();
-            UpdateUI();
-            StartCoroutine(LateInint());
+            StartCoroutine(LateInit());
         }
 
         private void StatInit()
         {
-            /*
-            * class for icons
-            * level
-            * stats: speed, power etc...
-            * items
-            * 
-            * character key associete:
-            * 
-            * animations
-            * icons
-            * battle scills unique animations
-            * 
-            */
-            Name = broCharacter.name;
-            isOverlord = broCharacter.characterClass == AdminBRO.Character.Class_Overlord;
+            //isEnemy and battleOrder assign on battle manager
+            isOverlord = character.characterClass == AdminBRO.Character.Class_Overlord;
+            health = (float)character.health;
+            healthMax = health;
+            mana = (float)character.mana;
+            manaMax = mana;
+            idleScale = characterRes.idleScale;
+            battleScale = characterRes.battleScale;
 
-            health = (float)broCharacter.health; healthMax = health;
-            mana = (float)broCharacter.mana; manaMax = mana;
-            damage = (float)broCharacter.damage;
-
-            //characterRes find and attach by broCharacter.key/name;
-
-            idleScale = 1f;
-            battleScale = 1.1f;
-
-            /*
-            isEnemy = character.isEnemy;
-            battleOrder = character.Order;
-            characterContent.ApplyStats(); //apply class bonus
-            isOverlord = character.isOverlord;
-            health = characterContent.hp; healthMax = characterContent.maxHp;
-            mana = characterContent.mp; manaMax = characterContent.maxMp;
-            idleScale = characterContent.idleScale;
-            battleScale = characterContent.battleScale;
-            damage = (int)Math.Ceiling(characterContent.damage);
-            */
-            skill = characterRes.skill;
+            skill = character.skills;
+            if (!isOverlord)
+            {
+                passiveSkill.Add(skill?.Find(f => f.type == "passive_skill"));
+                skill = skill.Except(passiveSkill).ToList();
+            }
+            else
+            {
+                passiveSkill.Add(skill?.Find(f => f.type == "overlord_first_passive_skill"));
+                passiveSkill.Add(skill?.Find(f => f.type == "overlord_second_passive_skill"));
+                skill = skill.Except(passiveSkill).ToList();
+            }
         }
-
-        public void PowerBuff()
-        {
-            buffDamageScale *= 2;
-        }
-
         private void ShapeInit()
         {
             rt = gameObject.AddComponent<RectTransform>();
@@ -145,6 +145,20 @@ namespace Overlewd
 
             transform.SetParent(persPos, false);
             transform.SetSiblingIndex(0);
+            //Drop GUI and Observer
+            GameObject observerGO;
+            if (isEnemy)
+                observerGO = Resources.Load("Battle/Prefabs/CharGUIEnemy") as GameObject;
+            else if (isOverlord)
+                observerGO = Resources.Load("Battle/Prefabs/CharGUIOverlord") as GameObject;
+            else if (isBoss)
+                observerGO = Resources.Load("Battle/Prefabs/CharGUIBoss") as GameObject;
+            else
+                observerGO = Resources.Load("Battle/Prefabs/CharGUI") as GameObject;
+
+            observer = Instantiate(observerGO, persPos).GetComponent<CharacterStatObserver>();
+            observer.cc = this;
+            observer.charStats = charStats;
 
             var sW = characterRes.characterPrefab ?
                 SpineWidget.GetInstance(characterRes.characterPrefab, transform) :
@@ -153,54 +167,40 @@ namespace Overlewd
             spineWidget = sW;
             defenceDuration = spineWidget.GetAnimationDuaration(characterRes.ani_defence_name);
         }
-
         private void UIInit()
         {
+            popUpPrefab = Resources.Load("Battle/Prefabs/BattlePopupText") as GameObject;
+
             charStats.charCtrl = this;
             charStats.InitUI();
-            sliderHP = persPos.Find("sliderHP").GetComponent<Slider>();
-            if (sliderHP != null) sliderHP.maxValue = healthMax; else Debug.Log("sliderHP is null");
-            hpTMP = persPos.Find("sliderHP/Text").GetComponent<TextMeshProUGUI>();
-
-            if (isOverlord)
-            {
-                sliderMP = persPos.Find("sliderMP").GetComponent<Slider>();
-                if (sliderMP != null) sliderMP.maxValue = manaMax;
-                mpTMP = persPos.Find("sliderMP/Text").GetComponent<TextMeshProUGUI>();
-            }
 
             bt = persPos.Find("button").GetComponent<Button>();
+            bt.onClick.AddListener(Select);
+
             border = persPos.Find("button/border").gameObject;
             border.SetActive(false);
-            bt.onClick.AddListener(Select);
         }
-
-        IEnumerator LateInint()
+        IEnumerator LateInit()
         {
             yield return new WaitForSeconds(0.01f);
-            sliderHP.gameObject.SetActive(true);
             bt.gameObject.SetActive(true);
         }
 
+
+        public void PowerBuff()
+        {
+            buffDamageScale *= 2;
+        }
         public void CharPortraitSet()
         {
-            charStats.charCtrl = this;
-            charStats.SetUI();
+            charStats.SetUI(this);
         }
 
         public void UpdateUI()
         {
-            string hpTxt = $"{health}/{healthMax}";
-            if (hpTMP != null) hpTMP.text = hpTxt; else Debug.Log("hpTMP = null");
-            if (sliderHP != null) sliderHP.value = health;
-            if (isOverlord)
-            {
-                string mpTxt = $"{mana}/{manaMax}";
-                if (mpTMP != null) mpTMP.text = mpTxt;
-                if (sliderMP != null) sliderMP.value = mana;
-            }
-            charStats.UpdateUI();
+            observer?.UpdateUI();
         }
+
         public void PlayIdle()
         {
             if (!isDead)
@@ -216,35 +216,41 @@ namespace Overlewd
 
         IEnumerator PlayAttack(int id, CharController target = null)
         {
-            if (id > characterRes.skill.Length) id = 0; //if id overflow on skill array
+            if (id >= skill.Count) id = 0; //if id overflow on skill array
 
             vfxDuration = characterRes.skill[id].vfxDuration;
-            attackDuration = spineWidget.GetAnimationDuaration(characterRes.skill[id].attackAnimationName);
-            damage = Mathf.RoundToInt(characterRes.skill[id].power + (float)broCharacter.damage * buffDamageScale);
 
-            if (characterRes.skill[id].prepairAnimationName == "")
+            attackDuration = spineWidget.GetAnimationDuaration(characterRes.ani_attack_name[id]);
+
+            damageTotal = Mathf.RoundToInt(damage * (skill[id].amount / 100) * buffDamageScale);
+            damageTotal += damageTotal * Mathf.Sign(defUp_defDown) * defUp_defDown_dot;
+
+            if (characterRes.ani_pAttack_name[id] == "")
                 preAttackDuration = 0f;
             else
             {
-                preAttackDuration = spineWidget.GetAnimationDuaration(characterRes.skill[id].prepairAnimationName);  //send to target Defence Animation
-                spineWidget.PlayAnimation(characterRes.skill[id].prepairAnimationName, false);
+                preAttackDuration = spineWidget.GetAnimationDuaration(characterRes.ani_pAttack_name[id]);  //send to target Defence Animation
+                spineWidget.PlayAnimation(characterRes.ani_pAttack_name[id], false);
             }
 
-            if (isOverlord) mana -= characterRes.skill[id].manaCost;
+            if (isOverlord) mana -= skill[id].manaCost; //????
+
             yield return new WaitForSeconds(preAttackDuration);
             if (characterRes.skill[id].vfx != null)
             {
                 Instantiate(characterRes.skill[id].vfx, battleLayer);
                 yield return new WaitForSeconds(vfxDuration);
             }
-            spineWidget.PlayAnimation(characterRes.skill[id].attackAnimationName, false);
+            spineWidget.PlayAnimation(characterRes.ani_attack_name[id], false);
             yield return new WaitForSeconds(attackDuration);
             PlayIdle();
             BattleOut();
             bm.BattleOut();
         }
-        public void Defence(CharController attacker, GameObject vfx = null) => StartCoroutine(PlayDefence(attacker, vfx));
-        IEnumerator PlayDefence(CharController attacker, GameObject vfx = null)
+
+        public void Defence(CharController attacker, int id, GameObject vfx = null) => StartCoroutine(PlayDefence(attacker, id, vfx));
+
+        IEnumerator PlayDefence(CharController attacker, int id, GameObject vfx = null)
         {
             transform.SetParent(battlePos);
             UnHiglight();
@@ -252,7 +258,20 @@ namespace Overlewd
             if (vfx != null) Instantiate(vfx, transform);
             spineWidget.PlayAnimation(characterRes.ani_defence_name, false);
             yield return new WaitForSeconds(defenceDuration / 2);
-            Damage(attacker.damage);
+
+            bool hit = attacker.accuracy > Random.value;
+            bool isDodge = dodge > Random.value;
+            bool isCrit = attacker.critrate > Random.value;
+
+            AddEffect(attacker.skill[id]);
+
+            Debug.Log($"attacker.damage: {attacker.damageTotal}");
+            Debug.Log($"hit {hit}, attacker.accuracy: {attacker.accuracy}");
+            Debug.Log($"dodge {isDodge}, attacker.dodge: {dodge}");
+            Debug.Log($"crit {isCrit}, attacker.critrate: {attacker.critrate}");
+
+            Damage(attacker.damageTotal, hit, isDodge, isCrit);
+
             yield return new WaitForSeconds(defenceDuration / 2);
             PlayIdle();
             BattleOut();
@@ -262,12 +281,14 @@ namespace Overlewd
         {
             if (bm.battleState == BattleManager.BattleState.PLAYER && !isDead)
             {
-                bm.unselect?.Invoke();
-                bm.ccOnClick = this; //type CharController
-                Highlight();
+                if (bm.CharPress(this))
+                {
+                    bm.unselect?.Invoke();
+                    Highlight();
+                }
+                if (!isEnemy)
+                    CharPortraitSet();
             }
-            if (!isEnemy)
-                CharPortraitSet();
         }
 
         public void Highlight() => border?.SetActive(true);
@@ -287,8 +308,19 @@ namespace Overlewd
             rt.DOAnchorPos(Vector2.zero, 0.25f);
             rt.DOScale(idleScale, 0.25f);
         }
-        public void Damage(float value)
+        public void Damage(float value, bool hit, bool dodge, bool crit)
         {
+            if (!hit)
+            {
+                DrawPopup("Miss!", "blue");
+                return;
+            }
+            if (dodge)
+            {
+                DrawPopup("Dodge!", "yellow");
+                return;
+            }
+            if (crit) value *= 2;
             if (value > 0)
             {
                 health -= value;
@@ -300,8 +332,29 @@ namespace Overlewd
                     StartCoroutine(PlayDead());
                     bm.StateUpdate(this);
                 }
+                if (crit)
+                    DrawPopup($"Crit! {value}", "red");
+                else
+                    DrawPopup($"{value}", "red");
+                UpdateUI();
             }
-            UpdateUI();
+            else
+            {
+                health -= value;
+                health = Mathf.Min(health, healthMax);
+                DrawPopup($"Heal! {value}", "green");
+                UpdateUI();
+            }
+        }
+
+
+        void DrawPopup(string msg, string color = "white")
+        {
+            if (popUpPrefab != null)
+            {
+                var damageText = Instantiate(popUpPrefab, rt);
+                damageText.GetComponent<DamagePopup>().Setup(msg, isEnemy, 0f, color);
+            }
         }
 
         IEnumerator PlayDead()
@@ -330,11 +383,114 @@ namespace Overlewd
             mana = Mathf.Min(mana, manaMax);
             UpdateUI();
         }
+
+        void AddEffect(AdminBRO.CharacterSkill sk)
+        {
+            bool hit = sk.effectProb / 100 > Random.value;
+
+            if (hit)
+            {
+                var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                var effectAmount = healthMax * (sk.effectAmount / 100);
+                switch (sk.effect)
+                {
+                    case "defense_up":
+                        defUp_defDown = duration;
+                        defUp_defDown_dot = sk.effectAmount / 100;
+                        break;
+                    case "defense_down":
+                        defUp_defDown = -duration;
+                        defUp_defDown_dot = effectAmount;
+                        break;
+                    case "focus":
+                        focus_blind = duration;
+                        break;
+                    case "blind":
+                        focus_blind = -duration;
+                        break;
+                    case "regeneration":
+                        regen_poison = duration;
+                        regen_poison_dot = effectAmount;
+                        break;
+                    case "poison":
+                        regen_poison = -duration;
+                        regen_poison_dot = effectAmount;
+                        break;
+                    case "bless":
+                        bless_healBlock = duration;
+                        bless_dot = effectAmount;
+                        break;
+                    case "heal_block":
+                        bless_healBlock = -duration;
+                        bless_dot = effectAmount;
+                        break;
+                    case "silence":
+                        silence = duration;
+                        break;
+                    case "immunity":
+                        immunity = duration;
+                        break;
+                    case "stun":
+                        stun = true;
+                        break;
+                    case "curse":
+                        curse = duration;
+                        curse_dot = damage * (sk.effectAmount / 100);
+                        break;
+                    case "dispel":
+                        Dispel();
+                        break;
+                    case "safeguard":
+                        Safeguard();
+                        break;
+                }
+                observer.UpdateStatuses();
+            }
+            else
+            {
+                DrawPopup("Effect miss", "red");
+            }
+        }
+
+        public void Dispel()
+        {
+            //dispel vfx
+            focus_blind = 0;
+            defUp_defDown = 0;
+            regen_poison = 0;
+            bless_healBlock = 0;
+            immunity = 0;
+            silence = 0;
+            curse = 0;
+        }
+        public void Safeguard()
+        {
+            if (stun)
+            {
+                stun = false;
+                DrawPopup("- Stun", "green");
+            }
+            if (defUp_defDown < 0)
+            {
+                defUp_defDown = 0;
+                DrawPopup("- Defence down", "green");
+            }
+        }
         private void OnDestroy()
         {
             bm.unselect -= UnHiglight;
-            sliderHP.gameObject.SetActive(false);
+            Destroy(observer.gameObject);
             bt.gameObject.SetActive(false);
         }
+
+        void EndRoundStatusEffectUpdate()
+        {
+            if (regen_poison != 0)
+            {
+
+                Damage(10, false, false, false);
+            }
+        }
+
     }
 }

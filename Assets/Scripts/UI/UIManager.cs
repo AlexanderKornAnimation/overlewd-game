@@ -195,15 +195,17 @@ namespace Overlewd
             var uiRootScreenLayerGO_rectMask2D = uiRootScreenLayerGO.AddComponent<RectMask2D>();
         }
 
-        private static void ConfigureLayer(out GameObject layerGO, string name, int siblingIndex)
+        private static GameObject ConfigureLayer(string name, int siblingIndex)
         {
-            layerGO = new GameObject(name);
+            var layerGO = new GameObject(name);
             layerGO.layer = 5;
             var layerGO_rectTransform = layerGO.AddComponent<RectTransform>();
             layerGO_rectTransform.SetParent(uiRootScreenLayerGO.transform, false);
             UITools.SetStretch(layerGO_rectTransform);
 
             layerGO.transform.SetSiblingIndex(siblingIndex);
+
+            return layerGO;
         }
 
         //Missclick Instantiate
@@ -296,12 +298,12 @@ namespace Overlewd
 
             ConfigureRootScreenLayer();
 
-            ConfigureLayer(out uiScreenLayerGO, "UIScreenLayer", 0);
-            ConfigureLayer(out uiPopupLayerGO, "UIPopupLayer", 1);
-            ConfigureLayer(out uiSubPopupLayerGO, "UISubPopupLayer", 2);
-            ConfigureLayer(out uiOverlayLayerGO, "UIOverlayLayer", 3);
-            ConfigureLayer(out uiNotificationLayerGO, "UINotificationLayer", 4);
-            ConfigureLayer(out uiDialogLayerGO, "UIDialogLayer", 5);
+            uiScreenLayerGO = ConfigureLayer("UIScreenLayer", 0);
+            uiPopupLayerGO = ConfigureLayer("UIPopupLayer", 1);
+            uiSubPopupLayerGO = ConfigureLayer("UISubPopupLayer", 2);
+            uiOverlayLayerGO = ConfigureLayer("UIOverlayLayer", 3);
+            uiNotificationLayerGO = ConfigureLayer("UINotificationLayer", 4);
+            uiDialogLayerGO = ConfigureLayer("UIDialogLayer", 5);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();

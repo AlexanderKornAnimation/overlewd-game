@@ -11,6 +11,7 @@ namespace Overlewd
 {
     public class DialogScreen : BaseFullScreenParent<DialogScreenInData>
     {
+        private FMODEvent backgroundMusic;
         private FMODEvent mainSound;
         private FMODEvent cutInSound;
         private FMODEvent replicaSound;
@@ -110,7 +111,6 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            SoundManager.GetEventInstance(FMODEventPath.Music_DialogScreen);
             await Task.CompletedTask;
         }
 
@@ -337,7 +337,7 @@ namespace Overlewd
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
+                    var animation = GameData.animations.GetById(replica.cutInAnimationId);
                     cutInAnimation = SpineScene.GetInstance(animation, cutInAnimPos);
                 }
             }
@@ -358,7 +358,7 @@ namespace Overlewd
                     Destroy(emotionAnimation?.gameObject);
                     emotionAnimation = null;
 
-                    var animation = GameData.animations.GetSceneById(replica.emotionAnimationId);
+                    var animation = GameData.animations.GetById(replica.emotionAnimationId);
                     emotionAnimation = SpineScene.GetInstance(animation, emotionPos);
                 }
             }
@@ -444,6 +444,17 @@ namespace Overlewd
 
         private void PlaySound(AdminBRO.DialogReplica replica)
         {
+            //background music
+            if (replica.backgroundMusicId.HasValue)
+            {
+                var backgroundMusicData = GameData.sounds.GetById(replica.backgroundMusicId);
+                if (backgroundMusicData.eventPath != backgroundMusic?.path)
+                {
+                    backgroundMusic?.Stop();
+                    backgroundMusic = SoundManager.GetEventInstance(backgroundMusicData.eventPath, backgroundMusicData.soundBankId);
+                }
+            }
+
             //main sound
             if (replica.mainSoundId.HasValue)
             {

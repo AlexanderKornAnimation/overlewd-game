@@ -160,7 +160,7 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.ShowScreen<MarketScreen>();
+            UIManager.ShowOverlay<MarketPopup>();
         }
 
         private void MergeButtonClick()

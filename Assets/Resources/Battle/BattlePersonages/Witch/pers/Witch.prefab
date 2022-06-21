@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &143447158568657012
+--- !u!1 &3318191500530290263
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6852649238570867165}
-  - component: {fileID: 2291251428724457221}
-  - component: {fileID: 9201375544319587476}
+  - component: {fileID: 9065579340082047379}
+  - component: {fileID: 1359936688029984140}
+  - component: {fileID: 6991430938995988903}
   m_Layer: 0
   m_Name: Witch
   m_TagString: Untagged
@@ -18,13 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &6852649238570867165
+--- !u!224 &9065579340082047379
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 143447158568657012}
+  m_GameObject: {fileID: 3318191500530290263}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -37,27 +37,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &2291251428724457221
+--- !u!222 &1359936688029984140
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 143447158568657012}
+  m_GameObject: {fileID: 3318191500530290263}
   m_CullTransparentMesh: 1
---- !u!114 &9201375544319587476
+--- !u!114 &6991430938995988903
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 143447158568657012}
+  m_GameObject: {fileID: 3318191500530290263}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: dbb609c51ee766943839a58ec950cc7c, type: 2}
+  m_Material: {fileID: 2100000, guid: 21faba74305406e46be934dff535e1d7, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  skeletonDataAsset: {fileID: 11400000, guid: 73fd8b9c96bab2c4d9f43d7fbf26c436, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 916ed2a1ea1143a4a8954cb959cf8e90, type: 2}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0

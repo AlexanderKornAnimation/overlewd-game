@@ -35,6 +35,8 @@ namespace Overlewd
 
         private SpineScene mainAnimation;
         private SpineScene cutInAnimation;
+
+        private FMODEvent backgroundMusic;
         private FMODEvent mainSound;
         private FMODEvent cutInSound;
         private FMODEvent replicaSound;
@@ -91,7 +93,6 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            SoundManager.GetEventInstance(FMODEventPath.Music_SexScreen);
             await Task.CompletedTask;
         }
 
@@ -271,12 +272,12 @@ namespace Overlewd
         {
             if (replica.mainAnimationId.HasValue)
             {
-                if (replica.mainAnimationId.Value != mainAnimation?.sceneData.id)
+                if (replica.mainAnimationId.Value != mainAnimation?.animationData.id)
                 {
                     Destroy(mainAnimation?.gameObject);
                     mainAnimation = null;
 
-                    var animation = GameData.animations.GetSceneById(replica.mainAnimationId);
+                    var animation = GameData.animations.GetById(replica.mainAnimationId);
                     if (animation != null)
                     {
                         mainAnimation = SpineScene.GetInstance(animation, mainAnimPos);
@@ -294,12 +295,12 @@ namespace Overlewd
         {
             if (replica.cutInAnimationId.HasValue)
             {
-                if (replica.cutInAnimationId != cutInAnimation?.sceneData.id)
+                if (replica.cutInAnimationId != cutInAnimation?.animationData.id)
                 {
                     Destroy(cutInAnimation?.gameObject);
                     cutInAnimation = null;
 
-                    var animation = GameData.animations.GetSceneById(replica.cutInAnimationId);
+                    var animation = GameData.animations.GetById(replica.cutInAnimationId);
                     if (animation != null)
                     {
                         cutInAnimation = SpineScene.GetInstance(animation, cutInAnimPos);
@@ -326,6 +327,17 @@ namespace Overlewd
 
         private void PlaySound(AdminBRO.DialogReplica replica)
         {
+            //background music
+            if (replica.backgroundMusicId.HasValue)
+            {
+                var backgroundMusicData = GameData.sounds.GetById(replica.backgroundMusicId);
+                if (backgroundMusicData.eventPath != backgroundMusic?.path)
+                {
+                    backgroundMusic?.Stop();
+                    backgroundMusic = SoundManager.GetEventInstance(backgroundMusicData.eventPath, backgroundMusicData.soundBankId);
+                }
+            }
+
             //main sound
             if (replica.mainSoundId.HasValue)
             {

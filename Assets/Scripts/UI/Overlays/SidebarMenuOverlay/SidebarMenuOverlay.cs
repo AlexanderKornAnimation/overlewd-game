@@ -10,8 +10,6 @@ namespace Overlewd
 {
     public class SidebarMenuOverlay : BaseOverlayParent<SidebarMenuOverayInData>
     {
-        private Button startingButton;
-
         private Button castleButton;
         private TextMeshProUGUI castleButton_Markers;
         private TextMeshProUGUI castleButton_Title;
@@ -67,9 +65,6 @@ namespace Overlewd
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/SidebarMenuOverlay/SidebarMenuOverlay", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-
-            startingButton = canvas.Find("StartingButton").GetComponent<Button>();
-            startingButton.onClick.AddListener(StartingButtonClick);
 
             castleButton = canvas.Find("CastleButton").GetComponent<Button>();
             castleButton.onClick.AddListener(CastleButtonClick);
@@ -130,30 +125,18 @@ namespace Overlewd
             forgeButton_Markers = forgeButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
-            
-            UITools.DisableButton(overlordButton);
-            UITools.DisableButton(forgeButton);
         }
 
         public override async Task BeforeShowMakeAsync()
         {
-            if (UIManager.HasScreen<CastleScreen>())
-            {
-                castleButton.gameObject.SetActive(false);
-                startingButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                castleButton.gameObject.SetActive(true);
-                startingButton.gameObject.SetActive(false);
-            }
+            UITools.DisableButton(castleButton, UIManager.HasScreen<CastleScreen>());
+            UITools.DisableButton(globalMapButton, UIManager.HasScreen<MapScreen>());
 
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
                     if (GameData.buildings.castle.isBuilt)
                     {
-                        UITools.DisableButton(startingButton);
                         UITools.DisableButton(castleButton);
                         UITools.DisableButton(portalButton);
                         //UITools.DisableButton(globalMapButton);
@@ -164,6 +147,15 @@ namespace Overlewd
                         UITools.DisableButton(marketButton);
                         UITools.DisableButton(forgeButton);
                     }
+                    break;
+
+                default:
+                    UITools.DisableButton(portalButton, !GameData.buildings.portal.isBuilt);
+                    UITools.DisableButton(haremButton, !GameData.buildings.harem.isBuilt);
+                    UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.isBuilt);
+                    UITools.DisableButton(laboratoryButton, !GameData.buildings.laboratory.isBuilt);
+                    UITools.DisableButton(forgeButton, !GameData.buildings.forge.isBuilt);
+                    UITools.DisableButton(overlordButton);
                     break;
             }
 
@@ -178,12 +170,6 @@ namespace Overlewd
         public override void StartHide()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_SidebarOverlayHide);
-        }
-
-        private void StartingButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<StartingScreen>();
         }
 
         private void CastleButtonClick()
@@ -233,11 +219,7 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.MakeScreen<MarketScreen>().
-                SetData(new MarketScreenInData
-                {
-                    prevScreenInData = UIManager.prevScreenInData
-                }).RunShowScreenProcess();
+            UIManager.ShowOverlay<MarketPopup>();
         }
 
         private void LaboratoryButtonClick()

@@ -66,6 +66,8 @@ namespace Overlewd
 
     public abstract class ScreenHide : ScreenTransition
     {
+        public bool destroyScreen { get; set; } = true;
+
         public override async Task PrepareDataAsync()
         {
             await screen.BeforeHideDataAsync();

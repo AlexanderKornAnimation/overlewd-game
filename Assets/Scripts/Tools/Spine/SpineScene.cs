@@ -11,17 +11,15 @@ namespace Overlewd
 {
     public class SpineScene : BaseWidget
     {
-        public AdminBRO.AnimationScene sceneData { get; private set; }
+        public AdminBRO.Animation animationData { get; private set; }
         public List<SpineWidget> layers { get; private set; } = new List<SpineWidget>();
 
-        private void Initialize(AdminBRO.AnimationScene _sceneData)
+        private void Initialize(AdminBRO.Animation _animationData)
         {
-            sceneData = _sceneData;
-            foreach (var layerData in sceneData.layouts)
+            animationData = _animationData;
+            foreach (var layerData in animationData.layouts)
             {
-                var newLayer = SpineWidget.GetInstance(layerData.animationPath,
-                    layerData.assetBundleId, transform);
-                newLayer?.PlayAnimation(layerData.animationName, true);
+                var newLayer = SpineWidget.GetInstance(layerData, transform);
                 if (newLayer != null) layers.Add(newLayer);
             }
         }
@@ -42,13 +40,13 @@ namespace Overlewd
             }
         }
 
-        public static SpineScene GetInstance(AdminBRO.AnimationScene sceneData, Transform parent)
+        public static SpineScene GetInstance(AdminBRO.Animation animationData, Transform parent)
         {
             var sceneGO = new GameObject(nameof(SpineScene));
             var sceneGO_rt = sceneGO.AddComponent<RectTransform>();
             sceneGO_rt.SetParent(parent, false);
             var ss = sceneGO.AddComponent<SpineScene>();
-            ss.Initialize(sceneData);
+            ss.Initialize(animationData);
             return ss;
         }
     }

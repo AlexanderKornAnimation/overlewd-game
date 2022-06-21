@@ -15,13 +15,13 @@ namespace Overlewd
         public GameObject vfxOnTarget = null;
         public float vfxDuration = 0f;
         public AudioClip sfx = null;
-        public bool select;
+        public bool isHeal;
 
         public string
             prepairAnimationName = "",
             attackAnimationName = "attack1";
 
-        public int power; // damage/healpower/buff/curse etc...
+        public int damage; // damage/healpower/buff/curse etc...
         public int manaCost = 0;
         public int amount = 0; //potions any supplies
         public int cooldown = 0; //in rounds

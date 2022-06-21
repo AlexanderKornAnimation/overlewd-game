@@ -18,10 +18,10 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
 
             mapButton = canvas.Find("MapButton").GetComponent<Button>();
-            // mapButton.onClick.AddListener(MapButtonClick);
+            mapButton.onClick.AddListener(MapButtonClick);
             
             marketButton = canvas.Find("MarketButton").GetComponent<Button>();
-            // marketButton.onClick.AddListener(MarketButtonClick);
+            marketButton.onClick.AddListener(MarketButtonClick);
         }
 
         private void MapButtonClick()
@@ -33,7 +33,7 @@ namespace Overlewd
         private void MarketButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<MarketScreen>();
+            UIManager.ShowOverlay<MarketPopup>();
         }
     }
 

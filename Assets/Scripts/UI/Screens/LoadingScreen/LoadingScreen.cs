@@ -256,7 +256,8 @@ namespace Overlewd
 
             await UniTask.Delay(500);
 
-            UIManager.ShowScreen<StartingScreen>();
+            //
+            RunFTUE();
         }
 
         public override async Task AfterShowAsync()
@@ -296,6 +297,25 @@ namespace Overlewd
         private bool ProgressBarIsFull()
         {
             return (progressBarPercent - loadingProgress.fillAmount) < 0.001f;
+        }
+
+        public static void RunFTUE()
+        {
+            GameData.devMode = false;
+            GameData.ftue.activeChapter.SetAsMapChapter();
+            var firstSexStage = GameData.ftue.info.chapter1.GetStageByKey("sex1");
+            if (firstSexStage.isComplete)
+            {
+                UIManager.ShowScreen<MapScreen>();
+            }
+            else
+            {
+                UIManager.MakeScreen<SexScreen>().
+                    SetData(new SexScreenInData
+                    {
+                        ftueStageId = firstSexStage.id,
+                    }).RunShowScreenProcess();
+            }
         }
 
         private IEnumerable<List<DownloadResourceInfo>> SplitResourcesList<T>(List<DownloadResourceInfo> resources,

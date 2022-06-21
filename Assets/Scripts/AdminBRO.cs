@@ -78,44 +78,10 @@ namespace Overlewd
 
         public static Tokens tokens;
 
-        // /me/init
-        public static async Task initAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/me/init";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        // /me/reset
-        public static async Task resetAsync(List<string> resetEntities)
-        {
-            var url = "https://overlewd-api.herokuapp.com/me/reset";
-            var form = new WWWForm();
-            foreach (var entityName in resetEntities)
-            {
-                form.AddField("modules[]", entityName);
-            }
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        public class ResetEntityName
-        {
-            public const string Wallet = "wallet";
-            public const string Inventory = "inventory";
-            public const string Building = "building";
-            public const string Battle = "battle";
-            public const string Quest = "quest";
-            public const string Event = "event";
-            public const string FTUE = "ftue";
-        }
-
         // GET /me; POST /me
+        // /me/init
+        // /me/reset
+        // /me/currency
         public static async Task<PlayerInfo> meAsync()
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/me", tokens?.accessToken))
@@ -142,16 +108,51 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
+            public Poison poison;
+
+            public class Poison
+            {
+                public int hp;
+                public int mana;
+            }
+
+            public class WalletItem
+            {
+                public int currencyId;
+                public int amount;
+            }
         }
 
-        [Serializable]
-        public class WalletItem
+        public static async Task initAsync()
         {
-            public int id;
-            public int amount;
-            public string createdAt;
-            public string updatedAt;
-            public CurrencyItem currency;
+            var url = "https://overlewd-api.herokuapp.com/me/init";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+
+        public static async Task resetAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/me/reset";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task meCurrencyAsync(int currencyId, int amount)
+        {
+            var form = new WWWForm();
+            form.AddField("currencyId", currencyId);
+            form.AddField("amount", amount);
+            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me/currency", form, tokens?.accessToken))
+            {
+                
+            }
         }
 
         // /markets
@@ -197,10 +198,40 @@ namespace Overlewd
         {
             public int id;
             public string name;
+            public string icon356Url;
+            public string icon256Url;
+            public string icon186Url;
+            public string icon153Url;
+            public string icon70Url;
             public string iconUrl;
+            public string key;
             public bool nutaku;
             public string createdAt;
             public string updatedAt;
+
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Crystal = "<sprite=\"AssetResources\" name=\"Crystal\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Wood = "<sprite=\"AssetResources\" name=\"Wood\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Stone = "<sprite=\"AssetResources\" name=\"Stone\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Copper = "<sprite=\"AssetResources\" name=\"Copper\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Gold = "<sprite=\"AssetResources\" name=\"Gold\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Gems = "<sprite=\"AssetResources\" name=\"Gem\">";
+
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_Ears = "<sprite=\"EventCurrency\" name=\"CatEras\">";
+            
+            [JsonProperty(Required = Required.Default)]
+            public const string Sprite_NutakuGold = "<sprite=\"EventCurrency\" name=\"NutakuGold\">";
         }
 
         // /tradable
@@ -462,12 +493,16 @@ namespace Overlewd
 
         public class EventStageEndData
         {
-            public bool win = true;
+            public bool win { get; set; } = true;
+            public int mana { get; set; } = 0;
+            public int hp { get; set; } = 0;
 
             public WWWForm ToWWWForm()
             {
                 var form = new WWWForm();
                 form.AddField("result", win ? "win" : "lose");
+                form.AddField("mana", -mana);
+                form.AddField("hp",-hp);
                 return form;
             }
         }
@@ -616,6 +651,7 @@ namespace Overlewd
             public int? cutInAnimationId;
             public int? mainAnimationId;
 
+            public int? backgroundMusicId;
             public int? mainSoundId;
             public int? cutInSoundId;
             public int? replicaSoundId;
@@ -739,6 +775,8 @@ namespace Overlewd
             public float? mana;
             public int? sexSceneId;
             public string key;
+            public List<PriceItem> levelUpPrice;
+            public List<PriceItem> mergePrice;
 
             public class Animation
             {
@@ -801,15 +839,22 @@ namespace Overlewd
         [Serializable]
         public class CharacterSkill
         {
+            public string name;
+            public string description;
+            public string icon;
             public string effect;
             public string type;
-            public string skillIcon;
-            public int damage;
             public int effectProb;
-            public int effectActingDuration;
-            public int effectCooldownDuration;
+            public float effectActingDuration;
+            public float effectCooldownDuration;
             public List<PriceItem> levelUpPrice;
             public int level;
+            public int manaCost;
+            public string actionType;
+            public bool AOE;
+            public int amount;
+            public string trigger;
+            public int effectAmount;
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)
@@ -1023,8 +1068,8 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? lastEndedState =>
-                GameData.progressMode switch {
-                    true => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
+                GameData.devMode switch {
+                    false => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
                     _ => null
                 };
 
@@ -1090,9 +1135,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? ftueState =>
-                GameData.progressMode switch
+                GameData.devMode switch
                 {
-                    true => (key, ftueChapterData?.key),
+                    false => (key, ftueChapterData?.key),
                     _ => null
                 };
         }
@@ -1121,28 +1166,32 @@ namespace Overlewd
 
         public class FTUEStageEndData
         {
-            public bool win = true;
+            public bool win { get; set; } = true;
+            public int mana { get; set; } = 0;
+            public int hp { get; set; } = 0;
 
             public WWWForm ToWWWForm()
             {
                 var form = new WWWForm();
                 form.AddField("result", win ? "win" : "lose");
+                form.AddField("mana", -mana);
+                form.AddField("hp", -hp);
                 return form;
             }
         }
 
         //animations
-        public static async Task<List<AnimationScene>> animationScenesAsync()
+        public static async Task<List<Animation>> animationsAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/animations";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<AnimationScene>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
             }
         }
 
         [Serializable]
-        public class AnimationScene
+        public class Animation
         {
             public int id;
             public string title;
@@ -1192,13 +1241,10 @@ namespace Overlewd
             public string key;
             public string name;
             public string description;
-            public string image;
-            public string icon;
             public List<Level> levels;
             public int? currentLevel;
             public int? nextLevel;
             public int? maxLevel;
-            public string buildStartedAt;
 
             public const string Key_Castle = "castle";
             public const string Key_Catacombs = "catacombs";
@@ -1214,14 +1260,13 @@ namespace Overlewd
             public class Level
             {
                 public List<PriceItem> price;
-                public List<PriceItem> momentPrice;
-                public int minutesToBuild;
+                public List<PriceItem> crystalPrice;
 
                 [JsonProperty(Required = Required.Default)]
                 public bool canBuild => GameData.player.CanBuy(price);
 
                 [JsonProperty(Required = Required.Default)]
-                public bool canBuildNow => GameData.player.CanBuy(momentPrice);
+                public bool canBuildCrystal => GameData.player.CanBuy(crystalPrice);
             }
 
             [JsonProperty(Required = Required.Default)]
@@ -1229,9 +1274,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isBuilt => currentLevel.HasValue;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isUnderConstruction => !String.IsNullOrEmpty(buildStartedAt);
 
             [JsonProperty(Required = Required.Default)]
             public Level currentLevelData =>
@@ -1246,8 +1288,8 @@ namespace Overlewd
                 maxLevel.HasValue ? levels[maxLevel.Value] : null;
 
             [JsonProperty(Required = Required.Default)]
-            public bool canUpgradeNow =>
-                nextLevelData?.canBuildNow ?? false;
+            public bool canUpgradeCrystal =>
+                nextLevelData?.canBuildCrystal ?? false;
 
             [JsonProperty(Required = Required.Default)]
             public bool canUpgrade =>
@@ -1265,10 +1307,10 @@ namespace Overlewd
             }
         }
 
-        // /buildings/{id}/build-now
-        public static async Task buildingBuildNowAsync(int id)
+        // /buildings/{id}/build-crystals
+        public static async Task buildingBuildCrystalsAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-now";
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {

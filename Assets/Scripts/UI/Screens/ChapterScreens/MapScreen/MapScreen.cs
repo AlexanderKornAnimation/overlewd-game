@@ -46,8 +46,8 @@ namespace Overlewd
         {
             if (GameData.ftue.mapChapter == null)
             {
-                GameData.ftue.mapChapter = GameData.progressMode ?
-                    GameData.ftue.activeChapter : GameData.ftue.info.chapter1;
+                GameData.ftue.mapChapter = GameData.devMode ?
+                    GameData.ftue.info.chapter1 : GameData.ftue.activeChapter;
             }
 
             //backbutton.gameObject.SetActive(false);
@@ -70,7 +70,7 @@ namespace Overlewd
                             continue;
                         }
 
-                        var instantiateStageOnMap = GameData.progressMode ? !stageData.isClosed : true;
+                        var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
                         if (instantiateStageOnMap)
                         {
                             if (stageData.dialogId.HasValue)
@@ -138,8 +138,8 @@ namespace Overlewd
                 if (GameData.ftue.mapChapter.nextChapterId.HasValue)
                 {
                     chapterButtonText.text = GameData.ftue.mapChapter.nextChapterData?.name;
-                    chapterButton.gameObject.SetActive(GameData.progressMode ?
-                        GameData.ftue.mapChapter.isComplete : true);
+                    chapterButton.gameObject.SetActive(GameData.devMode ?
+                         true : GameData.ftue.mapChapter.isComplete);
                 }
                 else
                 {
@@ -153,6 +153,7 @@ namespace Overlewd
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
+            DevWidget.GetInstance(transform);
 
             await Task.CompletedTask;
         }
