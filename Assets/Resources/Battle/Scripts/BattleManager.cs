@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,10 +34,13 @@ namespace Overlewd
         public Transform QueueUIContent;
         public GameObject EnemyStats;
         public Transform EnemyStatsContent;
+        [Tooltip("add this prefab here BattleUICanvas/Character/PlayerStats")]
         public CharacterPortrait PlayerStats;
 
         private SkillController[] skillControllers = new SkillController[3];
         private SkillController potion_mp, potion_hp;
+        private int skillOnSelect = -1; //-1 unselect
+        private int charOnSelect = -1; // 0 - allay 1 - enemy
         public GameObject healVFX;
 
         private int enemyNum = 0, enemyIsDead = 0, charNum = 0, charIsDead = 0;
@@ -57,30 +59,29 @@ namespace Overlewd
         private bool hideAOE = false;
         private bool notifIsShow = false;
 
+        public int debug = 0;
+
         private void Start()
         {
             battleScene = FindObjectOfType<BaseBattleScreen>();
 
             enemyTeam = battleScene.GetBattleData().enemyWaves[wave].enemyTeam; //wave 0
-            maxWave = battleScene.GetBattleData().enemyWaves.Count-1;
+            maxWave = battleScene.GetBattleData().enemyWaves.Count - 1;
             Debug.Log($"Battle ID: {battleData.id}");
-            //Debug.Log($"Find Null key: {characterResList.Find(item => item.key == "osu") == null}");
-            //Debug.Log($"Find Ovl key: {characterResList.Find(item => item.key == "OVERLORD")}");
 
             if (QueueUIContent == null) QueueUIContent = transform.Find("BattleUICanvas/QueueUI/Content");
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
+            if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
+            PlayerStats.bigPortrait = true;
+
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
             if (EnemyStats == null) EnemyStats = Resources.Load("Battle/Prefabs/Battle/EnemyStats") as GameObject;
-
-            if (PlayerStats == null)
-                PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
-            PlayerStats.isPlayer = true;
 
             for (int i = 0; i < skillControllers.Length; i++)
             {
                 var x = i; //Captured variable issue
                 skillControllers[x] = transform.Find($"BattleUICanvas/Character/Buttons/Button_{x}").GetComponent<SkillController>();
-                skillControllers[x].button.onClick.AddListener(delegate { ButtonClick(x); });
+                skillControllers[x].button.onClick.AddListener(delegate { ButtonPress(x); });
             }
 
             if (potion_mp == null) potion_mp = transform.Find("BattleUICanvas/Character/Buttons/Potion_mp").GetComponent<SkillController>();
@@ -93,6 +94,7 @@ namespace Overlewd
                 potion_hp.gameObject.SetActive(false);
                 potion_mp.gameObject.SetActive(false);
             }*/
+
             if (characterResList == null)
                 characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
 
@@ -106,9 +108,10 @@ namespace Overlewd
 
             maxStep = charControllerList.Count;
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
-            if (charControllerList[0].isEnemy) { 
+            if (charControllerList[0].isEnemy)
+            {
                 battleState = BattleState.ENEMY;
-                StartCoroutine(EnemyAttack1());
+                StartCoroutine(EnemyAttack());
             }
             else
                 battleState = BattleState.PLAYER;
@@ -118,8 +121,8 @@ namespace Overlewd
         IEnumerator LateInit()
         {
             yield return new WaitForSeconds(0.01f);
+            charControllerList[step].Highlight();
             SetSkillCtrl(ccOnSelect);
-            charControllerList[step].Select();
             //if (battleSettings.powerBuff)
             //    WinOrLose(wannaWin);
         }
@@ -131,7 +134,7 @@ namespace Overlewd
             {
                 var charGO = new GameObject($"{c.name}_{k}");
                 var cc = charGO.AddComponent<CharController>();
-                cc.broCharacter = c;
+                cc.character = c;
 
                 var cRes = characterResList?.Find(item => item.key == c.key);
                 cc.characterRes = cRes == null ? characterResList[2] : cRes;
@@ -209,9 +212,9 @@ namespace Overlewd
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Z)) ButtonClick(0);
-            if (Input.GetKeyDown(KeyCode.X)) ButtonClick(1);
-            if (Input.GetKeyDown(KeyCode.C) && ccOnClick.isOverlord) ButtonClick(2);
+            if (Input.GetKeyDown(KeyCode.Z)) ButtonPress(0);
+            if (Input.GetKeyDown(KeyCode.X)) ButtonPress(1);
+            if (Input.GetKeyDown(KeyCode.C) && ccOnClick.isOverlord) ButtonPress(2);
             if (Input.GetKeyDown(KeyCode.R))
                 foreach (var cc in charControllerList)
                     if (cc.isEnemy == true && !cc.isDead)
@@ -221,16 +224,83 @@ namespace Overlewd
                     }
         }
 
-        private void ButtonClick(int id)
+        public bool CharPress(CharController ccOnPress)
         {
+            if (skillOnSelect == -1)
+            {
+                if (charOnSelect != -1 && ccOnClick == ccOnPress)
+                {
+                    unselect?.Invoke();
+                    charOnSelect = -1;
+                    ccOnClick = null;
+                    foreach (var sc in skillControllers)
+                        sc.Enable();
+                    return false;
+                }
+                else
+                {
+                    ccOnClick = ccOnPress;
+                    charOnSelect = ccOnPress.isEnemy ? 1 : 0;
+                    foreach (var sc in skillControllers)
+                    {
+                        sc.Enable();
+                        if (ccOnClick.isEnemy == sc.isHeal || !ccOnClick.isEnemy == !sc.isHeal)
+                            sc.Disable(); //desable conflict buttons
+                    }
+                    AttackCheck();
+                    return true;
+                }
+            }
+            else
+            {
+                if (skillControllers[skillOnSelect].isHeal == ccOnPress.isEnemy)
+                {
+                    foreach (var item in skillControllers)
+                        if (item.isHeal == ccOnPress.isEnemy)
+                        item.BlinkDisable();
+                    return false;
+                }
+                else
+                {
+                    ccOnClick = ccOnPress;
+                    charOnSelect = ccOnPress.isEnemy ? 1 : 0;
+                    AttackCheck();
+                    return true;
+                }
+            }
+        }
+
+        private void ButtonPress(int id)
+        {
+            if (skillControllers[id].selectable)
+            {
+                if (skillOnSelect > -1 && skillOnSelect != id)
+                    skillControllers[skillOnSelect].Unselect();
+                skillOnSelect = skillControllers[id].Press() ? id : -1;
+                AttackCheck();
+            }
+        }
+
+        private void AttackCheck()
+        {
+            if (skillOnSelect != -1 && charOnSelect != -1)
+            {
+                AttackAction(skillOnSelect);
+            }
+        }
+
+        private void AttackAction(int id)
+        {
+            skillControllers[skillOnSelect].Unselect();
+            skillOnSelect = -1;
+            charOnSelect = -1;
             unselect?.Invoke();
-            skillControllers[id].Select();
-            bool AOE = ccOnSelect.skill[id].attackType == Skill.AttackType.AOE;
+            bool AOE = ccOnSelect.skill[id].AOE;
 
             if (battleState == BattleState.PLAYER)
             {
                 ani.SetTrigger("Player");
-                GameObject vfx = ccOnSelect.skill[id].vfxOnTarget;
+                GameObject vfx = ccOnSelect.characterRes.skill[id].vfxOnTarget;
                 if (AOE)
                 {
                     ccOnClick = null;
@@ -238,7 +308,7 @@ namespace Overlewd
                     foreach (var cc in charControllerList)
                         if (cc.isEnemy && !cc.isDead)
                         {
-                            cc.Defence(ccOnSelect, vfx);
+                            cc.Defence(ccOnSelect, id, vfx);
                             cc.UnHiglight();
                         }
                     if (ccOnSelect.skill[id].name == "Firestorm" || ccOnSelect.skill[id].name == "Fireballs")
@@ -249,7 +319,7 @@ namespace Overlewd
                 else
                 {
                     ccOnSelect.Attack(id, ccOnClick);
-                    ccOnClick.Defence(ccOnSelect, vfx);
+                    ccOnClick.Defence(ccOnSelect, id, vfx);
                 }
                 battleState = BattleState.ANIMATION;
 
@@ -261,26 +331,18 @@ namespace Overlewd
                 }
             }
         }
-        private void AttackAction()
-        {
 
-        }
-
-
-        IEnumerator EnemyAttack1()
+        IEnumerator EnemyAttack()
         {
             yield return new WaitForSeconds(0.5f);
-            var ct = enemyTargetList.Count;
-            ccOnClick = enemyTargetList[Random.Range(0, ct)];
+            ccOnClick = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
             ccOnClick.Highlight();
-            yield return new WaitForSeconds(0.5f);
-
             ccOnClick.CharPortraitSet(); //Show target stats
+            yield return new WaitForSeconds(0.5f);
             ani.SetTrigger("Enemy");
-            int id = Random.Range(0, ccOnSelect.skill.Length);
-
-            bool AOE = ccOnSelect.skill[id].attackType == Skill.AttackType.AOE;
-            GameObject vfx = ccOnSelect.skill[id].vfxOnTarget;
+            int id = Random.Range(0, 1);
+            bool AOE = ccOnSelect.skill[id].AOE;
+            GameObject vfx = ccOnSelect.characterRes.skill[id].vfxOnTarget;
 
             if (AOE)
             {
@@ -288,7 +350,7 @@ namespace Overlewd
                 ccOnSelect.Attack(id, ccOnClick);
                 foreach (var cc in enemyTargetList)
                 {
-                    cc.Defence(ccOnSelect, vfx);
+                    cc.Defence(ccOnSelect, id, vfx);
                     cc.UnHiglight();
                 }
             }
@@ -296,9 +358,9 @@ namespace Overlewd
             {
                 ccOnSelect.Attack(id, ccOnClick);
                 ccOnSelect.UnHiglight();
-                ccOnClick.Defence(ccOnSelect, vfx);
+                ccOnClick.Defence(ccOnSelect, id, vfx);
             }
-            
+
             battleState = BattleState.ANIMATION;
         }
         public void UseMPPotion()
@@ -323,8 +385,8 @@ namespace Overlewd
         }
         public void UnselectButtons()
         {
-            for (int i = 0; i < skillControllers.Length; i++)
-                skillControllers[i].Unselect();
+            foreach (var item in skillControllers)
+                item.Unselect();
         }
         public void WinOrLose(bool isWin)
         {
@@ -345,6 +407,7 @@ namespace Overlewd
                 unselect?.Invoke();
                 charControllerList[step].Highlight();
             }
+            charOnSelect = -1;
             ccOnClick = null;
         }
 
@@ -395,7 +458,7 @@ namespace Overlewd
                     });
                 if (CheckBattleGameData("chapter1", "battle2"))
                     //battleList[1].powerBuff = true; BUFF ON
-                Debug.Log("LOOSING");
+                    Debug.Log("LOOSING");
             }
         }
 
@@ -430,7 +493,7 @@ namespace Overlewd
                 if (ccOnSelect.isEnemy)
                 {
                     battleState = BattleState.ENEMY;
-                    StartCoroutine(EnemyAttack1());
+                    StartCoroutine(EnemyAttack());
                 }
                 else
                 {
@@ -442,12 +505,18 @@ namespace Overlewd
             }
         }
 
-        private void SetSkillCtrl(CharController character)
+        private void SetSkillCtrl(CharController cc)
         {
-            for (int i = 0; i < ccOnSelect.skill.Length; i++)
+            var i = cc.skill?.Count-1;
+            var j = 0;
+            foreach (var sk in skillControllers)
             {
-                var x = i;
-                skillControllers[x].ReplaceSkill(character.skill[x]); //add selected character skill on button controller
+                if (i > 0)
+                    sk.ReplaceSkill(cc.skill[j]);
+                else
+                    sk.gameObject.SetActive(false);
+                i--;
+                j++;
             }
         }
 
@@ -458,7 +527,7 @@ namespace Overlewd
                     battleID == battleScene.GetBattleData().ftueStageKey)
                 {
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
-                    Debug.Log($"{chapterID} {battleID} {notifID}");
+                    //Debug.Log($"{chapterID} {battleID} {notifID}");
                 }
         }
         public bool CheckBattleGameData(string chapterID, string battleID)
@@ -477,11 +546,26 @@ namespace Overlewd
             BattleNotif("chapter1", "battle5", "potionstutor2");
         }
 
+        private void OnGUI()
+        {
+            if (GUI.Button(new Rect(Screen.width / 2, Screen.height - 64, 72, 32), "Debug"))
+                if (debug < 2) debug++; else debug = 0;
+            if (debug > 0)
+            {
+                GUIStyle style = new GUIStyle();
+                style.normal.textColor = Color.white;
+                style.fontSize = 22;
+
+                GUI.Label(new Rect(Screen.width / 2 - 80, 64, 300, 500), $"Battle ID: {battleData.id}\n" +
+                    $"is BossLevel {battleData.isTypeBoss}", style);
+            }
+        }
+		
         private int SortBySpeed(CharController a, CharController b)
         {
-            if (a.broCharacter.speed < b.broCharacter.speed)
+            if (a.character.speed < b.character.speed)
                 return 1;
-            else if (a.broCharacter.speed > b.broCharacter.speed)
+            else if (a.character.speed > b.character.speed)
                 return -1;
             else if (a.isEnemy)
                 return 1;

@@ -8,7 +8,7 @@ namespace Overlewd
     {
         public CharController charCtrl;
         public Button button;
-        [HideInInspector] public bool isPlayer = false;
+        [HideInInspector] public bool bigPortrait = false;
         private Transform attack, defence, bleeding, burning, poison;
         private TextMeshProUGUI attackScale, defenceScale, bleedingScale, burningScale, poisonScale;
         private TextMeshProUGUI textHP;
@@ -17,7 +17,10 @@ namespace Overlewd
         private Slider sliderMP;
         private Image BattlePortraitIco;
 
-        private float hp, maxHp, mp, maxMp;
+        private float hp => charCtrl.health;
+        private float maxHp => charCtrl.healthMax;
+        private float mp => charCtrl.mana;
+        private float maxMp => charCtrl.manaMax;
 
         public void InitUI()
         {
@@ -27,17 +30,13 @@ namespace Overlewd
             textHP = transform.Find("sliderHP/Text")?.GetComponent<TextMeshProUGUI>();
             textMP = transform.Find("sliderMP/Text")?.GetComponent<TextMeshProUGUI>();
 
-            hp = charCtrl.health;
-            mp = charCtrl.mana;
-            maxHp = charCtrl.healthMax;
-            maxMp = charCtrl.manaMax;
             if (sliderHP) sliderHP.maxValue = maxHp;
             if (sliderMP) sliderMP.maxValue = maxMp;
 
             if (charCtrl != null && button != null)
                 button.onClick.AddListener(charCtrl.Select);
 
-            if (isPlayer)
+            if (bigPortrait)
             {
                 BattlePortraitIco.sprite = charCtrl.characterRes.bigPortrait;
                 transform.SetSiblingIndex(0);
@@ -54,22 +53,18 @@ namespace Overlewd
             UpdateUI();
         }
 
-        public void SetUI()
+        public void SetUI(CharController replaceCharacter = null)
         {
+            if (replaceCharacter)
+                charCtrl = replaceCharacter;
             BattlePortraitIco.sprite = charCtrl.characterRes.bigPortrait;
-            hp = charCtrl.health;
-            maxHp = charCtrl.healthMax;
             if (sliderHP) sliderHP.maxValue = maxHp;
-            mp = charCtrl.mana;
-            maxMp = charCtrl.manaMax;
             sliderMP?.gameObject.SetActive(charCtrl.isOverlord);
             UpdateUI();
         }
 
         public void UpdateUI()
         {
-            hp = charCtrl.health;
-            mp = charCtrl.mana;
             textHP.text = $"{hp}/{maxHp}";
             sliderHP.value = hp;
             if (textMP) textMP.text = $"{mp}/{maxMp}";

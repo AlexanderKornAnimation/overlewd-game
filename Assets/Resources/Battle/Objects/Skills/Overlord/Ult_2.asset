@@ -19,10 +19,10 @@ MonoBehaviour:
   vfxOnTarget: {fileID: 0}
   vfxDuration: 7.333
   sfx: {fileID: 0}
-  select: 0
-  attackAnimationName: attack4
+  isHeal: 1
   prepairAnimationName: prepair4
-  power: 5
+  attackAnimationName: attack4
+  damage: 0
   manaCost: 25
   amount: 0
   cooldown: 3

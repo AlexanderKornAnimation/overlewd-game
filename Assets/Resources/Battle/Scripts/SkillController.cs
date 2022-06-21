@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,22 +7,27 @@ namespace Overlewd
 {
     public class SkillController : MonoBehaviour
     {
-        public Skill skill;
-        private string skillName;
-        private string discription;
+        public Skill oldSkill;
+        public AdminBRO.CharacterSkill skill;
+        public bool isHeal => skill.actionType == "heal"? true : false;
+        private GameObject vfx => oldSkill.vfx;
+
         private Image image;
         private GameObject selectBorder;
         public bool select;
         private Slider slider;
         private TextMeshProUGUI textCount;
         public Button button;
-        private GameObject vfx;
+
         private AudioClip sfx;
         [HideInInspector]
         public Transform vfxSpawnPoint;
         [HideInInspector]
-        public int power, manaCost, amount, cooldown, cooldownCount = 0;
+        public int damage, amount, cooldown, cooldownCount = 0;
+        public int manaCost => skill.manaCost;
 
+
+        public bool selectable = true;
         public bool isSelected = false;
 
         private void Awake()
@@ -38,41 +44,32 @@ namespace Overlewd
         }
         private void StatInit()
         {
-            skillName = skill.skillName;
-            discription = skill.discription;
-            image.sprite = skill.battleIco;
+            image.sprite = oldSkill.battleIco;
             image.SetNativeSize();
-            vfx = skill.vfx;
-            sfx = skill.sfx;
-            power = skill.power;
-            manaCost = skill.manaCost;
+            sfx = oldSkill.sfx;
+            damage = oldSkill.damage; // old 
             amount = skill.amount;
 
             if (slider != null)
             {
-                cooldown = skill.cooldown;
+                cooldown = Mathf.RoundToInt(skill.effectCooldownDuration);
                 slider.maxValue = cooldown;
-                cooldownCount = skill.cooldownCount;
+                cooldownCount = 0;
                 slider.value = cooldownCount;
             }
-            if (textCount != null) 
-                if (skill.attackType == Skill.AttackType.POTION)
+            if (textCount != null)
+                if (oldSkill.attackType == Skill.AttackType.POTION)
                     textCount.text = $"{amount}";
                 else
                     textCount.text = $"{cooldownCount}";
         }
 
-        public void ReplaceSkill(Skill sk)
+        public void ReplaceSkill(AdminBRO.CharacterSkill sk)
         {
-            SaveSkill();
             skill = sk;
             StatInit();
         }
-        private void SaveSkill()
-        {
-            if (amount > 0) skill.SaveAmount(amount);
-            skill.SaveCDcount(cooldownCount);
-        }
+
         public void StatUpdate()
         {
             if (slider != null)
@@ -81,16 +78,17 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (skill.attackType == Skill.AttackType.POTION)
+                if (oldSkill.attackType == Skill.AttackType.POTION) //old
                     textCount.text = $"{amount}";
                 else
                     textCount.text = $"{cooldownCount}";
-            SaveSkill();
         }
 
-        public void Select() {
-            isSelected = true;
-            selectBorder?.SetActive(true);
+        public bool Press()
+        {
+            isSelected = !isSelected;
+            selectBorder?.SetActive(isSelected);
+            return isSelected;
         }
         public void Unselect()
         {
@@ -102,13 +100,20 @@ namespace Overlewd
         {
             if (vfx) Instantiate(vfx, target);
         }
-        public void UseSkill()
-        {
-            if (skill.attackType == Skill.AttackType.POTION)
-            {
 
-            }
+        public void Disable()
+        {
+            selectable = false;
+            image.color = Color.red;
         }
-        
+        public void Enable()
+        {
+            selectable = true;
+            image.color = Color.white;
+        }
+        public void BlinkDisable()
+        {
+            image.DOColor(Color.red, 0.1f).SetLoops(4, LoopType.Yoyo).SetEase(Ease.InOutExpo);
+        }
     }
 }
