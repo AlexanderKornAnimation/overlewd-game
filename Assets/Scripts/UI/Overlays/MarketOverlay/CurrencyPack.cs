@@ -11,7 +11,7 @@ namespace Overlewd
             public static CurrencyPack GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<CurrencyPack>
-                    ("Prefabs/UI/Popups/MarketPopup/CurrencyPack", parent);
+                    ("Prefabs/UI/Overlays/MarketOverlay/CurrencyPack", parent);
             }
         }
     }

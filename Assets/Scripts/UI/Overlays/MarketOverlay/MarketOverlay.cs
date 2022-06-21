@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MarketPopup : BasePopupParent<MarketPopupInData>
+    public class MarketPopup : BaseOverlayParent<MarketOverlayInData>
     {
         private List<NSMarketPopup.OfferButton> offers = new List<NSMarketPopup.OfferButton>();
         private NSMarketPopup.OfferButton selectedOffer;
@@ -21,7 +21,7 @@ namespace Overlewd
         private void Awake()
         {
             var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/MarketPopup/Market", transform);
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/MarketOverlay/Market", transform);
 
             canvas = screenInst.transform.Find("Canvas");
             currencyBack = canvas.Find("CurrencyBack");
@@ -33,14 +33,9 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             AddOffers();
-
-            foreach (var offer in offers)
-            {
-                offer.Deselect();
-            }
-            
             SelectOffer(offers.First());
             UITools.FillWallet(currencyBack);
+            
             await Task.CompletedTask;
         }
 
@@ -65,11 +60,11 @@ namespace Overlewd
 
         private void CloseButtonClick()
         {
-            UIManager.HidePopup();
+            UIManager.HideOverlay();
         }
     }
 
-    public class MarketPopupInData : BasePopupInData
+    public class MarketOverlayInData : BaseOverlayInData
     {
     }
 }

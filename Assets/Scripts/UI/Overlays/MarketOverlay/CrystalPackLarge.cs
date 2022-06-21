@@ -11,7 +11,7 @@ namespace Overlewd
             public static CrystalPackLarge GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<CrystalPackLarge>
-                    ("Prefabs/UI/Popups/MarketPopup/CrystalPackLarge", parent);
+                    ("Prefabs/UI/Overlays/MarketOverlay/CrystalPackLarge", parent);
             }
         }
     }

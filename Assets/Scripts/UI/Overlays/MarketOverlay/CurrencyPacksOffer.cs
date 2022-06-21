@@ -36,7 +36,7 @@ namespace Overlewd
             public static CurrencyPacksOffer GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<CurrencyPacksOffer>(
-                    "Prefabs/UI/Popups/MarketPopup/CurrencyPacksOffer", parent);
+                    "Prefabs/UI/Overlays/MarketOverlay/CurrencyPacksOffer", parent);
             }
         }
     }

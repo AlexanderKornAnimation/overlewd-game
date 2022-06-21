@@ -219,8 +219,7 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.HideOverlay();
-            UIManager.ShowPopup<MarketPopup>();
+            UIManager.ShowOverlay<MarketPopup>();
         }
 
         private void LaboratoryButtonClick()

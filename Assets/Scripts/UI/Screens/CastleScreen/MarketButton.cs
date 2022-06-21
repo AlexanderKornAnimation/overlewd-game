@@ -26,7 +26,7 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.ShowPopup<MarketPopup>();
+                UIManager.ShowOverlay<MarketPopup>();
             }
 
             public static MarketButton GetInstance(Transform parent)

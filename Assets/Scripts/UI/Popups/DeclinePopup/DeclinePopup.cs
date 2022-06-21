@@ -33,7 +33,7 @@ namespace Overlewd
         private void MarketButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowPopup<MarketPopup>();
+            UIManager.ShowOverlay<MarketPopup>();
         }
     }
 

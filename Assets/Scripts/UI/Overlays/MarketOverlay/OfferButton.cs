@@ -34,6 +34,7 @@ namespace Overlewd
             public void Customize()
             {
                 offer = CurrencyPacksOffer.GetInstance(offerPos);
+                Deselect();
             }
 
             private void ButtonClick()
@@ -57,7 +58,7 @@ namespace Overlewd
             public static OfferButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<OfferButton>(
-                    "Prefabs/UI/Popups/MarketPopup/OfferButton", parent);
+                    "Prefabs/UI/Overlays/MarketOverlay/OfferButton", parent);
             }
         }
     }
