@@ -75,6 +75,8 @@ namespace Overlewd
 
             AddMemoryLists();
             EnterTab(activeTabId);
+
+            await Task.CompletedTask;
         }
 
         private void AddMemoryLists()
