@@ -778,7 +778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4202833663003816072}
   - component: {fileID: 8342700479316790351}
-  - component: {fileID: 1944161517178969587}
+  - component: {fileID: 1244967844404638059}
   m_Layer: 0
   m_Name: MemoryScroll
   m_TagString: Untagged
@@ -814,7 +814,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6192009380006080468}
   m_CullTransparentMesh: 1
---- !u!114 &1944161517178969587
+--- !u!114 &1244967844404638059
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6192009380006080468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Script: {fileID: 11500000, guid: 3743de143b025444cb4e1a5ff33442c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 6423474774365056809}
@@ -837,10 +837,10 @@ MonoBehaviour:
   m_Viewport: {fileID: 5202160422258833769}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 2
-  m_VerticalScrollbarVisibility: 2
-  m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
