@@ -1468,6 +1468,7 @@ namespace Overlewd
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
+            public List<int> skills;
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";

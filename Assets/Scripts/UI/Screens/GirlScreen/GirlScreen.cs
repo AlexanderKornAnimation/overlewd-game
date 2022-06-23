@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -10,8 +11,12 @@ namespace Overlewd
 {
     public class GirlScreen : BaseFullScreenParent<GirlScreenInData>
     {
-        private Image girlImage;
-        
+        private Transform girlUlviImage;
+        private Transform girlAdrielImage;
+        private Transform girlIngieImage;
+        private Transform girlFayeImage;
+        private Transform girlLiliImage;
+
         private Image trustProgress;
         private TextMeshProUGUI currentProgressLevel;
         private TextMeshProUGUI nextProgressLevel;
@@ -28,8 +33,11 @@ namespace Overlewd
         private TextMeshProUGUI buffPower;
         private TextMeshProUGUI buffType;
 
-        private Button bannerButton;
-        private Image bannerArt;
+        private Button bannerUlviButton;
+        private Button bannerAdrielButton;
+        private Button bannerIngieButton;
+        private Button bannerFayeButton;
+        private Button bannerLiliButton;
         private GameObject bannerNotification; 
 
         private Button sexButton;
@@ -47,8 +55,12 @@ namespace Overlewd
             var buff = progressBar.Find("Buff");
             var banner = canvas.Find("Banner");
 
-            girlImage = canvas.Find("Girl").GetComponent<Image>();
-            
+            girlUlviImage = canvas.Find("GirlUlvi");
+            girlAdrielImage = canvas.Find("GirlAdriel");
+            girlIngieImage = canvas.Find("GirlIngie");
+            girlFayeImage = canvas.Find("GirlFaye");
+            girlLiliImage = canvas.Find("GirlLili");
+
             trustProgress = progressBar.Find("Progress").GetComponent<Image>();
             currentProgressLevel = progressBar.Find("CurrentLvl").GetComponent<TextMeshProUGUI>();
             nextProgressLevel = progressBar.Find("NextLvl").GetComponent<TextMeshProUGUI>();
@@ -65,8 +77,16 @@ namespace Overlewd
             buffPower = buff.Find("Power").GetComponent<TextMeshProUGUI>();
             buffType = buff.Find("Type").GetComponent<TextMeshProUGUI>();
 
-            bannerButton = canvas.Find("Banner").Find("Button").GetComponent<Button>();
-            bannerArt = bannerButton.GetComponent<Image>();
+            bannerUlviButton = canvas.Find("Banner").Find("BannerButtonUlvi").GetComponent<Button>();
+            bannerAdrielButton = canvas.Find("Banner").Find("BannerButtonAdriel").GetComponent<Button>();
+            bannerIngieButton = canvas.Find("Banner").Find("BannerButtonIngie").GetComponent<Button>();
+            bannerFayeButton = canvas.Find("Banner").Find("BannerButtonFaye").GetComponent<Button>();
+            bannerLiliButton = canvas.Find("Banner").Find("BannerButtonLili").GetComponent<Button>();
+            bannerUlviButton.onClick.AddListener(BannerButtonClick);
+            bannerAdrielButton.onClick.AddListener(BannerButtonClick);
+            bannerIngieButton.onClick.AddListener(BannerButtonClick);
+            bannerFayeButton.onClick.AddListener(BannerButtonClick);
+            bannerLiliButton.onClick.AddListener(BannerButtonClick);
             bannerNotification = banner.Find("Notification").GetComponent<GameObject>();
 
             sexButton = canvas.Find("SexButton").GetComponent<Button>();
@@ -75,7 +95,6 @@ namespace Overlewd
             chestButton = canvas.Find("ChestButton").GetComponent<Button>();
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             
-            bannerButton.onClick.AddListener(BannerButtonClick);
             portalButton.onClick.AddListener(PortalButtonClick);
             chestButton.onClick.AddListener(ChestButtonClick);
             backButton.onClick.AddListener(BackButtonClick);
@@ -83,14 +102,21 @@ namespace Overlewd
             dialogButton.onClick.AddListener(DialogButtonClick);
         }
 
-        private void Start()
+        public override async Task BeforeShowMakeAsync()
         {
-            Customize();
-        }
+            var girlData = inputData?.girlData;
+            girlUlviImage.gameObject.SetActive(girlData?.isUlvi ?? false);
+            bannerUlviButton.gameObject.SetActive(girlData?.isUlvi ?? false);
+            girlAdrielImage.gameObject.SetActive(girlData?.isAdriel ?? false);
+            bannerAdrielButton.gameObject.SetActive(girlData?.isAdriel ?? false);
+            girlIngieImage.gameObject.SetActive(girlData?.isIngie ?? false);
+            bannerIngieButton.gameObject.SetActive(girlData?.isIngie ?? false);
+            girlFayeImage.gameObject.SetActive(girlData?.isFaye ?? false);
+            bannerFayeButton.gameObject.SetActive(girlData?.isFaye ?? false);
+            girlLiliImage.gameObject.SetActive(girlData?.isLili ?? false);
+            bannerLiliButton.gameObject.SetActive(girlData?.isLili ?? false);
 
-        private void Customize()
-        {
-            
+            await Task.CompletedTask;
         }
 
         private void SexButtonClick()
@@ -125,7 +151,7 @@ namespace Overlewd
                 UIManager.MakeScreen<MemoryListScreen>().
                     SetData(new MemoryListScreenInData
                     {
-                        girlName = inputData.girlName,
+                        girlKey = inputData.girlKey,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId,
                         prevScreenInData = inputData
@@ -169,6 +195,9 @@ namespace Overlewd
 
     public class GirlScreenInData : BaseFullScreenInData
     {
-        public string girlName;
+        public string girlKey;
+
+        public AdminBRO.MatriarchItem girlData =>
+            GameData.matriarchs.GetMatriarchByKey(girlKey);
     }
 }

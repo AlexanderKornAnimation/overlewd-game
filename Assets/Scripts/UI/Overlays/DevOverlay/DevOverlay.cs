@@ -14,8 +14,6 @@ namespace Overlewd
         private Button Reset_Button;
         private Button AddCrystals_Button;
         private Button Battle_Button;
-        
-        private bool isOpen = true;
 
         private void Awake()
         {

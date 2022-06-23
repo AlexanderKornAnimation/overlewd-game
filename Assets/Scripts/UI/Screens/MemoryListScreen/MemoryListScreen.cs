@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Overlewd.NSMemoryListScreen;
 using TMPro;
 using UnityEngine;
@@ -62,12 +63,7 @@ namespace Overlewd
             mainMemoryScrollPos = canvas.Find("MainMemoryScrollPos");
         }
 
-        private void Start()
-        {
-            Customize();
-        }
-
-        private void Customize()
+        public override async Task BeforeShowMakeAsync()
         {
             for (int i = 0; i < girlNames.Length; i++)
             {
@@ -104,18 +100,19 @@ namespace Overlewd
                 mainMemoryScroll.gameObject.SetActive(false);
             }
             
-            var selectedGirl = inputData?.girlName switch
+            var selectedGirl = inputData?.girlKey switch
             {
-                "Ulvi" => ulviTab,
-                "Adriel" => adrielTab,
-                "Faye" => fayeTab,
-                "Ingie" => ingieTab,
-                "Lili" => liliTab,
+                AdminBRO.MatriarchItem.Key_Ulvi => ulviTab,
+                AdminBRO.MatriarchItem.Key_Adriel => adrielTab,
+                AdminBRO.MatriarchItem.Key_Faye => fayeTab,
+                AdminBRO.MatriarchItem.Key_Ingie => ingieTab,
+                AdminBRO.MatriarchItem.Key_Lili => liliTab,
                 _ => ulviTab
             };
             
             EnterTab(selectedGirl);
 
+            await Task.CompletedTask;
         }
  
         private void EnterTab(Button girlTab)
@@ -209,6 +206,9 @@ namespace Overlewd
 
     public class MemoryListScreenInData : BaseFullScreenInData
     {
-        public string girlName;
+        public string girlKey;
+
+        public AdminBRO.MatriarchItem girlData =>
+            GameData.matriarchs.GetMatriarchByKey(girlKey);
     }
 }

@@ -528,6 +528,27 @@ namespace Overlewd
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>
             matriarchs.Find(m => m.id == id);
+        public AdminBRO.MatriarchItem GetMatriarchByKey(string key) =>
+            matriarchs.Find(m => m.name == key);
+
+        public AdminBRO.MatriarchItem Ulvi =>
+            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ulvi);
+        public bool UlviIsOpen => Ulvi != null;
+        public AdminBRO.MatriarchItem Adriel =>
+            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Adriel);
+        public bool AdrielIsOpen => Adriel != null;
+        public AdminBRO.MatriarchItem Ingie =>
+            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ingie);
+        public bool IngieIsOpen => Ingie != null;
+        public AdminBRO.MatriarchItem Faye =>
+            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Faye);
+        public bool FayeIsOpen => Faye != null;
+        public AdminBRO.MatriarchItem Lili =>
+            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Lili);
+        public bool LiliIsOpen => Lili != null;
+
+
+
         public AdminBRO.MemoryItem GetMemoryById(int? id) =>
             memories.Find(m => m.id == id);
     }

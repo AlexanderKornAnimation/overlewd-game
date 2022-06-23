@@ -21,7 +21,7 @@ namespace Overlewd
 
             public event Action<OfferButton> selectButton;
 
-            private async void Awake()
+            void Awake()
             {
                 var canvas = transform.Find("Canvas");
                 button = canvas.Find("Button").GetComponent<Button>();
