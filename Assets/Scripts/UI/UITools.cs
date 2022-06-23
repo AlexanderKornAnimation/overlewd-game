@@ -21,12 +21,13 @@ namespace Overlewd
             var gold = transform.Find("Gold").GetComponent<TextMeshProUGUI>();
             var gems = transform.Find("Gems").GetComponent<TextMeshProUGUI>();
             
-            crystal.text = $"{AdminBRO.CurrencyItem.Sprite_Crystal}{GameData.player.Crystal.amount}";
-            wood.text = $"{AdminBRO.CurrencyItem.Sprite_Wood}{GameData.player.Wood.amount}";
-            stone.text = $"{AdminBRO.CurrencyItem.Sprite_Stone}{GameData.player.Stone.amount}";
-            copper.text = $"{AdminBRO.CurrencyItem.Sprite_Copper}{GameData.player.Copper.amount}";
-            gold.text = $"{AdminBRO.CurrencyItem.Sprite_Gold}{GameData.player.Gold.amount}";
-            gems.text = $"{AdminBRO.CurrencyItem.Sprite_Gems}{GameData.player.Gems.amount}";
+           
+            crystal.text = $"{GameData.currencies.Crystals.sprite}{GameData.player.Crystal.amount}";
+            wood.text = $"{GameData.currencies.Wood.sprite}{GameData.player.Wood.amount}";
+            stone.text = $"{GameData.currencies.Stone.sprite}{GameData.player.Stone.amount}";
+            copper.text = $"{GameData.currencies.Copper.sprite}{GameData.player.Copper.amount}";
+            gold.text = $"{GameData.currencies.Gold.sprite}{GameData.player.Gold.amount}";
+            gems.text = $"{GameData.currencies.Gems.sprite}{GameData.player.Gems.amount}";
         }
         
         public static void DisableButton(Button button, bool disable = true)

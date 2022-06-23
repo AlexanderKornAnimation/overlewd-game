@@ -361,30 +361,30 @@ namespace Overlewd
 
         public AdminBRO.CurrencyItem GetById(int? id) =>
             currencies.Find(c => c.id == id);
-       
+        public AdminBRO.CurrencyItem GetByKey(string key) =>
+            currencies.Find(c => c.key == key);
+
         public AdminBRO.CurrencyItem Copper =>
-            currencies.Find(c => c.key == "copper");
+            GetByKey(AdminBRO.CurrencyItem.Key_Copper);
         public AdminBRO.CurrencyItem Crystals =>
-            currencies.Find(c => c.key == "crystal");
+            GetByKey(AdminBRO.CurrencyItem.Key_Crystals);
         public AdminBRO.CurrencyItem Gems =>
-            currencies.Find(c => c.key == "gems");
+            GetByKey(AdminBRO.CurrencyItem.Key_Gems);
         public AdminBRO.CurrencyItem Gold =>
-            currencies.Find(c => c.key == "gold");
+            GetByKey(AdminBRO.CurrencyItem.Key_Gold);
         public AdminBRO.CurrencyItem Stone =>
-            currencies.Find(c => c.key == "stone");
+            GetByKey(AdminBRO.CurrencyItem.Key_Stone);
         public AdminBRO.CurrencyItem Wood =>
-            currencies.Find(c => c.key == "wood");
-
-
+            GetByKey(AdminBRO.CurrencyItem.Key_Wood);
         public AdminBRO.CurrencyItem CatEars =>
-            currencies.Find(c => c.key == "ears");
+            GetByKey(AdminBRO.CurrencyItem.Key_Ears);
         public AdminBRO.CurrencyItem HornyCoins =>
-            currencies.Find(c => c.key == "horny");
+            GetByKey(AdminBRO.CurrencyItem.Key_Horny);
         public AdminBRO.CurrencyItem JapaneseYen =>
-            currencies.Find(c => c.key == "yen");
+            GetByKey(AdminBRO.CurrencyItem.Key_Yen);
         public AdminBRO.CurrencyItem NutakuGold =>
-            currencies.Find(c => c.key == "ngold");
-        
+           GetByKey(AdminBRO.CurrencyItem.Key_Ngold);
+
     }
 
     //player

@@ -210,28 +210,30 @@ namespace Overlewd
             public string updatedAt;
 
             [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Crystal = "<sprite=\"AssetResources\" name=\"Crystal\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Wood = "<sprite=\"AssetResources\" name=\"Wood\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Stone = "<sprite=\"AssetResources\" name=\"Stone\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Copper = "<sprite=\"AssetResources\" name=\"Copper\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Gold = "<sprite=\"AssetResources\" name=\"Gold\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Gems = "<sprite=\"AssetResources\" name=\"Gem\">";
+            public string sprite =>
+                key switch
+                { 
+                    Key_Crystals => "<sprite=,\"AssetResources\" name=\"Crystal\">",
+                    Key_Wood => "<sprite=\"AssetResources\" name=\"Wood\">",
+                    Key_Stone => "<sprite=\"AssetResources\" name=\"Stone\">",
+                    Key_Copper => "<sprite=\"AssetResources\" name=\"Copper\">",
+                    Key_Gold => "<sprite=\"AssetResources\" name=\"Gold\">",
+                    Key_Gems => "<sprite=\"AssetResources\" name=\"Gem\">",
+                    Key_Ears => "<sprite=\"EventCurrency\" name=\"CatEras\">",
+                    Key_Ngold => "<sprite=\"EventCurrency\" name=\"NutakuGold\">",
+                    _ => ""
+                };
 
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Ears = "<sprite=\"EventCurrency\" name=\"CatEras\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_NutakuGold = "<sprite=\"EventCurrency\" name=\"NutakuGold\">";
+            public const string Key_Copper = "copper";
+            public const string Key_Crystals = "crystal";
+            public const string Key_Gems = "gems";
+            public const string Key_Gold = "gold";
+            public const string Key_Stone = "stone";
+            public const string Key_Wood = "wood";
+            public const string Key_Ears = "ears";
+            public const string Key_Horny = "horny";
+            public const string Key_Yen = "yen";
+            public const string Key_Ngold = "ngold";
         }
 
         // /tradable
@@ -1466,6 +1468,27 @@ namespace Overlewd
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
+
+            public const string Key_Ulvi = "Ulvi";
+            public const string Key_Adriel = "Adriel";
+            public const string Key_Ingie = "Ingie";
+            public const string Key_Faye = "Faye";
+            public const string Key_Lili = "Lili";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isUlvi => name == Key_Ulvi;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isAdriel => name == Key_Adriel;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isIngie => name == Key_Ingie;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFaye => name == Key_Faye;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLili => name == Key_Lili;
         }
 
         [Serializable]
