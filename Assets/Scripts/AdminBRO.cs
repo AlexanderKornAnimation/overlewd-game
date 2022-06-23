@@ -277,6 +277,9 @@ namespace Overlewd
             public int? matriarchShardId;
 
             [JsonProperty(Required = Required.Default)]
+            public const string Type_Currency = "currency";
+            
+            [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
         }
 

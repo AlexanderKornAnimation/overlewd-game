@@ -34,8 +34,11 @@ namespace Overlewd
                 base.Customize();
                 var battleData = stageData.battleData;
                 title.text = battleData.title;
-                loot.text = battleData.rewardSpriteString;
+                
+                var stringRewards = UITools.RewardsToString(battleData.firstRewards) + 
+                                    UITools.RewardsToString(battleData.rewards);
 
+                loot.text = stringRewards;
                 icon.SetActive(battleData.isTypeBattle);
                 bossIcon.SetActive(battleData.isTypeBoss);
 
@@ -48,6 +51,7 @@ namespace Overlewd
                         SetAnimation("Prefabs/UI/Screens/ChapterScreens/FX/StageNew/Boss/BossButtonAnim");
                         break;
                 }
+
             }
 
 

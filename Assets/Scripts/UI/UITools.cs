@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -12,6 +13,23 @@ namespace Overlewd
 {
     public static class UITools
     {
+        public static string RewardsToString(List<AdminBRO.RewardItem> rewards)
+        {
+            string str = "";
+            
+            foreach (var reward in rewards)
+            {
+                var item = GameData.markets.GetTradableById(reward.tradableId);
+                
+                if (item.type == AdminBRO.TradableItem.Type_Currency)
+                {
+                    str += GameData.currencies.GetById(item.currencyId).sprite + " ";
+                }
+            }
+
+            return str;
+        }
+        
         public static void FillWallet(Transform transform)
         {
             var crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();

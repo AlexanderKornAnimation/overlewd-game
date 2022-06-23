@@ -383,7 +383,7 @@ namespace Overlewd
         public AdminBRO.CurrencyItem JapaneseYen =>
             GetByKey(AdminBRO.CurrencyItem.Key_Yen);
         public AdminBRO.CurrencyItem NutakuGold =>
-           GetByKey(AdminBRO.CurrencyItem.Key_Ngold);
+            GetByKey(AdminBRO.CurrencyItem.Key_Ngold);
 
     }
 
