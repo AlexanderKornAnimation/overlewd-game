@@ -1,34 +1,37 @@
 fileFormatVersion: 2
-guid: a784d47d9580cce4aa2661f7fcfbff7f
+guid: f621636dc9ffcb243b71b1a4daa7be73
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2322585396635936702
+      213: 8485024753648477456
     second: MarkerSideQuest
   - first:
-      213: 3913459981711092212
-    second: MarkerQuarterlyEvent
-  - first:
-      213: 7367879417119705103
-    second: MarkerMainQuest
-  - first:
-      213: 1316313035310314362
-    second: MarkerMonthlyEvent
-  - first:
-      213: 3694220175233984563
-    second: MarkerWeeklyEvent
-  - first:
-      213: 4807886655378250842
+      213: -1951254630451087358
     second: NotificationSale
   - first:
-      213: -3999938791448749968
+      213: 8619035019919832983
+    second: MarkerMainQuest
+  - first:
+      213: -6233093922222251831
     second: NotificationNew
   - first:
-      213: 3604449995685823164
+      213: -222574682889164184
+    second: MarkerQuarterlyEvent
+  - first:
+      213: -7528795791942673395
     second: NotificationTimeLimit
   - first:
-      213: 7573068698028817762
+      213: -3910614847442455263
+    second: MarkerMonthlyEvent
+  - first:
+      213: -8235684508126470289
     second: NotificationDone
+  - first:
+      213: -4761391377116117094
+    second: MarkerWeeklyEvent
+  - first:
+      213: 4368292443468932772
+    second: NotificationLock
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -168,92 +171,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb7aef6dc1b7b3020800000000000000
-      internalID: 2322585396635936702
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MarkerQuarterlyEvent
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 186
-        width: 75
-        height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4f9a8947e176f4630800000000000000
-      internalID: 3913459981711092212
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MarkerMainQuest
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 279
-        width: 75
-        height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f08055d0b47ff3660800000000000000
-      internalID: 7367879417119705103
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MarkerMonthlyEvent
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 93
-        width: 75
-        height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a7333e24bbb744210800000000000000
-      internalID: 1316313035310314362
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MarkerWeeklyEvent
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 75
-        height: 75
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 33827e23da1844330800000000000000
-      internalID: 3694220175233984563
+      spriteID: 0152d9fce0dd0c570800000000000000
+      internalID: 8485024753648477456
       vertices: []
       indices: 
       edges: []
@@ -273,8 +192,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a5c5926907b09b240800000000000000
-      internalID: 4807886655378250842
+      spriteID: 20870a57040cbe4e0800000000000000
+      internalID: -1951254630451087358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarkerMainQuest
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 279
+        width: 75
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79739fc5fa6fc9770800000000000000
+      internalID: 8619035019919832983
       vertices: []
       indices: 
       edges: []
@@ -294,17 +234,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 078546c9cdc5d78c0800000000000000
-      internalID: -3999938791448749968
+      spriteID: 9c0eb422a1a9f79a0800000000000000
+      internalID: -6233093922222251831
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NotificationTimeLimit
+      name: MarkerQuarterlyEvent
       rect:
         serializedVersion: 2
-        x: 97
+        x: 0
         y: 186
         width: 75
         height: 75
@@ -315,8 +255,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cb203838c24950230800000000000000
-      internalID: 3604449995685823164
+      spriteID: 86a6562518149ecf0800000000000000
+      internalID: -222574682889164184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NotificationTimeLimit
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 186
+        width: 74
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0c1dc2dd18548790800000000000000
+      internalID: -7528795791942673395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarkerMonthlyEvent
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 93
+        width: 75
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 125f2dcf384bab9c0800000000000000
+      internalID: -3910614847442455263
       vertices: []
       indices: 
       edges: []
@@ -336,8 +318,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 26d33a56bd1f81960800000000000000
-      internalID: 7573068698028817762
+      spriteID: f6f1fea0398f4bd80800000000000000
+      internalID: -8235684508126470289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MarkerWeeklyEvent
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 75
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a97c26af4c32cedb0800000000000000
+      internalID: -4761391377116117094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NotificationLock
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 0
+        width: 74
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a62df745da4f9c30800000000000000
+      internalID: 4368292443468932772
       vertices: []
       indices: 
       edges: []

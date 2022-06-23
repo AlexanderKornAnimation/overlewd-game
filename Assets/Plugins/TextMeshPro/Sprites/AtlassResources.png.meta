@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 318ba3e90a011c34785525e1cb1af333
+guid: 1f18b63b89fb4d2438e4e7c1a5186220
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -10,28 +10,31 @@ TextureImporter:
     second: Energy
   - first:
       213: -7141604917554757085
-    second: ShardRare
+    second: Wood
   - first:
       213: -743511443358387319
-    second: ShardLegendary
+    second: Gold
   - first:
       213: 3947195480940314052
-    second: ShardCommon
+    second: Gem
   - first:
       213: 5059433486762437235
-    second: Wood
+    second: Copper
   - first:
       213: 3444606948907574042
     second: Stone
   - first:
       213: 8147973984281822809
-    second: Gold
+    second: ShardGold
   - first:
       213: 8395222161685788416
-    second: Gem
+    second: ShardPurpule
   - first:
       213: -5971012798137527651
-    second: Copper
+    second: ShardGray
+  - first:
+      213: -6482307829155475010
+    second: ShardGreen
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -160,8 +163,8 @@ TextureImporter:
       name: Crystal
       rect:
         serializedVersion: 2
-        x: 5
-        y: 88
+        x: 2
+        y: 156
         width: 45
         height: 45
       alignment: 0
@@ -181,9 +184,9 @@ TextureImporter:
       name: Energy
       rect:
         serializedVersion: 2
-        x: 53
-        y: 88
-        width: 45
+        x: 52
+        y: 156
+        width: 44
         height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -199,13 +202,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardRare
+      name: Wood
       rect:
         serializedVersion: 2
-        x: 118
-        y: 88
-        width: 38
-        height: 45
+        x: 112
+        y: 154
+        width: 45
+        height: 35
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,13 +223,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardLegendary
+      name: Gold
       rect:
         serializedVersion: 2
-        x: 4
-        y: 39
-        width: 38
-        height: 45
+        x: 0
+        y: 109
+        width: 43
+        height: 38
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,13 +244,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardCommon
+      name: Gem
       rect:
         serializedVersion: 2
-        x: 60
-        y: 38
-        width: 38
-        height: 45
+        x: 55
+        y: 108
+        width: 45
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -262,12 +265,12 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wood
+      name: Copper
       rect:
         serializedVersion: 2
-        x: 122
-        y: 39
-        width: 30
+        x: 112
+        y: 111
+        width: 45
         height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -286,10 +289,10 @@ TextureImporter:
       name: Stone
       rect:
         serializedVersion: 2
-        x: 4
-        y: 2
-        width: 30
-        height: 30
+        x: 0
+        y: 66
+        width: 45
+        height: 37
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,13 +307,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gold
+      name: ShardGold
       rect:
         serializedVersion: 2
-        x: 44
-        y: 2
-        width: 30
-        height: 30
+        x: 56
+        y: 56
+        width: 40
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,13 +328,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gem
+      name: ShardPurpule
       rect:
         serializedVersion: 2
-        x: 86
-        y: 5
-        width: 30
-        height: 29
+        x: 105
+        y: 56
+        width: 40
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -346,13 +349,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Copper
+      name: ShardGray
       rect:
         serializedVersion: 2
-        x: 127
-        y: 5
-        width: 30
-        height: 30
+        x: 56
+        y: 0
+        width: 40
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -362,6 +365,27 @@ TextureImporter:
       bones: []
       spriteID: d9293b1fe73b22da0800000000000000
       internalID: -5971012798137527651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShardGreen
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 0
+        width: 40
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb15476cf573a06a0800000000000000
+      internalID: -6482307829155475010
       vertices: []
       indices: 
       edges: []
