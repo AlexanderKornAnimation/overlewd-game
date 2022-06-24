@@ -37,6 +37,10 @@ namespace Overlewd
             
             public async Task ShowAsync()
             {
+                if (buildingData.currentLevel == 0)
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.Castle_BuildingAppear);
+                }
                 await UITools.FadeShowAsync(currentLevel, 0.7f);
             }
 

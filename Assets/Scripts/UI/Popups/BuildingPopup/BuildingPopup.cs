@@ -69,6 +69,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var buildingData = inputData?.buildingData;
+            
             if (buildingData != null)
             {
                 var building =
