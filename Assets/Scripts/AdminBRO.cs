@@ -213,7 +213,7 @@ namespace Overlewd
             public string sprite =>
                 key switch
                 { 
-                    Key_Crystals => "<sprite=,\"AssetResources\" name=\"Crystal\">",
+                    Key_Crystals => "<sprite=\"AssetResources\" name=\"Crystal\">",
                     Key_Wood => "<sprite=\"AssetResources\" name=\"Wood\">",
                     Key_Stone => "<sprite=\"AssetResources\" name=\"Stone\">",
                     Key_Copper => "<sprite=\"AssetResources\" name=\"Copper\">",

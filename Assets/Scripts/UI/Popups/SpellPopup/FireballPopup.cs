@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Resharper disable All
-
 namespace Overlewd
 {
-    public class FireballPopup : SpellPopup
+    public class FireballSpell : MonoBehaviour
     {
-        protected override void Awake()
+        public static FireballSpell GetInstance(Transform parent)
         {
-            base.Awake();
-            ResourceManager.InstantiateWidgetPrefab("Prefabs/UI/Popups/SpellPopup/FireballImage", spawnPoint);
+            return ResourceManager.InstantiateWidgetPrefab<FireballSpell>("Prefabs/UI/Popups/SpellPopup/FireballImage",
+                parent);
         }
-
     }
 }

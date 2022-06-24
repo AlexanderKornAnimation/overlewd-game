@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,15 +9,30 @@ namespace Overlewd
 {
     public class MagicGuildScreen : BaseFullScreenParent<MagicGuildScreenInData>
     {
-        private Button activeSpell;
-        private Button ultimateSpell;
-        private Button passiveSpell_1;
-        private Button passiveSpell_2;
+        private Transform activeSpell;
+        private Button activeSpell_isOpen;
+        private Button activeSpell_isMax;
+        private GameObject activeSpell_isLocked;
+        
+        private Transform ultimateSpell;
+        private Button ultimateSpell_isOpen;
+        private Button ultimateSpell_isMax;
+        private GameObject ultimateSpell_isLocked;
+        
+        private Transform passiveSpell1;
+        private Button passiveSpell1_isOpen;
+        private Button passiveSpell1_isMax;
+        private GameObject passiveSpell1_isLocked;
+        
+        private Transform passiveSpell2;
+        private Button passiveSpell2_isOpen;
+        private Button passiveSpell2_isMax;
+        private GameObject passiveSpell2_isLocked;
+        
         private Button backButton;
 
-        private Image spellUnknown;
-       
-        private Text mainTitle;
+        private TextMeshProUGUI buildingLevel;
+        private AdminBRO.Building buildingData => GameData.buildings.magicGuild;
 
         void Awake()
         {
@@ -23,19 +40,57 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            activeSpell = canvas.Find("ActiveSpell").GetComponent<Button>();
-            ultimateSpell = canvas.Find("UltimateSpell").GetComponent<Button>();
-            passiveSpell_1 = canvas.Find("PassiveSpell1").GetComponent<Button>();
-            passiveSpell_2 = canvas.Find("PassiveSpell2").GetComponent<Button>();
+            activeSpell = canvas.Find("ActiveSpell");
+            activeSpell_isOpen = activeSpell.Find("IsOpen").GetComponent<Button>();
+            activeSpell_isMax = activeSpell.Find("IsMax").GetComponent<Button>();
+
+            ultimateSpell = canvas.Find("UltimateSpell");
+            ultimateSpell_isOpen = ultimateSpell.Find("IsOpen").GetComponent<Button>();
+            ultimateSpell_isMax = ultimateSpell.Find("IsMax").GetComponent<Button>();
+            ultimateSpell_isLocked = ultimateSpell.Find("IsLocked").gameObject;
+
+            passiveSpell1 = canvas.Find("PassiveSpell1");
+            passiveSpell1_isOpen = passiveSpell1.Find("IsOpen").GetComponent<Button>();
+            passiveSpell1_isMax = passiveSpell1.Find("IsMax").GetComponent<Button>();
+            passiveSpell1_isLocked = passiveSpell1.Find("IsLocked").gameObject;
+
+            passiveSpell2 = canvas.Find("PassiveSpell2");
+            passiveSpell2_isOpen = passiveSpell2.Find("IsOpen").GetComponent<Button>();
+            passiveSpell2_isMax = passiveSpell2.Find("IsMax").GetComponent<Button>();
+            passiveSpell2_isLocked = passiveSpell2.Find("IsLocked").gameObject;
+            
             backButton = canvas.Find("BackButton").GetComponent<Button>();
 
-            mainTitle = canvas.Find("Window").Find("MainTitle").GetComponent<Text>();
+            buildingLevel = canvas.Find("Window").Find("BuildingLevel").GetComponent<TextMeshProUGUI>();
 
             backButton.onClick.AddListener(BackButtonClick);
-            activeSpell.onClick.AddListener(ActiveSpellButtonClick);
+            activeSpell_isOpen.onClick.AddListener(SpellButtonClick);
+            ultimateSpell_isOpen.onClick.AddListener(SpellButtonClick);
+            passiveSpell1_isOpen.onClick.AddListener(SpellButtonClick);
+            passiveSpell2_isOpen.onClick.AddListener(SpellButtonClick);
         }
 
-        private void ActiveSpellButtonClick()
+        public override async Task BeforeShowMakeAsync()
+        {
+            buildingLevel.text = (buildingData.currentLevel + 1).ToString();
+            activeSpell_isMax.gameObject.SetActive(false);
+
+            ultimateSpell_isLocked.SetActive(buildingData.currentLevel < 1);
+            ultimateSpell_isOpen.gameObject.SetActive(buildingData.currentLevel >= 1);
+            ultimateSpell_isMax.gameObject.SetActive(false);
+            
+            passiveSpell1_isLocked.SetActive(buildingData.currentLevel < 2);
+            passiveSpell1_isOpen.gameObject.SetActive(buildingData.currentLevel >= 2);
+            passiveSpell1_isMax.gameObject.SetActive(false);
+
+            passiveSpell2_isLocked.SetActive(buildingData.currentLevel < 3);
+            passiveSpell2_isOpen.gameObject.SetActive(buildingData.currentLevel >= 3);
+            passiveSpell2_isMax.gameObject.SetActive(false);
+
+            await Task.CompletedTask;
+        }
+
+        private void SpellButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowPopup<SpellPopup>();

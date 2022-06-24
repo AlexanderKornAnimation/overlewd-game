@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,75 +10,76 @@ namespace Overlewd
 {
     public class SpellPopup : BasePopupParent<SpellPopupInData>
     {
-        protected List<Transform> resources = new List<Transform>();
-        protected List<GameObject> notEnough = new List<GameObject>();
-        protected List<TextMeshProUGUI> count = new List<TextMeshProUGUI>();
-        protected List<Image> resourceIcon = new List<Image>();
+        private List<Image> resources = new List<Image>();
+        private List<TextMeshProUGUI> count = new List<TextMeshProUGUI>();
 
-        protected Transform spawnPoint;
+        private Transform spawnPoint;
+        private Transform currencyBack;
 
-        protected TextMeshProUGUI spellName;
-        protected TextMeshProUGUI description;
-        protected TextMeshProUGUI fullPotentialDescription;
+        private TextMeshProUGUI spellName;
+        private TextMeshProUGUI description;
 
-        protected Button paidBuildButton;
-        protected Button freeBuildButton;
-        protected Button backButton;
+        private Button crystalBuildButton;
+        private Button buildButton;
+        private Button closeButton;
 
-        protected virtual void Awake()
+        private void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/SpellPopup/SpellPopup", transform);
+            var screenInst =
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/SpellPopup/SpellPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
             spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
+            currencyBack = canvas.Find("CurrencyBack");
 
             spellName = canvas.Find("SpellName").GetComponent<TextMeshProUGUI>();
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
-            fullPotentialDescription = canvas.Find("FullPotentialDescription").GetComponent<TextMeshProUGUI>();
 
-            paidBuildButton = canvas.Find("PaidBuildButton").GetComponent<Button>();
-            freeBuildButton = canvas.Find("FreeBuildButton").GetComponent<Button>();
-            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
+            crystalBuildButton.onClick.AddListener(PaidBuildButtonClick);
             
-            paidBuildButton.onClick.AddListener(PaidBuildButtonClick);
-            freeBuildButton.onClick.AddListener(FreeBuildButtonClick);
-            backButton.onClick.AddListener(BackButtonClick);
+            buildButton = canvas.Find("BuildButton").GetComponent<Button>();
+            buildButton.onClick.AddListener(FreeBuildButtonClick);
             
-            CustomizeResources(canvas);
-        }
-
-        private void CustomizeResources(Transform canvas)
-        {
+            closeButton = canvas.Find("BackButton").GetComponent<Button>();
+            closeButton.onClick.AddListener(CloseButtonClick);
+            
             var grid = canvas.Find("Grid");
+            
             for (int i = 1; i <= grid.childCount; i++)
             {
-                var resource = grid.Find($"Recource{i}");
+                var resource = grid.Find($"Resource{i}").GetComponent<Image>();
                 resources.Add(resource);
-                notEnough.Add(resource.Find("NotEnough").gameObject);
-                count.Add(resource.Find("Count").GetComponent<TextMeshProUGUI>());
-                resourceIcon.Add(resource.Find("RecourceIcon").GetComponent<Image>());
+                count.Add(resource.transform.Find("Count").GetComponent<TextMeshProUGUI>());
             }
-
-            resourceIcon[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
-            resourceIcon[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
-            resourceIcon[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
-            resourceIcon[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
         }
 
-        protected virtual void PaidBuildButtonClick()
+        public override async Task BeforeShowMakeAsync()
+        {
+            Customize();
+            await Task.CompletedTask;
+        }
+
+        private void Customize()
+        {
+            FireballSpell.GetInstance(spawnPoint);
+            UITools.FillWallet(currencyBack);
+        }
+
+        private void PaidBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
 
-        protected virtual void FreeBuildButtonClick()
+        private void FreeBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
             UIManager.ShowScreen<CastleScreen>();
         }
 
-        private void BackButtonClick()
+        private void CloseButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.HidePopup();
