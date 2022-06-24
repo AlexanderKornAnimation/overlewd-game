@@ -1442,6 +1442,8 @@ namespace Overlewd
 
         // /matriarchs
         // /matriarchs/memories
+        // /matriarchs/memories/{id}/buy
+
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
             var url = $"https://overlewd-api.herokuapp.com/matriarchs";
@@ -1460,18 +1462,25 @@ namespace Overlewd
             }
         }
 
+        public static async Task memoryBuyAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs/memories/{id}/buy";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+            
+            }
+        }
+
         [Serializable]
         public class MatriarchItem
         {
             public int id;
             public string name;
-            public string placeholderImage;
-            public string image;
-            public int? order;
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
-            public List<int> skills;
+            public float? seduceCooldown;
+            public int? seduceBuffSkillId;
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";

@@ -551,5 +551,14 @@ namespace Overlewd
 
         public AdminBRO.MemoryItem GetMemoryById(int? id) =>
             memories.Find(m => m.id == id);
+
+        public async Task memoryBuy(int? id)
+        {
+            if (id.HasValue)
+            {
+                await AdminBRO.memoryBuyAsync(id.Value);
+                memories = await AdminBRO.memoriesAsync();
+            }
+        }
     }
 }
