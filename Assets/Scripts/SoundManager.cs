@@ -74,6 +74,9 @@ namespace Overlewd
         //gacha
         public const string Gacha_x1_open = "event:/Animations/Gacha/x1/Gacha_x1_open";
         public const string Gacha_x10_open = "event:/Animations/Gacha/x10/Gacha_x10_open";
+
+        //castle screen
+        public const string Castle_BuildingAppear = "event:/Animations/Castle_Scenes/Building_Appear";
     }
 
     public class FMODBank
