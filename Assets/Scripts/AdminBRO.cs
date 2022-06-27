@@ -1479,14 +1479,29 @@ namespace Overlewd
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
-            public float? seduceCooldown;
+            public int seduceCooldown;
             public int? seduceBuffSkillId;
+            public string status;
+            public int? currentEmpathyPoints;
+            public int? empathyLevelTargetPoints;
+            public int? currentEmpathyLevel;
+            public string rewardsClaimed;
+            public string seduceAvailableAt;
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
             public const string Key_Ingie = "Ingie";
             public const string Key_Faye = "Faye";
             public const string Key_Lili = "Lili";
+
+            public const string Status_Open = "open";
+            public const string Status_Close = "close";
+
+            public const string RewardsClaimed_None = "none";
+            public const string RewardsClaimed_TwentFive = "twenty_five";
+            public const string RewardsClaimed_Fifty = "fifty";
+            public const string RewardsClaimed_All = "all";
+
 
             [JsonProperty(Required = Required.Default)]
             public bool isUlvi => name == Key_Ulvi;

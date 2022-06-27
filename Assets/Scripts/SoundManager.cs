@@ -77,6 +77,7 @@ namespace Overlewd
 
         //castle screen
         public const string Castle_BuildingAppear = "event:/Animations/Castle_Scenes/Building_Appear";
+        public const string Castle_BuildingUpgrade = "event:/Animations/Castle_Scenes/Building_Upgrade";
     }
 
     public class FMODBank

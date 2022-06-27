@@ -41,6 +41,10 @@ namespace Overlewd
                 {
                     SoundManager.PlayOneShot(FMODEventPath.Castle_BuildingAppear);
                 }
+                else
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.Castle_BuildingUpgrade);
+                }
                 await UITools.FadeShowAsync(currentLevel, 0.7f);
             }
 
