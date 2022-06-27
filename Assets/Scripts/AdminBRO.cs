@@ -1443,6 +1443,7 @@ namespace Overlewd
         // /matriarchs
         // /matriarchs/memories
         // /matriarchs/memories/{id}/buy
+        // /matriarchs/{id}/seduce
 
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
@@ -1468,6 +1469,16 @@ namespace Overlewd
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
             
+            }
+        }
+
+        public static async Task seduceMatriarchAsync(int id)
+        {
+            var url = $"'https://overlewd-api.herokuapp.com/matriarchs/{id}/seduce";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
             }
         }
 

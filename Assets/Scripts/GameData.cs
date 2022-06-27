@@ -560,5 +560,14 @@ namespace Overlewd
                 memories = await AdminBRO.memoriesAsync();
             }
         }
+
+        public async Task matriarchSeduce(int? id)
+        {
+            if (id.HasValue)
+            {
+                await AdminBRO.seduceMatriarchAsync(id.Value);
+                matriarchs = await AdminBRO.matriarchsAsync();
+            }
+        }
     }
 }
