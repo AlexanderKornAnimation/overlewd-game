@@ -533,19 +533,19 @@ namespace Overlewd
 
         public AdminBRO.MatriarchItem Ulvi =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ulvi);
-        public bool UlviIsOpen => Ulvi != null;
+        public bool UlviIsOpen => Ulvi?.isOpen ?? false;
         public AdminBRO.MatriarchItem Adriel =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Adriel);
-        public bool AdrielIsOpen => Adriel != null;
+        public bool AdrielIsOpen => Adriel?.isOpen ?? false;
         public AdminBRO.MatriarchItem Ingie =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ingie);
-        public bool IngieIsOpen => Ingie != null;
+        public bool IngieIsOpen => Ingie?.isOpen ?? false;
         public AdminBRO.MatriarchItem Faye =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Faye);
-        public bool FayeIsOpen => Faye != null;
+        public bool FayeIsOpen => Faye?.isOpen ?? false;
         public AdminBRO.MatriarchItem Lili =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Lili);
-        public bool LiliIsOpen => Lili != null;
+        public bool LiliIsOpen => Lili?.isOpen ?? false;
 
 
 

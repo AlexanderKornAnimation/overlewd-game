@@ -1474,7 +1474,7 @@ namespace Overlewd
 
         public static async Task seduceMatriarchAsync(int id)
         {
-            var url = $"'https://overlewd-api.herokuapp.com/matriarchs/{id}/seduce";
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs/{id}/seduce";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1528,6 +1528,12 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isLili => name == Key_Lili;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => status == Status_Open;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isClose => name == Status_Close;
         }
 
         [Serializable]

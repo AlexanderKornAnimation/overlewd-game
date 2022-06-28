@@ -29,7 +29,8 @@ namespace Overlewd
 
         private Image rewardTier3;
         private TextMeshProUGUI receivedTier3;
-        
+
+        private Transform buffInfo;
         private TextMeshProUGUI buffPower;
         private TextMeshProUGUI buffType;
 
@@ -45,14 +46,19 @@ namespace Overlewd
         private Button portalButton;
         private Button chestButton;
         private Button backButton;
-        
-        private void Awake()
+
+        private Transform sexCooldown;
+        private TextMeshProUGUI sexCooldownTimer;
+
+        private bool seduceSex = false;
+
+
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/GirlScreen/Girl", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var progressBar = canvas.Find("TrustProgressBar");
-            var buff = progressBar.Find("Buff");
             var banner = canvas.Find("Banner");
 
             girlUlviImage = canvas.Find("GirlUlvi");
@@ -74,8 +80,9 @@ namespace Overlewd
             rewardTier3 = progressBar.Find("RewardTier3").GetComponent<Image>();
             receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<TextMeshProUGUI>();
 
-            buffPower = buff.Find("Power").GetComponent<TextMeshProUGUI>();
-            buffType = buff.Find("Type").GetComponent<TextMeshProUGUI>();
+            buffInfo = progressBar.Find("BuffInfo");
+            buffPower = buffInfo.Find("Power").GetComponent<TextMeshProUGUI>();
+            buffType = buffInfo.Find("Type").GetComponent<TextMeshProUGUI>();
 
             bannerUlviButton = canvas.Find("Banner").Find("BannerButtonUlvi").GetComponent<Button>();
             bannerAdrielButton = canvas.Find("Banner").Find("BannerButtonAdriel").GetComponent<Button>();
@@ -100,6 +107,25 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
             sexButton.onClick.AddListener(SexButtonClick);
             dialogButton.onClick.AddListener(DialogButtonClick);
+
+            sexCooldown = sexButton.transform.Find("Cooldown");
+            sexCooldownTimer = sexCooldown.Find("Timer").GetComponent<TextMeshProUGUI>();
+        }
+
+        public override async Task BeforeShowDataAsync()
+        {
+            var girlData = inputData?.girlData;
+            var availableTime = girlData?.seduceAvailableAt;
+            if (!String.IsNullOrEmpty(availableTime))
+            {
+                var availableTimeStr = UITools.AvailableTimeToString(availableTime);
+                if (String.IsNullOrEmpty(availableTimeStr))
+                {
+                    await GameData.matriarchs.Get();
+                }
+            }
+
+            await Task.CompletedTask;
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -116,16 +142,37 @@ namespace Overlewd
             girlLiliImage.gameObject.SetActive(girlData?.isLili ?? false);
             bannerLiliButton.gameObject.SetActive(girlData?.isLili ?? false);
 
+            if (!String.IsNullOrEmpty(girlData.seduceAvailableAt))
+            {
+                UITools.DisableButton(sexButton);
+                StartCoroutine("SexCooldownUpd");
+            }
+            else
+            {
+                sexCooldown.gameObject.SetActive(false);
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeHideDataAsync()
+        {
+            if (seduceSex)
+            {
+                await GameData.matriarchs.matriarchSeduce(inputData.girlData.id);
+            }
             await Task.CompletedTask;
         }
 
         private void SexButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            seduceSex = true;
             UIManager.MakeScreen<SexScreen>().
                 SetData(new SexScreenInData
             {
-                prevScreenInData = inputData
+                prevScreenInData = inputData,
+                dialogId = inputData.girlData.seduceSexSceneId
             }).RunShowScreenProcess();
         }
 
@@ -190,6 +237,25 @@ namespace Overlewd
                     RunShowScreenProcess();
             }
                 
+        }
+
+        private IEnumerator SexCooldownUpd()
+        {
+            var time = UITools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
+            while (!String.IsNullOrEmpty(time))
+            {
+                sexCooldownTimer.text = time;
+                yield return new WaitForSeconds(1.0f);
+                time = UITools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
+            }
+            UnlockSexButton();
+        }
+
+        private async void UnlockSexButton()
+        {
+            await GameData.matriarchs.Get();
+            sexCooldown.gameObject.SetActive(false);
+            UITools.DisableButton(sexButton, false);
         }
     }
 

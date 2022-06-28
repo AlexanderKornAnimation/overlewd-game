@@ -135,7 +135,7 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
+            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData ?? inputData.dialogData;
 
             if (inputData.eventStageId.HasValue)
             {
@@ -392,6 +392,8 @@ namespace Overlewd
 
     public class SexScreenInData : BaseFullScreenInData
     {
-        
+        public int? dialogId;
+        public AdminBRO.Dialog dialogData =>
+            GameData.dialogs.GetById(dialogId);
     }
 }
