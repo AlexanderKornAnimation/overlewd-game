@@ -902,6 +902,16 @@ namespace Overlewd
             }
         }
 
+        public static async Task chracterSkillLvlUp(int characterId, string skillType)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillType}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
@@ -1350,6 +1360,8 @@ namespace Overlewd
 
             }
         }
+
+        // /
 
         //chapter-maps
         public static async Task<List<ChapterMap>> chapterMapsAsync()

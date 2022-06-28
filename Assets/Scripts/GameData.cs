@@ -199,6 +199,12 @@ namespace Overlewd
             await Get();
         }
 
+        public async Task SkillLvlUp(int chId, string skillType)
+        {
+            await AdminBRO.chracterSkillLvlUp(chId, skillType);
+            await Get();
+        }
+
         public async Task Mrg(int srcID, int tgtId)
         {
             await AdminBRO.charactersMrgAsync(srcID, tgtId);
