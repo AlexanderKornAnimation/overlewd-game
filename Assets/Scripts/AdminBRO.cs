@@ -842,6 +842,43 @@ namespace Overlewd
             }
 
             public const string Rarity_Basic = "basic";
+            public const string Rarity_Advanced = "advanced";
+            public const string Rarity_Epic = "epic";
+            public const string Rarity_Heroic = "heroic";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isBasic => rarity == Rarity_Basic;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isAdvanced => rarity == Rarity_Advanced;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isEpic => rarity == Rarity_Epic;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isHeroic => rarity == Rarity_Heroic;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool canLvlUp => !isLvlMax && GameData.player.CanBuy(levelUpPrice);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLvlMax => maxLvl == level;
+
+            public bool CanSkillLvlUp(CharacterSkill skill)
+            {
+                var isMax = level == skill.level;
+                return !isMax && GameData.player.CanBuy(skill.levelUpPrice);
+            } 
+            
+            [JsonProperty(Required = Required.Default)]
+            public int maxLvl => rarity switch
+            {
+                Rarity_Basic => 10,
+                Rarity_Advanced => 20,
+                Rarity_Epic => 30,
+                Rarity_Heroic => 40,
+                _ => 10
+            };
         }
 
         [Serializable]
@@ -863,6 +900,10 @@ namespace Overlewd
             public int amount;
             public string trigger;
             public int effectAmount;
+
+            public const string Type_Passive = "passive_skill";
+            public const string Type_Attack = "attack";
+            public const string Type_Enhanced = "enhanced_attack";
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)

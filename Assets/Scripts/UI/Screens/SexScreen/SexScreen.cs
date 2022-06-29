@@ -123,10 +123,16 @@ namespace Overlewd
                     {
                         UIManager.ShowScreen<EventMapScreen>();
                     }
-                    else
+                    else if (inputData.prevScreenInData.IsType<GirlScreenInData>())
                     {
                         UIManager.MakeScreen<GirlScreen>().
                             SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                            .RunShowScreenProcess();
+                    }
+                    else
+                    {
+                        UIManager.MakeScreen<BattleGirlScreen>().
+                            SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>())
                             .RunShowScreenProcess();
                     }
                     break;

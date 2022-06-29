@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +14,14 @@ namespace Overlewd
         private Button backButton;
         private Button laboratoryButton;
         private Button sexSceneButton;
-        
-        private Button levelUpButton;
-        private GameObject levelUpButtonMaxLevel;
+        private Image sexSceneOpen;
+        private Image sexSceneClose;
+        private TextMeshProUGUI sexSceneOpenTitle;
+
+        private Transform levelUpButton;
+        private Button levelUpButtonCanLvlUp;
+        private Image[] levelPriceIcons = new Image[2];
+        private TextMeshProUGUI[] levelPriceAmounts = new TextMeshProUGUI[2];
 
         private TextMeshProUGUI speed;
         private TextMeshProUGUI power;
@@ -27,14 +34,28 @@ namespace Overlewd
         private TextMeshProUGUI health;
         private TextMeshProUGUI damageDealt;
 
-        private Image rarityBack;
         private TextMeshProUGUI classIcon;
         private TextMeshProUGUI className;
         private TextMeshProUGUI characterName;
         private TextMeshProUGUI potency;
+        private TextMeshProUGUI level;
+
+        private GameObject rarityBasic;
+        private GameObject rarityAdvanced;
+        private GameObject rarityEpic;
+        private GameObject rarityHeroic;
 
         private Image weapon;
         private Button weaponScreenButton;
+        private Transform currencyBack;
+        private Image girl;
+
+        private GameObject passiveSkillGO;
+        private GameObject basicSkillGO;
+        private GameObject ultimateSkillGO;
+        private NSBattleGirlScreen.Skill passiveSkill;
+        private NSBattleGirlScreen.Skill basicSkill;
+        private NSBattleGirlScreen.Skill ultimateSkill;
 
         private void Awake()
         {
@@ -45,6 +66,8 @@ namespace Overlewd
             var info = canvas.Find("Info");
             var mainStats = info.Find("StatsBack").Find("MainStats");
             var secondaryStats = info.Find("StatsBack").Find("SecondaryStats");
+            var levelBack = canvas.Find("LevelBack");
+            var skills = canvas.Find("Skills");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -52,14 +75,20 @@ namespace Overlewd
             weapon = canvas.Find("Weapon").GetComponent<Image>();
             weaponScreenButton = weapon.transform.Find("WeaponScreenButton").GetComponent<Button>();
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
-            
-            levelUpButton = canvas.Find("LevelUpButton").GetComponent<Button>();
-            levelUpButtonMaxLevel = levelUpButton.transform.Find("MaxLevel").GetComponent<GameObject>();
-            
+
+            levelUpButton = canvas.Find("LevelUpButton");
+            levelUpButtonCanLvlUp = levelUpButton.Find("CanLvlUp").GetComponent<Button>();
+            levelUpButtonCanLvlUp.onClick.AddListener(LevelUpButtonClick);
+
             laboratoryButton = canvas.Find("ForgeButton").GetComponent<Button>();
             laboratoryButton.onClick.AddListener(LaboratoryButtonClick);
-            
-            sexSceneButton = canvas.Find("SexSceneButton").GetComponent<Button>();
+
+            var sexSceneButtonTr = canvas.Find("SexSceneButton");
+            sexSceneButton = sexSceneButtonTr.Find("IsOpen").GetComponent<Button>();
+            sexSceneButton.onClick.AddListener(SexSceneButtonClick);
+            sexSceneOpen = sexSceneButtonTr.transform.Find("IsOpen").GetComponent<Image>();
+            sexSceneClose = sexSceneButtonTr.GetComponent<Image>();
+            sexSceneOpenTitle = sexSceneButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
             speed = mainStats.Find("Speed").Find("Stat").GetComponent<TextMeshProUGUI>();
             power = mainStats.Find("Power").Find("Stat").GetComponent<TextMeshProUGUI>();
@@ -72,23 +101,101 @@ namespace Overlewd
             health = secondaryStats.Find("Health").Find("Stat").GetComponent<TextMeshProUGUI>();
             damageDealt = secondaryStats.Find("DamageDealt").Find("Stat").GetComponent<TextMeshProUGUI>();
 
-            rarityBack = info.Find("ClassBack").GetComponent<Image>();
-            classIcon = rarityBack.transform.Find("Icon").GetComponent<TextMeshProUGUI>();
-            className = rarityBack.transform.Find("ClassName").GetComponent<TextMeshProUGUI>();
+            var classInfo = info.Find("ClassInfo");
+            classIcon = classInfo.transform.Find("Icon").GetComponent<TextMeshProUGUI>();
+            className = classInfo.transform.Find("ClassName").GetComponent<TextMeshProUGUI>();
             characterName = info.Find("NameBack").Find("Name").GetComponent<TextMeshProUGUI>();
             potency = info.Find("PotencyBack").Find("Value").GetComponent<TextMeshProUGUI>();
+            level = levelBack.Find("Level").GetComponent<TextMeshProUGUI>();
+
+            rarityBasic = classInfo.Find("RarityBasic").gameObject;
+            rarityAdvanced = classInfo.Find("RarityAdvanced").gameObject;
+            rarityEpic = classInfo.Find("RarityEpic").gameObject;
+            rarityHeroic = classInfo.Find("RarityHeroic").gameObject;
+
+            currencyBack = canvas.Find("CurrencyBack");
+            girl = canvas.Find("Girl").GetComponent<Image>();
+
+            passiveSkillGO = skills.Find("PassiveSkill").gameObject;
+            passiveSkill = passiveSkillGO.AddComponent<NSBattleGirlScreen.Skill>();
+
+            basicSkillGO = skills.Find("BasicSkill").gameObject;
+            basicSkill = basicSkillGO.AddComponent<NSBattleGirlScreen.Skill>();
+
+            ultimateSkillGO = skills.Find("UltimateSkill").gameObject;
+            ultimateSkill = ultimateSkillGO.AddComponent<NSBattleGirlScreen.Skill>();
+
         }
 
-        private void Start()
+        public override async Task BeforeShowMakeAsync()
         {
             Customize();
+
+            await Task.CompletedTask;
         }
-        
+
         private void Customize()
         {
-            
+            var characterData = inputData?.characterData;
+            if (characterData != null)
+            {
+                speed.text = characterData.speed.ToString();
+                power.text = characterData.power.ToString();
+                constitution.text = characterData.constitution.ToString();
+                agility.text = characterData.agility.ToString();
+
+                accuracy.text = characterData.accuracy * 100 + "%";
+                dodgeChance.text = characterData.dodge * 100 + "%";
+                critChance.text = characterData.critrate * 100 + "%";
+                health.text = characterData.health.ToString();
+                damageDealt.text = characterData.damage.ToString();
+
+                classIcon.text = AdminBRO.Character.GetMyClassMarker(characterData?.characterClass);
+                className.text = characterData.characterClass;
+                characterName.text = characterData.name;
+                level.text = characterData.level.ToString();
+
+                girl.sprite = ResourceManager.LoadSprite(characterData.fullScreenPersIcon);
+
+                passiveSkill.skillData = characterData.skills.Find(s => s.type == AdminBRO.CharacterSkill.Type_Passive);
+                passiveSkill.characterId = inputData?.characterId;
+                passiveSkill.Customize();
+
+                basicSkill.skillData = characterData.skills.Find(s => s.type == AdminBRO.CharacterSkill.Type_Attack);
+                basicSkill.characterId = inputData?.characterId;
+                basicSkill.Customize();
+
+                ultimateSkill.skillData = characterData.skills.Find(s => s.type == AdminBRO.CharacterSkill.Type_Enhanced);
+                ultimateSkill.characterId = inputData?.characterId;
+                ultimateSkill.Customize();
+
+                levelUpButtonCanLvlUp.gameObject.SetActive(characterData.canLvlUp);
+                sexSceneOpen.sprite = ResourceManager.LoadSprite(characterData.sexSceneOpenedBanner);
+                sexSceneClose.sprite = ResourceManager.LoadSprite(characterData.sexSceneClosedBanner);
+                sexSceneOpen.gameObject.SetActive(characterData.sexSceneId.HasValue);
+                sexSceneOpenTitle.text = $"Upgrade {characterData.name} to rare\nto unlock sex scene!";
+                
+                rarityBasic.SetActive(characterData.isBasic);
+                rarityAdvanced.SetActive(characterData.isAdvanced);
+                rarityEpic.SetActive(characterData.isEpic);
+                rarityHeroic.SetActive(characterData.isHeroic);
+
+                for (int i = 0; i < characterData?.levelUpPrice?.Count; i++)
+                {
+                    var price = characterData.levelUpPrice[i];
+                    var currency = GameData.currencies.GetById(price.currencyId);
+
+                    levelPriceIcons[i] = levelUpButtonCanLvlUp.transform.Find($"Resource{i + 1}").GetComponent<Image>();
+                    levelPriceAmounts[i] = levelPriceIcons[i]?.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+
+                    levelPriceIcons[i].sprite = ResourceManager.LoadSprite(currency.icon356Url);
+                    levelPriceAmounts[i].text = price.amount.ToString();
+                }
+            }
+
+            UITools.FillWallet(currencyBack);
         }
-        
+
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -99,8 +206,8 @@ namespace Overlewd
             else
             {
                 UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
-                    RunShowScreenProcess();
+                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>())
+                    .RunShowScreenProcess();
             }
         }
 
@@ -115,11 +222,11 @@ namespace Overlewd
             {
                 UIManager.MakeScreen<WeaponScreen>().
                     SetData(new WeaponScreenInData
-                    {
-                        prevScreenInData = inputData,
-                        ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
+                {
+                    prevScreenInData = inputData,
+                    ftueStageId = inputData.ftueStageId,
+                    eventStageId = inputData.eventStageId
+                }).RunShowScreenProcess();
             }
         }
 
@@ -128,24 +235,51 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<LaboratoryScreen>();
         }
-        
-        private void LevelUpButtonClick()
+
+        public override void OnGameDataEvent(GameDataEvent eventData)
         {
+            switch (eventData?.type)
+            {
+                case GameDataEvent.Type.CharacterLvlUp:
+                    Customize();
+                    break;
+            }
         }
 
-        private void ForgeButtonClick()
+        private async void LevelUpButtonClick()
         {
-            
+            if (inputData != null && inputData.characterId.HasValue)
+            {
+                var characterData = inputData?.characterData;
+                if (characterData.canLvlUp)
+                {
+                    await GameData.characters.LvlUp(inputData.characterId.Value);
+                }
+                else
+                {
+                    UIManager.ShowPopup<DeclinePopup>();
+                }
+            }
         }
 
         private void SexSceneButtonClick()
         {
-            
+            var sexSceneId = inputData?.characterData?.sexSceneId;
+            if (sexSceneId.HasValue)
+            {
+                UIManager.MakeScreen<SexScreen>().
+                    SetData(new SexScreenInData
+                {
+                    dialogId = sexSceneId,
+                    prevScreenInData = inputData
+                }).RunShowScreenProcess();
+            }
         }
     }
 
     public class BattleGirlScreenInData : BaseFullScreenInData
     {
         public int? characterId;
+        public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
     }
 }

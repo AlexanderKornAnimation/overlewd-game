@@ -16,7 +16,8 @@ namespace Overlewd
             None,
             BuyTradable,
             BuildingBuild,
-            BuildingBuildCrystal
+            BuildingBuildCrystal,
+            CharacterLvlUp
         }
     }
 
@@ -192,7 +193,7 @@ namespace Overlewd
     public class Characters
     {
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
-       
+
         public async Task Get()
         {
             characters = await AdminBRO.charactersAsync();
@@ -207,12 +208,19 @@ namespace Overlewd
         {
             await AdminBRO.characterLvlupAsync(chId);
             await Get();
+            await GameData.player.Get();
+            
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.CharacterLvlUp
+            });
         }
 
         public async Task SkillLvlUp(int chId, string skillType)
         {
             await AdminBRO.chracterSkillLvlUp(chId, skillType);
-            await Get();
+            await Get(); 
+            await GameData.player.Get();
         }
 
         public async Task Mrg(int srcID, int tgtId)
