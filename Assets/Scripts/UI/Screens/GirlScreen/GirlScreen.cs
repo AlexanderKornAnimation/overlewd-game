@@ -17,16 +17,23 @@ namespace Overlewd
         private Transform girlFayeImage;
         private Transform girlLiliImage;
 
-        private Image trustProgress;
+        private Transform ulviZodiac;
+        private Transform adrielZodiac;
+        private Transform ingieZodiac;
+        private Transform fayeZodiac;
+        private Transform liliZodiac;
+        private TextMeshProUGUI zodiacName;
+        private TextMeshProUGUI birthday;
+
+        private Transform lvlProgressStep1;
+        private Transform lvlProgressStep2;
+        private Transform lvlProgressStep3;
         private TextMeshProUGUI currentProgressLevel;
-        private TextMeshProUGUI nextProgressLevel;
-        
+        private TextMeshProUGUI nextProgressLevel;        
         private Image rewardTier1;
         private TextMeshProUGUI receivedTier1;
-        
         private Image rewardTier2;
         private TextMeshProUGUI receivedTier2;
-
         private Image rewardTier3;
         private TextMeshProUGUI receivedTier3;
 
@@ -61,22 +68,30 @@ namespace Overlewd
             var progressBar = canvas.Find("TrustProgressBar");
             var banner = canvas.Find("Banner");
 
+            var girlInfo = canvas.Find("GirlInfo");
+            ulviZodiac = girlInfo.Find("ZodiacInfo").Find("UlviZodiacIcon");
+            adrielZodiac = girlInfo.Find("ZodiacInfo").Find("AdrielZodiacIcon");
+            ingieZodiac = girlInfo.Find("ZodiacInfo").Find("IngieZodiacIcon");
+            fayeZodiac = girlInfo.Find("ZodiacInfo").Find("FayeZodiacIcon");
+            liliZodiac = girlInfo.Find("ZodiacInfo").Find("LiliZodiacIcon");
+            zodiacName = girlInfo.Find("ZodiacInfo").Find("ZodiacName").GetComponent<TextMeshProUGUI>();
+            birthday = girlInfo.Find("BirthdayInfo").Find("BirthdayDate").GetComponent<TextMeshProUGUI>();
+
             girlUlviImage = canvas.Find("GirlUlvi");
             girlAdrielImage = canvas.Find("GirlAdriel");
             girlIngieImage = canvas.Find("GirlIngie");
             girlFayeImage = canvas.Find("GirlFaye");
             girlLiliImage = canvas.Find("GirlLili");
 
-            trustProgress = progressBar.Find("Progress").GetComponent<Image>();
+            lvlProgressStep1 = progressBar.Find("Step1");
+            lvlProgressStep2 = progressBar.Find("Step2");
+            lvlProgressStep3 = progressBar.Find("Step3");
             currentProgressLevel = progressBar.Find("CurrentLvl").GetComponent<TextMeshProUGUI>();
             nextProgressLevel = progressBar.Find("NextLvl").GetComponent<TextMeshProUGUI>();
-
             rewardTier1 = progressBar.Find("RewardTier1").GetComponent<Image>();
             receivedTier1 = rewardTier1.transform.Find("Received").GetComponent<TextMeshProUGUI>();
-            
             rewardTier2 = progressBar.Find("RewardTier2").GetComponent<Image>();
             receivedTier2 = rewardTier2.transform.Find("Received").GetComponent<TextMeshProUGUI>();
-            
             rewardTier3 = progressBar.Find("RewardTier3").GetComponent<Image>();
             receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<TextMeshProUGUI>();
 
@@ -131,16 +146,49 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var girlData = inputData?.girlData;
-            girlUlviImage.gameObject.SetActive(girlData?.isUlvi ?? false);
-            bannerUlviButton.gameObject.SetActive(girlData?.isUlvi ?? false);
-            girlAdrielImage.gameObject.SetActive(girlData?.isAdriel ?? false);
-            bannerAdrielButton.gameObject.SetActive(girlData?.isAdriel ?? false);
-            girlIngieImage.gameObject.SetActive(girlData?.isIngie ?? false);
-            bannerIngieButton.gameObject.SetActive(girlData?.isIngie ?? false);
-            girlFayeImage.gameObject.SetActive(girlData?.isFaye ?? false);
-            bannerFayeButton.gameObject.SetActive(girlData?.isFaye ?? false);
-            girlLiliImage.gameObject.SetActive(girlData?.isLili ?? false);
-            bannerLiliButton.gameObject.SetActive(girlData?.isLili ?? false);
+
+            girlUlviImage.gameObject.SetActive(girlData.isUlvi);
+            bannerUlviButton.gameObject.SetActive(girlData.isUlvi);
+            girlAdrielImage.gameObject.SetActive(girlData.isAdriel);
+            bannerAdrielButton.gameObject.SetActive(girlData.isAdriel);
+            girlIngieImage.gameObject.SetActive(girlData.isIngie);
+            bannerIngieButton.gameObject.SetActive(girlData.isIngie);
+            girlFayeImage.gameObject.SetActive(girlData.isFaye);
+            bannerFayeButton.gameObject.SetActive(girlData.isFaye);
+            girlLiliImage.gameObject.SetActive(girlData.isLili);
+            bannerLiliButton.gameObject.SetActive(girlData.isLili);
+
+            ulviZodiac.gameObject.SetActive(girlData.isUlvi);
+            adrielZodiac.gameObject.SetActive(girlData.isAdriel);
+            ingieZodiac.gameObject.SetActive(girlData.isIngie);
+            fayeZodiac.gameObject.SetActive(girlData.isFaye);
+            liliZodiac.gameObject.SetActive(girlData.isLili);
+            zodiacName.text = girlData.paramZodiac;
+            birthday.text = girlData.paramAge.ToString();
+
+            switch (girlData.rewardsClaimed)
+            {
+                case AdminBRO.MatriarchItem.RewardsClaimed_None:
+                    lvlProgressStep1.gameObject.SetActive(false);
+                    lvlProgressStep2.gameObject.SetActive(false);
+                    lvlProgressStep3.gameObject.SetActive(false);
+                    break;
+                case AdminBRO.MatriarchItem.RewardsClaimed_TwentFive:
+                    lvlProgressStep1.gameObject.SetActive(true);
+                    lvlProgressStep2.gameObject.SetActive(false);
+                    lvlProgressStep3.gameObject.SetActive(false);
+                    break;
+                case AdminBRO.MatriarchItem.RewardsClaimed_Fifty:
+                    lvlProgressStep1.gameObject.SetActive(true);
+                    lvlProgressStep2.gameObject.SetActive(true);
+                    lvlProgressStep3.gameObject.SetActive(false);
+                    break;
+                case AdminBRO.MatriarchItem.RewardsClaimed_All:
+                    lvlProgressStep1.gameObject.SetActive(true);
+                    lvlProgressStep2.gameObject.SetActive(true);
+                    lvlProgressStep3.gameObject.SetActive(true);
+                    break;
+            }
 
             if (!String.IsNullOrEmpty(girlData.seduceAvailableAt))
             {
