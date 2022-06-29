@@ -22,6 +22,8 @@ MonoBehaviour:
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
+  pSkill:
+  - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
   idle_Prefab_Path: Battle/BattlePersonages/Naga/pers/Naga
   characterPrefab: {fileID: 1087001697701868879, guid: 3b6166b919d795842aace66009d6e69a, type: 3}
   ani_idle_name: idle

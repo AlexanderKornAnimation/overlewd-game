@@ -20,9 +20,12 @@ MonoBehaviour:
   battleScale: 1.31
   yOffset: 0
   skill:
-  - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
+  - {fileID: 11400000, guid: 4b2f270d18ef64947aa6f76270cefefd, type: 2}
   - {fileID: 11400000, guid: 3b5f8a6341cf4eb4189c634860a36c8e, type: 2}
   - {fileID: 11400000, guid: 15f8f4a92329581439a5e4b67e7b075b, type: 2}
+  pSkill:
+  - {fileID: 11400000, guid: ee8b014f40e928b48b16c2c7e1e579d5, type: 2}
+  - {fileID: 11400000, guid: 2b9ce2c01a57f1d4387b4e4e5cd3bd6a, type: 2}
   idle_Prefab_Path: Battle/BattlePersonages/Overlord
   characterPrefab: {fileID: 5672936884837085208, guid: 07374bbd9f9ff0a458b28c33c7ff9a88, type: 3}
   ani_idle_name: idle

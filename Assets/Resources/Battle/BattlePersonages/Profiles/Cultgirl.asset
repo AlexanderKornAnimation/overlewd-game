@@ -22,6 +22,8 @@ MonoBehaviour:
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
+  pSkill:
+  - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
   idle_Prefab_Path: Battle/BattlePersonages/Cultgirl/pers/Cultgirl
   characterPrefab: {fileID: 7277615286226459927, guid: 6c57880eac779f54f8dda80d62d69466, type: 3}
   ani_idle_name: idle

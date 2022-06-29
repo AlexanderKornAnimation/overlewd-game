@@ -22,6 +22,8 @@ MonoBehaviour:
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
+  pSkill:
+  - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
   idle_Prefab_Path: Battle/BattlePersonages/Witch/pers/Witch
   characterPrefab: {fileID: 3318191500530290263, guid: 3fc151582f66b8348a0224c1ad9c0f8e, type: 3}
   ani_idle_name: idle

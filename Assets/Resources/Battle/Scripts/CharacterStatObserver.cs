@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,14 +8,16 @@ namespace Overlewd
     public class CharacterStatObserver : MonoBehaviour
     {
 
-        public CharController cc; //присваивается при создании
+        public CharController cc;
 
         public Transform persPos => cc.persPos;
 
         //Char UI
         //public Button bt;
+        public Image charClass;
         public Slider sliderHP;
         public Slider sliderMP;
+        public bool showMP => cc.isOverlord;
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
 
@@ -71,13 +74,16 @@ namespace Overlewd
             curse_obj,
             stun_obj;
 
+        [SerializeField]
+        private List<Sprite> classIcons;
         private void Start()
         {
             charStats.InitUI();
 
             if (sliderHP) sliderHP.maxValue = healthMax;
             if (sliderMP) sliderMP.maxValue = manaMax;
-
+            sliderMP?.gameObject.SetActive(showMP);
+            if (charClass) SetClass();
             UpdateUI();
             UpdateStatuses();
         }
@@ -129,6 +135,31 @@ namespace Overlewd
                     icon.SetActive(effect < 0);
                 text.text = (Mathf.Abs(effect) > 1) ? Mathf.Abs(effect).ToString() : "";
             }
+        }
+        void SetClass()
+        {
+            switch (cc.character.characterClass)
+            {
+                case AdminBRO.Character.Class_Assassin:
+                    charClass.sprite = classIcons[1];
+                    break;
+                case AdminBRO.Character.Class_Caster:
+                    charClass.sprite = classIcons[2];
+                    break;
+                case AdminBRO.Character.Class_Bruiser:
+                    charClass.sprite = classIcons[3];
+                    break;
+                case AdminBRO.Character.Class_Healer:
+                    charClass.sprite = classIcons[4];
+                    break;
+                case AdminBRO.Character.Class_Tank:
+                    charClass.sprite = classIcons[5];
+                    break;
+                default:
+                    charClass.sprite = classIcons[0];
+                    break;
+            }
+            charClass.SetNativeSize();
         }
         private void OnGUI()
         {

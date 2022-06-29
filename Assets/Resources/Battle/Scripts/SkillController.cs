@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,29 +10,38 @@ namespace Overlewd
     {
         public Skill oldSkill;
         public AdminBRO.CharacterSkill skill;
-        public bool isHeal => skill.actionType == "heal"? true : false;
+        public bool isHeal => skill.actionType == "heal";
         private GameObject vfx => oldSkill.vfx;
+        private AudioClip sfx => oldSkill.sfx;
 
         private Image image;
+        [SerializeField] private Image effectSlot;
+        [SerializeField] private List<Sprite> effectIcons;
         private GameObject selectBorder;
         public bool select;
         private Slider slider;
         private TextMeshProUGUI textCount;
         public Button button;
 
-        private AudioClip sfx;
+        public bool potion => oldSkill.potion;
+        public int potionAmount;
+
         [HideInInspector]
         public Transform vfxSpawnPoint;
         [HideInInspector]
-        public int damage, amount, cooldown, cooldownCount = 0;
+        public int damage, cooldown, cooldownCount = 0;
+
+        //public int amount => skill.amount; //for info maybe
         public int manaCost => skill.manaCost;
 
 
         public bool selectable = true;
         public bool isSelected = false;
+        public bool silence = false;
 
         private void Awake()
         {
+            if (!potion && effectSlot == null) effectSlot = transform.Find("status").GetComponent<Image>();
             button = GetComponent<Button>();
             image = GetComponent<Image>();
             slider = GetComponentInChildren<Slider>();
@@ -46,9 +56,7 @@ namespace Overlewd
         {
             image.sprite = oldSkill.battleIco;
             image.SetNativeSize();
-            sfx = oldSkill.sfx;
-            damage = oldSkill.damage; // old 
-            amount = skill.amount;
+            damage = oldSkill.damage; // old
 
             if (slider != null)
             {
@@ -58,15 +66,17 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (oldSkill.attackType == Skill.AttackType.POTION)
-                    textCount.text = $"{amount}";
+                if (oldSkill.potion)
+                    textCount.text = $"{potionAmount}";
                 else
                     textCount.text = $"{cooldownCount}";
         }
 
-        public void ReplaceSkill(AdminBRO.CharacterSkill sk)
+        public void ReplaceSkill(AdminBRO.CharacterSkill sk, Skill skillSkin)
         {
             skill = sk;
+            oldSkill = skillSkin;
+            if (!potion) SetEffectIco();
             StatInit();
         }
 
@@ -78,8 +88,8 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (oldSkill.attackType == Skill.AttackType.POTION) //old
-                    textCount.text = $"{amount}";
+                if (oldSkill.potion) //old
+                    textCount.text = $"{potionAmount}";
                 else
                     textCount.text = $"{cooldownCount}";
         }
@@ -113,7 +123,61 @@ namespace Overlewd
         }
         public void BlinkDisable()
         {
+            image.color = Color.white;
             image.DOColor(Color.red, 0.1f).SetLoops(4, LoopType.Yoyo).SetEase(Ease.InOutExpo);
         }
+
+        void SetEffectIco()
+        {
+            switch (skill.effect)
+            {
+                case "defense_up":
+                    effectSlot.sprite = effectIcons[0];
+                    break;
+                case "defense_down":
+                    effectSlot.sprite = effectIcons[1];
+                    break;
+                case "focus":
+                    effectSlot.sprite = effectIcons[2];
+                    break;
+                case "blind":
+                    effectSlot.sprite = effectIcons[3];
+                    break;
+                case "regeneration":
+                    effectSlot.sprite = effectIcons[4];
+                    break;
+                case "poison":
+                    effectSlot.sprite = effectIcons[5];
+                    break;
+                case "bless":
+                    effectSlot.sprite = effectIcons[6];
+                    break;
+                case "heal_block":
+                    effectSlot.sprite = effectIcons[7];
+                    break;
+                case "silence":
+                    effectSlot.sprite = effectIcons[8];
+                    break;
+                case "immunity":
+                    effectSlot.sprite = effectIcons[9];
+                    break;
+                case "stun":
+                    effectSlot.sprite = effectIcons[10];
+                    break;
+                case "curse":
+                    effectSlot.sprite = effectIcons[11];
+                    break;
+                case "dispel":
+                    effectSlot.sprite = effectIcons[12];
+                    break;
+                case "safeguard":
+                    effectSlot.sprite = effectIcons[13];
+                    break;
+                default:
+                    effectSlot.sprite = effectIcons[0];
+                    break;
+            }
+        }
+
     }
 }
