@@ -1240,12 +1240,34 @@ namespace Overlewd
         }
 
         // /buildings
+        // /buildings/{id}/build
+        // /buildings/{id}/build-crystals
         public static async Task<List<Building>> buildingsAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/buildings";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Building>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task buildingBuildAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task buildingBuildCrystalsAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
             }
         }
 
@@ -1311,29 +1333,8 @@ namespace Overlewd
                 nextLevelData?.canBuild ?? false;
         }
 
-        // /buildings/{id}/build
-        public static async Task buildingBuildAsync(int id)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        // /buildings/{id}/build-crystals
-        public static async Task buildingBuildCrystalsAsync(int id)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
         // /municipality/time-left
+        // /municipality/collect
         public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/municipality/time-left";
@@ -1343,14 +1344,6 @@ namespace Overlewd
             }
         }
 
-        [Serializable]
-        public class MunicipalityTimeLeft
-        {
-            public int timeLeft;
-        }
-
-
-        // /municipality/collect
         public static async Task municipalityCollectAsync()
         {
             var url = $"https://overlewd-api.herokuapp.com/municipality/collect";
@@ -1361,7 +1354,69 @@ namespace Overlewd
             }
         }
 
-        // /
+        [Serializable]
+        public class MunicipalityTimeLeft
+        {
+            public int timeLeft;
+        }
+
+        // /magicguild/skills
+        // /magicguild/{skillType}/levelup
+        public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/magicguild/skills";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<MagicGuildSkill>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task magicGuildSkillLvlUpAsync(string skillType)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/magicguild/{skillType}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class MagicGuildSkill
+        {
+            public string type;
+            public Current current;
+            public int? next;
+            public int currentSkillLevel;
+            public int maxSkillLevel;
+
+            public class Current
+            {
+                public int id;
+                public string name;
+                public string description;
+                public string actionType;
+                public bool AOE;
+                public float amount;
+                public float amountBoost;
+                public string effect;
+                public string type;
+                public string trigger;
+                public float effectAmount;
+                public float effectAmountBoost;
+                public float effectProb;
+                public float effectProbBoost;
+                public string icon;
+                public float effectActingDuration;
+                public float effectActingDurationBoost;
+                public float effectCooldownDuration;
+                public float effectCooldownDurationBoost;
+                public float manaCost;
+                public float manaCostBoost;
+                public List<PriceItem> levelUpPrice;
+                public List<PriceItem> levelUpPriceBoost;
+            }
+        }
 
         //chapter-maps
         public static async Task<List<ChapterMap>> chapterMapsAsync()

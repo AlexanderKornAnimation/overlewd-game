@@ -91,9 +91,13 @@ namespace Overlewd
     public class Buildings
     {
         public List<AdminBRO.Building> buildings { get; private set; }
+        public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get;private set; }
 
-        public async Task Get() =>
+        public async Task Get()
+        {
             buildings = await AdminBRO.buildingsAsync();
+            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
+        }
         public AdminBRO.Building GetBuildingById(int? id) =>
             buildings.Find(b => b.id == id);
         public AdminBRO.Building GetBuildingByKey(string key) =>
@@ -122,7 +126,7 @@ namespace Overlewd
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
-            buildings = await AdminBRO.buildingsAsync();
+            await Get();
             await GameData.player.Get();
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
@@ -134,7 +138,7 @@ namespace Overlewd
         public async Task BuildCrystals(int buildingId)
         {
             await AdminBRO.buildingBuildCrystalsAsync(buildingId);
-            buildings = await AdminBRO.buildingsAsync();
+            await Get();
             await GameData.player.Get();
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
@@ -152,6 +156,12 @@ namespace Overlewd
         public async Task MunicipalityCollect()
         {
             await AdminBRO.municipalityCollectAsync();
+        }
+
+        public async Task MagicGuildSkillLvlUp(string skillType)
+        {
+            await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
+            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
         }
     }
 
