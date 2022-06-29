@@ -778,6 +778,7 @@ namespace Overlewd
             public float? health;
             public float? damage;
             public float? mana;
+            public float? potency;
             public int? sexSceneId;
             public string key;
             public List<PriceItem> levelUpPrice;
