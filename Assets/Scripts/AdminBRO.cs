@@ -780,6 +780,8 @@ namespace Overlewd
             public float? mana;
             public float? potency;
             public int? sexSceneId;
+            public string sexSceneClosedBanner;
+            public string sexSceneOpenedBanner;
             public string key;
             public List<PriceItem> levelUpPrice;
             public List<PriceItem> mergePrice;
