@@ -15,7 +15,7 @@ namespace Overlewd
             public int? characterId;
 
             private Image icon;
-            private TextMeshProUGUI name;
+            private TextMeshProUGUI title;
             private TextMeshProUGUI description;
 
             private Button levelUpButton;
@@ -26,7 +26,7 @@ namespace Overlewd
             private void Awake()
             {
                 icon = transform.Find("Icon").GetComponent<Image>();
-                name = transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                title = transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 description = transform.Find("Description").GetComponent<TextMeshProUGUI>();
                 levelUpButton = transform.Find("LevelUpButton").GetComponent<Button>();
                 levelUpButton.onClick.AddListener(LevelUpButtonClick);
@@ -35,7 +35,7 @@ namespace Overlewd
             public void Customize()
             {
                 icon.sprite = ResourceManager.LoadSprite(skillData.icon);
-                name.text = skillData.name;
+                title.text = skillData.name;
                 description.text = skillData.description;
                 
                 for (int i = 0; i < skillData.levelUpPrice.Count; i++)
@@ -57,7 +57,7 @@ namespace Overlewd
                     
                     if (charData.CanSkillLvlUp(skillData))
                     {
-                        await GameData.characters.SkillLvlUp(characterId.Value, skillData.type);
+                        await GameData.characters.SkillLvlUp(characterId.Value, skillData.id);
                     }
                     else
                     {

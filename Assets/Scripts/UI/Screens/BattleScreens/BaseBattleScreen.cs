@@ -153,8 +153,8 @@ namespace Overlewd
             }
 
 			//poison
-			inst.mana = GameData.player.info.poison.mana;
-			inst.hp = GameData.player.info.poison.hp;
+			inst.mana = GameData.player.info.potion.mana;
+			inst.hp = GameData.player.info.potion.hp;
 
 			return inst;
         }

@@ -216,9 +216,9 @@ namespace Overlewd
             });
         }
 
-        public async Task SkillLvlUp(int chId, string skillType)
+        public async Task SkillLvlUp(int chId, int skillId)
         {
-            await AdminBRO.chracterSkillLvlUp(chId, skillType);
+            await AdminBRO.chracterSkillLvlUp(chId, skillId);
             await Get(); 
             await GameData.player.Get();
         }

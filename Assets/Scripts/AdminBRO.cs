@@ -108,9 +108,9 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
-            public Poison poison;
+            public Potion potion;
 
-            public class Poison
+            public class Potion
             {
                 public int hp;
                 public int mana;
@@ -947,9 +947,9 @@ namespace Overlewd
             }
         }
 
-        public static async Task chracterSkillLvlUp(int characterId, string skillType)
+        public static async Task chracterSkillLvlUp(int characterId, int skillId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillType}/levelup";
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
