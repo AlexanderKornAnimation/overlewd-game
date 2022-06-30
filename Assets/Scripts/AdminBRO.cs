@@ -768,17 +768,17 @@ namespace Overlewd
             public string rarity;
             public List<int> equipment;
             public List<CharacterSkill> skills;
-            public float? speed;
-            public float? power;
-            public float? constitution;
-            public float? agility;
-            public float? accuracy;
-            public float? dodge;
-            public float? critrate;
-            public float? health;
-            public float? damage;
-            public float? mana;
-            public float? potency;
+            public float speed;
+            public float power;
+            public float constitution;
+            public float agility;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
+            public float potency;
             public int? sexSceneId;
             public string sexSceneClosedBanner;
             public string sexSceneOpenedBanner;
@@ -1608,6 +1608,7 @@ namespace Overlewd
             public int? currentEmpathyPoints;
             public int? empathyLevelTargetPoints;
             public int? currentEmpathyLevel;
+            public int? nextEmpathyLevel;
             public string rewardsClaimed;
             public string seduceAvailableAt;
 
