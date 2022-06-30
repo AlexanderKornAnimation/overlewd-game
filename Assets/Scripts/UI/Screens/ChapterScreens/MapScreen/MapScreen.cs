@@ -25,7 +25,7 @@ namespace Overlewd
         private QuestsWidget questsPanel;
         private BuffWidget buffPanel;
 
-        protected virtual void Awake()
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/MapScreen/MapScreen", transform);
 
@@ -164,6 +164,12 @@ namespace Overlewd
             UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
 
+        public override async Task BeforeShowAsync()
+        {
+            SoundManager.GetEventInstance(FMODEventPath.Music_MapScreen);
+            await Task.CompletedTask;
+        }
+
         public override async Task AfterShowAsync()
         {
             //animate opened stages
@@ -219,6 +225,12 @@ namespace Overlewd
                     break;
             }
 
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
             await Task.CompletedTask;
         }
 
