@@ -429,17 +429,18 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public List<EventChapter> chaptersData =>
-                chapters.Select(chId => GetChapterById(id)).OrderBy(ch => ch.order).ToList();
+                chapters.Select(chId => GetChapterById(chId)).
+                    OrderBy(ch => ch.order).ToList();
 
             [JsonProperty(Required = Required.Default)]
             public EventChapter firstChapter =>
-                chaptersData.First();
+                chaptersData.FirstOrDefault();
 
             [JsonProperty(Required = Required.Default)]
             public EventChapter activeChapter {
                 get {
                     var chapterData = firstChapter;
-                    while (chapterData.isComplete)
+                    while (chapterData?.isComplete ?? false)
                     {
                         if (chapterData.nextChapterId.HasValue)
                         {
