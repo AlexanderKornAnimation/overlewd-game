@@ -884,6 +884,7 @@ namespace Overlewd
         [Serializable]
         public class CharacterSkill
         {
+            public int id;
             public string name;
             public string description;
             public string icon;
@@ -1429,12 +1430,12 @@ namespace Overlewd
         public class MagicGuildSkill
         {
             public string type;
-            public Current current;
-            public int? next;
+            public SkillData current;
+            public SkillData next;
             public int currentSkillLevel;
             public int maxSkillLevel;
 
-            public class Current
+            public class SkillData
             {
                 public int id;
                 public string name;
