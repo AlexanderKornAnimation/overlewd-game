@@ -166,6 +166,8 @@ namespace Overlewd
             zodiacName.text = girlData.paramZodiac;
             birthday.text = girlData.paramAge.ToString();
 
+            currentProgressLevel.text = girlData.currentEmpathyLevel?.ToString();
+            nextProgressLevel.text = girlData.nextEmpathyLevel?.ToString();
             switch (girlData.rewardsClaimed)
             {
                 case AdminBRO.MatriarchItem.RewardsClaimed_None:
