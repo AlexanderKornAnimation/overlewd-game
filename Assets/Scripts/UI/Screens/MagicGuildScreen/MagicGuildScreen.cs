@@ -44,21 +44,21 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             activeSpell = activeSpell_GO.AddComponent<NSMagicGuildScreen.Spell>();
-            activeSpell.skillData = GameData.buildings.magicGuild_activeSkill;
+            activeSpell.skillType = AdminBRO.MagicGuildSkill.Type_ActiveSkill;
 
             if (buildingData.currentLevel.HasValue)
             {
                 if (buildingData.currentLevel.Value >= 1)
                 {
                     ultimateSpell = ultimateSpell_GO.AddComponent<NSMagicGuildScreen.Spell>();
-                    ultimateSpell.skillData = GameData.buildings.magicGuild_ultimateSkill;
+                    ultimateSpell.skillType = AdminBRO.MagicGuildSkill.Type_UltimateSkill;
                 }
                 if (buildingData.currentLevel.Value >= 2)
                 {
                     passiveSpell1 = passiveSpell1_GO.AddComponent<NSMagicGuildScreen.Spell>();
-                    passiveSpell1.skillData = GameData.buildings.magicGuild_passiveSkill1;
+                    passiveSpell1.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill1;
                     passiveSpell2 = passiveSpell2_GO.AddComponent<NSMagicGuildScreen.Spell>();
-                    passiveSpell2.skillData = GameData.buildings.magicGuild_PassiveSkill2;
+                    passiveSpell2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
                 }
             }
 

@@ -18,9 +18,11 @@ namespace Overlewd
             private Button isMax;
             private Button isOpen;
 
-            public AdminBRO.MagicGuildSkill skillData;
+            public string skillType { get; set; }
+            public AdminBRO.MagicGuildSkill skillData =>
+                GameData.buildings.GetMagicGuildSkillByType(skillType);
             
-            private void Awake()
+            void Awake()
             {
                 isLocked = transform.Find("IsLocked").gameObject;
                 level = transform.Find("Level").GetComponent<TextMeshProUGUI>();
@@ -33,38 +35,43 @@ namespace Overlewd
                 isOpen.onClick.AddListener(IsOpenButtonClick);
             }
 
-            private void Start()
+            void Start()
             {
                 Customize();
             }
 
             public void Customize()
             {
+                var _skillData = skillData;
+
                 isLocked.SetActive(false);
-                level.text = skillData.isLvlMax ? "MAX" : "Lvl " + skillData.currentSkillLevel;
-                title.text = skillData.current.name;
-                icon.sprite = ResourceManager.LoadSprite(skillData.current.icon);
-                isMax.gameObject.SetActive(skillData.isLvlMax);
-                Debug.Log(skillData.current.name);
+                level.text = _skillData.isLvlMax ? "MAX" : "Lvl " + _skillData.currentSkillLevel;
+                title.text = _skillData.current.name;
+                icon.sprite = ResourceManager.LoadSprite(_skillData.current.icon);
+                isMax.gameObject.SetActive(_skillData.isLvlMax);
             }
 
             private void IsMaxButtonClick()
             {
+                var _skillData = skillData;
+
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakePopup<SpellPopup>().
                     SetData(new SpellPopupInData
                 {
-                    spellId = skillData.current.id
+                    spellId = _skillData.current.id
                 }).RunShowPopupProcess();
             }
 
             private void IsOpenButtonClick()
             {
+                var _skillData = skillData;
+
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakePopup<SpellPopup>().
                     SetData(new SpellPopupInData
                 {
-                    spellId = skillData.current.id,
+                    spellId = _skillData.current.id,
                 }).RunShowPopupProcess();
             }
         }
