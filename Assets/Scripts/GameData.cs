@@ -17,7 +17,8 @@ namespace Overlewd
             BuyTradable,
             BuildingBuild,
             BuildingBuildCrystal,
-            CharacterLvlUp
+            CharacterLvlUp,
+            MagicGuildSpellLvlUp
         }
     }
 
@@ -124,6 +125,24 @@ namespace Overlewd
         public AdminBRO.Building portal =>
             GetBuildingByKey(AdminBRO.Building.Key_Portal);
 
+        public AdminBRO.MagicGuildSkill GetMagicGuildSkillByType(string type) =>
+            magicGuildSkills.Find(s => s.type == type);
+
+        public AdminBRO.MagicGuildSkill GetMagicGuildSkillById(int id) =>
+            magicGuildSkills.Find(s => s.current.id == id);
+
+        public AdminBRO.MagicGuildSkill magicGuild_activeSkill =>
+            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_ActiveSkill);
+            
+        public AdminBRO.MagicGuildSkill magicGuild_ultimateSkill =>
+            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_UltimateSkill);
+            
+        public AdminBRO.MagicGuildSkill magicGuild_passiveSkill1 =>
+            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill1);
+           
+        public AdminBRO.MagicGuildSkill magicGuild_PassiveSkill2 =>
+            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill2);
+
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
@@ -163,6 +182,12 @@ namespace Overlewd
         {
             await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
+            await GameData.player.Get();
+            
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.MagicGuildSpellLvlUp
+            });
         }
     }
 

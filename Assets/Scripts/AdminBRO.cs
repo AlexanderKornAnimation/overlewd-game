@@ -1445,6 +1445,20 @@ namespace Overlewd
             public int currentSkillLevel;
             public int maxSkillLevel;
 
+            [JsonProperty(Required = Required.Default)]
+            public bool isLvlMax => currentSkillLevel == maxSkillLevel;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool canlvlUp => !isLvlMax && GameData.player.CanBuy(current.levelUpPrice);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool canUpgrade => isLvlMax && GameData.player.CanBuy(current.levelUpPrice);
+            
+            public const string Type_ActiveSkill = "overlord_enhanced_attack";
+            public const string Type_UltimateSkill = "overlord_ultimate_attack";
+            public const string Type_PassiveSkill1 = "overlord_first_passive_skill";
+            public const string Type_PassiveSkill2 = "overlord_second_passive_skill";
+
             public class SkillData
             {
                 public int id;

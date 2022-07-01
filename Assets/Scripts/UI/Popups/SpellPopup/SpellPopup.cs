@@ -37,10 +37,10 @@ namespace Overlewd
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
             crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
-            crystalBuildButton.onClick.AddListener(PaidBuildButtonClick);
+            crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
             
             buildButton = canvas.Find("BuildButton").GetComponent<Button>();
-            buildButton.onClick.AddListener(FreeBuildButtonClick);
+            buildButton.onClick.AddListener(BuildButtonClick);
             
             closeButton = canvas.Find("BackButton").GetComponent<Button>();
             closeButton.onClick.AddListener(CloseButtonClick);
@@ -52,6 +52,7 @@ namespace Overlewd
                 var resource = grid.Find($"Resource{i}").GetComponent<Image>();
                 resources.Add(resource);
                 count.Add(resource.transform.Find("Count").GetComponent<TextMeshProUGUI>());
+                resource.gameObject.SetActive(false);
             }
         }
 
@@ -63,20 +64,42 @@ namespace Overlewd
 
         private void Customize()
         {
+            var spellData = inputData?.spellData;
+            spellName.text = spellData?.current.name;
+            description.text = spellData?.current.description;
+            for (int i = 0; i < spellData?.current.levelUpPrice.Count; i++)
+            {
+                resources[i].gameObject.SetActive(true);
+                var currency = GameData.currencies.GetById(spellData?.current.levelUpPrice[i].currencyId);
+                resources[i].sprite = ResourceManager.LoadSprite(currency.icon356Url);
+                count[i].text = spellData.current.levelUpPrice[i].amount.ToString();
+                count[i].color = spellData.canlvlUp ? Color.white : Color.red;
+            }
+            
             FireballSpell.GetInstance(spawnPoint);
             UITools.FillWallet(currencyBack);
         }
 
-        private void PaidBuildButtonClick()
+        private async void CrystalBuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            var spellData = inputData?.spellData;
+            if (spellData != null && spellData.canlvlUp)
+            {
+                await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+            }
+            UIManager.HidePopup();
         }
 
-        private void FreeBuildButtonClick()
+        private async void BuildButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-            UIManager.ShowScreen<CastleScreen>();
+            var spellData = inputData?.spellData;
+            if (spellData != null && spellData.canlvlUp)
+            {
+                await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+            }
+            UIManager.HidePopup();
         }
 
         private void CloseButtonClick()
@@ -98,6 +121,7 @@ namespace Overlewd
 
     public class SpellPopupInData : BasePopupInData
     {
-
+        public int spellId;
+        public AdminBRO.MagicGuildSkill spellData => GameData.buildings.GetMagicGuildSkillById(spellId);
     }
 }
