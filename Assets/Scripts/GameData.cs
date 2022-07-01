@@ -318,6 +318,17 @@ namespace Overlewd
         }
 
         public AdminBRO.EventItem mapEventData { get; set; }
+
+        public AdminBRO.EventItem activeWeekly =>
+            events.Where(e => e.isWeekly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+        public AdminBRO.EventItem activeMonthly =>
+            events.Where(e => e.isMonthly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+        public AdminBRO.EventItem activeQuarterly =>
+            events.Where(e => e.isQuarterly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+        public AdminBRO.EventItem comingSoonMonthly =>
+            events.Where(e => e.isMonthly && TimeTools.LessTimeDiff(e.dateStart, TimeSpan.FromDays(30))).FirstOrDefault();
+        public AdminBRO.EventItem comingSoonQuarterly =>
+            events.Where(e => e.isQuarterly && TimeTools.LessTimeDiff(e.dateStart, TimeSpan.FromDays(30))).FirstOrDefault();
     }
 
     //markets

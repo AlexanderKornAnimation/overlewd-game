@@ -42,30 +42,32 @@ namespace Overlewd
             gameObject.AddComponent<BlendPulseSelector>();
         }
 
-        private void Start()
+        void Start()
         {
             Customize();
         }
         
-        protected virtual void Customize()
+        void Customize()
         {
-            foreach (var eventData in GameData.events.events)
+            var weekly = GameData.events.activeWeekly;
+            if (weekly != null)
             {
-                switch (eventData.type)
-                {
-                    case AdminBRO.EventItem.Type_Weekly:
-                        weeklyEventButton.gameObject.SetActive(true);
-                        weeklyEventTitle.text = eventData.name;
-                        break;
-                    case AdminBRO.EventItem.Type_Monthly:
-                        monthlyEventButton.gameObject.SetActive(true);
-                        monthlyEventTitle.text = eventData.name;
-                        break;
-                    case AdminBRO.EventItem.Type_Quarterly:
-                        quarterlyEventButton.gameObject.SetActive(true);
-                        quarterlyEventTitle.text = eventData.name;
-                        break;
-                }
+                weeklyEventButton.gameObject.SetActive(true);
+                weeklyEventTitle.text = weekly.name;
+            }
+
+            var monthly = GameData.events.activeMonthly;
+            if (monthly != null)
+            {
+                monthlyEventButton.gameObject.SetActive(true);
+                monthlyEventTitle.text = monthly.name;
+            }
+
+            var quarterly = GameData.events.activeQuarterly;
+            if (quarterly != null)
+            {
+                quarterlyEventButton.gameObject.SetActive(true);
+                quarterlyEventTitle.text = quarterly.name;
             }
         }
         

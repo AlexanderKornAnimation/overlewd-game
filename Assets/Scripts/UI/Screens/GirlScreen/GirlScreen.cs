@@ -195,7 +195,7 @@ namespace Overlewd
             if (!String.IsNullOrEmpty(girlData.seduceAvailableAt))
             {
                 UITools.DisableButton(sexButton);
-                StartCoroutine("SexCooldownUpd");
+                StartCoroutine(SexCooldownUpd());
             }
             else
             {

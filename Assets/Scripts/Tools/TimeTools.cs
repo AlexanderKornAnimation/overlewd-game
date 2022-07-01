@@ -7,6 +7,35 @@ namespace Overlewd
 {
     public static class TimeTools
     {
+        public static bool LessTimeDiff(string toDate, TimeSpan timeDiff)
+        {
+            var date = DateTime.Parse(toDate);
+            var now = DateTime.Now;
+            return now <= date ? (date - now) < timeDiff : false;
+        }
+
+        public static bool PeriodIsActive(string startDate, string endDate)
+        {
+            if (String.IsNullOrEmpty(startDate) || String.IsNullOrEmpty(endDate))
+                return false;
+
+            var start = DateTime.Parse(startDate);
+            var end = DateTime.Parse(endDate);
+            var now = DateTime.Now;
+            return now >= start && now <= end;
+        }
+
+        public static bool PeriodIsEnded(string startDate, string endDate)
+        {
+            if (String.IsNullOrEmpty(startDate) || String.IsNullOrEmpty(endDate))
+                return false;
+
+            var start = DateTime.Parse(startDate);
+            var end = DateTime.Parse(endDate);
+            var now = DateTime.Now;
+            return now > start && now > end;
+        }
+
         public static string AvailableTimeToString(string availableTime)
         {
             if (String.IsNullOrEmpty(availableTime))
@@ -29,7 +58,6 @@ namespace Overlewd
             {
                 s += day.ToString() + "d ";
                 s += hour.ToString("D2") + "h ";
-                s += min.ToString("D2") + "m";
             }
             else if (hour > 0)
             {

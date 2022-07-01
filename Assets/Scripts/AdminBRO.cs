@@ -462,6 +462,15 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public List<EventMarketItem> marketsData =>
                 markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isWeekly => type == Type_Weekly;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isMonthly => type == Type_Monthly;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isQuarterly => type == Type_Quarterly;
         }
         
 

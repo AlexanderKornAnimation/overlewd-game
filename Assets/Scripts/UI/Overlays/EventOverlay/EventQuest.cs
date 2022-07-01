@@ -27,6 +27,7 @@ namespace Overlewd
             private TextMeshProUGUI title;
             private TextMeshProUGUI description;
             private TextMeshProUGUI eventMark;
+            private TextMeshProUGUI timer;
 
             private List<Image> rewards = new List<Image>();
 
@@ -39,6 +40,7 @@ namespace Overlewd
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
                 eventMark = backWithClock.Find("EventMark").GetComponent<TextMeshProUGUI>();
+                timer = backWithClock.Find("Timer").GetComponent<TextMeshProUGUI>();
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
@@ -71,6 +73,9 @@ namespace Overlewd
                 rewards[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Copper");
 
                 mapButton.gameObject.AddComponent<BlendPulseSelector>();
+
+                StopCoroutine("TimerUpd");
+                StartCoroutine(TimerUpd());
             }
 
             private void ToMapClick()
@@ -87,6 +92,18 @@ namespace Overlewd
                 {
                     canvasActive = value;
                     canvas.gameObject.SetActive(canvasActive);
+                }
+            }
+
+            private IEnumerator TimerUpd()
+            {
+                var dateEnd = eventData.dateEnd;
+                var timeToEnd = TimeTools.AvailableTimeToString(dateEnd);
+                while (!String.IsNullOrEmpty(timeToEnd))
+                {
+                    timer.text = timeToEnd;
+                    yield return new WaitForSeconds(1.0f);
+                    timeToEnd = TimeTools.AvailableTimeToString(dateEnd);
                 }
             }
 
