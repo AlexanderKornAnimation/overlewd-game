@@ -133,7 +133,7 @@ namespace Overlewd
             var availableTime = girlData?.seduceAvailableAt;
             if (!String.IsNullOrEmpty(availableTime))
             {
-                var availableTimeStr = UITools.AvailableTimeToString(availableTime);
+                var availableTimeStr = TimeTools.AvailableTimeToString(availableTime);
                 if (String.IsNullOrEmpty(availableTimeStr))
                 {
                     await GameData.matriarchs.Get();
@@ -291,12 +291,12 @@ namespace Overlewd
 
         private IEnumerator SexCooldownUpd()
         {
-            var time = UITools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
+            var time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             while (!String.IsNullOrEmpty(time))
             {
                 sexCooldownTimer.text = time;
                 yield return new WaitForSeconds(1.0f);
-                time = UITools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
+                time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             }
             UnlockSexButton();
         }
