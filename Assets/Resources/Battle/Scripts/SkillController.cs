@@ -12,11 +12,11 @@ namespace Overlewd
         public AdminBRO.CharacterSkill skill;
         public bool isHeal => skill.actionType == "heal";
         private GameObject vfx => oldSkill.vfx;
-        private AudioClip sfx => oldSkill.sfx;
+        private string sfx => oldSkill.sfx;
 
         private Image image;
         [SerializeField] private Image effectSlot;
-        [SerializeField] private List<Sprite> effectIcons;
+        private List<Sprite> effectIcons;
         private GameObject selectBorder;
         public bool select;
         private Slider slider;
@@ -41,6 +41,7 @@ namespace Overlewd
 
         private void Awake()
         {
+            effectIcons = new List<Sprite>(Resources.LoadAll<Sprite>("Battle/Images/UI/Status/Big"));
             if (!potion && effectSlot == null) effectSlot = transform.Find("status").GetComponent<Image>();
             button = GetComponent<Button>();
             image = GetComponent<Image>();
@@ -129,55 +130,12 @@ namespace Overlewd
 
         void SetEffectIco()
         {
-            switch (skill.effect)
+            effectSlot.gameObject.SetActive(true);
+            effectSlot.sprite = effectIcons.Find(i => i.name == skill.effect);
+            if (effectSlot.sprite == null)
             {
-                case "defense_up":
-                    effectSlot.sprite = effectIcons[0];
-                    break;
-                case "defense_down":
-                    effectSlot.sprite = effectIcons[1];
-                    break;
-                case "focus":
-                    effectSlot.sprite = effectIcons[2];
-                    break;
-                case "blind":
-                    effectSlot.sprite = effectIcons[3];
-                    break;
-                case "regeneration":
-                    effectSlot.sprite = effectIcons[4];
-                    break;
-                case "poison":
-                    effectSlot.sprite = effectIcons[5];
-                    break;
-                case "bless":
-                    effectSlot.sprite = effectIcons[6];
-                    break;
-                case "heal_block":
-                    effectSlot.sprite = effectIcons[7];
-                    break;
-                case "silence":
-                    effectSlot.sprite = effectIcons[8];
-                    break;
-                case "immunity":
-                    effectSlot.sprite = effectIcons[9];
-                    break;
-                case "stun":
-                    effectSlot.sprite = effectIcons[10];
-                    break;
-                case "curse":
-                    effectSlot.sprite = effectIcons[11];
-                    break;
-                case "dispel":
-                    effectSlot.sprite = effectIcons[12];
-                    break;
-                case "safeguard":
-                    effectSlot.sprite = effectIcons[13];
-                    break;
-                default:
-                    effectSlot.sprite = effectIcons[0];
-                    break;
+                effectSlot.gameObject.SetActive(false);
             }
         }
-
     }
 }

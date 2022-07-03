@@ -16,8 +16,7 @@ MonoBehaviour:
   vfx: {fileID: 0}
   vfxOnTarget: {fileID: 5541813711829063474, guid: 3ae697746f32e8c43b507c8e504647f3, type: 3}
   vfxDuration: 0
-  sfx: {fileID: 0}
-  isHeal: 0
+  sfx: event:/Animations/Battle/Generic_Hits/Overlord_hit
   potion: 0
   prepairAnimationName: prepair1
   attackAnimationName: attack1

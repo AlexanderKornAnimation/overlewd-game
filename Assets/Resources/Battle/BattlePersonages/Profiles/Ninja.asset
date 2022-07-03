@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
-  m_Name: Witch
+  m_Name: Ninja
   m_EditorClassIdentifier: 
-  key: WITCH
-  ico: {fileID: 21300000, guid: e5ee79f741ac7844dafa412441826625, type: 3}
-  battlePortrait: {fileID: 21300000, guid: e5ee79f741ac7844dafa412441826625, type: 3}
-  bigPortrait: {fileID: 21300000, guid: 07470717f34a17b4f80abbb9c3b971e6, type: 3}
+  key: NINJA
+  ico: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
+  battlePortrait: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
+  bigPortrait: {fileID: 21300000, guid: e5ad9dad72c3efd439a767fa359a2f98, type: 3}
   idleScale: 1
   battleScale: 1.5
   skill:
@@ -23,8 +23,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/Witch/pers/Witch
-  characterPrefab: {fileID: 3318191500530290263, guid: 3fc151582f66b8348a0224c1ad9c0f8e, type: 3}
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/Ninja/pers/Ninja
+  characterPrefab: {fileID: 1697437348151993205, guid: 87dca6d050099d5469b8da5c5d9658e5, type: 3}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1

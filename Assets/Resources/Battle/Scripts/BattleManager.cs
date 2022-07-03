@@ -151,6 +151,7 @@ namespace Overlewd
             SetSkillCtrl(ccOnSelect);
             if (battleState == BattleState.PLAYER)
                 ccOnSelect.CharPortraitSet();
+            SoundManager.GetEventInstance(FMODEventPath.Music_Battle_BGM_1);
             //if (battleSettings.powerBuff)
             //    WinOrLose(wannaWin);
         }
@@ -250,9 +251,6 @@ namespace Overlewd
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.Z)) ButtonPress(0);
-            //if (Input.GetKeyDown(KeyCode.X)) ButtonPress(1);
-            //if (Input.GetKeyDown(KeyCode.C) && ccOnClick.isOverlord) ButtonPress(2);
             if (Input.GetKeyDown(KeyCode.R))
                 foreach (var cc in charControllerList)
                     if (cc.isEnemy == true && !cc.isDead)
@@ -428,6 +426,7 @@ namespace Overlewd
             if (potion_mp.potionAmount > 0 && overlord.mana < overlord.manaMax)
                 if (battleState == BattleState.PLAYER)
                 {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_Battle_Manapotion);
                     overlord.HealMP(Mathf.RoundToInt(overlord.manaMax * 0.2f));
                     potion_mp.InstVFX(overlord.persPos);
                     potion_mp.potionAmount--;
@@ -526,7 +525,7 @@ namespace Overlewd
                     BattleNotif("chapter1", "battle1", "battletutor2"); //one round later
                     BattleNotif("chapter1", "battle4", "bosstutor");
                 }
-                roundEnd?.Invoke();
+                roundEnd?.Invoke(); //снимает два статуса почему-то
                 round++;
                 step = 0;
             }
@@ -536,6 +535,7 @@ namespace Overlewd
             }
             qe.transform.SetSiblingIndex(maxStep); //Push element to back after Step++
             QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Portrait
+
             var cc = charControllerList[step];
             if (cc.isDead || cc.stun) //skip dead/stun character
             {

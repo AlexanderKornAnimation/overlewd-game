@@ -16,8 +16,7 @@ MonoBehaviour:
   vfx: {fileID: 5541813711829063474, guid: dfa91f97a81e5e5419d6dc294cf0695f, type: 3}
   vfxOnTarget: {fileID: 0}
   vfxDuration: 4.667
-  sfx: {fileID: 0}
-  isHeal: 1
+  sfx: event:/Animations/Battle/Overlord_AOE_Hits/AOE1
   potion: 0
   prepairAnimationName: prepair3
   attackAnimationName: attack3

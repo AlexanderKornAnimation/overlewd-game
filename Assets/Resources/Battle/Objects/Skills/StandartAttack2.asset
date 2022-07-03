@@ -16,8 +16,7 @@ MonoBehaviour:
   vfx: {fileID: 0}
   vfxOnTarget: {fileID: 5541813711829063474, guid: dbcf0b4fee0b54744b0971b588d526e5, type: 3}
   vfxDuration: 0
-  sfx: {fileID: 0}
-  isHeal: 1
+  sfx: event:/UI/Battle_Interface/Actions/Attack
   potion: 0
   prepairAnimationName: prepair2
   attackAnimationName: attack2

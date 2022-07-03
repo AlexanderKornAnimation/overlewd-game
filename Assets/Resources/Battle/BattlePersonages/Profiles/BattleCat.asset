@@ -18,13 +18,12 @@ MonoBehaviour:
   bigPortrait: {fileID: 21300000, guid: e29a8dc78cc9499408500d749e8cd8fc, type: 3}
   idleScale: 1
   battleScale: 1.5
-  yOffset: 0
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: BattlePersonages/BattleCat/pers/BattleCat
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/BattleCat/pers/BattleCat
   characterPrefab: {fileID: 6210005373736215966, guid: b359b50bc2569d44e83b12ecde197f43, type: 3}
   ani_idle_name: idle
   ani_pAttack_name:

@@ -26,6 +26,7 @@ namespace Overlewd
         public GameObject popUpPrefab;
 
         public CharacterRes characterRes;
+        public Skill[] skillRes => characterRes.skill;
         public AdminBRO.Character character;
 
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();// => character.skills;
@@ -174,7 +175,7 @@ namespace Overlewd
         {
             popUpPrefab = Resources.Load("Battle/Prefabs/BattlePopupText") as GameObject;
 
-            charStats.charCtrl = this;
+            charStats.cc = this;
             charStats.InitUI();
 
             bt = persPos.Find("button").GetComponent<Button>();
@@ -212,8 +213,14 @@ namespace Overlewd
             if (id >= skill.Count) id = 0; //if id overflow on skill array
 
             vfxDuration = characterRes.skill[id].vfxDuration;
-
             attackDuration = spineWidget.GetAnimationDuaration(characterRes.ani_attack_name[id]);
+
+            foreach (var ps in passiveSkill)
+            {
+                if (ps.trigger == "on_attack")
+                    if (ps.actionType == "heal")
+                        PassiveBuff(ps);
+            }
 
             var curseScale = curse > 0 ? curse_dot : 1f;
             damageTotal = Mathf.RoundToInt(damage * ((float)skill[id].amount / 100f) * buffDamageScale);
@@ -228,13 +235,20 @@ namespace Overlewd
             }
 
             if (isOverlord) mana -= skill[id].manaCost; //????
-
+            SoundManager.PlayOneShot(skillRes[id].sfx);             //SFX
             yield return new WaitForSeconds(preAttackDuration);
             if (characterRes.skill[id].vfx != null)
             {
                 Instantiate(characterRes.skill[id].vfx, battleLayer);
                 yield return new WaitForSeconds(vfxDuration);
             }
+            foreach (var ps in passiveSkill)
+            {
+                if (ps.trigger == "on_attack")
+                    if (ps.actionType == "damage")
+                        PassiveDeBuff(ps, target);
+            }
+            
             spineWidget.PlayAnimation(characterRes.ani_attack_name[id], false);
             yield return new WaitForSeconds(attackDuration);
             PlayIdle();
@@ -262,6 +276,15 @@ namespace Overlewd
 
             if (hit) AddEffect(attacker.skill[id]);
 
+            foreach (var ps in passiveSkill)
+            {
+                if (ps.trigger == "when_attacked")
+                    if (ps.actionType == "heal")
+                        PassiveBuff(ps);
+                    else
+                        PassiveDeBuff(ps, attacker);
+            }
+
             Debug.Log($"attacker.damage: {attacker.damageTotal}");
             Debug.Log($"hit {hit}, attacker.accuracy: {attacker.accuracy}");
             Debug.Log($"dodge {isDodge}, attacker.dodge: {dodge}");
@@ -286,6 +309,7 @@ namespace Overlewd
                 }
                 if (!isEnemy)
                     CharPortraitSet();
+                SoundManager.PlayOneShot(FMODEventPath.UI_Battle_SelectPers);
             }
         }
 
@@ -379,103 +403,236 @@ namespace Overlewd
             UpdateUI();
         }
 
-        void AddEffect(AdminBRO.CharacterSkill sk)
+        void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null)
         {
-            bool hit = sk.effectProb > Random.Range(0, 100);
-            if (hit)
-            {
-                var duration = Mathf.RoundToInt(sk.effectActingDuration);
-                float ea = sk.effectAmount;
-                float effectAmount = healthMax * (ea / 100f);
-                switch (sk.effect)
+            if (targetCC == null) targetCC = this;
+            bool hit = sk.effectProb >= Random.Range(0, 100);
+            if (sk.effect != null)
+                if (hit)
                 {
-                    case "defense_up":
-                        defUp_defDown = duration;
-                        defUp_defDown_dot = ea / 100f;
-                        DrawPopup(msg_defence_up, "green");
-                        break;
-                    case "defense_down":
-                        if (immunity == 0)
-                        {
-                            defUp_defDown = -duration;
-                            defUp_defDown_dot = effectAmount;
-                            DrawPopup(msg_defence_down, "red");
-                        }
-                        else
+                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    float ea = sk.effectAmount;
+                    float effectAmount = healthMax * (ea / 100f);
+                    switch (sk.effect)
+                    {
+                        case "defense_up":
+                            defUp_defDown = duration;
+                            defUp_defDown_dot = ea / 100f;
+                            DrawPopup(msg_defence_up, "green");
+                            break;
+                        case "defense_down":
+                            if (immunity == 0)
+                            {
+                                defUp_defDown = -duration;
+                                defUp_defDown_dot = effectAmount;
+                                DrawPopup(msg_defence_down, "red");
+                            }
+                            else
+                                DrawPopup(msg_immunity, "green");
+                            break;
+                        case "focus":
+                            focus_blind = duration;
+                            break;
+                        case "blind":
+                            if (immunity == 0)
+                                focus_blind = -duration;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "regeneration":
+                            regen_poison = duration;
+                            regen_poison_dot = -effectAmount;
+                            break;
+                        case "poison":
+                            if (immunity == 0)
+                            {
+                                regen_poison = -duration;
+                                regen_poison_dot = effectAmount;
+                                DrawPopup(msg_poison, "red");
+                            }
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "bless":
+                            bless_healBlock = duration;
+                            bless_dot = effectAmount;
+                            break;
+                        case "heal_block":
+                            if (immunity == 0)
+                                bless_healBlock = -duration;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "silence":
+                            if (immunity == 0)
+                                silence = duration;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "immunity":
+                            immunity = duration;
                             DrawPopup(msg_immunity, "green");
-                        break;
-                    case "focus":
-                        focus_blind = duration;
-                        break;
-                    case "blind":
-                        if (immunity == 0)
-                            focus_blind = -duration;
-                        else
-                            DrawPopup(msg_immunity, "blue");
-                        break;
-                    case "regeneration":
-                        regen_poison = duration;
-                        regen_poison_dot = -effectAmount;
-                        break;
-                    case "poison":
-                        if (immunity == 0)
-                        {
-                            regen_poison = -duration;
-                            regen_poison_dot = effectAmount;
-                            DrawPopup(msg_poison, "red");
-                        }
-                        else
-                            DrawPopup(msg_immunity, "blue");
-                        break;
-                    case "bless":
-                        bless_healBlock = duration;
-                        bless_dot = effectAmount;
-                        break;
-                    case "heal_block":
-                        if (immunity == 0)
-                            bless_healBlock = -duration;
-                        else
-                            DrawPopup(msg_immunity, "blue");
-                        break;
-                    case "silence":
-                        if (immunity == 0)
-                            silence = duration;
-                        else
-                            DrawPopup(msg_immunity, "blue");
-                        break;
-                    case "immunity":
-                        immunity = duration;
-                        DrawPopup(msg_immunity, "green");
-                        break;
-                    case "stun":
-                        if (immunity == 0)
-                            stun = true;
-                        else
-                            DrawPopup(msg_immunity, "blue");
-                        break;
-                    case "curse":
-                        if (immunity == 0)
-                        {
-                            curse = duration;
-                            curse_dot = ea / 100f; //Calculate in total damage
-                        }
-                        break;
-                    case "dispel":
-                        Dispel();
-                        break;
-                    case "safeguard":
-                        Safeguard();
-                        break;
-                    default:
-                        Debug.LogError($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}");
-                        break;
+                            break;
+                        case "stun":
+                            if (immunity == 0)
+                                stun = true;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "curse":
+                            if (immunity == 0)
+                            {
+                                curse = duration;
+                                curse_dot = ea / 100f; //Calculate in total damage
+                            }
+                            break;
+                        case "dispel":
+                            Dispel();
+                            break;
+                        case "safeguard":
+                            Safeguard();
+                            break;
+                        default:
+                            Debug.LogError($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}");
+                            break;
+                    }
+                    observer.UpdateStatuses();
                 }
-                observer.UpdateStatuses();
-            }
-            else
-            {
-                DrawPopup("Effect miss", "red");
-            }
+                else
+                {
+                    DrawPopup("Effect miss", "red");
+                }
+        }
+        void PassiveBuff(AdminBRO.CharacterSkill sk)
+        {
+            bool isCrit = critrate > Random.value;
+
+            Damage(sk.amount, true, false, isCrit);
+            bool hitEffect = sk.effectProb >= Random.Range(0, 100);
+
+            if (sk.effect != null)
+                if (hitEffect)
+                {
+                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    float ea = sk.effectAmount;
+                    float effectAmount = healthMax * (ea / 100f);
+                    switch (sk.effect)
+                    {
+                        case "defense_up":
+                            defUp_defDown = duration;
+                            defUp_defDown_dot = ea / 100f;
+                            DrawPopup(msg_defence_up, "green");
+                            break;
+                        case "focus":
+                            focus_blind = duration;
+                            break;
+                        case "regeneration":
+                            regen_poison = duration;
+                            regen_poison_dot = -effectAmount;
+                            break;
+                        case "bless":
+                            bless_healBlock = duration;
+                            bless_dot = effectAmount;
+                            break;
+                        case "immunity":
+                            immunity = duration;
+                            DrawPopup(msg_immunity, "green");
+                            break;
+                        case "dispel":
+                            Dispel();
+                            break;
+                        case "safeguard":
+                            Safeguard();
+                            break;
+                        default:
+                            Debug.LogError($"Unknow Value or Debuff Effect on Passive Heal AdminBRO.CharacterSkill.effect: {sk.effect}");
+                            break;
+                    }
+                    observer.UpdateStatuses();
+                }
+                else
+                {
+                    DrawPopup("Passive effect miss", "red");
+                }
+        }
+        void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
+        {
+            bool isCrit = critrate > Random.value;
+
+            Damage(sk.amount, true, false, isCrit);
+            bool hitEffect = sk.effectProb >= Random.Range(0, 100);
+            if (sk.effect != null)
+                if (hitEffect)
+                {
+                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    float ea = sk.effectAmount;
+                    float effectAmount = targetCC.healthMax * (ea / 100f);
+                    switch (sk.effect)
+                    {
+                        case "defense_down":
+                            if (targetCC.immunity == 0)
+                            {
+                                targetCC.defUp_defDown = -duration;
+                                targetCC.defUp_defDown_dot = effectAmount;
+                                DrawPopup(msg_defence_down, "red");
+                            }
+                            else
+                                DrawPopup(msg_immunity, "green");
+                            break;
+                        case "blind":
+                            if (targetCC.immunity == 0)
+                                targetCC.focus_blind = -duration;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "poison":
+                            if (targetCC.immunity == 0)
+                            {
+                                targetCC.regen_poison = -duration;
+                                targetCC.regen_poison_dot = effectAmount;
+                                DrawPopup(msg_poison, "red");
+                            }
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "heal_block":
+                            if (targetCC.immunity == 0)
+                                targetCC.bless_healBlock = -duration;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "silence":
+                            if (targetCC.immunity == 0)
+                                targetCC.silence = duration;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "stun":
+                            if (targetCC.immunity == 0)
+                                targetCC.stun = true;
+                            else
+                                DrawPopup(msg_immunity, "blue");
+                            break;
+                        case "curse":
+                            if (targetCC.immunity == 0)
+                            {
+                                targetCC.curse = duration;
+                                targetCC.curse_dot = ea / 100f; //Calculate in total damage
+                            }
+                            break;
+                        case "dispel":
+                            Dispel();
+                            break;
+                        default:
+                            Debug.LogError($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}");
+                            break;
+                    }
+                    observer.UpdateStatuses();
+                }
+                else
+                {
+                    DrawPopup("Effect miss", "red");
+                }
         }
         public void Dispel()
         {

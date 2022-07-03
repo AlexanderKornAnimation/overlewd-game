@@ -18,13 +18,12 @@ MonoBehaviour:
   bigPortrait: {fileID: 21300000, guid: 12f4c2b1c00e850419188f3919f0785f, type: 3}
   idleScale: 1
   battleScale: 1.5
-  yOffset: 0
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: BattlePersonages/MageCat/pers/MageCat
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/MageCat/pers/MageCat
   characterPrefab: {fileID: 1601382160976312766, guid: 8a671c4a548095e4d96c97f8f43e735c, type: 3}
   ani_idle_name: Idle
   ani_pAttack_name:

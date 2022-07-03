@@ -12,13 +12,9 @@ namespace Overlewd
         public GameObject vfx = null;
         public GameObject vfxOnTarget = null;
         public float vfxDuration = 0f;
-        public AudioClip sfx = null;
+        public string sfx = null;
 
         public bool potion;
-
-        public string
-            prepairAnimationName = "",
-            attackAnimationName = "attack1";
 
         public int damage; // damage/healpower/buff/curse etc...
 
