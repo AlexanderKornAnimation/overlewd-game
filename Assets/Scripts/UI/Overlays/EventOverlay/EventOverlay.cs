@@ -92,20 +92,14 @@ namespace Overlewd
             eventButtonText[tabId].text = eventData.name;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
-            foreach (var quest in GameData.quests.quests)
+            foreach (var questId in eventData.quests)
             {
-                if (quest.eventId.HasValue)
-                {
-                    if (quest.eventId.Value == eventData.id)
-                    {
-                        var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
-                        eventQuest.eventId = eventData.id;
-                        eventQuest.questId = quest.eventId.Value;
-                        eventQuest.SetCanvasActive(false);
+                var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
+                eventQuest.eventId = eventData.id;
+                eventQuest.questId = questId;
+                eventQuest.SetCanvasActive(false);
 
-                        tabEventQuests[tabId].Add(eventQuest);
-                    }
-                }
+                tabEventQuests[tabId].Add(eventQuest);
             }
             var descr = NSEventOverlay.EventDescription.GetInstance(tabScrollViewContent);
             descr.eventId = eventData.id;

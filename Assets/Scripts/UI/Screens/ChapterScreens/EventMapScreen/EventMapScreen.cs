@@ -119,7 +119,7 @@ namespace Overlewd
 
             foreach (var eventMarketData in GameData.events.mapEventData.marketsData)
             {
-                var mapNode = chapterMap.transform.Find(eventMarketData.eventMapNodeName);
+                var mapNode = chapterMap.transform.Find(eventMarketData.eventMapNodeName ?? "");
                 if (mapNode != null)
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(mapNode);

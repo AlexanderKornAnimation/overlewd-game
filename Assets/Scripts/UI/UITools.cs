@@ -21,7 +21,7 @@ namespace Overlewd
             {
                 var item = GameData.markets.GetTradableById(reward.tradableId);
                 
-                if (item.type == AdminBRO.TradableItem.Type_Currency)
+                if (item?.type == AdminBRO.TradableItem.Type_Currency)
                 {
                     str += GameData.currencies.GetById(item.currencyId).sprite + " ";
                 }

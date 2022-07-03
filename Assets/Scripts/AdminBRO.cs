@@ -177,6 +177,21 @@ namespace Overlewd
             public string updatedAt;
             public List<int> tradables;
             public List<int> currencies;
+            public List<Tab> tabs;
+
+            public class Tab
+            {
+                public string title;
+                public bool isDefault;
+                public string icon;
+                public string banner;
+                public string viewType;
+                public List<int> goods;
+
+                public const string ViewTab_GoodsList = "goods_list";
+                public const string ViewTab_Bundle = "bundle";
+                public const string ViewTab_Pack = "pack";
+            }
 
             [JsonProperty(Required = Required.Default)]
             public List<TradableItem> tradablesData =>
@@ -356,7 +371,7 @@ namespace Overlewd
             public int? durationInDays;
             public List<int> stages;
             public int? order;
-            public List<EventChapterReward> rewards;
+            public List<RewardItem> rewards;
 
             public class EventChapterReward
             {
@@ -1467,23 +1482,17 @@ namespace Overlewd
                 public string actionType;
                 public bool AOE;
                 public float amount;
-                public float amountBoost;
                 public string effect;
                 public string type;
                 public string trigger;
                 public float effectAmount;
-                public float effectAmountBoost;
                 public float effectProb;
-                public float effectProbBoost;
                 public string icon;
                 public float effectActingDuration;
-                public float effectActingDurationBoost;
                 public float effectCooldownDuration;
-                public float effectCooldownDurationBoost;
                 public float manaCost;
-                public float manaCostBoost;
                 public List<PriceItem> levelUpPrice;
-                public List<PriceItem> levelUpPriceBoost;
+                public int level;
             }
         }
 
