@@ -69,10 +69,13 @@ namespace Overlewd
                 {
                     reward.gameObject.SetActive(false);
                 }
+
                 var rId = 0;
-                foreach(var rewardData in _questData.rewards)
+                foreach (var rewardData in _questData.rewards)
                 {
+                    
                     var reward = rewards[rId];
+                    rId++;
                     var rIcon = reward.Find("Item").GetComponent<Image>();
                     var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
