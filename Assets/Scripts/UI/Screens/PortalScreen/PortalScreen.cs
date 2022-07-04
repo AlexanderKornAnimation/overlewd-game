@@ -101,10 +101,6 @@ namespace Overlewd
                 newTab.gachaId = gacha.id;
                 AddTab(newTab, battleGirlsTabs);
             }
-            else
-            {
-                Debug.Log("NULL GACHA");
-            }
 
             return newTab;
         }
