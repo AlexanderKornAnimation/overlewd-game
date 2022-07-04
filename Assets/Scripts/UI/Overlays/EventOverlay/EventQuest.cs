@@ -76,10 +76,7 @@ namespace Overlewd
                     var rIcon = reward.Find("Item").GetComponent<Image>();
                     var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                    var rSprite = ResourceManager.LoadSprite(rewardData.icon);
-                    rIcon.sprite = rSprite != null ?
-                        rSprite :
-                        ResourceManager.LoadSprite(GameData.markets.GetTradableById(rewardData.tradableId)?.imageUrl);
+                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData.icon70);
                     rIcon.preserveAspect = true;
                     rCount.text = rewardData.amount?.ToString();
                     reward.gameObject.SetActive(true);

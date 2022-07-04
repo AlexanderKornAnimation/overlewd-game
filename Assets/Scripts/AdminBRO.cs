@@ -30,6 +30,10 @@ namespace Overlewd
             public string icon;
             public int? amount;
             public int? tradableId;
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.TradableItem tradableData =>
+                GameData.markets.GetTradableById(tradableId);
         }
 
         // /version
@@ -296,6 +300,28 @@ namespace Overlewd
             
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.CurrencyItem currencyData =>
+                GameData.currencies.GetById(currencyId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => currencyData?.iconUrl ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon70 => currencyData?.icon70Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon153 => currencyData?.icon153Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon186 => currencyData?.icon186Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon256 => currencyData?.icon256Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon356 => currencyData?.icon356Url ?? imageUrl;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
