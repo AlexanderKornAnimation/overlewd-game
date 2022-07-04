@@ -29,7 +29,7 @@ namespace Overlewd
             private TextMeshProUGUI eventMark;
             private TextMeshProUGUI timer;
 
-            private List<Image> rewards = new List<Image>();
+            private List<Transform> rewards = new List<Transform>();
 
             void Awake()
             {
@@ -44,6 +44,11 @@ namespace Overlewd
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
+
+                for (int i = 1; i <= 5; i++)
+                {
+                    rewards.Add(backWithClock.Find($"Reward{i}"));
+                }
             }
 
             void Start()
@@ -60,17 +65,25 @@ namespace Overlewd
                 title.text = _questData?.name;
                 description.text = _questData?.description;
 
-                for (int i = 1; i <= 5; i++)
+                foreach (var reward in rewards)
                 {
-                    rewards.Add(transform.Find("Canvas").Find("BackWithClock").Find($"Reward{i}").Find("Item")
-                        .GetComponent<Image>());
+                    reward.gameObject.SetActive(false);
                 }
+                var rId = 0;
+                foreach(var rewardData in _questData.rewards)
+                {
+                    var reward = rewards[rId];
+                    var rIcon = reward.Find("Item").GetComponent<Image>();
+                    var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                rewards[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
-                rewards[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
-                rewards[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
-                rewards[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
-                rewards[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Copper");
+                    var rSprite = ResourceManager.LoadSprite(rewardData.icon);
+                    rIcon.sprite = rSprite != null ?
+                        rSprite :
+                        ResourceManager.LoadSprite(GameData.markets.GetTradableById(rewardData.tradableId)?.imageUrl);
+                    rIcon.preserveAspect = true;
+                    rCount.text = rewardData.amount?.ToString();
+                    reward.gameObject.SetActive(true);
+                }
 
                 mapButton.gameObject.AddComponent<BlendPulseSelector>();
 
