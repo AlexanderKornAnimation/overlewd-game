@@ -53,25 +53,21 @@ namespace Overlewd
 
             private void IsMaxButtonClick()
             {
-                var _skillData = skillData;
-
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakePopup<SpellPopup>().
                     SetData(new SpellPopupInData
                 {
-                    spellId = _skillData.current.id
+                    spellId = skillData.current.id
                 }).RunShowPopupProcess();
             }
 
             private void IsOpenButtonClick()
             {
-                var _skillData = skillData;
-
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakePopup<SpellPopup>().
                     SetData(new SpellPopupInData
                 {
-                    spellId = _skillData.current.id,
+                    spellId = skillData.current.id
                 }).RunShowPopupProcess();
             }
         }

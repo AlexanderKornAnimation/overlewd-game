@@ -82,22 +82,38 @@ namespace Overlewd
 
         private async void CrystalBuildButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             var spellData = inputData?.spellData;
-            if (spellData != null && spellData.canlvlUp)
+            if (spellData != null)
             {
-                await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                if (spellData.canlvlUp)
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
+                    await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                }
+                else
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                    UIManager.ShowPopup<DeclinePopup>();
+                }
             }
             UIManager.HidePopup();
         }
 
         private async void BuildButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
             var spellData = inputData?.spellData;
-            if (spellData != null && spellData.canlvlUp)
+            if (spellData != null)
             {
-                await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                if (spellData.canlvlUp)
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
+                    await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                }
+                else
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                    UIManager.ShowPopup<DeclinePopup>();
+                }
             }
             UIManager.HidePopup();
         }

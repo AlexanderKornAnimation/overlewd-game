@@ -72,10 +72,10 @@ namespace Overlewd
             switch (eventData.type)
             {
                 case GameDataEvent.Type.MagicGuildSpellLvlUp:
-                    activeSpell.Customize();
-                    ultimateSpell.Customize();
-                    passiveSpell1.Customize();
-                    passiveSpell2.Customize();
+                    activeSpell?.Customize();
+                    ultimateSpell?.Customize();
+                    passiveSpell1?.Customize();
+                    passiveSpell2?.Customize();
                     break;
             }
         }
