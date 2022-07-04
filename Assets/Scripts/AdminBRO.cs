@@ -1033,7 +1033,7 @@ namespace Overlewd
         {
             public int id;
             public int? characterId;
-            public int? characterClassId;
+            public string characterClass;
             public string name;
             public float speed;
             public float power;
@@ -1604,8 +1604,8 @@ namespace Overlewd
             public const string TabType_OverlordEquipment = "overlord_equipment";
             public const string TabType_Shards = "shards";
 
-            public const string Type_Linear = "linear";
-            public const string Type_Stepwise = "stepwise";
+            public const string Type_TargetByCount = "target_by_count";
+            public const string Type_TargetByTier = "target_by_tier";
         }
 
         // /matriarchs
