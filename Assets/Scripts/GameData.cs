@@ -272,18 +272,6 @@ namespace Overlewd
             await Get();
         }
 
-        public async Task Equip(int chId, int eqId)
-        {
-            await AdminBRO.equipAsync(chId, eqId);
-            await Get();
-        }
-
-        public async Task Unequip(int chId, int eqId)
-        {
-            await AdminBRO.unequipAsync(chId, eqId);
-            await Get();
-        }
-
         public List<AdminBRO.Character> myTeamCharacters =>
             characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
         public AdminBRO.Character overlord =>
@@ -308,6 +296,20 @@ namespace Overlewd
 
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
+
+        public async Task Equip(int chId, int eqId)
+        {
+            await AdminBRO.equipAsync(chId, eqId);
+            await GameData.characters.Get();
+            await Get();
+        }
+
+        public async Task Unequip(int chId, int eqId)
+        {
+            await AdminBRO.unequipAsync(chId, eqId);
+            await GameData.characters.Get();
+            await Get();
+        }
     }
 
     //events
