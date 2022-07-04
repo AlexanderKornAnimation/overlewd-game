@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +31,16 @@ namespace Overlewd
         private GameObject[] scrollViews = new GameObject[tabsCount];
         private Transform[] scrollContents = new Transform[tabsCount];
 
+        private GameObject slotFull;
+        private GameObject slotEmptyHint;
+        private Image weaponIcon;
+        private TextMeshProUGUI speed;
+        private TextMeshProUGUI accuracy;
+        private TextMeshProUGUI power;
+        private TextMeshProUGUI critChance;
+        private TextMeshProUGUI effectDescription;
+        private Image weaponEffectRarity;
+
         private void Awake()
         {
             var screenInst =
@@ -37,12 +50,25 @@ namespace Overlewd
             var tabsArea = canvas.Find("TabsArea");
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var weaponsBack = canvas.Find("WeaponsBack");
+            var weaponSlot = canvas.Find("WeaponSlot");
 
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             portalButton.onClick.AddListener(PortalButtonClick);
             
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
+
+            slotFull = weaponSlot.Find("SlotFull").gameObject;
+            slotEmptyHint = weaponSlot.Find("SlotEmptyHint").gameObject;
+            weaponIcon = slotFull.transform.Find("WeaponIcon").GetComponent<Image>();
+            weaponEffectRarity = slotFull.transform.Find("WeaponEffect").GetComponent<Image>();
+            effectDescription = weaponEffectRarity.transform.Find("EffectDescription").GetComponent<TextMeshProUGUI>();
+
+            var stats = slotFull.transform.Find("Stats");
+            speed = stats.Find("Speed").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();
+            power = stats.Find("Power").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();
+            accuracy = stats.Find("Accuracy").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();
+            critChance = stats.Find("CritChance").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();            
 
             foreach (var i in tabIds)
             {
@@ -61,6 +87,64 @@ namespace Overlewd
             }
 
             EnterTab(activeTabId);
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            Customize();
+            await Task.CompletedTask;
+        }
+
+        private void CustomizeSlot(NSWeaponScreen.Weapon weapon)
+        {
+            var weaponData = weapon.weaponData;
+
+            slotFull.SetActive(weaponData.isEquipped);
+
+            if (weaponData.isEquipped)
+            {
+                speed.text = "+" + weaponData.speed;
+                power.text = "+" + weaponData.power;
+                accuracy.text = "+" + weaponData.accuracy + "%";
+                critChance.text = "+" + weaponData.critrate + "%";
+            }
+            
+            weapon.Customize();
+        }
+        
+        private void Customize()
+        {
+            foreach (var equip in GameData.equipment.equipment)
+            {
+                var weapon = NSWeaponScreen.Weapon.GetInstance(scrollContents[tabAllUnits]);
+                InitWeapon(weapon, equip.id);
+                
+                var weaponData = GameData.equipment.GetById(equip.id);
+
+                var tabId = weaponData.characterClass switch
+                {
+                    AdminBRO.Equipment.Class_Bruiser => tabBruisers,
+                    AdminBRO.Equipment.Class_Assassin => tabAssassins,
+                    AdminBRO.Equipment.Class_Caster => tabCasters,
+                    AdminBRO.Equipment.Class_Tank => tabTanks,
+                    AdminBRO.Equipment.Class_Healer => tabHealers,
+                    _=> tabAllUnits
+                };
+                // weapon = NSWeaponScreen.Weapon.GetInstance(scrollContents[tabId]);
+                // InitWeapon(weapon, equip.id);
+            }
+        }
+
+        private void InitWeapon(NSWeaponScreen.Weapon weapon, int equipId)
+        {
+            if (inputData != null)
+            {
+                weapon.characterId = inputData.characterId;
+                weapon.weaponId = equipId;
+                weapon.onEquip += CustomizeSlot;
+                weapon.onUnequip += CustomizeSlot;
+                CustomizeSlot(weapon);
+            }
         }
         
         private void TabClick(int tabId)
@@ -109,6 +193,7 @@ namespace Overlewd
 
     public class WeaponScreenInData : BaseFullScreenInData
     {
-        
+        public int? characterId;
+        public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
     }
 }

@@ -1045,6 +1045,15 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEquipped => characterId.HasValue;
+
+            public const string Class_Assassin = "Assassin";
+            public const string Class_Bruiser = "Bruiser";
+            public const string Class_Tank = "Tank";
+            public const string Class_Caster = "Caster";
+            public const string Class_Healer = "Healer";
         }
 
         //ftue

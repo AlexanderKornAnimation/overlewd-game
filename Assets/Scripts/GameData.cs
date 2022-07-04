@@ -18,7 +18,7 @@ namespace Overlewd
             BuildingBuild,
             BuildingBuildCrystal,
             CharacterLvlUp,
-            MagicGuildSpellLvlUp
+            MagicGuildSpellLvlUp,
         }
     }
 

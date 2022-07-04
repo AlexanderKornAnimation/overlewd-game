@@ -225,7 +225,8 @@ namespace Overlewd
                 {
                     prevScreenInData = inputData,
                     ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
+                    eventStageId = inputData.eventStageId,
+                    characterId = inputData.characterId
                 }).RunShowScreenProcess();
             }
         }
