@@ -8,7 +8,7 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-        public class TabStepwise : BaseTab
+        public class TabByTier : BaseTab
         {
             private Button buyButton;
             private TextMeshProUGUI buyButtonText;
@@ -50,10 +50,10 @@ namespace Overlewd
                 }).RunShowScreenProcess();
             }
             
-            public static TabStepwise GetInstance(Transform parent)
+            public static TabByTier GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<TabStepwise>
-                    ("Prefabs/UI/Screens/PortalScreen/TabStepwise", parent);
+                return ResourceManager.InstantiateWidgetPrefab<TabByTier>
+                    ("Prefabs/UI/Screens/PortalScreen/TabByTier", parent);
             }
         }
     }

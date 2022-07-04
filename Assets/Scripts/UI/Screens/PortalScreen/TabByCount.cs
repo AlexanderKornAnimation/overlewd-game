@@ -8,7 +8,7 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-        public class TabLinear : BaseTab
+        public class TabByCount: BaseTab
         {
             private Button buyOneButton;
             private TextMeshProUGUI priceForOne;
@@ -66,10 +66,10 @@ namespace Overlewd
                 }).RunShowScreenProcess();
             }
 
-            public static TabLinear GetInstance(Transform parent)
+            public static TabByCount GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<TabLinear>
-                    ("Prefabs/UI/Screens/PortalScreen/TabLinear", parent);
+                return ResourceManager.InstantiateWidgetPrefab<TabByCount>
+                    ("Prefabs/UI/Screens/PortalScreen/TabByCount", parent);
             }
         }
     }

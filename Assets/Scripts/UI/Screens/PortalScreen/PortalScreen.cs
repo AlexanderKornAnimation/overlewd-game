@@ -86,7 +86,29 @@ namespace Overlewd
             var tabRect = tab.GetComponent<RectTransform>();
             tabRect.anchoredPosition = new Vector2(lastTabPos.x + offsetX, lastTabPos.y);
         }
-        
+
+        private NSPortalScreen.BaseTab InstNewTab(AdminBRO.GachItem gacha, List<NSPortalScreen.BaseTab> tabsStorage)
+        {
+            NSPortalScreen.BaseTab newTab = gacha.type switch
+            {
+                AdminBRO.GachItem.Type_TargetByCount => NSPortalScreen.TabByCount.GetInstance(contents[buttonBattleGirls].transform),
+                AdminBRO.GachItem.Type_TargetByTier => NSPortalScreen.TabByTier.GetInstance(contents[buttonBattleGirls].transform),
+                _ => null
+            };
+
+            if (newTab != null)
+            {
+                newTab.gachaId = gacha.id;
+                AddTab(newTab, battleGirlsTabs);
+            }
+            else
+            {
+                Debug.Log("NULL GACHA");
+            }
+
+            return newTab;
+        }
+
         private void Customize()
         {
             foreach (var gacha in GameData.gacha.items)
@@ -94,52 +116,16 @@ namespace Overlewd
                 switch (gacha.tabType)
                 {
                     case AdminBRO.GachItem.TabType_Matriachs:
-                        {
-                            NSPortalScreen.BaseTab newTab = gacha.type switch
-                            {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonBattleGirls].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonBattleGirls].transform),
-                                _ => null
-                            };
-                            newTab.gachaId = gacha.id;
-                            AddTab(newTab, battleGirlsTabs);
-                        }
+                        InstNewTab(gacha, battleGirlsTabs);
                         break;
                     case AdminBRO.GachItem.TabType_CharactersEquipment:
-                        {
-                            NSPortalScreen.BaseTab newTab = gacha.type switch
-                            {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonBattleGirlsEquip].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonBattleGirlsEquip].transform),
-                                _ => null
-                            };
-                            newTab.gachaId = gacha.id;
-                            AddTab(newTab, battleGirlsEquipTabs);
-                        }
+                        InstNewTab(gacha, battleGirlsEquipTabs);
                         break;
                     case AdminBRO.GachItem.TabType_OverlordEquipment:
-                        {
-                            NSPortalScreen.BaseTab newTab = gacha.type switch
-                            {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonOverlordEquip].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonOverlordEquip].transform),
-                                _ => null
-                            };
-                            newTab.gachaId = gacha.id;
-                            AddTab(newTab, overlordTabs);
-                        }
+                        InstNewTab(gacha, overlordTabs);
                         break;
                     case AdminBRO.GachItem.TabType_Shards:
-                        {
-                            NSPortalScreen.BaseTab newTab = gacha.type switch
-                            {
-                                AdminBRO.GachItem.Type_Linear => NSPortalScreen.TabLinear.GetInstance(contents[buttonShards].transform),
-                                AdminBRO.GachItem.Type_Stepwise => NSPortalScreen.TabStepwise.GetInstance(contents[buttonShards].transform),
-                                _ => null
-                            };
-                            newTab.gachaId = gacha.id;
-                            AddTab(newTab, shardsTabs);
-                        }
+                        InstNewTab(gacha, shardsTabs);
                         break;
                 }
             }
