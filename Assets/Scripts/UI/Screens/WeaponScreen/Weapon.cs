@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,8 +26,6 @@ namespace Overlewd
             public int? characterId;
             public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
 
-            public event Action<Weapon> onEquip;
-            public event Action<Weapon> onUnequip;
 
             private void Awake()
             {
@@ -50,16 +49,32 @@ namespace Overlewd
             public void Customize()
             {
                 forAnotherClass.SetActive(weaponData.characterClass != characterData.characterClass);
-                bool isEquipped = characterId == weaponData.characterId || weaponData.isEquipped;
-                notificationEquipped.SetActive(isEquipped);
+                notificationEquipped.SetActive(weaponData.isEquipped);
+                equippedCharacterIcon.gameObject.SetActive(!weaponData.IsMy(characterId));
+
+                weaponIcon.color = weaponData.isEquipped ? Color.gray : Color.white;
                 
-                if (weaponData.isEquipped && weaponData.characterId != characterId)
+                if (weaponData.IsMy(characterId))
+                {
+                    transform.SetAsFirstSibling();
+                }
+                else
                 {
                     var equippedCharacter = GameData.characters.GetById(weaponData.characterId);
-                    equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter.teamEditPersIcon);
+                    // equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter.teamEditPersIcon);
                 }
             }
 
+            public async Task Equip(int chId, int eqId)
+            {
+                await GameData.equipment.Equip(chId, eqId);
+            }
+
+            public async Task Unequip(int chId, int eqId)
+            {
+                await GameData.equipment.Unequip(chId, eqId);
+            }
+            
             private async void ButtonClick()
             {
                 if (characterId.HasValue)
@@ -68,13 +83,28 @@ namespace Overlewd
                     
                     if (weaponData.isEquipped)
                     {
-                        await GameData.equipment.Unequip(characterId.Value, weaponId);
-                        onUnequip?.Invoke(this);
+                        if (weaponData.IsMy(characterId.Value))
+                        {
+                            await Unequip(characterId.Value, weaponId);
+                        }
+                        else
+                        {
+                            await Unequip(weaponData.characterId.Value, weaponId);
+
+                            if (characterData.hasEquipment)
+                            {
+                                await Unequip(characterId.Value, characterData.equipmentData.id);
+                            }
+                            await Equip(characterId.Value, weaponId);
+                        }
                     }
                     else
                     {
-                        await GameData.equipment.Equip(characterId.Value, weaponId);
-                        onEquip?.Invoke(this);
+                        if (characterData.hasEquipment)
+                        {
+                           await Unequip(characterId.Value, characterData.equipmentData.id);
+                        }
+                        await Equip(characterId.Value, weaponId);
                     }
                 }
             }

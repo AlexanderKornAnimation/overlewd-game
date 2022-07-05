@@ -829,7 +829,7 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
-            public float potency;
+            public float? potency;
             public int? sexSceneId;
             public string sexSceneClosedBanner;
             public string sexSceneOpenedBanner;
@@ -930,6 +930,12 @@ namespace Overlewd
                 Rarity_Heroic => 40,
                 _ => 10
             };
+
+            [JsonProperty(Required = Required.Default)]
+            public bool hasEquipment => equipment.Count > 0;
+            
+            [JsonProperty(Required = Required.Default)]
+            public Equipment equipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
         }
 
         [Serializable]
@@ -1048,6 +1054,8 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isEquipped => characterId.HasValue;
+
+            public bool IsMy(int? myId) => isEquipped && myId == characterId;
 
             public const string Class_Assassin = "Assassin";
             public const string Class_Bruiser = "Bruiser";

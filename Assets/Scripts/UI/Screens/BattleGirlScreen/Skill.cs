@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,11 @@ namespace Overlewd
     {
         public class Skill : MonoBehaviour
         {
-            public AdminBRO.CharacterSkill skillData { get; set; }
             public int? characterId;
+            public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
+            
+            public string skillType { get; set; }
+            public AdminBRO.CharacterSkill skillData => characterData.skills.FirstOrDefault(s => s.type == skillType);
 
             private Image icon;
             private TextMeshProUGUI title;
@@ -51,11 +55,9 @@ namespace Overlewd
 
             private async void LevelUpButtonClick()
             {
-                if (characterId != null)
+                if (characterData != null && characterId.HasValue)
                 {
-                    var charData = GameData.characters.GetById(characterId);
-                    
-                    if (charData.CanSkillLvlUp(skillData))
+                    if (characterData.CanSkillLvlUp(skillData))
                     {
                         await GameData.characters.SkillLvlUp(characterId.Value, skillData.id);
                     }

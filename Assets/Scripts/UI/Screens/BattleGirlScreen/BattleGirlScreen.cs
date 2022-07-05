@@ -53,8 +53,8 @@ namespace Overlewd
         private GameObject passiveSkillGO;
         private GameObject basicSkillGO;
         private GameObject ultimateSkillGO;
-        private NSBattleGirlScreen.Skill passiveSkill;
         private NSBattleGirlScreen.Skill basicSkill;
+        private NSBattleGirlScreen.Skill passiveSkill;
         private NSBattleGirlScreen.Skill ultimateSkill;
 
         private void Awake()
@@ -73,7 +73,7 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
 
             weapon = canvas.Find("Weapon").GetComponent<Image>();
-            weaponScreenButton = weapon.transform.Find("WeaponScreenButton").GetComponent<Button>();
+            weaponScreenButton = canvas.Find("WeaponScreenButton").GetComponent<Button>();
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
 
             levelUpButton = canvas.Find("LevelUpButton");
@@ -139,6 +139,7 @@ namespace Overlewd
             var characterData = inputData?.characterData;
             if (characterData != null)
             {
+                
                 speed.text = characterData.speed.ToString();
                 power.text = characterData.power.ToString();
                 constitution.text = characterData.constitution.ToString();
@@ -150,6 +151,8 @@ namespace Overlewd
                 health.text = characterData.health.ToString();
                 damageDealt.text = characterData.damage.ToString();
 
+                potency.text = characterData.potency.ToString();
+
                 classIcon.text = AdminBRO.Character.GetMyClassMarker(characterData?.characterClass);
                 className.text = characterData.characterClass;
                 characterName.text = characterData.name;
@@ -157,19 +160,19 @@ namespace Overlewd
 
                 girl.sprite = ResourceManager.LoadSprite(characterData.fullScreenPersIcon);
 
-                passiveSkill.skillData = characterData.skills.Find(s => s.type == AdminBRO.CharacterSkill.Type_Passive);
+                passiveSkill.skillType =  AdminBRO.CharacterSkill.Type_Passive;
                 passiveSkill.characterId = inputData?.characterId;
                 passiveSkill.Customize();
 
-                basicSkill.skillData = characterData.skills.Find(s => s.type == AdminBRO.CharacterSkill.Type_Attack);
+                basicSkill.skillType = AdminBRO.CharacterSkill.Type_Attack;
                 basicSkill.characterId = inputData?.characterId;
                 basicSkill.Customize();
 
-                ultimateSkill.skillData = characterData.skills.Find(s => s.type == AdminBRO.CharacterSkill.Type_Enhanced);
+                ultimateSkill.skillType = AdminBRO.CharacterSkill.Type_Enhanced;
                 ultimateSkill.characterId = inputData?.characterId;
                 ultimateSkill.Customize();
 
-                levelUpButtonCanLvlUp.gameObject.SetActive(characterData.canLvlUp);
+                levelUpButtonCanLvlUp.gameObject.SetActive(!characterData.isLvlMax);
                 sexSceneOpen.sprite = ResourceManager.LoadSprite(characterData.sexSceneOpenedBanner);
                 sexSceneClose.sprite = ResourceManager.LoadSprite(characterData.sexSceneClosedBanner);
                 sexSceneOpen.gameObject.SetActive(characterData.sexSceneId.HasValue);
@@ -179,6 +182,8 @@ namespace Overlewd
                 rarityAdvanced.SetActive(characterData.isAdvanced);
                 rarityEpic.SetActive(characterData.isEpic);
                 rarityHeroic.SetActive(characterData.isHeroic);
+                
+                weapon.gameObject.SetActive(characterData.hasEquipment);
 
                 for (int i = 0; i < characterData?.levelUpPrice?.Count; i++)
                 {
@@ -243,6 +248,11 @@ namespace Overlewd
             {
                 case GameDataEvent.Type.CharacterLvlUp:
                     Customize();
+                    break;
+                case GameDataEvent.Type.CharacterSkillLvlUp:
+                    basicSkill.Customize();
+                    ultimateSkill.Customize();
+                    passiveSkill.Customize();
                     break;
             }
         }
