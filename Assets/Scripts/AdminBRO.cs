@@ -629,7 +629,7 @@ namespace Overlewd
             public int progressCount;
             public int? eventId;
 
-            public const string Status_New = "new";
+            public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";

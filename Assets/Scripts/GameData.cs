@@ -86,6 +86,8 @@ namespace Overlewd
             await AdminBRO.ftueStageEndAsync(stageId, data);
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
+
+            await GameData.quests.Get();
         }
     }
 
@@ -153,6 +155,8 @@ namespace Overlewd
                 {
                     type = GameDataEvent.Type.BuildingBuild
                 });
+
+            await GameData.quests.Get();
         }
 
         public async Task BuildCrystals(int buildingId)
@@ -165,6 +169,8 @@ namespace Overlewd
                 {
                     type = GameDataEvent.Type.BuildingBuildCrystal
                 });
+
+            await GameData.quests.Get();
         }
 
         public async Task<int> MunicipalityTimeLeft()
@@ -342,6 +348,8 @@ namespace Overlewd
         {
             var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
             stages = await AdminBRO.eventStagesAsync();
+
+            await GameData.quests.Get();
         }
 
         public AdminBRO.EventItem mapEventData { get; set; }
@@ -405,9 +413,14 @@ namespace Overlewd
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
 
-        public async void ClaimReward(int? id)
+        public async Task ClaimReward(int? id)
         {
-            var cr_struct = await AdminBRO.questClaimRewardAsync(id.Value);
+            if (id.HasValue)
+            {
+                var cr_struct = await AdminBRO.questClaimRewardAsync(id.Value);
+                await Get();
+                await GameData.player.Get();
+            }
         }
     }
     

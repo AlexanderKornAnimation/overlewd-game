@@ -22,9 +22,12 @@ namespace Overlewd
             private bool canvasActive = true;
 
             private Button mapButton;
+            private Button claimButton;
+            private Transform inProgress;
 
             private TextMeshProUGUI eventName;
             private TextMeshProUGUI title;
+            private TextMeshProUGUI progress;
             private TextMeshProUGUI description;
             private TextMeshProUGUI eventMark;
             private TextMeshProUGUI timer;
@@ -38,12 +41,18 @@ namespace Overlewd
 
                 eventName = canvas.Find("EventName").GetComponent<TextMeshProUGUI>();
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
+                progress = canvas.Find("Progress").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
                 eventMark = backWithClock.Find("EventMark").GetComponent<TextMeshProUGUI>();
                 timer = backWithClock.Find("Timer").GetComponent<TextMeshProUGUI>();
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
+
+                claimButton = canvas.Find("ClaimButton").GetComponent<Button>();
+                claimButton.onClick.AddListener(ClaimClick);
+
+                inProgress = canvas.Find("InProgress");
 
                 for (int i = 1; i <= 5; i++)
                 {
@@ -63,6 +72,7 @@ namespace Overlewd
 
                 eventName.text = _eventData?.name;
                 title.text = _questData?.name;
+                progress.text = $"{_questData?.progressCount}/{_questData?.goalCount ?? 0}";
                 description.text = _questData?.description;
 
                 foreach (var reward in rewards)
@@ -79,13 +89,40 @@ namespace Overlewd
                     var rIcon = reward.Find("Item").GetComponent<Image>();
                     var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData.icon70);
+                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData?.icon70);
                     rIcon.preserveAspect = true;
                     rCount.text = rewardData.amount?.ToString();
                     reward.gameObject.SetActive(true);
                 }
 
-                mapButton.gameObject.AddComponent<BlendPulseSelector>();
+                if (_eventData.isWeekly)
+                {
+                    mapButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    mapButton.gameObject.AddComponent<BlendPulseSelector>();
+                }
+
+                switch (_questData.status)
+                {
+                    case AdminBRO.QuestItem.Status_Open:
+                        inProgress.gameObject.SetActive(false);
+                        claimButton.gameObject.SetActive(false);
+                        break;
+                    case AdminBRO.QuestItem.Status_In_Progress:
+                        inProgress.gameObject.SetActive(true);
+                        claimButton.gameObject.SetActive(false);
+                        break;
+                    case AdminBRO.QuestItem.Status_Complete:
+                        inProgress.gameObject.SetActive(false);
+                        claimButton.gameObject.SetActive(true);
+                        break;
+                    case AdminBRO.QuestItem.Status_Rewards_Claimed:
+                        inProgress.gameObject.SetActive(false);
+                        claimButton.gameObject.SetActive(false);
+                        break;
+                }
 
                 StopCoroutine("TimerUpd");
                 StartCoroutine(TimerUpd());
@@ -97,6 +134,12 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 eventData.SetAsMapEvent();
                 UIManager.ShowScreen<EventMapScreen>();
+            }
+
+            private async void ClaimClick()
+            {
+                await GameData.quests.ClaimReward(questId);
+                Customize();
             }
 
             public void SetCanvasActive(bool value)
