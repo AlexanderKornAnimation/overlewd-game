@@ -12,12 +12,12 @@ namespace Overlewd
         public const int TabWeekly = 0;
         public const int TabMonthly = 1;
         public const int TabDecade = 2;
-        public const int TabActive = 3;
-        public const int TabComingSoon = 4;
+        public const int TabComingMonthly = 3;
+        public const int TabComingDecade = 4;
         public const int TabsCount = 5;
 
-        private int[] tabIds = { TabWeekly, TabMonthly, TabDecade, TabActive, TabComingSoon };
-        private string[] tabNames = { "Weekly", "Monthly", "Decade", "Active", "ComingSoon" };
+        private int[] tabIds = { TabWeekly, TabMonthly, TabDecade, TabComingMonthly, TabComingDecade };
+        private string[] tabNames = { "Weekly", "Monthly", "Decade", "ComingMonthly", "ComingDecade" };
         private Transform[] scrollView = new Transform[TabsCount];
         private Transform[] scrollViewContent = new Transform[TabsCount];
         private List<NSEventOverlay.EventQuest>[] tabEventQuests = 
@@ -86,50 +86,64 @@ namespace Overlewd
             }
         }
 
-        private void InitTab(AdminBRO.EventItem eventData, int tabId)
+        private void InitEventTab(AdminBRO.EventItem eventData, int tabId)
         {
             var tabScrollViewContent = scrollViewContent[tabId];
             eventButtonText[tabId].text = eventData.name;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
-            foreach (var quest in GameData.quests.quests)
+            foreach (var questId in eventData.quests)
             {
-                if (quest.eventId.HasValue)
-                {
-                    if (quest.eventId.Value == eventData.id)
-                    {
-                        var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
-                        eventQuest.eventId = eventData.id;
-                        eventQuest.questId = quest.eventId.Value;
-                        eventQuest.SetCanvasActive(false);
+                var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
+                eventQuest.eventId = eventData.id;
+                eventQuest.questId = questId;
+                eventQuest.SetCanvasActive(false);
 
-                        tabEventQuests[tabId].Add(eventQuest);
-                    }
-                }
+                tabEventQuests[tabId].Add(eventQuest);
             }
             var descr = NSEventOverlay.EventDescription.GetInstance(tabScrollViewContent);
             descr.eventId = eventData.id;
         }
 
+        private void InitComingEventTab(AdminBRO.EventItem eventData, int tabId)
+        {
+            var tabScrollViewContent = scrollViewContent[tabId];
+            eventButtonText[tabId].text = eventData.name;
+
+            var comingWidget = NSEventOverlay.ComingEvent.GetInstance(tabScrollViewContent);
+            comingWidget.eventId = eventData.id;
+        }
+
         private void InitTabs()
         {
-            foreach (var eventData in GameData.events.events)
+            var eventsData = new [] {
+                GameData.events.activeWeekly,
+                GameData.events.activeMonthly,
+                GameData.events.activeQuarterly,
+                GameData.events.comingSoonMonthly,
+                GameData.events.comingSoonQuarterly
+            };
+
+            foreach (var tabId in tabIds)
             {
-                switch (eventData.type)
+                if (eventsData[tabId] != null)
                 {
-                    case AdminBRO.EventItem.Type_Weekly :
-                        InitTab(eventData, TabWeekly);
-                        break;
-                    case AdminBRO.EventItem.Type_Monthly :
-                        InitTab(eventData, TabMonthly);
-                        break;
-                    case AdminBRO.EventItem.Type_Quarterly :
-                        InitTab(eventData, TabDecade);
-                        break;
+                    switch (tabId)
+                    {
+                        case TabComingMonthly:
+                        case TabComingDecade:
+                            InitComingEventTab(eventsData[tabId], tabId);
+                            break;
+                        default:
+                            InitEventTab(eventsData[tabId], tabId);
+                            break;
+                    }
+                }
+                else 
+                {
+                    eventButton[tabId].gameObject.SetActive(false);
                 }
             }
-
-            NSEventOverlay.ComingEvent.GetInstance(scrollViewContent[TabComingSoon]);
         }
 
         private void BackButtonClick()

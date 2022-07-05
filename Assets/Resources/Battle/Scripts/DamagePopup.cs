@@ -2,17 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class DamagePopup : MonoBehaviour
 {
     private TextMeshProUGUI text;
+    private RectTransform rt;
 
-    [SerializeField]
-    private Color green, yellow, white, blue, red;
+    [SerializeField] private AnimationCurve curve;
+    [SerializeField] private Color green, yellow, white, blue, red;
+
+    private float lifetime = 1.5f;
 
     private void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
+        rt = GetComponent<RectTransform>();
     }
     private void Start()
     {
@@ -39,14 +44,17 @@ public class DamagePopup : MonoBehaviour
                 text.color = red;
                 break;
         }
-        if (invertXScale) { 
-            GetComponent<RectTransform>().localScale = new Vector3 (-1,1,1);
-        }
-
+        if (invertXScale)
+            rt.localScale = new Vector3(-1, 1, 1);
         text.SetText(msg);
-
-        
-
-        Destroy(gameObject, 1.45f + delay);
+        StartCoroutine(RunAnimation(delay));
+    }
+    IEnumerator RunAnimation(float startDelay)
+    {
+        yield return new WaitForSeconds(startDelay);
+        rt.DOMoveY(800, 0.33f);
+        rt.DOScaleY(0, lifetime).SetEase(curve);
+        yield return new WaitForSeconds(lifetime);
+        Destroy(gameObject);
     }
 }

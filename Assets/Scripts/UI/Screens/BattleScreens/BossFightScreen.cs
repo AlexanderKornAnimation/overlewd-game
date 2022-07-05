@@ -40,6 +40,7 @@ namespace Overlewd
         {
             backButton.gameObject.SetActive(false);
 
+
             await Task.CompletedTask;
         }
 
@@ -72,6 +73,13 @@ namespace Overlewd
         {
             bm.AfterShowBattleScreen();
 
+            SoundManager.GetEventInstance(FMODEventPath.Music_Battle_BGM_1);
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
             await Task.CompletedTask;
         }
 

@@ -22,13 +22,17 @@ namespace Overlewd
             private bool canvasActive = true;
 
             private Button mapButton;
+            private Button claimButton;
+            private Transform inProgress;
 
             private TextMeshProUGUI eventName;
             private TextMeshProUGUI title;
+            private TextMeshProUGUI progress;
             private TextMeshProUGUI description;
             private TextMeshProUGUI eventMark;
+            private TextMeshProUGUI timer;
 
-            private List<Image> rewards = new List<Image>();
+            private List<Transform> rewards = new List<Transform>();
 
             void Awake()
             {
@@ -37,11 +41,23 @@ namespace Overlewd
 
                 eventName = canvas.Find("EventName").GetComponent<TextMeshProUGUI>();
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
+                progress = canvas.Find("Progress").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
                 eventMark = backWithClock.Find("EventMark").GetComponent<TextMeshProUGUI>();
+                timer = backWithClock.Find("Timer").GetComponent<TextMeshProUGUI>();
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
+
+                claimButton = canvas.Find("ClaimButton").GetComponent<Button>();
+                claimButton.onClick.AddListener(ClaimClick);
+
+                inProgress = canvas.Find("InProgress");
+
+                for (int i = 1; i <= 5; i++)
+                {
+                    rewards.Add(backWithClock.Find($"Reward{i}"));
+                }
             }
 
             void Start()
@@ -56,21 +72,62 @@ namespace Overlewd
 
                 eventName.text = _eventData?.name;
                 title.text = _questData?.name;
+                progress.text = $"{_questData?.progressCount}/{_questData?.goalCount ?? 0}";
                 description.text = _questData?.description;
 
-                for (int i = 1; i <= 5; i++)
+                foreach (var reward in rewards)
                 {
-                    rewards.Add(transform.Find("Canvas").Find("BackWithClock").Find($"Reward{i}").Find("Item")
-                        .GetComponent<Image>());
+                    reward.gameObject.SetActive(false);
                 }
 
-                rewards[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
-                rewards[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
-                rewards[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
-                rewards[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
-                rewards[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Copper");
+                var rId = 0;
+                foreach (var rewardData in _questData.rewards)
+                {
+                    
+                    var reward = rewards[rId];
+                    rId++;
+                    var rIcon = reward.Find("Item").GetComponent<Image>();
+                    var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                mapButton.gameObject.AddComponent<BlendPulseSelector>();
+                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData?.icon70);
+                    rIcon.preserveAspect = true;
+                    rCount.text = rewardData.amount?.ToString();
+                    reward.gameObject.SetActive(true);
+                }
+
+                if (_eventData.isWeekly)
+                {
+                    mapButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    mapButton.gameObject.AddComponent<BlendPulseSelector>();
+                }
+
+                switch (_questData.status)
+                {
+                    case AdminBRO.QuestItem.Status_Open:
+                        inProgress.gameObject.SetActive(false);
+                        claimButton.gameObject.SetActive(false);
+                        break;
+                    case AdminBRO.QuestItem.Status_In_Progress:
+                        inProgress.gameObject.SetActive(true);
+                        claimButton.gameObject.SetActive(false);
+                        break;
+                    case AdminBRO.QuestItem.Status_Complete:
+                        inProgress.gameObject.SetActive(false);
+                        claimButton.gameObject.SetActive(true);
+                        mapButton.gameObject.SetActive(false);
+                        break;
+                    case AdminBRO.QuestItem.Status_Rewards_Claimed:
+                        inProgress.gameObject.SetActive(false);
+                        claimButton.gameObject.SetActive(false);
+                        mapButton.gameObject.SetActive(false);
+                        break;
+                }
+
+                StopCoroutine("TimerUpd");
+                StartCoroutine(TimerUpd());
             }
 
             private void ToMapClick()
@@ -81,12 +138,30 @@ namespace Overlewd
                 UIManager.ShowScreen<EventMapScreen>();
             }
 
+            private async void ClaimClick()
+            {
+                await GameData.quests.ClaimReward(questId);
+                Customize();
+            }
+
             public void SetCanvasActive(bool value)
             {
                 if (value != canvasActive)
                 {
                     canvasActive = value;
                     canvas.gameObject.SetActive(canvasActive);
+                }
+            }
+
+            private IEnumerator TimerUpd()
+            {
+                var dateEnd = eventData.dateEnd;
+                var timeToEnd = TimeTools.AvailableTimeToString(dateEnd);
+                while (!String.IsNullOrEmpty(timeToEnd))
+                {
+                    timer.text = timeToEnd;
+                    yield return new WaitForSeconds(1.0f);
+                    timeToEnd = TimeTools.AvailableTimeToString(dateEnd);
                 }
             }
 

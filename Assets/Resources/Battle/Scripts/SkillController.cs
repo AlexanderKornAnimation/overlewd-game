@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,29 +10,39 @@ namespace Overlewd
     {
         public Skill oldSkill;
         public AdminBRO.CharacterSkill skill;
-        public bool isHeal => skill.actionType == "heal"? true : false;
+        public bool isHeal => skill.actionType == "heal";
         private GameObject vfx => oldSkill.vfx;
+        private string sfx => oldSkill.sfx;
 
         private Image image;
+        [SerializeField] private Image effectSlot;
+        private List<Sprite> effectIcons;
         private GameObject selectBorder;
         public bool select;
         private Slider slider;
         private TextMeshProUGUI textCount;
         public Button button;
 
-        private AudioClip sfx;
+        public bool potion => oldSkill.potion;
+        public int potionAmount;
+
         [HideInInspector]
         public Transform vfxSpawnPoint;
         [HideInInspector]
-        public int damage, amount, cooldown, cooldownCount = 0;
+        public int damage, cooldown, cooldownCount = 0;
+
+        //public int amount => skill.amount; //for info maybe
         public int manaCost => skill.manaCost;
 
 
         public bool selectable = true;
         public bool isSelected = false;
+        public bool silence = false;
 
         private void Awake()
         {
+            effectIcons = new List<Sprite>(Resources.LoadAll<Sprite>("Battle/Images/UI/Status/Big"));
+            if (!potion && effectSlot == null) effectSlot = transform.Find("status").GetComponent<Image>();
             button = GetComponent<Button>();
             image = GetComponent<Image>();
             slider = GetComponentInChildren<Slider>();
@@ -46,9 +57,7 @@ namespace Overlewd
         {
             image.sprite = oldSkill.battleIco;
             image.SetNativeSize();
-            sfx = oldSkill.sfx;
-            damage = oldSkill.damage; // old 
-            amount = skill.amount;
+            damage = oldSkill.damage; // old
 
             if (slider != null)
             {
@@ -58,15 +67,17 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (oldSkill.attackType == Skill.AttackType.POTION)
-                    textCount.text = $"{amount}";
+                if (oldSkill.potion)
+                    textCount.text = $"{potionAmount}";
                 else
                     textCount.text = $"{cooldownCount}";
         }
 
-        public void ReplaceSkill(AdminBRO.CharacterSkill sk)
+        public void ReplaceSkill(AdminBRO.CharacterSkill sk, Skill skillSkin)
         {
             skill = sk;
+            oldSkill = skillSkin;
+            if (!potion) SetEffectIco();
             StatInit();
         }
 
@@ -78,8 +89,8 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (oldSkill.attackType == Skill.AttackType.POTION) //old
-                    textCount.text = $"{amount}";
+                if (oldSkill.potion) //old
+                    textCount.text = $"{potionAmount}";
                 else
                     textCount.text = $"{cooldownCount}";
         }
@@ -113,7 +124,18 @@ namespace Overlewd
         }
         public void BlinkDisable()
         {
+            image.color = Color.white;
             image.DOColor(Color.red, 0.1f).SetLoops(4, LoopType.Yoyo).SetEase(Ease.InOutExpo);
+        }
+
+        void SetEffectIco()
+        {
+            effectSlot.gameObject.SetActive(true);
+            effectSlot.sprite = effectIcons.Find(i => i.name == skill.effect);
+            if (effectSlot.sprite == null)
+            {
+                effectSlot.gameObject.SetActive(false);
+            }
         }
     }
 }

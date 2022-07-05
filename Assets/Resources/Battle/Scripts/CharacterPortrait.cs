@@ -6,21 +6,27 @@ namespace Overlewd
 {
     public class CharacterPortrait : MonoBehaviour
     {
-        public CharController charCtrl;
+        public CharController cc;
         public Button button;
         [HideInInspector] public bool bigPortrait = false;
-        private Transform attack, defence, bleeding, burning, poison;
-        private TextMeshProUGUI attackScale, defenceScale, bleedingScale, burningScale, poisonScale;
         private TextMeshProUGUI textHP;
         private TextMeshProUGUI textMP;
         private Slider sliderHP;
         private Slider sliderMP;
         private Image BattlePortraitIco;
 
-        private float hp => charCtrl.health;
-        private float maxHp => charCtrl.healthMax;
-        private float mp => charCtrl.mana;
-        private float maxMp => charCtrl.manaMax;
+        private StatusEffects status_bar;
+
+        private float hp => cc.health;
+        private float maxHp => cc.healthMax;
+        private float mp => cc.mana;
+        private float maxMp => cc.manaMax;
+
+        private void Awake()
+        {
+            status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
+            button = GetComponent<Button>();
+        }
 
         public void InitUI()
         {
@@ -33,33 +39,40 @@ namespace Overlewd
             if (sliderHP) sliderHP.maxValue = maxHp;
             if (sliderMP) sliderMP.maxValue = maxMp;
 
-            if (charCtrl != null && button != null)
-                button.onClick.AddListener(charCtrl.Select);
+            if (cc)
+            {
+                status_bar.cc = cc;
+                status_bar?.UpdateStatuses();
+            }
+            if (cc != null && button != null)
+                button.onClick.AddListener(cc.Select);
 
             if (bigPortrait)
             {
-                BattlePortraitIco.sprite = charCtrl.characterRes.bigPortrait;
+                BattlePortraitIco.sprite = cc.characterRes.bigPortrait;
                 transform.SetSiblingIndex(0);
             }
             else
             {
-                BattlePortraitIco.sprite = charCtrl.characterRes.battlePortrait;
-                if (transform.GetSiblingIndex() > charCtrl.battleOrder) 
+                BattlePortraitIco.sprite = cc.characterRes.battlePortrait;
+                if (transform.GetSiblingIndex() > cc.battleOrder) 
                 {
                     transform.SetSiblingIndex(5);
                 }
             }
-            sliderMP?.gameObject.SetActive(charCtrl.isOverlord);
+            sliderMP?.gameObject.SetActive(cc.isOverlord);
             UpdateUI();
         }
 
         public void SetUI(CharController replaceCharacter = null)
         {
             if (replaceCharacter)
-                charCtrl = replaceCharacter;
-            BattlePortraitIco.sprite = charCtrl.characterRes.bigPortrait;
+                cc = replaceCharacter;
+            BattlePortraitIco.sprite = cc.characterRes.bigPortrait;
             if (sliderHP) sliderHP.maxValue = maxHp;
-            sliderMP?.gameObject.SetActive(charCtrl.isOverlord);
+            sliderMP?.gameObject.SetActive(cc.isOverlord);
+            status_bar.cc = cc;
+            status_bar?.UpdateStatuses();
             UpdateUI();
         }
 
@@ -69,6 +82,7 @@ namespace Overlewd
             sliderHP.value = hp;
             if (textMP) textMP.text = $"{mp}/{maxMp}";
             if (sliderMP) sliderMP.value = mp;
+            status_bar?.UpdateStatuses();
         }
     }
 }

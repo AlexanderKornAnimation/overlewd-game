@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,18 +8,22 @@ namespace Overlewd
     public class CharacterStatObserver : MonoBehaviour
     {
 
-        public CharController cc; //присваивается при создании
+        public CharController cc;
 
         public Transform persPos => cc.persPos;
 
         //Char UI
         //public Button bt;
+        public Image charClass;
         public Slider sliderHP;
         public Slider sliderMP;
+        public bool showMP => cc.isOverlord;
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
 
         public CharacterPortrait charStats;
+
+        public StatusEffects status_bar;
 
         public float health => cc.health;
         public float healthMax => cc.healthMax;
@@ -27,57 +32,18 @@ namespace Overlewd
         public bool isEnemy => cc.isEnemy;
         public bool isOverlord => cc.isOverlord;
 
-        private int focus_blind => cc.focus_blind;
-        private int defUp_defDown => cc.defUp_defDown;
-        private int regen_poison => cc.regen_poison;
-        private int bless_healBlock => cc.bless_healBlock;
-        private int immunity => cc.immunity;
-        private int silence => cc.silence;
-        private int curse => cc.curse;
-        private bool stun => cc.stun; //only ico
 
-        [Header("Text Mesh Pro")]
         [SerializeField]
-        private TextMeshProUGUI
-            focus_tmp;
-        [SerializeField]
-        private TextMeshProUGUI
-            blind_tmp,
-            defUp_tmp,
-            defDown_tmp,
-            regen_tmp,
-            poison_tmp,
-            bless_tmp,
-            healBlock_tmp,
-            immunity_tmp,
-            silence_tmp,
-            curse_tmp;
-
-        [Header("Icons")]
-        [SerializeField]
-        private GameObject
-            focus_obj;
-        [SerializeField]
-        private GameObject
-            blind_obj,
-            defUp_obj,
-            defDown_obj,
-            regen_obj,
-            poison_obj,
-            bless_obj,
-            healBlock_obj,
-            immunity_obj,
-            silence_obj,
-            curse_obj,
-            stun_obj;
-
+        private List<Sprite> classIcons;
         private void Start()
         {
             charStats.InitUI();
-
+            status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
+            status_bar.cc = cc;
             if (sliderHP) sliderHP.maxValue = healthMax;
             if (sliderMP) sliderMP.maxValue = manaMax;
-
+            sliderMP?.gameObject.SetActive(showMP);
+            if (charClass) SetClass();
             UpdateUI();
             UpdateStatuses();
         }
@@ -96,39 +62,32 @@ namespace Overlewd
             charStats.UpdateUI();
         }
 
-        public void UpdateStatuses()
+        public void UpdateStatuses() => status_bar?.UpdateStatuses();
+
+        void SetClass()
         {
-            ApplyStat(focus_blind, focus_obj, focus_tmp);
-            ApplyStat(focus_blind, blind_obj, blind_tmp, buff: false);
-
-            ApplyStat(defUp_defDown, defUp_obj, defUp_tmp);
-            ApplyStat(defUp_defDown, defDown_obj, defDown_tmp, buff: false);
-
-            ApplyStat(regen_poison, regen_obj, regen_tmp);
-            ApplyStat(regen_poison, poison_obj, poison_tmp, buff: false);
-
-            ApplyStat(bless_healBlock, bless_obj, bless_tmp);
-            ApplyStat(bless_healBlock, healBlock_obj, healBlock_tmp, buff: false);
-
-            ApplyStat(immunity, immunity_obj, immunity_tmp);
-            ApplyStat(curse, curse_obj, curse_tmp);
-            ApplyStat(silence, silence_obj, silence_tmp);
-
-            stun_obj.SetActive(stun);
-        }
-
-        void ApplyStat(int effect, GameObject icon, TextMeshProUGUI text, bool buff = true)
-        {
-            if (effect == 0)
-                icon.SetActive(false);
-            else
+            switch (cc.character.characterClass)
             {
-                if (buff)
-                    icon.SetActive(effect > 0);
-                else
-                    icon.SetActive(effect < 0);
-                text.text = (Mathf.Abs(effect) > 1) ? Mathf.Abs(effect).ToString() : "";
+                case AdminBRO.Character.Class_Assassin:
+                    charClass.sprite = classIcons[1];
+                    break;
+                case AdminBRO.Character.Class_Caster:
+                    charClass.sprite = classIcons[2];
+                    break;
+                case AdminBRO.Character.Class_Bruiser:
+                    charClass.sprite = classIcons[3];
+                    break;
+                case AdminBRO.Character.Class_Healer:
+                    charClass.sprite = classIcons[4];
+                    break;
+                case AdminBRO.Character.Class_Tank:
+                    charClass.sprite = classIcons[5];
+                    break;
+                default:
+                    charClass.sprite = classIcons[0];
+                    break;
             }
+            charClass.SetNativeSize();
         }
         private void OnGUI()
         {

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7154945038354844806}
   - component: {fileID: 2858973879676426114}
   - component: {fileID: -7612133637216408552}
-  - component: {fileID: 4122027123162436238}
   m_Layer: 0
   m_Name: BattlePopupText
   m_TagString: Untagged
@@ -148,27 +147,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 414ac7584a5128145846830232dc2db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0012718514
+      value: 0.8
+      inSlope: -32.56493
+      outSlope: -32.56493
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.1879462
+    - serializedVersion: 3
+      time: 0.03506416
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9511478
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.99713135
+      value: 1
+      inSlope: 26.173145
+      outSlope: 26.173145
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.24861175
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 1
+    m_RotationOrder: 4
   green: {r: 0.51370597, g: 0.9811321, b: 0.7061756, a: 1}
   yellow: {r: 1, g: 0.7311321, b: 0.3254717, a: 1}
   white: {r: 1, g: 1, b: 1, a: 1}
   blue: {r: 0.35933605, g: 0.609247, b: 0.8018868, a: 1}
   red: {r: 0.990566, g: 0.3016184, b: 0.2943663, a: 1}
---- !u!95 &4122027123162436238
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1088677049896723366}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 035df74a6c0e2c64584a00150cb9e5ea, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

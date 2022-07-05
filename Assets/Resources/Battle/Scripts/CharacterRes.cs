@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -12,9 +13,9 @@ namespace Overlewd
         public Sprite bigPortrait;
 
         public float idleScale = 1f, battleScale = 1.4f;
-        public float yOffset = 0f;
 
         public Skill[] skill;
+        public Skill[] pSkill;
 
         public string
             idle_Prefab_Path = "Battle/BattlePersonages/idle_SkeletonData";
@@ -25,6 +26,5 @@ namespace Overlewd
         public string[] ani_attack_name = { "attack1", "attack2" };
         public string ani_defence_name = "defence";
         public string ani_defeat_name = "defeat";
-
     }
 }

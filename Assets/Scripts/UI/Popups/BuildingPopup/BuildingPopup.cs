@@ -49,7 +49,7 @@ namespace Overlewd
             resourcesGrid = canvas.Find("Grid");
             for (var i = 0; i < resource.Length; i++)
             {
-                resource[i] = resourcesGrid.Find($"Recource{i + 1}").GetComponent<Image>();
+                resource[i] = resourcesGrid.Find($"Resource{i + 1}").GetComponent<Image>();
                 count[i] = resource[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
                 resource[i].gameObject.SetActive(false);
             }
@@ -69,6 +69,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var buildingData = inputData?.buildingData;
+            
             if (buildingData != null)
             {
                 var building =

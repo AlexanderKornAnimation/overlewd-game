@@ -30,6 +30,10 @@ namespace Overlewd
             public string icon;
             public int? amount;
             public int? tradableId;
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.TradableItem tradableData =>
+                GameData.markets.GetTradableById(tradableId);
         }
 
         // /version
@@ -108,9 +112,9 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
-            public Poison poison;
+            public Potion potion;
 
-            public class Poison
+            public class Potion
             {
                 public int hp;
                 public int mana;
@@ -177,6 +181,21 @@ namespace Overlewd
             public string updatedAt;
             public List<int> tradables;
             public List<int> currencies;
+            public List<Tab> tabs;
+
+            public class Tab
+            {
+                public string title;
+                public bool isDefault;
+                public string icon;
+                public string banner;
+                public string viewType;
+                public List<int> goods;
+
+                public const string ViewTab_GoodsList = "goods_list";
+                public const string ViewTab_Bundle = "bundle";
+                public const string ViewTab_Pack = "pack";
+            }
 
             [JsonProperty(Required = Required.Default)]
             public List<TradableItem> tradablesData =>
@@ -210,28 +229,30 @@ namespace Overlewd
             public string updatedAt;
 
             [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Crystal = "<sprite=\"AssetResources\" name=\"Crystal\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Wood = "<sprite=\"AssetResources\" name=\"Wood\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Stone = "<sprite=\"AssetResources\" name=\"Stone\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Copper = "<sprite=\"AssetResources\" name=\"Copper\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Gold = "<sprite=\"AssetResources\" name=\"Gold\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Gems = "<sprite=\"AssetResources\" name=\"Gem\">";
+            public string sprite =>
+                key switch
+                { 
+                    Key_Crystals => "<sprite=\"AssetResources\" name=\"Crystal\">",
+                    Key_Wood => "<sprite=\"AssetResources\" name=\"Wood\">",
+                    Key_Stone => "<sprite=\"AssetResources\" name=\"Stone\">",
+                    Key_Copper => "<sprite=\"AssetResources\" name=\"Copper\">",
+                    Key_Gold => "<sprite=\"AssetResources\" name=\"Gold\">",
+                    Key_Gems => "<sprite=\"AssetResources\" name=\"Gem\">",
+                    Key_Ears => "<sprite=\"EventCurrency\" name=\"CatEras\">",
+                    Key_Ngold => "<sprite=\"EventCurrency\" name=\"NutakuGold\">",
+                    _ => ""
+                };
 
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_Ears = "<sprite=\"EventCurrency\" name=\"CatEras\">";
-            
-            [JsonProperty(Required = Required.Default)]
-            public const string Sprite_NutakuGold = "<sprite=\"EventCurrency\" name=\"NutakuGold\">";
+            public const string Key_Copper = "copper";
+            public const string Key_Crystals = "crystal";
+            public const string Key_Gems = "gems";
+            public const string Key_Gold = "gold";
+            public const string Key_Stone = "stone";
+            public const string Key_Wood = "wood";
+            public const string Key_Ears = "ears";
+            public const string Key_Horny = "horny";
+            public const string Key_Yen = "yen";
+            public const string Key_Ngold = "ngold";
         }
 
         // /tradable
@@ -275,7 +296,32 @@ namespace Overlewd
             public int? matriarchShardId;
 
             [JsonProperty(Required = Required.Default)]
+            public const string Type_Currency = "currency";
+            
+            [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.CurrencyItem currencyData =>
+                GameData.currencies.GetById(currencyId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => currencyData?.iconUrl ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon70 => currencyData?.icon70Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon153 => currencyData?.icon153Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon186 => currencyData?.icon186Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon256 => currencyData?.icon256Url ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon356 => currencyData?.icon356Url ?? imageUrl;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
@@ -351,7 +397,7 @@ namespace Overlewd
             public int? durationInDays;
             public List<int> stages;
             public int? order;
-            public List<EventChapterReward> rewards;
+            public List<RewardItem> rewards;
 
             public class EventChapterReward
             {
@@ -424,17 +470,18 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public List<EventChapter> chaptersData =>
-                chapters.Select(chId => GetChapterById(id)).OrderBy(ch => ch.order).ToList();
+                chapters.Select(chId => GetChapterById(chId)).
+                    OrderBy(ch => ch.order).ToList();
 
             [JsonProperty(Required = Required.Default)]
             public EventChapter firstChapter =>
-                chaptersData.First();
+                chaptersData.FirstOrDefault();
 
             [JsonProperty(Required = Required.Default)]
             public EventChapter activeChapter {
                 get {
                     var chapterData = firstChapter;
-                    while (chapterData.isComplete)
+                    while (chapterData?.isComplete ?? false)
                     {
                         if (chapterData.nextChapterId.HasValue)
                         {
@@ -456,6 +503,15 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public List<EventMarketItem> marketsData =>
                 markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isWeekly => type == Type_Weekly;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isMonthly => type == Type_Monthly;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isQuarterly => type == Type_Quarterly;
         }
         
 
@@ -573,7 +629,7 @@ namespace Overlewd
             public int progressCount;
             public int? eventId;
 
-            public const string Status_New = "new";
+            public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
@@ -763,17 +819,20 @@ namespace Overlewd
             public string rarity;
             public List<int> equipment;
             public List<CharacterSkill> skills;
-            public float? speed;
-            public float? power;
-            public float? constitution;
-            public float? agility;
-            public float? accuracy;
-            public float? dodge;
-            public float? critrate;
-            public float? health;
-            public float? damage;
-            public float? mana;
+            public float speed;
+            public float power;
+            public float constitution;
+            public float agility;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
+            public float? potency;
             public int? sexSceneId;
+            public string sexSceneClosedBanner;
+            public string sexSceneOpenedBanner;
             public string key;
             public List<PriceItem> levelUpPrice;
             public List<PriceItem> mergePrice;
@@ -834,11 +893,55 @@ namespace Overlewd
             }
 
             public const string Rarity_Basic = "basic";
+            public const string Rarity_Advanced = "advanced";
+            public const string Rarity_Epic = "epic";
+            public const string Rarity_Heroic = "heroic";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isBasic => rarity == Rarity_Basic;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isAdvanced => rarity == Rarity_Advanced;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isEpic => rarity == Rarity_Epic;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isHeroic => rarity == Rarity_Heroic;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool canLvlUp => !isLvlMax && GameData.player.CanBuy(levelUpPrice);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLvlMax => maxLvl == level;
+
+            public bool CanSkillLvlUp(CharacterSkill skill)
+            {
+                var isMax = level == skill.level;
+                return !isMax && GameData.player.CanBuy(skill.levelUpPrice);
+            } 
+            
+            [JsonProperty(Required = Required.Default)]
+            public int maxLvl => rarity switch
+            {
+                Rarity_Basic => 10,
+                Rarity_Advanced => 20,
+                Rarity_Epic => 30,
+                Rarity_Heroic => 40,
+                _ => 10
+            };
+
+            [JsonProperty(Required = Required.Default)]
+            public bool hasEquipment => equipment.Count > 0;
+            
+            [JsonProperty(Required = Required.Default)]
+            public Equipment equipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
         }
 
         [Serializable]
         public class CharacterSkill
         {
+            public int id;
             public string name;
             public string description;
             public string icon;
@@ -855,6 +958,10 @@ namespace Overlewd
             public int amount;
             public string trigger;
             public int effectAmount;
+
+            public const string Type_Passive = "passive_skill";
+            public const string Type_Attack = "attack";
+            public const string Type_Enhanced = "enhanced_attack";
         }
 
         public static async Task equipAsync(int characterId, int equipmentId)
@@ -897,6 +1004,16 @@ namespace Overlewd
             }
         }
 
+        public static async Task chracterSkillLvlUp(int characterId, int skillId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
@@ -922,7 +1039,7 @@ namespace Overlewd
         {
             public int id;
             public int? characterId;
-            public int? characterClassId;
+            public string characterClass;
             public string name;
             public float speed;
             public float power;
@@ -934,6 +1051,17 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEquipped => characterId.HasValue;
+
+            public bool IsMy(int? myId) => isEquipped && myId == characterId;
+
+            public const string Class_Assassin = "Assassin";
+            public const string Class_Bruiser = "Bruiser";
+            public const string Class_Tank = "Tank";
+            public const string Class_Caster = "Caster";
+            public const string Class_Healer = "Healer";
         }
 
         //ftue
@@ -1225,12 +1353,34 @@ namespace Overlewd
         }
 
         // /buildings
+        // /buildings/{id}/build
+        // /buildings/{id}/build-crystals
         public static async Task<List<Building>> buildingsAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/buildings";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Building>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task buildingBuildAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task buildingBuildCrystalsAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
             }
         }
 
@@ -1296,29 +1446,8 @@ namespace Overlewd
                 nextLevelData?.canBuild ?? false;
         }
 
-        // /buildings/{id}/build
-        public static async Task buildingBuildAsync(int id)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        // /buildings/{id}/build-crystals
-        public static async Task buildingBuildCrystalsAsync(int id)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
         // /municipality/time-left
+        // /municipality/collect
         public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/municipality/time-left";
@@ -1328,14 +1457,6 @@ namespace Overlewd
             }
         }
 
-        [Serializable]
-        public class MunicipalityTimeLeft
-        {
-            public int timeLeft;
-        }
-
-
-        // /municipality/collect
         public static async Task municipalityCollectAsync()
         {
             var url = $"https://overlewd-api.herokuapp.com/municipality/collect";
@@ -1343,6 +1464,75 @@ namespace Overlewd
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
+            }
+        }
+
+        [Serializable]
+        public class MunicipalityTimeLeft
+        {
+            public int timeLeft;
+        }
+
+        // /magicguild/skills
+        // /magicguild/{skillType}/levelup
+        public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/magicguild/skills";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<MagicGuildSkill>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task magicGuildSkillLvlUpAsync(string skillType)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/magicguild/{skillType}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class MagicGuildSkill
+        {
+            public string type;
+            public SkillData current;
+            public SkillData next;
+            public int currentSkillLevel;
+            public int maxSkillLevel;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLvlMax => currentSkillLevel == maxSkillLevel;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool canlvlUp => GameData.player.CanBuy(current.levelUpPrice);
+
+            public const string Type_ActiveSkill = "overlord_enhanced_attack";
+            public const string Type_UltimateSkill = "overlord_ultimate_attack";
+            public const string Type_PassiveSkill1 = "overlord_first_passive_skill";
+            public const string Type_PassiveSkill2 = "overlord_second_passive_skill";
+
+            public class SkillData
+            {
+                public int id;
+                public string name;
+                public string description;
+                public string actionType;
+                public bool AOE;
+                public float amount;
+                public string effect;
+                public string type;
+                public string trigger;
+                public float effectAmount;
+                public float effectProb;
+                public string icon;
+                public float effectActingDuration;
+                public float effectCooldownDuration;
+                public float manaCost;
+                public List<PriceItem> levelUpPrice;
+                public int level;
             }
         }
 
@@ -1431,12 +1621,15 @@ namespace Overlewd
             public const string TabType_OverlordEquipment = "overlord_equipment";
             public const string TabType_Shards = "shards";
 
-            public const string Type_Linear = "linear";
-            public const string Type_Stepwise = "stepwise";
+            public const string Type_TargetByCount = "target_by_count";
+            public const string Type_TargetByTier = "target_by_tier";
         }
 
         // /matriarchs
         // /matriarchs/memories
+        // /matriarchs/memories/{id}/buy
+        // /matriarchs/{id}/seduce
+
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
             var url = $"https://overlewd-api.herokuapp.com/matriarchs";
@@ -1455,17 +1648,78 @@ namespace Overlewd
             }
         }
 
+        public static async Task memoryBuyAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs/memories/{id}/buy";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+            
+            }
+        }
+
+        public static async Task seduceMatriarchAsync(int id)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs/{id}/seduce";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         [Serializable]
         public class MatriarchItem
         {
             public int id;
             public string name;
-            public string placeholderImage;
-            public string image;
-            public int? order;
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
+            public int seduceCooldown;
+            public int? seduceBuffSkillId;
+            public string status;
+            public int? currentEmpathyPoints;
+            public int? empathyLevelTargetPoints;
+            public int? currentEmpathyLevel;
+            public int? nextEmpathyLevel;
+            public string rewardsClaimed;
+            public string seduceAvailableAt;
+
+            public const string Key_Ulvi = "Ulvi";
+            public const string Key_Adriel = "Adriel";
+            public const string Key_Ingie = "Ingie";
+            public const string Key_Faye = "Faye";
+            public const string Key_Lili = "Lili";
+
+            public const string Status_Open = "open";
+            public const string Status_Close = "close";
+
+            public const string RewardsClaimed_None = "none";
+            public const string RewardsClaimed_TwentFive = "twenty_five";
+            public const string RewardsClaimed_Fifty = "fifty";
+            public const string RewardsClaimed_All = "all";
+
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isUlvi => name == Key_Ulvi;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isAdriel => name == Key_Adriel;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isIngie => name == Key_Ingie;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFaye => name == Key_Faye;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLili => name == Key_Lili;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => status == Status_Open;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isClose => name == Status_Close;
         }
 
         [Serializable]

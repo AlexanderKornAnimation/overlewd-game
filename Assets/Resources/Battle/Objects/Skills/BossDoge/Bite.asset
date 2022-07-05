@@ -12,19 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e180528410c80244b9cb774093047405, type: 3}
   m_Name: Bite
   m_EditorClassIdentifier: 
-  skillName: bite
-  discription: Powerfull storm of furious fire
-  battleIco: {fileID: 21300000, guid: df0436bbff76deb40a5a6900a3b9c1fd, type: 3}
+  battleIco: {fileID: 21300000, guid: 95aa6ddda195c6c43ba5370e584602c3, type: 3}
   vfx: {fileID: 0}
   vfxOnTarget: {fileID: 0}
   vfxDuration: 0
   sfx: {fileID: 0}
-  select: 0
+  isHeal: 0
+  potion: 0
   prepairAnimationName: 
   attackAnimationName: attack1
-  power: 2
-  manaCost: 20
-  amount: 0
-  cooldown: 0
-  cooldownCount: 0
-  attackType: 1
+  damage: 0

@@ -90,18 +90,27 @@ namespace Overlewd
             battleGirlsButton = canvas.Find("BattleGirlsButton").GetComponent<Button>();
             battleGirlsButton.onClick.AddListener(BattleGirlsButtonClick);
             battleGirlsGirl = battleGirlsButton.transform.Find("Girl").GetComponent<Image>();
-            battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-            //disable matriach
-            adrielActive.gameObject.SetActive(false);
-            ingieActive.gameObject.SetActive(false);
-            fayeActive.gameObject.SetActive(false);
-            liliActive.gameObject.SetActive(false);
-            
+            battleGirlsTitle = battleGirlsButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();            
         }
 
         public override async Task BeforeShowMakeAsync()
         {
+            adrielActive.gameObject.SetActive(GameData.matriarchs.AdrielIsOpen);
+            adrielNotActive.gameObject.SetActive(!GameData.matriarchs.AdrielIsOpen);
+            adrielButton.interactable = GameData.matriarchs.AdrielIsOpen;
+
+            ingieActive.gameObject.SetActive(GameData.matriarchs.IngieIsOpen);
+            ingieNotActive.gameObject.SetActive(!GameData.matriarchs.IngieIsOpen);
+            ingieButton.interactable = GameData.matriarchs.IngieIsOpen;
+
+            fayeActive.gameObject.SetActive(GameData.matriarchs.FayeIsOpen);
+            fayeNotActive.gameObject.SetActive(!GameData.matriarchs.FayeIsOpen);
+            fayeButton.interactable = GameData.matriarchs.FayeIsOpen;
+
+            liliActive.gameObject.SetActive(GameData.matriarchs.LiliIsOpen);
+            liliNotActive.gameObject.SetActive(!GameData.matriarchs.LiliIsOpen);
+            liliButton.interactable = GameData.matriarchs.LiliIsOpen;
+
             if (inputData?.prevScreenInData != null)
             {
                 if (inputData.prevScreenInData.IsType<MapScreenInData>() || inputData.prevScreenInData.IsType<EventMapScreenInData>())
@@ -146,7 +155,7 @@ namespace Overlewd
             }
         }
 
-        private void UlviButtonClick()
+        private void GirlButtonClick(string girlKey)
         {
             if (inputData == null)
             {
@@ -157,7 +166,7 @@ namespace Overlewd
                 UIManager.MakeScreen<GirlScreen>().
                     SetData(new GirlScreenInData
                     {
-                        girlName = ulviName.text,
+                        girlKey = girlKey,
                         prevScreenInData = inputData,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
@@ -165,21 +174,29 @@ namespace Overlewd
             }
         }
 
+        private void UlviButtonClick()
+        {
+            GirlButtonClick(AdminBRO.MatriarchItem.Key_Ulvi);
+        }
+
         private void AdrielButtonClick()
         {
-            // UIManager.ShowScreen<GirlScreen>();
+            GirlButtonClick(AdminBRO.MatriarchItem.Key_Adriel);
         }
 
         private void IngieButtonClick()
         {
+            GirlButtonClick(AdminBRO.MatriarchItem.Key_Ingie);
         }
 
         private void FayeButtonClick()
         {
+            GirlButtonClick(AdminBRO.MatriarchItem.Key_Faye);
         }
 
         private void LiliButtonClick()
         {
+            GirlButtonClick(AdminBRO.MatriarchItem.Key_Lili);
         }
 
         private void BattleGirlsButtonClick()
