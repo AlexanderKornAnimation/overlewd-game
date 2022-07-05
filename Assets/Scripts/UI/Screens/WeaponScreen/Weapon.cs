@@ -49,6 +49,7 @@ namespace Overlewd
             public void Customize()
             {
                 forAnotherClass.SetActive(weaponData.characterClass != characterData.characterClass);
+                button.gameObject.SetActive(weaponData.characterClass == characterData.characterClass);
                 notificationEquipped.SetActive(weaponData.isEquipped);
                 equippedCharacterIcon.gameObject.SetActive(!weaponData.IsMy(characterId));
 
