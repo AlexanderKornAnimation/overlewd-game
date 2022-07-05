@@ -151,7 +151,7 @@ namespace Overlewd
             SetSkillCtrl(ccOnSelect);
             if (battleState == BattleState.PLAYER)
                 ccOnSelect.CharPortraitSet();
-            SoundManager.GetEventInstance(FMODEventPath.Music_Battle_BGM_1);
+
             //if (battleSettings.powerBuff)
             //    WinOrLose(wannaWin);
         }

@@ -12,7 +12,7 @@ namespace Overlewd
 		protected BattleManager bm;
 		protected BattleManagerOutData endBattleData;
 
-		protected virtual void Awake()
+		void Awake()
 		{
 			var screenInst = ResourceManager.InstantiateScreenPrefab(
 				"Prefabs/UI/Screens/BattleScreens/BaseBattleScreen", transform);
