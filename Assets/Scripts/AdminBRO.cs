@@ -177,6 +177,8 @@ namespace Overlewd
             public string description;
             public string bannerImage;
             public string eventMapNodeName;
+            public int mapCX;
+            public int mapCY;
             public string createdAt;
             public string updatedAt;
             public List<int> tradables;
@@ -392,6 +394,7 @@ namespace Overlewd
             public int id;
             public string name;
             public int? chapterMapId;
+            public string mapImgUrl;
             public int eventId;
             public int? nextChapterId;
             public int? durationInDays;
@@ -573,6 +576,8 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
+            public int mapCX;
+            public int mapCY;
             public List<int> nextStages;
             public string status;
             public int? order;
@@ -1094,6 +1099,7 @@ namespace Overlewd
             public string key;
             public string name;
             public int? chapterMapId;
+            public string mapImgUrl;
             public List<FTUENotificationItem> notifications;
             public List<int> stages;
             public int? nextChapterId;
@@ -1224,6 +1230,8 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
+            public int mapCX;
+            public int mapCY;
             public string status;
             public string type;
             public List<int> nextStages;
