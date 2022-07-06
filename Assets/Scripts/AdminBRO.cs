@@ -203,6 +203,9 @@ namespace Overlewd
             public List<TradableItem> tradablesData =>
                 tradables.Select(id => GameData.markets.GetTradableById(id)).
                 Where(data => data != null).OrderByDescending(item => item.promo).ToList();
+
+            [JsonProperty(Required = Required.Default)]
+            public Vector2 mapPos => new Vector2(mapCX, mapCY);
         }
 
         // /currencies
@@ -589,6 +592,9 @@ namespace Overlewd
             public const string Status_Started = "started";
             public const string Status_Complete = "complete";
             public const string Status_Closed = "closed";
+
+            [JsonProperty(Required = Required.Default)]
+            public Vector2 mapPos => new Vector2(mapCX, mapCY);
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData =>
@@ -1244,6 +1250,9 @@ namespace Overlewd
 
             public const string Type_Dialog = "dialog";
             public const string Type_Battle = "battle";
+
+            [JsonProperty(Required = Required.Default)]
+            public Vector2 mapPos => new Vector2(mapCX, mapCY);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>

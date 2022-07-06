@@ -11,15 +11,17 @@ namespace Overlewd
 {
     public class MapScreen : BaseFullScreenParent<MapScreenInData>
     {
-        protected List<NSMapScreen.BaseStageButton> newStages = new List<NSMapScreen.BaseStageButton>();
+        private List<NSMapScreen.BaseStageButton> newStages = new List<NSMapScreen.BaseStageButton>();
 
-        protected Transform map;
-        protected Button chapterButton;
-        protected TextMeshProUGUI chapterButtonText;
-        protected Button sidebarButton;
-        protected TextMeshProUGUI chapterButtonMarkers;
+        private Transform map;
+        private Image background;
 
-        protected GameObject chapterMap;
+        private Button chapterButton;
+        private TextMeshProUGUI chapterButtonText;
+        private Button sidebarButton;
+        private TextMeshProUGUI chapterButtonMarkers;
+
+        private GameObject chapterMap;
 
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
@@ -40,6 +42,7 @@ namespace Overlewd
             sidebarButton.onClick.AddListener(SidebarButtonClick);
 
             map = canvas.Find("Map");
+            background = map.Find("Background").GetComponent<Image>();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -59,75 +62,84 @@ namespace Overlewd
                 if (mapData != null)
                 {
                     chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
+                    background.gameObject.SetActive(false);
+                }
+                else
+                {
+                    background.sprite = ResourceManager.LoadSprite(GameData.ftue.mapChapter.mapImgUrl);
+                }
 
-                    foreach (var stageId in GameData.ftue.mapChapter.stages)
+                foreach (var stageId in GameData.ftue.mapChapter.stages)
+                {
+                    var stageData = GameData.ftue.info.GetStageById(stageId);
+
+                    var stageMapNode = chapterMap?.transform.Find(stageData.mapNodeName ?? "") ?? map;
+
+                    var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
+                    if (instantiateStageOnMap)
                     {
-                        var stageData = GameData.ftue.info.GetStageById(stageId);
-
-                        var stageMapNode = chapterMap.transform.Find(stageData.mapNodeName);
-                        if (stageMapNode == null)
+                        if (stageData.dialogId.HasValue)
                         {
-                            continue;
-                        }
-
-                        var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
-                        if (instantiateStageOnMap)
-                        {
-                            if (stageData.dialogId.HasValue)
+                            var dialogData = stageData.dialogData;
+                            if (dialogData != null)
                             {
-                                var dialogData = stageData.dialogData;
-                                if (dialogData != null)
+                                if (dialogData.isTypeDialog)
                                 {
-                                    if (dialogData.isTypeDialog)
-                                    {
-                                        var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
-                                        dialog.stageId = stageId;
+                                    var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
+                                    dialog.stageId = stageId;
+                                    dialog.transform.localPosition = (chapterMap == null) ?
+                                        stageData.mapPos : Vector2.zero;
 
-                                        if (!stageData.isComplete)
-                                        {
-                                            newStages.Add(dialog);
-                                            dialog.gameObject.SetActive(false);
-                                        }
+                                    if (!stageData.isComplete)
+                                    {
+                                        newStages.Add(dialog);
+                                        dialog.gameObject.SetActive(false);
                                     }
-                                    else if (dialogData.isTypeSex)
-                                    {
-                                        var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
-                                        sex.stageId = stageId;
+                                }
+                                else if (dialogData.isTypeSex)
+                                {
+                                    var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
+                                    sex.stageId = stageId;
+                                    sex.transform.localPosition = (chapterMap == null) ?
+                                        stageData.mapPos : Vector2.zero;
 
-                                        if (!stageData.isComplete)
-                                        {
-                                            newStages.Add(sex);
-                                            sex.gameObject.SetActive(false);
-                                        }
+                                    if (!stageData.isComplete)
+                                    {
+                                        newStages.Add(sex);
+                                        sex.gameObject.SetActive(false);
                                     }
                                 }
                             }
-                            else if (stageData.battleId.HasValue)
+                        }
+                        else if (stageData.battleId.HasValue)
+                        {
+                            var battleData = stageData.battleData;
+                            if (battleData != null)
                             {
-                                var battleData = stageData.battleData;
-                                if (battleData != null)
+                                if (battleData.isTypeBattle)
                                 {
-                                    if (battleData.isTypeBattle)
-                                    {
-                                        var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                        fight.stageId = stageId;
-                                        
-                                        if (!stageData.isComplete)
-                                        {
-                                            newStages.Add(fight);
-                                            fight.gameObject.SetActive(false);
-                                        }
-                                    }
-                                    else if (battleData.isTypeBoss)
-                                    {
-                                        var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
-                                        fight.stageId = stageId;
+                                    var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                    fight.stageId = stageId;
+                                    fight.transform.localPosition = (chapterMap == null) ?
+                                        stageData.mapPos : Vector2.zero;
 
-                                        if (!stageData.isComplete)
-                                        {
-                                            newStages.Add(fight);
-                                            fight.gameObject.SetActive(false);
-                                        }
+                                    if (!stageData.isComplete)
+                                    {
+                                        newStages.Add(fight);
+                                        fight.gameObject.SetActive(false);
+                                    }
+                                }
+                                else if (battleData.isTypeBoss)
+                                {
+                                    var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
+                                    fight.stageId = stageId;
+                                    fight.transform.localPosition = (chapterMap == null) ?
+                                        stageData.mapPos : Vector2.zero;
+
+                                    if (!stageData.isComplete)
+                                    {
+                                        newStages.Add(fight);
+                                        fight.gameObject.SetActive(false);
                                     }
                                 }
                             }
