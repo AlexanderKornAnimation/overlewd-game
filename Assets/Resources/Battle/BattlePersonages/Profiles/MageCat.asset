@@ -13,24 +13,23 @@ MonoBehaviour:
   m_Name: MageCat
   m_EditorClassIdentifier: 
   key: MAGECAT
-  ico: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
-  battlePortrait: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
+  icoPortrait: {fileID: 21300000, guid: 70fbb2bc737189f4fa4f187723f7fe45, type: 3}
   bigPortrait: {fileID: 21300000, guid: 12f4c2b1c00e850419188f3919f0785f, type: 3}
   idleScale: 1
   battleScale: 1.5
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
-  - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
+  - {fileID: 11400000, guid: 39ed46a9828ed124f92874e880bddd3d, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/MageCat/pers/MageCat
-  characterPrefab: {fileID: 1601382160976312766, guid: 8a671c4a548095e4d96c97f8f43e735c, type: 3}
-  ani_idle_name: Idle
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/MageCat
+  characterPrefab: {fileID: 3429669871766209661, guid: 8a671c4a548095e4d96c97f8f43e735c, type: 3}
+  ani_idle_name: idle
   ani_pAttack_name:
-  - prepair
+  - prepair1
   - prepair2
   ani_attack_name:
-  - attack
+  - attack1
   - attack2
   ani_defence_name: defence
-  ani_defeat_name: difeat
+  ani_defeat_name: defeat

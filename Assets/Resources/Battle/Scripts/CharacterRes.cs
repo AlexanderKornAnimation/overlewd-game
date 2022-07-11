@@ -8,8 +8,7 @@ namespace Overlewd
     {
         //public string charName;
         public string key;
-        public Sprite ico;
-        public Sprite battlePortrait;
+        public Sprite icoPortrait;
         public Sprite bigPortrait;
 
         public float idleScale = 1f, battleScale = 1.4f;

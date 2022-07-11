@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: _overlord.char
   m_EditorClassIdentifier: 
   key: OVERLORD
-  ico: {fileID: 21300000, guid: 02ed73d90305ec242a7f05b870811ac1, type: 3}
-  battlePortrait: {fileID: 21300000, guid: 02ed73d90305ec242a7f05b870811ac1, type: 3}
+  icoPortrait: {fileID: 21300000, guid: 02ed73d90305ec242a7f05b870811ac1, type: 3}
   bigPortrait: {fileID: 21300000, guid: dbbc416984a19a044ae612a7e919e264, type: 3}
   idleScale: 0.9
   battleScale: 1.31
@@ -25,7 +24,7 @@ MonoBehaviour:
   pSkill:
   - {fileID: 11400000, guid: ee8b014f40e928b48b16c2c7e1e579d5, type: 2}
   - {fileID: 11400000, guid: 2b9ce2c01a57f1d4387b4e4e5cd3bd6a, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/Overlord/pers/Overlord
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/Overlord
   characterPrefab: {fileID: 5672936884837085208, guid: 07374bbd9f9ff0a458b28c33c7ff9a88, type: 3}
   ani_idle_name: idle
   ani_pAttack_name:

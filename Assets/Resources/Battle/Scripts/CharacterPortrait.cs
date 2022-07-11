@@ -13,10 +13,15 @@ namespace Overlewd
         private TextMeshProUGUI textMP;
         private Slider sliderHP;
         private Slider sliderMP;
+        private Image BattleBackgroundIco;
         private Image BattlePortraitIco;
+        [SerializeField]
+        private Sprite[] backRarityIcons;
 
         private StatusEffects status_bar;
 
+        private int level => cc.level;
+        private string rarity => cc.rarity;
         private float hp => cc.health;
         private float maxHp => cc.healthMax;
         private float mp => cc.mana;
@@ -30,7 +35,8 @@ namespace Overlewd
 
         public void InitUI()
         {
-            BattlePortraitIco = GetComponent<Image>();
+            BattleBackgroundIco = GetComponent<Image>();
+            BattlePortraitIco = transform.Find("Portrait")?.GetComponent<Image>();
             sliderHP = transform.Find("sliderHP")?.GetComponent<Slider>();
             sliderMP = transform.Find("sliderMP")?.GetComponent<Slider>();
             textHP = transform.Find("sliderHP/Text")?.GetComponent<TextMeshProUGUI>();
@@ -39,10 +45,29 @@ namespace Overlewd
             if (sliderHP) sliderHP.maxValue = maxHp;
             if (sliderMP) sliderMP.maxValue = maxMp;
 
-            if (cc)
+            if (BattleBackgroundIco != null && backRarityIcons.Length != 0)
+                switch (rarity)
+                {
+                    case AdminBRO.Character.Rarity_Basic:
+                        BattleBackgroundIco.sprite = backRarityIcons[0];
+                        break;
+                    case AdminBRO.Character.Rarity_Advanced:
+                        BattleBackgroundIco.sprite = backRarityIcons[1];
+                        break;
+                    case AdminBRO.Character.Rarity_Epic:
+                        BattleBackgroundIco.sprite = backRarityIcons[2];
+                        break;
+                    case AdminBRO.Character.Rarity_Heroic:
+                        BattleBackgroundIco.sprite = backRarityIcons[3];
+                        break;
+                    default:
+                        BattleBackgroundIco.sprite = backRarityIcons[0];
+                        break;
+                }
+            if (cc && status_bar)
             {
                 status_bar.cc = cc;
-                status_bar?.UpdateStatuses();
+                status_bar.UpdateStatuses();
             }
             if (cc != null && button != null)
                 button.onClick.AddListener(cc.Select);
@@ -54,8 +79,8 @@ namespace Overlewd
             }
             else
             {
-                BattlePortraitIco.sprite = cc.characterRes.battlePortrait;
-                if (transform.GetSiblingIndex() > cc.battleOrder) 
+                BattlePortraitIco.sprite = cc.characterRes.icoPortrait;
+                if (transform.GetSiblingIndex() > cc.battleOrder)
                 {
                     transform.SetSiblingIndex(5);
                 }

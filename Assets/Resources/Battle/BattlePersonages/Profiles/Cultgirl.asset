@@ -13,18 +13,17 @@ MonoBehaviour:
   m_Name: Cultgirl
   m_EditorClassIdentifier: 
   key: CULTGIRL
-  ico: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
-  battlePortrait: {fileID: 21300000, guid: 04913d78c3121064094ffe6bd12bbfc6, type: 3}
+  icoPortrait: {fileID: 21300000, guid: e328027faa1a50748904ed0164f8faeb, type: 3}
   bigPortrait: {fileID: 21300000, guid: e5ad9dad72c3efd439a767fa359a2f98, type: 3}
   idleScale: 1
   battleScale: 1.5
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
-  - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
+  - {fileID: 11400000, guid: 707a7d19e4e919c4cae85f6b297830c6, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/Cultgirl/pers/Cultgirl
-  characterPrefab: {fileID: 7277615286226459927, guid: 6c57880eac779f54f8dda80d62d69466, type: 3}
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/Cultgirl
+  characterPrefab: {fileID: 5225833384084219180, guid: 6c57880eac779f54f8dda80d62d69466, type: 3}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1

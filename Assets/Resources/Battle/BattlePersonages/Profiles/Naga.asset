@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Naga
   m_EditorClassIdentifier: 
   key: NAGA
-  ico: {fileID: 21300000, guid: e2bf46e3ea3b19441893138868042b31, type: 3}
-  battlePortrait: {fileID: 21300000, guid: e2bf46e3ea3b19441893138868042b31, type: 3}
+  icoPortrait: {fileID: 21300000, guid: dccdb5fe20cf57946824ec737aeced64, type: 3}
   bigPortrait: {fileID: 21300000, guid: 7658c2ea5c0e4764bb208c19338b2d1a, type: 3}
   idleScale: 1
   battleScale: 1.5
@@ -23,8 +22,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/Naga/pers/Naga
-  characterPrefab: {fileID: 1087001697701868879, guid: 3b6166b919d795842aace66009d6e69a, type: 3}
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/Naga
+  characterPrefab: {fileID: 5439249992082865964, guid: 3b6166b919d795842aace66009d6e69a, type: 3}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1
@@ -32,5 +31,5 @@ MonoBehaviour:
   ani_attack_name:
   - attack1
   - attack2
-  ani_defence_name: defend
+  ani_defence_name: defence
   ani_defeat_name: defeat

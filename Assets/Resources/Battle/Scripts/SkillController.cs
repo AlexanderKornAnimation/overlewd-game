@@ -57,7 +57,6 @@ namespace Overlewd
         {
             image.sprite = oldSkill.battleIco;
             image.SetNativeSize();
-            damage = oldSkill.damage; // old
 
             if (slider != null)
             {
