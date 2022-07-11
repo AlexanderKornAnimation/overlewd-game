@@ -17,7 +17,6 @@ namespace Overlewd
 
         private Button sidebarButton;
 
-        private NSEventMapScreen.MapButton mapButton;
         private BuffWidget buffPanel;
 
         void Awake()
@@ -54,8 +53,6 @@ namespace Overlewd
             {
                 background.sprite = ResourceManager.LoadSprite(eventChapterData.mapImgUrl);
             }
-
-            mapButton = NSEventMapScreen.MapButton.GetInstance(chapterMap.transform.Find("eventMap"));
 
             foreach (var stageData in eventChapterData.stagesData)
             {

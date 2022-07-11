@@ -1196,11 +1196,16 @@ namespace Overlewd
         public class FTUEStats
         {
             public int? lastStartedStage;
+            public int? lastUpdatedStage;
             public int? lastEndedStage;
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
                 GameData.ftue.info.GetStageById(lastStartedStage);
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEStageItem lastUpdatedStageData =>
+                GameData.ftue.info.GetStageById(lastUpdatedStage);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
