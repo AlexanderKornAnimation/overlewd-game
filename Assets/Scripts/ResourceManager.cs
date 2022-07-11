@@ -104,6 +104,9 @@ namespace Overlewd
 
         public static List<string> GetDirectoryFileNames(string directoryPath)
         {
+#if UNITY_WEBGL
+            return new List<string>(); //Directory.GetFiles() now working for WenGL 
+#else
             if (!Directory.Exists(directoryPath))
             {
                 return new List<string>();
@@ -118,6 +121,7 @@ namespace Overlewd
             }
 
             return result;
+#endif
         }
 
         public static List<string> GetResourcesFileNames()
