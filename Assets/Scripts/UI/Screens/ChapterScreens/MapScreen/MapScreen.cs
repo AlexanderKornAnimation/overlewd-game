@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -16,16 +17,17 @@ namespace Overlewd
         private Transform map;
         private Image background;
 
-        private Button chapterButton;
-        private TextMeshProUGUI chapterButtonText;
+        private Button chapterSelectorButton;
+        private TextMeshProUGUI chapterSelectorButtonName;
         private Button sidebarButton;
-        private TextMeshProUGUI chapterButtonMarkers;
+        private TextMeshProUGUI chapterSelectorButtonMarkers;
 
         private GameObject chapterMap;
 
         private EventsWidget eventsPanel;
         private QuestsWidget questsPanel;
         private BuffWidget buffPanel;
+        private NSMapScreen.ChapterSelector chapterSelector;
 
         void Awake()
         {
@@ -33,10 +35,10 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            chapterButton = canvas.Find("ChapterButton").GetComponent<Button>();
-            chapterButtonText = chapterButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            chapterButtonMarkers = chapterButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
-            chapterButton.onClick.AddListener(ChapterButtonClick);
+            chapterSelectorButton = canvas.Find("ChapterSelectorButton").GetComponent<Button>();
+            chapterSelectorButtonName = chapterSelectorButton.transform.Find("ChapterName").GetComponent<TextMeshProUGUI>();
+            chapterSelectorButtonMarkers = chapterSelectorButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
+            chapterSelectorButton.onClick.AddListener(ChapterButtonClick);
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
@@ -52,9 +54,9 @@ namespace Overlewd
                 GameData.ftue.mapChapter = GameData.devMode ?
                     GameData.ftue.info.chapter1 : GameData.ftue.activeChapter;
             }
-
+            
             //backbutton.gameObject.SetActive(false);
-            chapterButton.gameObject.SetActive(true);
+            chapterSelectorButtonName.text = GameData.ftue.mapChapter.name;
 
             if (GameData.ftue.mapChapter != null)
             {
@@ -146,17 +148,6 @@ namespace Overlewd
                         }
                     }
                 }
-
-                if (GameData.ftue.mapChapter.nextChapterId.HasValue)
-                {
-                    chapterButtonText.text = GameData.ftue.mapChapter.nextChapterData?.name;
-                    chapterButton.gameObject.SetActive(GameData.devMode ?
-                         true : GameData.ftue.mapChapter.isComplete);
-                }
-                else
-                {
-                    chapterButton.gameObject.SetActive(false);
-                }
             }
 
             eventsPanel = EventsWidget.GetInstance(transform);
@@ -166,6 +157,9 @@ namespace Overlewd
             buffPanel = BuffWidget.GetInstance(transform);
             buffPanel.Hide();
             DevWidget.GetInstance(transform);
+            chapterSelector = NSMapScreen.ChapterSelector.GetInstance(transform);
+            chapterSelector.Hide();
+
 
             await Task.CompletedTask;
         }
@@ -254,14 +248,16 @@ namespace Overlewd
         private void ChapterButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            GameData.ftue.mapChapter.nextChapterData?.SetAsMapChapter();
-            UIManager.ShowScreen<MapScreen>();
+            // if (GameData.ftue.info.chapters.Count(ch => ch.isComplete) > 1)
+            // {
+                chapterSelector.Show();
+            // }
         }
     }
 
     public class MapScreenInData : BaseFullScreenInData
     {
-        
+        public int chapterId;
+        public AdminBRO.FTUEChapter chapterData => GameData.ftue.info.GetChapterById(chapterId);
     }
 }

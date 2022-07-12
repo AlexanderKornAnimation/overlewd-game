@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Overlewd
 {
@@ -18,6 +19,11 @@ namespace Overlewd
         private Button sidebarButton;
 
         private BuffWidget buffPanel;
+        private Button chapterSelectorButton;
+        private TextMeshProUGUI chapterSelectorButtonName;
+        private TextMeshProUGUI chapterSelectroMarkers;
+
+        private NSEventMapScreen.ChapterSelector chapterSelector;
 
         void Awake()
         {
@@ -33,6 +39,11 @@ namespace Overlewd
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
+
+            chapterSelectorButton = canvas.Find("ChapterSelectorButton").GetComponent<Button>();
+            chapterSelectorButton.onClick.AddListener(ChapterSelectorButtonClick);
+            chapterSelectorButtonName = chapterSelectorButton.transform.Find("ChapterName").GetComponent<TextMeshProUGUI>();
+            chapterSelectroMarkers = chapterSelectorButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -53,6 +64,7 @@ namespace Overlewd
             {
                 background.sprite = ResourceManager.LoadSprite(eventChapterData.mapImgUrl);
             }
+
 
             foreach (var stageData in eventChapterData.stagesData)
             {
@@ -134,6 +146,10 @@ namespace Overlewd
                     eventMarketData.mapPos.pos : Vector2.zero;
             }
 
+            chapterSelector = NSEventMapScreen.ChapterSelector.GetInstance(transform);
+            chapterSelector.Hide();
+            chapterSelectorButtonName.text = eventChapterData.name;
+
             await Task.CompletedTask;
         }
 
@@ -166,6 +182,12 @@ namespace Overlewd
             }
             
             await Task.CompletedTask;
+        }
+
+        private void ChapterSelectorButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            chapterSelector.Show();
         }
 
         private void SidebarButtonClick()
