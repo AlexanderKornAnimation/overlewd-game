@@ -1150,6 +1150,12 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
+            public bool isActive => GameData.ftue.activeChapter == this;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => GameData.devMode ? true : (isComplete || isActive);
+
+            [JsonProperty(Required = Required.Default)]
             public FTUEChapter nextChapterData => 
                 GameData.ftue.info.GetChapterById(nextChapterId);
 
