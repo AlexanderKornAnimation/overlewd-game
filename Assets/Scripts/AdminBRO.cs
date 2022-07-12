@@ -845,6 +845,7 @@ namespace Overlewd
             public float mana;
             public float? potency;
             public int? sexSceneId;
+            public string sexSceneVisibleByRarity;
             public string sexSceneClosedBanner;
             public string sexSceneOpenedBanner;
             public string key;
@@ -1055,6 +1056,7 @@ namespace Overlewd
             public int? characterId;
             public string characterClass;
             public string name;
+            public string icon;
             public float speed;
             public float power;
             public float constitution;
