@@ -163,7 +163,8 @@ namespace Overlewd
             if (GameData.ftue.mapChapter.isComplete && GameData.ftue.mapChapter.nextChapterId.HasValue)
             {
                 var button = NSMapScreen.ButtonNextChapter.GetInstance(map);
-                button.chapterId = GameData.ftue.mapChapter.nextChapterId.Value;
+                button.transform.localPosition = GameData.ftue.mapChapter.nextChapterMapPos?.pos ?? Vector2.zero;
+                button.chapterId = GameData.ftue.mapChapter.nextChapterId;
             }
 
             await Task.CompletedTask;

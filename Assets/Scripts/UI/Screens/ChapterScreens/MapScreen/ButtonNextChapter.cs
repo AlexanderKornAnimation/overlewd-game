@@ -8,7 +8,7 @@ namespace Overlewd
     {
         public class ButtonNextChapter : BaseButton
         {
-            public int chapterId { get; set; }
+            public int? chapterId { get; set; }
 
             public AdminBRO.FTUEChapter chapterData => GameData.ftue.info.GetChapterById(chapterId);
 
