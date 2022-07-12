@@ -36,6 +36,16 @@ namespace Overlewd
                 GameData.markets.GetTradableById(tradableId);
         }
 
+        [Serializable]
+        public class MapPosition
+        {
+            public int mapCX;
+            public int mapCY;
+
+            [JsonProperty(Required = Required.Default)]
+            public Vector2 pos => new Vector2(mapCX, -mapCY);
+        }
+
         // /version
         public static async Task<ApiVersion> versionAsync()
         {
@@ -177,8 +187,7 @@ namespace Overlewd
             public string description;
             public string bannerImage;
             public string eventMapNodeName;
-            public int mapCX;
-            public int mapCY;
+            public MapPosition mapPos;
             public string createdAt;
             public string updatedAt;
             public List<int> tradables;
@@ -203,9 +212,6 @@ namespace Overlewd
             public List<TradableItem> tradablesData =>
                 tradables.Select(id => GameData.markets.GetTradableById(id)).
                 Where(data => data != null).OrderByDescending(item => item.promo).ToList();
-
-            [JsonProperty(Required = Required.Default)]
-            public Vector2 mapPos => new Vector2(mapCX, -mapCY);
         }
 
         // /currencies
@@ -398,6 +404,7 @@ namespace Overlewd
             public string name;
             public int? chapterMapId;
             public string mapImgUrl;
+            public MapPosition nextChapterMapPos;
             public int eventId;
             public int? nextChapterId;
             public int? durationInDays;
@@ -579,8 +586,7 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
-            public int mapCX;
-            public int mapCY;
+            public MapPosition mapPos;
             public List<int> nextStages;
             public string status;
             public int? order;
@@ -592,9 +598,6 @@ namespace Overlewd
             public const string Status_Started = "started";
             public const string Status_Complete = "complete";
             public const string Status_Closed = "closed";
-
-            [JsonProperty(Required = Required.Default)]
-            public Vector2 mapPos => new Vector2(mapCX, -mapCY);
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData =>
@@ -1106,6 +1109,9 @@ namespace Overlewd
             public string name;
             public int? chapterMapId;
             public string mapImgUrl;
+            public MapPosition monthlyEventMapPos;
+            public MapPosition quarterlyEventMapPos;
+            public MapPosition nextChapterMapPos;
             public List<FTUENotificationItem> notifications;
             public List<int> stages;
             public int? nextChapterId;
@@ -1241,8 +1247,7 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
-            public int mapCX;
-            public int mapCY;
+            public MapPosition mapPos;
             public string status;
             public string type;
             public List<int> nextStages;
@@ -1255,9 +1260,6 @@ namespace Overlewd
 
             public const string Type_Dialog = "dialog";
             public const string Type_Battle = "battle";
-
-            [JsonProperty(Required = Required.Default)]
-            public Vector2 mapPos => new Vector2(mapCX, -mapCY);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>

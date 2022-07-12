@@ -88,7 +88,7 @@ namespace Overlewd
                                     var dialog = NSMapScreen.DialogButton.GetInstance(stageMapNode);
                                     dialog.stageId = stageId;
                                     dialog.transform.localPosition = (chapterMap == null) ?
-                                        stageData.mapPos : Vector2.zero;
+                                        stageData.mapPos.pos : Vector2.zero;
 
                                     if (!stageData.isComplete)
                                     {
@@ -101,7 +101,7 @@ namespace Overlewd
                                     var sex = NSMapScreen.SexSceneButton.GetInstance(stageMapNode);
                                     sex.stageId = stageId;
                                     sex.transform.localPosition = (chapterMap == null) ?
-                                        stageData.mapPos : Vector2.zero;
+                                        stageData.mapPos.pos : Vector2.zero;
 
                                     if (!stageData.isComplete)
                                     {
@@ -121,7 +121,7 @@ namespace Overlewd
                                     var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
                                     fight.stageId = stageId;
                                     fight.transform.localPosition = (chapterMap == null) ?
-                                        stageData.mapPos : Vector2.zero;
+                                        stageData.mapPos.pos : Vector2.zero;
 
                                     if (!stageData.isComplete)
                                     {
@@ -134,7 +134,7 @@ namespace Overlewd
                                     var fight = NSMapScreen.FightButton.GetInstance(stageMapNode);
                                     fight.stageId = stageId;
                                     fight.transform.localPosition = (chapterMap == null) ?
-                                        stageData.mapPos : Vector2.zero;
+                                        stageData.mapPos.pos : Vector2.zero;
 
                                     if (!stageData.isComplete)
                                     {

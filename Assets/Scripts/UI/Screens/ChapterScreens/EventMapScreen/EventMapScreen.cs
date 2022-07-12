@@ -71,7 +71,7 @@ namespace Overlewd
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         fightButton.stageId = stageData.id;
                         fightButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos : Vector2.zero;
+                            stageData.mapPos.pos : Vector2.zero;
 
                         if (!stageData.isComplete)
                         {
@@ -84,7 +84,7 @@ namespace Overlewd
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
                         bossFightButton.stageId = stageData.id;
                         bossFightButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos : Vector2.zero;
+                            stageData.mapPos.pos : Vector2.zero;
 
                         if (!stageData.isComplete)
                         {
@@ -101,7 +101,7 @@ namespace Overlewd
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
                         dialogButton.stageId = stageData.id;
                         dialogButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos : Vector2.zero;
+                            stageData.mapPos.pos : Vector2.zero;
 
                         if (!stageData.isComplete)
                         {
@@ -114,7 +114,7 @@ namespace Overlewd
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
                         sexButton.stageId = stageData.id;
                         sexButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos : Vector2.zero;
+                            stageData.mapPos.pos : Vector2.zero;
 
                         if (!stageData.isComplete)
                         {
@@ -131,7 +131,7 @@ namespace Overlewd
                 var shopButton = NSEventMapScreen.EventShopButton.GetInstance(mapNode);
                 shopButton.eventMarketId = eventMarketData.id;
                 shopButton.transform.localPosition = (chapterMap == null) ?
-                    eventMarketData.mapPos : Vector2.zero;
+                    eventMarketData.mapPos.pos : Vector2.zero;
             }
 
             await Task.CompletedTask;
