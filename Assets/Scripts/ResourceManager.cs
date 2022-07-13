@@ -190,6 +190,11 @@ namespace Overlewd
             }
 
             var filePath = GetResourcesFilePath(id);
+            if (!Exists(filePath))
+            {
+                return null;
+            }
+
             var texture = new Texture2D(1, 1);
             var data = File.ReadAllBytes(filePath);
             texture.LoadImage(data, true);
