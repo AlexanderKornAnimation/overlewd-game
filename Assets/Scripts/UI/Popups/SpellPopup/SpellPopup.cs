@@ -71,7 +71,7 @@ namespace Overlewd
             {
                 resources[i].gameObject.SetActive(true);
                 var currency = GameData.currencies.GetById(spellData?.current.levelUpPrice[i].currencyId);
-                resources[i].sprite = ResourceManager.LoadSprite(currency.icon356Url);
+                resources[i].sprite = ResourceManager.LoadSprite(currency.iconUrl);
                 count[i].text = spellData.current.levelUpPrice[i].amount.ToString();
                 count[i].color = spellData.canlvlUp ? Color.white : Color.red;
             }

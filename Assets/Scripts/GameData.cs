@@ -516,6 +516,9 @@ namespace Overlewd
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
+        public int hpAmount => GameData.player.info.potion.hp;
+        public int manaAmount => GameData.player.info.potion.mana;
+
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
             foreach (var priceItem in price)

@@ -25,6 +25,8 @@ namespace Overlewd
         private RectTransform buffRect;
         private Transform enemyContent;
         private Transform allyContent;
+        private TextMeshProUGUI hpAmount;
+        private TextMeshProUGUI manaAmount;
 
         private Image firstTimeReward;
 
@@ -73,6 +75,9 @@ namespace Overlewd
 
             buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
             buffRect = buff.GetComponent<RectTransform>();
+
+            hpAmount = bottlePanel.Find("Health").Find("Value").GetComponent<TextMeshProUGUI>();
+            manaAmount = bottlePanel.Find("Mana").Find("Value").GetComponent<TextMeshProUGUI>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
             UITools.TopHide(buffRect);
@@ -136,6 +141,9 @@ namespace Overlewd
                 rewards[i].sprite = reward.icon == null ? null : ResourceManager.LoadSprite(reward.icon);
                 rewardsAmount[i].text = reward.amount.ToString();
             }
+
+            hpAmount.text = GameData.player.hpAmount.ToString();
+            manaAmount.text = GameData.player.manaAmount.ToString();
         }
 
         public override async Task BeforeShowMakeAsync()

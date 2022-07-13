@@ -92,7 +92,7 @@ namespace Overlewd
                 {
                     var currencyData = GameData.currencies.GetById(prices[i].currencyId);
                     resource[i].gameObject.SetActive(true);
-                    resource[i].sprite = ResourceManager.LoadSprite(currencyData.icon256Url);
+                    resource[i].sprite = ResourceManager.LoadSprite(currencyData.iconUrl);
                     count[i].text = prices[i].amount.ToString();
                     count[i].color = buildingData.canUpgrade ? Color.white : Color.red;
                 }

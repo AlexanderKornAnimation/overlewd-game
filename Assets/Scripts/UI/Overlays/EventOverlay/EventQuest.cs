@@ -91,7 +91,7 @@ namespace Overlewd
                     var rIcon = reward.GetComponent<Image>();
                     var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData?.icon70);
+                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData?.icon);
                     rIcon.preserveAspect = true;
                     rCount.text = rewardData.amount?.ToString();
                     reward.gameObject.SetActive(true);

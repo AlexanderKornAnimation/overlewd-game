@@ -47,7 +47,7 @@ namespace Overlewd
                     priceIcons[i] = levelUpButton.transform.Find($"Resource{i + 1}").GetComponent<Image>();
                     priceAmounts[i] = priceIcons[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
                     
-                    var iconUrl = GameData.currencies.GetById(skillData.levelUpPrice[i].currencyId).icon356Url;
+                    var iconUrl = GameData.currencies.GetById(skillData.levelUpPrice[i].currencyId).iconUrl;
                     priceIcons[i].sprite = ResourceManager.LoadSprite(iconUrl);
                     priceAmounts[i].text = skillData.levelUpPrice[i].amount.ToString();
                 }

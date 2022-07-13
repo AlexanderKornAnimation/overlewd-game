@@ -12,15 +12,16 @@ namespace Overlewd
         private Button nextButton;
         private Button repeatButton;
 
-        private Image reward1;
-        private Image reward2;
-        private Image reward3;
+        private const int rewardsCount = 3;
+        private Image[] rewards = new Image[rewardsCount];
+
 
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/VictoryPopup/VictoryPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+            var grid = canvas.Find("Grid");
 
             nextButton = canvas.Find("NextButton").GetComponent<Button>();
             nextButton.onClick.AddListener(NextButtonClick);
@@ -28,17 +29,23 @@ namespace Overlewd
             repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
             repeatButton.onClick.AddListener(RepeatButtonClick);
 
-            reward1 = canvas.Find("Reward1").GetComponent<Image>();
-            reward2 = canvas.Find("Reward2").GetComponent<Image>();
-            reward3 = canvas.Find("Reward3").GetComponent<Image>();
-            
-            reward1.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/CopperWithSubstrate186x186");
-            reward2.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/GemsWithSubstrate186x186");
-            reward3.sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/GoldWithSubstrate186x186");
+            for (int i = 0; i < rewards.Length; i++)
+            {
+                rewards[i] = grid.Find($"Reward{i + 1}").GetComponent<Image>();
+                rewards[i].gameObject.SetActive(false);
+            }
         }
 
         public override async Task BeforeShowMakeAsync()
         {
+            var battleData = inputData?.ftueStageData?.battleData ?? inputData?.eventStageData?.battleData;
+
+            for (int i = 0; i < battleData?.rewards?.Count; i++)
+            {
+                rewards[i].gameObject.SetActive(true);
+                rewards[i].sprite = ResourceManager.LoadSprite(battleData?.rewards[i].icon);
+            }
+
             switch (inputData.ftueStageData?.ftueState)
             {
                 case ("battle1", "chapter1"):

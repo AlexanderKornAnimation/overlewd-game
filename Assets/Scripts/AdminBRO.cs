@@ -228,11 +228,6 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public string icon356Url;
-            public string icon256Url;
-            public string icon186Url;
-            public string icon153Url;
-            public string icon70Url;
             public string iconUrl;
             public string key;
             public bool nutaku;
@@ -318,21 +313,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string icon => currencyData?.iconUrl ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon70 => currencyData?.icon70Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon153 => currencyData?.icon153Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon186 => currencyData?.icon186Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon256 => currencyData?.icon256Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon356 => currencyData?.icon356Url ?? imageUrl;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
