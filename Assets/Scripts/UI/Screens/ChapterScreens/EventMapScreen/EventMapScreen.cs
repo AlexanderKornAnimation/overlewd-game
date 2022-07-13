@@ -14,8 +14,6 @@ namespace Overlewd
         private Transform map;
         private Image background;
 
-        private GameObject chapterMap;
-
         private Button sidebarButton;
 
         private BuffWidget buffPanel;
@@ -54,17 +52,7 @@ namespace Overlewd
                 return;
             }
 
-            var mapData = GameData.chapterMaps.GetById(eventChapterData.chapterMapId);
-            if (mapData != null)
-            {
-                chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
-                background.gameObject.SetActive(false);
-            }
-            else
-            {
-                background.sprite = ResourceManager.LoadSprite(eventChapterData.mapImgUrl);
-            }
-
+            background.sprite = ResourceManager.LoadSprite(eventChapterData.mapImgUrl);
 
             foreach (var stageData in eventChapterData.stagesData)
             {
@@ -73,17 +61,14 @@ namespace Overlewd
                     //continue;
                 }
 
-                var mapNode = chapterMap?.transform.Find(stageData.mapNodeName ?? "") ?? map;
-
                 if (stageData.battleId.HasValue)
                 {
                     var battleData = stageData.battleData;
                     if (battleData.isTypeBattle)
                     {
-                        var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        var fightButton = NSEventMapScreen.FightButton.GetInstance(map);
                         fightButton.stageId = stageData.id;
-                        fightButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos.pos : Vector2.zero;
+                        fightButton.transform.localPosition = stageData.mapPos.pos;
 
                         if (!stageData.isComplete)
                         {
@@ -93,10 +78,9 @@ namespace Overlewd
                     }
                     else if (battleData.isTypeBoss)
                     {
-                        var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        var bossFightButton = NSEventMapScreen.FightButton.GetInstance(map);
                         bossFightButton.stageId = stageData.id;
-                        bossFightButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos.pos : Vector2.zero;
+                        bossFightButton.transform.localPosition = stageData.mapPos.pos;
 
                         if (!stageData.isComplete)
                         {
@@ -110,10 +94,9 @@ namespace Overlewd
                     var dialogData = stageData.dialogData;
                     if (dialogData.isTypeDialog)
                     {
-                        var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
+                        var dialogButton = NSEventMapScreen.DialogButton.GetInstance(map);
                         dialogButton.stageId = stageData.id;
-                        dialogButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos.pos : Vector2.zero;
+                        dialogButton.transform.localPosition = stageData.mapPos.pos;
 
                         if (!stageData.isComplete)
                         {
@@ -123,10 +106,9 @@ namespace Overlewd
                     }
                     else if (dialogData.isTypeSex)
                     {
-                        var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
+                        var sexButton = NSEventMapScreen.SexButton.GetInstance(map);
                         sexButton.stageId = stageData.id;
-                        sexButton.transform.localPosition = (chapterMap == null) ?
-                            stageData.mapPos.pos : Vector2.zero;
+                        sexButton.transform.localPosition = stageData.mapPos.pos;
 
                         if (!stageData.isComplete)
                         {
@@ -139,11 +121,9 @@ namespace Overlewd
 
             foreach (var eventMarketData in GameData.events.mapEventData.marketsData)
             {
-                var mapNode = chapterMap?.transform.Find(eventMarketData.eventMapNodeName ?? "") ?? map;
-                var shopButton = NSEventMapScreen.EventShopButton.GetInstance(mapNode);
+                var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
                 shopButton.eventMarketId = eventMarketData.id;
-                shopButton.transform.localPosition = (chapterMap == null) ?
-                    eventMarketData.mapPos.pos : Vector2.zero;
+                shopButton.transform.localPosition = eventMarketData.mapPos.pos;
             }
 
             chapterSelector = NSEventMapScreen.ChapterSelector.GetInstance(transform);

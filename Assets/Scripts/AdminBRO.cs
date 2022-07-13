@@ -402,7 +402,6 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public int? chapterMapId;
             public string mapImgUrl;
             public MapPosition nextChapterMapPos;
             public int eventId;
@@ -1109,7 +1108,6 @@ namespace Overlewd
             public int id;
             public string key;
             public string name;
-            public int? chapterMapId;
             public string mapImgUrl;
             public MapPosition monthlyEventMapPos;
             public MapPosition quarterlyEventMapPos;
@@ -1566,25 +1564,6 @@ namespace Overlewd
                 public List<PriceItem> levelUpPrice;
                 public int level;
             }
-        }
-
-        //chapter-maps
-        public static async Task<List<ChapterMap>> chapterMapsAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/chapter-maps";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
-            {
-                return JsonHelper.DeserializeObject<List<ChapterMap>>(request?.downloadHandler.text);
-            }
-        }
-
-        [Serializable]
-        public class ChapterMap
-        {
-            public int id;
-            public string title;
-            public string assetBundleId;
-            public string chapterMapPath;
         }
 
         // gacha

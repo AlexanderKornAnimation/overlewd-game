@@ -229,8 +229,6 @@ namespace Overlewd
 
             await GameData.sounds.Get();
 
-            await GameData.chapterMaps.Get();
-
             await GameData.buildings.Get();
 
             await GameData.characters.Get();
