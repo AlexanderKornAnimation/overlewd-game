@@ -36,6 +36,16 @@ namespace Overlewd
                 GameData.markets.GetTradableById(tradableId);
         }
 
+        [Serializable]
+        public class MapPosition
+        {
+            public int mapCX;
+            public int mapCY;
+
+            [JsonProperty(Required = Required.Default)]
+            public Vector2 pos => new Vector2(mapCX, -mapCY);
+        }
+
         // /version
         public static async Task<ApiVersion> versionAsync()
         {
@@ -177,6 +187,7 @@ namespace Overlewd
             public string description;
             public string bannerImage;
             public string eventMapNodeName;
+            public MapPosition mapPos;
             public string createdAt;
             public string updatedAt;
             public List<int> tradables;
@@ -217,11 +228,6 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public string icon356Url;
-            public string icon256Url;
-            public string icon186Url;
-            public string icon153Url;
-            public string icon70Url;
             public string iconUrl;
             public string key;
             public bool nutaku;
@@ -307,21 +313,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string icon => currencyData?.iconUrl ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon70 => currencyData?.icon70Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon153 => currencyData?.icon153Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon186 => currencyData?.icon186Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon256 => currencyData?.icon256Url ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string icon356 => currencyData?.icon356Url ?? imageUrl;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
@@ -391,7 +382,8 @@ namespace Overlewd
         {
             public int id;
             public string name;
-            public int? chapterMapId;
+            public string mapImgUrl;
+            public MapPosition nextChapterMapPos;
             public int eventId;
             public int? nextChapterId;
             public int? durationInDays;
@@ -573,6 +565,7 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
+            public MapPosition mapPos;
             public List<int> nextStages;
             public string status;
             public int? order;
@@ -831,6 +824,7 @@ namespace Overlewd
             public float mana;
             public float? potency;
             public int? sexSceneId;
+            public string sexSceneVisibleByRarity;
             public string sexSceneClosedBanner;
             public string sexSceneOpenedBanner;
             public string key;
@@ -1041,6 +1035,7 @@ namespace Overlewd
             public int? characterId;
             public string characterClass;
             public string name;
+            public string icon;
             public float speed;
             public float power;
             public float constitution;
@@ -1093,7 +1088,10 @@ namespace Overlewd
             public int id;
             public string key;
             public string name;
-            public int? chapterMapId;
+            public string mapImgUrl;
+            public MapPosition monthlyEventMapPos;
+            public MapPosition quarterlyEventMapPos;
+            public MapPosition nextChapterMapPos;
             public List<FTUENotificationItem> notifications;
             public List<int> stages;
             public int? nextChapterId;
@@ -1130,6 +1128,12 @@ namespace Overlewd
                     return true;
                 }
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isActive => GameData.ftue.activeChapter == this;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => GameData.devMode ? true : (isComplete || isActive);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter nextChapterData => 
@@ -1184,11 +1188,16 @@ namespace Overlewd
         public class FTUEStats
         {
             public int? lastStartedStage;
+            public int? lastUpdatedStage;
             public int? lastEndedStage;
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
                 GameData.ftue.info.GetStageById(lastStartedStage);
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEStageItem lastUpdatedStageData =>
+                GameData.ftue.info.GetStageById(lastUpdatedStage);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
@@ -1224,6 +1233,7 @@ namespace Overlewd
             public int? dialogId;
             public int? battleId;
             public string mapNodeName;
+            public MapPosition mapPos;
             public string status;
             public string type;
             public List<int> nextStages;
@@ -1534,25 +1544,6 @@ namespace Overlewd
                 public List<PriceItem> levelUpPrice;
                 public int level;
             }
-        }
-
-        //chapter-maps
-        public static async Task<List<ChapterMap>> chapterMapsAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/chapter-maps";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
-            {
-                return JsonHelper.DeserializeObject<List<ChapterMap>>(request?.downloadHandler.text);
-            }
-        }
-
-        [Serializable]
-        public class ChapterMap
-        {
-            public int id;
-            public string title;
-            public string assetBundleId;
-            public string chapterMapPath;
         }
 
         // gacha

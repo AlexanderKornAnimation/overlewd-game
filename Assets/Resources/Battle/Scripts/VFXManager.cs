@@ -21,10 +21,10 @@ namespace Overlewd
         {
             var parent = GetComponentInParent<Transform>().localScale;
             //UITools.SetStretch(GetComponent<RectTransform>());
-            if (spineVFXPrefab) 
-                spineWiget = SpineWidget.GetInstance(spineVFXPrefab, transform);
-            else
-                spineWiget = SpineWidget.GetInstance(path, transform);
+
+            spineWiget = spineVFXPrefab ?
+                SpineWidget.GetInstance(spineVFXPrefab, transform) :
+                SpineWidget.GetInstance(path, transform);
 
             duration = spineWiget.GetAnimationDuaration(animationName);
             StartCoroutine(StartAfterDelay());

@@ -38,11 +38,10 @@ namespace Overlewd
             var questNum = 0;
             foreach (var questData in GameData.quests.quests)
             {
-                NSQuestWidget.BaseQuestButton questButton = (questNum % 3) switch
+                NSQuestWidget.BaseQuestButton questButton = (questNum % 2) switch
                 {
                     0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
                     1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
-                    2 => NSQuestWidget.SideQuestButton3.GetInstance(content),
                     _ => null
                 };
                 questButton.questId = questData.id;

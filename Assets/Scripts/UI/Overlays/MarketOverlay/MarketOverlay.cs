@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class MarketPopup : BaseOverlayParent<MarketOverlayInData>
+    public class MarketOverlay : BaseOverlayParent<MarketOverlayInData>
     {
         private List<NSMarketPopup.OfferButton> offers = new List<NSMarketPopup.OfferButton>();
         private NSMarketPopup.OfferButton selectedOffer;

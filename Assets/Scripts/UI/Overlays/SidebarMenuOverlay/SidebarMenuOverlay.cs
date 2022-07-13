@@ -60,78 +60,87 @@ namespace Overlewd
         private TextMeshProUGUI forgeButton_Title;
         private Image forgeButton_Icon;
 
+        private Transform bannerContent;
+        private Transform bannerScroll;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/SidebarMenuOverlay/SidebarMenuOverlay", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+            var buttonsGrid = canvas.Find("ButtonsGrid");
 
-            castleButton = canvas.Find("CastleButton").GetComponent<Button>();
+            castleButton = buttonsGrid.Find("CastleButton").GetComponent<Button>();
             castleButton.onClick.AddListener(CastleButtonClick);
             castleButton_Markers = castleButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             castleButton_Title = castleButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             castleButton_Icon = castleButton.transform.Find("Icon").GetComponent<Image>();
 
-            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
+            portalButton = buttonsGrid.Find("PortalButton").GetComponent<Button>();
             portalButton.onClick.AddListener(PortalButtonClick);
             portalButton_Markers = portalButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             portalButton_Title = portalButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             portalButton_Icon = portalButton.transform.Find("Icon").GetComponent<Image>();
 
-            globalMapButton = canvas.Find("GlobalMapButton").GetComponent<Button>();
+            globalMapButton = buttonsGrid.Find("GlobalMapButton").GetComponent<Button>();
             globalMapButton.onClick.AddListener(GlobalMapButtonClick);
             globalMapButton_Markers = globalMapButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             globalMapButton_Title = globalMapButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             globalMapButton_Icon = globalMapButton.transform.Find("Icon").GetComponent<Image>();
 
-            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton = buttonsGrid.Find("OverlordButton").GetComponent<Button>();
             overlordButton.onClick.AddListener(OverlordButtonClick);
             overlordButton_Markers = overlordButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             overlordButton_Title = overlordButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             overlordButton_Icon = overlordButton.transform.Find("Icon").GetComponent<Image>();
             
-            haremButton = canvas.Find("HaremButton").GetComponent<Button>();
+            haremButton = buttonsGrid.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
             haremButton_Markers = haremButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             haremButton_Title = haremButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             haremButton_Icon = haremButton.transform.Find("Icon").GetComponent<Image>();
 
-            municipalityButton = canvas.Find("MunicipalityButton").GetComponent<Button>();
+            municipalityButton = buttonsGrid.Find("MunicipalityButton").GetComponent<Button>();
             municipalityButton.onClick.AddListener(MunicipalityButtonClick);
             municipalityButton_Markers = municipalityButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             municipalityButton_Title = municipalityButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             municipalityButton_Icon = municipalityButton.transform.Find("Icon").GetComponent<Image>();
 
-            magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
+            magicGuildButton = buttonsGrid.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
             magicGuildButton_Markers = magicGuildButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             magicGuildButton_Title = magicGuildButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             magicGuildButton_Icon = magicGuildButton.transform.Find("Icon").GetComponent<Image>();
 
-            marketButton = canvas.Find("MarketButton").GetComponent<Button>();
+            marketButton = buttonsGrid.Find("MarketButton").GetComponent<Button>();
             marketButton.onClick.AddListener(MarketButtonClick);
             marketButton_Markers = marketButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             marketButton_Title = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             marketButton_Icon = marketButton.transform.Find("Icon").GetComponent<Image>();
 
-            laboratoryButton = canvas.Find("LaboratoryButton").GetComponent<Button>();
+            laboratoryButton = buttonsGrid.Find("LaboratoryButton").GetComponent<Button>();
             laboratoryButton.onClick.AddListener(LaboratoryButtonClick);
             laboratory_Markers = laboratoryButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             laboratory_Title = laboratoryButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             laboratoryButton_Icon = laboratoryButton.transform.Find("Icon").GetComponent<Image>();
             
-            forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
+            forgeButton = buttonsGrid.Find("ForgeButton").GetComponent<Button>();
             forgeButton.onClick.AddListener(ForgeButtonClick);
             forgeButton_Markers = forgeButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
             forgeButton_Title = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             forgeButton_Icon = forgeButton.transform.Find("Icon").GetComponent<Image>();
+
+            bannerScroll = canvas.Find("ScrollView");
+            bannerContent = bannerScroll.Find("Viewport").Find("Content");
+            
+            UITools.LeftHide(bannerScroll.GetComponent<RectTransform>());
         }
 
         public override async Task BeforeShowMakeAsync()
         {
             UITools.DisableButton(castleButton, UIManager.HasScreen<CastleScreen>());
             UITools.DisableButton(globalMapButton, UIManager.HasScreen<MapScreen>());
-
+            
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
@@ -159,7 +168,22 @@ namespace Overlewd
                     break;
             }
 
+            for (int i = 0; i < 11; i++)
+            {
+                NSSidebarMenuOverlay.Banner.GetInstance(bannerContent);
+            }
+            
             await Task.CompletedTask;
+        }
+
+        public override async Task AfterShowAsync()
+        {
+            await UITools.LeftShowAsync(bannerScroll.GetComponent<RectTransform>());
+        }
+        
+        public override async Task BeforeHideAsync()
+        {
+            await UITools.LeftHideAsync(bannerScroll.GetComponent<RectTransform>());
         }
 
         public override void StartShow()
@@ -219,7 +243,7 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.ShowOverlay<MarketPopup>();
+            UIManager.ShowOverlay<MarketOverlay>();
         }
 
         private void LaboratoryButtonClick()

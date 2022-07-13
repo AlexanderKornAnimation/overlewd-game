@@ -42,7 +42,6 @@ namespace Overlewd
         public static Battles battles { get; } = new Battles();
         public static Animations animations { get; } = new Animations();
         public static Sounds sounds { get; } = new Sounds();
-        public static ChapterMaps chapterMaps { get; } = new ChapterMaps();
         public static Matriarchs matriarchs { get; } = new Matriarchs();
     }
 
@@ -517,6 +516,9 @@ namespace Overlewd
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
+        public int hpAmount => info.potion.hp;
+        public int manaAmount => info.potion.mana;
+
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
             foreach (var priceItem in price)
@@ -589,20 +591,6 @@ namespace Overlewd
 
         public AdminBRO.Sound GetById(int? id) =>
             sounds.Find(s => s.id == id);
-    }
-
-    //chapterMaps
-    public class ChapterMaps
-    {
-        public List<AdminBRO.ChapterMap> chapterMaps { get; private set; } = new List<AdminBRO.ChapterMap>();
-
-        public async Task Get()
-        {
-            chapterMaps = await AdminBRO.chapterMapsAsync();
-        }
-
-        public AdminBRO.ChapterMap GetById(int? id) =>
-            chapterMaps.Find(cm => cm.id == id);
     }
 
     //matriarchs

@@ -193,7 +193,7 @@ namespace Overlewd
                     levelPriceIcons[i] = levelUpButtonCanLvlUp.transform.Find($"Resource{i + 1}").GetComponent<Image>();
                     levelPriceAmounts[i] = levelPriceIcons[i]?.transform.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                    levelPriceIcons[i].sprite = ResourceManager.LoadSprite(currency.icon356Url);
+                    levelPriceIcons[i].sprite = ResourceManager.LoadSprite(currency.iconUrl);
                     levelPriceAmounts[i].text = price.amount.ToString();
                 }
             }

@@ -24,6 +24,7 @@ namespace Overlewd
             private Button mapButton;
             private Button claimButton;
             private Transform inProgress;
+            private Transform complited;
 
             private TextMeshProUGUI eventName;
             private TextMeshProUGUI title;
@@ -53,6 +54,7 @@ namespace Overlewd
                 claimButton.onClick.AddListener(ClaimClick);
 
                 inProgress = canvas.Find("InProgress");
+                complited = canvas.Find("Complited");
 
                 for (int i = 1; i <= 5; i++)
                 {
@@ -86,10 +88,10 @@ namespace Overlewd
                     
                     var reward = rewards[rId];
                     rId++;
-                    var rIcon = reward.Find("Item").GetComponent<Image>();
+                    var rIcon = reward.GetComponent<Image>();
                     var rCount = reward.Find("Count").GetComponent<TextMeshProUGUI>();
 
-                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData?.icon70);
+                    rIcon.sprite = ResourceManager.LoadSprite(rewardData.tradableData?.icon);
                     rIcon.preserveAspect = true;
                     rCount.text = rewardData.amount?.ToString();
                     reward.gameObject.SetActive(true);
@@ -108,19 +110,24 @@ namespace Overlewd
                 {
                     case AdminBRO.QuestItem.Status_Open:
                         inProgress.gameObject.SetActive(false);
+                        complited.gameObject.SetActive(false);
                         claimButton.gameObject.SetActive(false);
                         break;
                     case AdminBRO.QuestItem.Status_In_Progress:
                         inProgress.gameObject.SetActive(true);
+                        complited.gameObject.SetActive(false);
                         claimButton.gameObject.SetActive(false);
                         break;
                     case AdminBRO.QuestItem.Status_Complete:
                         inProgress.gameObject.SetActive(false);
+                        complited.gameObject.SetActive(false);
                         claimButton.gameObject.SetActive(true);
                         mapButton.gameObject.SetActive(false);
                         break;
                     case AdminBRO.QuestItem.Status_Rewards_Claimed:
+                        progress.gameObject.SetActive(false);
                         inProgress.gameObject.SetActive(false);
+                        complited.gameObject.SetActive(true);
                         claimButton.gameObject.SetActive(false);
                         mapButton.gameObject.SetActive(false);
                         break;

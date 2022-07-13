@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Overlewd
 {
@@ -11,14 +12,18 @@ namespace Overlewd
         private List<NSEventMapScreen.BaseStageButton> newStages = new List<NSEventMapScreen.BaseStageButton>();
 
         private Transform map;
-        private GameObject chapterMap;
+        private Image background;
 
         private Button sidebarButton;
 
-        private NSEventMapScreen.MapButton mapButton;
         private BuffWidget buffPanel;
+        private Button chapterSelectorButton;
+        private TextMeshProUGUI chapterSelectorButtonName;
+        private TextMeshProUGUI chapterSelectroMarkers;
 
-        private void Awake()
+        private NSEventMapScreen.ChapterSelector chapterSelector;
+
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/EventMap", transform);
 
@@ -28,9 +33,15 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
             map = canvas.Find("Map");
+            background = map.Find("Background").GetComponent<Image>();
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
+
+            chapterSelectorButton = canvas.Find("ChapterSelectorButton").GetComponent<Button>();
+            chapterSelectorButton.onClick.AddListener(ChapterSelectorButtonClick);
+            chapterSelectorButtonName = chapterSelectorButton.transform.Find("ChapterName").GetComponent<TextMeshProUGUI>();
+            chapterSelectroMarkers = chapterSelectorButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -41,14 +52,7 @@ namespace Overlewd
                 return;
             }
 
-            var mapData = GameData.chapterMaps.GetById(eventChapterData.chapterMapId);
-            if (mapData == null)
-            {
-                return;
-            }
-            chapterMap = ResourceManager.InstantiateRemoteAsset<GameObject>(mapData.chapterMapPath, mapData.assetBundleId, map);
-
-            mapButton = NSEventMapScreen.MapButton.GetInstance(chapterMap.transform.Find("eventMap"));
+            background.sprite = ResourceManager.LoadSprite(eventChapterData.mapImgUrl);
 
             foreach (var stageData in eventChapterData.stagesData)
             {
@@ -57,19 +61,14 @@ namespace Overlewd
                     //continue;
                 }
 
-                var mapNode = chapterMap.transform.Find(stageData.mapNodeName ?? "");
-                if (mapNode == null)
-                {
-                    continue;
-                }
-
                 if (stageData.battleId.HasValue)
                 {
                     var battleData = stageData.battleData;
                     if (battleData.isTypeBattle)
                     {
-                        var fightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        var fightButton = NSEventMapScreen.FightButton.GetInstance(map);
                         fightButton.stageId = stageData.id;
+                        fightButton.transform.localPosition = stageData.mapPos.pos;
 
                         if (!stageData.isComplete)
                         {
@@ -79,9 +78,10 @@ namespace Overlewd
                     }
                     else if (battleData.isTypeBoss)
                     {
-                        var bossFightButton = NSEventMapScreen.FightButton.GetInstance(mapNode);
+                        var bossFightButton = NSEventMapScreen.FightButton.GetInstance(map);
                         bossFightButton.stageId = stageData.id;
-                        
+                        bossFightButton.transform.localPosition = stageData.mapPos.pos;
+
                         if (!stageData.isComplete)
                         {
                             newStages.Add(bossFightButton);
@@ -94,9 +94,10 @@ namespace Overlewd
                     var dialogData = stageData.dialogData;
                     if (dialogData.isTypeDialog)
                     {
-                        var dialogButton = NSEventMapScreen.DialogButton.GetInstance(mapNode);
+                        var dialogButton = NSEventMapScreen.DialogButton.GetInstance(map);
                         dialogButton.stageId = stageData.id;
-                        
+                        dialogButton.transform.localPosition = stageData.mapPos.pos;
+
                         if (!stageData.isComplete)
                         {
                             newStages.Add(dialogButton);
@@ -105,9 +106,10 @@ namespace Overlewd
                     }
                     else if (dialogData.isTypeSex)
                     {
-                        var sexButton = NSEventMapScreen.SexButton.GetInstance(mapNode);
+                        var sexButton = NSEventMapScreen.SexButton.GetInstance(map);
                         sexButton.stageId = stageData.id;
-                        
+                        sexButton.transform.localPosition = stageData.mapPos.pos;
+
                         if (!stageData.isComplete)
                         {
                             newStages.Add(sexButton);
@@ -119,13 +121,14 @@ namespace Overlewd
 
             foreach (var eventMarketData in GameData.events.mapEventData.marketsData)
             {
-                var mapNode = chapterMap.transform.Find(eventMarketData.eventMapNodeName ?? "");
-                if (mapNode != null)
-                {
-                    var shopButton = NSEventMapScreen.EventShopButton.GetInstance(mapNode);
-                    shopButton.eventMarketId = eventMarketData.id;
-                }
+                var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
+                shopButton.eventMarketId = eventMarketData.id;
+                shopButton.transform.localPosition = eventMarketData.mapPos.pos;
             }
+
+            chapterSelector = NSEventMapScreen.ChapterSelector.GetInstance(transform);
+            chapterSelector.Hide();
+            chapterSelectorButtonName.text = eventChapterData.name;
 
             await Task.CompletedTask;
         }
@@ -159,6 +162,12 @@ namespace Overlewd
             }
             
             await Task.CompletedTask;
+        }
+
+        private void ChapterSelectorButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            chapterSelector.Show();
         }
 
         private void SidebarButtonClick()

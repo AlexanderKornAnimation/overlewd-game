@@ -108,7 +108,7 @@ namespace Overlewd
                         if (i == 2)
                             style.normal.textColor = Color.white;
 
-                        GUI.Label(new Rect(pos.x + 40, pos.y - 150 - i * 2, 180, 400),
+                        GUI.Label(new Rect(pos.x + 40, pos.y - 250 - i * 2, 180, 400),
                             $"Name: {cc.Name}\n" +
                             $"Level: {cc.character.level}\n" +
                             $"Rarity: {cc.character.rarity}\n" +
@@ -141,7 +141,7 @@ namespace Overlewd
                         var k = 0;
                         foreach (var item in cc.skill)
                         {
-                            GUI.Label(new Rect(pos.x + 40, pos.y -150 + k * 180 - i * 2, 180, 480),
+                            GUI.Label(new Rect(pos.x + 40, pos.y -250 + k * 180 - i * 2, 180, 480),
                             $"Skill {k} Name: {item.name}\n" +
                             $"Damage Amount: {item.amount}\n" + //scale in % - (amount/100)
                             $"AOE: {item.AOE}   EffectProb: {item.effectProb}\n" +
@@ -152,12 +152,13 @@ namespace Overlewd
                         }
                         foreach (var item in cc.passiveSkill)
                         {
-                            GUI.Label(new Rect(pos.x + 240, pos.y - 150 + k * 180 - i * 2, 180, 480),
+                            GUI.Label(new Rect(pos.x + 60, pos.y - 250 + k * 180 - i * 2, 180, 480),
                             $"Skill {k} Name: {item.name}\n" +
                             $"Damage Amount: {item.amount}\n" + //scale in % - (amount/100)
                             $"AOE: {item.AOE}   EffectProb: {item.effectProb}\n" +
                             $"isHeal: {item.actionType}\n" +
                             $"Type: {item.type}\n" +
+                            $"Trigger: {item.trigger}\n" +
                             $"Effect: {item.effect}", style);
                             k++;
                         }

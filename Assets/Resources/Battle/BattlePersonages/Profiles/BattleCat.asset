@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: BattleCat
   m_EditorClassIdentifier: 
   key: BATTLECAT
-  ico: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}
-  battlePortrait: {fileID: 21300000, guid: 9388ea90cd2147f478995f76f393f562, type: 3}
+  icoPortrait: {fileID: 21300000, guid: e6ec4e3c1374e4d4fb07067d9ba3c83e, type: 3}
   bigPortrait: {fileID: 21300000, guid: e29a8dc78cc9499408500d749e8cd8fc, type: 3}
   idleScale: 1
   battleScale: 1.5
@@ -23,8 +22,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/BattleCat/pers/BattleCat
-  characterPrefab: {fileID: 6210005373736215966, guid: b359b50bc2569d44e83b12ecde197f43, type: 3}
+  idle_Prefab_Path: Battle/BattlePersonages/Characters/BattleCat
+  characterPrefab: {fileID: 3263057376200103264, guid: e941eef4cb911624aa4af85fec23ed1c, type: 3}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1
@@ -33,4 +32,4 @@ MonoBehaviour:
   - attack1
   - attack2
   ani_defence_name: defence
-  ani_defeat_name: difeat
+  ani_defeat_name: defeat

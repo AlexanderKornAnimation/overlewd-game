@@ -20,17 +20,18 @@ namespace Overlewd
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/DefeatPopup/DefeatPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
+            var grid = canvas.Find("Grid");
 
-            magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
+            magicGuildButton = grid.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
 
-            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
+            overlordButton = grid.Find("OverlordButton").GetComponent<Button>();
             overlordButton.onClick.AddListener(OverlordButtonClick);
 
-            haremButton = canvas.Find("HaremButton").GetComponent<Button>();
+            haremButton = grid.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
 
-            editTeamButton = canvas.Find("EditTeamButton").GetComponent<Button>();
+            editTeamButton = grid.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
         }
 

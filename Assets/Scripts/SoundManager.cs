@@ -161,7 +161,8 @@ namespace Overlewd
         {
             EventDescription eventDesc;
             RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-            return eventDesc.isValid() ? new FMODEvent(eventPath) : null;
+            //return eventDesc.isValid() ? new FMODEvent(eventPath) : null;
+            return new FMODEvent(eventPath);
         }
     }
 

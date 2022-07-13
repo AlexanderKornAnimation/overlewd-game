@@ -15,25 +15,21 @@ namespace Overlewd
         public bool isBoss = false;
         public bool isOverlord = false;
 
+        public BattleManager bm; //init on BattleManager Initialize();
+        public AdminBRO.Character character;
         public Button bt;
         public CharacterPortrait charStats;
-
         private GameObject border;
-
         public CharacterStatObserver observer;
-
-        public BattleManager bm; //init on BattleManager Initialize();
         public GameObject popUpPrefab;
-
         public CharacterRes characterRes;
         public Skill[] skillRes => characterRes.skill;
-        public AdminBRO.Character character;
-
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();// => character.skills;
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
 
-
         public string Name => character.name;
+        public int level => (int)character.level;
+        public string rarity => character.rarity;
         public float speed => (float)character.speed;
         public float power => (float)character.power;
         public float constitution => (float)character.constitution;
@@ -42,10 +38,9 @@ namespace Overlewd
         public float dodge => (float)character.dodge;
         public float critrate => (float)character.critrate;
         public float damage => (float)character.damage;
-
         public float damageTotal = 10;
 
-
+        public float zoomSpeed = 0.15f;
         private float idleScale = 1f, battleScale = 1.4f;
         public int battleOrder = 1;
         public float health = 100, healthMax = 100;
@@ -62,7 +57,7 @@ namespace Overlewd
         private SpineWidget spineWidget;
         private float defenceDuration = 1f;
         public float
-            preAttackDuration = 0.9f,
+            preAttackDuration = 1f,
             attackDuration = 1f,
             vfxDuration = 0f;
         private RectTransform rt;
@@ -201,31 +196,24 @@ namespace Overlewd
                 spineWidget.PlayAnimation(characterRes.ani_idle_name, true);
         }
 
-        public void Attack(int attackID, CharController target = null)
-        {
-            BattleIn();
-            if (target != null) target.BattleIn();
-            StartCoroutine(PlayAttack(attackID, target));
-        }
+        public void Attack(int attackID, bool AOE = false, CharController target = null) =>
+            StartCoroutine(PlayAttack(attackID, AOE, target));
 
-        IEnumerator PlayAttack(int id, CharController target = null)
+        IEnumerator PlayAttack(int id, bool AOE = false, CharController target = null)
         {
-            if (id >= skill.Count) id = 0; //if id overflow on skill array
-
+            if (id >= skill.Count) id = 0;                              //Overflow insurance
+            var skRes = skillRes[id];
+            var curseDotScale = curse > 0 ? curse_dot : 1f;
+            BattleIn(AOE);
+            yield return new WaitForSeconds(zoomSpeed);
             vfxDuration = characterRes.skill[id].vfxDuration;
             attackDuration = spineWidget.GetAnimationDuaration(characterRes.ani_attack_name[id]);
-
-            foreach (var ps in passiveSkill)
-            {
+            foreach (var ps in passiveSkill)                            //on_attack Passive Skill Buff
                 if (ps.trigger == "on_attack")
                     if (ps.actionType == "heal")
                         PassiveBuff(ps);
-            }
-
-            var curseScale = curse > 0 ? curse_dot : 1f;
             damageTotal = Mathf.RoundToInt(damage * ((float)skill[id].amount / 100f) * buffDamageScale);
-            damageTotal *= curseScale;
-
+            damageTotal *= curseDotScale;
             if (characterRes.ani_pAttack_name[id] == "")
                 preAttackDuration = 0f;
             else
@@ -234,37 +222,44 @@ namespace Overlewd
                 spineWidget.PlayAnimation(characterRes.ani_pAttack_name[id], false);
             }
 
-            if (isOverlord) mana -= skill[id].manaCost; //????
-            SoundManager.PlayOneShot(skillRes[id].sfx);             //SFX
+            if (isOverlord) mana -= skill[id].manaCost;                 //????
+            SoundManager.PlayOneShot(skRes.sfx);                        //SFX
+
             yield return new WaitForSeconds(preAttackDuration);
+
+            if (skRes.shake)                                            //Shake
+                bm.Shake(skRes.shakeDuration, skRes.shakeStrength);
             if (characterRes.skill[id].vfx != null)
             {
                 Instantiate(characterRes.skill[id].vfx, battleLayer);
                 yield return new WaitForSeconds(vfxDuration);
             }
-            foreach (var ps in passiveSkill)
-            {
+            foreach (var ps in passiveSkill)                            //on_attack Passive Skill DeBuff
                 if (ps.trigger == "on_attack")
                     if (ps.actionType == "damage")
                         PassiveDeBuff(ps, target);
-            }
-            
             spineWidget.PlayAnimation(characterRes.ani_attack_name[id], false);
+
             yield return new WaitForSeconds(attackDuration);
+
             PlayIdle();
-            BattleOut();
+            BattleOut(AOE);
             bm.BattleOut();
         }
 
         public void Defence(CharController attacker, int id, GameObject vfx = null, bool aoe = false) => StartCoroutine(PlayDefence(attacker, id, vfx, aoe));
 
-        IEnumerator PlayDefence(CharController attacker, int id, GameObject vfx = null, bool aoe = false)
+        IEnumerator PlayDefence(CharController attacker, int id, GameObject vfx = null, bool AOE = false)
         {
+            BattleIn(AOE);
+            yield return new WaitForSeconds(zoomSpeed);
             transform.SetParent(battlePos);
             UnHiglight();
             yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             if (vfx != null) Instantiate(vfx, transform);
-            spineWidget.PlayAnimation(characterRes.ani_defence_name, false);
+            var attackerSkill = attacker.skill[id];
+            if (attackerSkill.actionType != "heal")
+                spineWidget.PlayAnimation(characterRes.ani_defence_name, false);
             yield return new WaitForSeconds(defenceDuration / 2);
 
             bool hit = attacker.accuracy > Random.value;
@@ -274,11 +269,11 @@ namespace Overlewd
             if (attacker.focus_blind != 0)
                 hit = attacker.focus_blind > 0 ? true : false;
 
-            if (hit) AddEffect(attacker.skill[id]);
+            if (hit) AddEffect(attackerSkill); //calculate probability and add effect
 
             foreach (var ps in passiveSkill)
             {
-                if (ps.trigger == "when_attacked")
+                if (ps?.trigger == "when_attacked")
                     if (ps.actionType == "heal")
                         PassiveBuff(ps);
                     else
@@ -294,8 +289,9 @@ namespace Overlewd
             Damage(attacker.damageTotal + defScale, hit, isDodge, isCrit);
 
             yield return new WaitForSeconds(defenceDuration / 2);
-            PlayIdle();
-            BattleOut();
+            if (attackerSkill.actionType != "heal")
+                PlayIdle();
+            BattleOut(AOE);
         }
 
         public void Select()
@@ -316,20 +312,23 @@ namespace Overlewd
         public void Highlight() => border?.SetActive(true);
         public void UnHiglight() => border?.SetActive(false);
 
-        public void BattleIn()
+        public void BattleIn(bool AOE = false)
         {
             UnHiglight();
             transform.SetParent(battlePos);
-            rt.DOAnchorPos(Vector2.zero, 0.25f);
-            rt.DOScale(battleScale, 0.25f);
+            if (AOE) return;
+            rt.DOAnchorPos(Vector2.zero, zoomSpeed);
+            rt.DOScale(battleScale, zoomSpeed);
+
         }
 
-        public void BattleOut()
+        public void BattleOut(bool AOE = false)
         {
             transform.SetParent(persPos);
             transform.SetSiblingIndex(0);
-            rt.DOAnchorPos(Vector2.zero, 0.25f);
-            rt.DOScale(idleScale, 0.25f);
+            if (AOE) return;
+            rt.DOAnchorPos(Vector2.zero, zoomSpeed);
+            rt.DOScale(idleScale, zoomSpeed);
         }
         IEnumerator PlayDead()
         {
@@ -351,14 +350,14 @@ namespace Overlewd
                 DrawPopup("Miss!", "blue");
                 return;
             }
-            if (dodge)
-            {
-                DrawPopup("Dodge!", "yellow");
-                return;
-            }
             if (crit) value *= 2;
             if (value > 0)
             {
+                if (dodge)
+                {
+                    DrawPopup("Dodge!", "yellow");
+                    return;
+                }
                 health -= value;
                 health = Mathf.Max(health, 0);
                 if (health <= 0)

@@ -32,9 +32,8 @@ namespace Overlewd
                 var rewardGrid = rewardWindow.Find("RewardGrid");
                 for (int i = 0; i < 6; i++)
                 {
-                    var reward = rewardGrid.Find($"Reward{i + 1}");
-                    rewardResource[i] = reward.Find("Resource").GetComponent<Image>();
-                    rewardCount[i] = reward.Find("Count").GetComponent<TextMeshProUGUI>();
+                    rewardResource[i] = rewardGrid.Find($"Reward{i + 1}").GetComponent<Image>();
+                    rewardCount[i] = rewardResource[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
                 }
 
                 toQuestButton = rewardWindow.Find("ToQuestButton").GetComponent<Button>();
@@ -49,12 +48,12 @@ namespace Overlewd
 
             private void Customize()
             {
-                rewardResource[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Crystal");
-                rewardResource[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Wood");
-                rewardResource[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gold");
-                rewardResource[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Stone");
-                rewardResource[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Copper");
-                rewardResource[5].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/Gem");
+                rewardResource[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/CopperWithSubstrate186x186");
+                rewardResource[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/WoodWithSubstrate186x186");
+                rewardResource[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/GoldWithSubstrate186x186");
+                rewardResource[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/GemsWithSubstrate186x186");
+                rewardResource[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/StoneWithSubstrate186x186");
+                rewardResource[5].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/CopperWithSubstrate186x186");
 
             }
             

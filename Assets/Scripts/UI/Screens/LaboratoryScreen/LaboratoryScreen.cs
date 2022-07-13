@@ -29,60 +29,61 @@ namespace Overlewd
 
         private Button marketButton;
         private Button portalButton;
-        private Button mergeButton;
         private Button backButton;
-
-        private GameObject hint;
+        
+        private Button mergeButton;
+        private Image[] mergePriceImage = new Image[2];
+        private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
         private GameObject slotFull;
+        private Image slotImage;
         private Button slotButton;
-        private GameObject girlInfo;
-        private Image girlRarity;
         private Image girlImage;
         private TextMeshProUGUI girlName;
-        private TextMeshProUGUI girlLevel;
+
+        private Transform currencyBack;
         
         private void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/LaboratoryScreen/LaboratoryScreen",
                     transform);
-
+        
             var canvas = screenInst.transform.Find("Canvas");
             var tabsArea = canvas.Find("TabsArea");
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var charactersBack = canvas.Find("CharactersBack");
             var slot = canvas.Find("Slot");
-            var headline = slot.Find("Headline");
-
+        
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
+            
             marketButton = canvas.Find("MarketButton").GetComponent<Button>();
             marketButton.onClick.AddListener(MarketButtonClick);
-
+            
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             portalButton.onClick.AddListener(PortalButtonClick);
-
-            mergeButton = canvas.Find("MergeButton").GetComponent<Button>();
+            
+            mergeButton = canvas.Find("MergeButton").Find("Button").GetComponent<Button>();
             mergeButton.onClick.AddListener(MergeButtonClick);
 
-            hint = headline.Find("Hint").gameObject;
-
+            for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
+            {
+                mergePriceImage[i] = mergeButton.transform.Find($"Resource{i + 1}").GetComponent<Image>();
+                mergePriceAmount[i] = mergePriceImage[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+            }
+            
             slotFull = slot.Find("SlotFull").gameObject;
-            girlInfo = slotFull.transform.Find("GirlInfo").gameObject;
             girlImage = slotFull.transform.Find("Girl").GetComponent<Image>();
-            girlRarity = slotFull.transform.Find("GirlRarity").GetComponent<Image>();
-            girlName = girlInfo.transform.Find("Name").GetComponent<TextMeshProUGUI>();
-            girlLevel = girlInfo.transform.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
+            currencyBack = canvas.Find("CurrencyBack");
             
             foreach (var i in tabIds)
             {
                 tabs[i] = tabsArea.Find(tabNames[i]).GetComponent<Button>();
-                tabs[i].onClick.AddListener(() => { TabClick(i); });
-
+                tabs[i].onClick.AddListener(() => TabClick(i));
+        
                 pressedTabs[i] = pressedTabsArea.Find(tabNames[i]).GetComponent<Image>().gameObject;
-
+        
                 scrollViews[i] = charactersBack.Find("ScrollView_" + tabNames[i]).gameObject;
                 scrollContents[i] = scrollViews[i].transform.Find("Viewport").Find("Content");
             }
@@ -119,7 +120,9 @@ namespace Overlewd
                 newChAll.characterId = ch.id.Value;
             }
             
+            UITools.FillWallet(currencyBack);
             slotFull.SetActive(false);
+            mergeButton.gameObject.SetActive(slotFull.activeSelf);
         }
         
         public override async Task BeforeShowMakeAsync()
@@ -160,12 +163,12 @@ namespace Overlewd
 
         private void MarketButtonClick()
         {
-            UIManager.ShowOverlay<MarketPopup>();
+            UIManager.ShowOverlay<MarketOverlay>();
         }
 
         private void MergeButtonClick()
         {
-            
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
         }
 
         private void BackButtonClick()
@@ -177,6 +180,7 @@ namespace Overlewd
 
     public class LaboratoryScreenInData : BaseFullScreenInData
     {
-        
+        public int? characterId;
+        public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
     }
 }
