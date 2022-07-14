@@ -226,16 +226,20 @@ namespace Overlewd
     public class Characters
     {
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
+        public List<AdminBRO.SkillEffect> effects { get; private set; } = new List<AdminBRO.SkillEffect>();
 
         public async Task Get()
         {
             characters = await AdminBRO.charactersAsync();
+            effects = await AdminBRO.skillEffectsAsync();
         }
 
         public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
         public AdminBRO.Character GetByClass(string chClass) => 
             characters.Find(ch => ch.characterClass == chClass);
+        public AdminBRO.SkillEffect EffectByName(string name) =>
+            effects.Find(e => e.name == name);
 
         public async Task LvlUp(int chId)
         {

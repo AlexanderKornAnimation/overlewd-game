@@ -783,17 +783,67 @@ namespace Overlewd
         }
 
         // /my/characters
-        // /battles/my/characters/{id}/equip/{id} - post
-        // /battles/my/characters/{id}/equip/{id} - delete
         // /battles/my/characters/{id}
         // /battles/my/characters/{id}/levelup
+        // /battles/my/characters/{characterId}/skills/{skillId}/levelup
         // /battles/my/characters/{tgtId}/merge/{srcId}
+        // /battles/skills/effects
         public static async Task<List<Character>> charactersAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task characterToSlotAsync(int characterId, string slotId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
+            var form = new WWWForm();
+            form.AddField("teamPosition", slotId);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task characterLvlupAsync(int characterId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task chracterSkillLvlUp(int characterId, int skillId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task<List<SkillEffect>> skillEffectsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/skills/effects";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<SkillEffect>>(request?.downloadHandler.text);
             }
         }
 
@@ -958,13 +1008,32 @@ namespace Overlewd
             public const string Type_Enhanced = "enhanced_attack";
         }
 
+        [Serializable]
+        public class SkillEffect
+        {
+            public string name;
+            public string description;
+        }
+
+        // /my/characters/equipment
+        // /battles/my/characters/{id}/equip/{id} - post
+        // /battles/my/characters/{id}/equip/{id} - delete
+        public static async Task<List<Equipment>> equipmentAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
+            }
+        }
+
         public static async Task equipAsync(int characterId, int equipmentId)
         {
             var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                
+
             }
         }
 
@@ -974,57 +1043,6 @@ namespace Overlewd
             using (var request = await HttpCore.DeleteAsync(url, tokens?.accessToken))
             {
 
-            }
-        }
-
-        public static async Task characterToSlotAsync(int characterId, string slotId)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
-            var form = new WWWForm();
-            form.AddField("teamPosition", slotId);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        public static async Task characterLvlupAsync(int characterId)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/levelup";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        public static async Task chracterSkillLvlUp(int characterId, int skillId)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
-        {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
-            }
-        }
-
-        // /my/characters/equipment
-        public static async Task<List<Equipment>> equipmentAsync()
-        {
-            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
-            {
-                return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
             }
         }
 
