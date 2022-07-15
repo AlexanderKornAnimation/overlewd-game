@@ -898,44 +898,26 @@ namespace Overlewd
             public const string Class_Overlord = "Overlord";
             public const string Class_Tank = "Tank";
 
-            public const string Sprite_AllyAssassin = "<sprite=\"ClassesNLevel\" name=\"AllyAssasin\">";
-            public const string Sprite_AllyBruiser = "<sprite=\"ClassesNLevel\" name=\"AllyBruiser\">";
-            public const string Sprite_AllyCaster = "<sprite=\"ClassesNLevel\" name=\"AllyCaster\">";
-            public const string Sprite_AllyHealer = "<sprite=\"ClassesNLevel\" name=\"AllyHealer\">";
-            public const string Sprite_Overlord = "<sprite=\"ClassesNLevel\" name=\"Overlord\">";
-            public const string Sprite_AllyTank = "<sprite=\"ClassesNLevel\" name=\"AllyTank\">";
-            public static string GetMyClassMarker(string classId)
-            {
-                return classId switch
-                {
-                    Class_Assassin => Sprite_AllyAssassin,
-                    Class_Bruiser => Sprite_AllyBruiser,
-                    Class_Caster => Sprite_AllyCaster,
-                    Class_Healer => Sprite_AllyHealer,
-                    Class_Overlord => Sprite_Overlord,
-                    Class_Tank => Sprite_AllyTank,
-                    _ => ""
-                };
-            }
-            
-            public const string Sprite_EnemyAssassin = "<sprite=\"ClassesNLevel\" name=\"EnemyAssasin\">";
-            public const string Sprite_EnemyBruiser = "<sprite=\"ClassesNLevel\" name=\"EnemyBruiser\">";
-            public const string Sprite_EnemyCaster = "<sprite=\"ClassesNLevel\" name=\"EnemyCaster\">";
-            public const string Sprite_EnemyHealer = "<sprite=\"ClassesNLevel\" name=\"EnemyHealer\">";
-            public const string Sprite_EnemyTank = "<sprite=\"ClassesNLevel\" name=\"EnemyTank\">";
-            public static string GetEnemyClassMarker(string classId)
-            {
-                return classId switch
-                {
-                    Class_Assassin => Sprite_EnemyAssassin,
-                    Class_Bruiser => Sprite_EnemyBruiser,
-                    Class_Caster => Sprite_EnemyCaster,
-                    Class_Healer => Sprite_EnemyHealer,
-                    Class_Tank => Sprite_EnemyTank,
-                    _ => ""
-                };
-            }
+            public const string Sprite_ClassAssassin = "<sprite=\"ClassesNLevel\" name=\"AllyAssassin\">";
+            public const string Sprite_ClassBruiser = "<sprite=\"ClassesNLevel\" name=\"AllyBruiser\">";
+            public const string Sprite_ClassCaster = "<sprite=\"ClassesNLevel\" name=\"AllyCaster\">";
+            public const string Sprite_ClassHealer = "<sprite=\"ClassesNLevel\" name=\"AllyHealer\">";
+            public const string Sprite_ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"Overlord\">";
+            public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"AllyTank\">";
 
+            public string classMarker => characterClass switch 
+            {
+                    Class_Assassin => Sprite_ClassAssassin,
+                    Class_Bruiser => Sprite_ClassBruiser,
+                    Class_Caster => Sprite_ClassCaster,
+                    Class_Healer => Sprite_ClassHealer,
+                    Class_Overlord => Sprite_ClassOverlord,
+                    Class_Tank => Sprite_ClassTank,
+                    _ => ""
+                };
+            
+                
+           
             public const string Rarity_Basic = "basic";
             public const string Rarity_Advanced = "advanced";
             public const string Rarity_Epic = "epic";

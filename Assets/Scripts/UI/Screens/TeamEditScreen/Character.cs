@@ -48,7 +48,7 @@ namespace Overlewd
                 var chData = GameData.characters.GetById(characterId);
                 girlIcon.sprite = ResourceManager.LoadSprite(chData.teamEditPersIcon);
                 level.text = chData.level.ToString();
-                girlClass.text = AdminBRO.Character.GetMyClassMarker(chData.characterClass);
+                girlClass.text = chData.classMarker;
                 if (chData.teamPosition != AdminBRO.Character.TeamPosition_None)
                 {
                     girlIcon.color = Color.gray;

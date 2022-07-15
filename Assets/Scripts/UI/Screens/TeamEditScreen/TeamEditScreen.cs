@@ -172,9 +172,9 @@ namespace Overlewd
                 slot1_title.text = chData.name;
                 slot1_titleChIcons.gameObject.SetActive(true);
                 slot1_Level.text = chData.level.ToString();
-                slot1_Class.text = AdminBRO.Character.GetMyClassMarker(chData.characterClass);
+                slot1_Class.text = chData.classMarker;
                 slot1_Potency.gameObject.SetActive(true);
-                slot1_PotencyValue.text = "_";
+                slot1_PotencyValue.text = chData.potency.HasValue ? chData.potency.ToString() : "_";;
             }
             else
             {
@@ -196,9 +196,9 @@ namespace Overlewd
                 slot2_title.text = chData.name;
                 slot2_titleChIcons.gameObject.SetActive(true);
                 slot2_Level.text = chData.level.ToString();
-                slot2_Class.text = AdminBRO.Character.GetMyClassMarker(chData.characterClass);
+                slot2_Class.text = chData.classMarker;
                 slot2_Potency.gameObject.SetActive(true);
-                slot2_PotencyValue.text = "_";
+                slot2_PotencyValue.text = chData.potency.HasValue ? chData.potency.ToString() : "_";
             }
             else
             {

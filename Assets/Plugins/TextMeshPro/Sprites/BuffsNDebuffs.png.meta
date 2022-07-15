@@ -1,37 +1,7 @@
 fileFormatVersion: 2
-guid: bf04e392cca05e247a2aa0600a690f10
+guid: 23f9984a61484b142bb1f76ee14a8bb8
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 4641094200519299632
-    second: BuffsNDebuffs_0
-  - first:
-      213: -6081803976527241705
-    second: BuffsNDebuffs_1
-  - first:
-      213: 7797219649257218634
-    second: BuffsNDebuffs_2
-  - first:
-      213: 2171443631267196715
-    second: BuffsNDebuffs_3
-  - first:
-      213: -7042374064904587033
-    second: BuffsNDebuffs_4
-  - first:
-      213: 977644776695510843
-    second: BuffsNDebuffs_5
-  - first:
-      213: 3315582239157846817
-    second: BuffsNDebuffs_6
-  - first:
-      213: 1662159694026067320
-    second: BuffsNDebuffs_7
-  - first:
-      213: -3030729378177305511
-    second: BuffsNDebuffs_8
-  - first:
-      213: 2117578755449126916
-    second: BuffsNDebuffs_9
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -157,211 +127,673 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BuffsNDebuffs_0
+      name: AttackUp
       rect:
         serializedVersion: 2
-        x: 0
-        y: 303
-        width: 54
-        height: 54
+        x: 10
+        y: 159
+        width: 39
+        height: 40
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0321417f59a786040800000000000000
-      internalID: 4641094200519299632
+      spriteID: 3bef9bd03a266eb00800000000000000
+      internalID: 857481231510142643
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_1
+      name: Immunity
       rect:
         serializedVersion: 2
-        x: 0
-        y: 228
-        width: 54
-        height: 54
+        x: 54
+        y: 159
+        width: 40
+        height: 40
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 71e19819187199ba0800000000000000
-      internalID: -6081803976527241705
+      spriteID: 52b5e154f1018f7a0800000000000000
+      internalID: -6343302348661695707
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_2
+      name: Regeneration
       rect:
         serializedVersion: 2
-        x: 0
-        y: 153
-        width: 54
-        height: 54
+        x: 99
+        y: 158
+        width: 38
+        height: 41
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a422ca5a5f9453c60800000000000000
-      internalID: 7797219649257218634
+      spriteID: 08f5371fa82656d70800000000000000
+      internalID: 9035736576284647296
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_3
+      name: BuffDispell
       rect:
         serializedVersion: 2
-        x: 0
+        x: 144
+        y: 150
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aec86a29d1c89fb0800000000000000
+      internalID: -4640746277541720411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuffRegeneration
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 150
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ee2846772c88e780800000000000000
+      internalID: -8653512582876352799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DebuffStun
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 150
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2463e33d355b28e40800000000000000
+      internalID: 5657283453561747010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuffFocus
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 150
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b40a99711167650d0800000000000000
+      internalID: -3434427850040958901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuffAttackUp
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 150
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af92025233b712130800000000000000
+      internalID: 3540246241686333946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArrowUp
+      rect:
+        serializedVersion: 2
+        x: 495
+        y: 178
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0ab0f0368ed12620800000000000000
+      internalID: 2747721915600779786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArrowDown
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 178
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00c07ecb9f1471130800000000000000
+      internalID: 3537368573194734592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DefenceUp
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 112
+        width: 36
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fdffdccbf2df3ba0800000000000000
+      internalID: -6106930590775247376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Curse
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 111
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bdc943e1aa206830800000000000000
+      internalID: 4062293738679553459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Safeguard
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 125
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98396bf1660182190800000000000000
+      internalID: -7987115908336807031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Blind
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 111
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 446c3a8aa80fc4530800000000000000
+      internalID: 3840709060565648964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuffSafeguard
+      rect:
+        serializedVersion: 2
+        x: 144
         y: 75
         width: 54
         height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b2f27735a74822e10800000000000000
-      internalID: 2171443631267196715
+      spriteID: 9f29fd12ac17d2700800000000000000
+      internalID: 517194645183107833
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_4
+      name: DebuffBlind
       rect:
         serializedVersion: 2
-        x: 0
+        x: 214
+        y: 75
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb49029f674339710800000000000000
+      internalID: 1698759170039256254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DebuffPoison
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 75
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 081b3b3c5d5d962c0800000000000000
+      internalID: -4437780843708829312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuffImmunity
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 75
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73e60fbfb56210810800000000000000
+      internalID: 1729705908397698615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuffDefenceUp
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 75
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8343cc6c700739c0800000000000000
+      internalID: -3947686013966269555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HealBlock
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 60
+        width: 39
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45691b6398f085f90800000000000000
+      internalID: -6964799741725927852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Poison
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 62
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0e08371e31099820800000000000000
+      internalID: 2925370799142997514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DefenceDown
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 62
+        width: 36
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09cba85604d863b00800000000000000
+      internalID: 807988490880597136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Silence
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 75
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7057d9ce81f01260800000000000000
+      internalID: 7066413410918289532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bless
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 7
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40ac3df9185de1a80800000000000000
+      internalID: -8494117094465222140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Focus
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 7
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edf581665cd42c230800000000000000
+      internalID: 3657571357595033566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stun
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 7
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e22abd6d25878790800000000000000
+      internalID: -7527901821965557023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dispell
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 3
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a07070b3112d58920800000000000000
+      internalID: 2992028498904155914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DebuffDefenceDown
+      rect:
+        serializedVersion: 2
+        x: 214
         y: 0
         width: 54
         height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e830fd9916744e90800000000000000
-      internalID: -7042374064904587033
+      spriteID: 230d35d708de9d730800000000000000
+      internalID: 4024508878146490418
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_5
+      name: DebuffCurse
       rect:
         serializedVersion: 2
-        x: 76
-        y: 11
-        width: 30
-        height: 32
+        x: 284
+        y: 0
+        width: 54
+        height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b37b37f9eba419d00800000000000000
-      internalID: 977644776695510843
+      spriteID: a29634ea4c97b1c70800000000000000
+      internalID: 8942875370718456106
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_6
+      name: BuffBless
       rect:
         serializedVersion: 2
-        x: 77
-        y: 86
-        width: 30
-        height: 32
+        x: 354
+        y: 0
+        width: 54
+        height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1230994da70530e20800000000000000
-      internalID: 3315582239157846817
+      spriteID: 63824e80ee53a3e20800000000000000
+      internalID: 3331034170861561910
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_7
+      name: DebuffHealBlock
       rect:
         serializedVersion: 2
-        x: 77
-        y: 164
-        width: 29
-        height: 32
+        x: 424
+        y: 0
+        width: 54
+        height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87d456a6f6d211710800000000000000
-      internalID: 1662159694026067320
+      spriteID: 6496aa89428d0db10800000000000000
+      internalID: 2004339485871597894
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BuffsNDebuffs_8
+      name: DebuffSilence
       rect:
         serializedVersion: 2
-        x: 77
-        y: 239
-        width: 30
-        height: 32
+        x: 494
+        y: 0
+        width: 54
+        height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 954b66320bfa0f5d0800000000000000
-      internalID: -3030729378177305511
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BuffsNDebuffs_9
-      rect:
-        serializedVersion: 2
-        x: 75
-        y: 314
-        width: 33
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 400857e98a6236d10800000000000000
-      internalID: 2117578755449126916
+      spriteID: ff5cfc00b7e73cc90800000000000000
+      internalID: -7150732716574521857
       vertices: []
       indices: 
       edges: []

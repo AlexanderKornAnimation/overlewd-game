@@ -153,7 +153,7 @@ namespace Overlewd
 
                 potency.text = characterData.potency.ToString();
 
-                classIcon.text = AdminBRO.Character.GetMyClassMarker(characterData?.characterClass);
+                classIcon.text = characterData.classMarker;
                 className.text = characterData.characterClass;
                 characterName.text = characterData.name;
                 level.text = characterData.level.ToString();

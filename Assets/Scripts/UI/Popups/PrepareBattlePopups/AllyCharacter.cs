@@ -10,7 +10,7 @@ namespace Overlewd
         {
             protected override void SetClassIcon()
             {
-                characterClass.text = AdminBRO.Character.GetMyClassMarker(characterData.characterClass);
+                characterClass.text = characterData.classMarker;
             }
 
             public static AllyCharacter GetInstance(Transform parent)
