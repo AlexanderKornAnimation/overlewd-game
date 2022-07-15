@@ -36,7 +36,9 @@ namespace Overlewd
         private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
         private GameObject slotFull;
-        private Image slotImage;
+        private Image slotEmpty;
+        private Image slotAdvanced;
+        private Image slotEpic;
         private Button slotButton;
         private Image girlImage;
         private TextMeshProUGUI girlName;
@@ -66,6 +68,10 @@ namespace Overlewd
             
             mergeButton = canvas.Find("MergeButton").Find("Button").GetComponent<Button>();
             mergeButton.onClick.AddListener(MergeButtonClick);
+
+            slotEmpty = slot.Find("SlotEmpty").GetComponent<Image>();
+            slotAdvanced = slot.Find("SlotAdvanced").GetComponent<Image>();
+            slotEpic = slot.Find("SlotEpic").GetComponent<Image>();
 
             for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
             {
