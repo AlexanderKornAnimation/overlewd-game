@@ -198,6 +198,9 @@ namespace Overlewd
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
         {
+            if (String.IsNullOrEmpty(eventPath))
+                return null;
+
             if (!HasLocalEvent(eventPath) && !String.IsNullOrEmpty(bankId))
             {
                 ResourceManager.LoadFMODBank(bankId);

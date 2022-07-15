@@ -32,8 +32,6 @@ namespace Overlewd
         protected Transform emotionBack;
         protected Transform emotionPos;
 
-        protected SpineScene emotionAnimation;
-
         protected virtual void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Notifications/DialogNotification/DialogNotification", transform);
@@ -64,21 +62,16 @@ namespace Overlewd
 
         public override async Task BeforeShowAsync()
         {
-            if (inputData != null)
-            {
-                var dialogData = inputData.dialogData;
-                if (dialogData != null)
-                {
-                    var firstReplica = dialogData.replicas.First();
-                    text.text = firstReplica.message;
+            var dialogData = inputData?.dialogData;
 
-                    if (firstReplica.emotionAnimationId.HasValue)
-                    {
-                        var animation = GameData.animations.GetById(firstReplica.emotionAnimationId);
-                        emotionAnimation = SpineScene.GetInstance(animation, emotionPos);
-                    }
-                }
-            }
+            var firstReplica = dialogData?.replicas.FirstOrDefault();
+            text.text = firstReplica?.message;
+
+            var animationData = GameData.animations.GetById(firstReplica?.emotionAnimationId);
+            SpineScene.GetInstance(animationData, emotionPos);
+
+            var replicaSoundData = GameData.sounds.GetById(firstReplica?.replicaSoundId);
+            SoundManager.GetEventInstance(replicaSoundData?.eventPath, replicaSoundData?.soundBankId);
 
             StartCoroutine(CloseByTimer());
 
