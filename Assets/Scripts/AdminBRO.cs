@@ -910,13 +910,14 @@ namespace Overlewd
             public const string Class_Overlord = "Overlord";
             public const string Class_Tank = "Tank";
 
-            public const string Sprite_ClassAssassin = "<sprite=\"ClassesNLevel\" name=\"AllyAssassin\">";
-            public const string Sprite_ClassBruiser = "<sprite=\"ClassesNLevel\" name=\"AllyBruiser\">";
-            public const string Sprite_ClassCaster = "<sprite=\"ClassesNLevel\" name=\"AllyCaster\">";
-            public const string Sprite_ClassHealer = "<sprite=\"ClassesNLevel\" name=\"AllyHealer\">";
-            public const string Sprite_ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"Overlord\">";
-            public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"AllyTank\">";
+            public const string Sprite_ClassAssassin = "<sprite=\"ClassesNLevel\" name=\"ClassAssassin\">";
+            public const string Sprite_ClassBruiser = "<sprite=\"ClassesNLevel\" name=\"ClassBruiser\">";
+            public const string Sprite_ClassCaster = "<sprite=\"ClassesNLevel\" name=\"ClassCaster\">";
+            public const string Sprite_ClassHealer = "<sprite=\"ClassesNLevel\" name=\"ClassHealer\">";
+            public const string Sprite_ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"ClassOverlord\">";
+            public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassAllyTank\">";
 
+            [JsonProperty(Required = Required.Default)]
             public string classMarker => characterClass switch 
             {
                     Class_Assassin => Sprite_ClassAssassin,

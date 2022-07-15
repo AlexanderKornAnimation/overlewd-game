@@ -98,7 +98,6 @@ namespace Overlewd
         {
             foreach (var buildingData in GameData.buildings.buildings)
             {
-                Debug.Log($"name {buildingData.name} isBuild {buildingData.isBuilt}");
                 if (buildingData.isBuilt)
                 {
                     switch (buildingData.key)
