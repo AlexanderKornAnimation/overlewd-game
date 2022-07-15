@@ -27,10 +27,13 @@ namespace Overlewd
 
     public class DialogNotification : BaseNotificationParent<DialogNotificationInData>
     {
-        protected Button button;
-        protected TextMeshProUGUI text;
-        protected Transform emotionBack;
-        protected Transform emotionPos;
+        private Button button;
+        private TextMeshProUGUI text;
+        private Transform emotionBack;
+        private Transform emotionPos;
+
+        private FMODEvent replicaSound;
+        private bool endTimer = false;
 
         protected virtual void Awake()
         {
@@ -71,8 +74,12 @@ namespace Overlewd
             SpineScene.GetInstance(animationData, emotionPos);
 
             var replicaSoundData = GameData.sounds.GetById(firstReplica?.replicaSoundId);
-            SoundManager.GetEventInstance(replicaSoundData?.eventPath, replicaSoundData?.soundBankId);
+            replicaSound = SoundManager.GetEventInstance(replicaSoundData?.eventPath, replicaSoundData?.soundBankId);
 
+            if (replicaSound != null)
+            {
+                StartCoroutine(WaitReplicaEnd());
+            }
             StartCoroutine(CloseByTimer());
 
             await Task.CompletedTask;
@@ -87,7 +94,10 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            UIManager.GetNotificationMissclick<DialogNotificationMissclick>()?.OnReset();
+            if (replicaSound != null)
+            {
+                UIManager.GetNotificationMissclick<DialogNotificationMissclick>()?.OnReset();
+            }
 
             await Task.CompletedTask;
         }
@@ -110,7 +120,31 @@ namespace Overlewd
         private IEnumerator CloseByTimer()
         {
             yield return new WaitForSeconds(4.0f);
+            endTimer = true;
+
+            while (replicaSound?.IsPlaying() ?? false)
+            {
+                yield return new WaitForSeconds(0.3f);
+            }
+
             UIManager.HideNotification();
+        }
+
+        private IEnumerator WaitReplicaEnd()
+        {
+            while (replicaSound.IsPlaying())
+            {
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            if (!endTimer)
+            {
+                var missclick = UIManager.MakeNotificationMissclick<DialogNotificationMissclick>();
+                if (missclick != null)
+                {
+                    missclick.missClickEnabled = true;
+                }
+            }
         }
     }
 
