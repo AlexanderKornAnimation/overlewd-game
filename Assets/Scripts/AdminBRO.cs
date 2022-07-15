@@ -96,6 +96,7 @@ namespace Overlewd
         // /me/init
         // /me/reset
         // /me/currency
+        // /me/special-for-vova/{characterId}
         public static async Task<PlayerInfo> meAsync()
         {
             using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/me", tokens?.accessToken))
@@ -112,6 +113,17 @@ namespace Overlewd
             using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me", form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task addCharacter(int chId, int level)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/me/special-for-vova/{chId}";
+            var form = new WWWForm();
+            form.AddField("level", level);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
             }
         }
 
