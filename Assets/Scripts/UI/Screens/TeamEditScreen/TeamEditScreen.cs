@@ -226,8 +226,8 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            var orderedCharactersById = GameData.characters.orderById;
-            foreach (var ch in orderedCharactersById)
+            var orderedCharacters = GameData.characters.orderByLevel;
+            foreach (var ch in orderedCharacters)
             {
                 if (ch.characterClass == AdminBRO.Character.Class_Overlord)
                     continue;

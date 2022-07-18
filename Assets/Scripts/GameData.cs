@@ -19,6 +19,7 @@ namespace Overlewd
             BuildingBuildCrystal,
             CharacterLvlUp,
             CharacterSkillLvlUp,
+            CharacterMerge,
             MagicGuildSpellLvlUp,
             EquipmentEquipped,
             EquipmentUnequipped
@@ -234,6 +235,23 @@ namespace Overlewd
             effects = await AdminBRO.skillEffectsAsync();
         }
 
+        public async Task TestInit()
+        {
+            await AdminBRO.addCharacter(19, 10);
+            await AdminBRO.addCharacter(19, 10);
+            await AdminBRO.addCharacter(16, 20);
+            await AdminBRO.addCharacter(16, 20);
+
+            await AdminBRO.addCharacter(15, 20);
+            await AdminBRO.addCharacter(15, 20);
+            await AdminBRO.addCharacter(20, 30);
+            await AdminBRO.addCharacter(20, 30);
+
+            await AdminBRO.addCharacter(13, 40);
+            await AdminBRO.addCharacter(13, 40);
+            await Get();
+        }
+
         public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
         public AdminBRO.Character GetByClass(string chClass) => 
@@ -264,10 +282,18 @@ namespace Overlewd
             });
         }
 
-        public async Task Mrg(int srcID, int tgtId)
+        public async Task Mrg(int? srcID, int? tgtId)
         {
-            await AdminBRO.charactersMrgAsync(srcID, tgtId);
+            if (!srcID.HasValue || !tgtId.HasValue)
+                return;
+
+            await AdminBRO.charactersMrgAsync(srcID.Value, tgtId.Value);
+            await GameData.player.Get();
             await Get();
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.CharacterMerge
+            });
         }
 
         public async Task ToSlot1(int chId)
@@ -292,8 +318,8 @@ namespace Overlewd
             characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
         public AdminBRO.Character overlord =>
             GetByClass(AdminBRO.Character.Class_Overlord);
-        public List<AdminBRO.Character> orderById =>
-            characters.OrderBy(ch => ch.id).ToList();
+        public List<AdminBRO.Character> orderByLevel =>
+            characters.OrderBy(ch => ch.level).ToList();
         public AdminBRO.Character slot1Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
