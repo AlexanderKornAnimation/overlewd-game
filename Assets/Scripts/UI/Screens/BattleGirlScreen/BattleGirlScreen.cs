@@ -16,7 +16,7 @@ namespace Overlewd
         private Button sexSceneButton;
         private Image sexSceneOpen;
         private Image sexSceneClose;
-        private TextMeshProUGUI sexSceneOpenTitle;
+        private TextMeshProUGUI sexSceneClosedTitle;
 
         private Transform levelUpButton;
         private Button levelUpButtonCanLvlUp;
@@ -88,7 +88,7 @@ namespace Overlewd
             sexSceneButton.onClick.AddListener(SexSceneButtonClick);
             sexSceneOpen = sexSceneButtonTr.transform.Find("IsOpen").GetComponent<Image>();
             sexSceneClose = sexSceneButtonTr.GetComponent<Image>();
-            sexSceneOpenTitle = sexSceneButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            sexSceneClosedTitle = sexSceneButtonTr.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
             speed = mainStats.Find("Speed").Find("Stat").GetComponent<TextMeshProUGUI>();
             power = mainStats.Find("Power").Find("Stat").GetComponent<TextMeshProUGUI>();
@@ -176,7 +176,9 @@ namespace Overlewd
                 sexSceneOpen.sprite = ResourceManager.LoadSprite(characterData.sexSceneOpenedBanner);
                 sexSceneClose.sprite = ResourceManager.LoadSprite(characterData.sexSceneClosedBanner);
                 sexSceneOpen.gameObject.SetActive(characterData.sexSceneId.HasValue);
-                sexSceneOpenTitle.text = $"Upgrade {characterData.name} to rare\nto unlock sex scene!";
+
+                var sexSceneRarity = characterData.sexSceneVisibleByRarity ?? "_";
+                sexSceneClosedTitle.text = $"Upgrade {characterData.name} to {sexSceneRarity}\nto unlock sex scene!";
                 
                 rarityBasic.SetActive(characterData.isBasic);
                 rarityAdvanced.SetActive(characterData.isAdvanced);
@@ -184,6 +186,11 @@ namespace Overlewd
                 rarityHeroic.SetActive(characterData.isHeroic);
                 
                 weapon.gameObject.SetActive(characterData.hasEquipment);
+                
+                if (weapon.gameObject.activeSelf)
+                {
+                    weapon.sprite = ResourceManager.LoadSprite(characterData.equipmentData?.icon);
+                }
 
                 for (int i = 0; i < characterData?.levelUpPrice?.Count; i++)
                 {

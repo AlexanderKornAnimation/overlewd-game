@@ -119,6 +119,7 @@ namespace Overlewd
                 slotFull.SetActive(isMy);
                 slotEmptyHint.SetActive(!slotFull.activeSelf);
                 slotButton.gameObject.SetActive(slotFull.activeSelf);
+                weaponIcon.sprite = ResourceManager.LoadSprite(weaponData.icon);
 
                 if (isMy)
                 {
