@@ -11,7 +11,7 @@ namespace Overlewd
 #if !UNITY_EDITOR && !DEV_BUILD
         public const string ApiVersion = "9"; //active api version
 #else
-        public const string ApiVersion = "9"; //dev api version
+        public const string ApiVersion = "10"; //dev api version
 #endif
 
         public static bool HasNetworkConection()
