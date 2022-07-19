@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,13 +30,17 @@ namespace Overlewd
 
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
+        public BattleLog log => GetComponent<BattleLog>();
         bool bossLevel => battleData.isTypeBoss;
         private List<AdminBRO.Character> playerTeam => battleScene.GetBattleData().myTeam;
         private List<AdminBRO.Character> enemyTeam;
 
         private Transform BattleCanvas => transform.Find("BattleCanvas");
         public GameObject portraitPrefab; //attach to BM in inspector; "content" is ui spawn point
-        public Transform QueueUIContent;
+        public Transform QueueUI;
+        private Transform QueueUIContent;
+        public TextMeshProUGUI wavesTMP;
+        public TextMeshProUGUI roundTMP;
         public GameObject EnemyStats;
         public Transform EnemyStatsContent;
         [Tooltip("add this prefab here BattleUICanvas/Character/PlayerStats")]
@@ -76,6 +81,8 @@ namespace Overlewd
         int usedMP = 0, usedHP = 0;
 
         public int debug = 0;
+        [SerializeField]
+        GameObject debugObj;
 
         private void Start()
         {
@@ -85,7 +92,11 @@ namespace Overlewd
             maxWave = battleScene.GetBattleData().enemyWaves.Count - 1;
             Debug.Log($"Battle ID: {battleData.id}");
 
-            if (QueueUIContent == null) QueueUIContent = transform.Find("BattleUICanvas/QueueUI/Content");
+            if (QueueUI == null) QueueUI = transform.Find("BattleUICanvas/QueueUI");
+            QueueUIContent = QueueUI.Find("Content");
+            if (wavesTMP == null) wavesTMP = QueueUI.Find("text_Waves").GetComponent<TextMeshProUGUI>();
+            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave}";
+            if (roundTMP == null) roundTMP = transform.Find("BattleUICanvas/Background/Round/text").GetComponent<TextMeshProUGUI>();
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
             PlayerStats.bigPortrait = true;
@@ -94,6 +105,7 @@ namespace Overlewd
                 if (BossStats == null) BossStats = transform.Find("BattleUICanvas/Character/BossStats").GetComponent<CharacterPortrait>();
                 BossStats.bigPortrait = true;
                 BossStats.gameObject.SetActive(true);
+                QueueUI.gameObject.SetActive(false);
             }
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
             if (EnemyStats == null) EnemyStats = Resources.Load("Battle/Prefabs/Battle/EnemyStats") as GameObject;
@@ -209,6 +221,7 @@ namespace Overlewd
 
         private void NextWave()
         {
+            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave}";
             //destroy old enemys
             foreach (var cc in charControllerList)
                 if (cc.isEnemy)
@@ -224,7 +237,7 @@ namespace Overlewd
             QueueElements.Clear(); //clear list
             enemyAllyList.Clear(); //Clear Ally List before add new
             var waveList = battleScene.GetBattleData().enemyWaves[wave].enemyTeam;
-            
+
             DropCharactersFromList(waveList, true); //create
             charControllerList.Sort(SortBySpeed);   //sort
             CreatePortraitQueue();                  //drop new portraits with sorting
@@ -516,6 +529,7 @@ namespace Overlewd
 
         private void Step()
         {
+            log.Add("Battle Manager: Step");
             var qe = QueueElements[step];
             qe.transform.SetSiblingIndex(maxStep);
             qe.transform.localScale = Vector3.one; //Reset Scale and push back portrait
@@ -528,6 +542,8 @@ namespace Overlewd
                 }
                 roundEnd?.Invoke(); //снимает два статуса почему-то
                 round++;
+                roundTMP.text = $"Round {round}";
+                log.Add($"Round {round}");
                 step = 0;
             }
             if (castAOEForNotify == true)
@@ -598,34 +614,50 @@ namespace Overlewd
 
         public void BattleNotif(string chapterID, string battleID, string notifID = null)
         {
+
             if (battleScene.GetBattleData() != null)
                 if (chapterID == battleScene.GetBattleData().ftueChapterKey &&
                     battleID == battleScene.GetBattleData().ftueStageKey)
                 {
+#if UNITY_EDITOR
+                    Debug.Log($"{chapterID} {battleID} {notifID}");
+#else
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
-                    //Debug.Log($"{chapterID} {battleID} {notifID}");
+#endif
                 }
+
         }
         public bool CheckBattleGameData(string chapterID, string battleID)
         {
+            return false;
+
             if (battleScene.GetBattleData() != null)
                 return chapterID == battleScene.GetBattleData().ftueChapterKey &&
                        battleID == battleScene.GetBattleData().ftueStageKey;
             else
                 return false;
         }
-
         public void AfterShowBattleScreen()
         {
             BattleNotif("chapter1", "battle1", "battletutor1");
             BattleNotif("chapter1", "battle3", "battletutor4");
             BattleNotif("chapter1", "battle5", "potionstutor2");
         }
-
+        public void AddStatus(string effect)
+        {
+            if (ccTarget != null)
+            {
+                ccTarget.AddEffectManual(effect);
+            }
+            else
+            {
+                log.Add("Please select character");
+            }
+        }
         private void OnGUI()
         {
             if (GUI.Button(new Rect(Screen.width / 2, Screen.height - 64, 72, 32), "Debug"))
-                if (debug < 2) debug++; else debug = 0;
+                if (debug < 3) debug++; else debug = 0;
             if (debug > 0)
             {
                 GUIStyle style = new GUIStyle();
@@ -635,6 +667,7 @@ namespace Overlewd
                 GUI.Label(new Rect(Screen.width / 2 - 80, 64, 300, 500), $"Battle ID: {battleData.id}\n" +
                     $"is BossLevel {battleData.isTypeBoss}", style);
             }
+            debugObj?.SetActive(debug > 0);
         }
 
         private int SortBySpeed(CharController a, CharController b)

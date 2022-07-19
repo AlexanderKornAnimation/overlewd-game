@@ -44,7 +44,7 @@ namespace Overlewd
 
             protected virtual void SetClassIcon()
             {
-               characterClass.text = AdminBRO.Character.GetEnemyClassMarker(characterData.characterClass);
+                characterClass.text = characterData.classMarker;
             }
         }
     }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Overlewd
 {
-    public class SkillController : MonoBehaviour
+    public class SkillController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         public Skill oldSkill;
         public AdminBRO.CharacterSkill skill;
@@ -14,8 +15,8 @@ namespace Overlewd
         private GameObject vfx => oldSkill.vfx;
         private string sfx => oldSkill.sfx;
 
-        private Image image;
-        [SerializeField] private Image effectSlot;
+        public Image image;
+        public Image effectSlot;
         private List<Sprite> effectIcons;
         private GameObject selectBorder;
         public bool select;
@@ -33,11 +34,17 @@ namespace Overlewd
 
         //public int amount => skill.amount; //for info maybe
         public int manaCost => skill.manaCost;
-
+        public string Name => skill.name;
+        public string description => skill.description;
 
         public bool selectable = true;
         public bool isSelected = false;
         public bool silence = false;
+
+        private bool pressed = false;
+        private float pressTimer = .5f, pressTime = 0f;
+
+        private SkillDescription skillDescription => FindObjectOfType<SkillDescription>();
 
         private void Awake()
         {
@@ -127,6 +134,11 @@ namespace Overlewd
             image.DOColor(Color.red, 0.1f).SetLoops(4, LoopType.Yoyo).SetEase(Ease.InOutExpo);
         }
 
+        public void ShowDiscription()
+        {
+            skillDescription.Open(this);
+        }
+
         void SetEffectIco()
         {
             effectSlot.gameObject.SetActive(true);
@@ -135,6 +147,33 @@ namespace Overlewd
             {
                 effectSlot.gameObject.SetActive(false);
             }
+        }
+        private void Update()
+        {
+            if (pressed && !potion)
+            {
+                if (pressTime < pressTimer)
+                {
+                    pressTime += Time.deltaTime;
+                }
+                else
+                {
+                    ShowDiscription();
+                    pressTime = 0f;
+                    pressed = false;
+                }
+            }
+        }
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            pressTime = 0f;
+            pressed = true;
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            pressTime = 0f;
+            pressed = false;
         }
     }
 }

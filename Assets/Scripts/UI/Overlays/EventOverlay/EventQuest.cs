@@ -9,18 +9,8 @@ namespace Overlewd
 {
     namespace NSEventOverlay
     {
-        public class EventQuest : MonoBehaviour
+        public class EventQuest : BaseQuest
         {
-            public int eventId { get; set; }
-            public AdminBRO.EventItem eventData =>
-                GameData.events.GetEventById(eventId);
-            public int questId { get; set; }
-            public AdminBRO.QuestItem questData =>
-                GameData.quests.GetById(questId);
-
-            private Transform canvas;
-            private bool canvasActive = true;
-
             private Button mapButton;
             private Button claimButton;
             private Transform inProgress;
@@ -145,19 +135,10 @@ namespace Overlewd
                 UIManager.ShowScreen<EventMapScreen>();
             }
 
-            private async void ClaimClick()
+            protected override void ClaimClick()
             {
-                await GameData.quests.ClaimReward(questId);
+                base.ClaimClick();
                 Customize();
-            }
-
-            public void SetCanvasActive(bool value)
-            {
-                if (value != canvasActive)
-                {
-                    canvasActive = value;
-                    canvas.gameObject.SetActive(canvasActive);
-                }
             }
 
             private IEnumerator TimerUpd()

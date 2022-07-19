@@ -1,46 +1,31 @@
 fileFormatVersion: 2
-guid: 30b3768a17bb97940b2b283c2c0ccb60
+guid: 74c20e7d47e53b345a360085b4f3588d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9060049200363324373
-    second: ClassesNLevel_0
+      213: -7966359982097946647
+    second: ClassTank
   - first:
-      213: -4155353457543998921
-    second: ClassesNLevel_1
+      213: 552338910092524330
+    second: ClassAssassin
   - first:
-      213: -1495251526932850528
-    second: ClassesNLevel_2
+      213: -3685960548396402733
+    second: ClassHealer
   - first:
-      213: -8217446287989962613
-    second: ClassesNLevel_3
+      213: -2397568867031626440
+    second: ClassCaster
   - first:
-      213: 3890167314582803991
-    second: ClassesNLevel_4
+      213: -4757170484863805961
+    second: ClassBruiser
   - first:
-      213: 828236083377590857
-    second: ClassesNLevel_5
+      213: 5046061623185131473
+    second: ClassOverlord
   - first:
-      213: 625481216767839770
-    second: ClassesNLevel_6
+      213: 7344582401033238684
+    second: BackLevelMax
   - first:
-      213: 4980322316833582356
-    second: ClassesNLevel_7
-  - first:
-      213: 5102925523259851658
-    second: ClassesNLevel_8
-  - first:
-      213: 4703712112855626449
-    second: ClassesNLevel_9
-  - first:
-      213: 8786340678753135039
-    second: ClassesNLevel_10
-  - first:
-      213: -7291664153243630550
-    second: ClassesNLevel_11
-  - first:
-      213: 7887347749108064723
-    second: ClassesNLevel_12
+      213: -2616948974582913354
+    second: BackLevel
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -166,13 +151,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ClassesNLevel_0
+      name: ClassTank
       rect:
         serializedVersion: 2
-        x: 0
-        y: 545
-        width: 70
-        height: 70
+        x: 5
+        y: 224
+        width: 65
+        height: 65
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,20 +165,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d3c73bdeb2cbbd70800000000000000
-      internalID: 9060049200363324373
+      spriteID: 9e72a2acdcdc17190800000000000000
+      internalID: -7966359982097946647
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ClassesNLevel_1
+      name: ClassAssassin
       rect:
         serializedVersion: 2
-        x: 98
-        y: 542
-        width: 70
-        height: 70
+        x: 96
+        y: 224
+        width: 65
+        height: 65
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -201,20 +186,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73216eedb083556c0800000000000000
-      internalID: -4155353457543998921
+      spriteID: a2bf0b3ff4d4aa700800000000000000
+      internalID: 552338910092524330
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ClassesNLevel_2
+      name: ClassHealer
       rect:
         serializedVersion: 2
-        x: 0
-        y: 452
-        width: 70
-        height: 70
+        x: 2
+        y: 146
+        width: 65
+        height: 65
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -222,20 +207,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0a89e4f88accf3be0800000000000000
-      internalID: -1495251526932850528
+      spriteID: 3d77ab80966d8dcc0800000000000000
+      internalID: -3685960548396402733
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ClassesNLevel_3
+      name: ClassCaster
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 146
+        width: 65
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83d4b0c71df1abed0800000000000000
+      internalID: -2397568867031626440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ClassBruiser
       rect:
         serializedVersion: 2
         x: 3
-        y: 347
-        width: 70
-        height: 70
+        y: 70
+        width: 65
+        height: 65
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -243,81 +249,39 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b8881839324c5fd80800000000000000
-      internalID: -8217446287989962613
+      spriteID: 7f558b906a22bfdb0800000000000000
+      internalID: -4757170484863805961
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ClassesNLevel_4
+      name: ClassOverlord
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 68
+        width: 65
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d74ea4af46370640800000000000000
+      internalID: 5046061623185131473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BackLevelMax
       rect:
         serializedVersion: 2
         x: 0
-        y: 253
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7161b86cf86acf530800000000000000
-      internalID: 3890167314582803991
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 159
-        width: 71
-        height: 71
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 942d1e3645c7e7b00800000000000000
-      internalID: 828236083377590857
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_6
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 66
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a1e402b4ad72ea800800000000000000
-      internalID: 625481216767839770
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_7
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 74
+        y: 0
         width: 70
         height: 59
       alignment: 0
@@ -327,18 +291,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 41de0d1a2c8ad1540800000000000000
-      internalID: 4980322316833582356
+      spriteID: c98fb2dc7c23de560800000000000000
+      internalID: 7344582401033238684
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ClassesNLevel_8
+      name: BackLevel
       rect:
         serializedVersion: 2
-        x: 98
-        y: 7
+        x: 92
+        y: 0
         width: 70
         height: 59
       alignment: 0
@@ -348,92 +312,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a838d291abb31d640800000000000000
-      internalID: 5102925523259851658
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_9
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 160
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1d2367cce31f64140800000000000000
-      internalID: 4703712112855626449
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_10
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 255
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fb925a89b4a5fe970800000000000000
-      internalID: 8786340678753135039
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_11
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 348
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a24c674e51ececa90800000000000000
-      internalID: -7291664153243630550
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ClassesNLevel_12
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 449
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3d120952dfc757d60800000000000000
-      internalID: 7887347749108064723
+      spriteID: 6b6a9a6d5cabeabd0800000000000000
+      internalID: -2616948974582913354
       vertices: []
       indices: 
       edges: []

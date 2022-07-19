@@ -385,6 +385,7 @@ namespace Overlewd
                 var replicaSoundData = GameData.sounds.GetById(replica.replicaSoundId);
                 if (replicaSoundData.eventPath != replicaSound?.path)
                 {
+                    replicaSound?.Stop();
                     replicaSound = SoundManager.GetEventInstance(replicaSoundData.eventPath, replicaSoundData.soundBankId);
                 }
             }

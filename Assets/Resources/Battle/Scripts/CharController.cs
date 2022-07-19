@@ -16,6 +16,7 @@ namespace Overlewd
         public bool isOverlord = false;
 
         public BattleManager bm; //init on BattleManager Initialize();
+        public BattleLog log => bm.log;
         public AdminBRO.Character character;
         public Button bt;
         public CharacterPortrait charStats;
@@ -633,6 +634,96 @@ namespace Overlewd
                     DrawPopup("Effect miss", "red");
                 }
         }
+        public void AddEffectManual(string effect)
+        {
+            var duration = 1;
+            float ea = 50;
+            float effectAmount = healthMax * (ea / 100f);
+            switch (effect)
+            {
+                case "defense_up":
+                    defUp_defDown += duration;
+                    defUp_defDown_dot = ea / 100f;
+                    DrawPopup(msg_defence_up, "green");
+                    break;
+                case "defense_down":
+                    if (immunity == 0)
+                    {
+                        defUp_defDown -= duration;
+                        defUp_defDown_dot = effectAmount;
+                        DrawPopup(msg_defence_down, "red");
+                    }
+                    else
+                        DrawPopup(msg_immunity, "green");
+                    break;
+                case "focus":
+                    focus_blind += duration;
+                    break;
+                case "blind":
+                    if (immunity == 0)
+                        focus_blind -= duration;
+                    else
+                        DrawPopup(msg_immunity, "blue");
+                    break;
+                case "regeneration":
+                    regen_poison += duration;
+                    regen_poison_dot = -effectAmount;
+                    break;
+                case "poison":
+                    if (immunity == 0)
+                    {
+                        regen_poison -= duration;
+                        regen_poison_dot = effectAmount;
+                        DrawPopup(msg_poison, "red");
+                    }
+                    else
+                        DrawPopup(msg_immunity, "blue");
+                    break;
+                case "bless":
+                    bless_healBlock += duration;
+                    bless_dot = effectAmount;
+                    break;
+                case "heal_block":
+                    if (immunity == 0)
+                        bless_healBlock -= duration;
+                    else
+                        DrawPopup(msg_immunity, "blue");
+                    break;
+                case "silence":
+                    if (immunity == 0)
+                        silence = duration;
+                    else
+                        DrawPopup(msg_immunity, "blue");
+                    break;
+                case "immunity":
+                    immunity += duration;
+                    DrawPopup(msg_immunity, "green");
+                    break;
+                case "stun":
+                    if (immunity == 0)
+                        stun = true;
+                    else
+                        DrawPopup(msg_immunity, "blue");
+                    break;
+                case "curse":
+                    if (immunity == 0)
+                    {
+                        curse = duration;
+                        curse_dot = ea / 100f; //Calculate in total damage
+                    }
+                    break;
+                case "dispel":
+                    Dispel();
+                    break;
+                case "safeguard":
+                    Safeguard();
+                    break;
+                default:
+                    Debug.LogError($"Unknow Value AdminBRO.CharacterSkill.effect: {effect}");
+                    break;
+            }
+            observer.UpdateStatuses();
+        }
         public void Dispel()
         {
             //dispel vfx
@@ -689,6 +780,7 @@ namespace Overlewd
             {
                 var damageText = Instantiate(popUpPrefab, rt);
                 damageText.GetComponent<DamagePopup>().Setup(msg, isEnemy && !isBoss, 0f, color);
+                log.Add(name+ ": " + msg);
             }
             else Debug.LogError($"Null Draw Popup Prefab: {gameObject.name}");
         }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -36,12 +37,16 @@ namespace Overlewd
         private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
         private GameObject slotFull;
-        private Image slotImage;
+        private Image slotEmpty;
+        private Image slotAdvanced;
+        private Image slotEpic;
         private Button slotButton;
         private Image girlImage;
         private TextMeshProUGUI girlName;
 
         private Transform currencyBack;
+
+        private List<NSLaboratoryScreen.Character>  flaskCharacters = new List<NSLaboratoryScreen.Character>();
         
         private void Awake()
         {
@@ -67,6 +72,10 @@ namespace Overlewd
             mergeButton = canvas.Find("MergeButton").Find("Button").GetComponent<Button>();
             mergeButton.onClick.AddListener(MergeButtonClick);
 
+            slotEmpty = slot.Find("SlotEmpty").GetComponent<Image>();
+            slotAdvanced = slot.Find("SlotAdvanced").GetComponent<Image>();
+            slotEpic = slot.Find("SlotEpic").GetComponent<Image>();
+
             for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
             {
                 mergePriceImage[i] = mergeButton.transform.Find($"Resource{i + 1}").GetComponent<Image>();
@@ -75,6 +84,7 @@ namespace Overlewd
             
             slotFull = slot.Find("SlotFull").gameObject;
             girlImage = slotFull.transform.Find("Girl").GetComponent<Image>();
+            girlName = slotFull.transform.Find("GirlName").GetComponent<TextMeshProUGUI>();
             currencyBack = canvas.Find("CurrencyBack");
             
             foreach (var i in tabIds)
@@ -89,6 +99,32 @@ namespace Overlewd
             }
         }
 
+        private List<AdminBRO.Character> SortCharacters(List<AdminBRO.Character> characters)
+        {
+            return characters.Where(ch => ch.characterClass != AdminBRO.Character.Class_Overlord).ToList();
+        }
+
+        private void AddChToTab(AdminBRO.Character ch)
+        {
+            var tabId = ch.characterClass switch
+            {
+                AdminBRO.Character.Class_Assassin => tabAssassins,
+                AdminBRO.Character.Class_Bruiser => tabBruisers,
+                AdminBRO.Character.Class_Caster => tabCasters,
+                AdminBRO.Character.Class_Healer => tabHealers,
+                AdminBRO.Character.Class_Tank => tabTanks,
+                _ => tabAllUnits
+            };
+
+            var newCh = NSLaboratoryScreen.Character.GetInstance(scrollContents[tabId]);
+            newCh.characterId = ch.id;
+            newCh.labScreen = this;
+
+            var newChAll = NSLaboratoryScreen.Character.GetInstance(scrollContents[tabAllUnits]);
+            newChAll.characterId = ch.id;
+            newChAll.labScreen = this;
+        }
+
         private void Customize()
         {
             foreach (var i in tabIds)
@@ -97,32 +133,14 @@ namespace Overlewd
                 scrollViews[i].gameObject.SetActive(false);
             }
             
-            var orderedCharactersById = GameData.characters.orderById;
-            foreach (var ch in orderedCharactersById)
+            var sortCharacters = SortCharacters(GameData.characters.orderByLevel);
+            foreach (var ch in sortCharacters)
             {
-                if (ch.characterClass == AdminBRO.Character.Class_Overlord)
-                    continue;
-
-                var tabId = ch.characterClass switch
-                {
-                    AdminBRO.Character.Class_Assassin => tabAssassins,
-                    AdminBRO.Character.Class_Bruiser => tabBruisers,
-                    AdminBRO.Character.Class_Caster => tabCasters,
-                    AdminBRO.Character.Class_Healer => tabHealers,
-                    AdminBRO.Character.Class_Tank => tabTanks,
-                    _ => tabAllUnits
-                };
-
-                var newCh = NSLaboratoryScreen.Character.GetInstance(scrollContents[tabId]);
-                newCh.characterId = ch.id.Value;
-
-                var newChAll = NSLaboratoryScreen.Character.GetInstance(scrollContents[tabAllUnits]);
-                newChAll.characterId = ch.id.Value;
+                AddChToTab(ch);
             }
             
             UITools.FillWallet(currencyBack);
-            slotFull.SetActive(false);
-            mergeButton.gameObject.SetActive(slotFull.activeSelf);
+            UpdFlaskState();
         }
         
         public override async Task BeforeShowMakeAsync()
@@ -156,6 +174,111 @@ namespace Overlewd
             scrollViews[tabId].SetActive(false);
         }
 
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.type)
+            {
+                case GameDataEvent.Type.CharacterMerge:
+                    UITools.FillWallet(currencyBack);
+                    EraseAllFromFlusk();
+                    break;
+            }
+        }
+
+        public bool IsInFlask(NSLaboratoryScreen.Character ch)
+        {
+            return flaskCharacters.Exists(item => item.characterId == ch.characterId);
+        }
+
+        public bool CanAddToFlask(NSLaboratoryScreen.Character ch)
+        {
+            var chData = ch.chracterData;
+            if (chData.isHeroic || !chData.isLvlMax)
+            {
+                return false;
+            }
+
+            if (flaskCharacters.Count == 0)
+            {
+                return true;
+            }
+            else if (flaskCharacters.Count == 1)
+            {
+                var fChData = flaskCharacters.First().chracterData;
+                return (fChData.key == chData.key &&
+                    fChData.level == chData.level);
+            }
+            return false;
+        }
+
+        public void AddToFlask(NSLaboratoryScreen.Character ch)
+        {
+            flaskCharacters.Add(ch);
+            UpdChStates();
+            UpdFlaskState();
+        }
+
+        private void UpdFlaskState()
+        {
+            if (flaskCharacters.Count == 0)
+            {
+                slotEmpty.gameObject.SetActive(true);
+                slotAdvanced.gameObject.SetActive(false);
+                slotEpic.gameObject.SetActive(false); ;
+                slotFull.SetActive(false);
+                mergeButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                var chData = flaskCharacters.First().chracterData;
+                slotEmpty.gameObject.SetActive(chData.isBasic);
+                slotAdvanced.gameObject.SetActive(chData.isAdvanced);
+                slotEpic.gameObject.SetActive(chData.isEpic);
+                slotFull.SetActive(true);
+                girlImage.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
+                girlName.text = chData.name;
+                mergeButton.gameObject.SetActive(flaskCharacters.Count > 1);
+            }
+        }
+
+        public void EraseFromFlask(NSLaboratoryScreen.Character ch)
+        {
+            flaskCharacters.RemoveAll(item => item.characterId == ch.characterId);
+            UpdChStates();
+            UpdFlaskState();
+        }
+
+        public void EraseAllFromFlusk()
+        {
+            flaskCharacters.Clear();
+            UpdChStates();
+            UpdFlaskState();
+        }
+
+        private void UpdChStates()
+        {
+            var actualChs = SortCharacters(GameData.characters.orderByLevel);
+            var tabsChs = scrollContents.SelectMany(tab => tab.GetComponentsInChildren<NSLaboratoryScreen.Character>()).ToList();
+            var removedChs = tabsChs.Where(tCh => !actualChs.Exists(aCh => aCh.id == tCh.characterId));
+            var addChs = actualChs.Where(aCh => !tabsChs.Exists(tCh => tCh.characterId == aCh.id));
+            
+            foreach (var rCh in removedChs)
+            {
+                DestroyImmediate(rCh.gameObject);
+            }
+
+            foreach (var nCh in addChs)
+            {
+                AddChToTab(nCh);
+            }
+
+            var actTabsChs = scrollContents.SelectMany(tab => tab.GetComponentsInChildren<NSLaboratoryScreen.Character>()).ToList();
+            foreach (var ch in actTabsChs)
+            {
+                ch.Customize();
+            }
+        }
+
         private void PortalButtonClick()
         {
             UIManager.ShowScreen<PortalScreen>();
@@ -166,9 +289,12 @@ namespace Overlewd
             UIManager.ShowOverlay<MarketOverlay>();
         }
 
-        private void MergeButtonClick()
+        private async void MergeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            var ch1 = flaskCharacters.First();
+            var ch2 = flaskCharacters.Last();
+            await GameData.characters.Mrg(ch1.characterId, ch2.characterId);
         }
 
         private void BackButtonClick()

@@ -42,6 +42,9 @@ namespace Overlewd
 
         public static SpineScene GetInstance(AdminBRO.Animation animationData, Transform parent)
         {
+            if (animationData == null)
+                return null;
+
             var sceneGO = new GameObject(nameof(SpineScene));
             var sceneGO_rt = sceneGO.AddComponent<RectTransform>();
             sceneGO_rt.SetParent(parent, false);

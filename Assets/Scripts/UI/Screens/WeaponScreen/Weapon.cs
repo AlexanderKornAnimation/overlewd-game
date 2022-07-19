@@ -52,6 +52,7 @@ namespace Overlewd
                 button.gameObject.SetActive(weaponData.characterClass == characterData.characterClass);
                 notificationEquipped.SetActive(weaponData.isEquipped);
                 equippedCharacterIcon.gameObject.SetActive(!weaponData.IsMy(characterId));
+                weaponIcon.sprite = ResourceManager.LoadSprite(weaponData.icon);
 
                 weaponIcon.color = weaponData.isEquipped ? Color.gray : Color.white;
                 
@@ -62,7 +63,7 @@ namespace Overlewd
                 else
                 {
                     var equippedCharacter = GameData.characters.GetById(weaponData.characterId);
-                    // equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter.teamEditPersIcon);
+                    equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter?.teamEditPersIcon);
                 }
             }
 
