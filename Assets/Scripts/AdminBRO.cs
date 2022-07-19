@@ -640,6 +640,21 @@ namespace Overlewd
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool hasDescription => !String.IsNullOrEmpty(description);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isCompleted => status == Status_Complete;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool inProgress => status == Status_In_Progress;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isClaimed => status == Status_Rewards_Claimed;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => status == Status_Open;
         }
 
         // //quests/{id}/claim-reward

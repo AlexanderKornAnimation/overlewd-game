@@ -20,13 +20,13 @@ namespace Overlewd
         private string[] tabNames = { "Weekly", "Monthly", "Decade", "ComingMonthly", "ComingDecade" };
         private Transform[] scrollView = new Transform[TabsCount];
         private Transform[] scrollViewContent = new Transform[TabsCount];
-        private List<NSEventOverlay.EventQuest>[] tabEventQuests = 
+        private List<NSEventOverlay.BaseQuest>[] tabEventQuests = 
             {
-                new List<NSEventOverlay.EventQuest>(),
-                new List<NSEventOverlay.EventQuest>(),
-                new List<NSEventOverlay.EventQuest>(),
-                new List<NSEventOverlay.EventQuest>(),
-                new List<NSEventOverlay.EventQuest>()
+                new List<NSEventOverlay.BaseQuest>(),
+                new List<NSEventOverlay.BaseQuest>(),
+                new List<NSEventOverlay.BaseQuest>(),
+                new List<NSEventOverlay.BaseQuest>(),
+                new List<NSEventOverlay.BaseQuest>()
             };
         private Button[] eventButton = new Button[TabsCount];
         private TextMeshProUGUI[] eventButtonText = new TextMeshProUGUI[TabsCount];
@@ -94,7 +94,12 @@ namespace Overlewd
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
             foreach (var questId in eventData.quests)
             {
-                var eventQuest = NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent);
+                var questData = GameData.quests.GetById(questId);
+
+                var eventQuest = questData.hasDescription 
+                    ?  (NSEventOverlay.BaseQuest) NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent)
+                    :  NSEventOverlay.EventShortQuest.GetInstance(tabScrollViewContent);
+                
                 eventQuest.eventId = eventData.id;
                 eventQuest.questId = questId;
                 eventQuest.SetCanvasActive(false);
