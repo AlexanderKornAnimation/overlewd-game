@@ -14,10 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   battleIco: {fileID: 21300000, guid: f12eb407a8ef343489ba081b8c9cf661, type: 3}
   vfx: {fileID: 5541813711829063474, guid: 63c74d27b7224ac4a85ae346bf4d80b3, type: 3}
+  vfxOnSelf: {fileID: 0}
   vfxOnTarget: {fileID: 0}
+  vfxAOETarget: {fileID: 0}
   vfxDuration: 7.333
-  sfx: 
+  vfxCascadeTimer: 0
+  shake: 0
+  shakeDuration: 1.5
+  shakeStrength: 10
+  sfx: event:/Animations/Battle/Overlord_AOE_Hits/AOE2
   potion: 0
-  prepairAnimationName: prepair4
-  attackAnimationName: attack4
-  damage: 0
