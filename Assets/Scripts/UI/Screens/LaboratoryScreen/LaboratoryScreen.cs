@@ -101,18 +101,7 @@ namespace Overlewd
 
         private List<AdminBRO.Character> SortCharacters(List<AdminBRO.Character> characters)
         {
-            var result = new List<AdminBRO.Character>();
-            foreach (var ch in characters)
-            {
-                if (ch.characterClass == AdminBRO.Character.Class_Overlord)
-                    continue;
-
-                if (!ch.isHeroic && ch.isLvlMax)
-                {
-                    result.Add(ch);
-                }
-            }
-            return result;
+            return characters.Where(ch => ch.characterClass != AdminBRO.Character.Class_Overlord).ToList();
         }
 
         private void AddChToTab(AdminBRO.Character ch)
@@ -203,6 +192,12 @@ namespace Overlewd
 
         public bool CanAddToFlask(NSLaboratoryScreen.Character ch)
         {
+            var chData = ch.chracterData;
+            if (chData.isHeroic || !chData.isLvlMax)
+            {
+                return false;
+            }
+
             if (flaskCharacters.Count == 0)
             {
                 return true;
@@ -210,7 +205,6 @@ namespace Overlewd
             else if (flaskCharacters.Count == 1)
             {
                 var fChData = flaskCharacters.First().chracterData;
-                var chData = ch.chracterData;
                 return (fChData.key == chData.key &&
                     fChData.level == chData.level);
             }

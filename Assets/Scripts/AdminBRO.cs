@@ -27,13 +27,15 @@ namespace Overlewd
         [Serializable]
         public class RewardItem
         {
-            public string icon;
             public int? amount;
             public int? tradableId;
 
             [JsonProperty(Required = Required.Default)]
             public AdminBRO.TradableItem tradableData =>
                 GameData.markets.GetTradableById(tradableId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => tradableData?.icon;
         }
 
         [Serializable]
