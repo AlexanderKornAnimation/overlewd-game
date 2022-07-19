@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Networking;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -146,17 +147,13 @@ namespace Overlewd
         private static Vector2 SelectResolution()
         {
             var aspectRatio = (float)Screen.width / (float)Screen.height;
-
-            //1920:1080
-            var aspectDeltaFullHD = Mathf.Abs(1920.0f / 1080.0f - aspectRatio);
-            //2160:1080
-            var aspectDeltaWideHD = Mathf.Abs(2160.0f / 1080.0f - aspectRatio);
-
-            if (aspectDeltaFullHD < aspectDeltaWideHD)
+            var resoulutions = new List<Vector2>()
             {
-                return new Vector2(1920, 1080);
-            }
-            return new Vector2(2160, 1080);
+                new Vector2(1920, 1080),
+                new Vector2(2160, 1080),
+                new Vector2(2400, 1080)
+            };
+            return resoulutions.OrderBy(res => Mathf.Abs(res.x / res.y - aspectRatio)).First();
         }
 
         public static void ChangeResolution()
