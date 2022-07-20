@@ -177,7 +177,7 @@ namespace Overlewd
 
         public static SpineWidget GetInstance(AdminBRO.Animation animationData, Transform parent)
         {
-            var layerFirst = animationData?.layouts.First();
+            var layerFirst = animationData?.layouts?.First();
             return GetInstance(layerFirst, parent);
         }
     }

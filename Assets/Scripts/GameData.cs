@@ -607,6 +607,8 @@ namespace Overlewd
 
         public AdminBRO.Animation GetById(int? id) =>
             animations.Find(a => a.id == id);
+        public AdminBRO.Animation GetByTitle(string title) =>
+            animations.Find(a => a.title == title);
     }
 
     //sounds
