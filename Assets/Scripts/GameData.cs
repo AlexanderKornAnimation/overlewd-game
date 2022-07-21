@@ -609,6 +609,16 @@ namespace Overlewd
             animations.Find(a => a.id == id);
         public AdminBRO.Animation GetByTitle(string title) =>
             animations.Find(a => a.title == title);
+
+        public AdminBRO.Animation this[int id] {
+            get => GetById(id);
+        }
+        public AdminBRO.Animation this[string title] {
+            get => GetByTitle(title);
+        }
+        public SpineWidget this[string title, Transform parent] {
+            get => SpineWidget.GetInstance(GetByTitle(title), parent);
+        }
     }
 
     //sounds
