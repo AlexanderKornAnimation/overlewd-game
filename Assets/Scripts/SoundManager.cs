@@ -88,10 +88,6 @@ namespace Overlewd
 
         private FMODBank(string path)
         {
-            /*status = RuntimeManager.StudioSystem.loadBankFile(path,
-                LOAD_BANK_FLAGS.NORMAL,
-                out bank);*/
-
             var bankInMemory = File.ReadAllBytes(path);
             status = RuntimeManager.StudioSystem.loadBankMemory(bankInMemory,
                 LOAD_BANK_FLAGS.NORMAL,
