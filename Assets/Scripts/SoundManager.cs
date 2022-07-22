@@ -88,7 +88,12 @@ namespace Overlewd
 
         private FMODBank(string path)
         {
-            status = RuntimeManager.StudioSystem.loadBankFile(path,
+            /*status = RuntimeManager.StudioSystem.loadBankFile(path,
+                LOAD_BANK_FLAGS.NORMAL,
+                out bank);*/
+
+            var bankInMemory = File.ReadAllBytes(path);
+            status = RuntimeManager.StudioSystem.loadBankMemory(bankInMemory,
                 LOAD_BANK_FLAGS.NORMAL,
                 out bank);
         }
@@ -161,8 +166,12 @@ namespace Overlewd
         {
             EventDescription eventDesc;
             RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-            //return eventDesc.isValid() ? new FMODEvent(eventPath) : null;
-            return new FMODEvent(eventPath);
+            if (eventDesc.isValid())
+            {
+                return new FMODEvent(eventPath);
+            }
+            UnityEngine.Debug.LogWarning($"event not found: {eventPath}");
+            return null;
         }
     }
 
