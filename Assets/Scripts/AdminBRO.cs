@@ -886,7 +886,7 @@ namespace Overlewd
             public string fullScreenPersIcon;
             public string name;
             public string characterClass;
-            public List<Animation> animations;
+            public int? animationId;
             public int? level;
             public string rarity;
             public List<int> equipment;
@@ -909,12 +909,6 @@ namespace Overlewd
             public string key;
             public List<PriceItem> levelUpPrice;
             public List<PriceItem> mergePrice;
-
-            public class Animation
-            {
-                public string name;
-                public int? animation;
-            }
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -992,6 +986,9 @@ namespace Overlewd
             
             [JsonProperty(Required = Required.Default)]
             public Equipment equipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation animationData => GameData.animations.GetById(animationId);
         }
 
         [Serializable]
