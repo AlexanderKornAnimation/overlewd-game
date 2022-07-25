@@ -51,14 +51,14 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (inputData.isTen)
+            if (inputData.isFive)
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
 
                 var itemsStartPos = canvas.Find("ItemStartPositions");
                 var itemsEndPos = canvas.Find("ItemEndPositions");
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 5; i++)
                 {
                     var startPos = itemsStartPos.Find($"Item{i}");
                     var endPos = itemsEndPos.Find($"Item{i}").position;
@@ -155,6 +155,6 @@ namespace Overlewd
     public class SummoningScreenInData : BaseFullScreenInData
     {
         public string tabType;
-        public bool isTen;
+        public bool isFive;
     }
 }
