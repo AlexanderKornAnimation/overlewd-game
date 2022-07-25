@@ -176,6 +176,23 @@ namespace Overlewd
         private static List<FMODEvent> instances = new List<FMODEvent>();
         private static List<EventDescription> localEvents = new List<EventDescription>();
 
+        public static IEnumerator<int> PreloadBanks()
+        {
+            RuntimeManager.LoadBank("BGM");
+            RuntimeManager.LoadBank("Master");
+            RuntimeManager.LoadBank("Master.strings");
+
+            while (!RuntimeManager.HaveAllBanksLoaded)
+            {
+                yield return 0;
+            }
+
+#if UNITY_WEBGL
+            RuntimeManager.CoreSystem.mixerSuspend();
+            RuntimeManager.CoreSystem.mixerResume();
+#endif
+        }
+
         public static void Initialize()
         {
             Bank[] banks;

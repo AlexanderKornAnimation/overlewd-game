@@ -20,7 +20,6 @@ namespace Overlewd
 
             UIManager.Initialize();
             ResourceManager.Initialize();
-            SoundManager.Initialize();
         }
 
         IEnumerator Start()
@@ -31,6 +30,10 @@ namespace Overlewd
             the window
             */
             yield return new WaitForSeconds(0.5f);
+
+            //Sound manager init
+            yield return SoundManager.PreloadBanks();
+            SoundManager.Initialize();
 
             UIManager.ShowScreen<LoadingScreen>();
         }
