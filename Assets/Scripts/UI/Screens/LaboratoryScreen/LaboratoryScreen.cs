@@ -193,7 +193,7 @@ namespace Overlewd
         public bool CanAddToFlask(NSLaboratoryScreen.Character ch)
         {
             var chData = ch.chracterData;
-            if (chData.isEpic || !chData.isLvlMax)
+            if (chData.isHeroic || !chData.isLvlMax)
             {
                 return false;
             }
