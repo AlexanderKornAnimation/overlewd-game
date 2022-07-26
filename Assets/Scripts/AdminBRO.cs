@@ -986,8 +986,8 @@ namespace Overlewd
             {
                 Rarity_Basic => 10,
                 Rarity_Advanced => 20,
-                Rarity_Epic => 30,
-                Rarity_Heroic => 40,
+                Rarity_Heroic => 30,
+                Rarity_Epic => 40,
                 _ => 10
             };
 
