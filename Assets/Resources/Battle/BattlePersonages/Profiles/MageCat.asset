@@ -22,8 +22,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 39ed46a9828ed124f92874e880bddd3d, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/MageCat
-  characterPrefab: {fileID: 3429669871766209661, guid: 8a671c4a548095e4d96c97f8f43e735c, type: 3}
+  characterPrefab: {fileID: 0}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1

@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 namespace Overlewd
 {
@@ -22,7 +23,7 @@ namespace Overlewd
         public bool select;
         private Slider slider;
         private TextMeshProUGUI textCount;
-        public Button button;
+        public UnityEvent OnClickAction = new UnityEvent();
 
         public bool potion => oldSkill.potion;
         public int potionAmount;
@@ -50,7 +51,6 @@ namespace Overlewd
         {
             effectIcons = new List<Sprite>(Resources.LoadAll<Sprite>("Battle/Images/UI/Status/Big"));
             if (!potion && effectSlot == null) effectSlot = transform.Find("status").GetComponent<Image>();
-            button = GetComponent<Button>();
             image = GetComponent<Image>();
             slider = GetComponentInChildren<Slider>();
             textCount = GetComponentInChildren<TextMeshProUGUI>();
@@ -158,6 +158,7 @@ namespace Overlewd
                 }
                 else
                 {
+                    Debug.Log("Descr is open");
                     ShowDiscription();
                     pressTime = 0f;
                     pressed = false;
@@ -169,9 +170,10 @@ namespace Overlewd
             pressTime = 0f;
             pressed = true;
         }
-
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (pressed)
+                OnClickAction.Invoke();
             pressTime = 0f;
             pressed = false;
         }

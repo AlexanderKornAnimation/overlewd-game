@@ -22,8 +22,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b4558cc7409088840a53d1e1cf65e04f, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/Boss_Cerber
-  characterPrefab: {fileID: 3736978107560482626, guid: 88b3fc3c32c5b0141acba02add5da035, type: 3}
+  characterPrefab: {fileID: 0}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1

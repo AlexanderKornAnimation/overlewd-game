@@ -16,8 +16,6 @@ namespace Overlewd
         public Skill[] skill;
         public Skill[] pSkill;
 
-        public string
-            idle_Prefab_Path = "Battle/BattlePersonages/idle_SkeletonData";
         public GameObject characterPrefab = null;
 
         public string ani_idle_name = "idle";

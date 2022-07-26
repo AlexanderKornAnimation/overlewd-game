@@ -95,7 +95,7 @@ namespace Overlewd
             if (QueueUI == null) QueueUI = transform.Find("BattleUICanvas/QueueUI");
             QueueUIContent = QueueUI.Find("Content");
             if (wavesTMP == null) wavesTMP = QueueUI.Find("text_Waves").GetComponent<TextMeshProUGUI>();
-            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave}";
+            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave+1}";
             if (roundTMP == null) roundTMP = transform.Find("BattleUICanvas/Background/Round/text").GetComponent<TextMeshProUGUI>();
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
@@ -115,7 +115,7 @@ namespace Overlewd
             {
                 var x = i; //Captured variable issue
                 skillControllers[x] = transform.Find($"BattleUICanvas/Character/Buttons/Skills/Button_{x}").GetComponent<SkillController>();
-                skillControllers[x].button.onClick.AddListener(delegate { ButtonPress(x); });
+                skillControllers[x].OnClickAction.AddListener(delegate { ButtonPress(x); });
             }
             skillPanelWidthScale = transform.Find("BattleUICanvas/Character/Buttons/Skills/").GetComponent<RectTransform>();
             passiveControllers[0] = transform.Find("BattleUICanvas/Character/Buttons/Passives/Button_0").GetComponent<SkillController>();
@@ -124,8 +124,8 @@ namespace Overlewd
             if (potion_hp == null) potion_hp = transform.Find("BattleUICanvas/Character/Buttons/Bottles/Potion_hp").GetComponent<SkillController>();
             potion_hp.potionAmount = potionHP;
             potion_mp.potionAmount = potionMP;
-            potion_mp?.button.onClick.AddListener(UseMPPotion);
-            potion_hp?.button.onClick.AddListener(UseHPPotion);
+            potion_mp?.OnClickAction.AddListener(UseMPPotion);
+            potion_hp?.OnClickAction.AddListener(UseHPPotion);
 
             /*if (battleSettings.hidePotions)
             {

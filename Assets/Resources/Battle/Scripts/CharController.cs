@@ -10,7 +10,6 @@ namespace Overlewd
 {
     public class CharController : MonoBehaviour
     {
-
         public bool isEnemy = false;
         public bool isBoss = false;
         public bool isOverlord = false;
@@ -161,10 +160,9 @@ namespace Overlewd
             observer.cc = this;
             observer.charStats = charStats;
 
-            var sW = characterRes.characterPrefab ?
-                SpineWidget.GetInstance(characterRes.characterPrefab, transform) :
-                SpineWidget.GetInstance(characterRes.idle_Prefab_Path, transform);
-            spineWidget = sW;
+            spineWidget = character.animationData != null ?
+                SpineWidget.GetInstance(character.animationData, transform) :
+                SpineWidget.GetInstance(characterRes.characterPrefab, transform);
             defenceDuration = spineWidget.GetAnimationDuaration(characterRes.ani_defence_name);
         }
         private void UIInit()
@@ -780,7 +778,7 @@ namespace Overlewd
             {
                 var damageText = Instantiate(popUpPrefab, rt);
                 damageText.GetComponent<DamagePopup>().Setup(msg, isEnemy && !isBoss, 0f, color);
-                log.Add(name+ ": " + msg);
+                log.Add(name + ": " + msg);
             }
             else Debug.LogError($"Null Draw Popup Prefab: {gameObject.name}");
         }
