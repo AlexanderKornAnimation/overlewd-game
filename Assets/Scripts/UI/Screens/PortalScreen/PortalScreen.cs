@@ -35,7 +35,7 @@ namespace Overlewd
         private Transform tabArea;
         private Transform currencyBack;
 
-        private void Awake()
+        void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/PortalScreen/PortalScreen", transform);
@@ -68,7 +68,14 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-        
+
+        public override async Task AfterShowAsync()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_portal);
+
+            await Task.CompletedTask;
+        }
+
         private void Customize()
         {
             foreach (var gacha in GameData.gacha.items)

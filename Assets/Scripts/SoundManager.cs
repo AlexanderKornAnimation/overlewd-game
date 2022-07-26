@@ -79,6 +79,26 @@ namespace Overlewd
         //castle screen
         public const string Castle_BuildingAppear = "event:/Animations/Castle_Scenes/Building_Appear";
         public const string Castle_BuildingUpgrade = "event:/Animations/Castle_Scenes/Building_Upgrade";
+
+        //VO
+        //Победа / Поражение в бою. Проигрывать только если следом не идет туториальная озвучка.
+        public const string VO_Winning_a_battle = "event:/VO/Placeholders/Ulvi/Reactions/Winning_a_battle";
+        public const string VO_Losing_a_battle = "event:/VO/Placeholders/Ulvi/Reactions/Losing_a_battle";
+        //При надевании шмотки на оверлорда.
+        public const string VO_equipping_armor = "event:/VO/Placeholders/Ulvi/Reactions/equipping_armor";
+        //При заходе на экраны (понятно по названию):
+        public const string VO_Ulvi_Reactions_catacombs = "event:/VO/Placeholders/Ulvi/Reactions/catacombs";
+        public const string VO_Ulvi_Reactions_forge = "event:/VO/Placeholders/Ulvi/Reactions/forge";
+        public const string VO_Ulvi_Reactions_harem = "event:/VO/Placeholders/Ulvi/Reactions/harem";
+        public const string VO_Ulvi_Reactions_laboratory = "event:/VO/Placeholders/Ulvi/Reactions/laboratory";
+        public const string VO_Ulvi_Reactions_mages_guild = "event:/VO/Placeholders/Ulvi/Reactions/mages_guild";
+        public const string VO_Ulvi_Reactions_portal = "event:/VO/Placeholders/Ulvi/Reactions/portal";
+        public const string VO_Ulvi_Reactions_battle_girls = "event:/VO/Placeholders/Ulvi/Reactions/battle_girls";
+        public const string VO_Ulvi_Reactions_matriarch_screen = "event:/VO/Placeholders/Ulvi/Reactions/matriarch_screen (экран Ульви именно)";
+        public const string VO_Ulvi_Reactions_market = "event:/VO/Placeholders/Ulvi/Reactions/market";
+        public const string VO_Ulvi_Reactions_eventbook = "event:/VO/Placeholders/Ulvi/Reactions/eventbook";
+        //Так же при повышении репутации / лояльности с Ульви нужно проигрывать данный ивент:
+        public const string _ = "event:/VO/Placeholders/Ulvi/Reactions/loyalty_increase";
     }
 
     public class FMODBank
@@ -180,6 +200,7 @@ namespace Overlewd
         {
             RuntimeManager.LoadBank("BGM");
             RuntimeManager.LoadBank("Master");
+            RuntimeManager.LoadBank("Voiceovers_local");
             RuntimeManager.LoadBank("Master.strings");
 
             while (!RuntimeManager.HaveAllBanksLoaded)

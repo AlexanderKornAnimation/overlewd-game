@@ -73,6 +73,13 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_eventbook);
+
+            await Task.CompletedTask;
+        }
+
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

@@ -39,6 +39,13 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_market);
+
+            await Task.CompletedTask;
+        }
+
         private void AddOffers()
         {
             for (int i = 0; i < 3; i++)

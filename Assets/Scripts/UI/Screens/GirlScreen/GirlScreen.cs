@@ -205,6 +205,16 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            if (inputData?.girlData?.isUlvi ?? false)
+            {
+                SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_matriarch_screen);
+            }
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeHideDataAsync()
         {
             if (seduceSex)

@@ -48,7 +48,7 @@ namespace Overlewd
 
         private List<NSLaboratoryScreen.Character>  flaskCharacters = new List<NSLaboratoryScreen.Character>();
         
-        private void Awake()
+        void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/LaboratoryScreen/LaboratoryScreen",
@@ -149,6 +149,13 @@ namespace Overlewd
             
             EnterTab(activeTabId);
             
+            await Task.CompletedTask;
+        }
+
+        public override async Task AfterShowAsync()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_laboratory);
+
             await Task.CompletedTask;
         }
 
