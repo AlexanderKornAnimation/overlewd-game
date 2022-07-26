@@ -239,6 +239,8 @@ namespace Overlewd
 
             await GameData.matriarchs.Get();
 
+            await GameData.battlePass.Get();
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();

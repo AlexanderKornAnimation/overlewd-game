@@ -817,6 +817,7 @@ namespace Overlewd
         // /battles/my/characters/{characterId}/skills/{skillId}/levelup
         // /battles/my/characters/{tgtId}/merge/{srcId}
         // /battles/skills/effects
+        // /battles/pass
         public static async Task<List<Character>> charactersAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
@@ -873,6 +874,15 @@ namespace Overlewd
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<SkillEffect>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<BattlePass>> battlePassesAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/pass";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<BattlePass>>(request?.downloadHandler.text);
             }
         }
 
@@ -1022,6 +1032,23 @@ namespace Overlewd
         {
             public string name;
             public string description;
+        }
+
+        [Serializable]
+        public class BattlePass
+        {
+            public int id;
+            public int? eventId;
+            public List<Level> levels;
+            public List<PriceItem> premiumPrice;
+            public int currentPointsCount;
+
+            public class Level
+            {
+                public int pointsThreshold;
+                public int defaultReward;
+                public int premiumReward;
+            }
         }
 
         // /my/characters/equipment
