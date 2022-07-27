@@ -56,6 +56,16 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            if (!UIManager.HasAnyNotification())
+            {
+                SoundManager.PlayOneShot(FMODEventPath.VO_Winning_a_battle);
+            }
+
+            await Task.CompletedTask;
+        }
+
         public override void MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();

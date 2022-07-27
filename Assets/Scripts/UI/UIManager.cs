@@ -757,6 +757,11 @@ namespace Overlewd
             return currentNotification?.GetType() == typeof(T);
         }
 
+        public static bool HasAnyNotification()
+        {
+            return currentNotification != null;
+        }
+
         public static async Task WaitHideNotifications()
         {
             while (currentNotification != null ||

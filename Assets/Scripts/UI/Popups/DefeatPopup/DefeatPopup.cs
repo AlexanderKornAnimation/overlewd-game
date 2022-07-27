@@ -58,6 +58,9 @@ namespace Overlewd
                 case ("battle2", "chapter1"):
                     GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
                     break;
+                default:
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Losing_a_battle);
+                    break;
             }
 
             await Task.CompletedTask;
