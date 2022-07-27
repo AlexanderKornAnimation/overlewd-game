@@ -325,7 +325,11 @@ namespace Overlewd
 
         private void OverlordButtonClick()
         {
-            
+            UIManager.MakeScreen<OverlordScreen>().
+                SetData(new OverlordScreenInData
+            {
+                prevScreenInData = inputData,
+            }).RunShowScreenProcess();
         }
     }
 

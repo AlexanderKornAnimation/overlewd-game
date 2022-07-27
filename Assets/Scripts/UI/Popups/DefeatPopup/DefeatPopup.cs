@@ -91,8 +91,8 @@ namespace Overlewd
 
         private void OverlordButtonClick()
         {
-            // SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            // UIManager.ShowScreen<InventoryAndUserScreen>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<OverlordScreen>();
         }
 
         private void HaremButtonClick()

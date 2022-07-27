@@ -33,8 +33,6 @@ namespace Overlewd
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             portalButtonText = portalButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             portalButton.onClick.AddListener(PortalButtonClick);
-
-            UITools.DisableButton(overlordButton);
         }
 
         private NSSummoningScreen.Item GetItem(Transform pos)
@@ -124,6 +122,7 @@ namespace Overlewd
         private void OverlordButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<OverlordScreen>();
         }
 
         private void HaremButtonClick()
