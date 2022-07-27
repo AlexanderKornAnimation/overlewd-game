@@ -37,9 +37,10 @@ namespace Overlewd
         private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
         private GameObject slotFull;
-        private Image slotEmpty;
-        private Image slotAdvanced;
-        private Image slotEpic;
+        private GameObject slotEmpty;
+        private GameObject slotAdvanced;
+        private GameObject slotEpic;
+        private GameObject slotHeroic;
         private Button slotButton;
         private Image girlImage;
         private TextMeshProUGUI girlName;
@@ -72,9 +73,10 @@ namespace Overlewd
             mergeButton = canvas.Find("MergeButton").Find("Button").GetComponent<Button>();
             mergeButton.onClick.AddListener(MergeButtonClick);
 
-            slotEmpty = slot.Find("SlotEmpty").GetComponent<Image>();
-            slotAdvanced = slot.Find("SlotAdvanced").GetComponent<Image>();
-            slotEpic = slot.Find("SlotEpic").GetComponent<Image>();
+            slotEmpty = slot.Find("SlotEmpty").gameObject;
+            slotAdvanced = slot.Find("SlotAdvanced").gameObject;
+            slotEpic = slot.Find("SlotEpic").gameObject;
+            slotHeroic = slot.Find("SlotHeroic").gameObject;
 
             for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
             {
@@ -229,18 +231,31 @@ namespace Overlewd
         {
             if (flaskCharacters.Count == 0)
             {
-                slotEmpty.gameObject.SetActive(true);
-                slotAdvanced.gameObject.SetActive(false);
-                slotEpic.gameObject.SetActive(false); ;
+                slotEmpty.SetActive(true);
+                slotAdvanced.SetActive(false);
+                slotEpic.SetActive(false);
+                slotHeroic.SetActive(false);
                 slotFull.SetActive(false);
                 mergeButton.gameObject.SetActive(false);
             }
             else
             {
                 var chData = flaskCharacters.First().chracterData;
-                slotEmpty.gameObject.SetActive(chData.isBasic);
-                slotAdvanced.gameObject.SetActive(chData.isAdvanced);
-                slotEpic.gameObject.SetActive(chData.isEpic);
+                if (flaskCharacters.Count == 1)
+                {
+                    slotEmpty.SetActive(chData.isBasic);
+                    slotAdvanced.SetActive(chData.isAdvanced);
+                    slotEpic.SetActive(chData.isEpic);
+                    slotHeroic.SetActive(chData.isHeroic);
+                }
+                else //2 characters
+                {
+                    slotEmpty.SetActive(false);
+                    slotAdvanced.SetActive(chData.isBasic);
+                    slotEpic.SetActive(chData.isAdvanced);
+                    slotHeroic.SetActive(chData.isEpic);
+                }
+
                 slotFull.SetActive(true);
                 girlImage.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
                 girlName.text = chData.name;
