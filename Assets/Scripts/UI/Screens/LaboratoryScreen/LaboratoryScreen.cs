@@ -201,6 +201,11 @@ namespace Overlewd
 
         public bool CanAddToFlask(NSLaboratoryScreen.Character ch)
         {
+            if (IsInFlask(ch))
+            {
+                return false;
+            }
+
             var chData = ch.chracterData;
             if (chData.isHeroic || !chData.isLvlMax)
             {
@@ -216,6 +221,19 @@ namespace Overlewd
                 var fChData = flaskCharacters.First().chracterData;
                 return (fChData.key == chData.key &&
                     fChData.level == chData.level);
+            }
+            return false;
+        }
+
+        public bool HasPair()
+        {
+            var tabChs = scrollContents.SelectMany(tab => tab.GetComponentsInChildren<NSLaboratoryScreen.Character>()).ToList();
+            foreach (var tabCh in tabChs)
+            {
+                if (CanAddToFlask(tabCh))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -243,10 +261,21 @@ namespace Overlewd
                 var chData = flaskCharacters.First().chracterData;
                 if (flaskCharacters.Count == 1)
                 {
-                    slotEmpty.SetActive(chData.isBasic);
-                    slotAdvanced.SetActive(chData.isAdvanced);
-                    slotEpic.SetActive(chData.isEpic);
-                    slotHeroic.SetActive(chData.isHeroic);
+                    if (HasPair())
+                    {
+                        slotEmpty.SetActive(chData.isBasic);
+                        slotAdvanced.SetActive(chData.isAdvanced);
+                        slotEpic.SetActive(chData.isEpic);
+                        slotHeroic.SetActive(chData.isHeroic);
+                    }
+                    else
+                    {
+                        //TODO: not has pair
+                        slotEmpty.SetActive(true);
+                        slotAdvanced.SetActive(false);
+                        slotEpic.SetActive(false);
+                        slotHeroic.SetActive(false);
+                    }
                 }
                 else //2 characters
                 {
