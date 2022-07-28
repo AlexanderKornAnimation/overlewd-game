@@ -58,9 +58,17 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (!UIManager.HasAnyNotification())
+            switch (inputData.ftueStageData?.ftueState)
             {
-                SoundManager.PlayOneShot(FMODEventPath.VO_Winning_a_battle);
+                case (_, "chapter1"):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Winning_a_battle);
+                    break;
+                case (_, "chapter2"):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Winning_a_battle);
+                    break;
+                case (_, "chapter3"):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Winning_a_battle);
+                    break;
             }
 
             await Task.CompletedTask;

@@ -75,7 +75,18 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_eventbook);
+            switch(GameData.ftue.stats.lastEndedState)
+            {
+                case (_, "chapter1"):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_eventbook);
+                break;
+                case (_, "chapter2"):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_eventbook);
+                break;
+                case (_, "chapter3"):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_eventbook);
+                break;
+            }
 
             await Task.CompletedTask;
         }
