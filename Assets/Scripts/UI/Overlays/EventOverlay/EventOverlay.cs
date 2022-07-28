@@ -99,6 +99,12 @@ namespace Overlewd
             eventButtonText[tabId].text = eventData.name;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
+
+            if (tabId == TabMonthly)
+            {
+                NSEventOverlay.BattlePass.GetInstance(scrollViewContent[tabId]);
+            }
+            
             foreach (var questId in eventData.quests)
             {
                 var questData = GameData.quests.GetById(questId);
