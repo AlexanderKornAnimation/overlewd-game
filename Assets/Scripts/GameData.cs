@@ -205,11 +205,11 @@ namespace Overlewd
     //gacha
     public class Gacha
     {
-        public List<AdminBRO.GachItem> items { get; private set; }
+        public List<AdminBRO.GachaItem> items { get; private set; }
 
         public async Task Get() =>
             items = await AdminBRO.gachaAsync();
-        public AdminBRO.GachItem GetGachaById(int? id) =>
+        public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
         public async Task Buy(int id)

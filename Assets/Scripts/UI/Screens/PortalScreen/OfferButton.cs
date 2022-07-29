@@ -24,7 +24,7 @@ namespace Overlewd
 
             public int gachaId { get; set; }
 
-            public AdminBRO.GachItem gachaData => GameData.gacha.GetGachaById(gachaId);
+            public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
             private void Awake()
             {
@@ -50,8 +50,8 @@ namespace Overlewd
             {
                 content = gachaData.type switch
                 {
-                    AdminBRO.GachItem.Type_TargetByCount => ContentByCount.GetInstance(contentPos),
-                    AdminBRO.GachItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
+                    AdminBRO.GachaItem.Type_TargetByCount => ContentByCount.GetInstance(contentPos),
+                    AdminBRO.GachaItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
                     _ => null
                 };
 

@@ -100,19 +100,19 @@ namespace Overlewd
                 
                 switch (gacha.tabType)
                 {
-                    case AdminBRO.GachItem.TabType_Matriachs:
+                    case AdminBRO.GachaItem.TabType_Matriachs:
                         offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabBattleGirls]);
                         battleGirlsOffers.Add(offerButton);
                         break;
-                    case AdminBRO.GachItem.TabType_OverlordEquipment:
+                    case AdminBRO.GachaItem.TabType_OverlordEquipment:
                         offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabOverlordEquip]);
                         overlordOffers.Add(offerButton);
                         break;
-                    case AdminBRO.GachItem.TabType_Shards:
+                    case AdminBRO.GachaItem.TabType_Shards:
                         offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabShards]);
                         shardsOffers.Add(offerButton);
                         break;
-                    case AdminBRO.GachItem.TabType_CharactersEquipment:
+                    case AdminBRO.GachaItem.TabType_CharactersEquipment:
                         offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabBattleGirlsEquip]);
                         battleGirlsEquipOffers.Add(offerButton);
                         break;

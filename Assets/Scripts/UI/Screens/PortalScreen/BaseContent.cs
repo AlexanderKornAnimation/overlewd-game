@@ -23,7 +23,7 @@ namespace Overlewd
             
             public int gachaId { get; set; }
 
-            public AdminBRO.GachItem gachaData => GameData.gacha.GetGachaById(gachaId);
+            public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
             protected virtual void Awake()
             {

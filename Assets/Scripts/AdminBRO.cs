@@ -1601,12 +1601,12 @@ namespace Overlewd
         }
 
         // gacha
-        public static async Task<List<GachItem>> gachaAsync()
+        public static async Task<List<GachaItem>> gachaAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/gacha";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<GachItem>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<GachaItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -1629,7 +1629,7 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class GachItem
+        public class GachaItem
         {
             public int id;
             public string tabTitle;
@@ -1649,6 +1649,7 @@ namespace Overlewd
             public string dateStart;
             public string dateEnd;
             public int? eventId;
+            public int count;
 
             public class PoolItem
             {
