@@ -58,14 +58,19 @@ namespace Overlewd
                 case ("battle2", "chapter1"):
                     GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
                     break;
-                case (_, "chapter1"):
-                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
-                    break;
-                case (_, "chapter2"):
-                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Losing_a_battle);
-                    break;
-                case (_, "chapter3"):
-                    SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Losing_a_battle);
+                case (_, _):
+                    switch (GameData.ftue.activeChapter.key)
+                    {
+                        case "chapter1":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
+                            break;
+                        case "chapter2":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Losing_a_battle);
+                            break;
+                        case "chapter3":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Losing_a_battle);
+                            break;
+                    }
                     break;
             }
 

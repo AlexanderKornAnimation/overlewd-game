@@ -43,14 +43,19 @@ namespace Overlewd
         {
             switch (GameData.ftue.stats.lastEndedState)
             {
-                case (_, "chapter1"):
-                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_market);
-                    break;
-                case (_, "chapter2"):
-                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_market);
-                    break;
-                case (_, "chapter3"):
-                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_market);
+                case (_, _):
+                    switch (GameData.ftue.activeChapter.key)
+                    {
+                        case "chapter1":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_market);
+                            break;
+                        case "chapter2":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_market);
+                            break;
+                        case "chapter3":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_market);
+                            break;
+                    }
                     break;
             }
 
