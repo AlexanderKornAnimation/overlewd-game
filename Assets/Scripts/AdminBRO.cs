@@ -41,8 +41,8 @@ namespace Overlewd
         [Serializable]
         public class MapPosition
         {
-            public int mapCX;
-            public int mapCY;
+            public float mapCX;
+            public float mapCY;
 
             [JsonProperty(Required = Required.Default)]
             public Vector2 pos => new Vector2(mapCX, -mapCY);
