@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    namespace NSMarketPopup
+    namespace NSMarketOverlay
     {
          public abstract class BaseOffer : MonoBehaviour
         {

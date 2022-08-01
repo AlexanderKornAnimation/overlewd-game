@@ -10,13 +10,14 @@ namespace Overlewd
 {
     public class MarketOverlay : BaseOverlayParent<MarketOverlayInData>
     {
-        private List<NSMarketPopup.OfferButton> offers = new List<NSMarketPopup.OfferButton>();
-        private NSMarketPopup.OfferButton selectedOffer;
+        private List<NSMarketOverlay.OfferButton> offers = new List<NSMarketOverlay.OfferButton>();
+        private NSMarketOverlay.OfferButton selectedOffer;
 
         private Button backButton;
         private Transform canvas;
-        private Transform offersContent;
+        private Transform offerButtonsContent;
         private Transform currencyBack;
+        private Transform offerPos;
 
         private void Awake()
         {
@@ -25,9 +26,10 @@ namespace Overlewd
 
             canvas = screenInst.transform.Find("Canvas");
             currencyBack = canvas.Find("CurrencyBack");
-            offersContent = canvas.Find("OffersScroll").Find("Viewport").Find("Content");
+            offerButtonsContent = canvas.Find("OfferButtonsScroll").Find("Viewport").Find("Content");
             backButton = canvas.Find("CloseButton").GetComponent<Button>();
             backButton.onClick.AddListener(CloseButtonClick);
+            offerPos = canvas.Find("OfferPos");
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -66,15 +68,15 @@ namespace Overlewd
         {
             for (int i = 0; i < 3; i++)
             {
-                var offerButton = NSMarketPopup.OfferButton.GetInstance(offersContent);
-                offerButton.offerPos = canvas;
+                var offerButton = NSMarketOverlay.OfferButton.GetInstance(offerButtonsContent);
+                offerButton.offerPos = offerPos;
                 offerButton.Customize();
                 offerButton.selectButton += SelectOffer;
                 offers.Add(offerButton);
             }
         }
 
-        private void SelectOffer(NSMarketPopup.OfferButton offer)
+        private void SelectOffer(NSMarketOverlay.OfferButton offer)
         {
             selectedOffer?.Deselect();
             offer?.Select();
