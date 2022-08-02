@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    namespace NSMarketPopup
+    namespace NSMarketOverlay
     {
         public class CurrencyPacksOffer : BaseOffer
         {
-            private List<BaseCurrencyPack> packs = new List<BaseCurrencyPack>();
+            private List<CurrencyPack> packs = new List<CurrencyPack>();
             
             private Transform content;
 
@@ -24,12 +24,9 @@ namespace Overlewd
             {
                 base.Customize();
 
-                for (int i = 0; i <= 3; i++)
+                for (int i = 0; i <= 6; i++)
                 {
                     packs.Add(CurrencyPack.GetInstance(content));
-                    packs.Add(CrystalPackSmall.GetInstance(content));
-                    packs.Add(CrystalPackMedium.GetInstance(content));
-                    packs.Add(CrystalPackLarge.GetInstance(content));
                 }
             }
 

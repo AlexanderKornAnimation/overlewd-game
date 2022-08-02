@@ -56,6 +56,29 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (inputData.ftueStageData?.ftueState)
+            {
+                case (_, _):
+                    switch (GameData.ftue.activeChapter.key)
+                    {
+                        case "chapter1":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Winning_a_battle);
+                            break;
+                        case "chapter2":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Winning_a_battle);
+                            break;
+                        case "chapter3":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Winning_a_battle);
+                            break;
+                    }
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         public override void MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();

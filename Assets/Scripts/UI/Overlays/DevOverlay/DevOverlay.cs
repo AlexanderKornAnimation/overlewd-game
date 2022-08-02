@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,10 @@ namespace Overlewd
         private Button AddCrystals_Button;
         private Button Battle_Button;
 
-        private void Awake()
+        private TextMeshProUGUI deviceModel;
+        private TextMeshProUGUI deviceId;
+
+        void Awake()
         {
             var inst = ResourceManager.InstantiateScreenPrefab(
                 "Prefabs/UI/Overlays/DevOverlay/DevOverlay", transform);
@@ -40,9 +44,21 @@ namespace Overlewd
             Battle_Button = background.Find("Battle").GetComponent<Button>();
             Battle_Button.onClick.AddListener(Battle_ButtonClick);
 
+            var userInfo = canvas.Find("UserInfo");
+            deviceModel = userInfo.Find("DeviceModel").GetComponent<TextMeshProUGUI>();
+            deviceId = userInfo.Find("DeviceId").GetComponent<TextMeshProUGUI>();
+
 #if !UNITY_EDITOR
             Battle_Button.gameObject.SetActive(false);
 #endif
+        }
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            deviceModel.text = "Device Midel: " + SystemInfo.deviceModel;
+            deviceId.text = "Device Id:" + SystemInfo.deviceUniqueIdentifier;
+
+            await Task.CompletedTask;
         }
 
         public override ScreenShow Show()

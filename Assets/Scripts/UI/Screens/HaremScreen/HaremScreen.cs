@@ -122,6 +122,29 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedState)
+            {
+                case (_, _):
+                    switch (GameData.ftue.activeChapter.key)
+                    {
+                        case "chapter1":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_harem);
+                            break;
+                        case "chapter2":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_harem);
+                            break;
+                        case "chapter3":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_harem);
+                            break;
+                    }
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

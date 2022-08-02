@@ -164,7 +164,7 @@ namespace Overlewd
                     UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.isBuilt);
                     UITools.DisableButton(laboratoryButton, !GameData.buildings.laboratory.isBuilt);
                     UITools.DisableButton(forgeButton, !GameData.buildings.forge.isBuilt);
-                    UITools.DisableButton(overlordButton);
+                    // UITools.DisableButton(overlordButton);
                     break;
             }
 
@@ -216,7 +216,7 @@ namespace Overlewd
 
         private void OverlordButtonClick()
         {
-            
+            UIManager.ShowScreen<OverlordScreen>();
         }
         
         private void HaremButtonClick()

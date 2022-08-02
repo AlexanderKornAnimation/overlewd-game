@@ -41,8 +41,8 @@ namespace Overlewd
         [Serializable]
         public class MapPosition
         {
-            public int mapCX;
-            public int mapCY;
+            public float mapCX;
+            public float mapCY;
 
             [JsonProperty(Required = Required.Default)]
             public Vector2 pos => new Vector2(mapCX, -mapCY);
@@ -817,6 +817,7 @@ namespace Overlewd
         // /battles/my/characters/{characterId}/skills/{skillId}/levelup
         // /battles/my/characters/{tgtId}/merge/{srcId}
         // /battles/skills/effects
+        // /battles/pass
         public static async Task<List<Character>> charactersAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
@@ -876,6 +877,15 @@ namespace Overlewd
             }
         }
 
+        public static async Task<List<BattlePass>> battlePassesAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/battles/pass";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<BattlePass>>(request?.downloadHandler.text);
+            }
+        }
+
         [Serializable]
         public class Character
         {
@@ -886,7 +896,7 @@ namespace Overlewd
             public string fullScreenPersIcon;
             public string name;
             public string characterClass;
-            public List<Animation> animations;
+            public int? animationId;
             public int? level;
             public string rarity;
             public List<int> equipment;
@@ -909,12 +919,6 @@ namespace Overlewd
             public string key;
             public List<PriceItem> levelUpPrice;
             public List<PriceItem> mergePrice;
-
-            public class Animation
-            {
-                public string name;
-                public int? animation;
-            }
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -992,6 +996,9 @@ namespace Overlewd
             
             [JsonProperty(Required = Required.Default)]
             public Equipment equipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation animationData => GameData.animations.GetById(animationId);
         }
 
         [Serializable]
@@ -1025,6 +1032,23 @@ namespace Overlewd
         {
             public string name;
             public string description;
+        }
+
+        [Serializable]
+        public class BattlePass
+        {
+            public int id;
+            public int? eventId;
+            public List<Level> levels;
+            public List<PriceItem> premiumPrice;
+            public int currentPointsCount;
+
+            public class Level
+            {
+                public int pointsThreshold;
+                public int defaultReward;
+                public int premiumReward;
+            }
         }
 
         // /my/characters/equipment
@@ -1577,12 +1601,12 @@ namespace Overlewd
         }
 
         // gacha
-        public static async Task<List<GachItem>> gachaAsync()
+        public static async Task<List<GachaItem>> gachaAsync()
         {
             var url = "https://overlewd-api.herokuapp.com/gacha";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<GachItem>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<List<GachaItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -1605,7 +1629,7 @@ namespace Overlewd
         }
 
         [Serializable]
-        public class GachItem
+        public class GachaItem
         {
             public int id;
             public string tabTitle;
@@ -1625,6 +1649,7 @@ namespace Overlewd
             public string dateStart;
             public string dateEnd;
             public int? eventId;
+            public int count;
 
             public class PoolItem
             {

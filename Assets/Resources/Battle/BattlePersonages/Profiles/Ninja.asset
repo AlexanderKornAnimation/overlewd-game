@@ -22,8 +22,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7f3ca5a561eb01741a653c44681f7202, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
-  idle_Prefab_Path: Battle/BattlePersonages/Characters/Ninja
-  characterPrefab: {fileID: 6246610725357515830, guid: 87dca6d050099d5469b8da5c5d9658e5, type: 3}
+  characterPrefab: {fileID: 0}
   ani_idle_name: idle
   ani_pAttack_name:
   - prepair1

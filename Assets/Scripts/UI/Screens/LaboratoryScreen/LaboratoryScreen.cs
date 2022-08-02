@@ -37,9 +37,10 @@ namespace Overlewd
         private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
         private GameObject slotFull;
-        private Image slotEmpty;
-        private Image slotAdvanced;
-        private Image slotEpic;
+        private GameObject slotEmpty;
+        private GameObject slotAdvanced;
+        private GameObject slotEpic;
+        private GameObject slotHeroic;
         private Button slotButton;
         private Image girlImage;
         private TextMeshProUGUI girlName;
@@ -48,7 +49,7 @@ namespace Overlewd
 
         private List<NSLaboratoryScreen.Character>  flaskCharacters = new List<NSLaboratoryScreen.Character>();
         
-        private void Awake()
+        void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/LaboratoryScreen/LaboratoryScreen",
@@ -72,9 +73,10 @@ namespace Overlewd
             mergeButton = canvas.Find("MergeButton").Find("Button").GetComponent<Button>();
             mergeButton.onClick.AddListener(MergeButtonClick);
 
-            slotEmpty = slot.Find("SlotEmpty").GetComponent<Image>();
-            slotAdvanced = slot.Find("SlotAdvanced").GetComponent<Image>();
-            slotEpic = slot.Find("SlotEpic").GetComponent<Image>();
+            slotEmpty = slot.Find("SlotEmpty").gameObject;
+            slotAdvanced = slot.Find("SlotAdvanced").gameObject;
+            slotEpic = slot.Find("SlotEpic").gameObject;
+            slotHeroic = slot.Find("SlotHeroic").gameObject;
 
             for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
             {
@@ -152,6 +154,29 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedState)
+            {
+                case (_, _):
+                    switch (GameData.ftue.activeChapter.key)
+                    {
+                        case "chapter1":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_laboratory);
+                            break;
+                        case "chapter2":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_laboratory);
+                            break;
+                        case "chapter3":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_laboratory);
+                            break;
+                    }
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -192,6 +217,11 @@ namespace Overlewd
 
         public bool CanAddToFlask(NSLaboratoryScreen.Character ch)
         {
+            if (IsInFlask(ch))
+            {
+                return false;
+            }
+
             var chData = ch.chracterData;
             if (chData.isHeroic || !chData.isLvlMax)
             {
@@ -211,6 +241,19 @@ namespace Overlewd
             return false;
         }
 
+        public bool HasPair()
+        {
+            var tabChs = scrollContents.SelectMany(tab => tab.GetComponentsInChildren<NSLaboratoryScreen.Character>()).ToList();
+            foreach (var tabCh in tabChs)
+            {
+                if (CanAddToFlask(tabCh))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void AddToFlask(NSLaboratoryScreen.Character ch)
         {
             flaskCharacters.Add(ch);
@@ -222,18 +265,42 @@ namespace Overlewd
         {
             if (flaskCharacters.Count == 0)
             {
-                slotEmpty.gameObject.SetActive(true);
-                slotAdvanced.gameObject.SetActive(false);
-                slotEpic.gameObject.SetActive(false); ;
+                slotEmpty.SetActive(true);
+                slotAdvanced.SetActive(false);
+                slotEpic.SetActive(false);
+                slotHeroic.SetActive(false);
                 slotFull.SetActive(false);
                 mergeButton.gameObject.SetActive(false);
             }
             else
             {
                 var chData = flaskCharacters.First().chracterData;
-                slotEmpty.gameObject.SetActive(chData.isBasic);
-                slotAdvanced.gameObject.SetActive(chData.isAdvanced);
-                slotEpic.gameObject.SetActive(chData.isEpic);
+                if (flaskCharacters.Count == 1)
+                {
+                    if (HasPair())
+                    {
+                        slotEmpty.SetActive(chData.isBasic);
+                        slotAdvanced.SetActive(chData.isAdvanced);
+                        slotEpic.SetActive(chData.isEpic);
+                        slotHeroic.SetActive(chData.isHeroic);
+                    }
+                    else
+                    {
+                        //TODO: not has pair
+                        slotEmpty.SetActive(true);
+                        slotAdvanced.SetActive(false);
+                        slotEpic.SetActive(false);
+                        slotHeroic.SetActive(false);
+                    }
+                }
+                else //2 characters
+                {
+                    slotEmpty.SetActive(false);
+                    slotAdvanced.SetActive(chData.isBasic);
+                    slotEpic.SetActive(chData.isAdvanced);
+                    slotHeroic.SetActive(chData.isEpic);
+                }
+
                 slotFull.SetActive(true);
                 girlImage.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
                 girlName.text = chData.name;

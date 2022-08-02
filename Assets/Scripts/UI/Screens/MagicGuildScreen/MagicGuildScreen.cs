@@ -24,7 +24,7 @@ namespace Overlewd
         private TextMeshProUGUI buildingLevel;
         private AdminBRO.Building buildingData => GameData.buildings.magicGuild;
 
-        private void Awake()
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild", transform);
 
@@ -63,6 +63,29 @@ namespace Overlewd
             }
 
             buildingLevel.text = (buildingData.currentLevel + 1).ToString();
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedState)
+            {
+                case (_, _):
+                    switch (GameData.ftue.activeChapter.key)
+                    {
+                        case "chapter1":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_mages_guild);
+                            break;
+                        case "chapter2":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_mages_guild);
+                            break;
+                        case "chapter3":
+                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_mages_guild);
+                            break;
+                    }
+                    break;
+            }
 
             await Task.CompletedTask;
         }

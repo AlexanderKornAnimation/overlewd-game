@@ -79,6 +79,56 @@ namespace Overlewd
         //castle screen
         public const string Castle_BuildingAppear = "event:/Animations/Castle_Scenes/Building_Appear";
         public const string Castle_BuildingUpgrade = "event:/Animations/Castle_Scenes/Building_Upgrade";
+
+        //VO
+        //Победа / Поражение в бою. Проигрывать только если следом не идет туториальная озвучка.
+        public const string VO_Ulvi_Winning_a_battle = "event:/VO/Placeholders/Ulvi/Reactions/Winning_a_battle";
+        public const string VO_Ulvi_Losing_a_battle = "event:/VO/Placeholders/Ulvi/Reactions/Losing_a_battle";
+        public const string VO_Adriel_Winning_a_battle = "event:/VO/Placeholders/Adriel/Reactions/Winning_a_battle";
+        public const string VO_Adriel_Losing_a_battle = "event:/VO/Placeholders/Adriel/Reactions/Losing_a_battle";
+        public const string VO_Inge_Winning_a_battle = "event:/VO/Placeholders/Inge/Reactions/Winning_a_battle";
+        public const string VO_Inge_Losing_a_battle = "event:/VO/Placeholders/Inge/Reactions/Losing_a_battle";
+        //При надевании шмотки на оверлорда.
+        public const string VO_Ulvi_equipping_armor = "event:/VO/Placeholders/Ulvi/Reactions/equipping_armor";
+        public const string VO_Adriel_equipping_armor = "event:/VO/Placeholders/Adriel/Reactions/equipping_armor";
+        public const string VO_Inge_equipping_armor = "event:/VO/Placeholders/Inge/Reactions/equipping_armor";
+        //При заходе на экраны (понятно по названию):
+        public const string VO_Ulvi_Reactions_catacombs = "event:/VO/Placeholders/Ulvi/Reactions/catacombs";
+        public const string VO_Ulvi_Reactions_forge = "event:/VO/Placeholders/Ulvi/Reactions/forge";
+        public const string VO_Ulvi_Reactions_harem = "event:/VO/Placeholders/Ulvi/Reactions/harem";
+        public const string VO_Ulvi_Reactions_laboratory = "event:/VO/Placeholders/Ulvi/Reactions/laboratory";
+        public const string VO_Ulvi_Reactions_mages_guild = "event:/VO/Placeholders/Ulvi/Reactions/mages_guild";
+        public const string VO_Ulvi_Reactions_portal = "event:/VO/Placeholders/Ulvi/Reactions/portal";
+        public const string VO_Ulvi_Reactions_battle_girls = "event:/VO/Placeholders/Ulvi/Reactions/battle_girls";
+        public const string VO_Ulvi_Reactions_matriarch_screen = "event:/VO/Placeholders/Ulvi/Reactions/matriarch_screen";
+        public const string VO_Ulvi_Reactions_market = "event:/VO/Placeholders/Ulvi/Reactions/market";
+        public const string VO_Ulvi_Reactions_eventbook = "event:/VO/Placeholders/Ulvi/Reactions/eventbook";
+
+        public const string VO_Adriel_Reactions_catacombs = "event:/VO/Placeholders/Adriel/Reactions/catacombs";
+        public const string VO_Adriel_Reactions_forge = "event:/VO/Placeholders/Adriel/Reactions/forge";
+        public const string VO_Adriel_Reactions_harem = "event:/VO/Placeholders/Adriel/Reactions/harem";
+        public const string VO_Adriel_Reactions_laboratory = "event:/VO/Placeholders/Adriel/Reactions/laboratory";
+        public const string VO_Adriel_Reactions_mages_guild = "event:/VO/Placeholders/Adriel/Reactions/mages_guild";
+        public const string VO_Adriel_Reactions_portal = "event:/VO/Placeholders/Adriel/Reactions/portal";
+        public const string VO_Adriel_Reactions_battle_girls = "event:/VO/Placeholders/Adriel/Reactions/battle_girls";
+        public const string VO_Adriel_Reactions_matriarch_screen = "event:/VO/Placeholders/Adriel/Reactions/matriarch_screen";
+        public const string VO_Adriel_Reactions_market = "event:/VO/Placeholders/Adriel/Reactions/market";
+        public const string VO_Adriel_Reactions_eventbook = "event:/VO/Placeholders/Adriel/Reactions/eventbook";
+
+        public const string VO_Ingie_Reactions_catacombs = "event:/VO/Placeholders/Ingie/Reactions/catacombs";
+        public const string VO_Ingie_Reactions_forge = "event:/VO/Placeholders/Ingie/Reactions/forge";
+        public const string VO_Ingie_Reactions_harem = "event:/VO/Placeholders/Ingie/Reactions/harem";
+        public const string VO_Ingie_Reactions_laboratory = "event:/VO/Placeholders/Ingie/Reactions/laboratory";
+        public const string VO_Ingie_Reactions_mages_guild = "event:/VO/Placeholders/Ingie/Reactions/mages_guild";
+        public const string VO_Ingie_Reactions_portal = "event:/VO/Placeholders/Ingie/Reactions/portal";
+        public const string VO_Ingie_Reactions_battle_girls = "event:/VO/Placeholders/Ingie/Reactions/battle_girls";
+        public const string VO_Ingie_Reactions_matriarch_screen = "event:/VO/Placeholders/Ingie/Reactions/matriarch_screen";
+        public const string VO_Ingie_Reactions_market = "event:/VO/Placeholders/Ingie/Reactions/market";
+        public const string VO_Ingie_Reactions_eventbook = "event:/VO/Placeholders/Ingie/Reactions/eventbook";
+        //Так же при повышении репутации / лояльности с Ульви нужно проигрывать данный ивент:
+        public const string VO_Ulvi_loyalty_increase = "event:/VO/Placeholders/Ulvi/Reactions/loyalty_increase";
+        public const string VO_Adriel_loyalty_increase = "event:/VO/Placeholders/Adriel/Reactions/loyalty_increase";
+        public const string VO_Ingie_loyalty_increase = "event:/VO/Placeholders/Inge/Reactions/loyalty_increase";
     }
 
     public class FMODBank
@@ -88,7 +138,8 @@ namespace Overlewd
 
         private FMODBank(string path)
         {
-            status = RuntimeManager.StudioSystem.loadBankFile(path,
+            var bankInMemory = File.ReadAllBytes(path);
+            status = RuntimeManager.StudioSystem.loadBankMemory(bankInMemory,
                 LOAD_BANK_FLAGS.NORMAL,
                 out bank);
         }
@@ -161,8 +212,12 @@ namespace Overlewd
         {
             EventDescription eventDesc;
             RuntimeManager.StudioSystem.getEvent(eventPath, out eventDesc);
-            //return eventDesc.isValid() ? new FMODEvent(eventPath) : null;
-            return new FMODEvent(eventPath);
+            if (eventDesc.isValid())
+            {
+                return new FMODEvent(eventPath);
+            }
+            UnityEngine.Debug.LogWarning($"event not found: {eventPath}");
+            return null;
         }
     }
 
@@ -170,6 +225,24 @@ namespace Overlewd
     {
         private static List<FMODEvent> instances = new List<FMODEvent>();
         private static List<EventDescription> localEvents = new List<EventDescription>();
+
+        public static IEnumerator<int> PreloadBanks()
+        {
+            RuntimeManager.LoadBank("BGM");
+            RuntimeManager.LoadBank("Master");
+            RuntimeManager.LoadBank("Voiceovers_local");
+            RuntimeManager.LoadBank("Master.strings");
+
+            while (!RuntimeManager.HaveAllBanksLoaded)
+            {
+                yield return 0;
+            }
+
+#if UNITY_WEBGL
+            RuntimeManager.CoreSystem.mixerSuspend();
+            RuntimeManager.CoreSystem.mixerResume();
+#endif
+        }
 
         public static void Initialize()
         {
@@ -197,7 +270,7 @@ namespace Overlewd
         }
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
-        {
+        {//for music
             if (String.IsNullOrEmpty(eventPath))
                 return null;
 
@@ -223,7 +296,7 @@ namespace Overlewd
         }
 
         public static void PlayOneShot(string eventPath)
-        {
+        {//for sfx
             RuntimeManager.PlayOneShot(eventPath.Trim());
         }
 

@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Overlewd.NSMarketPopup;
+using Overlewd.NSMarketOverlay;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Overlewd
 {
-    namespace NSMarketPopup
+    namespace NSMarketOverlay
     {
         public class OfferButton : MonoBehaviour
         {
@@ -18,7 +18,7 @@ namespace Overlewd
             private GameObject buttonSelected;
             private BaseOffer offer;
             public Transform offerPos;
-
+            
             public event Action<OfferButton> selectButton;
 
             void Awake()
@@ -33,7 +33,7 @@ namespace Overlewd
 
             public void Customize()
             {
-                offer = CurrencyPacksOffer.GetInstance(offerPos);
+                offer = ResourceBundle.GetInstance(offerPos);
                 Deselect();
             }
 

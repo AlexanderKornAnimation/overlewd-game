@@ -11,18 +11,15 @@ namespace Overlewd
         public CharController cc;
 
         public Transform persPos => cc.persPos;
+        public CharacterPortrait charStats => cc.charStats;
 
         //Char UI
-        //public Button bt;
         public Image charClass;
         public Slider sliderHP;
         public Slider sliderMP;
         public bool showMP => cc.isOverlord;
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
-
-        public CharacterPortrait charStats;
-
         public StatusEffects status_bar;
 
         public float health => cc.health;
@@ -37,7 +34,6 @@ namespace Overlewd
         private List<Sprite> classIcons;
         private void Start()
         {
-            charStats.InitUI();
             status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
             status_bar.cc = cc;
             if (sliderHP) sliderHP.maxValue = healthMax;

@@ -205,6 +205,24 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (inputData?.girlKey)
+            {
+                case AdminBRO.MatriarchItem.Key_Ulvi:
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_matriarch_screen);
+                    break;
+                case AdminBRO.MatriarchItem.Key_Adriel:
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_matriarch_screen);
+                    break;
+                case AdminBRO.MatriarchItem.Key_Ingie:
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_matriarch_screen);
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeHideDataAsync()
         {
             if (seduceSex)

@@ -33,32 +33,30 @@ namespace Overlewd
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             portalButtonText = portalButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             portalButton.onClick.AddListener(PortalButtonClick);
-
-            UITools.DisableButton(overlordButton);
         }
 
         private NSSummoningScreen.Item GetItem(Transform pos)
         {
             return inputData.tabType switch
             {
-                AdminBRO.GachItem.TabType_CharactersEquipment => NSSummoningScreen.Equip.GetInsance(pos),
-                AdminBRO.GachItem.TabType_OverlordEquipment => NSSummoningScreen.Equip.GetInsance(pos),
-                AdminBRO.GachItem.TabType_Matriachs => NSSummoningScreen.BattleGirls.GetInsance(pos),
-                AdminBRO.GachItem.TabType_Shards => NSSummoningScreen.Shard.GetInstance(pos),
+                AdminBRO.GachaItem.TabType_CharactersEquipment => NSSummoningScreen.Equip.GetInsance(pos),
+                AdminBRO.GachaItem.TabType_OverlordEquipment => NSSummoningScreen.Equip.GetInsance(pos),
+                AdminBRO.GachaItem.TabType_Matriachs => NSSummoningScreen.BattleGirls.GetInsance(pos),
+                AdminBRO.GachaItem.TabType_Shards => NSSummoningScreen.Shard.GetInstance(pos),
                 _ => null
             };
         }
 
         public override async Task AfterShowAsync()
         {
-            if (inputData.isTen)
+            if (inputData.isFive)
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
 
                 var itemsStartPos = canvas.Find("ItemStartPositions");
                 var itemsEndPos = canvas.Find("ItemEndPositions");
 
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 5; i++)
                 {
                     var startPos = itemsStartPos.Find($"Item{i}");
                     var endPos = itemsEndPos.Find($"Item{i}").position;
@@ -101,18 +99,18 @@ namespace Overlewd
         {
             switch (inputData.tabType)
             {
-                case AdminBRO.GachItem.TabType_OverlordEquipment:
+                case AdminBRO.GachaItem.TabType_OverlordEquipment:
                     haremButton.gameObject.SetActive(false);
                     break;
-                case AdminBRO.GachItem.TabType_Matriachs:
+                case AdminBRO.GachaItem.TabType_Matriachs:
                     haremButtonText.text = "Go to the Harem\nto edit team";
                     overlordButton.gameObject.SetActive(false);
                     break;
-                case AdminBRO.GachItem.TabType_CharactersEquipment:
+                case AdminBRO.GachaItem.TabType_CharactersEquipment:
                     haremButtonText.text = "Go to the Harem\nto equip new weapon";
                     overlordButton.gameObject.SetActive(false);
                     break;
-                case AdminBRO.GachItem.TabType_Shards:
+                case AdminBRO.GachaItem.TabType_Shards:
                     haremButtonText.text = "Go to the Harem\nto activate shards";
                     overlordButton.gameObject.SetActive(false);
                     break;
@@ -124,6 +122,7 @@ namespace Overlewd
         private void OverlordButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<OverlordScreen>();
         }
 
         private void HaremButtonClick()
@@ -141,10 +140,10 @@ namespace Overlewd
                 {
                     activeButtonId = inputData.tabType switch
                     {
-                        AdminBRO.GachItem.TabType_OverlordEquipment => PortalScreenInData.overlordEquipButtonId,
-                        AdminBRO.GachItem.TabType_CharactersEquipment => PortalScreenInData.battleGirlsEquipButtonId,
-                        AdminBRO.GachItem.TabType_Matriachs => PortalScreenInData.battleGirlsButtonId,
-                        AdminBRO.GachItem.TabType_Shards => PortalScreenInData.shardsButtonId,
+                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreenInData.overlordEquipButtonId,
+                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreenInData.battleGirlsEquipButtonId,
+                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreenInData.battleGirlsButtonId,
+                        AdminBRO.GachaItem.TabType_Shards => PortalScreenInData.shardsButtonId,
                         _ => PortalScreenInData.battleGirlsButtonId
                     }
                 })
@@ -155,6 +154,6 @@ namespace Overlewd
     public class SummoningScreenInData : BaseFullScreenInData
     {
         public string tabType;
-        public bool isTen;
+        public bool isFive;
     }
 }

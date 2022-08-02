@@ -44,6 +44,7 @@ namespace Overlewd
         public static Animations animations { get; } = new Animations();
         public static Sounds sounds { get; } = new Sounds();
         public static Matriarchs matriarchs { get; } = new Matriarchs();
+        public static BattlePass battlePass { get; } = new BattlePass();
     }
 
     //ftue
@@ -91,6 +92,7 @@ namespace Overlewd
             stats = await AdminBRO.ftueStatsAsync();
 
             await GameData.quests.Get();
+            await GameData.battlePass.Get();
         }
     }
 
@@ -98,7 +100,7 @@ namespace Overlewd
     public class Buildings
     {
         public List<AdminBRO.Building> buildings { get; private set; }
-        public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get;private set; }
+        public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
 
         public async Task Get()
         {
@@ -138,13 +140,13 @@ namespace Overlewd
 
         public AdminBRO.MagicGuildSkill magicGuild_activeSkill =>
             GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_ActiveSkill);
-            
+
         public AdminBRO.MagicGuildSkill magicGuild_ultimateSkill =>
             GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_UltimateSkill);
-            
+
         public AdminBRO.MagicGuildSkill magicGuild_passiveSkill1 =>
             GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill1);
-           
+
         public AdminBRO.MagicGuildSkill magicGuild_PassiveSkill2 =>
             GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill2);
 
@@ -192,7 +194,7 @@ namespace Overlewd
             await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
             await GameData.player.Get();
-            
+
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
                 type = GameDataEvent.Type.MagicGuildSpellLvlUp
@@ -203,11 +205,11 @@ namespace Overlewd
     //gacha
     public class Gacha
     {
-        public List<AdminBRO.GachItem> items { get; private set; }
+        public List<AdminBRO.GachaItem> items { get; private set; }
 
         public async Task Get() =>
             items = await AdminBRO.gachaAsync();
-        public AdminBRO.GachItem GetGachaById(int? id) =>
+        public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
         public async Task Buy(int id)
@@ -254,7 +256,7 @@ namespace Overlewd
 
         public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
-        public AdminBRO.Character GetByClass(string chClass) => 
+        public AdminBRO.Character GetByClass(string chClass) =>
             characters.Find(ch => ch.characterClass == chClass);
         public AdminBRO.SkillEffect EffectByName(string name) =>
             effects.Find(e => e.name == name);
@@ -264,7 +266,7 @@ namespace Overlewd
             await AdminBRO.characterLvlupAsync(chId);
             await Get();
             await GameData.player.Get();
-            
+
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
                 type = GameDataEvent.Type.CharacterLvlUp
@@ -274,7 +276,7 @@ namespace Overlewd
         public async Task SkillLvlUp(int chId, int skillId)
         {
             await AdminBRO.chracterSkillLvlUp(chId, skillId);
-            await Get(); 
+            await Get();
             await GameData.player.Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -355,7 +357,7 @@ namespace Overlewd
             await AdminBRO.unequipAsync(chId, eqId);
             await GameData.characters.Get();
             await Get();
-            
+
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
                 type = GameDataEvent.Type.EquipmentUnequipped
@@ -395,6 +397,7 @@ namespace Overlewd
             stages = await AdminBRO.eventStagesAsync();
 
             await GameData.quests.Get();
+            await GameData.battlePass.Get();
         }
 
         public AdminBRO.EventItem mapEventData { get; set; }
@@ -468,7 +471,7 @@ namespace Overlewd
             }
         }
     }
-    
+
     //currencies
     public class Currencies
     {
@@ -527,22 +530,22 @@ namespace Overlewd
 
         public AdminBRO.PlayerInfo.WalletItem Crystal =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
-        
+
         public AdminBRO.PlayerInfo.WalletItem Wood =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Wood.id);
-        
+
         public AdminBRO.PlayerInfo.WalletItem Stone =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Stone.id);
-        
+
         public AdminBRO.PlayerInfo.WalletItem Copper =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Copper.id);
-        
+
         public AdminBRO.PlayerInfo.WalletItem Gold =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
-        
+
         public AdminBRO.PlayerInfo.WalletItem Gems =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
-        
+
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
@@ -607,6 +610,21 @@ namespace Overlewd
 
         public AdminBRO.Animation GetById(int? id) =>
             animations.Find(a => a.id == id);
+        public AdminBRO.Animation GetByTitle(string title) =>
+            animations.Find(a => a.title == title);
+
+        public AdminBRO.Animation this[int id]
+        {
+            get => GetById(id);
+        }
+        public AdminBRO.Animation this[string title]
+        {
+            get => GetByTitle(title);
+        }
+        public SpineWidget this[string title, Transform parent]
+        {
+            get => SpineWidget.GetInstance(GetByTitle(title), parent);
+        }
     }
 
     //sounds
@@ -678,5 +696,19 @@ namespace Overlewd
                 matriarchs = await AdminBRO.matriarchsAsync();
             }
         }
+    }
+    
+    //battlePass
+    public class BattlePass
+    {
+        public List<AdminBRO.BattlePass> passes { get; private set; } = new List<AdminBRO.BattlePass>();
+
+        public async Task Get()
+        {
+            passes = await AdminBRO.battlePassesAsync();
+        }
+
+        AdminBRO.BattlePass GetByEventId(int? eventId) =>
+            passes.Find(p => p.eventId == eventId);
     }
 }
