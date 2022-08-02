@@ -97,7 +97,7 @@ namespace Overlewd
             UIManager.MakeOverlay<EventOverlay>().
                 SetData(new EventOverlayInData
                 {
-                    activeTabId = EventOverlay.TabDecade
+                    activeTabId = EventOverlay.TabQuarterly
                 }).RunShowOverlayProcess();
         }
         
