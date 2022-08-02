@@ -138,6 +138,7 @@ namespace Overlewd
         {
             skillDescription.Open(this);
         }
+        public bool CheckMana(float mana) => manaCost <= mana;
 
         void SetEffectIco()
         {

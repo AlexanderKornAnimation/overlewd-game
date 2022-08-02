@@ -26,7 +26,8 @@ namespace Overlewd
                 SpineWidget.GetInstance(spineVFXPrefab, transform) :
                 SpineWidget.GetInstance(path, transform);
 
-            duration = spineWiget.GetAnimationDuaration(animationName);
+            if (spineWiget)
+                duration = spineWiget.GetAnimationDuaration(animationName);
             StartCoroutine(StartAfterDelay());
         }
 

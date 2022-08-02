@@ -46,6 +46,8 @@ namespace Overlewd
         [Tooltip("add this prefab here BattleUICanvas/Character/PlayerStats")]
         public CharacterPortrait PlayerStats;
         public CharacterPortrait BossStats;
+        Transform bPosPlayer, bPosEnemy;
+        int siblingPlayer, siblingEnemy;
 
         private SkillController[] skillControllers = new SkillController[3];
         private SkillController[] passiveControllers = new SkillController[2];
@@ -53,7 +55,7 @@ namespace Overlewd
         private RectTransform skillPanelWidthScale;
         private int skillOnSelect = -1; //-1 unselect
         private int charOnSelect = -1; // 0 - allay 1 - enemy
-        public GameObject healVFX;
+        public GameObject vfx_purple, vfx_red, vfx_blue, vfx_green, vfx_stun;
 
         private int enemyNum = 0, enemyIsDead = 0, charNum = 0, charIsDead = 0;
         private int step = 0; //current characters list step
@@ -95,7 +97,7 @@ namespace Overlewd
             if (QueueUI == null) QueueUI = transform.Find("BattleUICanvas/QueueUI");
             QueueUIContent = QueueUI.Find("Content");
             if (wavesTMP == null) wavesTMP = QueueUI.Find("text_Waves").GetComponent<TextMeshProUGUI>();
-            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave+1}";
+            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             if (roundTMP == null) roundTMP = transform.Find("BattleUICanvas/Background/Round/text").GetComponent<TextMeshProUGUI>();
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
@@ -110,6 +112,10 @@ namespace Overlewd
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
             if (EnemyStats == null) EnemyStats = Resources.Load("Battle/Prefabs/Battle/EnemyStats") as GameObject;
 
+            bPosPlayer = transform.Find("BattleCanvas/BattleLayer/battlePos1");
+            bPosEnemy  = transform.Find("BattleCanvas/BattleLayer/battlePos2");
+            siblingPlayer = bPosPlayer.GetSiblingIndex();
+            siblingEnemy  = bPosEnemy.GetSiblingIndex();
 
             for (int i = 0; i < skillControllers.Length; i++)
             {
@@ -149,12 +155,14 @@ namespace Overlewd
             if (charControllerList[0].isEnemy)
             {
                 battleState = BattleState.ENEMY;
+                if (!ccOnSelect.isBoss)
+                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
                 StartCoroutine(EnemyAttack());
             }
             else
             {
                 battleState = BattleState.PLAYER;
-
+                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
             }
             ccOnSelect = charControllerList[step];
             StartCoroutine(LateInit());
@@ -328,19 +336,26 @@ namespace Overlewd
             var sc = skillControllers[id];
             var AOE = sc.skill.AOE;
 
-            if (sc.selectable && !sc.silence)
-            {
-                if (AOE)
+            if (sc.CheckMana(ccOnSelect.mana)) { 
+
+                if (sc.selectable && !sc.silence)
                 {
-                    AttackAction(id);
-                    return;
+                    if (AOE)
+                    {
+                        AttackAction(id);
+                        return;
+                    }
+                    if (skillOnSelect > -1 && skillOnSelect != id)
+                        skillControllers[skillOnSelect]?.Unselect();
+                    skillOnSelect = sc.Press() ? id : -1;
+                    AttackCheck();
                 }
-                if (skillOnSelect > -1 && skillOnSelect != id)
-                    skillControllers[skillOnSelect]?.Unselect();
-                skillOnSelect = sc.Press() ? id : -1;
-                AttackCheck();
+                else if (sc.silence)
+                {
+                    sc.BlinkDisable();
+                }
             }
-            else if (sc.silence)
+            else
             {
                 sc.BlinkDisable();
             }
@@ -563,17 +578,21 @@ namespace Overlewd
             else
             {
                 ccOnSelect = charControllerList[step];
-
+                bPosEnemy.SetSiblingIndex(siblingEnemy);
+                bPosPlayer.SetSiblingIndex(siblingPlayer);
                 if (ccOnSelect.isEnemy)
                 {
                     battleState = BattleState.ENEMY;
                     StartCoroutine(EnemyAttack());
+                    if (!ccOnSelect.isBoss)
+                        bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
                 }
                 else
                 {
                     SetSkillCtrl(ccOnSelect);
                     ccOnSelect.CharPortraitSet();
                     battleState = BattleState.PLAYER;
+                    bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                 }
             }
         }

@@ -7363,7 +7363,11 @@ MonoBehaviour:
   EnemyStatsContent: {fileID: 5496798229500404337}
   PlayerStats: {fileID: 8481323610088203379}
   BossStats: {fileID: 5647095579482221027}
-  healVFX: {fileID: 86848110055568654, guid: 74096253829e79c478b557784947128a, type: 3}
+  vfx_purple: {fileID: 6055811017360518113, guid: ff2dc7d8525f35c4582506bdad2299ed, type: 3}
+  vfx_red: {fileID: 6055811017360518113, guid: 6c8f4c1183ce4aa4caa245752f8c9784, type: 3}
+  vfx_blue: {fileID: 6055811017360518113, guid: cc2da65588ab9d542877acf3e4b2c12c, type: 3}
+  vfx_green: {fileID: 6055811017360518113, guid: 8ff2954e3d66e6e4bb3b54fc52c9a2ca, type: 3}
+  vfx_stun: {fileID: 6055811017360518113, guid: 6c8f4c1183ce4aa4caa245752f8c9784, type: 3}
   debug: 0
   debugObj: {fileID: 441224583}
   battleState: 3
@@ -8835,7 +8839,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 679}
+  m_AnchoredPosition: {x: 0, y: 680}
   m_SizeDelta: {x: 285, y: 82}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2586552958123689445
