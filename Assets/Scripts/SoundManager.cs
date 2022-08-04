@@ -208,6 +208,11 @@ namespace Overlewd
             SoundManager.RemoveEvent(this);
         }
 
+        public void SetPitch(float pitch)
+        {
+            instance.setPitch(pitch);
+        }
+
         public static FMODEvent GetInstance(string eventPath)
         {
             EventDescription eventDesc;

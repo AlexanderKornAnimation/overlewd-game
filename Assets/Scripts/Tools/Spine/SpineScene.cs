@@ -40,6 +40,14 @@ namespace Overlewd
             }
         }
 
+        public void TimeScale(float scale)
+        {
+            foreach (var layer in layers)
+            {
+                layer.TimeScale(scale);
+            }
+        }
+
         public static SpineScene GetInstance(AdminBRO.Animation animationData, Transform parent)
         {
             if (animationData == null)
