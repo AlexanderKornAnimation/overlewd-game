@@ -734,6 +734,8 @@ namespace Overlewd
             public int? cutInSoundId;
             public int? replicaSoundId;
 
+            public float mainAnimationTimeScale;
+
             public const string CharacterPosition_Left = "left";
             public const string CharacterPosition_Right = "right";
             public const string CharacterPosition_Middle = "middle";

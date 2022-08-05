@@ -289,6 +289,7 @@ namespace Overlewd
                         mainAnimation = SpineScene.GetInstance(animation, mainAnimPos);
                     }
                 }
+                mainAnimation?.TimeScale(replica.mainAnimationTimeScale);
             }
             else
             {
@@ -353,6 +354,7 @@ namespace Overlewd
                     mainSound?.Stop();
                     mainSound = SoundManager.GetEventInstance(mainSoundData.eventPath, mainSoundData.soundBankId);
                 }
+                mainSound?.SetPitch(replica.mainAnimationTimeScale);
             }
             else
             {
