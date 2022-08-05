@@ -175,6 +175,13 @@ namespace Overlewd
             if (battleState == BattleState.PLAYER)
                 ccOnSelect.CharPortraitSet();
 
+            if (!battleStart) //skip button = true; back button = false
+            {
+                if (battleScene != null)
+                    battleScene.StartBattle();
+                battleStart = true;
+            }
+
             //if (battleSettings.powerBuff)
             //    WinOrLose(wannaWin);
         }
@@ -410,13 +417,6 @@ namespace Overlewd
                     ccTarget.Defence(ccOnSelect, id, vfx, aoe: HEAL);
                 }
                 battleState = BattleState.ANIMATION;
-
-                if (!battleStart) //skip button = true; back button = false
-                {
-                    if (battleScene != null)
-                        battleScene.StartBattle();
-                    battleStart = true;
-                }
             }
         }
         public void Shake(float duration, float strenght) =>
