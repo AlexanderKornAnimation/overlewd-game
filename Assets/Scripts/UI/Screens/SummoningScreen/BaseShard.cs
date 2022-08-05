@@ -12,7 +12,7 @@ namespace Overlewd
 {
     namespace NSSummoningScreen
     {
-        public abstract class Item : MonoBehaviour
+        public abstract class BaseShard : MonoBehaviour
         {
             protected Image itemImage;
             protected RectTransform rect;

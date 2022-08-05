@@ -6,12 +6,12 @@ namespace Overlewd
 {
     namespace NSSummoningScreen
     {
-        public class Equip : Item
+        public class Equip : BaseShard
         {
             public static Equip GetInsance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<Equip>(
-                    "Prefabs/UI/Screens/SummoningScreen/Animations/Equip/EquipAnim", parent);
+                    "Prefabs/UI/Screens/SummoningScreen/Animations/Equip/Equip", parent);
             }
         }
     }
