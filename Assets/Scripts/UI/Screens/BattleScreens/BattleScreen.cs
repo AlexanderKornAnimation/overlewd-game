@@ -100,8 +100,6 @@ namespace Overlewd
                         mana = endBattleData.manaSpent,
                         hp = endBattleData.hpSpent
                     });
-
-                await GameData.player.Get();
             }
             else
             {
@@ -112,8 +110,6 @@ namespace Overlewd
                         mana = endBattleData.manaSpent,
                         hp = endBattleData.hpSpent
                     });
-
-                await GameData.player.Get();
             }
         }
     }

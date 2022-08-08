@@ -93,6 +93,8 @@ namespace Overlewd
 
             await GameData.quests.Get();
             await GameData.battlePass.Get();
+            await GameData.player.Get();
+            await GameData.battles.Get();
         }
     }
 
@@ -405,6 +407,8 @@ namespace Overlewd
 
             await GameData.quests.Get();
             await GameData.battlePass.Get();
+            await GameData.player.Get();
+            await GameData.battles.Get();
         }
 
         public AdminBRO.EventItem mapEventData { get; set; }
