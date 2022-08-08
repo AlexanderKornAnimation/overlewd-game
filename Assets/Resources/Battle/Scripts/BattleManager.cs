@@ -20,7 +20,7 @@ namespace Overlewd
         [HideInInspector] public List<CharController> charControllerList;
         [HideInInspector] public List<CharController> enemyTargetList;
         [HideInInspector] public List<CharController> enemyAllyList;
-        [HideInInspector] public List<GameObject> QueueElements;
+        [HideInInspector] public List<QueuePortraitController> QueueElements = null;
         [SerializeField] private float portraitScale = 1.5f;
         [Tooltip("selected as current turn")] public CharController ccOnSelect;
         [Tooltip("selected as target")] public CharController ccTarget = null;
@@ -113,9 +113,9 @@ namespace Overlewd
             if (EnemyStats == null) EnemyStats = Resources.Load("Battle/Prefabs/Battle/EnemyStats") as GameObject;
 
             bPosPlayer = transform.Find("BattleCanvas/BattleLayer/battlePos1");
-            bPosEnemy  = transform.Find("BattleCanvas/BattleLayer/battlePos2");
+            bPosEnemy = transform.Find("BattleCanvas/BattleLayer/battlePos2");
             siblingPlayer = bPosPlayer.GetSiblingIndex();
-            siblingEnemy  = bPosEnemy.GetSiblingIndex();
+            siblingEnemy = bPosEnemy.GetSiblingIndex();
 
             for (int i = 0; i < skillControllers.Length; i++)
             {
@@ -149,22 +149,9 @@ namespace Overlewd
 
             ColorUtility.TryParseHtmlString("#A64646", out redColor);
             CreatePortraitQueue();
-
             maxStep = charControllerList.Count;
-            QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
-            if (charControllerList[0].isEnemy)
-            {
-                battleState = BattleState.ENEMY;
-                if (!ccOnSelect.isBoss)
-                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
-                StartCoroutine(EnemyAttack());
-            }
-            else
-            {
-                battleState = BattleState.PLAYER;
-                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
-            }
-            ccOnSelect = charControllerList[step];
+            if (!bossLevel) QueueElements[0].Select(); //Scale Up First Element
+            StateCheck();
             StartCoroutine(LateInit());
         }
         IEnumerator LateInit()
@@ -236,8 +223,9 @@ namespace Overlewd
 
         private void NextWave()
         {
+            step = 0;
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave}";
-            //destroy old enemys
+            //Destroy phase ============================================================
             foreach (var cc in charControllerList)
                 if (cc.isEnemy)
                 {
@@ -245,42 +233,51 @@ namespace Overlewd
                     Destroy(cc.gameObject);
                 }
             charControllerList.RemoveAll(item => item.isEnemy == true);
-
             //destroy portraits queue
-            foreach (Transform child in QueueUIContent.transform) //delete all portraits content
-                Destroy(child.gameObject);
-            QueueElements.Clear(); //clear list
+            foreach (QueuePortraitController item in QueueElements) //delete all portraits content
+                Destroy(item.gameObject);
+            QueueElements.Clear();
             enemyAllyList.Clear(); //Clear Ally List before add new
+            //Create phase =============================================================
             var waveList = battleScene.GetBattleData().enemyWaves[wave].enemyTeam;
-
             DropCharactersFromList(waveList, true); //create
             charControllerList.Sort(SortBySpeed);   //sort
-            CreatePortraitQueue();                  //drop new portraits with sorting
-
-            step = 0;
             maxStep = charControllerList.Count;
-            QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Element
-            if (charControllerList[0].isEnemy)
-                battleState = BattleState.ENEMY;
-            else
-                battleState = BattleState.PLAYER;
-            ccOnSelect = charControllerList[step];
+            CreatePortraitQueue();                  //drop new portraits with sorting
+            QueueElements[0].Select(); //Scale Up First Element
+            StateCheck();
+            LateInit();
         }
-
-        private void CreatePortraitQueue()
+        void StateCheck()
         {
-            foreach (var cc in charControllerList) //Fill QueueUI characters icons
+            ccOnSelect = charControllerList[step];
+            if (ccOnSelect.isEnemy)
             {
-                var portraitQ = Instantiate(portraitPrefab, QueueUIContent);
-                portraitQ.name = "Portrait_" + cc.Name;
-                portraitQ.GetComponent<Image>().sprite = cc.characterRes.icoPortrait;
-                portraitQ.GetComponent<Button>().onClick.AddListener(cc.Select);
-                if (cc.isEnemy)
-                    portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
-                QueueElements.Add(portraitQ);
+                battleState = BattleState.ENEMY;
+                if (!ccOnSelect.isBoss)
+                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
+                StartCoroutine(EnemyAttack());
+            }
+            else
+            {
+                battleState = BattleState.PLAYER;
+                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
             }
         }
-
+        private void CreatePortraitQueue()
+        {
+            if (!bossLevel)
+                foreach (var cc in charControllerList) //Fill QueueUI characters icons
+                {
+                    var portraitQ = Instantiate(portraitPrefab, QueueUIContent).GetComponent<QueuePortraitController>();
+                    portraitQ.name = "Portrait_" + cc.Name;
+                    portraitQ.SetUp(cc);
+                    if (cc.isEnemy)
+                        portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
+                    QueueElements.Add(portraitQ);
+                }
+            else return;
+        }
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.R))
@@ -343,7 +340,8 @@ namespace Overlewd
             var sc = skillControllers[id];
             var AOE = sc.skill.AOE;
 
-            if (sc.CheckMana(ccOnSelect.mana)) { 
+            if (sc.CheckMana(ccOnSelect.mana))
+            {
 
                 if (sc.selectable && !sc.silence)
                 {
@@ -494,7 +492,13 @@ namespace Overlewd
         public void StateUpdate(CharController invoker) //call when any character is dead
         {
             var index = charControllerList.FindIndex(x => x == invoker);
-            QueueElements[index].SetActive(false); //disable queue portrait
+            if (!bossLevel) { //Destroy queue portrait
+                var qe = QueueElements.Find(f => f.cc == invoker);
+                Destroy(qe.gameObject);
+                QueueElements.Remove(qe);
+            }
+            charControllerList.Remove(invoker);
+            maxStep = charControllerList.Count;
 
             if (invoker.isEnemy)
                 enemyIsDead++;
@@ -509,13 +513,7 @@ namespace Overlewd
                 {
                     //next wave function or
                     battleState = BattleState.WIN;
-                    if (battleScene != null)
-                        battleScene.EndBattle(new BattleManagerOutData
-                        {
-                            battleWin = true,
-                            manaSpent = usedMP,
-                            hpSpent = usedHP
-                        });
+                    StartCoroutine(WinScreenWithDelay());
                     Debug.Log("WINNIG");
                 }
                 else
@@ -541,13 +539,23 @@ namespace Overlewd
                     Debug.Log("LOOSING");
             }
         }
-
+        IEnumerator WinScreenWithDelay()
+        {
+            yield return new WaitForSeconds(1f);
+            if (battleScene != null)
+                battleScene.EndBattle(new BattleManagerOutData
+                {
+                    battleWin = true,
+                    manaSpent = usedMP,
+                    hpSpent = usedHP
+                });
+        }
         private void Step()
         {
             log.Add("Battle Manager: Step");
-            var qe = QueueElements[step];
-            qe.transform.SetSiblingIndex(maxStep);
-            qe.transform.localScale = Vector3.one; //Reset Scale and push back portrait
+
+            var qe = QueueElements.Find(i => i.cc == ccOnSelect);
+            qe?.Deselect();
             if (++step == maxStep)
             {
                 if (round == 1)
@@ -565,11 +573,8 @@ namespace Overlewd
             {
                 BattleNotif("chapter1", "battle5", "potionstutor3"); //AOE Cast
             }
-            qe.transform.SetSiblingIndex(maxStep); //Push element to back after Step++
-            QueueElements[step].transform.localScale *= portraitScale; //Scale Up First Portrait
-
             var cc = charControllerList[step];
-            if (cc.isDead || cc.stun) //skip dead/stun character
+            if (cc.stun) //skip dead/stun character
             {
                 if (cc.stun)
                     cc.stun = false;
@@ -578,6 +583,7 @@ namespace Overlewd
             else
             {
                 ccOnSelect = charControllerList[step];
+                if (!bossLevel) QueueElements.Find(i => i?.cc == ccOnSelect).Select();
                 bPosEnemy.SetSiblingIndex(siblingEnemy);
                 bPosPlayer.SetSiblingIndex(siblingPlayer);
                 if (ccOnSelect.isEnemy)
@@ -595,6 +601,7 @@ namespace Overlewd
                     bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                 }
             }
+            
         }
 
         private void SetSkillCtrl(CharController cc)
