@@ -1602,6 +1602,46 @@ namespace Overlewd
             }
         }
 
+        // /forge/price
+        // /forge/merge
+        public static async Task<List<ForgePrice>> forgePrices()
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/price";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<ForgePrice>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task forgeMerge(string mergeType, int[] mergeIds)
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/merge";
+            var form = new WWWForm();
+            form.AddField("mergeType", mergeType);
+            foreach (var id in mergeIds)
+            {
+                form.AddField("ids[]", id);
+            }
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class ForgePrice
+        {
+            public string mergeType;
+            public int mergeCount;
+            public List<MergePrice> pricesOfMergeType;
+
+            public class MergePrice
+            {
+                public string rarity;
+                public List<PriceItem> price;
+            }
+        }
+
         // gacha
         public static async Task<List<GachaItem>> gachaAsync()
         {

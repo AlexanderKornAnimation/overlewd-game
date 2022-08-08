@@ -101,11 +101,13 @@ namespace Overlewd
     {
         public List<AdminBRO.Building> buildings { get; private set; }
         public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
+        public List<AdminBRO.ForgePrice> forgePrices { get; private set; }
 
         public async Task Get()
         {
             buildings = await AdminBRO.buildingsAsync();
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
+            forgePrices = await AdminBRO.forgePrices();
         }
         public AdminBRO.Building GetBuildingById(int? id) =>
             buildings.Find(b => b.id == id);
@@ -199,6 +201,11 @@ namespace Overlewd
             {
                 type = GameDataEvent.Type.MagicGuildSpellLvlUp
             });
+        }
+
+        public async Task ForgeMerge(string mergeType, int[] mergeIds)
+        {
+            await AdminBRO.forgeMerge(mergeType, mergeIds);
         }
     }
 
