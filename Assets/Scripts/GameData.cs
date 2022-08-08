@@ -719,7 +719,7 @@ namespace Overlewd
             passes = await AdminBRO.battlePassesAsync();
         }
 
-        AdminBRO.BattlePass GetByEventId(int? eventId) =>
+        public AdminBRO.BattlePass GetByEventId(int? eventId) =>
             passes.Find(p => p.eventId == eventId);
     }
 }

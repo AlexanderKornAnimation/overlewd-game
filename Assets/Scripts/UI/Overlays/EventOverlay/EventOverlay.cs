@@ -161,6 +161,13 @@ namespace Overlewd
             eventButtonPressedTitle[tabId].text = eventData.name;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
+
+            var battlePassData = GameData.battlePass.GetByEventId(eventData.id);
+            if (battlePassData != null)
+            {
+                var battlePass = NSEventOverlay.BattlePass.GetInstance(tabScrollViewContent);
+                battlePass.eventId = eventData.id;
+            }
             
             foreach (var questId in eventData.quests)
             {

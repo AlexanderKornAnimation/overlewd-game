@@ -11,6 +11,10 @@ namespace Overlewd
     {
         public class BattlePass : MonoBehaviour
         {
+            public int eventId { get; set; }
+            public AdminBRO.BattlePass passData =>
+                GameData.battlePass.GetByEventId(eventId);
+
             private Image freeFinalReward;
             private Image premiumFinalReward;
             private TextMeshProUGUI points;
