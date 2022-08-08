@@ -1048,8 +1048,8 @@ namespace Overlewd
             public class Level
             {
                 public int pointsThreshold;
-                public int defaultReward;
-                public int premiumReward;
+                public RewardItem defaultReward;
+                public RewardItem premiumReward;
             }
         }
 
