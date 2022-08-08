@@ -79,7 +79,7 @@ namespace Overlewd
         {
             bm.AfterShowBattleScreen();
 
-            SoundManager.GetEventInstance(FMODEventPath.Music_Battle_BGM_1);
+            SoundManager.PlayBGMusic(FMODEventPath.Music_Battle_BGM_1);
             await Task.CompletedTask;
         }
 
