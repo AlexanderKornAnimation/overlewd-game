@@ -159,10 +159,9 @@ namespace Overlewd
             UIManager.ShowOverlay<SidebarMenuOverlay>();
         }
 
-        public override async Task BeforeShowAsync()
+        public override void StartShow()
         {
-            SoundManager.GetEventInstance(FMODEventPath.Music_MapScreen);
-            await Task.CompletedTask;
+            SoundManager.PlayBGMusic(FMODEventPath.Music_MapScreen);
         }
 
         public override async Task AfterShowAsync()

@@ -228,6 +228,7 @@ namespace Overlewd
 
     public static class SoundManager
     {
+        private static FMODEvent bgMusic;
         private static List<FMODEvent> instances = new List<FMODEvent>();
         private static List<EventDescription> localEvents = new List<EventDescription>();
 
@@ -272,6 +273,21 @@ namespace Overlewd
                     item.getPath(out localEventPath);
                     return localEventPath == eventPath.Trim();
                 });
+        }
+
+        public static void PlayBGMusic(string eventPath)
+        {
+            if (bgMusic?.path != eventPath)
+            {
+                bgMusic?.Stop();
+                bgMusic = FMODEvent.GetInstance(eventPath);
+            }
+        }
+
+        public static void StopBGMusic()
+        {
+            bgMusic?.Stop();
+            bgMusic = null;
         }
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
