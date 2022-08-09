@@ -168,7 +168,6 @@ namespace Overlewd
                     battleScene.StartBattle();
                 battleStart = true;
             }
-
             //if (battleSettings.powerBuff)
             //    WinOrLose(wannaWin);
         }
@@ -221,10 +220,11 @@ namespace Overlewd
             }
         }
 
-        private void NextWave()
+        IEnumerator NextWave()
         {
+            yield return new WaitForSeconds(2f);
             step = 0;
-            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave}";
+            if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             //Destroy phase ============================================================
             foreach (var cc in charControllerList)
                 if (cc.isEnemy)
@@ -520,7 +520,7 @@ namespace Overlewd
                 {
                     battleState = BattleState.NEXTWAVE;
                     wave++;
-                    NextWave();
+                    StartCoroutine(NextWave());
                     BattleNotif("chapter1", "battle1", "battletutor3");
                 }
             }
@@ -640,7 +640,6 @@ namespace Overlewd
 
         public void BattleNotif(string chapterID, string battleID, string notifID = null)
         {
-
             if (battleScene.GetBattleData() != null)
                 if (chapterID == battleScene.GetBattleData().ftueChapterKey &&
                     battleID == battleScene.GetBattleData().ftueStageKey)
@@ -651,7 +650,6 @@ namespace Overlewd
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
 #endif
                 }
-
         }
         public bool CheckBattleGameData(string chapterID, string battleID)
         {

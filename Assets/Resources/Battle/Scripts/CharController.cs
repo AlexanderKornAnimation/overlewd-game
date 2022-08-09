@@ -20,8 +20,8 @@ namespace Overlewd
         public GameObject popUpPrefab;
         public CharacterRes characterRes;
         public Skill[] skillRes => characterRes.skill;
+        private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
-        public List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
 
         public string Name => character.name;
@@ -120,7 +120,6 @@ namespace Overlewd
                 skill.Add(skillStash?.Find(f => f.type == "attack"));
                 skill.Add(skillStash?.Find(f => f.type == "enhanced_attack"));
             }
-            skillStash.Clear();
         }
         private void ShapeInit()
         {
@@ -310,7 +309,6 @@ namespace Overlewd
             if (AOE) return;
             rt.DOAnchorPos(Vector2.zero, zoomSpeed);
             rt.DOScale(battleScale, zoomSpeed);
-
         }
 
         public void BattleOut(bool AOE = false)
