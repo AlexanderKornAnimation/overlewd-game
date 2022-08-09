@@ -22,11 +22,11 @@ namespace Overlewd
             private Transform content;
             private Image progressBar;
 
-            private List<BattlePassLevel> levels = new List<BattlePassLevel>();
+            private Transform canvas;
 
             private void Awake()
             {
-                var canvas = transform.Find("Canvas");
+                canvas = transform.Find("Canvas");
                 var finalRewards = canvas.Find("FinalRewards");
                 
                 freeFinalReward = finalRewards.Find("FreeReward").GetComponent<Image>();
@@ -39,32 +39,24 @@ namespace Overlewd
             private void Start()
             {
                 Customize();
-
-                StartCoroutine(ContentVisibleOptimize());
             }
 
             private void Customize()
             {
                 for (int i = 0; i <= 20; i++)
                 {
-                    levels.Add(BattlePassLevel.GetInstance(content));
+                    BattlePassLevel.GetInstance(content);
                 }
             }
 
-            private IEnumerator ContentVisibleOptimize()
+            public void SetCanvasActive(bool value)
             {
-                while (true)
+                if (value != canvas.gameObject.activeSelf)
                 {
-                    var screenRect = UIManager.GetScreenWorldRect();
-                    foreach (var level in levels)
-                    {
-                        var itemRect = level.transform as RectTransform;
-                        level.SetCanvasActive(itemRect.WorldRect().Overlaps(screenRect));
-                    }
-                    yield return null;
+                    canvas.gameObject.SetActive(value);
                 }
             }
-            
+
             public static BattlePass GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<BattlePass>(

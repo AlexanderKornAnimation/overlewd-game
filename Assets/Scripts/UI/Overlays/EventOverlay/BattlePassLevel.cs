@@ -83,11 +83,6 @@ namespace Overlewd
                 
             }
             
-            public void SetCanvasActive(bool value)
-            {
-                canvas.gameObject.SetActive(false);
-            }
-            
             public static BattlePassLevel GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<BattlePassLevel>(

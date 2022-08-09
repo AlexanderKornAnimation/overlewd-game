@@ -19,14 +19,6 @@ namespace Overlewd
         private string[] tabNames = { "Quarterly", "Monthly", "Weekly", "ComingMonthly" };
         private Transform[] scrollView = new Transform[TabsCount];
         private Transform[] scrollViewContent = new Transform[TabsCount];
-        private List<NSEventOverlay.BaseQuest>[] tabEventQuests = 
-            {
-                new List<NSEventOverlay.BaseQuest>(),
-                new List<NSEventOverlay.BaseQuest>(),
-                new List<NSEventOverlay.BaseQuest>(),
-                new List<NSEventOverlay.BaseQuest>(),
-                new List<NSEventOverlay.BaseQuest>()
-            };
         private Button[] eventButton = new Button[TabsCount];
         private Image[] eventButtonBanner = new Image[TabsCount];
         private TextMeshProUGUI[] eventButtonTitle = new TextMeshProUGUI[TabsCount];
@@ -180,8 +172,6 @@ namespace Overlewd
                 eventQuest.eventId = eventData.id;
                 eventQuest.questId = questId;
                 eventQuest.SetCanvasActive(false);
-
-                tabEventQuests[tabId].Add(eventQuest);
             }
             var descr = NSEventOverlay.EventDescription.GetInstance(tabScrollViewContent);
             descr.eventId = eventData.id;
@@ -239,7 +229,12 @@ namespace Overlewd
             while (true)
             {
                 var screenRect = UIManager.GetScreenWorldRect();
-                foreach (var eventQuest in tabEventQuests[activeTabId])
+                foreach (var battlePass in scrollViewContent[activeTabId].GetComponentsInChildren<NSEventOverlay.BattlePass>())
+                {
+                    var rect = battlePass.transform as RectTransform;
+                    battlePass.SetCanvasActive(rect.WorldRect().Overlaps(screenRect));
+                }
+                foreach (var eventQuest in scrollViewContent[activeTabId].GetComponentsInChildren<NSEventOverlay.BaseQuest>())
                 {
                     var itemRect = eventQuest.transform as RectTransform;
                     eventQuest.SetCanvasActive(itemRect.WorldRect().Overlaps(screenRect));
