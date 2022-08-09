@@ -159,7 +159,11 @@ namespace Overlewd
         {
             var tabScrollViewContent = scrollViewContent[tabId];
             eventButtonTitle[tabId].text = eventData.name;
+            eventButtonBanner[tabId].sprite = ResourceManager.LoadSprite(eventData.eventListBannerImage);
+            eventButtonBanner[tabId].preserveAspect = true;
             eventButtonPressedTitle[tabId].text = eventData.name;
+            eventButtonPressedBanner[tabId].sprite = ResourceManager.LoadSprite(eventData.eventListBannerImage);
+            eventButtonPressedBanner[tabId].preserveAspect = true;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
 
