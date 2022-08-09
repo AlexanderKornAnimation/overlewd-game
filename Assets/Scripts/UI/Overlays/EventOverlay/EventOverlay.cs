@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -28,6 +29,9 @@ namespace Overlewd
 
         private Button backButton;
         private Transform tabArea;
+
+        private List<NSEventOverlay.BaseQuest>[] tabQuests = new List<NSEventOverlay.BaseQuest>[TabsCount];
+        private List<NSEventOverlay.BattlePass>[] tabBattlePasses = new List<NSEventOverlay.BattlePass>[TabsCount];
 
         private int activeTabId = TabWeekly;
 
@@ -75,9 +79,14 @@ namespace Overlewd
             }
             
             EnterTab(activeTabId);
+
+            foreach (var tabId in tabIds)
+            {
+                tabQuests[tabId] = scrollViewContent[tabId].GetComponentsInChildren<NSEventOverlay.BaseQuest>().ToList();
+                tabBattlePasses[tabId] = scrollViewContent[tabId].GetComponentsInChildren<NSEventOverlay.BattlePass>().ToList();
+            }
             StartCoroutine(TabContentVisibleOptimize());
             
-
             await Task.CompletedTask;
         }
 
@@ -229,12 +238,12 @@ namespace Overlewd
             while (true)
             {
                 var screenRect = UIManager.GetScreenWorldRect();
-                foreach (var battlePass in scrollViewContent[activeTabId].GetComponentsInChildren<NSEventOverlay.BattlePass>())
+                foreach (var battlePass in tabBattlePasses[activeTabId])
                 {
                     var rect = battlePass.transform as RectTransform;
                     battlePass.SetCanvasActive(rect.WorldRect().Overlaps(screenRect));
                 }
-                foreach (var eventQuest in scrollViewContent[activeTabId].GetComponentsInChildren<NSEventOverlay.BaseQuest>())
+                foreach (var eventQuest in tabQuests[activeTabId])
                 {
                     var itemRect = eventQuest.transform as RectTransform;
                     eventQuest.SetCanvasActive(itemRect.WorldRect().Overlaps(screenRect));

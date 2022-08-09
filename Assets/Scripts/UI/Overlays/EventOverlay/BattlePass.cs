@@ -43,9 +43,11 @@ namespace Overlewd
 
             private void Customize()
             {
-                for (int i = 0; i <= 20; i++)
+                var data = passData;
+                foreach (var level in data.levels)
                 {
-                    BattlePassLevel.GetInstance(content);
+                    var newLevel = BattlePassLevel.GetInstance(content);
+                    newLevel.levelData = level;
                 }
             }
 
