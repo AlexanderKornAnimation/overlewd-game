@@ -65,7 +65,10 @@ namespace Overlewd
 
             public void Customize()
             {
-                
+                var battlePassData = passData;
+
+                level.text = levelData.pointsThreshold.ToString();
+                levelReached.SetActive(levelData.pointsThreshold <= battlePassData.currentPointsCount);
             }
             
             private void FreeClaimButtonClick()
