@@ -11,6 +11,9 @@ namespace Overlewd
     {
         public class BattlePassLevel : MonoBehaviour
         {
+            public int battlePassId { get; set; }
+            public AdminBRO.BattlePass passData =>
+                GameData.battlePass.GetById(battlePassId);
             public AdminBRO.BattlePass.Level levelData { get; set; }
 
             private TextMeshProUGUI level;

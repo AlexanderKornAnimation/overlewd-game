@@ -47,6 +47,7 @@ namespace Overlewd
                 foreach (var level in data.levels)
                 {
                     var newLevel = BattlePassLevel.GetInstance(content);
+                    newLevel.battlePassId = data.id;
                     newLevel.levelData = level;
                 }
             }

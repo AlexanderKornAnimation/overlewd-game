@@ -719,5 +719,7 @@ namespace Overlewd
 
         public AdminBRO.BattlePass GetByEventId(int? eventId) =>
             passes.Find(p => p.eventId == eventId);
+        public AdminBRO.BattlePass GetById(int id) =>
+            passes.Find(p => p.id == id);
     }
 }
