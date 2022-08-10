@@ -20,14 +20,12 @@ namespace Overlewd
 
                 craftInProgressNotification = notificationsGrid.Find("CraftInProgressNotification");
                 craftAvailableNotification = notificationsGrid.Find("CraftAvailableNotification");
-
-                UITools.DisableButton(button);
             }
 
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                // UIManager.ShowScreen<ForgeScreen>();
+                UIManager.ShowScreen<ForgeScreen>();
             }
 
             public static ForgeButton GetInstance(Transform parent)

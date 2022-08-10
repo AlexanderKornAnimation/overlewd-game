@@ -1807,7 +1807,7 @@ namespace Overlewd
             public bool isOpen => status == Status_Open;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isClose => name == Status_Close;
+            public bool isClose => status == Status_Close;
         }
 
         [Serializable]

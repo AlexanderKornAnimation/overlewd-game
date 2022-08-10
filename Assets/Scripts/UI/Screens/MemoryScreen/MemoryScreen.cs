@@ -69,13 +69,17 @@ namespace Overlewd
             UIManager.MakeScreen<PortalScreen>().
                 SetData(new PortalScreenInData
             {
-                activeButtonId = PortalScreenInData.shardsButtonId
+                activeButtonId = PortalScreen.TabShards
             }).RunShowScreenProcess();
         }
 
         private void ForgeButtonClick()
         {
-            
+            UIManager.MakeScreen<ForgeScreen>().
+                SetData(new ForgeScreenInData
+            {
+                activeTabId = ForgeScreen.TabShard
+            }).RunShowScreenProcess();
         }
 
         private void BuyButtonClick()

@@ -280,7 +280,7 @@ namespace Overlewd
             UIManager.MakeScreen<PortalScreen>().
                 SetData(new PortalScreenInData
             {
-                activeButtonId = PortalScreenInData.shardsButtonId
+                activeButtonId = PortalScreen.TabShards
             }).RunShowScreenProcess();
         }
         

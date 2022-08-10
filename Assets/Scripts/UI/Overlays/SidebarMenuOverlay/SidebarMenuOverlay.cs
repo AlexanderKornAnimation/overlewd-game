@@ -254,7 +254,7 @@ namespace Overlewd
         
         private void ForgeButtonClick()
         {
-            // UIManager.ShowScreen<ForgeScreen>();
+            UIManager.ShowScreen<ForgeScreen>();
         }
     }
 

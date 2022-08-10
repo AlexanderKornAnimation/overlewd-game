@@ -108,7 +108,6 @@ namespace Overlewd
 
         private void Customize()
         {
-            UITools.DisableButton(forgeButton);
             UITools.DisableButton(collectiblesButton);
         }
 
@@ -158,6 +157,11 @@ namespace Overlewd
         private void ForgeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<ForgeScreen>().
+                SetData(new ForgeScreenInData
+                {
+                    activeTabId = ForgeScreen.TabOverlordEquip
+                }).RunShowScreenProcess();
         }
 
         private void MagicGuildButtonClick()

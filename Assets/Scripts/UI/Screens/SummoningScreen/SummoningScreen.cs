@@ -140,11 +140,11 @@ namespace Overlewd
                 {
                     activeButtonId = inputData.tabType switch
                     {
-                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreenInData.overlordEquipButtonId,
-                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreenInData.battleGirlsEquipButtonId,
-                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreenInData.battleGirlsButtonId,
-                        AdminBRO.GachaItem.TabType_Shards => PortalScreenInData.shardsButtonId,
-                        _ => PortalScreenInData.battleGirlsButtonId
+                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreen.TabOverlordEquip,
+                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreen.TabBattleGirlsEquip,
+                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreen.TabBattleGirls,
+                        AdminBRO.GachaItem.TabType_Shards => PortalScreen.TabShards,
+                        _ => PortalScreen.TabBattleGirls
                     }
                 })
                 .RunShowScreenProcess();
