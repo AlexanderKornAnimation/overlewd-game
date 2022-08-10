@@ -69,6 +69,23 @@ namespace Overlewd
 
                 level.text = levelData.pointsThreshold.ToString();
                 levelReached.SetActive(levelData.pointsThreshold <= battlePassData.currentPointsCount);
+
+                for (int i = 0; i < 2; i++)
+                {
+                    if (i < levelData.defaultReward.Count)
+                    {
+                        freeRewards[i].gameObject.SetActive(true);
+                        freeRewards[i].sprite = ResourceManager.LoadSprite(levelData.defaultReward[i].icon);
+                        freeRewardsAmounts[i].text = levelData.defaultReward[i].amount?.ToString();
+                    }
+
+                    if (i < levelData.premiumReward.Count)
+                    {
+                        premRewards[i].gameObject.SetActive(true);
+                        premRewards[i].sprite = ResourceManager.LoadSprite(levelData.premiumReward[i].icon);
+                        premRewardsAmounts[i].text = levelData.premiumReward[i].amount?.ToString();
+                    }
+                }
             }
             
             private void FreeClaimButtonClick()
