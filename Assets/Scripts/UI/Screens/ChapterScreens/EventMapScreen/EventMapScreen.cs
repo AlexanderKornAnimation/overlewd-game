@@ -13,6 +13,7 @@ namespace Overlewd
 
         private Transform map;
         private Image background;
+        private Image banner;
 
         private Button sidebarButton;
 
@@ -34,6 +35,7 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
             map = canvas.Find("Map");
             background = map.Find("Background").GetComponent<Image>();
+            banner = canvas.Find("Banner").GetComponent<Image>();
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
@@ -46,13 +48,15 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            var eventChapterData = GameData.events.mapEventData.activeChapter;
+            var eventData = GameData.events.mapEventData;
+            var eventChapterData = eventData.activeChapter;
             if (eventChapterData == null)
             {
                 return;
             }
 
             background.sprite = ResourceManager.LoadSprite(eventChapterData.mapImgUrl);
+            banner.sprite = ResourceManager.LoadSprite(eventData.mapBannerImage);
 
             foreach (var stageData in eventChapterData.stagesData)
             {

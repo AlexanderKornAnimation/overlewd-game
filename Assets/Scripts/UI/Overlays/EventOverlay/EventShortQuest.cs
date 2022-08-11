@@ -14,7 +14,8 @@ namespace Overlewd
             private const int rewardsCount = 6;
             private Image[] rewards = new Image[rewardsCount];
             private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[rewardsCount];
-            
+
+            private Button mapButton;
             private Button claimButton;
             private TextMeshProUGUI title;
             private TextMeshProUGUI quest;
@@ -36,6 +37,9 @@ namespace Overlewd
                 inProgress = canvas.Find("InProgress").gameObject;
                 completed = canvas.Find("Completed").gameObject;
 
+                mapButton = canvas.Find("MapButton").GetComponent<Button>();
+                mapButton.onClick.AddListener(ToMapClick);
+
                 for (int i = 0; i < rewardsCount; i++)
                 {
                     rewards[i] = grid.Find($"Reward{i + 1}").GetComponent<Image>();
@@ -51,22 +55,34 @@ namespace Overlewd
 
             private void Customize()
             {
-                if (questData != null)
+                var _eventData = eventData;
+                var _questData = questData;
+
+                if (_eventData.isWeekly)
                 {
-                    title.text = eventData.name;
-                    quest.text = questData.name;
-                    progress.text = $"{questData.progressCount}/{questData.goalCount}";
+                    mapButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    mapButton.gameObject.AddComponent<BlendPulseSelector>();
+                }
+
+                if (_questData != null)
+                {
+                    title.text = _eventData.name;
+                    quest.text = _questData.name;
+                    progress.text = $"{_questData.progressCount}/{_questData.goalCount}";
                     
-                    completed.SetActive(questData.isClaimed);
-                    inProgress.SetActive(questData.inProgress);
-                    claimButton.gameObject.SetActive(questData.isCompleted);
-                    progress.gameObject.SetActive(!questData.isClaimed);
+                    completed.SetActive(_questData.isClaimed);
+                    inProgress.SetActive(_questData.inProgress);
+                    claimButton.gameObject.SetActive(_questData.isCompleted);
+                    progress.gameObject.SetActive(!_questData.isClaimed);
                     
-                    for (int i = 0; i < questData.rewards?.Count; i++)
+                    for (int i = 0; i < _questData.rewards?.Count; i++)
                     {
                         rewards[i].gameObject.SetActive(true);
-                        rewards[i].sprite = ResourceManager.LoadSprite(questData.rewards[i].icon);
-                        rewardsAmount[i].text = questData.rewards[i].amount.ToString();
+                        rewards[i].sprite = ResourceManager.LoadSprite(_questData.rewards[i].icon);
+                        rewardsAmount[i].text = _questData.rewards[i].amount.ToString();
                     }
                 }
             }
@@ -76,7 +92,15 @@ namespace Overlewd
                 base.ClaimClick();
                 Customize();
             }
-            
+
+            private void ToMapClick()
+            {
+                Destroy(mapButton.gameObject.GetComponent<Selector>());
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                eventData.SetAsMapEvent();
+                UIManager.ShowScreen<EventMapScreen>();
+            }
+
             public static EventShortQuest GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<EventShortQuest>(

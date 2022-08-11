@@ -166,6 +166,7 @@ namespace Overlewd
             eventButtonPressedBanner[tabId].preserveAspect = true;
 
             var banner = NSEventOverlay.Banner.GetInstance(tabScrollViewContent);
+            banner.eventId = eventData.id;
 
             var battlePassData = GameData.battlePass.GetByEventId(eventData.id);
             if (battlePassData != null)
