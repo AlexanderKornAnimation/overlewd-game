@@ -23,7 +23,6 @@ namespace Overlewd
         private const int tabsCount = 5;
         private int activeTabId;
 
-        
         private string[] tabNames = {"Ulvi", "Adriel", "Faye", "Ingie", "Lili"};
         private int[] tabIds =  {tabUlvi, tabAdriel, tabFaye, tabIngie, tabLili};
         private Button[] tabs = new Button[tabsCount];
@@ -57,8 +56,6 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButtonGirlName = backButton.transform.Find("GirlName").GetComponent<TextMeshProUGUI>();
             backButton.onClick.AddListener(BackButtonClick);
-
-
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -81,25 +78,28 @@ namespace Overlewd
 
         private void AddMemoryLists()
         {
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]));
+            for (int i = 0; i < 4; i++)
+            {
+                var ulvi = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]);
+                ulvi.girlKey = AdminBRO.MatriarchItem.Key_Ulvi;
+                memoryLists.Add(ulvi);
+                
+                var adriel = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]);
+                adriel.girlKey = AdminBRO.MatriarchItem.Key_Adriel;;
+                memoryLists.Add(adriel);
 
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]));
-            
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]));
-            
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]));
-            
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]));
+                var faye = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]);
+                faye.girlKey = AdminBRO.MatriarchItem.Key_Faye;;
+                memoryLists.Add(faye);
+
+                var ingie = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]);
+                ingie.girlKey = AdminBRO.MatriarchItem.Key_Ingie;;
+                memoryLists.Add(ingie);
+
+                var lili = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]);
+                lili.girlKey = AdminBRO.MatriarchItem.Key_Lili;;
+                memoryLists.Add(lili);
+            }
         }
         
         private void TabClick(int tabId)

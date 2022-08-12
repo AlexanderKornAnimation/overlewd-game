@@ -16,6 +16,8 @@ namespace Overlewd
              private TextMeshProUGUI unlockedLockedCount;
              private TextMeshProUGUI title;
              
+             public string girlKey { get; set; }
+             
              private void Awake()
              {
                  var canvas = transform.Find("Canvas");
@@ -41,7 +43,8 @@ namespace Overlewd
                  for (int i = 0; i < 5; i++)
                  {
                      Memory.GetInstance(content);
-                     MemoryWithShards.GetInstance(content);
+                     var memory = MemoryWithShards.GetInstance(content);
+                     memory.girlKey = girlKey;
                  }
              }
              

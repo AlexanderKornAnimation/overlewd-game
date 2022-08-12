@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -11,35 +12,52 @@ namespace Overlewd
         {
             private Transform closed;
             
-            private GameObject goldShard;
-            private TextMeshProUGUI goldShardsCount;
+            private GameObject heroicShard;
+            private TextMeshProUGUI heroicShardAmount;
             
-            private GameObject purpuleShard;
-            private TextMeshProUGUI purpuleShardsCount;
+            private GameObject epicShard;
+            private TextMeshProUGUI epicShardAmount;
             
-            private GameObject greenShard;
-            private TextMeshProUGUI greenShardsCount;
+            private GameObject advancedShard;
+            private TextMeshProUGUI advancedShardAmount;
             
-            private GameObject grayShard;
-            private TextMeshProUGUI grayShardsCount;
+            private GameObject basicShard;
+            private TextMeshProUGUI basicShardAmount;
+
+            private Button memoryScreenButton;
+            
+            public string girlKey { get; set; }
 
             protected override void Awake()
             {
                 base.Awake();
                 closed = canvas.Find("Closed");
-                goldShard = closed.Find("ShardGold").gameObject;
-                goldShardsCount = goldShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                heroicShard = closed.Find("ShardHeroic").gameObject;
+                heroicShardAmount = heroicShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
                 
-                purpuleShard = closed.Find("ShardPurpule").gameObject;
-                purpuleShardsCount = purpuleShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                epicShard = closed.Find("ShardEpic").gameObject;
+                epicShardAmount = epicShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
                 
-                greenShard = closed.Find("ShardGreen").gameObject;
-                greenShardsCount = greenShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                advancedShard = closed.Find("ShardAdvanced").gameObject;
+                advancedShardAmount = advancedShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
                 
-                grayShard = closed.Find("ShardGray").gameObject;
-                grayShardsCount = grayShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                basicShard = closed.Find("ShardBasic").gameObject;
+                basicShardAmount = basicShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+
+                memoryScreenButton = closed.Find("MemoryScreenButton").GetComponent<Button>();
+                memoryScreenButton.onClick.AddListener(MemoryScreenButtonClick);
             }
 
+            private void MemoryScreenButtonClick()
+            {
+                UIManager.MakeScreen<MemoryScreen>().
+                    SetData(new MemoryScreenInData
+                {
+                    girlKey = girlKey,
+                    prevScreenInData = UIManager.prevScreenInData
+                }).RunShowScreenProcess();
+            }
+            
             public static MemoryWithShards GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<MemoryWithShards>(
