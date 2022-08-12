@@ -1604,18 +1604,18 @@ namespace Overlewd
 
         // /forge/price
         // /forge/merge
-        public static async Task<List<ForgePrice>> forgePrices()
+        public static async Task<ForgePrice> forgePrices()
         {
             var url = "https://overlewd-api.herokuapp.com/forge/price";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<ForgePrice>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<ForgePrice>(request?.downloadHandler.text);
             }
         }
 
-        public static async Task forgeMerge(string mergeType, int[] mergeIds)
+        public static async Task forgeMergeEquipment(string mergeType, int[] mergeIds)
         {
-            var url = "https://overlewd-api.herokuapp.com/forge/merge";
+            var url = "https://overlewd-api.herokuapp.com/forge/merge/equipment";
             var form = new WWWForm();
             form.AddField("mergeType", mergeType);
             foreach (var id in mergeIds)
@@ -1628,12 +1628,56 @@ namespace Overlewd
             }
         }
 
+        public static async Task forgeMergeShard(int matriarchId, string rarity)
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/merge/shard";
+            var form = new WWWForm();
+            form.AddField("matriarchId", matriarchId);
+            form.AddField("rarity", rarity);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/exchange/shard";
+            var form = new WWWForm();
+            form.AddField("matriarchSourceId", matriarchSourceId);
+            form.AddField("matriarchTargetId", matriarchTargetId);
+            form.AddField("rarity", rarity);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         [Serializable]
         public class ForgePrice
         {
-            public string mergeType;
-            public int mergeCount;
-            public List<MergePrice> pricesOfMergeType;
+            public List<MergeEquipmentSettings> mergeEquipmentSettings;
+            public MergeShardSettings mergeShardSettings;
+            public ExchangeShardSettings exchangeShardSettings;
+
+            public class MergeEquipmentSettings
+            {
+                public string mergeType;
+                public int mergeCount;
+                public List<MergePrice> pricesOfMergeType;
+            }
+            
+            public class MergeShardSettings
+            {
+                public int mergeAmount;
+                public List<MergePrice> pricesOfMergeType;
+            }
+
+            public class ExchangeShardSettings
+            {
+                public int exchangeAmount;
+                public List<MergePrice> pricesOfExchangeType;
+            }
 
             public class MergePrice
             {
@@ -1772,6 +1816,14 @@ namespace Overlewd
             public int? nextEmpathyLevel;
             public string rewardsClaimed;
             public string seduceAvailableAt;
+            public List<Shard> shards;
+
+            public class Shard
+            {
+                public string rarity;
+                public int amount;
+            }
+
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";

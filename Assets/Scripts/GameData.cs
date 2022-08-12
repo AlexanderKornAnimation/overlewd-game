@@ -102,7 +102,7 @@ namespace Overlewd
     {
         public List<AdminBRO.Building> buildings { get; private set; }
         public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
-        public List<AdminBRO.ForgePrice> forgePrices { get; private set; }
+        public AdminBRO.ForgePrice forgePrices { get; private set; }
 
         public async Task Get()
         {
@@ -153,6 +153,7 @@ namespace Overlewd
         public AdminBRO.MagicGuildSkill magicGuild_PassiveSkill2 =>
             GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill2);
 
+        //Municipality
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
@@ -192,6 +193,7 @@ namespace Overlewd
             await AdminBRO.municipalityCollectAsync();
         }
 
+        //MagicGuild
         public async Task MagicGuildSkillLvlUp(string skillType)
         {
             await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
@@ -204,9 +206,20 @@ namespace Overlewd
             });
         }
 
-        public async Task ForgeMerge(string mergeType, int[] mergeIds)
+        //Forge
+        public async Task ForgeMergeEquipment(string mergeType, int[] mergeIds)
         {
-            await AdminBRO.forgeMerge(mergeType, mergeIds);
+            await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
+        }
+
+        public async Task ForgeMergeShard(int matriarchId, string rarity)
+        {
+            await AdminBRO.forgeMergeShard(matriarchId, rarity);
+        }
+
+        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        {
+            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity);
         }
     }
 
