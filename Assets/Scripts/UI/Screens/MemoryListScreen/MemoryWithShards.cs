@@ -27,6 +27,7 @@ namespace Overlewd
             private Button memoryScreenButton;
             
             public string girlKey { get; set; }
+            public AdminBRO.MatriarchItem girlData => GameData.matriarchs.GetMatriarchByKey(girlKey);
 
             protected override void Awake()
             {
@@ -48,6 +49,19 @@ namespace Overlewd
                 memoryScreenButton.onClick.AddListener(MemoryScreenButtonClick);
             }
 
+            protected override void Customize()
+            {
+                base.Customize();
+                if (memoryData != null)
+                {
+                    heroicShardAmount.text = $"{girlData?.goldShard?.amount}/{memoryData?.goldShard?.amount}";
+                    epicShardAmount.text = $"{girlData?.purpleShard?.amount}/{memoryData?.purpleShard?.amount}";
+                    advancedShardAmount.text = $"{girlData?.greenShard?.amount}/{memoryData?.greenShard?.amount}";
+                    basicShardAmount.text = $"{girlData?.whiteShard?.amount}/{memoryData?.whiteShard?.amount}";
+                    closed.gameObject.SetActive(!memoryData.isOpen);
+                }
+            }
+            
             private void MemoryScreenButtonClick()
             {
                 UIManager.MakeScreen<MemoryScreen>().

@@ -22,6 +22,12 @@ namespace Overlewd
                 notification = canvas.Find("Notification").GetComponent<TextMeshProUGUI>();
             }
 
+            protected override void Customize()
+            {
+                base.Customize();
+                title.text = memoryData?.title;
+            }
+
             public static Memory GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<Memory>("Prefabs/UI/Screens/MemoryListScreen/Memory",

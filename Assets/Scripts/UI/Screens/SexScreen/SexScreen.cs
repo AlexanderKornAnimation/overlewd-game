@@ -129,6 +129,12 @@ namespace Overlewd
                             SetData(inputData.prevScreenInData.As<GirlScreenInData>())
                             .RunShowScreenProcess();
                     }
+                    else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
+                    {
+                        UIManager.MakeScreen<MemoryListScreen>()
+                            .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
+                            .RunShowScreenProcess();
+                    }
                     else
                     {
                         UIManager.MakeScreen<BattleGirlScreen>().

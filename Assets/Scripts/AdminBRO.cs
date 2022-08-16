@@ -1822,8 +1822,24 @@ namespace Overlewd
             {
                 public string rarity;
                 public int amount;
+                
+                public const string Rariry_White = "white";
+                public const string Rariry_Green = "green";
+                public const string Rariry_Purple = "purple";
+                public const string Rariry_Gold = "gold";
             }
 
+            [JsonProperty(Required = Required.Default)]
+            public Shard whiteShard => shards?.Find(s => s.rarity == Shard.Rariry_White);
+            
+            [JsonProperty(Required = Required.Default)]
+            public Shard greenShard => shards?.Find(s => s.rarity == Shard.Rariry_Green);
+            
+            [JsonProperty(Required = Required.Default)]
+            public Shard purpleShard => shards?.Find(s => s.rarity == Shard.Rariry_Purple);
+            
+            [JsonProperty(Required = Required.Default)]
+            public Shard goldShard => shards?.Find(s => s.rarity == Shard.Rariry_Gold);
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
@@ -1889,7 +1905,32 @@ namespace Overlewd
                 public const string Rariry_Gold = "gold";
             }
 
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard whiteShard =>
+                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_White);
+            
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard greenShard =>
+                shardsToOpen.Find(r => r.shardRarity == OpenShard.Rariry_Green);
+            
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard purpleShard =>
+                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_Purple);
+            
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard goldShard =>
+                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_Gold);
+
+            
             public const string Status_Visible = "visible";
+            public const string Status_Open = "open";
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isVisible => status == Status_Visible;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => status == Status_Open;
+
         }
     }
 }
