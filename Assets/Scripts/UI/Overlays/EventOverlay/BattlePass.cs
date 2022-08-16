@@ -11,6 +11,10 @@ namespace Overlewd
     {
         public class BattlePass : MonoBehaviour
         {
+            public int eventId { get; set; }
+            public AdminBRO.BattlePass passData =>
+                GameData.battlePass.GetByEventId(eventId);
+
             private Image freeFinalReward;
             private Image premiumFinalReward;
             private TextMeshProUGUI points;
@@ -18,11 +22,11 @@ namespace Overlewd
             private Transform content;
             private Image progressBar;
 
-            private List<BattlePassLevel> levels = new List<BattlePassLevel>();
+            private Transform canvas;
 
             private void Awake()
             {
-                var canvas = transform.Find("Canvas");
+                canvas = transform.Find("Canvas");
                 var finalRewards = canvas.Find("FinalRewards");
                 
                 freeFinalReward = finalRewards.Find("FreeReward").GetComponent<Image>();
@@ -35,32 +39,27 @@ namespace Overlewd
             private void Start()
             {
                 Customize();
-
-                StartCoroutine(ContentVisibleOptimize());
             }
 
             private void Customize()
             {
-                for (int i = 0; i <= 20; i++)
+                var data = passData;
+                foreach (var level in data.levels)
                 {
-                    levels.Add(BattlePassLevel.GetInstance(content));
+                    var newLevel = BattlePassLevel.GetInstance(content);
+                    newLevel.battlePassId = data.id;
+                    newLevel.levelData = level;
                 }
             }
 
-            private IEnumerator ContentVisibleOptimize()
+            public void SetCanvasActive(bool value)
             {
-                while (true)
+                if (value != canvas.gameObject.activeSelf)
                 {
-                    var screenRect = UIManager.GetScreenWorldRect();
-                    foreach (var level in levels)
-                    {
-                        var itemRect = level.transform as RectTransform;
-                        level.SetCanvasActive(itemRect.WorldRect().Overlaps(screenRect));
-                    }
-                    yield return null;
+                    canvas.gameObject.SetActive(value);
                 }
             }
-            
+
             public static BattlePass GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<BattlePass>(

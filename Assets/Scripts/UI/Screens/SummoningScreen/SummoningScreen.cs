@@ -9,7 +9,7 @@ namespace Overlewd
 {
     public class SummoningScreen : BaseFullScreenParent<SummoningScreenInData>
     {
-        private List<NSSummoningScreen.Item> items = new List<NSSummoningScreen.Item>();
+        private List<NSSummoningScreen.BaseShard> shards = new List<NSSummoningScreen.BaseShard>();
 
         private Button haremButton;
         private TextMeshProUGUI haremButtonText;
@@ -35,14 +35,14 @@ namespace Overlewd
             portalButton.onClick.AddListener(PortalButtonClick);
         }
 
-        private NSSummoningScreen.Item GetItem(Transform pos)
+        private NSSummoningScreen.BaseShard GetShard(Transform pos)
         {
             return inputData.tabType switch
             {
                 AdminBRO.GachaItem.TabType_CharactersEquipment => NSSummoningScreen.Equip.GetInsance(pos),
                 AdminBRO.GachaItem.TabType_OverlordEquipment => NSSummoningScreen.Equip.GetInsance(pos),
-                AdminBRO.GachaItem.TabType_Matriachs => NSSummoningScreen.BattleGirls.GetInsance(pos),
-                AdminBRO.GachaItem.TabType_Shards => NSSummoningScreen.Shard.GetInstance(pos),
+                AdminBRO.GachaItem.TabType_Matriachs => NSSummoningScreen.BattleGirl.GetInsance(pos),
+                AdminBRO.GachaItem.TabType_Shards => NSSummoningScreen.Crystal.GetInstance(pos),
                 _ => null
             };
         }
@@ -61,18 +61,18 @@ namespace Overlewd
                     var startPos = itemsStartPos.Find($"Item{i}");
                     var endPos = itemsEndPos.Find($"Item{i}").position;
 
-                    var item = GetItem(startPos);
-                    item.endPos = endPos;
-                    item.tabType = inputData.tabType;
+                    var shard = GetShard(startPos);
+                    shard.endPos = endPos;
+                    shard.tabType = inputData.tabType;
 
-                    await item.ShowAsync();
-                    items.Add(item);
+                    await shard.ShowAsync();
+                    shards.Add(shard);
                 }
 
                 await Task.Delay(1000);
-                foreach (var item in items)
+                foreach (var shard in shards)
                 {
-                    await item.OpenAsync();
+                    await shard.OpenAsync();
                 }
             }
             else
@@ -82,14 +82,14 @@ namespace Overlewd
                 var itemSingleStartPos = canvas.Find("ItemSingleStartPos");
                 var itemSingleEndPos = canvas.Find("ItemSingleEndPos").position;
 
-                var item = GetItem(itemSingleStartPos);
-                item.endPos = itemSingleEndPos;
-                item.tabType = inputData.tabType;
+                var shard = GetShard(itemSingleStartPos);
+                shard.endPos = itemSingleEndPos;
+                shard.tabType = inputData.tabType;
 
-                await item.ShowAsync();
+                await shard.ShowAsync();
                 await Task.Delay(1000);
-                await item.OpenAsync();
-                items.Add(item);
+                await shard.OpenAsync();
+                shards.Add(shard);
             }
             
             await Task.CompletedTask;
@@ -140,11 +140,11 @@ namespace Overlewd
                 {
                     activeButtonId = inputData.tabType switch
                     {
-                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreenInData.overlordEquipButtonId,
-                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreenInData.battleGirlsEquipButtonId,
-                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreenInData.battleGirlsButtonId,
-                        AdminBRO.GachaItem.TabType_Shards => PortalScreenInData.shardsButtonId,
-                        _ => PortalScreenInData.battleGirlsButtonId
+                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreen.TabOverlordEquip,
+                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreen.TabBattleGirlsEquip,
+                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreen.TabBattleGirls,
+                        AdminBRO.GachaItem.TabType_Shards => PortalScreen.TabShards,
+                        _ => PortalScreen.TabBattleGirls
                     }
                 })
                 .RunShowScreenProcess();

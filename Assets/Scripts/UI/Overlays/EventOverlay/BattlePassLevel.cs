@@ -11,6 +11,11 @@ namespace Overlewd
     {
         public class BattlePassLevel : MonoBehaviour
         {
+            public int battlePassId { get; set; }
+            public AdminBRO.BattlePass passData =>
+                GameData.battlePass.GetById(battlePassId);
+            public AdminBRO.BattlePass.Level levelData { get; set; }
+
             private TextMeshProUGUI level;
             private GameObject levelReached;
 
@@ -60,7 +65,27 @@ namespace Overlewd
 
             public void Customize()
             {
-                
+                var battlePassData = passData;
+
+                level.text = levelData.pointsThreshold.ToString();
+                levelReached.SetActive(levelData.pointsThreshold <= battlePassData.currentPointsCount);
+
+                for (int i = 0; i < 2; i++)
+                {
+                    if (i < levelData.defaultReward.Count)
+                    {
+                        freeRewards[i].gameObject.SetActive(true);
+                        freeRewards[i].sprite = ResourceManager.LoadSprite(levelData.defaultReward[i].icon);
+                        freeRewardsAmounts[i].text = levelData.defaultReward[i].amount?.ToString();
+                    }
+
+                    if (i < levelData.premiumReward.Count)
+                    {
+                        premRewards[i].gameObject.SetActive(true);
+                        premRewards[i].sprite = ResourceManager.LoadSprite(levelData.premiumReward[i].icon);
+                        premRewardsAmounts[i].text = levelData.premiumReward[i].amount?.ToString();
+                    }
+                }
             }
             
             private void FreeClaimButtonClick()
@@ -81,11 +106,6 @@ namespace Overlewd
             private void UpgradeButtonClick()
             {
                 
-            }
-            
-            public void SetCanvasActive(bool value)
-            {
-                canvas.gameObject.SetActive(false);
             }
             
             public static BattlePassLevel GetInstance(Transform parent)

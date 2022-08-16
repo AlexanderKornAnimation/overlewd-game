@@ -67,6 +67,7 @@ namespace Overlewd
         public const string Music_Battle_BGM_1 = "event:/Music/BattleScreen/Battle_BGM_1";
 
         //screens bg music
+        public const string Castle_Screen_BGM_Attn = "snapshot:/Castle_Screen_BGM_Attn";//переходы между экранами замка
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
         public const string Music_SexScreen = "event:/Music/LewdScreen/BGM_SexScene_1";
         public const string Music_DialogScreen = "event:/Music/DialogueScreen/BGM_Dialogue_Chill_1";
@@ -208,6 +209,11 @@ namespace Overlewd
             SoundManager.RemoveEvent(this);
         }
 
+        public void SetPitch(float pitch)
+        {
+            instance.setPitch(pitch);
+        }
+
         public static FMODEvent GetInstance(string eventPath)
         {
             EventDescription eventDesc;
@@ -223,6 +229,7 @@ namespace Overlewd
 
     public static class SoundManager
     {
+        private static FMODEvent bgMusic;
         private static List<FMODEvent> instances = new List<FMODEvent>();
         private static List<EventDescription> localEvents = new List<EventDescription>();
 
@@ -267,6 +274,21 @@ namespace Overlewd
                     item.getPath(out localEventPath);
                     return localEventPath == eventPath.Trim();
                 });
+        }
+
+        public static void PlayBGMusic(string eventPath)
+        {
+            if (bgMusic?.path != eventPath)
+            {
+                bgMusic?.Stop();
+                bgMusic = FMODEvent.GetInstance(eventPath);
+            }
+        }
+
+        public static void StopBGMusic()
+        {
+            bgMusic?.Stop();
+            bgMusic = null;
         }
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)

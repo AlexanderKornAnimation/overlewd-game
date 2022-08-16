@@ -112,14 +112,12 @@ namespace Overlewd
                         inProgress.gameObject.SetActive(false);
                         complited.gameObject.SetActive(false);
                         claimButton.gameObject.SetActive(true);
-                        mapButton.gameObject.SetActive(false);
                         break;
                     case AdminBRO.QuestItem.Status_Rewards_Claimed:
                         progress.gameObject.SetActive(false);
                         inProgress.gameObject.SetActive(false);
                         complited.gameObject.SetActive(true);
                         claimButton.gameObject.SetActive(false);
-                        mapButton.gameObject.SetActive(false);
                         break;
                 }
 

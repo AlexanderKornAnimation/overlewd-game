@@ -9,7 +9,6 @@ namespace Overlewd
         public abstract class BaseQuest : MonoBehaviour
         {
             protected Transform canvas;
-            protected bool canvasActive = true;
 
             public int eventId { get; set; }
             public AdminBRO.EventItem eventData =>
@@ -23,12 +22,11 @@ namespace Overlewd
                 await GameData.quests.ClaimReward(questId);
             }
             
-            public virtual void SetCanvasActive(bool value)
+            public void SetCanvasActive(bool value)
             {
-                if (value != canvasActive)
+                if (value != canvas.gameObject.activeSelf)
                 {
-                    canvasActive = value;
-                    canvas.gameObject.SetActive(canvasActive);
+                    canvas.gameObject.SetActive(value);
                 }
             }
         }

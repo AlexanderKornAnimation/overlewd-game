@@ -13,6 +13,9 @@ namespace Overlewd
             protected Transform canvas;
             protected Button button;
             protected Image art;
+            
+            public int? memoryId;
+            public AdminBRO.MemoryItem memoryData => GameData.matriarchs.GetMemoryById(memoryId);
 
             protected virtual void Awake()
             {
@@ -23,9 +26,25 @@ namespace Overlewd
                 art = button.transform.Find("Art").GetComponent<Image>();
             }
 
-            protected virtual void ButtonClick()
+            private void Start()
+            {
+                Customize();
+            }
+
+            protected virtual void Customize()
             {
                 
+            }
+            
+            protected virtual void ButtonClick()
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                UIManager.MakeScreen<SexScreen>().
+                    SetData(new SexScreenInData
+                    {
+                        dialogId = memoryData?.sexSceneId,
+                        prevScreenInData = UIManager.prevScreenInData
+                    }).RunShowScreenProcess();
             }
         }
     }

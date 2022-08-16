@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 namespace Overlewd
@@ -15,6 +16,9 @@ namespace Overlewd
              private Transform content;
              private TextMeshProUGUI unlockedLockedCount;
              private TextMeshProUGUI title;
+             
+             public string girlKey { get; set; }
+             public AdminBRO.MatriarchItem girlData => GameData.matriarchs.GetMatriarchByKey(girlKey);
              
              private void Awake()
              {
@@ -38,13 +42,26 @@ namespace Overlewd
 
              private void Customize()
              {
-                 for (int i = 0; i < 5; i++)
+                 BaseMemory memory;
+
+                 foreach (var memoryData in GameData.matriarchs.memories)
                  {
-                     Memory.GetInstance(content);
-                     MemoryWithShards.GetInstance(content);
+                     if (memoryData.matriarchId == girlData.id && memoryData.isVisible)
+                     {
+                         if (memoryData.shardsToOpen == null)
+                         {
+                             memory = Memory.GetInstance(content);
+                         }
+                         else
+                         {
+                             memory = MemoryWithShards.GetInstance(content);
+                         }
+
+                         memory.memoryId = memoryData.id;
+                         memories.Add(memory);
+                     }
                  }
              }
-             
 
              public static MemoryList GetInstance(Transform parent)
              {

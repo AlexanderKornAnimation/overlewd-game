@@ -1,10 +1,8 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 namespace Overlewd
 {
@@ -17,14 +15,13 @@ namespace Overlewd
         public BattleManager bm; //init on BattleManager Initialize();
         public BattleLog log => bm.log;
         public AdminBRO.Character character;
-        public Button bt;
         public CharacterPortrait charStats;
-        private GameObject border;
         public CharacterStatObserver observer;
         public GameObject popUpPrefab;
         public CharacterRes characterRes;
         public Skill[] skillRes => characterRes.skill;
-        public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();// => character.skills;
+        private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
+        public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
 
         public string Name => character.name;
@@ -82,7 +79,8 @@ namespace Overlewd
             msg_defence_down = "Defence down",
             msg_poison = "Poison",
             msg_defence_up = "Defence up",
-            msg_stun = "Stun";
+            msg_stun = "Stun",
+            msg_heal = "Heal:";
         private GameObject vfx_purple => bm.vfx_purple;
         private GameObject vfx_red => bm.vfx_red;
         private GameObject vfx_blue => bm.vfx_blue;
@@ -95,7 +93,6 @@ namespace Overlewd
             ShapeInit();
             UIInit();
             PlayIdle();
-            StartCoroutine(LateInit());
         }
 
         private void StatInit()
@@ -109,18 +106,20 @@ namespace Overlewd
             manaMax = mana;
             idleScale = characterRes.idleScale;
             battleScale = characterRes.battleScale;
-
-            skill = character.skills;
-            if (!isOverlord)
+            skillStash = character.skills;
+            if (isOverlord)
             {
-                passiveSkill.Add(skill?.Find(f => f.type == "passive_skill"));
-                skill = skill.Except(passiveSkill).ToList();
+                passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_first_passive_skill"));
+                passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_second_passive_skill"));
+                skill.Add(skillStash?.Find(f => f.type == "overlord_attack"));
+                skill.Add(skillStash?.Find(f => f.type == "overlord_enhanced_attack"));
+                skill.Add(skillStash?.Find(f => f.type == "overlord_ultimate_attack"));
             }
             else
             {
-                passiveSkill.Add(skill?.Find(f => f.type == "overlord_first_passive_skill"));
-                passiveSkill.Add(skill?.Find(f => f.type == "overlord_second_passive_skill"));
-                skill = skill.Except(passiveSkill).ToList();
+                passiveSkill.Add(skillStash?.Find(f => f.type == "passive_skill"));
+                skill.Add(skillStash?.Find(f => f.type == "attack"));
+                skill.Add(skillStash?.Find(f => f.type == "enhanced_attack"));
             }
         }
         private void ShapeInit()
@@ -176,17 +175,6 @@ namespace Overlewd
 
             charStats.cc = this;
             charStats.InitUI();
-
-            bt = persPos.Find("button").GetComponent<Button>();
-            bt.onClick.AddListener(Select);
-
-            border = persPos.Find("button/border").gameObject;
-            border.SetActive(false);
-        }
-        IEnumerator LateInit()
-        {
-            yield return new WaitForSeconds(0.01f);
-            bt.gameObject.SetActive(true);
         }
 
         public void PowerBuff() => buffDamageScale *= 2;
@@ -312,8 +300,8 @@ namespace Overlewd
             }
         }
 
-        public void Highlight() => border?.SetActive(true);
-        public void UnHiglight() => border?.SetActive(false);
+        public void Highlight() => observer.Border(true);
+        public void UnHiglight() => observer.Border(false);
 
         public void BattleIn(bool AOE = false)
         {
@@ -322,7 +310,6 @@ namespace Overlewd
             if (AOE) return;
             rt.DOAnchorPos(Vector2.zero, zoomSpeed);
             rt.DOScale(battleScale, zoomSpeed);
-
         }
 
         public void BattleOut(bool AOE = false)
@@ -342,8 +329,12 @@ namespace Overlewd
                 yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(characterRes.ani_defeat_name));
                 spineWidget.PlayAnimation("defeat2", true); //!костыль
             }
-            else
+            else 
+            { 
                 spineWidget.PlayAnimation(characterRes.ani_defeat_name, false);
+                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(characterRes.ani_defeat_name));
+                Destroy(gameObject);
+            }
         }
 
         public void Damage(float value, bool hit, bool dodge, bool crit)
@@ -366,7 +357,6 @@ namespace Overlewd
                 if (health <= 0)
                 {
                     isDead = true;
-                    bt.onClick.RemoveAllListeners();
                     StartCoroutine(PlayDead());
                     bm.StateUpdate(this);
                 }
@@ -376,7 +366,7 @@ namespace Overlewd
                     DrawPopup($"{value}", "red");
                 UpdateUI();
             }
-            else
+            else if (value < 0)
             {
                 Heal(-value);
             }
@@ -394,7 +384,7 @@ namespace Overlewd
                     value += value * bless_dot;
                 health += value;
                 health = Mathf.Min(health, healthMax);
-                DrawPopup($"{value}", "green");
+                DrawPopup($"{msg_heal} {value}", "green");
                 UpdateUI();
             }
         }
@@ -825,14 +815,9 @@ namespace Overlewd
                 Damage(regen_poison_dot, true, false, false);
                 regen_poison -= (int)Mathf.Sign(regen_poison);
             }
-            if (focus_blind != 0)
-                focus_blind -= (int)Mathf.Sign(focus_blind);
-            if (defUp_defDown != 0)
-                defUp_defDown -= (int)Mathf.Sign(defUp_defDown);
-            if (regen_poison != 0)
-                regen_poison -= (int)Mathf.Sign(regen_poison);
-            if (bless_healBlock != 0)
-                bless_healBlock -= (int)Mathf.Sign(bless_healBlock);
+            if (focus_blind != 0)       focus_blind     -= (int)Mathf.Sign(focus_blind);
+            if (defUp_defDown != 0)     defUp_defDown   -= (int)Mathf.Sign(defUp_defDown);
+            if (bless_healBlock != 0)   bless_healBlock -= (int)Mathf.Sign(bless_healBlock);
 
             if (immunity != 0) immunity--;
             if (silence != 0) silence--;
@@ -873,7 +858,7 @@ namespace Overlewd
             bm.unselect -= UnHiglight;
             bm.roundEnd -= UpadeteRoundEnd;
             Destroy(observer.gameObject);
-            bt.gameObject.SetActive(false);
+            if (isEnemy) Destroy(charStats.gameObject);
         }
 
     }

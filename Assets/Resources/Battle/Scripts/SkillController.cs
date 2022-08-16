@@ -143,7 +143,7 @@ namespace Overlewd
         void SetEffectIco()
         {
             effectSlot.gameObject.SetActive(true);
-            effectSlot.sprite = effectIcons.Find(i => i.name == skill.effect);
+            effectSlot.sprite = effectIcons.Find(i => i.name == skill?.effect);
             if (effectSlot.sprite == null)
             {
                 effectSlot.gameObject.SetActive(false);

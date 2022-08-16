@@ -129,6 +129,12 @@ namespace Overlewd
                             SetData(inputData.prevScreenInData.As<GirlScreenInData>())
                             .RunShowScreenProcess();
                     }
+                    else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
+                    {
+                        UIManager.MakeScreen<MemoryListScreen>()
+                            .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
+                            .RunShowScreenProcess();
+                    }
                     else
                     {
                         UIManager.MakeScreen<BattleGirlScreen>().
@@ -289,6 +295,7 @@ namespace Overlewd
                         mainAnimation = SpineScene.GetInstance(animation, mainAnimPos);
                     }
                 }
+                mainAnimation?.TimeScale(replica.mainAnimationTimeScale);
             }
             else
             {
@@ -353,6 +360,7 @@ namespace Overlewd
                     mainSound?.Stop();
                     mainSound = SoundManager.GetEventInstance(mainSoundData.eventPath, mainSoundData.soundBankId);
                 }
+                mainSound?.SetPitch(replica.mainAnimationTimeScale);
             }
             else
             {

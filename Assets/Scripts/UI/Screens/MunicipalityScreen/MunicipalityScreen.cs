@@ -210,6 +210,18 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task BeforeShowAsync()
+        {
+            SoundManager.GetEventInstance(FMODEventPath.Castle_Screen_BGM_Attn);
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
+            await Task.CompletedTask;
+        }
+
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
             switch (eventData?.type)

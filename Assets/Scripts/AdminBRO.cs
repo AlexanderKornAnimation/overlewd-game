@@ -734,6 +734,8 @@ namespace Overlewd
             public int? cutInSoundId;
             public int? replicaSoundId;
 
+            public float mainAnimationTimeScale;
+
             public const string CharacterPosition_Left = "left";
             public const string CharacterPosition_Right = "right";
             public const string CharacterPosition_Middle = "middle";
@@ -1046,8 +1048,8 @@ namespace Overlewd
             public class Level
             {
                 public int pointsThreshold;
-                public int defaultReward;
-                public int premiumReward;
+                public List<RewardItem> defaultReward;
+                public List<RewardItem> premiumReward;
             }
         }
 
@@ -1600,6 +1602,90 @@ namespace Overlewd
             }
         }
 
+        // /forge/price
+        // /forge/merge
+        public static async Task<ForgePrice> forgePrices()
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/price";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<ForgePrice>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task forgeMergeEquipment(string mergeType, int[] mergeIds)
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/merge/equipment";
+            var form = new WWWForm();
+            form.AddField("mergeType", mergeType);
+            foreach (var id in mergeIds)
+            {
+                form.AddField("ids[]", id);
+            }
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task forgeMergeShard(int matriarchId, string rarity)
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/merge/shard";
+            var form = new WWWForm();
+            form.AddField("matriarchId", matriarchId);
+            form.AddField("rarity", rarity);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        {
+            var url = "https://overlewd-api.herokuapp.com/forge/exchange/shard";
+            var form = new WWWForm();
+            form.AddField("matriarchSourceId", matriarchSourceId);
+            form.AddField("matriarchTargetId", matriarchTargetId);
+            form.AddField("rarity", rarity);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        [Serializable]
+        public class ForgePrice
+        {
+            public List<MergeEquipmentSettings> mergeEquipmentSettings;
+            public MergeShardSettings mergeShardSettings;
+            public ExchangeShardSettings exchangeShardSettings;
+
+            public class MergeEquipmentSettings
+            {
+                public string mergeType;
+                public int mergeCount;
+                public List<MergePrice> pricesOfMergeType;
+            }
+            
+            public class MergeShardSettings
+            {
+                public int mergeAmount;
+                public List<MergePrice> pricesOfMergeType;
+            }
+
+            public class ExchangeShardSettings
+            {
+                public int exchangeAmount;
+                public List<MergePrice> pricesOfExchangeType;
+            }
+
+            public class MergePrice
+            {
+                public string rarity;
+                public List<PriceItem> price;
+            }
+        }
+
         // gacha
         public static async Task<List<GachaItem>> gachaAsync()
         {
@@ -1730,6 +1816,30 @@ namespace Overlewd
             public int? nextEmpathyLevel;
             public string rewardsClaimed;
             public string seduceAvailableAt;
+            public List<Shard> shards;
+
+            public class Shard
+            {
+                public string rarity;
+                public int amount;
+                
+                public const string Rariry_White = "white";
+                public const string Rariry_Green = "green";
+                public const string Rariry_Purple = "purple";
+                public const string Rariry_Gold = "gold";
+            }
+
+            [JsonProperty(Required = Required.Default)]
+            public Shard whiteShard => shards?.Find(s => s.rarity == Shard.Rariry_White);
+            
+            [JsonProperty(Required = Required.Default)]
+            public Shard greenShard => shards?.Find(s => s.rarity == Shard.Rariry_Green);
+            
+            [JsonProperty(Required = Required.Default)]
+            public Shard purpleShard => shards?.Find(s => s.rarity == Shard.Rariry_Purple);
+            
+            [JsonProperty(Required = Required.Default)]
+            public Shard goldShard => shards?.Find(s => s.rarity == Shard.Rariry_Gold);
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
@@ -1745,6 +1855,8 @@ namespace Overlewd
             public const string RewardsClaimed_Fifty = "fifty";
             public const string RewardsClaimed_All = "all";
 
+            [JsonProperty(Required = Required.Default)]
+            public string key => name;
 
             [JsonProperty(Required = Required.Default)]
             public bool isUlvi => name == Key_Ulvi;
@@ -1765,7 +1877,7 @@ namespace Overlewd
             public bool isOpen => status == Status_Open;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isClose => name == Status_Close;
+            public bool isClose => status == Status_Close;
         }
 
         [Serializable]
@@ -1795,7 +1907,32 @@ namespace Overlewd
                 public const string Rariry_Gold = "gold";
             }
 
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard whiteShard =>
+                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_White);
+            
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard greenShard =>
+                shardsToOpen.Find(r => r.shardRarity == OpenShard.Rariry_Green);
+            
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard purpleShard =>
+                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_Purple);
+            
+            [JsonProperty(Required = Required.Default)]
+            public OpenShard goldShard =>
+                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_Gold);
+
+            
             public const string Status_Visible = "visible";
+            public const string Status_Open = "open";
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isVisible => status == Status_Visible;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => status == Status_Open;
+
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Overlewd
         {
             bm.AfterShowBattleScreen();
 
-            SoundManager.GetEventInstance(FMODEventPath.Music_Battle_BGM_1);
+            SoundManager.PlayBGMusic(FMODEventPath.Music_Battle_BGM_1);
             await Task.CompletedTask;
         }
 
@@ -94,8 +94,6 @@ namespace Overlewd
                        mana = endBattleData.manaSpent,
                        hp = endBattleData.hpSpent
                     });
-
-                await GameData.player.Get();
             }
             else
             {
@@ -106,8 +104,6 @@ namespace Overlewd
                         mana = endBattleData.manaSpent,
                         hp = endBattleData.hpSpent
                     });
-
-                await GameData.player.Get();
             }
         }
     }

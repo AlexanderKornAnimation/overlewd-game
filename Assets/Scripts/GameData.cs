@@ -93,6 +93,7 @@ namespace Overlewd
 
             await GameData.quests.Get();
             await GameData.battlePass.Get();
+            await GameData.player.Get();
         }
     }
 
@@ -101,11 +102,13 @@ namespace Overlewd
     {
         public List<AdminBRO.Building> buildings { get; private set; }
         public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
+        public AdminBRO.ForgePrice forgePrices { get; private set; }
 
         public async Task Get()
         {
             buildings = await AdminBRO.buildingsAsync();
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
+            forgePrices = await AdminBRO.forgePrices();
         }
         public AdminBRO.Building GetBuildingById(int? id) =>
             buildings.Find(b => b.id == id);
@@ -150,6 +153,7 @@ namespace Overlewd
         public AdminBRO.MagicGuildSkill magicGuild_PassiveSkill2 =>
             GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill2);
 
+        //Municipality
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
@@ -189,6 +193,7 @@ namespace Overlewd
             await AdminBRO.municipalityCollectAsync();
         }
 
+        //MagicGuild
         public async Task MagicGuildSkillLvlUp(string skillType)
         {
             await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
@@ -199,6 +204,22 @@ namespace Overlewd
             {
                 type = GameDataEvent.Type.MagicGuildSpellLvlUp
             });
+        }
+
+        //Forge
+        public async Task ForgeMergeEquipment(string mergeType, int[] mergeIds)
+        {
+            await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
+        }
+
+        public async Task ForgeMergeShard(int matriarchId, string rarity)
+        {
+            await AdminBRO.forgeMergeShard(matriarchId, rarity);
+        }
+
+        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        {
+            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity);
         }
     }
 
@@ -398,6 +419,7 @@ namespace Overlewd
 
             await GameData.quests.Get();
             await GameData.battlePass.Get();
+            await GameData.player.Get();
         }
 
         public AdminBRO.EventItem mapEventData { get; set; }
@@ -708,7 +730,9 @@ namespace Overlewd
             passes = await AdminBRO.battlePassesAsync();
         }
 
-        AdminBRO.BattlePass GetByEventId(int? eventId) =>
+        public AdminBRO.BattlePass GetByEventId(int? eventId) =>
             passes.Find(p => p.eventId == eventId);
+        public AdminBRO.BattlePass GetById(int id) =>
+            passes.Find(p => p.id == id);
     }
 }

@@ -33,7 +33,6 @@ namespace Overlewd
         private Transform emotionPos;
 
         private FMODEvent replicaSound;
-        private bool endTimer = false;
 
         protected virtual void Awake()
         {
@@ -76,25 +75,21 @@ namespace Overlewd
             var replicaSoundData = GameData.sounds.GetById(firstReplica?.replicaSoundId);
             replicaSound = SoundManager.GetEventInstance(replicaSoundData?.eventPath, replicaSoundData?.soundBankId);
 
-            if (replicaSound != null)
-            {
-                StartCoroutine(WaitReplicaEnd());
-            }
-            StartCoroutine(CloseByTimer());
+            StartCoroutine("CloseByTimerOrReplica");
 
             await Task.CompletedTask;
         }
 
         public override async Task BeforeHideAsync()
         {
-            StopCoroutine(CloseByTimer());
+            StopCoroutine("CloseByTimerOrReplica");
 
             await Task.CompletedTask;
         }
 
         public override async Task AfterShowAsync()
         {
-            if (replicaSound != null)
+            if (replicaSound == null)
             {
                 UIManager.GetNotificationMissclick<DialogNotificationMissclick>()?.OnReset();
             }
@@ -117,10 +112,9 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenLeftHide>();
         }
 
-        private IEnumerator CloseByTimer()
+        private IEnumerator CloseByTimerOrReplica()
         {
             yield return new WaitForSeconds(4.0f);
-            endTimer = true;
 
             while (replicaSound?.IsPlaying() ?? false)
             {
@@ -128,23 +122,6 @@ namespace Overlewd
             }
 
             UIManager.HideNotification();
-        }
-
-        private IEnumerator WaitReplicaEnd()
-        {
-            while (replicaSound.IsPlaying())
-            {
-                yield return new WaitForSeconds(0.3f);
-            }
-
-            if (!endTimer)
-            {
-                var missclick = UIManager.MakeNotificationMissclick<DialogNotificationMissclick>();
-                if (missclick != null)
-                {
-                    missclick.missClickEnabled = true;
-                }
-            }
         }
     }
 

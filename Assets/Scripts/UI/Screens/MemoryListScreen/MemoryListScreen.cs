@@ -15,21 +15,20 @@ namespace Overlewd
         private Button backButton;
         private TextMeshProUGUI backButtonGirlName;
 
-        private const int tabUlvi = 0;
-        private const int tabAdriel = 1;
-        private const int tabFaye = 2;
-        private const int tabIngie = 3;
-        private const int tabLili = 4;
-        private const int tabsCount = 5;
+        public const int TabUlvi = 0;
+        public const int TabAdriel = 1;
+        public const int TabFaye = 2;
+        public const int TabIngie = 3;
+        public const int TabLili = 4;
+        public const int TabsCount = 5;
         private int activeTabId;
 
-        
         private string[] tabNames = {"Ulvi", "Adriel", "Faye", "Ingie", "Lili"};
-        private int[] tabIds =  {tabUlvi, tabAdriel, tabFaye, tabIngie, tabLili};
-        private Button[] tabs = new Button[tabsCount];
-        private GameObject[] pressedTabs = new GameObject[tabsCount];
-        private GameObject[] scrolls = new GameObject[tabsCount];
-        private Transform[] scrollsContent = new Transform[tabsCount];
+        private int[] tabIds =  {TabUlvi, TabAdriel, TabFaye, TabIngie, TabLili};
+        private Button[] tabs = new Button[TabsCount];
+        private GameObject[] pressedTabs = new GameObject[TabsCount];
+        private GameObject[] scrolls = new GameObject[TabsCount];
+        private Transform[] scrollsContent = new Transform[TabsCount];
 
         private void Awake()
         {
@@ -52,26 +51,30 @@ namespace Overlewd
                 scrolls[id] = canvas.Find(tabNames[id] + "MainScroll").gameObject;
                 scrolls[id].SetActive(false);
                 scrollsContent[id] = scrolls[id].transform.Find("Viewport").Find("Content");
+                var matriarch = GameData.matriarchs.GetMatriarchByKey(tabNames[id]);
+                tabs[id].gameObject.SetActive(matriarch.isOpen);
             }
             
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButtonGirlName = backButton.transform.Find("GirlName").GetComponent<TextMeshProUGUI>();
             backButton.onClick.AddListener(BackButtonClick);
-
-
         }
+
+        private int TabIdByGirlKey(string key) =>
+            key switch
+            {
+                AdminBRO.MatriarchItem.Key_Ulvi => TabUlvi,
+                AdminBRO.MatriarchItem.Key_Adriel => TabAdriel,
+                AdminBRO.MatriarchItem.Key_Faye => TabFaye,
+                AdminBRO.MatriarchItem.Key_Ingie => TabIngie,
+                AdminBRO.MatriarchItem.Key_Lili => TabLili,
+                _ => TabUlvi
+            };
+
 
         public override async Task BeforeShowMakeAsync()
         {
-            activeTabId = inputData?.girlKey switch
-            {
-                AdminBRO.MatriarchItem.Key_Ulvi => tabUlvi,
-                AdminBRO.MatriarchItem.Key_Adriel => tabAdriel,
-                AdminBRO.MatriarchItem.Key_Faye => tabFaye,
-                AdminBRO.MatriarchItem.Key_Ingie => tabIngie,
-                AdminBRO.MatriarchItem.Key_Lili => tabLili,
-                _ => tabUlvi
-            };
+            activeTabId = TabIdByGirlKey(inputData?.girlKey);
 
             AddMemoryLists();
             EnterTab(activeTabId);
@@ -81,25 +84,14 @@ namespace Overlewd
 
         private void AddMemoryLists()
         {
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabUlvi]));
-
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabAdriel]));
-            
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabFaye]));
-            
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabIngie]));
-            
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]));
-            memoryLists.Add(NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[tabLili]));
+            foreach (var matriarch in GameData.matriarchs.matriarchs)
+            {
+                if (matriarch.isOpen)
+                {
+                    var memList = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[TabIdByGirlKey(matriarch.key)]);
+                    memList.girlKey = matriarch.key;
+                }
+            }
         }
         
         private void TabClick(int tabId)

@@ -291,8 +291,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 70
-      minScalar: 16
+      scalar: 140
+      minScalar: 32
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5226,8 +5226,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 70
-      minScalar: 16
+      scalar: 140
+      minScalar: 32
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -9965,7 +9965,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.2
+      scalar: 0.35
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -10134,7 +10134,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 600
+      scalar: 850
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -10891,20 +10891,29 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 1
-          outSlope: 1
-          tangentMode: 34
+          inSlope: 1.3222395
+          outSlope: 1.3222395
+          tangentMode: 0
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
+          outWeight: 0.14106582
+        - serializedVersion: 3
+          time: 0.1492417
+          value: 0.5724466
+          inSlope: 1.5163964
+          outSlope: 1.5163964
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.13461685
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: 1
-          outSlope: 1
-          tangentMode: 34
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
           weightedMode: 0
-          inWeight: 0
+          inWeight: 0.33333334
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -14732,7 +14741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8118a3fa7d236744ab5aa56019032d52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: a95990425cbfc0d469fa9e7928cb080c, type: 2}
+  m_Material: {fileID: 2100000, guid: d51148b797fd2a84daceb5592280ccbf, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -15033,8 +15042,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 70
-      minScalar: 16
+      scalar: 140
+      minScalar: 32
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -19968,8 +19977,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 70
-      minScalar: 16
+      scalar: 140
+      minScalar: 32
       maxCurve:
         serializedVersion: 2
         m_Curve:

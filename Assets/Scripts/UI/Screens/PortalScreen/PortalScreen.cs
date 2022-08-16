@@ -9,20 +9,20 @@ namespace Overlewd
 {
     public class PortalScreen : BaseFullScreenParent<PortalScreenInData>
     {
-        private const int tabBattleGirls = 0;
-        private const int tabBattleGirlsEquip = 1;
-        private const int tabOverlordEquip = 2;
-        private const int tabShards = 3;
-        private const int tabsCount = 4;
+        public const int TabBattleGirls = 0;
+        public const int TabBattleGirlsEquip = 1;
+        public const int TabOverlordEquip = 2;
+        public const int TabShards = 3;
+        public const int TabsCount = 4;
 
         private int activeTabId;
 
         private string[] tabsNames = {"BattleGirls", "BattleGirlsEquip", "OverlordEquip", "Shards"};
 
-        private int[] tabsIds = {tabBattleGirls, tabBattleGirlsEquip, tabOverlordEquip, tabShards};
-        private Button[] tabs = new Button[tabsCount];
-        private GameObject[] pressedTabs = new GameObject[tabsCount];
-        private Transform[] contents = new Transform[tabsCount];
+        private int[] tabsIds = {TabBattleGirls, TabBattleGirlsEquip, TabOverlordEquip, TabShards};
+        private Button[] tabs = new Button[TabsCount];
+        private GameObject[] pressedTabs = new GameObject[TabsCount];
+        private Transform[] contents = new Transform[TabsCount];
 
         private NSPortalScreen.OfferButton selectedOffer;
 
@@ -63,7 +63,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
-            activeTabId = inputData?.activeButtonId ?? tabBattleGirls;
+            activeTabId = inputData?.activeButtonId ?? TabBattleGirls;
             ButtonClick(activeTabId);
 
             await Task.CompletedTask;
@@ -92,6 +92,18 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task BeforeShowAsync()
+        {
+            SoundManager.GetEventInstance(FMODEventPath.Castle_Screen_BGM_Attn);
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeHideAsync()
+        {
+            SoundManager.StopAll();
+            await Task.CompletedTask;
+        }
+
         private void Customize()
         {
             foreach (var gacha in GameData.gacha.items)
@@ -101,19 +113,19 @@ namespace Overlewd
                 switch (gacha.tabType)
                 {
                     case AdminBRO.GachaItem.TabType_Matriachs:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabBattleGirls]);
+                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabBattleGirls]);
                         battleGirlsOffers.Add(offerButton);
                         break;
                     case AdminBRO.GachaItem.TabType_OverlordEquipment:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabOverlordEquip]);
+                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabOverlordEquip]);
                         overlordOffers.Add(offerButton);
                         break;
                     case AdminBRO.GachaItem.TabType_Shards:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabShards]);
+                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabShards]);
                         shardsOffers.Add(offerButton);
                         break;
                     case AdminBRO.GachaItem.TabType_CharactersEquipment:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[tabBattleGirlsEquip]);
+                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabBattleGirlsEquip]);
                         battleGirlsEquipOffers.Add(offerButton);
                         break;
                 }
@@ -189,22 +201,22 @@ namespace Overlewd
 
             switch (buttonId)
             {
-                case tabBattleGirls:
+                case TabBattleGirls:
                     OpenTab(buttonId);
                     if (battleGirlsOffers.Any())
                         SelectOffer(battleGirlsOffers.First());
                     break;
-                case tabBattleGirlsEquip:
+                case TabBattleGirlsEquip:
                     OpenTab(buttonId);
                     if (battleGirlsEquipOffers.Any())
                         SelectOffer(battleGirlsEquipOffers.First());
                     break;
-                case tabOverlordEquip:
+                case TabOverlordEquip:
                     OpenTab(buttonId);
                     if (overlordOffers.Any())
                         SelectOffer(overlordOffers.First());
                     break;
-                case tabShards:
+                case TabShards:
                     OpenTab(buttonId);
                     if (shardsOffers.Any())
                         SelectOffer(shardsOffers.First());
@@ -228,10 +240,5 @@ namespace Overlewd
     public class PortalScreenInData : BaseFullScreenInData
     {
         public int? activeButtonId;
-
-        public const int battleGirlsButtonId = 0;
-        public const int battleGirlsEquipButtonId = 1;
-        public const int overlordEquipButtonId = 2;
-        public const int shardsButtonId = 3;
     }
 }

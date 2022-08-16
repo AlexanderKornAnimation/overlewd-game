@@ -128,6 +128,11 @@ namespace Overlewd
             transform.localScale = Vector3.Scale(transform.localScale, new Vector3(scale, scale, 1));
         }
 
+        public void TimeScale(float scale)
+        {
+            skeletonGraphic.timeScale = scale;
+        }
+
         public float GetAnimationDuaration(string animationName)
         {
             return skeletonGraphic.SkeletonData.Animations.Find(a => a.Name == animationName).Duration;

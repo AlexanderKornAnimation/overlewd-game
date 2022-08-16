@@ -21,6 +21,8 @@ namespace Overlewd
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
         public StatusEffects status_bar;
+        public Button bt;
+        public GameObject border;
 
         public float health => cc.health;
         public float healthMax => cc.healthMax;
@@ -36,6 +38,10 @@ namespace Overlewd
         {
             status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
             status_bar.cc = cc;
+            bt = transform.Find("button").GetComponent<Button>();
+            bt?.onClick.AddListener(cc.Select);
+            border = transform.Find("button/border").gameObject;
+            border?.SetActive(false);
             if (sliderHP) sliderHP.maxValue = healthMax;
             if (sliderMP) sliderMP.maxValue = manaMax;
             sliderMP?.gameObject.SetActive(showMP);
@@ -59,7 +65,7 @@ namespace Overlewd
         }
 
         public void UpdateStatuses() => status_bar?.UpdateStatuses();
-
+        public void Border(bool brd) => border?.SetActive(brd);
         void SetClass()
         {
             switch (cc.character.characterClass)

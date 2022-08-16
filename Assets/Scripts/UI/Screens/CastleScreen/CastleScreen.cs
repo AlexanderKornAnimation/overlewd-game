@@ -59,8 +59,6 @@ namespace Overlewd
         private QuestsWidget questsPanel;
         private BuffWidget buffPanel;
 
-        private FMODEvent music;
-
         private void Awake()
         {
             var screenInst =
@@ -275,13 +273,12 @@ namespace Overlewd
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowShow);
-            music = SoundManager.GetEventInstance(FMODEventPath.Music_CastleScreen);
+            SoundManager.PlayBGMusic(FMODEventPath.Music_CastleScreen);
         }
 
         public override void StartHide()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_CastleWindowHide);
-            music?.Stop();
         }
 
         private void SidebarButtonClick()
