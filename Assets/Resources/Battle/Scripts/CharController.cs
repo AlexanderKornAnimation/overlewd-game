@@ -79,7 +79,8 @@ namespace Overlewd
             msg_defence_down = "Defence down",
             msg_poison = "Poison",
             msg_defence_up = "Defence up",
-            msg_stun = "Stun";
+            msg_stun = "Stun",
+            msg_heal = "Heal:";
         private GameObject vfx_purple => bm.vfx_purple;
         private GameObject vfx_red => bm.vfx_red;
         private GameObject vfx_blue => bm.vfx_blue;
@@ -365,7 +366,7 @@ namespace Overlewd
                     DrawPopup($"{value}", "red");
                 UpdateUI();
             }
-            else
+            else if (value < 0)
             {
                 Heal(-value);
             }
@@ -383,7 +384,7 @@ namespace Overlewd
                     value += value * bless_dot;
                 health += value;
                 health = Mathf.Min(health, healthMax);
-                DrawPopup($"{value}", "green");
+                DrawPopup($"{msg_heal} {value}", "green");
                 UpdateUI();
             }
         }

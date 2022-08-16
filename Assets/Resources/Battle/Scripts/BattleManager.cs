@@ -498,7 +498,6 @@ namespace Overlewd
                 QueueElements.Remove(qe);
             }
             charControllerList.Remove(invoker);
-            maxStep = charControllerList.Count;
 
             if (invoker.isEnemy)
                 enemyIsDead++;
@@ -556,7 +555,8 @@ namespace Overlewd
 
             var qe = QueueElements.Find(i => i.cc == ccOnSelect);
             qe?.Deselect();
-            if (++step == maxStep)
+            maxStep = charControllerList.Count;
+            if (++step >= maxStep)
             {
                 if (round == 1)
                 {
@@ -576,8 +576,7 @@ namespace Overlewd
             var cc = charControllerList[step];
             if (cc.stun) //skip dead/stun character
             {
-                if (cc.stun)
-                    cc.stun = false;
+                cc.stun = false;
                 Step();
             }
             else
