@@ -60,9 +60,8 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
         }
 
-        public override async Task BeforeShowMakeAsync()
-        {
-            activeTabId = inputData?.girlKey switch
+        private int TabIdByGirlKey(string key) =>
+            key switch
             {
                 AdminBRO.MatriarchItem.Key_Ulvi => TabUlvi,
                 AdminBRO.MatriarchItem.Key_Adriel => TabAdriel,
@@ -71,6 +70,11 @@ namespace Overlewd
                 AdminBRO.MatriarchItem.Key_Lili => TabLili,
                 _ => TabUlvi
             };
+
+
+        public override async Task BeforeShowMakeAsync()
+        {
+            activeTabId = TabIdByGirlKey(inputData?.girlKey);
 
             AddMemoryLists();
             EnterTab(activeTabId);
@@ -84,7 +88,8 @@ namespace Overlewd
             {
                 if (matriarch.isOpen)
                 {
-                    NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[matriarch.id - 1]);
+                    var memList = NSMemoryListScreen.MemoryList.GetInstance(scrollsContent[TabIdByGirlKey(matriarch.key)]);
+                    memList.girlKey = matriarch.key;
                 }
             }
         }

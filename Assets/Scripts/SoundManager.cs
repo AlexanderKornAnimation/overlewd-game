@@ -67,6 +67,7 @@ namespace Overlewd
         public const string Music_Battle_BGM_1 = "event:/Music/BattleScreen/Battle_BGM_1";
 
         //screens bg music
+        public const string Castle_Screen_BGM_Attn = "snapshot:/Castle_Screen_BGM_Attn";//переходы между экранами замка
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
         public const string Music_SexScreen = "event:/Music/LewdScreen/BGM_SexScene_1";
         public const string Music_DialogScreen = "event:/Music/DialogueScreen/BGM_Dialogue_Chill_1";

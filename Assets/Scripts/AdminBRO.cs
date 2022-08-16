@@ -1855,6 +1855,8 @@ namespace Overlewd
             public const string RewardsClaimed_Fifty = "fifty";
             public const string RewardsClaimed_All = "all";
 
+            [JsonProperty(Required = Required.Default)]
+            public string key => name;
 
             [JsonProperty(Required = Required.Default)]
             public bool isUlvi => name == Key_Ulvi;
