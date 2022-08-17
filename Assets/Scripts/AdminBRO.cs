@@ -469,6 +469,7 @@ namespace Overlewd
             public string updatedAt;
             public List<int> chapters;
             public List<RewardItem> rewards;
+            public int? narratorMatriarchId;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
@@ -518,6 +519,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isQuarterly => type == Type_Quarterly;
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.MatriarchItem narratorMatriarch =>
+                GameData.matriarchs.GetMatriarchById(narratorMatriarchId);
         }
         
 
@@ -1088,6 +1093,7 @@ namespace Overlewd
         public class Equipment
         {
             public int id;
+            public int? equipmentId;
             public int? characterId;
             public string characterClass;
             public string name;
