@@ -202,44 +202,40 @@ namespace Overlewd
 
             await AdminBRO.authLoginAsync();
             await AdminBRO.meAsync(SystemInfo.deviceModel);
+            await AdminBRO.initAsync();
 
             //
             SetDownloadBarProgress(0.1f);
             SetDownloadBarTitle("Download game data");
 
-            await AdminBRO.initAsync();
+            var gameMeta = new List<BaseGameMeta> {
+                GameData.player,
+                GameData.currencies,
+                GameData.markets,
+                GameData.events,
+                GameData.quests,
+                GameData.dialogs,
+                GameData.battles,
+                GameData.ftue,
+                GameData.animations,
+                GameData.sounds,
+                GameData.buildings,
+                GameData.characters,
+                GameData.equipment,
+                GameData.gacha,
+                GameData.matriarchs,
+                GameData.battlePass
+            };
 
-            await GameData.player.Get();
-
-            await GameData.currencies.Get();
-
-            await GameData.markets.Get();
-
-            await GameData.events.Get();
-
-            await GameData.quests.Get();
-
-            await GameData.dialogs.Get();
-
-            await GameData.battles.Get();
-
-            await GameData.ftue.Get();
-
-            await GameData.animations.Get();
-
-            await GameData.sounds.Get();
-
-            await GameData.buildings.Get();
-
-            await GameData.characters.Get();
-
-            await GameData.equipment.Get();
-
-            await GameData.gacha.Get();
-
-            await GameData.matriarchs.Get();
-
-            await GameData.battlePass.Get();
+            foreach (var metaSplit in SplitGameMeta(gameMeta, 20))
+            {
+                var metaTasks = new List<Task>();
+                foreach (var meta in metaSplit)
+                {
+                    metaTasks.Add(meta.Get());
+                }
+                await Task.WhenAll(metaTasks);
+            }
 
             SetDownloadBarProgress(0.3f);
 
@@ -269,7 +265,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.ShowDialogBox("No Internet �onnection", "", () => Game.Quit());
+                UIManager.ShowDialogBox("No Internet Connection", "", () => Game.Quit());
             }
 
             await Task.CompletedTask;
@@ -342,6 +338,14 @@ namespace Overlewd
             {
                 yield return resources.GetRange(i, Math.Min(splitSize, resources.Count - i));
             }*/
+        }
+
+        private IEnumerable<List<BaseGameMeta>> SplitGameMeta(List<BaseGameMeta> meta, int splitSize = 4)
+        {
+            for (int i = 0; i < meta.Count; i += splitSize)
+            {
+                yield return meta.GetRange(i, Math.Min(splitSize, meta.Count - i));
+            }
         }
 
         private class DownloadResourceInfo

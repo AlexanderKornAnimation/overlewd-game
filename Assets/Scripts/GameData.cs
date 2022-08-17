@@ -47,8 +47,16 @@ namespace Overlewd
         public static BattlePass battlePass { get; } = new BattlePass();
     }
 
+    public abstract class BaseGameMeta
+    {
+        public virtual async Task Get()
+        {
+            await Task.CompletedTask;
+        }
+    }
+
     //ftue
-    public class FTUE
+    public class FTUE : BaseGameMeta
     {
         public AdminBRO.FTUEInfo info { get; private set; }
         public List<AdminBRO.FTUEStageItem> stages { get; private set; }
@@ -72,7 +80,7 @@ namespace Overlewd
         }
         public AdminBRO.FTUEChapter mapChapter { get; set; }
 
-        public async Task Get()
+        public override async Task Get()
         {
             info = await AdminBRO.ftueAsync();
             stages = await AdminBRO.ftueStagesAsync();
@@ -98,13 +106,13 @@ namespace Overlewd
     }
 
     //buildings
-    public class Buildings
+    public class Buildings : BaseGameMeta
     {
         public List<AdminBRO.Building> buildings { get; private set; }
         public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
         public AdminBRO.ForgePrice forgePrices { get; private set; }
 
-        public async Task Get()
+        public override async Task Get()
         {
             buildings = await AdminBRO.buildingsAsync();
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
@@ -224,12 +232,15 @@ namespace Overlewd
     }
 
     //gacha
-    public class Gacha
+    public class Gacha : BaseGameMeta
     {
         public List<AdminBRO.GachaItem> items { get; private set; }
 
-        public async Task Get() =>
+        public override async Task Get()
+        {
             items = await AdminBRO.gachaAsync();
+        }
+
         public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
@@ -247,12 +258,12 @@ namespace Overlewd
     }
 
     //characters
-    public class Characters
+    public class Characters : BaseGameMeta
     {
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
         public List<AdminBRO.SkillEffect> effects { get; private set; } = new List<AdminBRO.SkillEffect>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
@@ -350,11 +361,11 @@ namespace Overlewd
     }
 
     //equipment
-    public class Equipment
+    public class Equipment : BaseGameMeta
     {
         public List<AdminBRO.Equipment> equipment { get; private set; } = new List<AdminBRO.Equipment>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             equipment = await AdminBRO.equipmentAsync();
         }
@@ -387,13 +398,13 @@ namespace Overlewd
     }
 
     //events
-    public class Events
+    public class Events : BaseGameMeta
     {
         public List<AdminBRO.EventItem> events { get; private set; } = new List<AdminBRO.EventItem>();
         public List<AdminBRO.EventChapter> chapters { get; private set; } = new List<AdminBRO.EventChapter>();
         public List<AdminBRO.EventStageItem> stages { get; private set; } = new List<AdminBRO.EventStageItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             events = await AdminBRO.eventsAsync();
             chapters = await AdminBRO.eventChaptersAsync();
@@ -437,13 +448,13 @@ namespace Overlewd
     }
 
     //markets
-    public class Markets
+    public class Markets : BaseGameMeta
     {
         public List<AdminBRO.EventMarketItem> eventMarkets { get; private set; } = new List<AdminBRO.EventMarketItem>();
 
         public List<AdminBRO.TradableItem> tradables { get; private set; } = new List<AdminBRO.TradableItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             eventMarkets = await AdminBRO.eventMarketsAsync();
             tradables = await AdminBRO.tradablesAsync();
@@ -471,11 +482,11 @@ namespace Overlewd
     }
 
     //quests
-    public class Quests
+    public class Quests : BaseGameMeta
     {
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             quests = await AdminBRO.questsAsync();
         }
@@ -495,11 +506,11 @@ namespace Overlewd
     }
 
     //currencies
-    public class Currencies
+    public class Currencies : BaseGameMeta
     {
         public List<AdminBRO.CurrencyItem> currencies { get; private set; } = new List<AdminBRO.CurrencyItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             currencies = await AdminBRO.currenciesAsync();
         }
@@ -533,11 +544,11 @@ namespace Overlewd
     }
 
     //player
-    public class Player
+    public class Player : BaseGameMeta
     {
         public AdminBRO.PlayerInfo info { get; private set; }
 
-        public async Task Get()
+        public override async Task Get()
         {
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
@@ -593,11 +604,11 @@ namespace Overlewd
     }
 
     //dialogs
-    public class Dialogs
+    public class Dialogs : BaseGameMeta
     {
         public static List<AdminBRO.Dialog> dialogs { get; private set; } = new List<AdminBRO.Dialog>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             dialogs = await AdminBRO.dialogsAsync();
         }
@@ -607,11 +618,11 @@ namespace Overlewd
     }
 
     //battles
-    public class Battles
+    public class Battles : BaseGameMeta
     {
         public List<AdminBRO.Battle> battles { get; private set; } = new List<AdminBRO.Battle>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             battles = await AdminBRO.battlesAsync();
         }
@@ -621,11 +632,11 @@ namespace Overlewd
     }
 
     //animations
-    public class Animations
+    public class Animations : BaseGameMeta
     {
         public List<AdminBRO.Animation> animations { get; private set; } = new List<AdminBRO.Animation>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             animations = await AdminBRO.animationsAsync();
         }
@@ -650,11 +661,11 @@ namespace Overlewd
     }
 
     //sounds
-    public class Sounds
+    public class Sounds : BaseGameMeta
     {
         public List<AdminBRO.Sound> sounds { get; private set; } = new List<AdminBRO.Sound>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             sounds = await AdminBRO.soundsAsync();
         }
@@ -664,12 +675,12 @@ namespace Overlewd
     }
 
     //matriarchs
-    public class Matriarchs
+    public class Matriarchs : BaseGameMeta
     {
         public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
         public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
@@ -721,11 +732,11 @@ namespace Overlewd
     }
     
     //battlePass
-    public class BattlePass
+    public class BattlePass : BaseGameMeta
     {
         public List<AdminBRO.BattlePass> passes { get; private set; } = new List<AdminBRO.BattlePass>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             passes = await AdminBRO.battlePassesAsync();
         }
