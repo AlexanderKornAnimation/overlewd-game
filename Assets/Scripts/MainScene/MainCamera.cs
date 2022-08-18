@@ -18,6 +18,7 @@ namespace Overlewd
             resolution = new Vector2(Screen.width, Screen.height);
 #endif
 
+            LogCollector.Initialize();
             UIManager.Initialize();
             ResourceManager.Initialize();
         }

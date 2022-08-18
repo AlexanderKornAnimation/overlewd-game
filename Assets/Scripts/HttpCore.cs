@@ -27,12 +27,16 @@ namespace Overlewd
             return Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
         }
 
-        public static async Task<UnityWebRequest> GetAsync(string url, string token = null)
+        public static async Task<UnityWebRequest> GetAsync(string url,string token = null,
+            bool lockUserInput = true)
         {
             try
             {
                 var request = UnityWebRequest.Get(url);
-                UIManager.AddUserInputLocker(new UserInputLocker(request));
+                if (lockUserInput)
+                {
+                    UIManager.AddUserInputLocker(new UserInputLocker(request));
+                }
 
                 if (token != null)
                 {
@@ -55,12 +59,16 @@ namespace Overlewd
             }
         }
 
-        public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, string token = null)
+        public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form,
+            string token = null, bool lockUserInput = true)
         {
             try
             {
                 var request = UnityWebRequest.Post(url, form);
-                UIManager.AddUserInputLocker(new UserInputLocker(request));
+                if (lockUserInput)
+                {
+                    UIManager.AddUserInputLocker(new UserInputLocker(request));
+                }
 
                 if (token != null)
                 {
@@ -83,12 +91,16 @@ namespace Overlewd
             }
         }
 
-        public static async Task<UnityWebRequest> DeleteAsync(string url, string token = null)
+        public static async Task<UnityWebRequest> DeleteAsync(string url, string token = null,
+            bool lockUserInput = true)
         {
             try
             {
                 var request = UnityWebRequest.Delete(url);
-                UIManager.AddUserInputLocker(new UserInputLocker(request));
+                if (lockUserInput)
+                {
+                    UIManager.AddUserInputLocker(new UserInputLocker(request));
+                }
 
                 if (token != null)
                 {
