@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -17,7 +18,7 @@ namespace Overlewd
 
             private Image freeFinalReward;
             private Image premiumFinalReward;
-            private TextMeshProUGUI points;
+            private TextMeshProUGUI titleFinalReward;
 
             private Transform content;
             private Image progressBar;
@@ -31,7 +32,8 @@ namespace Overlewd
                 
                 freeFinalReward = finalRewards.Find("FreeReward").GetComponent<Image>();
                 premiumFinalReward = finalRewards.Find("PremiumReward").GetComponent<Image>();
-                points = finalRewards.GetComponent<TextMeshProUGUI>();
+                titleFinalReward = finalRewards.Find("Title").GetComponent<TextMeshProUGUI>();
+
                 content = canvas.Find("ScrollView").Find("Viewport").Find("Content");
                 progressBar = content.Find("ProgressBar").GetComponent<Image>();
             }
@@ -44,12 +46,17 @@ namespace Overlewd
             private void Customize()
             {
                 var data = passData;
-                foreach (var level in data.levels)
+                foreach (var level in data.levels.GetRange(0, data.levels.Count - 1))
                 {
                     var newLevel = BattlePassLevel.GetInstance(content);
                     newLevel.battlePassId = data.id;
                     newLevel.levelData = level;
                 }
+
+                var finalLevel = data.levels.Last();
+                freeFinalReward.sprite = ResourceManager.LoadSprite(finalLevel?.defaultReward?.First()?.icon);
+                premiumFinalReward.sprite = ResourceManager.LoadSprite(finalLevel?.premiumReward?.First()?.icon);
+                titleFinalReward.text = $"Reach {finalLevel?.pointsThreshold} points to get final reward!";
             }
 
             public void SetCanvasActive(bool value)
