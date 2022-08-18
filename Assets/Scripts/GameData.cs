@@ -214,6 +214,18 @@ namespace Overlewd
             });
         }
 
+        public async Task MagicGuildSkillLvlUpCrystal(string skillType)
+        {
+            await AdminBRO.magicGuildSkillLvlUpCrystalAsync(skillType);
+            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.MagicGuildSpellLvlUp
+            });
+        }
+
         //Forge
         public async Task ForgeMergeEquipment(string mergeType, int[] mergeIds)
         {

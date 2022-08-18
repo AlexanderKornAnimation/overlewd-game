@@ -1566,6 +1566,16 @@ namespace Overlewd
             }
         }
 
+        public static async Task magicGuildSkillLvlUpCrystalAsync(string skillType)
+        {
+            var url = $"https://overlewd-api.herokuapp.com/magicguild/{skillType}/levelup-crystals";
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         [Serializable]
         public class MagicGuildSkill
         {
