@@ -22,16 +22,16 @@ namespace Overlewd
             {
                 base.Awake();
                 
-                buyOneButton = content.Find("BuyOneButton").GetComponent<Button>();
+                buyOneButton = canvas.Find("BuyOneButton").GetComponent<Button>();
                 buyOneButton.onClick.AddListener(BuyOneButtonClick);
                     priceForOne = buyOneButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
                 
-                buyFiveButton = content.Find("BuyTenButton").GetComponent<Button>();
+                buyFiveButton = canvas.Find("BuyTenButton").GetComponent<Button>();
                 buyFiveButton.onClick.AddListener(BuyTenButtonClick);
                 priceForFive = buyFiveButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
                 discount = buyFiveButton.transform.Find("DiscountIcon").Find("Discount").GetComponent<TextMeshProUGUI>();
-                item = content.Find("Item").GetComponent<Image>();
+                item = canvas.Find("Item").GetComponent<Image>();
 
             }
 
@@ -69,7 +69,7 @@ namespace Overlewd
             public static ContentByCount GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<ContentByCount>
-                    ("Prefabs/UI/Screens/PortalScreen/TabByCount", parent);
+                    ("Prefabs/UI/Screens/PortalScreen/ContentByCount", parent);
             }
         }
     }

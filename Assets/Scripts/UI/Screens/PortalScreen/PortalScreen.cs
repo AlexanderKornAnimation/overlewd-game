@@ -131,7 +131,8 @@ namespace Overlewd
                 }
                 
                 if (offerButton != null)
-                { 
+                {
+                    offerButton.Initialize();
                     offerButton.gachaId = gacha.id;
                     offerButton.contentPos = transform;
                     offerButton.selectOffer += SelectOffer;
@@ -198,6 +199,7 @@ namespace Overlewd
         {
             activeTabId = buttonId;
             pressedTabs[buttonId].SetActive(true);
+            contents[buttonId].gameObject.SetActive(true);
 
             switch (buttonId)
             {
@@ -227,6 +229,7 @@ namespace Overlewd
         private void LeaveTab(int buttonId)
         {
             pressedTabs[buttonId].SetActive(false);
+            contents[buttonId].gameObject.SetActive(false);
             CloseTab(buttonId);
         }
         

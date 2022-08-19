@@ -11,14 +11,12 @@ namespace Overlewd
     {
         public abstract class BaseContent : MonoBehaviour
         {
-            protected Button button;
-            protected Image background;
             protected Image contentBackground;
             protected TextMeshProUGUI title;
             protected TextMeshProUGUI markers;
             protected TextMeshProUGUI discount;
             
-            protected Transform content;
+            protected Transform canvas;
             protected RectTransform rect;
             
             public int gachaId { get; set; }
@@ -27,10 +25,7 @@ namespace Overlewd
 
             protected virtual void Awake()
             {
-                var canvas = transform.Find("Canvas");
-                
-                content = canvas.Find("Content");
-                background = button.GetComponent<Image>();
+                canvas = transform.Find("Canvas");
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
             }
         }
