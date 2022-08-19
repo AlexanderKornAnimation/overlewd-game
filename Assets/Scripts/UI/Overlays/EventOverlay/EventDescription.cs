@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -14,12 +15,14 @@ namespace Overlewd
                 GameData.events.GetEventById(eventId);
 
             private TextMeshProUGUI text;
+            private Image girlPic;
 
             void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
                 text = canvas.Find("Text").GetComponent<TextMeshProUGUI>();
+                girlPic = canvas.Find("Girl").GetComponent<Image>();
             }
 
             void Start()
@@ -31,6 +34,7 @@ namespace Overlewd
             {
                 var _eventData = eventData;
                 text.text = _eventData.description;
+                //girlPic.sprite = ResourceManager.LoadSprite(_eventData?.narratorMatriarch?.icon);
             }
 
             public static EventDescription GetInstance(Transform parent)

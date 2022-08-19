@@ -63,6 +63,29 @@ namespace Overlewd
             public int version;
         }
 
+        //log
+        public static async void logAsync(LogData data)
+        {
+            var url = "https://overlewd-api.herokuapp.com/log";
+            var postData = new WWWForm();
+            postData.AddField("platform", data.platform);
+            postData.AddField("condition", data.condition);
+            postData.AddField("stackTrace", data.stackTrace);
+            postData.AddField("type", data.type);
+            using (var request = await HttpCore.PostAsync(url, postData, tokens?.accessToken, false))
+            {
+
+            }
+        }
+
+        public class LogData
+        {
+            public string platform;
+            public string condition;
+            public string stackTrace;
+            public string type;
+        }
+
         // auth/login; auth/refresh
         public static async Task<Tokens> authLoginAsync()
         {
@@ -1764,7 +1787,7 @@ namespace Overlewd
                 public string title;
             }
 
-            public const string TabType_Matriachs = "matriachs";
+            public const string TabType_Matriachs = "matriarchs";
             public const string TabType_CharactersEquipment = "battle_characters_equipment";
             public const string TabType_OverlordEquipment = "overlord_equipment";
             public const string TabType_Shards = "shards";

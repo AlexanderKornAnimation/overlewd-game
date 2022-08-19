@@ -69,8 +69,8 @@ namespace Overlewd
 
             public virtual void Select()
             {
-               selectedButton.SetActive(true);
-               content.gameObject.SetActive(true);
+                selectedButton.SetActive(true);
+                content.gameObject.SetActive(true);
             }
 
             public virtual void Deselect()
