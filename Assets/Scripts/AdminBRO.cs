@@ -51,7 +51,7 @@ namespace Overlewd
         // /version
         public static async Task<ApiVersion> versionAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/version"))
+            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/version"))
             {
                 return JsonHelper.DeserializeObject<ApiVersion>(request?.downloadHandler.text);
             }
@@ -66,7 +66,7 @@ namespace Overlewd
         //log
         public static async void logAsync(LogData data)
         {
-            var url = "https://overlewd-api.herokuapp.com/log";
+            var url = "http://api.overlewd.com/log";
             var postData = new WWWForm();
             postData.AddField("platform", data.platform);
             postData.AddField("condition", data.condition);
@@ -91,7 +91,7 @@ namespace Overlewd
         {
             var postData = new WWWForm();
             postData.AddField("deviceId", GetDeviceId());
-            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/auth/login", postData))
+            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/auth/login", postData))
             {
                 tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
                 return tokens;
@@ -101,7 +101,7 @@ namespace Overlewd
         public static async Task<Tokens> authRefreshAsync()
         {
             var postData = new WWWForm();
-            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/auth/refresh", postData))
+            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/auth/refresh", postData))
             {
                 tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
                 return tokens;
@@ -124,7 +124,7 @@ namespace Overlewd
         // /me/special-for-vova/{characterId}
         public static async Task<PlayerInfo> meAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/me", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/me", tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
             }
@@ -135,7 +135,7 @@ namespace Overlewd
             var form = new WWWForm();
             form.AddField("name", name);
             form.AddField("currentVersion", HttpCore.ApiVersion);
-            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me", form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me", form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
             }
@@ -143,7 +143,7 @@ namespace Overlewd
 
         public static async Task addCharacter(int chId, int level)
         {
-            var url = $"https://overlewd-api.herokuapp.com/me/special-for-vova/{chId}";
+            var url = $"http://api.overlewd.com/me/special-for-vova/{chId}";
             var form = new WWWForm();
             form.AddField("level", level);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
@@ -176,7 +176,7 @@ namespace Overlewd
 
         public static async Task initAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/me/init";
+            var url = "http://api.overlewd.com/me/init";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -187,7 +187,7 @@ namespace Overlewd
 
         public static async Task resetAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/me/reset";
+            var url = "http://api.overlewd.com/me/reset";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -200,7 +200,7 @@ namespace Overlewd
             var form = new WWWForm();
             form.AddField("currencyId", currencyId);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync("https://overlewd-api.herokuapp.com/me/currency", form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me/currency", form, tokens?.accessToken))
             {
                 
             }
@@ -209,7 +209,7 @@ namespace Overlewd
         // /markets
         public static async Task<List<EventMarketItem>> eventMarketsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/markets";
+            var url = "http://api.overlewd.com/markets";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<EventMarketItem>>(request?.downloadHandler.text);
@@ -254,7 +254,7 @@ namespace Overlewd
         // /currencies
         public static async Task<List<CurrencyItem>> currenciesAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/currencies", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/currencies", tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<CurrencyItem>>(request?.downloadHandler.text);
             }
@@ -301,7 +301,7 @@ namespace Overlewd
         // /tradable
         public static async Task<List<TradableItem>> tradablesAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/tradable";
+            var url = "http://api.overlewd.com/tradable";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<TradableItem>>(request?.downloadHandler.text);
@@ -356,7 +356,7 @@ namespace Overlewd
         public static async Task<TradableBuyStatus> tradableBuyAsync(int marketId, int tradableId)
         {
             var form = new WWWForm();
-            var url = $"https://overlewd-api.herokuapp.com/markets/{marketId}/tradable/{tradableId}/buy";
+            var url = $"http://api.overlewd.com/markets/{marketId}/tradable/{tradableId}/buy";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
@@ -374,11 +374,11 @@ namespace Overlewd
         {
             var url = Application.platform switch
             {
-                RuntimePlatform.Android => "https://overlewd-api.herokuapp.com/resources?platform=android",
-                RuntimePlatform.WindowsEditor => "https://overlewd-api.herokuapp.com/resources?platform=windows",
-                RuntimePlatform.WindowsPlayer => "https://overlewd-api.herokuapp.com/resources?platform=windows",
-                RuntimePlatform.WebGLPlayer => "https://overlewd-api.herokuapp.com/resources?platform=webgl",
-                _ => "https://overlewd-api.herokuapp.com/resources"
+                RuntimePlatform.Android => "http://api.overlewd.com/resources?platform=android",
+                RuntimePlatform.WindowsEditor => "http://api.overlewd.com/resources?platform=windows",
+                RuntimePlatform.WindowsPlayer => "http://api.overlewd.com/resources?platform=windows",
+                RuntimePlatform.WebGLPlayer => "http://api.overlewd.com/resources?platform=webgl",
+                _ => "http://api.overlewd.com/resources"
             };
 
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
@@ -408,7 +408,7 @@ namespace Overlewd
         // /event-chapters
         public static async Task<List<EventChapter>> eventChaptersAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/event-chapters", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/event-chapters", tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<EventChapter>>(request?.downloadHandler.text);
             }
@@ -465,7 +465,7 @@ namespace Overlewd
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
-            using (var request = await HttpCore.GetAsync("https://overlewd-api.herokuapp.com/events", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/events", tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<EventItem>>(request?.downloadHandler.text);
             }
@@ -552,7 +552,7 @@ namespace Overlewd
         // /event-stages
         public static async Task<List<EventStageItem>> eventStagesAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/event-stages";
+            var url = "http://api.overlewd.com/event-stages";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<EventStageItem>>(request?.downloadHandler.text);
@@ -562,7 +562,7 @@ namespace Overlewd
         // /event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/start";
+            var url = $"http://api.overlewd.com/event-stages/{eventStageId}/start";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -573,7 +573,7 @@ namespace Overlewd
         // /event-stages/{id}/end
         public static async Task<EventStageItem> eventStageEndAsync(int eventStageId, EventStageEndData data = null)
         {
-            var url = $"https://overlewd-api.herokuapp.com/event-stages/{eventStageId}/end";
+            var url = $"http://api.overlewd.com/event-stages/{eventStageId}/end";
             var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -644,7 +644,7 @@ namespace Overlewd
         // /quests
         public static async Task<List<QuestItem>> questsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/quests";
+            var url = "http://api.overlewd.com/quests";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<QuestItem>>(request?.downloadHandler.text);
@@ -688,7 +688,7 @@ namespace Overlewd
         // //quests/{id}/claim-reward
         public static async Task<QuestClaimReward> questClaimRewardAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/quests/{id}/claim-reward";
+            var url = $"http://api.overlewd.com/quests/{id}/claim-reward";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -713,7 +713,7 @@ namespace Overlewd
         // /i18n
         public static async Task<List<LocalizationItem>> localizationAsync(string locale)
         {
-            var url = String.Format("https://overlewd-api.herokuapp.com/i18n?locale={0}", locale);
+            var url = String.Format("http://api.overlewd.com/i18n?locale={0}", locale);
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<LocalizationItem>>(request?.downloadHandler.text);
@@ -736,7 +736,7 @@ namespace Overlewd
         // /dialogs
         public static async Task<List<Dialog>> dialogsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/dialogs";
+            var url = "http://api.overlewd.com/dialogs";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Dialog>>(request?.downloadHandler.text);
@@ -807,7 +807,7 @@ namespace Overlewd
         // /battles
         public static async Task<List<Battle>> battlesAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles";
+            var url = "http://api.overlewd.com/battles";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Battle>>(request?.downloadHandler.text);
@@ -850,7 +850,7 @@ namespace Overlewd
         // /battles/pass
         public static async Task<List<Character>> charactersAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/my/characters";
+            var url = "http://api.overlewd.com/battles/my/characters";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
@@ -859,7 +859,7 @@ namespace Overlewd
 
         public static async Task characterToSlotAsync(int characterId, string slotId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}";
+            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}";
             var form = new WWWForm();
             form.AddField("teamPosition", slotId);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
@@ -870,7 +870,7 @@ namespace Overlewd
 
         public static async Task characterLvlupAsync(int characterId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/levelup";
+            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/levelup";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -880,7 +880,7 @@ namespace Overlewd
 
         public static async Task chracterSkillLvlUp(int characterId, int skillId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
+            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -890,7 +890,7 @@ namespace Overlewd
 
         public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
+            var url = $"http://api.overlewd.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -900,7 +900,7 @@ namespace Overlewd
 
         public static async Task<List<SkillEffect>> skillEffectsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/skills/effects";
+            var url = "http://api.overlewd.com/battles/skills/effects";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<SkillEffect>>(request?.downloadHandler.text);
@@ -909,7 +909,7 @@ namespace Overlewd
 
         public static async Task<List<BattlePass>> battlePassesAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/pass";
+            var url = "http://api.overlewd.com/battles/pass";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<BattlePass>>(request?.downloadHandler.text);
@@ -1086,7 +1086,7 @@ namespace Overlewd
         // /battles/my/characters/{id}/equip/{id} - delete
         public static async Task<List<Equipment>> equipmentAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/battles/my/characters/equipment";
+            var url = "http://api.overlewd.com/battles/my/characters/equipment";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
@@ -1095,7 +1095,7 @@ namespace Overlewd
 
         public static async Task equipAsync(int characterId, int equipmentId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
+            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/equip/{equipmentId}";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1105,7 +1105,7 @@ namespace Overlewd
 
         public static async Task unequipAsync(int characterId, int equipmentId)
         {
-            var url = $"https://overlewd-api.herokuapp.com/battles/my/characters/{characterId}/equip/{equipmentId}";
+            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/equip/{equipmentId}";
             using (var request = await HttpCore.DeleteAsync(url, tokens?.accessToken))
             {
 
@@ -1147,7 +1147,7 @@ namespace Overlewd
         //ftue
         public static async Task<FTUEInfo> ftueAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/ftue";
+            var url = "http://api.overlewd.com/ftue";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<FTUEInfo>(request?.downloadHandler.text);
@@ -1262,7 +1262,7 @@ namespace Overlewd
         // ftue/stats
         public static async Task<FTUEStats> ftueStatsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/ftue/stats";
+            var url = "http://api.overlewd.com/ftue/stats";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<FTUEStats>(request?.downloadHandler.text);
@@ -1302,7 +1302,7 @@ namespace Overlewd
         // /ftue-stages
         public static async Task<List<FTUEStageItem>> ftueStagesAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/ftue-stages";
+            var url = "http://api.overlewd.com/ftue-stages";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<FTUEStageItem>>(request?.downloadHandler.text);
@@ -1369,7 +1369,7 @@ namespace Overlewd
         public static async Task ftueStageStartAsync(int stageId)
         {
             var form = new WWWForm();
-            var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/start";
+            var url = $"http://api.overlewd.com/ftue-stages/{stageId}/start";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
@@ -1379,7 +1379,7 @@ namespace Overlewd
         // /ftue-stages/{id}/end
         public static async Task ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
         {
-            var url = $"https://overlewd-api.herokuapp.com/ftue-stages/{stageId}/end";
+            var url = $"http://api.overlewd.com/ftue-stages/{stageId}/end";
             var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1406,7 +1406,7 @@ namespace Overlewd
         //animations
         public static async Task<List<Animation>> animationsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/animations";
+            var url = "http://api.overlewd.com/animations";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
@@ -1431,7 +1431,7 @@ namespace Overlewd
         //sounds
         public static async Task<List<Sound>> soundsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/sounds";
+            var url = "http://api.overlewd.com/sounds";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Sound>>(request?.downloadHandler.text);
@@ -1452,7 +1452,7 @@ namespace Overlewd
         // /buildings/{id}/build-crystals
         public static async Task<List<Building>> buildingsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/buildings";
+            var url = "http://api.overlewd.com/buildings";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<Building>>(request?.downloadHandler.text);
@@ -1461,7 +1461,7 @@ namespace Overlewd
 
         public static async Task buildingBuildAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build";
+            var url = $"http://api.overlewd.com/buildings/{id}/build";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1471,7 +1471,7 @@ namespace Overlewd
 
         public static async Task buildingBuildCrystalsAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/buildings/{id}/build-crystals";
+            var url = $"http://api.overlewd.com/buildings/{id}/build-crystals";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1545,7 +1545,7 @@ namespace Overlewd
         // /municipality/collect
         public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/municipality/time-left";
+            var url = "http://api.overlewd.com/municipality/time-left";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<MunicipalityTimeLeft>(request?.downloadHandler.text);
@@ -1554,7 +1554,7 @@ namespace Overlewd
 
         public static async Task municipalityCollectAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/municipality/collect";
+            var url = $"http://api.overlewd.com/municipality/collect";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1572,7 +1572,7 @@ namespace Overlewd
         // /magicguild/{skillType}/levelup
         public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/magicguild/skills";
+            var url = $"http://api.overlewd.com/magicguild/skills";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<MagicGuildSkill>>(request?.downloadHandler.text);
@@ -1581,7 +1581,7 @@ namespace Overlewd
 
         public static async Task magicGuildSkillLvlUpAsync(string skillType)
         {
-            var url = $"https://overlewd-api.herokuapp.com/magicguild/{skillType}/levelup";
+            var url = $"http://api.overlewd.com/magicguild/{skillType}/levelup";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1591,7 +1591,7 @@ namespace Overlewd
 
         public static async Task magicGuildSkillLvlUpCrystalAsync(string skillType)
         {
-            var url = $"https://overlewd-api.herokuapp.com/magicguild/{skillType}/levelup-crystals";
+            var url = $"http://api.overlewd.com/magicguild/{skillType}/levelup-crystals";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
@@ -1645,7 +1645,7 @@ namespace Overlewd
         // /forge/merge
         public static async Task<ForgePrice> forgePrices()
         {
-            var url = "https://overlewd-api.herokuapp.com/forge/price";
+            var url = "http://api.overlewd.com/forge/price";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<ForgePrice>(request?.downloadHandler.text);
@@ -1654,7 +1654,7 @@ namespace Overlewd
 
         public static async Task forgeMergeEquipment(string mergeType, int[] mergeIds)
         {
-            var url = "https://overlewd-api.herokuapp.com/forge/merge/equipment";
+            var url = "http://api.overlewd.com/forge/merge/equipment";
             var form = new WWWForm();
             form.AddField("mergeType", mergeType);
             foreach (var id in mergeIds)
@@ -1669,7 +1669,7 @@ namespace Overlewd
 
         public static async Task forgeMergeShard(int matriarchId, string rarity)
         {
-            var url = "https://overlewd-api.herokuapp.com/forge/merge/shard";
+            var url = "http://api.overlewd.com/forge/merge/shard";
             var form = new WWWForm();
             form.AddField("matriarchId", matriarchId);
             form.AddField("rarity", rarity);
@@ -1681,7 +1681,7 @@ namespace Overlewd
 
         public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
         {
-            var url = "https://overlewd-api.herokuapp.com/forge/exchange/shard";
+            var url = "http://api.overlewd.com/forge/exchange/shard";
             var form = new WWWForm();
             form.AddField("matriarchSourceId", matriarchSourceId);
             form.AddField("matriarchTargetId", matriarchTargetId);
@@ -1728,7 +1728,7 @@ namespace Overlewd
         // gacha
         public static async Task<List<GachaItem>> gachaAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/gacha";
+            var url = "http://api.overlewd.com/gacha";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<GachaItem>>(request?.downloadHandler.text);
@@ -1737,7 +1737,7 @@ namespace Overlewd
 
         public static async Task gachaBuyAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/gacha/{id}/buy";
+            var url = $"http://api.overlewd.com/gacha/{id}/buy";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
 
@@ -1746,7 +1746,7 @@ namespace Overlewd
 
         public static async Task gachaBuyTenAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/gacha/{id}/buy-ten";
+            var url = $"http://api.overlewd.com/gacha/{id}/buy-ten";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
 
@@ -1803,7 +1803,7 @@ namespace Overlewd
 
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/matriarchs";
+            var url = $"http://api.overlewd.com/matriarchs";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<MatriarchItem>>(request?.downloadHandler.text);
@@ -1812,7 +1812,7 @@ namespace Overlewd
 
         public static async Task<List<MemoryItem>> memoriesAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/matriarchs/memories";
+            var url = $"http://api.overlewd.com/matriarchs/memories";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<MemoryItem>>(request?.downloadHandler.text);
@@ -1821,7 +1821,7 @@ namespace Overlewd
 
         public static async Task memoryBuyAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/matriarchs/memories/{id}/buy";
+            var url = $"http://api.overlewd.com/matriarchs/memories/{id}/buy";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
             
@@ -1830,7 +1830,7 @@ namespace Overlewd
 
         public static async Task seduceMatriarchAsync(int id)
         {
-            var url = $"https://overlewd-api.herokuapp.com/matriarchs/{id}/seduce";
+            var url = $"http://api.overlewd.com/matriarchs/{id}/seduce";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
