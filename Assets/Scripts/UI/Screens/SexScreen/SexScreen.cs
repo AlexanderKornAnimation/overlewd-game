@@ -83,7 +83,9 @@ namespace Overlewd
         {
             if (dialogData == null)
                 return;
-            
+
+            SoundManager.StopBGMusic();
+
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();

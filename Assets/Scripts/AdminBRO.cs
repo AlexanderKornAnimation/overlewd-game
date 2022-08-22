@@ -345,6 +345,7 @@ namespace Overlewd
             public int currentCount;
             public bool soldOut;
             public int? matriarchShardId;
+            public string rarity;
 
             [JsonProperty(Required = Required.Default)]
             public const string Type_Currency = "currency";
@@ -1771,15 +1772,13 @@ namespace Overlewd
             public string tabBackgroundImage;
             public string tabType;
             public List<PriceItem> priceForOne;
-            public List<PriceItem> priceForTen;
+            public List<PriceItem> priceForMany;
             public int? discount;
             public int? limitOfCycles;
             public List<PoolItem> pool;
             public List<PoolItem> targetPool;
             public string type;
             public List<TierItem> tiers;
-            public string dateStart;
-            public string dateEnd;
             public int? eventId;
             public int count;
 
@@ -1792,6 +1791,8 @@ namespace Overlewd
             public class TierItem
             {
                 public string title;
+                public string targetRarity;
+                public int probability;
             }
 
             public const string TabType_Matriachs = "matriarchs";

@@ -644,10 +644,9 @@ namespace Overlewd
                     battleID == battleScene.GetBattleData().ftueStageKey)
                 {
 #if UNITY_EDITOR
-                    Debug.Log($"{chapterID} {battleID} {notifID}");
-#else
-                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
+                    //Debug.Log($"{chapterID} {battleID} {notifID}");
 #endif
+                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
                 }
         }
         public bool CheckBattleGameData(string chapterID, string battleID)
