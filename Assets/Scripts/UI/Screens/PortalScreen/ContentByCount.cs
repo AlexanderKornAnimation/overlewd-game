@@ -10,10 +10,10 @@ namespace Overlewd
     {
         public class ContentByCount: BaseContent
         {
-            private Button buyOneButton;
+            private Button summonOneButton;
             private TextMeshProUGUI priceForOne;
             
-            private Button buyFiveButton;
+            private Button summonFiveButton;
             private TextMeshProUGUI priceForFive;
             
             private Image item;
@@ -22,15 +22,15 @@ namespace Overlewd
             {
                 base.Awake();
                 
-                buyOneButton = canvas.Find("BuyOneButton").GetComponent<Button>();
-                buyOneButton.onClick.AddListener(BuyOneButtonClick);
-                    priceForOne = buyOneButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+                summonOneButton = canvas.Find("SummonOneButton").GetComponent<Button>();
+                summonOneButton.onClick.AddListener(SummonOneButtonClick);
+                priceForOne = summonOneButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 
-                buyFiveButton = canvas.Find("BuyTenButton").GetComponent<Button>();
-                buyFiveButton.onClick.AddListener(BuyTenButtonClick);
-                priceForFive = buyFiveButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+                summonFiveButton = canvas.Find("SummonFiveButton").GetComponent<Button>();
+                summonFiveButton.onClick.AddListener(SummonTenButtonClick);
+                priceForFive = summonFiveButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
-                discount = buyFiveButton.transform.Find("DiscountIcon").Find("Discount").GetComponent<TextMeshProUGUI>();
+                discount = summonFiveButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
                 item = canvas.Find("Item").GetComponent<Image>();
 
             }
@@ -45,7 +45,7 @@ namespace Overlewd
 
             }
 
-            private void BuyOneButtonClick()
+            private void SummonOneButtonClick()
             {
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
@@ -55,7 +55,7 @@ namespace Overlewd
                     }).RunShowScreenProcess();
             }
             
-            private void BuyTenButtonClick()
+            private void SummonTenButtonClick()
             {
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData

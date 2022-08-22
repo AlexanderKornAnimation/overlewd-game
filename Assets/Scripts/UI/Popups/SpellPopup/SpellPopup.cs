@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace Overlewd
         private TextMeshProUGUI description;
 
         private Button crystalBuildButton;
+        private TextMeshProUGUI crystalBuildButtonText;
+        
         private Button buildButton;
         private Button closeButton;
 
@@ -38,6 +41,7 @@ namespace Overlewd
 
             crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
             crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
+            crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             
             buildButton = canvas.Find("BuildButton").GetComponent<Button>();
             buildButton.onClick.AddListener(BuildButtonClick);
@@ -65,15 +69,22 @@ namespace Overlewd
         private void Customize()
         {
             var spellData = inputData?.spellData;
-            spellName.text = spellData?.current.name;
-            description.text = spellData?.current.description;
-            for (int i = 0; i < spellData?.current.levelUpPrice.Count; i++)
+            if (spellData != null)
             {
-                resources[i].gameObject.SetActive(true);
-                var currency = GameData.currencies.GetById(spellData?.current.levelUpPrice[i].currencyId);
-                resources[i].sprite = ResourceManager.LoadSprite(currency.iconUrl);
-                count[i].text = spellData.current.levelUpPrice[i].amount.ToString();
-                count[i].color = spellData.canlvlUp ? Color.white : Color.red;
+                spellName.text = spellData.current.name;
+                description.text = spellData.current.description;
+                for (int i = 0; i < spellData.current.levelUpPrice.Count; i++)
+                {
+                    resources[i].gameObject.SetActive(true);
+                    var currency = GameData.currencies.GetById(spellData?.current.levelUpPrice[i].currencyId);
+                    resources[i].sprite = ResourceManager.LoadSprite(currency.iconUrl);
+                    count[i].text = spellData.current.levelUpPrice[i].amount.ToString();
+                    count[i].color = spellData.canlvlUp ? Color.white : Color.red;
+                }
+
+                var crystalPrice = spellData.priceCrystal?.FirstOrDefault()?.amount;
+                var color = spellData.canCrystallvlUp ? "white" : "red";
+                crystalBuildButtonText.text = $"Summon building\nfor <color={color}>{crystalPrice}</color> crystals";
             }
             
             FireballSpell.GetInstance(spawnPoint);
@@ -85,10 +96,10 @@ namespace Overlewd
             var spellData = inputData?.spellData;
             if (spellData != null)
             {
-                if (spellData.canlvlUp)
+                if (spellData.canCrystallvlUp)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-                    await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                    await GameData.buildings.MagicGuildSkillLvlUpCrystal(spellData.type);
                 }
                 else
                 {

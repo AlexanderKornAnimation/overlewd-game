@@ -65,7 +65,7 @@ namespace Overlewd
                     AdminBRO.GachaItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
                     _ => null
                 };
-
+                
                 if (content != null)
                 {
                     content.gachaId = gachaId;
