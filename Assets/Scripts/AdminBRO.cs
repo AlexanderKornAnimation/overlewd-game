@@ -48,6 +48,14 @@ namespace Overlewd
             public Vector2 pos => new Vector2(mapCX, -mapCY);
         }
 
+        public class Rarity
+        {
+            public const string Basic = "basic";
+            public const string Advanced = "advanced";
+            public const string Epic = "epic";
+            public const string Heroic = "heroic";
+        }
+
         // /version
         public static async Task<ApiVersion> versionAsync()
         {
@@ -980,24 +988,17 @@ namespace Overlewd
                     _ => ""
                 };
             
-                
-           
-            public const string Rarity_Basic = "basic";
-            public const string Rarity_Advanced = "advanced";
-            public const string Rarity_Epic = "epic";
-            public const string Rarity_Heroic = "heroic";
-
             [JsonProperty(Required = Required.Default)]
-            public bool isBasic => rarity == Rarity_Basic;
+            public bool isBasic => rarity == Rarity.Basic;
             
             [JsonProperty(Required = Required.Default)]
-            public bool isAdvanced => rarity == Rarity_Advanced;
+            public bool isAdvanced => rarity == Rarity.Advanced;
             
             [JsonProperty(Required = Required.Default)]
-            public bool isEpic => rarity == Rarity_Epic;
+            public bool isEpic => rarity == Rarity.Epic;
             
             [JsonProperty(Required = Required.Default)]
-            public bool isHeroic => rarity == Rarity_Heroic;
+            public bool isHeroic => rarity == Rarity.Heroic;
             
             [JsonProperty(Required = Required.Default)]
             public bool canLvlUp => !isLvlMax && GameData.player.CanBuy(levelUpPrice);
@@ -1014,10 +1015,10 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public int maxLvl => rarity switch
             {
-                Rarity_Basic => 10,
-                Rarity_Advanced => 20,
-                Rarity_Epic => 30,
-                Rarity_Heroic => 40,
+                Rarity.Basic => 10,
+                Rarity.Advanced => 20,
+                Rarity.Epic => 30,
+                Rarity.Heroic => 40,
                 _ => 10
             };
 
@@ -1867,24 +1868,19 @@ namespace Overlewd
             {
                 public string rarity;
                 public int amount;
-                
-                public const string Rariry_White = "white";
-                public const string Rariry_Green = "green";
-                public const string Rariry_Purple = "purple";
-                public const string Rariry_Gold = "gold";
             }
 
             [JsonProperty(Required = Required.Default)]
-            public Shard whiteShard => shards?.Find(s => s.rarity == Shard.Rariry_White);
+            public Shard basicShard => shards?.Find(s => s.rarity == Rarity.Basic);
             
             [JsonProperty(Required = Required.Default)]
-            public Shard greenShard => shards?.Find(s => s.rarity == Shard.Rariry_Green);
+            public Shard advancedShard => shards?.Find(s => s.rarity == Rarity.Advanced);
             
             [JsonProperty(Required = Required.Default)]
-            public Shard purpleShard => shards?.Find(s => s.rarity == Shard.Rariry_Purple);
+            public Shard epicShard => shards?.Find(s => s.rarity == Rarity.Epic);
             
             [JsonProperty(Required = Required.Default)]
-            public Shard goldShard => shards?.Find(s => s.rarity == Shard.Rariry_Gold);
+            public Shard heroicShard => shards?.Find(s => s.rarity == Rarity.Heroic);
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
@@ -1945,28 +1941,23 @@ namespace Overlewd
             {
                 public int amount;
                 public string shardRarity;
-
-                public const string Rariry_White = "white";
-                public const string Rariry_Green = "green";
-                public const string Rariry_Purple = "purple";
-                public const string Rariry_Gold = "gold";
             }
 
             [JsonProperty(Required = Required.Default)]
-            public OpenShard whiteShard =>
-                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_White);
+            public OpenShard basicShard =>
+                shardsToOpen?.Find(r => r.shardRarity == Rarity.Basic);
             
             [JsonProperty(Required = Required.Default)]
-            public OpenShard greenShard =>
-                shardsToOpen.Find(r => r.shardRarity == OpenShard.Rariry_Green);
+            public OpenShard advancedShard =>
+                shardsToOpen.Find(r => r.shardRarity == Rarity.Advanced);
             
             [JsonProperty(Required = Required.Default)]
-            public OpenShard purpleShard =>
-                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_Purple);
+            public OpenShard epicShard =>
+                shardsToOpen?.Find(r => r.shardRarity == Rarity.Epic);
             
             [JsonProperty(Required = Required.Default)]
-            public OpenShard goldShard =>
-                shardsToOpen?.Find(r => r.shardRarity == OpenShard.Rariry_Gold);
+            public OpenShard heroicShard =>
+                shardsToOpen?.Find(r => r.shardRarity == Rarity.Heroic);
 
             
             public const string Status_Visible = "visible";

@@ -48,16 +48,16 @@ namespace Overlewd
             if (BattleBackgroundIco != null && backRarityIcons.Length != 0)
                 switch (rarity)
                 {
-                    case AdminBRO.Character.Rarity_Basic:
+                    case AdminBRO.Rarity.Basic:
                         BattleBackgroundIco.sprite = backRarityIcons[0];
                         break;
-                    case AdminBRO.Character.Rarity_Advanced:
+                    case AdminBRO.Rarity.Advanced:
                         BattleBackgroundIco.sprite = backRarityIcons[1];
                         break;
-                    case AdminBRO.Character.Rarity_Epic:
+                    case AdminBRO.Rarity.Epic:
                         BattleBackgroundIco.sprite = backRarityIcons[2];
                         break;
-                    case AdminBRO.Character.Rarity_Heroic:
+                    case AdminBRO.Rarity.Heroic:
                         BattleBackgroundIco.sprite = backRarityIcons[3];
                         break;
                     default:
