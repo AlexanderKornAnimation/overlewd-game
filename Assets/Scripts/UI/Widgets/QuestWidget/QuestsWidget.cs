@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -36,7 +37,7 @@ namespace Overlewd
         protected virtual void Customize()
         {
             var questNum = 0;
-            foreach (var questData in GameData.quests.quests)
+            foreach (var questData in GameData.quests.quests.Where(q => !q.eventId.HasValue))
             {
                 NSQuestWidget.BaseQuestButton questButton = (questNum % 2) switch
                 {
