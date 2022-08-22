@@ -1792,6 +1792,7 @@ namespace Overlewd
             {
                 public string title;
                 public string targetRarity;
+                public int? targetTradableId;
                 public int probability;
             }
 
