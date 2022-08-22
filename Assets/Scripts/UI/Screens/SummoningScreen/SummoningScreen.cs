@@ -9,14 +9,13 @@ namespace Overlewd
 {
     public class SummoningScreen : BaseFullScreenParent<SummoningScreenInData>
     {
-        private List<NSSummoningScreen.BaseShard> shards = new List<NSSummoningScreen.BaseShard>();
-
         private Button haremButton;
         private TextMeshProUGUI haremButtonText;
         private Button overlordButton;
         private Button portalButton;
         private TextMeshProUGUI portalButtonText;
         private Transform canvas;
+        private Transform shardsPos;
 
         private void Awake()
         {
@@ -33,18 +32,8 @@ namespace Overlewd
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
             portalButtonText = portalButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             portalButton.onClick.AddListener(PortalButtonClick);
-        }
 
-        private NSSummoningScreen.BaseShard GetShard(Transform pos)
-        {
-            return inputData.tabType switch
-            {
-                AdminBRO.GachaItem.TabType_CharactersEquipment => NSSummoningScreen.Equip.GetInsance(pos),
-                AdminBRO.GachaItem.TabType_OverlordEquipment => NSSummoningScreen.Equip.GetInsance(pos),
-                AdminBRO.GachaItem.TabType_Matriachs => NSSummoningScreen.BattleGirl.GetInsance(pos),
-                AdminBRO.GachaItem.TabType_Shards => NSSummoningScreen.Crystal.GetInstance(pos),
-                _ => null
-            };
+            shardsPos = canvas.Find("ShardsPos");
         }
 
         public override async Task AfterShowAsync()
@@ -53,45 +42,15 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
 
-                var itemsStartPos = canvas.Find("ItemStartPositions");
-                var itemsEndPos = canvas.Find("ItemEndPositions");
-
-                for (int i = 1; i <= 5; i++)
-                {
-                    var startPos = itemsStartPos.Find($"Item{i}");
-                    var endPos = itemsEndPos.Find($"Item{i}").position;
-
-                    var shard = GetShard(startPos);
-                    shard.endPos = endPos;
-                    shard.tabType = inputData.tabType;
-
-                    await shard.ShowAsync();
-                    shards.Add(shard);
-                }
-
-                await Task.Delay(1000);
-                foreach (var shard in shards)
-                {
-                    await shard.OpenAsync();
-                }
+                NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
             }
             else
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
 
-                var itemSingleStartPos = canvas.Find("ItemSingleStartPos");
-                var itemSingleEndPos = canvas.Find("ItemSingleEndPos").position;
-
-                var shard = GetShard(itemSingleStartPos);
-                shard.endPos = itemSingleEndPos;
-                shard.tabType = inputData.tabType;
-
-                await shard.ShowAsync();
-                await Task.Delay(1000);
-                await shard.OpenAsync();
-                shards.Add(shard);
+                NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
             }
-            
+
             await Task.CompletedTask;
         }
 

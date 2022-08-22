@@ -1791,7 +1791,7 @@ namespace Overlewd
             public class TierItem
             {
                 public string title;
-                public string targetRarity;
+                public string rarity;
                 public int? targetTradableId;
                 public int probability;
             }
