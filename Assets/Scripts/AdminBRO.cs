@@ -1987,5 +1987,40 @@ namespace Overlewd
             public bool isOpen => status == Status_Open;
 
         }
+
+        // /potions/prices
+        // /potions/{type}/buy
+        public static async Task<List<PotionInfo>> potionPricesAsync()
+        {
+            var url = $"http://api.overlewd.com/potions/prices";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<PotionInfo>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task potionBuy(string type, int count)
+        {
+            var url = $"http://api.overlewd.com/potions/{type}/buy";
+            var form = new WWWForm();
+            form.AddField("count", count);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+
+        [Serializable]
+        public class PotionInfo
+        {
+            public string type;
+            public List<PriceItem> price;
+
+            public const string Type_hp = "hp";
+            public const string Type_mana = "mana";
+            public const string Type_energy = "energy";
+        }
+        
     }
 }

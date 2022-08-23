@@ -22,7 +22,8 @@ namespace Overlewd
             CharacterMerge,
             MagicGuildSpellLvlUp,
             EquipmentEquipped,
-            EquipmentUnequipped
+            EquipmentUnequipped,
+            BuyPotions
         }
     }
 
@@ -45,6 +46,7 @@ namespace Overlewd
         public static Sounds sounds { get; } = new Sounds();
         public static Matriarchs matriarchs { get; } = new Matriarchs();
         public static BattlePass battlePass { get; } = new BattlePass();
+        public static Potions potions { get; } = new Potions();
     }
 
     public abstract class BaseGameMeta
@@ -505,7 +507,7 @@ namespace Overlewd
             var result  = await AdminBRO.tradableBuyAsync(tradableId.Value);
             await GameData.player.Get();
 
-            if (result.status = true)
+            if (result.status == true)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
@@ -782,5 +784,57 @@ namespace Overlewd
             passes.Find(p => p.eventId == eventId);
         public AdminBRO.BattlePass GetById(int id) =>
             passes.Find(p => p.id == id);
+    }
+
+    //potions
+    public class Potions : BaseGameMeta
+    {
+        public List<AdminBRO.PotionInfo> potions { get; private set; } = new List<AdminBRO.PotionInfo>();
+
+        public override async Task Get()
+        {
+            potions = await AdminBRO.potionPricesAsync();
+        }
+
+        public AdminBRO.PotionInfo GetHp() =>
+            potions.Find(p => p.type == AdminBRO.PotionInfo.Type_hp);
+        public AdminBRO.PotionInfo GetMana() =>
+            potions.Find(p => p.type == AdminBRO.PotionInfo.Type_mana);
+        public AdminBRO.PotionInfo GetEnergy() =>
+            potions.Find(p => p.type == AdminBRO.PotionInfo.Type_energy);
+
+        public async Task BuyHp(int count)
+        {
+            await AdminBRO.potionBuy(AdminBRO.PotionInfo.Type_hp, count);
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuyPotions
+                });
+        }
+        public async Task BuyMana(int count)
+        {
+            await AdminBRO.potionBuy(AdminBRO.PotionInfo.Type_mana, count);
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuyPotions
+                });
+        }
+        public async Task BuyEnergy(int count)
+        {
+            await AdminBRO.potionBuy(AdminBRO.PotionInfo.Type_energy, count);
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuyPotions
+                });
+        }
     }
 }

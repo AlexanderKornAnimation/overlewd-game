@@ -224,10 +224,11 @@ namespace Overlewd
                 GameData.equipment,
                 GameData.gacha,
                 GameData.matriarchs,
-                GameData.battlePass
+                GameData.battlePass,
+                GameData.potions
             };
 
-            foreach (var metaSplit in SplitGameMeta(gameMeta, 20))
+            foreach (var metaSplit in SplitGameMeta(gameMeta, 10))
             {
                 var metaTasks = new List<Task>();
                 foreach (var meta in metaSplit)
