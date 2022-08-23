@@ -1999,9 +1999,20 @@ namespace Overlewd
             }
         }
 
-        public static async Task potionBuy(string type, int count)
+        public static async Task potionBuyAsync(string type, int count)
         {
             var url = $"http://api.overlewd.com/potions/{type}/buy";
+            var form = new WWWForm();
+            form.AddField("count", count);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        public static async Task potionUseAsync(string type, int count)
+        {
+            var url = $"http://api.overlewd.com/potions/{type}/use";
             var form = new WWWForm();
             form.AddField("count", count);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))

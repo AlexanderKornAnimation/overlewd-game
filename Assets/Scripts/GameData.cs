@@ -23,7 +23,8 @@ namespace Overlewd
             MagicGuildSpellLvlUp,
             EquipmentEquipped,
             EquipmentUnequipped,
-            BuyPotions
+            BuyPotions,
+            UsePotions
         }
     }
 
@@ -803,9 +804,9 @@ namespace Overlewd
         public AdminBRO.PotionInfo GetEnergy() =>
             potions.Find(p => p.type == AdminBRO.PotionInfo.Type_energy);
 
-        public async Task BuyHp(int count)
+        private async Task Buy(string type, int count)
         {
-            await AdminBRO.potionBuy(AdminBRO.PotionInfo.Type_hp, count);
+            await AdminBRO.potionBuyAsync(type, count);
             await GameData.player.Get();
 
             UIManager.ThrowGameDataEvent(
@@ -813,28 +814,44 @@ namespace Overlewd
                 {
                     type = GameDataEvent.Type.BuyPotions
                 });
+        }
+
+        private async Task Use(string type, int count)
+        {
+            await AdminBRO.potionUseAsync(type, count);
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.UsePotions
+                });
+        }
+
+        public async Task BuyHp(int count)
+        {
+            await Buy(AdminBRO.PotionInfo.Type_hp, count);
         }
         public async Task BuyMana(int count)
         {
-            await AdminBRO.potionBuy(AdminBRO.PotionInfo.Type_mana, count);
-            await GameData.player.Get();
-
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuyPotions
-                });
+            await Buy(AdminBRO.PotionInfo.Type_mana, count);
         }
         public async Task BuyEnergy(int count)
         {
-            await AdminBRO.potionBuy(AdminBRO.PotionInfo.Type_energy, count);
-            await GameData.player.Get();
+            await Buy(AdminBRO.PotionInfo.Type_energy, count);
+        }
 
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuyPotions
-                });
+        public async Task UseHp(int count)
+        {
+            await Use(AdminBRO.PotionInfo.Type_hp, count);
+        }
+        public async Task UseMana(int count)
+        {
+            await Use(AdminBRO.PotionInfo.Type_mana, count);
+        }
+        public async Task UseEnergy(int count)
+        {
+            await Use(AdminBRO.PotionInfo.Type_energy, count);
         }
     }
 }
