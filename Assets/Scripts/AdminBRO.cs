@@ -349,8 +349,14 @@ namespace Overlewd
             public int? matriarchShardId;
             public string rarity;
 
-            [JsonProperty(Required = Required.Default)]
+            public const string Type_Default = "default";
             public const string Type_Currency = "currency";
+            public const string Type_Pack = "pack";
+            public const string Type_BattleCharacter = "battle-character";
+            public const string Type_BattleCharacterEquipment = "battle-character-equipment";
+            public const string Type_MatriarchShard = "matriarch_shard";
+            public const string Type_ManaPotion = "mana_potion";
+            public const string Type_HpPotion = "hp_potion";
             
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
