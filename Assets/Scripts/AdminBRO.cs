@@ -168,11 +168,13 @@ namespace Overlewd
             public string locale;
             public List<WalletItem> wallet;
             public Potion potion;
+            public int energyPoints;
 
             public class Potion
             {
                 public int hp;
                 public int mana;
+                public int energy;
             }
 
             public class WalletItem
@@ -362,10 +364,21 @@ namespace Overlewd
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
+        // /tradable/{tradableId}/buy
         public static async Task<TradableBuyStatus> tradableBuyAsync(int marketId, int tradableId)
         {
             var form = new WWWForm();
             var url = $"http://api.overlewd.com/markets/{marketId}/tradable/{tradableId}/buy";
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<TradableBuyStatus> tradableBuyAsync(int tradableId)
+        {
+            var form = new WWWForm();
+            var url = $"http://api.overlewd.com/tradable/{tradableId}/buy";
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
@@ -436,6 +449,7 @@ namespace Overlewd
             public List<int> stages;
             public int? order;
             public List<RewardItem> rewards;
+            public int? battleEnergyPointsCost;
 
             public class EventChapterReward
             {
@@ -1183,6 +1197,7 @@ namespace Overlewd
             public List<int> stages;
             public int? nextChapterId;
             public int? order;
+            public int? battleEnergyPointsCost;
 
             public FTUENotificationItem GetNotifByKey(string key)
             {

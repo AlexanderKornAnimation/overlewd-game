@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,41 +10,45 @@ namespace Overlewd
 {
     public class VictoryPopup : BasePopupParent<VictoryPopupInData>
     {
+        private Transform grid;
+
         private Button nextButton;
         private Button repeatButton;
-
-        private const int rewardsCount = 3;
-        private Image[] rewards = new Image[rewardsCount];
-
 
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/VictoryPopup/VictoryPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-            var grid = canvas.Find("Grid");
+            grid = canvas.Find("Grid");
 
             nextButton = canvas.Find("NextButton").GetComponent<Button>();
             nextButton.onClick.AddListener(NextButtonClick);
 
             repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
             repeatButton.onClick.AddListener(RepeatButtonClick);
-
-            for (int i = 0; i < rewards.Length; i++)
-            {
-                rewards[i] = grid.Find($"Reward{i + 1}").GetComponent<Image>();
-                rewards[i].gameObject.SetActive(false);
-            }
         }
 
         public override async Task BeforeShowMakeAsync()
         {
             var battleData = inputData?.ftueStageData?.battleData ?? inputData?.eventStageData?.battleData;
 
-            for (int i = 0; i < battleData?.rewards?.Count; i++)
+            int revId = 0;
+            foreach (Transform reward in grid)
             {
-                rewards[i].gameObject.SetActive(true);
-                rewards[i].sprite = ResourceManager.LoadSprite(battleData?.rewards[i].icon);
+                if (revId < battleData?.rewards?.Count)
+                {
+                    var icon = reward.GetComponent<Image>();
+                    var count = reward.Find("Count").GetComponent<TextMeshProUGUI>();
+                    icon.sprite = ResourceManager.LoadSprite(battleData?.rewards[revId].icon);
+                    count.text = battleData?.rewards[revId].amount?.ToString() ?? "_";
+                    reward.gameObject.SetActive(true);
+                }
+                else
+                {
+                    reward.gameObject.SetActive(false);
+                }
+                revId++;
             }
 
             switch (inputData.ftueStageData?.ftueState)
