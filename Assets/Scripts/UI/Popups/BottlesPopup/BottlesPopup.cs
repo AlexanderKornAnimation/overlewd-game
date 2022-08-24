@@ -73,7 +73,18 @@ namespace Overlewd
         private void CloseButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.HidePopup();
+            if (inputData.prevPopupInData.IsType<PrepareBattlePopupInData>())
+            {
+                UIManager.MakePopup<PrepareBattlePopup>().
+                    SetData(inputData.prevPopupInData.As<PrepareBattlePopupInData>()).
+                    RunShowPopupProcess();
+            }
+            else if (inputData.prevPopupInData.IsType<PrepareBossFightPopupInData>())
+            {
+                UIManager.MakePopup<PrepareBossFightPopup>().
+                    SetData(inputData.prevPopupInData.As<PrepareBossFightPopupInData>()).
+                    RunShowPopupProcess();
+            }
         }
     }
 

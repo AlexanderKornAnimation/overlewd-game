@@ -510,6 +510,11 @@ namespace Overlewd
             return currentPopup as T;
         }
 
+        public static BasePopupInData currentPopupInData =>
+            currentPopup?.baseInputData;
+        public static BasePopupInData prevPopupInData =>
+            prevPopup?.baseInputData;
+
         public static bool HasPopup<T>() where T : BasePopup
         {
             return currentPopup?.GetType() == typeof(T);

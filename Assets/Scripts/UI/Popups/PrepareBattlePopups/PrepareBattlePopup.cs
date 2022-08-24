@@ -164,7 +164,11 @@ namespace Overlewd
         private void PotionBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowPopup<BottlesPopup>();
+            UIManager.MakePopup<BottlesPopup>().
+                SetData(new BottlesPopupInData
+                {
+                    prevPopupInData = inputData
+                }).RunShowPopupProcess();
         }
         
         private void BuffButtonClick()
