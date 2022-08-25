@@ -38,15 +38,17 @@ namespace Overlewd
                 
             }
 
-            public void SummonFiveButtonClick()
+            public async void SummonFiveButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var summonData = await GameData.gacha.Buy(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {
                     tabType = gachaData?.tabType,
                     prevScreenInData = UIManager.prevScreenInData,
-                    isFive = true
+                    isFive = true,
+                    summonData = summonData
                 }).RunShowScreenProcess();
             }
             

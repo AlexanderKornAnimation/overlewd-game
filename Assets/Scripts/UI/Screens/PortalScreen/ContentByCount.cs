@@ -27,7 +27,7 @@ namespace Overlewd
                 priceForOne = summonOneButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
                 
                 summonFiveButton = canvas.Find("SummonFiveButton").GetComponent<Button>();
-                summonFiveButton.onClick.AddListener(SummonTenButtonClick);
+                summonFiveButton.onClick.AddListener(SummonFiveButtonClick);
                 priceForFive = summonFiveButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 discount = summonFiveButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
@@ -45,24 +45,30 @@ namespace Overlewd
 
             }
 
-            private void SummonOneButtonClick()
+            private async void SummonOneButtonClick()
             {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var summonData = await GameData.gacha.Buy(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                     {
                         prevScreenInData = UIManager.prevScreenInData,
                         tabType = gachaData.tabType,
+                        summonData = summonData
                     }).RunShowScreenProcess();
             }
             
-            private void SummonTenButtonClick()
+            private async void SummonFiveButtonClick()
             {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var summonData = await GameData.gacha.BuyTen(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {
                     prevScreenInData = UIManager.prevScreenInData,
                     tabType = gachaData.tabType,
-                    isFive = true
+                    isFive = true,
+                    summonData = summonData
                 }).RunShowScreenProcess();
             }
 

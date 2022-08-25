@@ -114,5 +114,6 @@ namespace Overlewd
     {
         public string tabType;
         public bool isFive;
+        public List<AdminBRO.GachaBuyResult> summonData;
     }
 }

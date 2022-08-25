@@ -10,6 +10,7 @@ namespace Overlewd
     public class GameDataEvent
     {
         public Type type = Type.None;
+        public Data data;
 
         public enum Type
         {
@@ -24,7 +25,14 @@ namespace Overlewd
             EquipmentEquipped,
             EquipmentUnequipped,
             BuyPotions,
-            UsePotions
+            UsePotions,
+            GachaBuy
+        }
+
+        public abstract class Data
+        {
+            public T As<T>() where T : Data =>
+                this as T;
         }
     }
 
@@ -259,16 +267,45 @@ namespace Overlewd
         public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
-        public async Task Buy(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> Buy(int id)
         {
-            await AdminBRO.gachaBuyAsync(id);
+            var result = await AdminBRO.gachaBuyAsync(id);
             await Get();
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.GachaBuy,
+                data = new EventData
+                {
+                    buyResult = result
+                }
+            });
+
+            return result;
         }
 
-        public async Task BuyTen(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> BuyTen(int id)
         {
-            await AdminBRO.gachaBuyTenAsync(id);
+            var result = await AdminBRO.gachaBuyTenAsync(id);
             await Get();
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.GachaBuy,
+                data = new EventData
+                {
+                    buyResult = result
+                }
+            });
+
+            return result;
+        }
+
+        public class EventData : GameDataEvent.Data
+        {
+            public List<AdminBRO.GachaBuyResult> buyResult;
         }
     }
 

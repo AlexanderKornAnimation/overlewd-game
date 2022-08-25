@@ -1764,22 +1764,29 @@ namespace Overlewd
             }
         }
 
-        public static async Task gachaBuyAsync(int id)
+        public static async Task<List<GachaBuyResult>> gachaBuyAsync(int id)
         {
             var url = $"http://api.overlewd.com/gacha/{id}/buy";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-
+                return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
             }
         }
 
-        public static async Task gachaBuyTenAsync(int id)
+        public static async Task<List<GachaBuyResult>> gachaBuyTenAsync(int id)
         {
             var url = $"http://api.overlewd.com/gacha/{id}/buy-ten";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-
+                return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
             }
+        }
+
+        [Serializable]
+        public class GachaBuyResult
+        {
+            public int? tradableId;
+            public string rarity;
         }
 
         [Serializable]
