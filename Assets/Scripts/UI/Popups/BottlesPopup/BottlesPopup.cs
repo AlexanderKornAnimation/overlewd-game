@@ -86,19 +86,47 @@ namespace Overlewd
             manaPlusButton.onClick.AddListener(ManaPlusButtonClick);
             manaCount = mana.Find("Counter").Find("Count").GetComponent<TextMeshProUGUI>();
             
-            var staminaTr = staminaCounter.Find("Stamina");
-            var bottle = staminaCounter.Find("Bottle");
-            staminaCount = staminaTr.Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
-            staminaBottleAmount = bottle.Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
+            staminaAmount = staminaCounter.Find("Stamina").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
+            staminaBottleAmount = staminaCounter.Find("Bottle").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowMakeAsync()
         {
-            Customize();
+            staminaCount.text = 1.ToString();
+            scrollCount.text = 1.ToString();
+            healthCount.text = 1.ToString();
+            manaCount.text = 1.ToString();
+
+            CheckIncButtonsState();
+            CheckBuyButtonsState();
+
             await Task.CompletedTask;
         }
 
-        private void Customize()
+        private void Inc(TextMeshProUGUI value)
+        {
+            value.text = (int.Parse(value.text) + 1).ToString();
+            CheckIncButtonsState();
+        }
+        private void Dec(TextMeshProUGUI value)
+        {
+            value.text = (int.Parse(value.text) - 1).ToString();
+            CheckIncButtonsState();
+        }
+
+        private void CheckIncButtonsState()
+        {
+            UITools.DisableButton(staminaMinusButton, int.Parse(staminaCount.text) == 1);
+            UITools.DisableButton(staminaPlusButton, int.Parse(staminaCount.text) == 10);
+            UITools.DisableButton(scrollMinusButton, int.Parse(scrollCount.text) == 1);
+            UITools.DisableButton(scrollPlusButton, int.Parse(scrollCount.text) == 10);
+            UITools.DisableButton(healthMinusButton, int.Parse(healthCount.text) == 1);
+            UITools.DisableButton(healthPlusButton, int.Parse(healthCount.text) == 10);
+            UITools.DisableButton(manaMinusButton, int.Parse(manaCount.text) == 1);
+            UITools.DisableButton(manaPlusButton, int.Parse(manaCount.text) == 10);
+        }
+
+        private void CheckBuyButtonsState()
         {
 
         }
@@ -106,56 +134,66 @@ namespace Overlewd
         private void StaminaPlusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Inc(staminaCount);
         }
         
         private void StaminaMinusButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);  
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Dec(staminaCount);
         }
         
         private void StaminaBuyButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);  
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            
         }
         
         private void ScrollPlusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Inc(scrollCount);
         }
         
         private void ScrollMinusButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick); 
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Dec(scrollCount);
         }
         
         private void ScrollBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);  
+
         }
         
         private void HealthPlusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Inc(healthCount);
         }
         
         private void HealthMinusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Dec(healthCount);
         }
         
         private void HealthBuyButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);  
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick); 
         }
         
         private void ManaPlusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Inc(manaCount);
         }
         
         private void ManaMinusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            Dec(manaCount);
         }
         
         private void ManaBuyButtonClick()
