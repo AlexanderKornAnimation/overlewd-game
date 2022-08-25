@@ -624,6 +624,8 @@ namespace Overlewd
 
         public int hpAmount => info.potion.hp;
         public int manaAmount => info.potion.mana;
+        public int energyAmount => info.potion.energy;
+        public int energyPoints => info.energyPoints;
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
