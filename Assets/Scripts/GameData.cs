@@ -410,6 +410,24 @@ namespace Overlewd
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
+
+        public float myTeamPotency
+        {
+            get
+            {
+                float potency = 0;
+
+                foreach (var character in myTeamCharacters)
+                {
+                    if (character.potency.HasValue)
+                    {
+                        potency += character.potency.Value;
+                    }
+                }
+
+                return potency;
+            }
+        }
     }
 
     //equipment

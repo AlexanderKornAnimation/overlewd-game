@@ -17,25 +17,42 @@ namespace Overlewd
 
         private Button backButton;
         private Button battleButton;
+        private TextMeshProUGUI battleButtonText;
         private Button editTeamButton;
         private Button buffButton;
         private Button staminaBuyButton;
         private Button manaBuyButton;
         private Button healthBuyButton;
+        private Button scrollBuyButton;
+
+        private GameObject fastBattleAvailable;
+        private Button fastBattleButton;
+        private TextMeshProUGUI fastBattleText;
+        private Button buttonPlus;
+        private Button buttonMinus;
+        private TextMeshProUGUI uiScrollCount;
+        private int scrollAmount = 1;
+        
         private RectTransform buffRect;
         private Transform enemyContent;
+        private TextMeshProUGUI enemyTeamPotency;
         private Transform allyContent;
-        private TextMeshProUGUI hpAmount;
-        private TextMeshProUGUI manaAmount;
+        private TextMeshProUGUI allyTeamPotency;
+        private TextMeshProUGUI userHpAmount;
+        private TextMeshProUGUI userManaAmount;
+        private TextMeshProUGUI userStaminaAmount;
+        private TextMeshProUGUI userScrollAmount;
 
         private Image firstTimeReward;
 
         private Image[] rewards = new Image[RewardsCount];
         private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
         private TextMeshProUGUI firstTimeRewardCount;
+        private GameObject firstTimeRewardStatus;
 
         private TextMeshProUGUI markers;
         private AdminBRO.Battle battleData;
+        private int? energyCost;
 
         private void Awake()
         {
@@ -48,8 +65,7 @@ namespace Overlewd
             var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
             var levelTitle = canvas.Find("LevelTitle");
             var buff = canvas.Find("Buff");
-            var enemiesBack = canvas.Find("EnemiesBack");
-            var alliesBack = canvas.Find("AlliesBack");
+            var enemiesBack = canvas.Find("CharactersBackground").Find("Enemies");
             var bottlePanel = canvas.Find("BottlePanel");
 
             staminaBuyButton = bottlePanel.Find("Stamina").Find("BuyButton").GetComponent<Button>();
@@ -60,32 +76,56 @@ namespace Overlewd
 
             healthBuyButton = bottlePanel.Find("Health").Find("BuyButton").GetComponent<Button>();
             healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
+
+            scrollBuyButton = bottlePanel.Find("Scroll").Find("BuyButton").GetComponent<Button>();
+            scrollBuyButton.onClick.AddListener(ScrollBuyButtonClick);
             
-            enemyContent = enemiesBack.Find("Characters").Find("ScrollView").Find("Viewport").Find("Content");
-            allyContent = alliesBack.Find("Characters");
+            enemyContent = enemiesBack.Find("Viewport").Find("Content");
+            allyContent = canvas.Find("CharactersBackground").Find("Allies");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
             battleButton = canvas.Find("BattleButton").GetComponent<Button>();
             battleButton.onClick.AddListener(BattleButtonClick);
+            battleButtonText = battleButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
-            editTeamButton = canvas.Find("AlliesBack").Find("EditTeamButton").GetComponent<Button>();
+            editTeamButton = canvas.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
 
             buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
             buffRect = buff.GetComponent<RectTransform>();
 
-            hpAmount = bottlePanel.Find("Health").Find("Value").GetComponent<TextMeshProUGUI>();
-            manaAmount = bottlePanel.Find("Mana").Find("Value").GetComponent<TextMeshProUGUI>();
+            var fastBattle = canvas.Find("FastBattle");
+            fastBattleAvailable = fastBattle.Find("Available").gameObject;
+            var substrateCounter = fastBattleAvailable.transform.Find("SubstrateCounter");
+            uiScrollCount = substrateCounter.Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
+            buttonPlus = substrateCounter.Find("ButtonPlus").GetComponent<Button>();
+            buttonPlus.onClick.AddListener(PlusButtonClick);
+            buttonMinus = substrateCounter.Find("ButtonMinus").GetComponent<Button>();
+            buttonMinus.onClick.AddListener(MinusButtonClick);
+            fastBattleButton = fastBattleAvailable.transform.Find("Button").GetComponent<Button>();
+            fastBattleButton.onClick.AddListener(FastBattleButtonClick);
+            fastBattleText = fastBattleButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            
+            userHpAmount = bottlePanel.Find("Health").Find("Value").GetComponent<TextMeshProUGUI>();
+            userManaAmount = bottlePanel.Find("Mana").Find("Value").GetComponent<TextMeshProUGUI>();
+            userStaminaAmount = bottlePanel.Find("Stamina").Find("Value").GetComponent<TextMeshProUGUI>();
+            userScrollAmount = bottlePanel.Find("Scroll").Find("Value").GetComponent<TextMeshProUGUI>();
 
+            enemyTeamPotency = canvas.Find("CharactersBackground").Find("EnemiesHeadline").Find("PotencyBack")
+                .Find("Potency").GetComponent<TextMeshProUGUI>();
+            allyTeamPotency = canvas.Find("CharactersBackground").Find("AlliesHeadline").Find("PotencyBack")
+                .Find("Potency").GetComponent<TextMeshProUGUI>();
+            
             buffButton.onClick.AddListener(BuffButtonClick);
-            UITools.TopHide(buffRect);
+            UITools.RightHide(buffRect);
 
             markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
 
             firstTimeReward = rewardsTr.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardCount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+            firstTimeRewardStatus = firstTimeReward.transform.Find("ClaimStatus").gameObject;
             firstTimeReward.gameObject.SetActive(false);
 
             for (int i = 0; i < rewards.Length; i++)
@@ -101,14 +141,25 @@ namespace Overlewd
 
         private void Customize()
         {
+            float enemyPotency = 0;
             foreach (var phase in battleData.battlePhases)
             {
                 foreach (var enemy in phase.enemyCharacters)
                 {
                     var enemyChar = NSPrepareBattlePopup.EnemyCharacter.GetInstance(enemyContent);
                     enemyChar.characterData = enemy;
+
+                    if (enemy != null)
+                    {
+                        if (enemy.potency.HasValue)
+                        {
+                            enemyPotency += enemy.potency.Value;
+                        }
+                    }
                 }
             }
+
+            enemyTeamPotency.text = enemyPotency.ToString();
 
             var characters = GameData.characters.myTeamCharacters;
             var overlordData = GameData.characters.overlord;
@@ -122,6 +173,7 @@ namespace Overlewd
                 allyChar.characterData = ally;
             }
 
+            var isStageComplete = inputData?.ftueStageData?.isComplete ?? inputData?.eventStageData.isComplete;
             if (battleData.firstRewards.Count > 0)
             {
                 var firstReward = battleData.firstRewards[0];
@@ -129,6 +181,12 @@ namespace Overlewd
                 firstTimeReward.gameObject.SetActive(true);
                 firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
                 firstTimeRewardCount.text = firstReward.amount.ToString();
+
+                if (isStageComplete.HasValue)
+                {
+                    firstTimeRewardStatus.SetActive(isStageComplete.Value);
+                    firstTimeReward.color = isStageComplete.Value ? Color.gray : Color.white;
+                }
             }
 
             if (battleData.rewards.Count < 1)
@@ -142,8 +200,24 @@ namespace Overlewd
                 rewardsAmount[i].text = reward.amount.ToString();
             }
 
-            hpAmount.text = GameData.player.hpAmount.ToString();
-            manaAmount.text = GameData.player.manaAmount.ToString();
+            if (isStageComplete.HasValue)
+                fastBattleAvailable.SetActive(isStageComplete.Value);
+            
+            userHpAmount.text = GameData.player.hpAmount.ToString();
+            userManaAmount.text = GameData.player.manaAmount.ToString();
+            userStaminaAmount.text = GameData.player.energyPoints + "/120";
+            allyTeamPotency.text = GameData.characters.myTeamPotency.ToString();
+
+            if (inputData != null)
+            {
+                energyCost = inputData.ftueStageId.HasValue
+                    ? GameData.ftue.activeChapter.battleEnergyPointsCost
+                    : GameData.events.mapEventData.activeChapter.battleEnergyPointsCost;
+            }
+            
+            battleButtonText.text =
+                $"Make them suffer\nwith <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {energyCost} energy!";
+            
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -161,6 +235,44 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        private void FastBattleButtonClick()
+        {            
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+        }
+        
+        private void PlusButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            scrollAmount++;
+            fastBattleText.text =
+                $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {energyCost * scrollAmount} and {AdminBRO.PlayerInfo.Sprite_Scroll} {scrollAmount}";
+            uiScrollCount.text = scrollAmount.ToString();
+        }
+        
+        private void MinusButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            scrollAmount--;
+            
+            if (scrollAmount < 1)
+                scrollAmount = 1;
+
+            fastBattleText.text =
+                $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {energyCost * scrollAmount} and {AdminBRO.PlayerInfo.Sprite_Scroll} {scrollAmount}";
+            
+            uiScrollCount.text = scrollAmount.ToString();
+        }
+
+        private void ScrollBuyButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakePopup<BottlesPopup>().
+                SetData(new BottlesPopupInData
+                {
+                    prevPopupInData = inputData
+                }).RunShowPopupProcess();
+        }
+        
         private void PotionBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -204,13 +316,23 @@ namespace Overlewd
         private void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            UIManager.MakeScreen<BattleScreen>().
-                SetData(new BaseBattleScreenInData
+            if (energyCost.HasValue)
+            {
+                if (GameData.player.energyPoints >= energyCost)
                 {
-                    prevScreenInData = UIManager.prevScreenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).RunShowScreenProcess();
+                    UIManager.MakeScreen<BattleScreen>().
+                        SetData(new BaseBattleScreenInData
+                        {
+                            prevScreenInData = UIManager.prevScreenInData,
+                            ftueStageId = inputData.ftueStageId,
+                            eventStageId = inputData.eventStageId
+                        }).RunShowScreenProcess();
+                }
+                else
+                {
+                    UIManager.ShowPopup<BottlesPopup>();
+                }
+            }
         }
 
         public override ScreenShow Show()
@@ -225,12 +347,12 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            await UITools.TopShowAsync(buffRect, 0.2f);
+            await UITools.RightShowAsync(buffRect, 0.2f);
         }
 
         public override async Task BeforeHideAsync()
         {
-            await UITools.TopHideAsync(buffRect, 0.2f);
+            await UITools.RightHideAsync(buffRect, 0.2f);
         }
     }
 

@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 1f18b63b89fb4d2438e4e7c1a5186220, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9865e8024ce61b1439c7570bf210f35f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -73,7 +73,7 @@ MonoBehaviour:
     m_StrikethroughOffset: 0
     m_StrikethroughThickness: 0
     m_TabWidth: 0
-  spriteSheet: {fileID: 2800000, guid: 1f18b63b89fb4d2438e4e7c1a5186220, type: 3}
+  spriteSheet: {fileID: 2800000, guid: 9865e8024ce61b1439c7570bf210f35f, type: 3}
   m_SpriteCharacterTable:
   - m_ElementType: 2
     m_Unicode: 65534
@@ -141,6 +141,12 @@ MonoBehaviour:
     m_Scale: 1
     m_Name: ShardBasic
     m_HashCode: -1051026922
+  - m_ElementType: 2
+    m_Unicode: 65534
+    m_GlyphIndex: 20
+    m_Scale: 1
+    m_Name: Scroll
+    m_HashCode: -1014083059
   m_SpriteGlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -277,21 +283,6 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: 8395222161685788416, guid: 1f18b63b89fb4d2438e4e7c1a5186220, type: 3}
-  - m_Index: 10
-    m_Metrics:
-      m_Width: 40
-      m_Height: 47
-      m_HorizontalBearingX: 0
-      m_HorizontalBearingY: 38
-      m_HorizontalAdvance: 40
-    m_GlyphRect:
-      m_X: 105
-      m_Y: 0
-      m_Width: 40
-      m_Height: 47
-    m_Scale: 1
-    m_AtlasIndex: 0
-    sprite: {fileID: -6482307829155475010, guid: 1f18b63b89fb4d2438e4e7c1a5186220, type: 3}
   - m_Index: 9
     m_Metrics:
       m_Width: 40
@@ -307,5 +298,35 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     sprite: {fileID: -5971012798137527651, guid: 1f18b63b89fb4d2438e4e7c1a5186220, type: 3}
+  - m_Index: 10
+    m_Metrics:
+      m_Width: 40
+      m_Height: 47
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 38
+      m_HorizontalAdvance: 40
+    m_GlyphRect:
+      m_X: 105
+      m_Y: 0
+      m_Width: 40
+      m_Height: 47
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: -6482307829155475010, guid: 1f18b63b89fb4d2438e4e7c1a5186220, type: 3}
+  - m_Index: 20
+    m_Metrics:
+      m_Width: 38
+      m_Height: 45
+      m_HorizontalBearingX: -19
+      m_HorizontalBearingY: 22.5
+      m_HorizontalAdvance: 38
+    m_GlyphRect:
+      m_X: 4
+      m_Y: 2
+      m_Width: 38
+      m_Height: 45
+    m_Scale: 1
+    m_AtlasIndex: 0
+    sprite: {fileID: 6066187312014894251, guid: 9865e8024ce61b1439c7570bf210f35f, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []

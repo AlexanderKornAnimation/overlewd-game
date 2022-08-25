@@ -15,6 +15,7 @@ namespace Overlewd
 
             protected Transform canvas;
 
+            protected Image rarity;
             protected Image art;
             protected TextMeshProUGUI level;
             protected TextMeshProUGUI characterClass;
@@ -23,6 +24,7 @@ namespace Overlewd
             {
                 canvas = transform.Find("Canvas");
                 art = canvas.Find("Art").GetComponent<Image>();
+                rarity = canvas.Find("Rarity").GetComponent<Image>();
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 characterClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
             }
@@ -39,12 +41,9 @@ namespace Overlewd
 
                 level.text = characterData.level.ToString();
                 art.sprite = ResourceManager.LoadSprite(characterData.teamEditPersIcon);
-                SetClassIcon();
-            }
-
-            protected virtual void SetClassIcon()
-            {
+                rarity.sprite = characterData.raritySprite;
                 characterClass.text = characterData.classMarker;
+
             }
         }
     }

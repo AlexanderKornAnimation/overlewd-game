@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
 using System.Linq;
+using TMPro;
 
 namespace Overlewd
 {
@@ -175,8 +176,13 @@ namespace Overlewd
                 public int hp;
                 public int mana;
                 public int energy;
+                
+
             }
 
+            public const string Sprite_Energy = "<sprite=\"AssetResources\" name=\"Energy\">";
+            public const string Sprite_Scroll = "<sprite=\"AssetResources\" name=\"Scroll\">";
+            
             public class WalletItem
             {
                 public int currencyId;
@@ -997,6 +1003,16 @@ namespace Overlewd
             public const string Sprite_ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"ClassOverlord\">";
             public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassAllyTank\">";
 
+            [JsonProperty(Required = Required.Default)]
+            public Sprite raritySprite => rarity switch
+            {
+                Rarity.Basic => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlBasic"),
+                Rarity.Advanced => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlAdvanced"),
+                Rarity.Epic => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlEpic"),
+                Rarity.Heroic => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlHeroic"),
+                _ => null
+            };
+            
             [JsonProperty(Required = Required.Default)]
             public string classMarker => characterClass switch 
             {
