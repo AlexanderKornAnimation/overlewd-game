@@ -616,6 +616,18 @@ namespace Overlewd
             }
         }
 
+        // /event-stages/{id}/replay
+        public static async Task eventStageReplayAsync(int eventStageId, int count)
+        {
+            var url = $"http://api.overlewd.com/event-stages/{eventStageId}/replay";
+            var form = new WWWForm();
+            form.AddField("count", count);
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
         public class EventStageEndData
         {
             public bool win { get; set; } = true;
@@ -1420,6 +1432,18 @@ namespace Overlewd
         {
             var url = $"http://api.overlewd.com/ftue-stages/{stageId}/end";
             var form = data?.ToWWWForm() ?? new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+
+            }
+        }
+
+        // /ftue-stages/{id}/replay
+        public static async Task ftueStageReplayAsync(int stageId, int count)
+        {
+            var url = $"http://api.overlewd.com/ftue-stages/{stageId}/replay";
+            var form = new WWWForm();
+            form.AddField("count", count);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 

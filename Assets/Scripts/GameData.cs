@@ -114,6 +114,17 @@ namespace Overlewd
             await GameData.battlePass.Get();
             await GameData.player.Get();
         }
+
+        public async Task ReplayStage(int stageId, int count)
+        {
+            await AdminBRO.ftueStageReplayAsync(stageId, count);
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+
+            await GameData.quests.Get();
+            await GameData.battlePass.Get();
+            await GameData.player.Get();
+        }
     }
 
     //buildings
@@ -496,6 +507,16 @@ namespace Overlewd
         public async Task StageEnd(int stageId, AdminBRO.EventStageEndData data = null)
         {
             var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
+            stages = await AdminBRO.eventStagesAsync();
+
+            await GameData.quests.Get();
+            await GameData.battlePass.Get();
+            await GameData.player.Get();
+        }
+
+        public async Task StageReplay(int stageId, int count)
+        {
+            await AdminBRO.eventStageReplayAsync(stageId, count);
             stages = await AdminBRO.eventStagesAsync();
 
             await GameData.quests.Get();
