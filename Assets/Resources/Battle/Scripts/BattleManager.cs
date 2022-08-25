@@ -26,7 +26,7 @@ namespace Overlewd
         [Tooltip("selected as target")] public CharController ccTarget = null;
         public Animator ani;
 
-        public List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        private List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
@@ -138,9 +138,7 @@ namespace Overlewd
                 potion_hp.gameObject.SetActive(false);
                 potion_mp.gameObject.SetActive(false);
             }*/
-
-            if (characterResList == null)
-                characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
+            characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
 
             DropCharactersFromList(playerTeam, isEnemy: false);
             DropCharactersFromList(enemyTeam, isEnemy: true);
@@ -182,7 +180,9 @@ namespace Overlewd
                 cc.character = c;
 
                 var cRes = characterResList?.Find(item => item.key == c.key);
-                var defaultSkin = bossLevel ? characterResList[3] : characterResList[2];
+                var defaultSkin = bossLevel ? 
+                    characterResList?.Find(item => item.key == "CERBERUS") : 
+                    characterResList?.Find(item => item.key == "DEFAULT");
                 cc.characterRes = cRes == null ? defaultSkin : cRes; //load default skin if key not found
 
                 charControllerList.Add(cc);
@@ -438,7 +438,7 @@ namespace Overlewd
         }
         public void UseHPPotion()
         {
-            if (potion_hp.potionAmount > 0 && overlord.health < overlord.healthMax)
+            if (potion_hp.potionAmount > 0 && overlord.health < overlord.healthMax && !overlord.isDead)
                 if (battleState == BattleState.PLAYER)
                 {
                     overlord.Heal(Mathf.RoundToInt(overlord.healthMax * 0.2f));
@@ -450,7 +450,7 @@ namespace Overlewd
         }
         public void UseMPPotion()
         {
-            if (potion_mp.potionAmount > 0 && overlord.mana < overlord.manaMax)
+            if (potion_mp.potionAmount > 0 && overlord.mana < overlord.manaMax && !overlord.isDead)
                 if (battleState == BattleState.PLAYER)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_Battle_Manapotion);
@@ -644,9 +644,10 @@ namespace Overlewd
                     battleID == battleScene.GetBattleData().ftueStageKey)
                 {
 #if UNITY_EDITOR
-                    //Debug.Log($"{chapterID} {battleID} {notifID}");
-#endif
+                    Debug.Log($"{chapterID} {battleID} {notifID}");
+#else
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
+#endif
                 }
         }
         public bool CheckBattleGameData(string chapterID, string battleID)

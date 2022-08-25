@@ -25,6 +25,7 @@ namespace Overlewd
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
 
         public string Name => character.name;
+        public string characterClass => character.characterClass;
         public int level => (int)character.level;
         public string rarity => character.rarity;
         public float speed => (float)character.speed;

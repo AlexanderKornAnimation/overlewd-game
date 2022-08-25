@@ -11,12 +11,10 @@ namespace Overlewd
         public Sprite icoPortrait;
         public Sprite bigPortrait;
 
-        public float idleScale = 1f, battleScale = 1.4f;
+        public float idleScale = 1f, battleScale = 1.5f;
 
         public Skill[] skill;
         public Skill[] pSkill;
-
-        public GameObject characterPrefab = null;
 
         public string ani_idle_name = "idle";
         public string[] ani_pAttack_name = { "prepair1", "prepair2" };

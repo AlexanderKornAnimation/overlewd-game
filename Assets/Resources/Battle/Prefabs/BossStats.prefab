@@ -2033,6 +2033,7 @@ MonoBehaviour:
   cc: {fileID: 0}
   button: {fileID: 2507594478503502562}
   bigPortrait: 0
+  backRarityIcons: []
 --- !u!1 &5425841322813453445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2181,7 +2182,7 @@ GameObject:
   - component: {fileID: 2377389880080012399}
   - component: {fileID: 7701021010221872132}
   m_Layer: 0
-  m_Name: regen
+  m_Name: regeneration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2621,6 +2622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cc: {fileID: 0}
+  withDescription: 0
 --- !u!1 &6629576669906250445
 GameObject:
   m_ObjectHideFlags: 0
@@ -2633,7 +2635,7 @@ GameObject:
   - component: {fileID: 7894834757158921695}
   - component: {fileID: 5540123371809131676}
   m_Layer: 0
-  m_Name: defDown
+  m_Name: defense_down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2845,7 +2847,7 @@ GameObject:
   - component: {fileID: 5520895399064408598}
   - component: {fileID: 8940485272612910537}
   m_Layer: 0
-  m_Name: healBlock
+  m_Name: heal_block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2921,7 +2923,7 @@ GameObject:
   - component: {fileID: 1645049732204900560}
   - component: {fileID: 1587251967740094693}
   m_Layer: 0
-  m_Name: defUp
+  m_Name: defense_up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,14 +1,20 @@
 using TMPro;
 using UnityEngine;
-
-public class BattleLog : MonoBehaviour
+namespace Overlewd
 {
-    [SerializeField]
-    private TextMeshProUGUI log;
-
-    public void Add(string text, bool error = false)
+    public class BattleLog : MonoBehaviour
     {
-        if (log) log.text += (text + "\n");
-        if (error) Debug.LogError(text);
-    }
+        [SerializeField]
+        private TextMeshProUGUI log;
+
+        public void Add(string text, bool error = false)
+        {
+            if (log) log.text += (text + "\n");
+            if (error)
+            {
+                Debug.LogError(text);
+                FindObjectOfType<BattleManager>().debug = 2;
+            }
+        }
+    } 
 }

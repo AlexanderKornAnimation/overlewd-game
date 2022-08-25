@@ -580,7 +580,7 @@ GameObject:
   - component: {fileID: 6596995703352463504}
   - component: {fileID: 7592023343496168256}
   m_Layer: 0
-  m_Name: healBlock
+  m_Name: heal_block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -865,6 +865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e2e3adc1dee6e24eb0290d47a24b7a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  withDescription: 0
   cc: {fileID: 0}
 --- !u!1 &3066421157917733608
 GameObject:
@@ -1392,7 +1393,7 @@ GameObject:
   - component: {fileID: 8670837449305765162}
   - component: {fileID: 4639017963730060073}
   m_Layer: 0
-  m_Name: regen
+  m_Name: regeneration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2178,7 +2179,7 @@ GameObject:
   - component: {fileID: 6368679463755398648}
   - component: {fileID: 4935397802390150855}
   m_Layer: 0
-  m_Name: defDown
+  m_Name: defense_down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2541,7 +2542,7 @@ GameObject:
   - component: {fileID: 7169077551673404714}
   - component: {fileID: 8778651654078964200}
   m_Layer: 0
-  m_Name: defUp
+  m_Name: defense_up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

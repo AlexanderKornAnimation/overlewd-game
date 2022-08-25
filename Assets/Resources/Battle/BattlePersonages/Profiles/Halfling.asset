@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c4a50ce6b28b34478257f8efb99c82d, type: 3}
-  m_Name: Ninja
+  m_Name: Halfling
   m_EditorClassIdentifier: 
-  key: NINJA
-  icoPortrait: {fileID: 21300000, guid: bac6ff7c3ef6ef94f9e85bdfdf9b9f12, type: 3}
-  bigPortrait: {fileID: 21300000, guid: e5ad9dad72c3efd439a767fa359a2f98, type: 3}
+  key: HALFLING
+  icoPortrait: {fileID: 21300000, guid: 79d2aa59efe094e429d19bcea113d8d2, type: 3}
+  bigPortrait: {fileID: 21300000, guid: 758e6a15e73ddb545b7bce1afccb497c, type: 3}
   idleScale: 1
   battleScale: 1.5
   skill:
   - {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
-  - {fileID: 11400000, guid: 7f3ca5a561eb01741a653c44681f7202, type: 2}
+  - {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   pSkill:
   - {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
   ani_idle_name: idle
