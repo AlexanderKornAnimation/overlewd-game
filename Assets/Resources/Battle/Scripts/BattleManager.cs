@@ -645,9 +645,8 @@ namespace Overlewd
                 {
 #if UNITY_EDITOR
                     Debug.Log($"{chapterID} {battleID} {notifID}");
-#else
-                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
 #endif
+                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
                 }
         }
         public bool CheckBattleGameData(string chapterID, string battleID)
