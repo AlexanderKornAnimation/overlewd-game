@@ -60,9 +60,10 @@ namespace Overlewd
 
             foreach (var stageData in eventChapterData.stagesData)
             {
-                if (stageData.isClosed)
+                var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
+                if (!instantiateStageOnMap)
                 {
-                    //continue;
+                    continue;
                 }
 
                 if (stageData.battleId.HasValue)
