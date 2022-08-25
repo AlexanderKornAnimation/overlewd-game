@@ -9,14 +9,14 @@ namespace Overlewd
     {
         public static void Initialize()
         {
-#if (UNITY_STANDALONE_WIN || UNITY_ANDROID) && !UNITY_EDITOR_WIN
+#if (UNITY_STANDALONE_WIN || UNITY_ANDROID) && !UNITY_EDITOR
             Application.logMessageReceived += Msg;
 #endif
         }
 
         private static void Msg(string condition, string stackTrace, LogType type)
         {
-            if (type != LogType.Error)
+            if (type != LogType.Exception)
                 return;
 
             var newLog = new AdminBRO.LogData();
