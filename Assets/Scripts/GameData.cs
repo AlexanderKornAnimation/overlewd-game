@@ -903,7 +903,7 @@ namespace Overlewd
                 });
         }
 
-        private async Task UseEnergy(int count)
+        public async Task UseEnergy(int count)
         {
             await AdminBRO.potionEnergyUseAsync(count);
             await GameData.player.Get();

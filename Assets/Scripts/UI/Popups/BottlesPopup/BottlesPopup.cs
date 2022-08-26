@@ -124,8 +124,7 @@ namespace Overlewd
             healthCount.text = 1.ToString();
             manaCount.text = 1.ToString();
 
-            CheckIncButtonsState();
-            CheckBuyButtonsState();
+            Refresh();
 
             await Task.CompletedTask;
         }
@@ -140,6 +139,22 @@ namespace Overlewd
             UITools.DisableButton(healthPlusButton, _healthCount == 10);
             UITools.DisableButton(manaMinusButton, _manaCount == 1);
             UITools.DisableButton(manaPlusButton, _manaCount == 10);
+        }
+
+        private void RefreshEnergyPanel()
+        {
+            refillPrice.text = $"Use bottle to get" +
+                $" <size=35><sprite=\"AssetResources\" name=\"Energy\"></size>" +
+                $" {GameData.potions.baseEnergyVolume}";
+            staminaAmount.text = $"{GameData.player.energyPoints}/{GameData.potions.baseEnergyVolume}";
+            staminaBottleAmount.text = GameData.player.energyAmount.ToString();
+        }
+
+        private void Refresh()
+        {
+            CheckIncButtonsState();
+            CheckBuyButtonsState();
+            RefreshEnergyPanel();
         }
 
         private void CheckBuyButtonsState()
@@ -173,10 +188,11 @@ namespace Overlewd
             Dec(staminaCount);
         }
         
-        private void StaminaBuyButtonClick()
+        private async void StaminaBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            
+            await GameData.potions.BuyEnergy(_staminaCount);
+            Refresh();
         }
         
         private void ScrollPlusButtonClick()
@@ -191,10 +207,11 @@ namespace Overlewd
             Dec(scrollCount);
         }
         
-        private void ScrollBuyButtonClick()
+        private async void ScrollBuyButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);  
-
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            await GameData.potions.BuyReplay(_scrollCount);
+            Refresh();
         }
         
         private void HealthPlusButtonClick()
@@ -209,9 +226,11 @@ namespace Overlewd
             Dec(healthCount);
         }
         
-        private void HealthBuyButtonClick()
+        private async void HealthBuyButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick); 
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            await GameData.potions.BuyHp(_healthCount);
+            Refresh();
         }
         
         private void ManaPlusButtonClick()
@@ -226,14 +245,18 @@ namespace Overlewd
             Dec(manaCount);
         }
         
-        private void ManaBuyButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);  
-        }
-        
-        private void RefillButtonClick()
+        private async void ManaBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            await GameData.potions.BuyMana(_manaCount);
+            Refresh();
+        }
+        
+        private async void RefillButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            await GameData.potions.UseEnergy(1);
+            RefreshEnergyPanel();
         }
 
         private void CloseButtonClick()
