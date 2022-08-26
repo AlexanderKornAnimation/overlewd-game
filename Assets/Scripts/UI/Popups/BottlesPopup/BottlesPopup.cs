@@ -107,11 +107,13 @@ namespace Overlewd
         {
             value.text = (int.Parse(value.text) + 1).ToString();
             CheckIncButtonsState();
+            CheckBuyButtonsState();
         }
         private void Dec(TextMeshProUGUI value)
         {
             value.text = (int.Parse(value.text) - 1).ToString();
             CheckIncButtonsState();
+            CheckBuyButtonsState();
         }
 
         private void CheckIncButtonsState()

@@ -176,8 +176,7 @@ namespace Overlewd
                 public int hp;
                 public int mana;
                 public int energy;
-                
-
+                public int replay;
             }
 
             public const string Sprite_Energy = "<sprite=\"AssetResources\" name=\"Energy\">";
@@ -2041,14 +2040,14 @@ namespace Overlewd
 
         }
 
-        // /potions/prices
+        // /potions
         // /potions/{type}/buy
-        public static async Task<List<PotionInfo>> potionPricesAsync()
+        public static async Task<PotionsInfo> potionsAsync()
         {
-            var url = $"http://api.overlewd.com/potions/prices";
+            var url = $"http://api.overlewd.com/potions";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<List<PotionInfo>>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<PotionsInfo>(request?.downloadHandler.text);
             }
         }
 
@@ -2063,9 +2062,9 @@ namespace Overlewd
             }
         }
 
-        public static async Task potionUseAsync(string type, int count)
+        public static async Task potionEnergyUseAsync(int count)
         {
-            var url = $"http://api.overlewd.com/potions/{type}/use";
+            var url = $"http://api.overlewd.com/potions/energy/use";
             var form = new WWWForm();
             form.AddField("count", count);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
@@ -2076,14 +2075,23 @@ namespace Overlewd
 
 
         [Serializable]
-        public class PotionInfo
+        public class PotionsInfo
         {
-            public string type;
-            public List<PriceItem> price;
+            public List<PotionPrice> prices;
+            public int maxEnergyVolume;
+            public int energyPerCan;
+            public float energyRecoverySpeedPerMinute;
+
+            public class PotionPrice
+            {
+                public string type;
+                public List<PriceItem> price;
+            }
 
             public const string Type_hp = "hp";
             public const string Type_mana = "mana";
             public const string Type_energy = "energy";
+            public const string Type_replay = "replay";
         }
         
     }

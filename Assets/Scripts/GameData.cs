@@ -701,6 +701,7 @@ namespace Overlewd
         public int hpAmount => info.potion.hp;
         public int manaAmount => info.potion.mana;
         public int energyAmount => info.potion.energy;
+        public int replayAmount => info.potion.replay;
         public int energyPoints => info.energyPoints;
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
@@ -868,19 +869,25 @@ namespace Overlewd
     //potions
     public class Potions : BaseGameMeta
     {
-        public List<AdminBRO.PotionInfo> potions { get; private set; } = new List<AdminBRO.PotionInfo>();
+        public AdminBRO.PotionsInfo potions { get; private set; } = new AdminBRO.PotionsInfo();
 
         public override async Task Get()
         {
-            potions = await AdminBRO.potionPricesAsync();
+            potions = await AdminBRO.potionsAsync();
         }
 
-        public AdminBRO.PotionInfo GetHp() =>
-            potions.Find(p => p.type == AdminBRO.PotionInfo.Type_hp);
-        public AdminBRO.PotionInfo GetMana() =>
-            potions.Find(p => p.type == AdminBRO.PotionInfo.Type_mana);
-        public AdminBRO.PotionInfo GetEnergy() =>
-            potions.Find(p => p.type == AdminBRO.PotionInfo.Type_energy);
+        public AdminBRO.PotionsInfo.PotionPrice HpPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_hp);
+        public AdminBRO.PotionsInfo.PotionPrice ManaPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_mana);
+        public AdminBRO.PotionsInfo.PotionPrice EnergyPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_energy);
+        public AdminBRO.PotionsInfo.PotionPrice ReplayPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_replay);
+
+        public int baseEnergyVolume => potions.maxEnergyVolume;
+        public int energyPerPotion => potions.energyPerCan;
+        public float energyRecoverySpeed => potions.energyRecoverySpeedPerMinute;
 
         private async Task Buy(string type, int count)
         {
@@ -894,9 +901,9 @@ namespace Overlewd
                 });
         }
 
-        private async Task Use(string type, int count)
+        private async Task UseEnergy(int count)
         {
-            await AdminBRO.potionUseAsync(type, count);
+            await AdminBRO.potionEnergyUseAsync(count);
             await GameData.player.Get();
 
             UIManager.ThrowGameDataEvent(
@@ -908,28 +915,19 @@ namespace Overlewd
 
         public async Task BuyHp(int count)
         {
-            await Buy(AdminBRO.PotionInfo.Type_hp, count);
+            await Buy(AdminBRO.PotionsInfo.Type_hp, count);
         }
         public async Task BuyMana(int count)
         {
-            await Buy(AdminBRO.PotionInfo.Type_mana, count);
+            await Buy(AdminBRO.PotionsInfo.Type_mana, count);
         }
         public async Task BuyEnergy(int count)
         {
-            await Buy(AdminBRO.PotionInfo.Type_energy, count);
+            await Buy(AdminBRO.PotionsInfo.Type_energy, count);
         }
-
-        public async Task UseHp(int count)
+        public async Task BuyReplay(int count)
         {
-            await Use(AdminBRO.PotionInfo.Type_hp, count);
-        }
-        public async Task UseMana(int count)
-        {
-            await Use(AdminBRO.PotionInfo.Type_mana, count);
-        }
-        public async Task UseEnergy(int count)
-        {
-            await Use(AdminBRO.PotionInfo.Type_energy, count);
+            await Buy(AdminBRO.PotionsInfo.Type_replay, count);
         }
     }
 }
