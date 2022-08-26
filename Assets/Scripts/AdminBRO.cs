@@ -23,6 +23,10 @@ namespace Overlewd
         {
             public int currencyId;
             public int amount;
+
+            public static PriceItem operator* (int d, PriceItem a) =>
+                new PriceItem { currencyId = a.currencyId, amount = a.amount * d };
+            public static PriceItem operator* (PriceItem a, int d) => d * a;
         }
 
         [Serializable]
