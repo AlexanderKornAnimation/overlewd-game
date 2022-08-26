@@ -41,10 +41,10 @@ namespace Overlewd
            
             crystal.text = $"<size=40>{GameData.currencies.Crystals.sprite}<size=44> {GameData.player.Crystal.amount}";
             wood.text = $"<size=40>{GameData.currencies.Wood.sprite}<size=44> {GameData.player.Wood.amount}";
-            stone.text = $"<size=40>{GameData.currencies.Stone.sprite}<size=44> {GameData.player.Stone.amount}";
             copper.text = $"<size=40>{GameData.currencies.Copper.sprite}<size=44> {GameData.player.Copper.amount}";
             gold.text = $"<size=40>{GameData.currencies.Gold.sprite}<size=44> {GameData.player.Gold.amount}";
             gems.text = $"<size=40>{GameData.currencies.Gems.sprite}<size=44> {GameData.player.Gems.amount}";
+            stone.text = $"<size=40>{GameData.currencies.Stone.sprite}<size=44> {GameData.player.Stone.amount}";
         }
         
         public static void DisableButton(Button button, bool disable = true)

@@ -230,9 +230,29 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private void FastBattleButtonClick()
+        private async void FastBattleButtonClick()
         {            
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            if (energyCost.HasValue)
+            {
+                if (GameData.player.energyPoints >= energyCost)
+                {
+                    if (inputData.ftueStageId.HasValue)
+                    {
+                        await GameData.ftue.ReplayStage(inputData.ftueStageId.Value, scrollAmount);
+                    }
+                    else if (inputData.eventStageId.HasValue)
+                    {
+                        await GameData.events.StageReplay(inputData.eventStageId.Value, scrollAmount);
+                    }
+                    
+                    UIManager.HidePopup();
+                }
+                else
+                {
+                    UIManager.ShowPopup<BottlesPopup>();
+                }
+            }
         }
         
         private void PlusButtonClick()

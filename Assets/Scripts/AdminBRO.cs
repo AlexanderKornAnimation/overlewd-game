@@ -1013,7 +1013,7 @@ namespace Overlewd
             public const string Sprite_ClassCaster = "<sprite=\"ClassesNLevel\" name=\"ClassCaster\">";
             public const string Sprite_ClassHealer = "<sprite=\"ClassesNLevel\" name=\"ClassHealer\">";
             public const string Sprite_ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"ClassOverlord\">";
-            public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassAllyTank\">";
+            public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassTank\">";
 
             [JsonProperty(Required = Required.Default)]
             public Sprite raritySprite => rarity switch
