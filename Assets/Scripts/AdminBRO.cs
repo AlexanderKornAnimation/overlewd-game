@@ -991,7 +991,10 @@ namespace Overlewd
         {
             public int? id;
             public string teamPosition;
-            public string teamEditPersIcon;
+            public string basicIcon;
+            public string advancedIcon;
+            public string epicIcon;
+            public string heroicIcon;
             public string teamEditSlotPersIcon;
             public string fullScreenPersIcon;
             public string name;
@@ -1039,12 +1042,12 @@ namespace Overlewd
             public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassTank\">";
 
             [JsonProperty(Required = Required.Default)]
-            public Sprite raritySprite => rarity switch
+            public Sprite iconSprite => rarity switch
             {
-                Rarity.Basic => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlBasic"),
-                Rarity.Advanced => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlAdvanced"),
-                Rarity.Epic => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlEpic"),
-                Rarity.Heroic => ResourceManager.InstantiateAsset<Sprite>("Common/Images/Backgrounds/BattleGirlHeroic"),
+                Rarity.Basic => ResourceManager.LoadSprite(basicIcon),
+                Rarity.Advanced => ResourceManager.LoadSprite(advancedIcon),
+                Rarity.Epic => ResourceManager.LoadSprite(epicIcon),
+                Rarity.Heroic => ResourceManager.LoadSprite(heroicIcon),
                 _ => null
             };
             

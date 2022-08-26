@@ -63,7 +63,7 @@ namespace Overlewd
                 else
                 {
                     var equippedCharacter = GameData.characters.GetById(weaponData.characterId);
-                    equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter?.teamEditPersIcon);
+                    equippedCharacterIcon.sprite = equippedCharacter?.iconSprite;
                 }
             }
 
