@@ -17,25 +17,48 @@ namespace Overlewd
         private TextMeshProUGUI staminaBottleAmount;
 
         private Button staminaBuyButton;
+        private TextMeshProUGUI staminaBuyButtonTitle;
         private Button staminaMinusButton;
         private Button staminaPlusButton;
         private TextMeshProUGUI staminaCount;
         
         private Button scrollBuyButton;
+        private TextMeshProUGUI scrollBuyButtonTitle;
         private Button scrollMinusButton;
         private Button scrollPlusButton;
         private TextMeshProUGUI scrollCount;
 
         private Button healthBuyButton;
+        private TextMeshProUGUI healthBuyButtonTitle;
         private Button healthPlusButton;
         private Button healthMinusButton;
         private TextMeshProUGUI healthCount;
 
         private Button manaBuyButton;
+        private TextMeshProUGUI manaBuyButtonTitle;
         private Button manaPlusButton;
         private Button manaMinusButton;
         private TextMeshProUGUI manaCount;
-        
+
+
+        private int _staminaCount => int.Parse(staminaCount.text);
+        private int _scrollCount => int.Parse(scrollCount.text);
+        private int _healthCount => int.Parse(healthCount.text);
+        private int _manaCount => int.Parse(manaCount.text);
+
+        private void Inc(TextMeshProUGUI value)
+        {
+            value.text = (int.Parse(value.text) + 1).ToString();
+            CheckIncButtonsState();
+            CheckBuyButtonsState();
+        }
+        private void Dec(TextMeshProUGUI value)
+        {
+            value.text = (int.Parse(value.text) - 1).ToString();
+            CheckIncButtonsState();
+            CheckBuyButtonsState();
+        }
+
         private void Awake()
         {
             var screenInst =
@@ -56,6 +79,7 @@ namespace Overlewd
 
             staminaBuyButton = stamina.Find("BuyButton").GetComponent<Button>();
             staminaBuyButton.onClick.AddListener(StaminaBuyButtonClick);
+            staminaBuyButtonTitle = staminaBuyButton.GetComponentInChildren<TextMeshProUGUI>();
             staminaPlusButton = stamina.Find("ButtonPlus").GetComponent<Button>();
             staminaPlusButton.onClick.AddListener(StaminaPlusButtonClick);
             staminaMinusButton = stamina.Find("ButtonMinus").GetComponent<Button>();
@@ -64,6 +88,7 @@ namespace Overlewd
 
             scrollBuyButton = scroll.Find("BuyButton").GetComponent<Button>();
             scrollBuyButton.onClick.AddListener(ScrollBuyButtonClick);
+            scrollBuyButtonTitle = scrollBuyButton.GetComponentInChildren<TextMeshProUGUI>();
             scrollMinusButton = scroll.Find("ButtonMinus").GetComponent<Button>();
             scrollMinusButton.onClick.AddListener(ScrollMinusButtonClick);
             scrollPlusButton = scroll.Find("ButtonPlus").GetComponent<Button>();
@@ -72,6 +97,7 @@ namespace Overlewd
             
             healthBuyButton = health.Find("BuyButton").GetComponent<Button>();
             healthBuyButton.onClick.AddListener(HealthBuyButtonClick);
+            healthBuyButtonTitle = healthBuyButton.GetComponentInChildren<TextMeshProUGUI>();
             healthMinusButton = health.Find("ButtonMinus").GetComponent<Button>();
             healthMinusButton.onClick.AddListener(HealthMinusButtonClick);
             healthPlusButton = health.Find("ButtonPlus").GetComponent<Button>();
@@ -80,6 +106,7 @@ namespace Overlewd
             
             manaBuyButton = mana.Find("BuyButton").GetComponent<Button>();
             manaBuyButton.onClick.AddListener(ManaBuyButtonClick);
+            manaBuyButtonTitle = manaBuyButton.GetComponentInChildren<TextMeshProUGUI>();
             manaMinusButton = mana.Find("ButtonMinus").GetComponent<Button>();
             manaMinusButton.onClick.AddListener(ManaMinusButtonClick);
             manaPlusButton = mana.Find("ButtonPlus").GetComponent<Button>();
@@ -103,34 +130,35 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private void Inc(TextMeshProUGUI value)
-        {
-            value.text = (int.Parse(value.text) + 1).ToString();
-            CheckIncButtonsState();
-            CheckBuyButtonsState();
-        }
-        private void Dec(TextMeshProUGUI value)
-        {
-            value.text = (int.Parse(value.text) - 1).ToString();
-            CheckIncButtonsState();
-            CheckBuyButtonsState();
-        }
-
         private void CheckIncButtonsState()
         {
-            UITools.DisableButton(staminaMinusButton, int.Parse(staminaCount.text) == 1);
-            UITools.DisableButton(staminaPlusButton, int.Parse(staminaCount.text) == 10);
-            UITools.DisableButton(scrollMinusButton, int.Parse(scrollCount.text) == 1);
-            UITools.DisableButton(scrollPlusButton, int.Parse(scrollCount.text) == 10);
-            UITools.DisableButton(healthMinusButton, int.Parse(healthCount.text) == 1);
-            UITools.DisableButton(healthPlusButton, int.Parse(healthCount.text) == 10);
-            UITools.DisableButton(manaMinusButton, int.Parse(manaCount.text) == 1);
-            UITools.DisableButton(manaPlusButton, int.Parse(manaCount.text) == 10);
+            UITools.DisableButton(staminaMinusButton, _staminaCount == 1);
+            UITools.DisableButton(staminaPlusButton, _staminaCount == 10);
+            UITools.DisableButton(scrollMinusButton, _scrollCount == 1);
+            UITools.DisableButton(scrollPlusButton, _scrollCount == 10);
+            UITools.DisableButton(healthMinusButton, _healthCount == 1);
+            UITools.DisableButton(healthPlusButton, _healthCount == 10);
+            UITools.DisableButton(manaMinusButton, _manaCount == 1);
+            UITools.DisableButton(manaPlusButton, _manaCount == 10);
         }
 
         private void CheckBuyButtonsState()
         {
+            var staminaPrice = UITools.PriceMul(GameData.potions.energyPrice, _staminaCount);
+            staminaBuyButtonTitle.text = "Buy for " + UITools.PriceToString(staminaPrice);
+            UITools.DisableButton(staminaBuyButton, !GameData.player.CanBuy(staminaPrice));
 
+            var scrollPrice = UITools.PriceMul(GameData.potions.replayPrice, _scrollCount);
+            scrollBuyButtonTitle.text = "Buy for " + UITools.PriceToString(scrollPrice);
+            UITools.DisableButton(scrollBuyButton, !GameData.player.CanBuy(scrollPrice));
+
+            var healthPrice = UITools.PriceMul(GameData.potions.hpPrice, _healthCount);
+            healthBuyButtonTitle.text = "Buy for " + UITools.PriceToString(healthPrice);
+            UITools.DisableButton(healthBuyButton, !GameData.player.CanBuy(healthPrice));
+
+            var manaPrice = UITools.PriceMul(GameData.potions.manaPrice, _manaCount);
+            manaBuyButtonTitle.text = "Buy for " + UITools.PriceToString(manaPrice);
+            UITools.DisableButton(manaBuyButton, !GameData.player.CanBuy(manaPrice));
         }
 
         private void StaminaPlusButtonClick()

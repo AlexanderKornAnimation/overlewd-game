@@ -48,7 +48,7 @@ namespace Overlewd
                 var sprite = p.sprite;
                 result += String.IsNullOrEmpty(sprite) ?
                         "" :
-                        String.IsNullOrEmpty(result) ? sprite : (" " + sprite);
+                        String.IsNullOrEmpty(result) ? sprite + $" {p.amount}" : (" " + sprite + $" {p.amount}");
             }
             return result;
         }
