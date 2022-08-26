@@ -53,6 +53,7 @@ namespace Overlewd
         private AdminBRO.Battle battleData;
 
         private int energyCost => inputData?.energyCost ?? 0;
+        private int replayCost => inputData?.replayCost ?? 0;
 
         void Awake()
         {

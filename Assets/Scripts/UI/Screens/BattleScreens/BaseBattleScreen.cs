@@ -85,6 +85,7 @@ namespace Overlewd
     {
 		public int energyCost => ftueStageData?.ftueChapterData?.battleEnergyPointsCost ??
 			eventStageData?.eventChapterData?.battleEnergyPointsCost ?? 0;
+		public int replayCost => 1;
     }
 
 	public class BaseBattleScreenInData : BaseFullScreenInData
