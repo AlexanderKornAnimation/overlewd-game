@@ -38,9 +38,7 @@ namespace Overlewd
         private TextMeshProUGUI fastBattleText;
         private Button buttonPlus;
         private Button buttonMinus;
-        private TextMeshProUGUI uiScrollCount;
-        private int scrollAmount = 1;
-
+        private TextMeshProUGUI uiBattlesCount;
 
         private Image[] rewards = new Image[RewardsCount];
         private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
@@ -52,14 +50,15 @@ namespace Overlewd
         private TextMeshProUGUI markers;
         private AdminBRO.Battle battleData;
 
+        private int battlesCount => int.Parse(uiBattlesCount.text);
         private int energyCost => inputData?.energyCost ?? 0;
         private int replayCost => inputData?.replayCost ?? 0;
+        private (int scrollCost, int energyCost) fastBattleCost => (battlesCount * replayCost, battlesCount * energyCost);
 
         void Awake()
         {
-            var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/PrepareBattlePopups/PrepareBossFightPopup/PrepareBossFightPopup",
-                    transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab(
+                "Prefabs/UI/Popups/PrepareBattlePopups/PrepareBossFightPopup/PrepareBossFightPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
             var levelTitle = canvas.Find("LevelTitle");
@@ -100,7 +99,7 @@ namespace Overlewd
             var fastBattle = canvas.Find("FastBattle");
             fastBattleAvailable = fastBattle.Find("Available").gameObject;
             var substrateCounter = fastBattleAvailable.transform.Find("SubstrateCounter");
-            uiScrollCount = substrateCounter.Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
+            uiBattlesCount = substrateCounter.Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
             buttonPlus = substrateCounter.Find("ButtonPlus").GetComponent<Button>();
             buttonPlus.onClick.AddListener(PlusButtonClick);
             buttonMinus = substrateCounter.Find("ButtonMinus").GetComponent<Button>();
@@ -203,11 +202,15 @@ namespace Overlewd
 
             userHpAmount.text = GameData.player.hpAmount.ToString();
             userManaAmount.text = GameData.player.manaAmount.ToString();
-            userStaminaAmount.text = GameData.player.energyPoints + "/120";
+            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
+            userScrollAmount.text = GameData.player.replayAmount.ToString();
             allyTeamPotency.text = GameData.characters.myTeamPotency.ToString();
             
             battleButtonText.text =
                 $"Make them suffer\nwith <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {energyCost} energy!";
+            fastBattleText.text =
+                $"Give an order to hunt\nfor <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {fastBattleCost.energyCost} and {AdminBRO.PlayerInfo.Sprite_Scroll} {fastBattleCost.scrollCost}";
+            CheckButtonStatus();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -225,51 +228,67 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private async void FastBattleButtonClick()
+         private async void FastBattleButtonClick()
         {            
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (GameData.player.energyPoints >= energyCost)
+            
+            bool canPlayFastBattle = GameData.player.energyAmount >= fastBattleCost.energyCost &&
+                GameData.player.replayAmount >= fastBattleCost.scrollCost;
+            
+            if (canPlayFastBattle)
             {
                 if (inputData.ftueStageId.HasValue)
                 {
-                    await GameData.ftue.ReplayStage(inputData.ftueStageId.Value, scrollAmount);
+                    await GameData.ftue.ReplayStage(inputData.ftueStageId.Value, battlesCount);
                 }
                 else if (inputData.eventStageId.HasValue)
                 {
-                    await GameData.events.StageReplay(inputData.eventStageId.Value, scrollAmount);
+                    await GameData.events.StageReplay(inputData.eventStageId.Value, battlesCount);
                 }
                     
                 UIManager.HidePopup();
             }
             else
             {
-                UIManager.ShowPopup<BottlesPopup>();
+                UIManager.MakePopup<BottlesPopup>().
+                    SetData(new BottlesPopupInData
+                    {
+                        prevPopupInData = inputData,
+                    }).RunShowPopupProcess();
             }
         }
         
         private void PlusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            scrollAmount++;
-            fastBattleText.text =
-                $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {energyCost * scrollAmount} and {AdminBRO.PlayerInfo.Sprite_Scroll} {scrollAmount}";
-            uiScrollCount.text = scrollAmount.ToString();
+            Inc();
         }
         
         private void MinusButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            scrollAmount--;
-            
-            if (scrollAmount < 1)
-                scrollAmount = 1;
-
-            fastBattleText.text =
-                $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {energyCost * scrollAmount} and {AdminBRO.PlayerInfo.Sprite_Scroll} {scrollAmount}";
-            
-            uiScrollCount.text = scrollAmount.ToString();
+            Dec();
         }
 
+        private void Inc()
+        {
+            uiBattlesCount.text = (battlesCount + 1).ToString();
+            CheckButtonStatus();
+        }
+
+        private void Dec()
+        {
+            uiBattlesCount.text = (battlesCount - 1).ToString();
+            CheckButtonStatus();
+        }
+
+        private void CheckButtonStatus()
+        {
+            fastBattleText.text =
+                $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {fastBattleCost.energyCost} and {AdminBRO.PlayerInfo.Sprite_Scroll} {fastBattleCost.scrollCost}";
+            buttonPlus.gameObject.SetActive(battlesCount < 5);
+            buttonMinus.gameObject.SetActive(battlesCount > 1);
+        }
         private void ScrollBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -280,7 +299,6 @@ namespace Overlewd
                 }).RunShowPopupProcess();
         }
 
-        
         private void PotionBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
