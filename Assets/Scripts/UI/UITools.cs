@@ -13,23 +13,46 @@ namespace Overlewd
 {
     public static class UITools
     {
+        public static List<AdminBRO.PriceItem> PriceMul(List<AdminBRO.PriceItem> price, int mul)
+        {
+            var result = new List<AdminBRO.PriceItem>();
+            foreach (var p in price)
+            {
+                result.Add(p * mul);
+            }
+            return result;
+        }
+
         public static string RewardsToString(List<AdminBRO.RewardItem> rewards)
         {
-            string str = "";
-            
+            string result = "";
             foreach (var reward in rewards)
             {
-                var item = GameData.markets.GetTradableById(reward.tradableId);
-                
-                if (item?.type == AdminBRO.TradableItem.Type_Currency)
+                var tData = reward.tradableData;
+                if (tData?.type == AdminBRO.TradableItem.Type_Currency)
                 {
-                    str += GameData.currencies.GetById(item.currencyId).sprite + " ";
+                    var sprite = tData?.sprite;
+                    result += String.IsNullOrEmpty(sprite) ?
+                        "" :
+                        String.IsNullOrEmpty(result) ? sprite : (" " + sprite);
                 }
             }
-
-            return str;
+            return result;
         }
-        
+
+        public static string PriceToString(List<AdminBRO.PriceItem> price)
+        {
+            string result = "";
+            foreach (var p in price)
+            {
+                var sprite = p.sprite;
+                result += String.IsNullOrEmpty(sprite) ?
+                        "" :
+                        String.IsNullOrEmpty(result) ? sprite : (" " + sprite);
+            }
+            return result;
+        }
+
         public static void FillWallet(Transform transform)
         {
             var crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();

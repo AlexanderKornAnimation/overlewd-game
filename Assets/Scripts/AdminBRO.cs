@@ -24,9 +24,19 @@ namespace Overlewd
             public int currencyId;
             public int amount;
 
-            public static PriceItem operator* (int d, PriceItem a) =>
-                new PriceItem { currencyId = a.currencyId, amount = a.amount * d };
-            public static PriceItem operator* (PriceItem a, int d) => d * a;
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.CurrencyItem currencyData =>
+                GameData.currencies.GetById(currencyId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => currencyData?.iconUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string sprite => currencyData?.sprite;
+
+            public static PriceItem operator* (int mul, PriceItem a) =>
+                new PriceItem { currencyId = a.currencyId, amount = a.amount * mul };
+            public static PriceItem operator* (PriceItem a, int mul) => mul * a;
         }
 
         [Serializable]
@@ -41,6 +51,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string icon => tradableData?.icon;
+
+            [JsonProperty(Required = Required.Default)]
+            public string sprite => tradableData?.sprite;
         }
 
         [Serializable]
@@ -376,6 +389,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string icon => currencyData?.iconUrl ?? imageUrl;
+
+            [JsonProperty(Required = Required.Default)]
+            public string sprite => currencyData?.sprite;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
