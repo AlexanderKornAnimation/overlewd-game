@@ -81,6 +81,12 @@ namespace Overlewd
 		}
 	}
 
+	public class BasePrepareBattlePopupInData : BasePopupInData
+    {
+		public int energyCost => ftueStageData?.ftueChapterData?.battleEnergyPointsCost ??
+			eventStageData?.eventChapterData?.battleEnergyPointsCost ?? 0;
+    }
+
 	public class BaseBattleScreenInData : BaseFullScreenInData
 	{
 		public int? battleId { get; set; }

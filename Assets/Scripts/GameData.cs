@@ -496,6 +496,8 @@ namespace Overlewd
             events.Find(e => e.id == id);
         public AdminBRO.EventChapter GetChapterById(int? id) =>
             chapters.Find(c => c.id == id);
+        public AdminBRO.EventChapter GetChapterByStageId(int? id) =>
+            chapters.Find(c => c.stages.Exists(sId => sId == id));
         public AdminBRO.EventStageItem GetStageById(int? id) =>
             stages.Find(s => s.id == id);
 

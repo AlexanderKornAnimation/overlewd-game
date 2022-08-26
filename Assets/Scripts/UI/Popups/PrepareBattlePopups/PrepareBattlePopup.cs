@@ -52,7 +52,8 @@ namespace Overlewd
 
         private TextMeshProUGUI markers;
         private AdminBRO.Battle battleData;
-        private int? energyCost;
+
+        private int energyCost => inputData?.energyCost ?? 0;
 
         private void Awake()
         {
@@ -207,13 +208,6 @@ namespace Overlewd
             userManaAmount.text = GameData.player.manaAmount.ToString();
             userStaminaAmount.text = GameData.player.energyPoints + "/120";
             allyTeamPotency.text = GameData.characters.myTeamPotency.ToString();
-
-            if (inputData != null)
-            {
-                energyCost = inputData.ftueStageId.HasValue
-                    ? GameData.ftue.activeChapter.battleEnergyPointsCost
-                    : GameData.events.mapEventData.activeChapter.battleEnergyPointsCost;
-            }
             
             battleButtonText.text =
                 $"Make them suffer\nwith <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {energyCost} energy!";
@@ -239,25 +233,22 @@ namespace Overlewd
         {            
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             
-            if (energyCost.HasValue)
+            if (GameData.player.energyPoints >= energyCost)
             {
-                if (GameData.player.energyPoints >= energyCost)
+                if (inputData.ftueStageId.HasValue)
                 {
-                    if (inputData.ftueStageId.HasValue)
-                    {
-                        await GameData.ftue.ReplayStage(inputData.ftueStageId.Value, scrollAmount);
-                    }
-                    else if (inputData.eventStageId.HasValue)
-                    {
-                        await GameData.events.StageReplay(inputData.eventStageId.Value, scrollAmount);
-                    }
+                    await GameData.ftue.ReplayStage(inputData.ftueStageId.Value, scrollAmount);
+                }
+                else if (inputData.eventStageId.HasValue)
+                {
+                    await GameData.events.StageReplay(inputData.eventStageId.Value, scrollAmount);
+                }
                     
-                    UIManager.HidePopup();
-                }
-                else
-                {
-                    UIManager.ShowPopup<BottlesPopup>();
-                }
+                UIManager.HidePopup();
+            }
+            else
+            {
+                UIManager.ShowPopup<BottlesPopup>();
             }
         }
         
@@ -337,22 +328,19 @@ namespace Overlewd
         private void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            if (energyCost.HasValue)
+            if (GameData.player.energyPoints >= energyCost)
             {
-                if (GameData.player.energyPoints >= energyCost)
-                {
-                    UIManager.MakeScreen<BattleScreen>().
-                        SetData(new BaseBattleScreenInData
-                        {
-                            prevScreenInData = UIManager.prevScreenInData,
-                            ftueStageId = inputData.ftueStageId,
-                            eventStageId = inputData.eventStageId
-                        }).RunShowScreenProcess();
-                }
-                else
-                {
-                    UIManager.ShowPopup<BottlesPopup>();
-                }
+                UIManager.MakeScreen<BattleScreen>().
+                    SetData(new BaseBattleScreenInData
+                    {
+                        prevScreenInData = UIManager.prevScreenInData,
+                        ftueStageId = inputData.ftueStageId,
+                        eventStageId = inputData.eventStageId
+                    }).RunShowScreenProcess();
+            }
+            else
+            {
+                UIManager.ShowPopup<BottlesPopup>();
             }
         }
 
@@ -377,7 +365,7 @@ namespace Overlewd
         }
     }
 
-    public class PrepareBattlePopupInData : BasePopupInData
+    public class PrepareBattlePopupInData : BasePrepareBattlePopupInData
     {
         
     }

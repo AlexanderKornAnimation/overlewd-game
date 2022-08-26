@@ -685,6 +685,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isClosed => status == Status_Closed;
+
+            [JsonProperty(Required = Required.Default)]
+            public EventChapter eventChapterData =>
+                GameData.events.GetChapterByStageId(id);
         }
 
         // /quests
