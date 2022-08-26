@@ -1762,25 +1762,27 @@ namespace Overlewd
             }
         }
 
-        public static async Task forgeMergeShard(int matriarchId, string rarity)
+        public static async Task forgeMergeShard(int matriarchId, string rarity, int amount)
         {
             var url = "http://api.overlewd.com/forge/merge/shard";
             var form = new WWWForm();
             form.AddField("matriarchId", matriarchId);
             form.AddField("rarity", rarity);
+            form.AddField("amount", amount);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
             }
         }
 
-        public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
         {
             var url = "http://api.overlewd.com/forge/exchange/shard";
             var form = new WWWForm();
             form.AddField("matriarchSourceId", matriarchSourceId);
             form.AddField("matriarchTargetId", matriarchTargetId);
             form.AddField("rarity", rarity);
+            form.AddField("amount", amount);
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
@@ -1804,12 +1806,14 @@ namespace Overlewd
             public class MergeShardSettings
             {
                 public int mergeAmount;
+                public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfMergeType;
             }
 
             public class ExchangeShardSettings
             {
                 public int exchangeAmount;
+                public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfExchangeType;
             }
 

@@ -254,14 +254,14 @@ namespace Overlewd
             await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
         }
 
-        public async Task ForgeMergeShard(int matriarchId, string rarity)
+        public async Task ForgeMergeShard(int matriarchId, string rarity, int amount)
         {
-            await AdminBRO.forgeMergeShard(matriarchId, rarity);
+            await AdminBRO.forgeMergeShard(matriarchId, rarity, amount);
         }
 
-        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
         {
-            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity);
+            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity, amount);
         }
     }
 
