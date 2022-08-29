@@ -405,18 +405,18 @@ namespace Overlewd
         void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null)
         {
             if (targetCC == null) targetCC = this;
-            bool hit = sk.effectProb >= Random.Range(0, 100);
+            bool hit = sk.effectProb >= Random.Range(0, 1);
             if (sk.effect != null)
                 if (hit)
                 {
                     var duration = Mathf.RoundToInt(sk.effectActingDuration);
                     float ea = sk.effectAmount;
-                    float effectAmount = healthMax * (ea / 100f);
+                    float effectAmount = healthMax * ea;
                     switch (sk.effect)
                     {
                         case "defense_up":
                             defUp_defDown = duration;
-                            defUp_defDown_dot = ea / 100f;
+                            defUp_defDown_dot = ea;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
                             DrawPopup(msg_defence_up, "green");
                             break;
@@ -502,7 +502,7 @@ namespace Overlewd
                             if (immunity == 0)
                             {
                                 curse = duration;
-                                curse_dot = ea / 100f; //Calculate in total damage
+                                curse_dot = ea; //Calculate in total damage
                                 if (vfx_red) Instantiate(vfx_red, selfVFX);
                             }
                             break;
@@ -524,19 +524,19 @@ namespace Overlewd
             bool isCrit = critrate > Random.value;
 
             Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.Range(0, 100);
+            bool hitEffect = sk.effectProb >= Random.Range(0, 1);
 
             if (sk.effect != null)
                 if (hitEffect)
                 {
                     var duration = Mathf.RoundToInt(sk.effectActingDuration);
                     float ea = sk.effectAmount;
-                    float effectAmount = healthMax * (ea / 100f);
+                    float effectAmount = healthMax * ea;
                     switch (sk.effect)
                     {
                         case "defense_up":
                             defUp_defDown = duration;
-                            defUp_defDown_dot = ea / 100f;
+                            defUp_defDown_dot = ea;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
                             DrawPopup(msg_defence_up, "green");
                             break;
@@ -577,13 +577,13 @@ namespace Overlewd
             bool isCrit = critrate > Random.value;
 
             Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.Range(0, 100);
+            bool hitEffect = sk.effectProb >= Random.Range(0, 1);
             if (sk.effect != null)
                 if (hitEffect)
                 {
                     var duration = Mathf.RoundToInt(sk.effectActingDuration);
                     float ea = sk.effectAmount;
-                    float effectAmount = targetCC.healthMax * (ea / 100f);
+                    float effectAmount = targetCC.healthMax * ea;
                     switch (sk.effect)
                     {
                         case "defense_down":
@@ -648,7 +648,7 @@ namespace Overlewd
                             if (targetCC.immunity == 0)
                             {
                                 targetCC.curse = duration;
-                                targetCC.curse_dot = ea / 100f; //Calculate in total damage
+                                targetCC.curse_dot = ea; //Calculate in total damage
                                 if (vfx_red) Instantiate(vfx_red, targetCC.selfVFX);
                             }
                             break;
@@ -665,13 +665,13 @@ namespace Overlewd
         public void AddEffectManual(string effect)
         {
             var duration = 1;
-            float ea = 50;
-            float effectAmount = healthMax * (ea / 100f);
+            float ea = 0.5f;
+            float effectAmount = healthMax * ea;
             switch (effect)
             {
                 case "defense_up":
                     defUp_defDown += duration;
-                    defUp_defDown_dot = ea / 100f;
+                    defUp_defDown_dot = ea;
                     if (vfx_blue) Instantiate(vfx_blue, selfVFX);
                     DrawPopup(msg_defence_up, "green");
                     break;
@@ -756,7 +756,7 @@ namespace Overlewd
                     if (immunity == 0)
                     {
                         curse = duration;
-                        curse_dot = ea / 100f; //Calculate in total damage
+                        curse_dot = ea; //Calculate in total damage
                         if (vfx_red) Instantiate(vfx_red, selfVFX);
                     }
                     break;
