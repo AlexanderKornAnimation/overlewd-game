@@ -40,6 +40,8 @@ namespace Overlewd
         private Button manaMinusButton;
         private TextMeshProUGUI manaCount;
 
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         private int _staminaCount => int.Parse(staminaCount.text);
         private int _scrollCount => int.Parse(scrollCount.text);
@@ -112,6 +114,8 @@ namespace Overlewd
             manaPlusButton = mana.Find("ButtonPlus").GetComponent<Button>();
             manaPlusButton.onClick.AddListener(ManaPlusButtonClick);
             manaCount = mana.Find("Counter").Find("Count").GetComponent<TextMeshProUGUI>();
+
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
             
             staminaAmount = staminaCounter.Find("Stamina").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
             staminaBottleAmount = staminaCounter.Find("Bottle").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
@@ -130,6 +134,7 @@ namespace Overlewd
             scrollCount.text = 1.ToString();
             healthCount.text = 1.ToString();
             manaCount.text = 1.ToString();
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
 
             Refresh();
 
@@ -164,6 +169,7 @@ namespace Overlewd
             CheckIncButtonsState();
             CheckBuyButtonsState();
             RefreshEnergyPanel();
+            walletWidget.Customize();
         }
 
         private void CheckBuyButtonsState()
