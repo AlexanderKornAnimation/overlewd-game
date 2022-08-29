@@ -133,11 +133,8 @@ namespace Overlewd
             potion_mp?.OnClickAction.AddListener(UseMPPotion);
             potion_hp?.OnClickAction.AddListener(UseHPPotion);
 
-            /*if (battleSettings.hidePotions)
-            {
-                potion_hp.gameObject.SetActive(false);
-                potion_mp.gameObject.SetActive(false);
-            }*/
+            transform.Find("BattleUICanvas/Character/Buttons/Bottles/").gameObject.SetActive(ManaPotionsChecker()); //turn off bottles
+
             characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
 
             DropCharactersFromList(playerTeam, isEnemy: false);
@@ -180,8 +177,8 @@ namespace Overlewd
                 cc.character = c;
 
                 var cRes = characterResList?.Find(item => item.key == c.key);
-                var defaultSkin = bossLevel ? 
-                    characterResList?.Find(item => item.key == "CERBERUS") : 
+                var defaultSkin = bossLevel ?
+                    characterResList?.Find(item => item.key == "CERBERUS") :
                     characterResList?.Find(item => item.key == "DEFAULT");
                 cc.characterRes = cRes == null ? defaultSkin : cRes; //load default skin if key not found
 
@@ -342,7 +339,6 @@ namespace Overlewd
 
             if (sc.CheckMana(ccOnSelect.mana))
             {
-
                 if (sc.selectable && !sc.silence)
                 {
                     if (AOE)
@@ -492,7 +488,8 @@ namespace Overlewd
         public void StateUpdate(CharController invoker) //call when any character is dead
         {
             var index = charControllerList.FindIndex(x => x == invoker);
-            if (!bossLevel) { //Destroy queue portrait
+            if (!bossLevel)
+            { //Destroy queue portrait
                 var qe = QueueElements.Find(f => f.cc == invoker);
                 Destroy(qe.gameObject);
                 QueueElements.Remove(qe);
@@ -600,12 +597,10 @@ namespace Overlewd
                     bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                 }
             }
-            
         }
 
         private void SetSkillCtrl(CharController cc)
         {
-            skillPanelWidthScale.sizeDelta = cc.isOverlord ? new Vector2(518, 144) : new Vector2(406, 144);
             var i = cc.skill?.Count;
             var j = 0;
             bool silent = cc.silence > 0;
@@ -649,6 +644,21 @@ namespace Overlewd
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
                 }
         }
+        private bool ManaPotionsChecker()
+        {
+            if (battleScene.GetBattleData().ftueChapterKey == "chapter1")
+            {
+                string[] battlesToCheck = { "battle1", "battle2", "battle3", "battle4" };
+                var stageKey = battleScene.GetBattleData().ftueStageKey;
+                foreach (var item in battlesToCheck)
+                    if (item == stageKey)
+                        return false;
+            }
+            return true;
+        }
+        public bool MagicGuildChecker() => 
+            !(battleScene.GetBattleData().ftueChapterKey == "chapter1" || battleScene.GetBattleData().ftueChapterKey == "chapter2");
+        
         public bool CheckBattleGameData(string chapterID, string battleID)
         {
             return false;
