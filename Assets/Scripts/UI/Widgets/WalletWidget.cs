@@ -14,6 +14,7 @@ namespace Overlewd
         private TextMeshProUGUI copper;
         private TextMeshProUGUI gold;
         private TextMeshProUGUI gems;
+
         private void Awake()
         {
             crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();

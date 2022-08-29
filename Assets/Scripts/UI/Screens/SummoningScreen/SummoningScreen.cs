@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace Overlewd
         private TextMeshProUGUI portalButtonText;
         private Transform canvas;
         private Transform shardsPos;
+
+        private SpineScene bgAnim;
+        private bool endBGAnim = false;
 
         private void Awake()
         {
@@ -56,6 +60,9 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            //bgAnim = SpineScene.GetInstance(GameData.animations["gacha_portal_scene1"], shardsPos);
+            //bgAnim.Pause();
+
             switch (inputData.tabType)
             {
                 case AdminBRO.GachaItem.TabType_OverlordEquipment:

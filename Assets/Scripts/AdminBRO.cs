@@ -1013,7 +1013,7 @@ namespace Overlewd
             public float critrate;
             public float health;
             public float damage;
-            public float mana;
+            public int mana;
             public float? potency;
             public int? sexSceneId;
             public string sexSceneVisibleByRarity;
@@ -1116,7 +1116,7 @@ namespace Overlewd
             public string icon;
             public string effect;
             public string type;
-            public int effectProb;
+            public float effectProb;
             public float effectActingDuration;
             public float effectCooldownDuration;
             public List<PriceItem> levelUpPrice;
@@ -1124,9 +1124,9 @@ namespace Overlewd
             public int manaCost;
             public string actionType;
             public bool AOE;
-            public int amount;
+            public float amount;
             public string trigger;
-            public int effectAmount;
+            public float effectAmount;
 
             public const string Type_Passive = "passive_skill";
             public const string Type_Attack = "attack";
