@@ -297,15 +297,12 @@ namespace Overlewd
         public static async Task FadeShowAsync(GameObject obj, float duration = durationDef)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
 
             float time = 0.0f;
-
             while (time < duration)
             {
                 time += deltaTimeInc;
@@ -316,25 +313,17 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
 
         public static async Task FadeHideAsync(GameObject obj, float duration = durationDef)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
 
             float time = 0.0f;
-
             while (time < duration)
             {
                 time += deltaTimeInc;
@@ -345,47 +334,26 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
 
         public static void FadeShow(GameObject obj)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
-
             canvasGroup.alpha = 1.0f;
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
 
         public static void FadeHide(GameObject obj)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
-
             canvasGroup.alpha = 0.0f;
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
     }
 }

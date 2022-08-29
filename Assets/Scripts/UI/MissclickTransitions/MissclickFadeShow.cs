@@ -10,6 +10,7 @@ namespace Overlewd
         protected override void Awake()
         {
             base.Awake();
+            UITools.FadeHide(gameObject);
         }
 
         public override async Task ProgressAsync()

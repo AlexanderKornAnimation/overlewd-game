@@ -115,7 +115,7 @@ namespace Overlewd
             userScrollAmount = bottlePanel.Find("Scroll").Find("Value").GetComponent<TextMeshProUGUI>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
-            UITools.TopHide(buffRect);
+            UITools.RightHide(buffRect);
 
             markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
             stageTitle = levelTitle.Find("Title").GetComponent<TextMeshProUGUI>();
