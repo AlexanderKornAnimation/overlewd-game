@@ -155,6 +155,8 @@ namespace Overlewd
                 $" {GameData.potions.baseEnergyVolume}";
             staminaAmount.text = $"{GameData.player.energyPoints}/{GameData.potions.baseEnergyVolume}";
             staminaBottleAmount.text = GameData.player.energyPotionAmount.ToString();
+
+            UITools.DisableButton(refillButton, GameData.player.energyPotionAmount < 1);
         }
 
         private void Refresh()
