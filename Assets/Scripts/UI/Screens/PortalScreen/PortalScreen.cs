@@ -33,7 +33,8 @@ namespace Overlewd
 
         private Button backButton;
         private Transform tabArea;
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         void Awake()
         {
@@ -57,7 +58,7 @@ namespace Overlewd
 
             }
 
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -144,8 +145,8 @@ namespace Overlewd
                 pressedTabs[i].gameObject.SetActive(false);
                 contents[i].gameObject.SetActive(false);
             }
-            
-            UITools.FillWallet(currencyBack);
+
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
         private void SelectOffer(NSPortalScreen.OfferButton offerButton)

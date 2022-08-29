@@ -41,7 +41,8 @@ namespace Overlewd
         private GameObject battleGirlsEquipContentGO;
         private GameObject overlordContentGO;
         
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
         private Transform tabArea;
         private Button backButton;
 
@@ -142,8 +143,7 @@ namespace Overlewd
                 mergePriceAmount[i] = mergePrice[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
             }
             
-            currencyBack = canvas.Find("CurrencyBack");
-            UITools.FillWallet(currencyBack);
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -173,6 +173,7 @@ namespace Overlewd
             activeTabId = inputData.activeTabId ?? TabShard;
             targetItem.SetActive(false);
             consumeItem.SetActive(false);
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
             EnterTab(activeTabId);
         }
 

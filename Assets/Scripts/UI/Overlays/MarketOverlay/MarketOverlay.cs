@@ -16,7 +16,8 @@ namespace Overlewd
         private Button backButton;
         private Transform canvas;
         private Transform offerButtonsContent;
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
         private Transform offerPos;
 
         private void Awake()
@@ -25,7 +26,7 @@ namespace Overlewd
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/MarketOverlay/Market", transform);
 
             canvas = screenInst.transform.Find("Canvas");
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
             offerButtonsContent = canvas.Find("OfferButtonsScroll").Find("Viewport").Find("Content");
             backButton = canvas.Find("CloseButton").GetComponent<Button>();
             backButton.onClick.AddListener(CloseButtonClick);
@@ -36,8 +37,8 @@ namespace Overlewd
         {
             AddOffers();
             SelectOffer(offers.First());
-            UITools.FillWallet(currencyBack);
-            
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
+                
             await Task.CompletedTask;
         }
 

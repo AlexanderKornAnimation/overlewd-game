@@ -52,23 +52,6 @@ namespace Overlewd
             }
             return result;
         }
-
-        public static void FillWallet(Transform transform)
-        {
-            var crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();
-            var wood = transform.Find("Wood").GetComponent<TextMeshProUGUI>();
-            var stone = transform.Find("Stone").GetComponent<TextMeshProUGUI>();
-            var copper = transform.Find("Copper").GetComponent<TextMeshProUGUI>();
-            var gold = transform.Find("Gold").GetComponent<TextMeshProUGUI>();
-            var gems = transform.Find("Gems").GetComponent<TextMeshProUGUI>();
-           
-            crystal.text = $"<size=40>{GameData.currencies.Crystals.sprite}<size=44> {GameData.player.Crystal.amount}";
-            wood.text = $"<size=40>{GameData.currencies.Wood.sprite}<size=44> {GameData.player.Wood.amount}";
-            copper.text = $"<size=40>{GameData.currencies.Copper.sprite}<size=44> {GameData.player.Copper.amount}";
-            gold.text = $"<size=40>{GameData.currencies.Gold.sprite}<size=44> {GameData.player.Gold.amount}";
-            gems.text = $"<size=40>{GameData.currencies.Gems.sprite}<size=44> {GameData.player.Gems.amount}";
-            stone.text = $"<size=40>{GameData.currencies.Stone.sprite}<size=44> {GameData.player.Stone.amount}";
-        }
         
         public static void DisableButton(Button button, bool disable = true)
         {

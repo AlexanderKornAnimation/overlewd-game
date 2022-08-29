@@ -47,7 +47,8 @@ namespace Overlewd
 
         private Image weapon;
         private Button weaponScreenButton;
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
         private Image girl;
 
         private GameObject passiveSkillGO;
@@ -113,7 +114,7 @@ namespace Overlewd
             rarityEpic = classInfo.Find("RarityEpic").gameObject;
             rarityHeroic = classInfo.Find("RarityHeroic").gameObject;
 
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
             girl = canvas.Find("Girl").GetComponent<Image>();
 
             passiveSkillGO = skills.Find("PassiveSkill").gameObject;
@@ -130,6 +131,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
 
             await Task.CompletedTask;
         }
@@ -162,7 +164,6 @@ namespace Overlewd
             var characterData = inputData?.characterData;
             if (characterData != null)
             {
-                
                 speed.text = characterData.speed.ToString();
                 power.text = characterData.power.ToString();
                 constitution.text = characterData.constitution.ToString();
@@ -228,7 +229,6 @@ namespace Overlewd
                 }
             }
 
-            UITools.FillWallet(currencyBack);
         }
 
         private void BackButtonClick()
@@ -278,11 +278,13 @@ namespace Overlewd
             {
                 case GameDataEvent.Type.CharacterLvlUp:
                     Customize();
+                    walletWidget.Customize();
                     break;
                 case GameDataEvent.Type.CharacterSkillLvlUp:
                     basicSkill.Customize();
                     ultimateSkill.Customize();
                     passiveSkill.Customize();
+                    walletWidget.Customize();
                     break;
             }
         }

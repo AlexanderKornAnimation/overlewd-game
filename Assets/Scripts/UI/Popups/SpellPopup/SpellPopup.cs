@@ -15,7 +15,8 @@ namespace Overlewd
         private List<TextMeshProUGUI> count = new List<TextMeshProUGUI>();
 
         private Transform spawnPoint;
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         private TextMeshProUGUI spellName;
         private TextMeshProUGUI description;
@@ -34,7 +35,7 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
 
             spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
 
             spellName = canvas.Find("SpellName").GetComponent<TextMeshProUGUI>();
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
@@ -88,7 +89,7 @@ namespace Overlewd
             }
             
             FireballSpell.GetInstance(spawnPoint);
-            UITools.FillWallet(currencyBack);
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
         private async void CrystalBuildButtonClick()
