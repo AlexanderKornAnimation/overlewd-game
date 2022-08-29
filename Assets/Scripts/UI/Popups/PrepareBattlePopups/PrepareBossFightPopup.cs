@@ -380,7 +380,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            await UITools.TopShowAsync(buffRect, 0.2f);
+            await UITools.RightShowAsync(buffRect, 0.2f);
 
             //ftue part
             switch (GameData.ftue.stats.lastEndedState)
@@ -393,7 +393,7 @@ namespace Overlewd
 
         public override async Task BeforeHideAsync()
         {
-            await UITools.TopHideAsync(buffRect, 0.2f);
+            await UITools.RightHideAsync(buffRect, 0.2f);
         }
     }
 
