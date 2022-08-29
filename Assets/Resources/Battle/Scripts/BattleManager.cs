@@ -558,7 +558,6 @@ namespace Overlewd
                 if (round == 1)
                 {
                     BattleNotif("chapter1", "battle1", "battletutor2"); //one round later
-                    BattleNotif("chapter1", "battle4", "bosstutor");
                 }
                 roundEnd?.Invoke(); //снимает два статуса почему-то
                 round++;
@@ -674,6 +673,7 @@ namespace Overlewd
             BattleNotif("chapter1", "battle1", "battletutor1");
             BattleNotif("chapter1", "battle3", "battletutor4");
             BattleNotif("chapter1", "battle5", "potionstutor2");
+            BattleNotif("chapter1", "battle4", "bosstutor");
         }
         public void AddStatus(string effect)
         {

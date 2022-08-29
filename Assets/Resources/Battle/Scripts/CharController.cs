@@ -210,7 +210,7 @@ namespace Overlewd
                 if (ps.trigger == "on_attack")
                     if (ps.actionType == "heal")
                         PassiveBuff(ps);
-            damageTotal = Mathf.RoundToInt(damage * ((float)skill[id].amount / 100f) * buffDamageScale);
+            damageTotal = Mathf.RoundToInt(damage * ((float)skill[id].amount) * buffDamageScale);
             damageTotal *= curseDotScale;
             if (characterRes.ani_pAttack_name[id] == "")
                 preAttackDuration = 0f;
@@ -517,11 +517,7 @@ namespace Overlewd
                             break;
                     }
                     observer.UpdateStatuses();
-                }
-                else
-                {
-                    DrawPopup("Effect miss", "red");
-                }
+                } //else DrawPopup("Effect miss", "red");
         }
         void PassiveBuff(AdminBRO.CharacterSkill sk)
         {
@@ -574,10 +570,6 @@ namespace Overlewd
                             break;
                     }
                     observer.UpdateStatuses();
-                }
-                else
-                {
-                    DrawPopup("Passive effect miss", "red");
                 }
         }
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
@@ -668,10 +660,6 @@ namespace Overlewd
                             break;
                     }
                     observer.UpdateStatuses();
-                }
-                else
-                {
-                    DrawPopup("Effect miss", "red");
                 }
         }
         public void AddEffectManual(string effect)
