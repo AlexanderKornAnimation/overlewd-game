@@ -50,6 +50,7 @@ namespace Overlewd
         private GameObject firstTimeRewardStatus;
 
         private TextMeshProUGUI markers;
+        private TextMeshProUGUI stageTitle;
         private AdminBRO.Battle battleData;
 
         private int battlesCount => int.Parse(uiBattlesCount.text);
@@ -124,6 +125,7 @@ namespace Overlewd
             UITools.RightHide(buffRect);
 
             markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
+            stageTitle = levelTitle.Find("Title").GetComponent<TextMeshProUGUI>();
 
             firstTimeReward = rewardsTr.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardCount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
@@ -205,17 +207,18 @@ namespace Overlewd
             if (isStageComplete.HasValue)
                 fastBattleAvailable.SetActive(isStageComplete.Value);
             
-            userHpAmount.text = GameData.player.hpAmount.ToString();
-            userManaAmount.text = GameData.player.manaAmount.ToString();
+            userHpAmount.text = GameData.player.hpPotionAmount.ToString();
+            userManaAmount.text = GameData.player.manaPotionAmount.ToString();
             userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
             userScrollAmount.text = GameData.player.replayAmount.ToString();
             allyTeamPotency.text = GameData.characters.myTeamPotency.ToString();
+            stageTitle.text = battleData.title;
             
             battleButtonText.text =
                 $"Make them suffer\nwith <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {energyCost} energy!";
             fastBattleText.text =
                 $"Give an order to hunt\nfor <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {fastBattleCost.energyCost} and {AdminBRO.PlayerInfo.Sprite_Scroll} {fastBattleCost.scrollCost}";
-            CheckButtonStatus();
+            CheckButtonState();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -233,15 +236,13 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-       
-        
         private async void FastBattleButtonClick()
         {            
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            bool canPlayFastBattle = GameData.player.energyAmount >= fastBattleCost.energyCost &&
+            bool canPlayFastBattle = GameData.player.energyPoints >= fastBattleCost.energyCost &&
                 GameData.player.replayAmount >= fastBattleCost.scrollCost;
-            
+            Debug.Log(canPlayFastBattle);
             if (canPlayFastBattle)
             {
                 if (inputData.ftueStageId.HasValue)
@@ -280,16 +281,16 @@ namespace Overlewd
         private void Inc()
         {
             uiBattlesCount.text = (battlesCount + 1).ToString();
-            CheckButtonStatus();
+            CheckButtonState();
         }
 
         private void Dec()
         {
             uiBattlesCount.text = (battlesCount - 1).ToString();
-            CheckButtonStatus();
+            CheckButtonState();
         }
 
-        private void CheckButtonStatus()
+        private void CheckButtonState()
         {
             fastBattleText.text =
                 $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {fastBattleCost.energyCost} and {AdminBRO.PlayerInfo.Sprite_Scroll} {fastBattleCost.scrollCost}";

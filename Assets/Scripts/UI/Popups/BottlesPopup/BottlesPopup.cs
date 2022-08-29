@@ -147,7 +147,7 @@ namespace Overlewd
                 $" <size=35><sprite=\"AssetResources\" name=\"Energy\"></size>" +
                 $" {GameData.potions.baseEnergyVolume}";
             staminaAmount.text = $"{GameData.player.energyPoints}/{GameData.potions.baseEnergyVolume}";
-            staminaBottleAmount.text = GameData.player.energyAmount.ToString();
+            staminaBottleAmount.text = GameData.player.energyPotionAmount.ToString();
         }
 
         private void Refresh()

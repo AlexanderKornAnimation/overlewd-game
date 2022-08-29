@@ -700,9 +700,9 @@ namespace Overlewd
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
-        public int hpAmount => info.potion.hp;
-        public int manaAmount => info.potion.mana;
-        public int energyAmount => info.potion.energy;
+        public int hpPotionAmount => info.potion.hp;
+        public int manaPotionAmount => info.potion.mana;
+        public int energyPotionAmount => info.potion.energy;
         public int replayAmount => info.potion.replay;
         public int energyPoints => info.energyPoints;
 
