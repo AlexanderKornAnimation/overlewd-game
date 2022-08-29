@@ -117,6 +117,13 @@ namespace Overlewd
             staminaBottleAmount = staminaCounter.Find("Bottle").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
         }
 
+        public override async Task BeforeShowDataAsync()
+        {
+            await GameData.player.Get();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             staminaCount.text = 1.ToString();

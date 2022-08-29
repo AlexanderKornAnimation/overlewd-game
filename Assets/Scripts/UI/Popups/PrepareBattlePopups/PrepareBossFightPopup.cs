@@ -216,6 +216,13 @@ namespace Overlewd
             CheckButtonState();
         }
 
+        public override async Task BeforeShowDataAsync()
+        {
+            await GameData.player.Get();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
