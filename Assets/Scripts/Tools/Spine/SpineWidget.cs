@@ -14,6 +14,9 @@ namespace Overlewd
         public event Action startListeners;
         public event Action completeListeners;
 
+        private bool isComplete = false;
+        private bool loopMode = true;
+
         private class SpineEventInfo
         {
             public string eventName;
@@ -52,6 +55,7 @@ namespace Overlewd
 
         private void CompleteListener(TrackEntry e)
         {
+            isComplete = loopMode ? false : true;
             completeListeners?.Invoke();
         }
 
@@ -101,7 +105,10 @@ namespace Overlewd
         {
             if (skeletonGraphic == null)
                 return;
+
             skeletonGraphic.AnimationState.SetAnimation(0, animationName.Trim(), loop);
+            loopMode = loop;
+            isComplete = false;
         }
 
         public void Pause()
@@ -117,6 +124,8 @@ namespace Overlewd
                 return;
             skeletonGraphic.freeze = false;
         }
+
+        public bool IsComplete => loopMode ? false : isComplete;
 
         public void FlipX()
         {
@@ -168,7 +177,7 @@ namespace Overlewd
             return sw;
         }
 
-        public static SpineWidget GetInstance(AdminBRO.Animation.LayoutData layerData, Transform parent)
+        public static SpineWidget GetInstance(AdminBRO.Animation.LayoutData layerData, Transform parent, bool loop)
         {
             if (layerData == null)
                 return null;
@@ -176,14 +185,14 @@ namespace Overlewd
             var inst = ResourceManager.InstantiateRemoteAsset<GameObject>(layerData.animationPath, layerData.assetBundleId, parent);
             var sw = inst?.AddComponent<SpineWidget>();
             sw?.Initialize();
-            sw?.PlayAnimation(layerData.animationName, true);
+            sw?.PlayAnimation(layerData.animationName, loop);
             return sw;
         }
 
         public static SpineWidget GetInstance(AdminBRO.Animation animationData, Transform parent)
         {
             var layerFirst = animationData?.layouts?.First();
-            return GetInstance(layerFirst, parent);
+            return GetInstance(layerFirst, parent, true);
         }
     }
 }

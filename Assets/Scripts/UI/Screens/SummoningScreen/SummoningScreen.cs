@@ -18,8 +18,8 @@ namespace Overlewd
         private Transform canvas;
         private Transform shardsPos;
 
-        private SpineScene bgAnim;
-        private bool endBGAnim = false;
+        private SpineScene portalFullScreenAnim;
+        private List<Button> activeButtons = new List<Button>();
 
         private void Awake()
         {
@@ -42,6 +42,14 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            portalFullScreenAnim.Play();
+            await UniTask.WaitUntil(() => portalFullScreenAnim.IsComplete);
+
+            foreach (var b in activeButtons)
+            {
+                b.gameObject.SetActive(true);
+            }
+
             if (inputData.isMany)
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
@@ -60,26 +68,37 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            //bgAnim = SpineScene.GetInstance(GameData.animations["gacha_portal_scene1"], shardsPos);
-            //bgAnim.Pause();
+            portalFullScreenAnim = SpineScene.GetInstance(GameData.animations["gacha_portal_scene1"], shardsPos, false);
+            portalFullScreenAnim.Pause();
+
+            activeButtons.Add(portalButton);
 
             switch (inputData.tabType)
             {
                 case AdminBRO.GachaItem.TabType_OverlordEquipment:
                     haremButton.gameObject.SetActive(false);
+                    activeButtons.Add(overlordButton);
                     break;
                 case AdminBRO.GachaItem.TabType_Matriachs:
                     haremButtonText.text = "Go to the Harem\nto edit team";
                     overlordButton.gameObject.SetActive(false);
+                    activeButtons.Add(haremButton);
                     break;
                 case AdminBRO.GachaItem.TabType_CharactersEquipment:
                     haremButtonText.text = "Go to the Harem\nto equip new weapon";
                     overlordButton.gameObject.SetActive(false);
+                    activeButtons.Add(haremButton);
                     break;
                 case AdminBRO.GachaItem.TabType_Shards:
                     haremButtonText.text = "Go to the Harem\nto activate shards";
                     overlordButton.gameObject.SetActive(false);
+                    activeButtons.Add(haremButton);
                     break;
+            }
+
+            foreach (var b in activeButtons)
+            {
+                b.gameObject.SetActive(false);
             }
 
             await Task.CompletedTask;
