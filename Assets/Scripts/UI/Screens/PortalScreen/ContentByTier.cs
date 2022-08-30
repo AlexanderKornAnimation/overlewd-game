@@ -10,17 +10,17 @@ namespace Overlewd
     {
         public class ContentByTier : BaseContent
         {
-            private Button summonFiveButton;
+            private Button summonManyButton;
             private TextMeshProUGUI summonButtonText;
             private List<Transform> steps = new List<Transform>();
 
             protected override void Awake()
             {
                 base.Awake();
-                
-                summonFiveButton = canvas.Find("SummonFiveButton").GetComponent<Button>();
-                summonFiveButton.onClick.AddListener(SummonFiveButtonClick);
-                summonButtonText = summonFiveButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+
+                summonManyButton = canvas.Find("SummonManyButton").GetComponent<Button>();
+                summonManyButton.onClick.AddListener(SummonManyButtonClick);
+                summonButtonText = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 for (int i = 1; i <= 10; i++)
                 {
@@ -38,16 +38,16 @@ namespace Overlewd
                 
             }
 
-            public async void SummonFiveButtonClick()
+            public async void SummonManyButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                var summonData = await GameData.gacha.Buy(gachaId);
+                var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {
                     tabType = gachaData?.tabType,
                     prevScreenInData = UIManager.prevScreenInData,
-                    isFive = true,
+                    isMany = true,
                     summonData = summonData
                 }).RunShowScreenProcess();
             }

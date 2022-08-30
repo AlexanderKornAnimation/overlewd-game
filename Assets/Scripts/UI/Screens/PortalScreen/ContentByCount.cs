@@ -13,8 +13,8 @@ namespace Overlewd
             private Button summonOneButton;
             private TextMeshProUGUI priceForOne;
             
-            private Button summonFiveButton;
-            private TextMeshProUGUI priceForFive;
+            private Button summonManyButton;
+            private TextMeshProUGUI priceForMany;
             
             private Image item;
 
@@ -25,12 +25,12 @@ namespace Overlewd
                 summonOneButton = canvas.Find("SummonOneButton").GetComponent<Button>();
                 summonOneButton.onClick.AddListener(SummonOneButtonClick);
                 priceForOne = summonOneButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                
-                summonFiveButton = canvas.Find("SummonFiveButton").GetComponent<Button>();
-                summonFiveButton.onClick.AddListener(SummonFiveButtonClick);
-                priceForFive = summonFiveButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
-                discount = summonFiveButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
+                summonManyButton = canvas.Find("SummonManyButton").GetComponent<Button>();
+                summonManyButton.onClick.AddListener(SummonManyButtonClick);
+                priceForMany = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+
+                discount = summonManyButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
                 item = canvas.Find("Item").GetComponent<Image>();
 
             }
@@ -58,16 +58,16 @@ namespace Overlewd
                     }).RunShowScreenProcess();
             }
             
-            private async void SummonFiveButtonClick()
+            private async void SummonManyButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                var summonData = await GameData.gacha.BuyTen(gachaId);
+                var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {
                     prevScreenInData = UIManager.prevScreenInData,
                     tabType = gachaData.tabType,
-                    isFive = true,
+                    isMany = true,
                     summonData = summonData
                 }).RunShowScreenProcess();
             }

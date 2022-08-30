@@ -42,7 +42,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (inputData.isFive)
+            if (inputData.isMany)
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
 
@@ -120,7 +120,7 @@ namespace Overlewd
     public class SummoningScreenInData : BaseFullScreenInData
     {
         public string tabType;
-        public bool isFive;
+        public bool isMany;
         public List<AdminBRO.GachaBuyResult> summonData;
     }
 }

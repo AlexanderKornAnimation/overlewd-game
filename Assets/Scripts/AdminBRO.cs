@@ -1843,9 +1843,9 @@ namespace Overlewd
             }
         }
 
-        public static async Task<List<GachaBuyResult>> gachaBuyTenAsync(int id)
+        public static async Task<List<GachaBuyResult>> gachaBuyManyAsync(int id)
         {
-            var url = $"http://api.overlewd.com/gacha/{id}/buy-ten";
+            var url = $"http://api.overlewd.com/gacha/{id}/buy-many";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
@@ -1873,18 +1873,12 @@ namespace Overlewd
             public List<PriceItem> priceForMany;
             public int? discount;
             public int? limitOfCycles;
-            public List<PoolItem> pool;
-            public List<PoolItem> targetPool;
             public string type;
             public List<TierItem> tiers;
             public int? eventId;
             public int count;
-
-            public class PoolItem
-            {
-                public int tradableId;
-                public int probability;
-            }
+            public int currentCount;
+            public int manyAmount;
 
             public class TierItem
             {

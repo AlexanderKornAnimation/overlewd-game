@@ -298,9 +298,9 @@ namespace Overlewd
             return result;
         }
 
-        public async Task<List<AdminBRO.GachaBuyResult>> BuyTen(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> BuyMany(int id)
         {
-            var result = await AdminBRO.gachaBuyTenAsync(id);
+            var result = await AdminBRO.gachaBuyManyAsync(id);
             await Get();
             await GameData.player.Get();
 
