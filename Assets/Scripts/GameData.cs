@@ -110,6 +110,7 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
 
+            await GameData.characters.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -121,6 +122,7 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
 
+            await GameData.characters.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -511,6 +513,7 @@ namespace Overlewd
             var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
             stages = await AdminBRO.eventStagesAsync();
 
+            await GameData.characters.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -521,6 +524,7 @@ namespace Overlewd
             await AdminBRO.eventStageReplayAsync(stageId, count);
             stages = await AdminBRO.eventStagesAsync();
 
+            await GameData.characters.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
