@@ -235,6 +235,8 @@ namespace Overlewd
                     break;
             }
 
+            StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergy));
+
             await Task.CompletedTask;
         }
 
@@ -394,6 +396,11 @@ namespace Overlewd
         public override async Task BeforeHideAsync()
         {
             await UITools.RightHideAsync(buffRect, 0.2f);
+        }
+
+        private void RefreshEnergy()
+        {
+            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
         }
     }
 

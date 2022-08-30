@@ -58,7 +58,7 @@ namespace Overlewd
         private int replayCost => inputData?.replayCost ?? 0;
         private (int scrollCost, int energyCost) fastBattleCost => (battlesCount * replayCost, battlesCount * energyCost);
 
-        private void Awake()
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab(
                     "Prefabs/UI/Popups/PrepareBattlePopups/PrepareBattlePopup/PrepareBattlePopup",
@@ -240,6 +240,8 @@ namespace Overlewd
                     break;
             }
 
+            StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergy));
+
             await Task.CompletedTask;
         }
 
@@ -396,6 +398,11 @@ namespace Overlewd
         public override async Task BeforeHideAsync()
         {
             await UITools.RightHideAsync(buffRect, 0.2f);
+        }
+
+        private void RefreshEnergy()
+        {
+            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
         }
     }
 

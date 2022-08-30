@@ -674,7 +674,38 @@ namespace Overlewd
         {
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
+
+            lastTimeUpd = DateTime.Now;
+            accEnergyPoints = 0.0f;
         }
+
+        private DateTime lastTimeUpd;
+        private float accEnergyPoints = 0.0f;
+        public IEnumerator UpdLocalEnergyPoints(Action action)
+        {
+            while (true)
+            {
+                var time = DateTime.Now;
+                var dt = time - lastTimeUpd;
+                lastTimeUpd = time;
+
+                if (info.energyPoints < GameData.potions.baseEnergyVolume)
+                {
+                    accEnergyPoints += (float)dt.TotalMinutes * GameData.potions.energyRecoverySpeed;
+                    int accPointsIntPart = (int)accEnergyPoints;
+                    accEnergyPoints -= accPointsIntPart;
+                    info.energyPoints = Math.Min(info.energyPoints + accPointsIntPart, GameData.potions.baseEnergyVolume);
+                }
+                else
+                {
+                    accEnergyPoints = 0.0f;
+                }
+
+                action?.Invoke();
+                yield return new WaitForSeconds(1.0f);
+            }
+        }
+
 
         public async Task AddCrystals(int amount = 1000)
         {

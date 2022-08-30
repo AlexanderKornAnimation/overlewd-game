@@ -137,6 +137,7 @@ namespace Overlewd
             walletWidget = WalletWidget.GetInstance(walletWidgetPos);
 
             Refresh();
+            StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergyPanel));
 
             await Task.CompletedTask;
         }
