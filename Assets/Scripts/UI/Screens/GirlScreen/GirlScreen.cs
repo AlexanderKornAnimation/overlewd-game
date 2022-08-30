@@ -24,6 +24,7 @@ namespace Overlewd
         private Transform liliZodiac;
         private TextMeshProUGUI zodiacName;
         private TextMeshProUGUI birthday;
+        private TextMeshProUGUI girlName;
 
         private Transform lvlProgressStep1;
         private Transform lvlProgressStep2;
@@ -76,6 +77,7 @@ namespace Overlewd
             liliZodiac = girlInfo.Find("ZodiacInfo").Find("LiliZodiacIcon");
             zodiacName = girlInfo.Find("ZodiacInfo").Find("ZodiacName").GetComponent<TextMeshProUGUI>();
             birthday = girlInfo.Find("BirthdayInfo").Find("BirthdayDate").GetComponent<TextMeshProUGUI>();
+            girlName = girlInfo.Find("NameBack").Find("Name").GetComponent<TextMeshProUGUI>();
 
             girlUlviImage = canvas.Find("GirlUlvi");
             girlAdrielImage = canvas.Find("GirlAdriel");
@@ -165,6 +167,7 @@ namespace Overlewd
             liliZodiac.gameObject.SetActive(girlData.isLili);
             zodiacName.text = girlData.paramZodiac;
             birthday.text = girlData.paramAge.ToString();
+            girlName.text = girlData.name;
 
             currentProgressLevel.text = girlData.currentEmpathyLevel?.ToString();
             nextProgressLevel.text = girlData.nextEmpathyLevel?.ToString();

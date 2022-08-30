@@ -200,7 +200,6 @@ namespace Overlewd
         private void EnterTab(int tabId)
         {
             activeTabId = tabId;
-            tabs[tabId].gameObject.SetActive(false);
             pressedTabs[tabId].SetActive(true); 
             scrollViews[tabId].SetActive(true);
         }
