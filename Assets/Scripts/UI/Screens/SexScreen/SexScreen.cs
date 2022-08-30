@@ -16,6 +16,7 @@ namespace Overlewd
 
         private TextMeshProUGUI personageName;
         private TextMeshProUGUI text;
+        private GameObject nameBackground;
 
         private Button textContainer;
         private Button skipButton;
@@ -49,8 +50,9 @@ namespace Overlewd
 
             textContainer = canvas.Find("TextContainer").GetComponent<Button>();
             textContainer.onClick.AddListener(TextContainerButtonClick);
-
-            personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
+            
+            nameBackground = canvas.Find("SubstrateName").gameObject;
+            personageName = nameBackground.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
@@ -83,7 +85,9 @@ namespace Overlewd
         {
             if (dialogData == null)
                 return;
-            
+
+            SoundManager.StopBGMusic();
+
             Initialize();
             ShowCurrentReplica();
             AutoplayButtonCustomize();
@@ -245,6 +249,7 @@ namespace Overlewd
             
             personageName.text = replica.characterName;
             text.text = replica.message;
+            nameBackground.SetActive(replica.characterName != null);
 
             ShowMain(replica, prevReplica);
             ShowCutIn(replica, prevReplica);

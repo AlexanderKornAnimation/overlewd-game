@@ -26,19 +26,30 @@ namespace Overlewd
 
             public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
-            private void Awake()
+            private bool init = false;
+
+            public void Initialize()
             {
+                if (init) return;
+
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                
+
                 background = button.gameObject.GetComponent<Image>();
                 selectedButton = canvas.Find("Selected").gameObject;
                 selectedButtonTitle = selectedButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-                
+
                 Deselect();
+
+                init = true;
+            }
+
+            private void Awake()
+            {
+                Initialize();
             }
 
             private void Start()
@@ -54,7 +65,7 @@ namespace Overlewd
                     AdminBRO.GachaItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
                     _ => null
                 };
-
+                
                 if (content != null)
                 {
                     content.gachaId = gachaId;
@@ -69,14 +80,14 @@ namespace Overlewd
 
             public virtual void Select()
             {
-               selectedButton.SetActive(true);
-               content.gameObject.SetActive(true);
+                selectedButton.SetActive(true);
+                content?.gameObject.SetActive(true);
             }
 
             public virtual void Deselect()
             {
                 selectedButton.SetActive(false);
-                content.gameObject.SetActive(false);
+                content?.gameObject.SetActive(false);
             }
 
             public static OfferButton GetInstance(Transform parent)

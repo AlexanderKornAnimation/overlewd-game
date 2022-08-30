@@ -45,7 +45,8 @@ namespace Overlewd
         private Image girlImage;
         private TextMeshProUGUI girlName;
 
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         private List<NSLaboratoryScreen.Character>  flaskCharacters = new List<NSLaboratoryScreen.Character>();
         
@@ -87,7 +88,7 @@ namespace Overlewd
             slotFull = slot.Find("SlotFull").gameObject;
             girlImage = slotFull.transform.Find("Girl").GetComponent<Image>();
             girlName = slotFull.transform.Find("GirlName").GetComponent<TextMeshProUGUI>();
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
             
             foreach (var i in tabIds)
             {
@@ -140,8 +141,8 @@ namespace Overlewd
             {
                 AddChToTab(ch);
             }
-            
-            UITools.FillWallet(currencyBack);
+
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
             UpdFlaskState();
         }
         
@@ -199,7 +200,6 @@ namespace Overlewd
         private void EnterTab(int tabId)
         {
             activeTabId = tabId;
-            tabs[tabId].gameObject.SetActive(false);
             pressedTabs[tabId].SetActive(true); 
             scrollViews[tabId].SetActive(true);
         }
@@ -216,7 +216,7 @@ namespace Overlewd
             switch (eventData.type)
             {
                 case GameDataEvent.Type.CharacterMerge:
-                    UITools.FillWallet(currencyBack);
+                    walletWidget.Customize();
                     EraseAllFromFlusk();
                     break;
             }

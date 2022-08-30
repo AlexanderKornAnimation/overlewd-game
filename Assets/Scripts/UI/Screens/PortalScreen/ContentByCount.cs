@@ -10,11 +10,11 @@ namespace Overlewd
     {
         public class ContentByCount: BaseContent
         {
-            private Button buyOneButton;
+            private Button summonOneButton;
             private TextMeshProUGUI priceForOne;
             
-            private Button buyFiveButton;
-            private TextMeshProUGUI priceForFive;
+            private Button summonManyButton;
+            private TextMeshProUGUI priceForMany;
             
             private Image item;
 
@@ -22,16 +22,16 @@ namespace Overlewd
             {
                 base.Awake();
                 
-                buyOneButton = content.Find("BuyOneButton").GetComponent<Button>();
-                buyOneButton.onClick.AddListener(BuyOneButtonClick);
-                    priceForOne = buyOneButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-                
-                buyFiveButton = content.Find("BuyTenButton").GetComponent<Button>();
-                buyFiveButton.onClick.AddListener(BuyTenButtonClick);
-                priceForFive = buyFiveButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+                summonOneButton = canvas.Find("SummonOneButton").GetComponent<Button>();
+                summonOneButton.onClick.AddListener(SummonOneButtonClick);
+                priceForOne = summonOneButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
-                discount = buyFiveButton.transform.Find("DiscountIcon").Find("Discount").GetComponent<TextMeshProUGUI>();
-                item = content.Find("Item").GetComponent<Image>();
+                summonManyButton = canvas.Find("SummonManyButton").GetComponent<Button>();
+                summonManyButton.onClick.AddListener(SummonManyButtonClick);
+                priceForMany = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+
+                discount = summonManyButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
+                item = canvas.Find("Item").GetComponent<Image>();
 
             }
 
@@ -45,31 +45,37 @@ namespace Overlewd
 
             }
 
-            private void BuyOneButtonClick()
+            private async void SummonOneButtonClick()
             {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var summonData = await GameData.gacha.Buy(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                     {
                         prevScreenInData = UIManager.prevScreenInData,
                         tabType = gachaData.tabType,
+                        summonData = summonData
                     }).RunShowScreenProcess();
             }
             
-            private void BuyTenButtonClick()
+            private async void SummonManyButtonClick()
             {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {
                     prevScreenInData = UIManager.prevScreenInData,
                     tabType = gachaData.tabType,
-                    isFive = true
+                    isMany = true,
+                    summonData = summonData
                 }).RunShowScreenProcess();
             }
 
             public static ContentByCount GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<ContentByCount>
-                    ("Prefabs/UI/Screens/PortalScreen/TabByCount", parent);
+                    ("Prefabs/UI/Screens/PortalScreen/ContentByCount", parent);
             }
         }
     }

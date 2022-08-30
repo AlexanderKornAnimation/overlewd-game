@@ -13,45 +13,53 @@ namespace Overlewd
 {
     public static class UITools
     {
+        public static List<AdminBRO.PriceItem> PriceMul(List<AdminBRO.PriceItem> price, int mul)
+        {
+            var result = new List<AdminBRO.PriceItem>();
+            foreach (var p in price)
+            {
+                result.Add(p * mul);
+            }
+            return result;
+        }
+
         public static string RewardsToString(List<AdminBRO.RewardItem> rewards)
         {
-            string str = "";
-            
+            string result = "";
             foreach (var reward in rewards)
             {
-                var item = GameData.markets.GetTradableById(reward.tradableId);
-                
-                if (item?.type == AdminBRO.TradableItem.Type_Currency)
+                var tData = reward.tradableData;
+                if (tData?.type == AdminBRO.TradableItem.Type_Currency)
                 {
-                    str += GameData.currencies.GetById(item.currencyId).sprite + " ";
+                    var sprite = tData?.sprite;
+                    result += String.IsNullOrEmpty(sprite) ?
+                        "" :
+                        String.IsNullOrEmpty(result) ? sprite : (" " + sprite);
                 }
             }
-
-            return str;
+            return result;
         }
-        
-        public static void FillWallet(Transform transform)
+
+        public static string PriceToString(List<AdminBRO.PriceItem> price)
         {
-            var crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();
-            var wood = transform.Find("Wood").GetComponent<TextMeshProUGUI>();
-            var stone = transform.Find("Stone").GetComponent<TextMeshProUGUI>();
-            var copper = transform.Find("Copper").GetComponent<TextMeshProUGUI>();
-            var gold = transform.Find("Gold").GetComponent<TextMeshProUGUI>();
-            var gems = transform.Find("Gems").GetComponent<TextMeshProUGUI>();
-           
-            crystal.text = $"<size=40>{GameData.currencies.Crystals.sprite}<size=44> {GameData.player.Crystal.amount}";
-            wood.text = $"<size=40>{GameData.currencies.Wood.sprite}<size=44> {GameData.player.Wood.amount}";
-            stone.text = $"<size=40>{GameData.currencies.Stone.sprite}<size=44> {GameData.player.Stone.amount}";
-            copper.text = $"<size=40>{GameData.currencies.Copper.sprite}<size=44> {GameData.player.Copper.amount}";
-            gold.text = $"<size=40>{GameData.currencies.Gold.sprite}<size=44> {GameData.player.Gold.amount}";
-            gems.text = $"<size=40>{GameData.currencies.Gems.sprite}<size=44> {GameData.player.Gems.amount}";
+            string result = "";
+            foreach (var p in price)
+            {
+                var sprite = p.sprite;
+                result += String.IsNullOrEmpty(sprite) ?
+                        "" :
+                        String.IsNullOrEmpty(result) ? sprite + $" {p.amount}" : (" " + sprite + $" {p.amount}");
+            }
+            return result;
         }
         
         public static void DisableButton(Button button, bool disable = true)
         {
+            var bColors = button.colors;
             if (disable)
             {
                 button.interactable = false;
+                bColors.disabledColor = Color.gray;
                 foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
                 {
                     cr.SetColor(Color.gray);
@@ -60,11 +68,13 @@ namespace Overlewd
             else
             {
                 button.interactable = true;
+                bColors.disabledColor = Color.white;
                 foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
                 {
                     cr.SetColor(Color.white);
                 }
             }
+            button.colors = bColors;
         }
 
         public static void SetStretch(RectTransform rectTransform)
@@ -287,15 +297,12 @@ namespace Overlewd
         public static async Task FadeShowAsync(GameObject obj, float duration = durationDef)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
 
             float time = 0.0f;
-
             while (time < duration)
             {
                 time += deltaTimeInc;
@@ -306,25 +313,17 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
 
         public static async Task FadeHideAsync(GameObject obj, float duration = durationDef)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
 
             float time = 0.0f;
-
             while (time < duration)
             {
                 time += deltaTimeInc;
@@ -335,47 +334,26 @@ namespace Overlewd
 
                 await UniTask.NextFrame();
             }
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
 
         public static void FadeShow(GameObject obj)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
-
             canvasGroup.alpha = 1.0f;
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
 
         public static void FadeHide(GameObject obj)
         {
             var canvasGroup = obj.GetComponent<CanvasGroup>();
-            var deleteCanvasGroupAfter = false;
             if (canvasGroup == null)
             {
                 canvasGroup = obj.AddComponent<CanvasGroup>();
-                deleteCanvasGroupAfter = true;
             }
-
             canvasGroup.alpha = 0.0f;
-
-            if (deleteCanvasGroupAfter)
-            {
-                UnityEngine.Object.Destroy(canvasGroup);
-            }
         }
     }
 }

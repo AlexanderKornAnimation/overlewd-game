@@ -10,6 +10,7 @@ namespace Overlewd
     public class GameDataEvent
     {
         public Type type = Type.None;
+        public Data data;
 
         public enum Type
         {
@@ -22,7 +23,16 @@ namespace Overlewd
             CharacterMerge,
             MagicGuildSpellLvlUp,
             EquipmentEquipped,
-            EquipmentUnequipped
+            EquipmentUnequipped,
+            BuyPotions,
+            UsePotions,
+            GachaBuy
+        }
+
+        public abstract class Data
+        {
+            public T As<T>() where T : Data =>
+                this as T;
         }
     }
 
@@ -45,10 +55,19 @@ namespace Overlewd
         public static Sounds sounds { get; } = new Sounds();
         public static Matriarchs matriarchs { get; } = new Matriarchs();
         public static BattlePass battlePass { get; } = new BattlePass();
+        public static Potions potions { get; } = new Potions();
+    }
+
+    public abstract class BaseGameMeta
+    {
+        public virtual async Task Get()
+        {
+            await Task.CompletedTask;
+        }
     }
 
     //ftue
-    public class FTUE
+    public class FTUE : BaseGameMeta
     {
         public AdminBRO.FTUEInfo info { get; private set; }
         public List<AdminBRO.FTUEStageItem> stages { get; private set; }
@@ -72,7 +91,7 @@ namespace Overlewd
         }
         public AdminBRO.FTUEChapter mapChapter { get; set; }
 
-        public async Task Get()
+        public override async Task Get()
         {
             info = await AdminBRO.ftueAsync();
             stages = await AdminBRO.ftueStagesAsync();
@@ -91,6 +110,19 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
 
+            await GameData.characters.Get();
+            await GameData.quests.Get();
+            await GameData.battlePass.Get();
+            await GameData.player.Get();
+        }
+
+        public async Task ReplayStage(int stageId, int count)
+        {
+            await AdminBRO.ftueStageReplayAsync(stageId, count);
+            stages = await AdminBRO.ftueStagesAsync();
+            stats = await AdminBRO.ftueStatsAsync();
+
+            await GameData.characters.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -98,13 +130,13 @@ namespace Overlewd
     }
 
     //buildings
-    public class Buildings
+    public class Buildings : BaseGameMeta
     {
         public List<AdminBRO.Building> buildings { get; private set; }
         public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
         public AdminBRO.ForgePrice forgePrices { get; private set; }
 
-        public async Task Get()
+        public override async Task Get()
         {
             buildings = await AdminBRO.buildingsAsync();
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
@@ -206,53 +238,97 @@ namespace Overlewd
             });
         }
 
+        public async Task MagicGuildSkillLvlUpCrystal(string skillType)
+        {
+            await AdminBRO.magicGuildSkillLvlUpCrystalAsync(skillType);
+            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.MagicGuildSpellLvlUp
+            });
+        }
+
         //Forge
         public async Task ForgeMergeEquipment(string mergeType, int[] mergeIds)
         {
             await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
         }
 
-        public async Task ForgeMergeShard(int matriarchId, string rarity)
+        public async Task ForgeMergeShard(int matriarchId, string rarity, int amount)
         {
-            await AdminBRO.forgeMergeShard(matriarchId, rarity);
+            await AdminBRO.forgeMergeShard(matriarchId, rarity, amount);
         }
 
-        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity)
+        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
         {
-            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity);
+            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity, amount);
         }
     }
 
     //gacha
-    public class Gacha
+    public class Gacha : BaseGameMeta
     {
         public List<AdminBRO.GachaItem> items { get; private set; }
 
-        public async Task Get() =>
+        public override async Task Get()
+        {
             items = await AdminBRO.gachaAsync();
+        }
+
         public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
-        public async Task Buy(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> Buy(int id)
         {
-            await AdminBRO.gachaBuyAsync(id);
+            var result = await AdminBRO.gachaBuyAsync(id);
             await Get();
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.GachaBuy,
+                data = new EventData
+                {
+                    buyResult = result
+                }
+            });
+
+            return result;
         }
 
-        public async Task BuyTen(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> BuyMany(int id)
         {
-            await AdminBRO.gachaBuyTenAsync(id);
+            var result = await AdminBRO.gachaBuyManyAsync(id);
             await Get();
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(new GameDataEvent
+            {
+                type = GameDataEvent.Type.GachaBuy,
+                data = new EventData
+                {
+                    buyResult = result
+                }
+            });
+
+            return result;
+        }
+
+        public class EventData : GameDataEvent.Data
+        {
+            public List<AdminBRO.GachaBuyResult> buyResult;
         }
     }
 
     //characters
-    public class Characters
+    public class Characters : BaseGameMeta
     {
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
         public List<AdminBRO.SkillEffect> effects { get; private set; } = new List<AdminBRO.SkillEffect>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
@@ -347,14 +423,32 @@ namespace Overlewd
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
+
+        public float myTeamPotency
+        {
+            get
+            {
+                float potency = 0;
+
+                foreach (var character in myTeamCharacters)
+                {
+                    if (character.potency.HasValue)
+                    {
+                        potency += character.potency.Value;
+                    }
+                }
+
+                return potency;
+            }
+        }
     }
 
     //equipment
-    public class Equipment
+    public class Equipment : BaseGameMeta
     {
         public List<AdminBRO.Equipment> equipment { get; private set; } = new List<AdminBRO.Equipment>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             equipment = await AdminBRO.equipmentAsync();
         }
@@ -387,13 +481,13 @@ namespace Overlewd
     }
 
     //events
-    public class Events
+    public class Events : BaseGameMeta
     {
         public List<AdminBRO.EventItem> events { get; private set; } = new List<AdminBRO.EventItem>();
         public List<AdminBRO.EventChapter> chapters { get; private set; } = new List<AdminBRO.EventChapter>();
         public List<AdminBRO.EventStageItem> stages { get; private set; } = new List<AdminBRO.EventStageItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             events = await AdminBRO.eventsAsync();
             chapters = await AdminBRO.eventChaptersAsync();
@@ -404,6 +498,8 @@ namespace Overlewd
             events.Find(e => e.id == id);
         public AdminBRO.EventChapter GetChapterById(int? id) =>
             chapters.Find(c => c.id == id);
+        public AdminBRO.EventChapter GetChapterByStageId(int? id) =>
+            chapters.Find(c => c.stages.Exists(sId => sId == id));
         public AdminBRO.EventStageItem GetStageById(int? id) =>
             stages.Find(s => s.id == id);
 
@@ -417,6 +513,18 @@ namespace Overlewd
             var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
             stages = await AdminBRO.eventStagesAsync();
 
+            await GameData.characters.Get();
+            await GameData.quests.Get();
+            await GameData.battlePass.Get();
+            await GameData.player.Get();
+        }
+
+        public async Task StageReplay(int stageId, int count)
+        {
+            await AdminBRO.eventStageReplayAsync(stageId, count);
+            stages = await AdminBRO.eventStagesAsync();
+
+            await GameData.characters.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -437,13 +545,13 @@ namespace Overlewd
     }
 
     //markets
-    public class Markets
+    public class Markets : BaseGameMeta
     {
         public List<AdminBRO.EventMarketItem> eventMarkets { get; private set; } = new List<AdminBRO.EventMarketItem>();
 
         public List<AdminBRO.TradableItem> tradables { get; private set; } = new List<AdminBRO.TradableItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             eventMarkets = await AdminBRO.eventMarketsAsync();
             tradables = await AdminBRO.tradablesAsync();
@@ -454,28 +562,53 @@ namespace Overlewd
         public AdminBRO.TradableItem GetTradableById(int? id) =>
             tradables.Find(t => t.id == id);
 
-        public async Task BuyTradable(int? marketId, int? tradableId)
+        public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? marketId, int? tradableId)
         {
             if (!marketId.HasValue || !tradableId.HasValue)
-                return;
+                return new AdminBRO.TradableBuyStatus { status = false };
 
-            await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
+            var result = await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
             await GameData.player.Get();
 
-            UIManager.ThrowGameDataEvent(
-                new GameDataEvent
-                {
-                    type = GameDataEvent.Type.BuyTradable
-                });
+            if (result.status == true)
+            {
+                UIManager.ThrowGameDataEvent(
+                    new GameDataEvent
+                    {
+                        type = GameDataEvent.Type.BuyTradable
+                    });
+            }
+
+            return result;
+        }
+
+        public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? tradableId)
+        {
+            if (!tradableId.HasValue)
+                return new AdminBRO.TradableBuyStatus { status = false }; ;
+
+            var result  = await AdminBRO.tradableBuyAsync(tradableId.Value);
+            await GameData.player.Get();
+
+            if (result.status == true)
+            {
+                UIManager.ThrowGameDataEvent(
+                    new GameDataEvent
+                    {
+                        type = GameDataEvent.Type.BuyTradable
+                    });
+            }
+
+            return result;
         }
     }
 
     //quests
-    public class Quests
+    public class Quests : BaseGameMeta
     {
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             quests = await AdminBRO.questsAsync();
         }
@@ -495,11 +628,11 @@ namespace Overlewd
     }
 
     //currencies
-    public class Currencies
+    public class Currencies : BaseGameMeta
     {
         public List<AdminBRO.CurrencyItem> currencies { get; private set; } = new List<AdminBRO.CurrencyItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             currencies = await AdminBRO.currenciesAsync();
         }
@@ -533,11 +666,11 @@ namespace Overlewd
     }
 
     //player
-    public class Player
+    public class Player : BaseGameMeta
     {
         public AdminBRO.PlayerInfo info { get; private set; }
 
-        public async Task Get()
+        public override async Task Get()
         {
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
@@ -571,8 +704,11 @@ namespace Overlewd
         public AdminBRO.PlayerInfo.WalletItem CatEars =>
             info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
 
-        public int hpAmount => info.potion.hp;
-        public int manaAmount => info.potion.mana;
+        public int hpPotionAmount => info.potion.hp;
+        public int manaPotionAmount => info.potion.mana;
+        public int energyPotionAmount => info.potion.energy;
+        public int replayAmount => info.potion.replay;
+        public int energyPoints => info.energyPoints;
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
@@ -593,11 +729,11 @@ namespace Overlewd
     }
 
     //dialogs
-    public class Dialogs
+    public class Dialogs : BaseGameMeta
     {
         public static List<AdminBRO.Dialog> dialogs { get; private set; } = new List<AdminBRO.Dialog>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             dialogs = await AdminBRO.dialogsAsync();
         }
@@ -607,11 +743,11 @@ namespace Overlewd
     }
 
     //battles
-    public class Battles
+    public class Battles : BaseGameMeta
     {
         public List<AdminBRO.Battle> battles { get; private set; } = new List<AdminBRO.Battle>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             battles = await AdminBRO.battlesAsync();
         }
@@ -621,11 +757,11 @@ namespace Overlewd
     }
 
     //animations
-    public class Animations
+    public class Animations : BaseGameMeta
     {
         public List<AdminBRO.Animation> animations { get; private set; } = new List<AdminBRO.Animation>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             animations = await AdminBRO.animationsAsync();
         }
@@ -635,26 +771,18 @@ namespace Overlewd
         public AdminBRO.Animation GetByTitle(string title) =>
             animations.Find(a => a.title == title);
 
-        public AdminBRO.Animation this[int id]
-        {
-            get => GetById(id);
-        }
-        public AdminBRO.Animation this[string title]
-        {
-            get => GetByTitle(title);
-        }
-        public SpineWidget this[string title, Transform parent]
-        {
-            get => SpineWidget.GetInstance(GetByTitle(title), parent);
-        }
+        public AdminBRO.Animation this[int id] => GetById(id);
+        public AdminBRO.Animation this[string title] => GetByTitle(title);
+        public SpineWidget this[string title, Transform parent] =>
+            SpineWidget.GetInstance(GetByTitle(title), parent);
     }
 
     //sounds
-    public class Sounds
+    public class Sounds : BaseGameMeta
     {
         public List<AdminBRO.Sound> sounds { get; private set; } = new List<AdminBRO.Sound>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             sounds = await AdminBRO.soundsAsync();
         }
@@ -664,12 +792,12 @@ namespace Overlewd
     }
 
     //matriarchs
-    public class Matriarchs
+    public class Matriarchs : BaseGameMeta
     {
         public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
         public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
@@ -721,11 +849,11 @@ namespace Overlewd
     }
     
     //battlePass
-    public class BattlePass
+    public class BattlePass : BaseGameMeta
     {
         public List<AdminBRO.BattlePass> passes { get; private set; } = new List<AdminBRO.BattlePass>();
 
-        public async Task Get()
+        public override async Task Get()
         {
             passes = await AdminBRO.battlePassesAsync();
         }
@@ -734,5 +862,70 @@ namespace Overlewd
             passes.Find(p => p.eventId == eventId);
         public AdminBRO.BattlePass GetById(int id) =>
             passes.Find(p => p.id == id);
+    }
+
+    //potions
+    public class Potions : BaseGameMeta
+    {
+        public AdminBRO.PotionsInfo potions { get; private set; } = new AdminBRO.PotionsInfo();
+
+        public override async Task Get()
+        {
+            potions = await AdminBRO.potionsAsync();
+        }
+
+        public List<AdminBRO.PriceItem> hpPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_hp)?.price ?? new List<AdminBRO.PriceItem>();
+        public List<AdminBRO.PriceItem> manaPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_mana)?.price ?? new List<AdminBRO.PriceItem>();
+        public List<AdminBRO.PriceItem> energyPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_energy)?.price ?? new List<AdminBRO.PriceItem>();
+        public List<AdminBRO.PriceItem> replayPrice =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_replay)?.price ?? new List<AdminBRO.PriceItem>();
+
+        public int baseEnergyVolume => potions.maxEnergyVolume;
+        public int energyPerPotion => potions.energyPerCan;
+        public float energyRecoverySpeed => potions.energyRecoverySpeedPerMinute;
+
+        private async Task Buy(string type, int count)
+        {
+            await AdminBRO.potionBuyAsync(type, count);
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.BuyPotions
+                });
+        }
+
+        public async Task UseEnergy(int count)
+        {
+            await AdminBRO.potionEnergyUseAsync(count);
+            await GameData.player.Get();
+
+            UIManager.ThrowGameDataEvent(
+                new GameDataEvent
+                {
+                    type = GameDataEvent.Type.UsePotions
+                });
+        }
+
+        public async Task BuyHp(int count)
+        {
+            await Buy(AdminBRO.PotionsInfo.Type_hp, count);
+        }
+        public async Task BuyMana(int count)
+        {
+            await Buy(AdminBRO.PotionsInfo.Type_mana, count);
+        }
+        public async Task BuyEnergy(int count)
+        {
+            await Buy(AdminBRO.PotionsInfo.Type_energy, count);
+        }
+        public async Task BuyReplay(int count)
+        {
+            await Buy(AdminBRO.PotionsInfo.Type_replay, count);
+        }
     }
 }

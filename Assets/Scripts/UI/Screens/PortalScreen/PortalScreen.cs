@@ -33,7 +33,8 @@ namespace Overlewd
 
         private Button backButton;
         private Transform tabArea;
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         void Awake()
         {
@@ -57,7 +58,7 @@ namespace Overlewd
 
             }
 
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -131,7 +132,8 @@ namespace Overlewd
                 }
                 
                 if (offerButton != null)
-                { 
+                {
+                    offerButton.Initialize();
                     offerButton.gachaId = gacha.id;
                     offerButton.contentPos = transform;
                     offerButton.selectOffer += SelectOffer;
@@ -143,8 +145,8 @@ namespace Overlewd
                 pressedTabs[i].gameObject.SetActive(false);
                 contents[i].gameObject.SetActive(false);
             }
-            
-            UITools.FillWallet(currencyBack);
+
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
         private void SelectOffer(NSPortalScreen.OfferButton offerButton)
@@ -198,6 +200,7 @@ namespace Overlewd
         {
             activeTabId = buttonId;
             pressedTabs[buttonId].SetActive(true);
+            contents[buttonId].gameObject.SetActive(true);
 
             switch (buttonId)
             {
@@ -227,6 +230,7 @@ namespace Overlewd
         private void LeaveTab(int buttonId)
         {
             pressedTabs[buttonId].SetActive(false);
+            contents[buttonId].gameObject.SetActive(false);
             CloseTab(buttonId);
         }
         

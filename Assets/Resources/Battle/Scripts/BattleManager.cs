@@ -26,7 +26,7 @@ namespace Overlewd
         [Tooltip("selected as target")] public CharController ccTarget = null;
         public Animator ani;
 
-        public List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        private List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
@@ -133,14 +133,9 @@ namespace Overlewd
             potion_mp?.OnClickAction.AddListener(UseMPPotion);
             potion_hp?.OnClickAction.AddListener(UseHPPotion);
 
-            /*if (battleSettings.hidePotions)
-            {
-                potion_hp.gameObject.SetActive(false);
-                potion_mp.gameObject.SetActive(false);
-            }*/
+            transform.Find("BattleUICanvas/Character/Buttons/Bottles/").gameObject.SetActive(ManaPotionsChecker()); //turn off bottles
 
-            if (characterResList == null)
-                characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
+            characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
 
             DropCharactersFromList(playerTeam, isEnemy: false);
             DropCharactersFromList(enemyTeam, isEnemy: true);
@@ -182,7 +177,9 @@ namespace Overlewd
                 cc.character = c;
 
                 var cRes = characterResList?.Find(item => item.key == c.key);
-                var defaultSkin = bossLevel ? characterResList[3] : characterResList[2];
+                var defaultSkin = bossLevel ?
+                    characterResList?.Find(item => item.key == "CERBERUS") :
+                    characterResList?.Find(item => item.key == "DEFAULT");
                 cc.characterRes = cRes == null ? defaultSkin : cRes; //load default skin if key not found
 
                 charControllerList.Add(cc);
@@ -342,7 +339,6 @@ namespace Overlewd
 
             if (sc.CheckMana(ccOnSelect.mana))
             {
-
                 if (sc.selectable && !sc.silence)
                 {
                     if (AOE)
@@ -438,7 +434,7 @@ namespace Overlewd
         }
         public void UseHPPotion()
         {
-            if (potion_hp.potionAmount > 0 && overlord.health < overlord.healthMax)
+            if (potion_hp.potionAmount > 0 && overlord.health < overlord.healthMax && !overlord.isDead)
                 if (battleState == BattleState.PLAYER)
                 {
                     overlord.Heal(Mathf.RoundToInt(overlord.healthMax * 0.2f));
@@ -450,7 +446,7 @@ namespace Overlewd
         }
         public void UseMPPotion()
         {
-            if (potion_mp.potionAmount > 0 && overlord.mana < overlord.manaMax)
+            if (potion_mp.potionAmount > 0 && overlord.mana < overlord.manaMax && !overlord.isDead)
                 if (battleState == BattleState.PLAYER)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_Battle_Manapotion);
@@ -492,7 +488,8 @@ namespace Overlewd
         public void StateUpdate(CharController invoker) //call when any character is dead
         {
             var index = charControllerList.FindIndex(x => x == invoker);
-            if (!bossLevel) { //Destroy queue portrait
+            if (!bossLevel)
+            { //Destroy queue portrait
                 var qe = QueueElements.Find(f => f.cc == invoker);
                 Destroy(qe.gameObject);
                 QueueElements.Remove(qe);
@@ -561,7 +558,6 @@ namespace Overlewd
                 if (round == 1)
                 {
                     BattleNotif("chapter1", "battle1", "battletutor2"); //one round later
-                    BattleNotif("chapter1", "battle4", "bosstutor");
                 }
                 roundEnd?.Invoke(); //снимает два статуса почему-то
                 round++;
@@ -600,12 +596,10 @@ namespace Overlewd
                     bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                 }
             }
-            
         }
 
         private void SetSkillCtrl(CharController cc)
         {
-            skillPanelWidthScale.sizeDelta = cc.isOverlord ? new Vector2(518, 144) : new Vector2(406, 144);
             var i = cc.skill?.Count;
             var j = 0;
             bool silent = cc.silence > 0;
@@ -645,11 +639,25 @@ namespace Overlewd
                 {
 #if UNITY_EDITOR
                     Debug.Log($"{chapterID} {battleID} {notifID}");
-#else
-                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
 #endif
+                    battleScene.OnBattleNotification(battleID, chapterID, notifID);
                 }
         }
+        private bool ManaPotionsChecker()
+        {
+            if (battleScene.GetBattleData().ftueChapterKey == "chapter1")
+            {
+                string[] battlesToCheck = { "battle1", "battle2", "battle3", "battle4" };
+                var stageKey = battleScene.GetBattleData().ftueStageKey;
+                foreach (var item in battlesToCheck)
+                    if (item == stageKey)
+                        return false;
+            }
+            return true;
+        }
+        public bool MagicGuildChecker() => 
+            !(battleScene.GetBattleData().ftueChapterKey == "chapter1" || battleScene.GetBattleData().ftueChapterKey == "chapter2");
+        
         public bool CheckBattleGameData(string chapterID, string battleID)
         {
             return false;
@@ -665,6 +673,7 @@ namespace Overlewd
             BattleNotif("chapter1", "battle1", "battletutor1");
             BattleNotif("chapter1", "battle3", "battletutor4");
             BattleNotif("chapter1", "battle5", "potionstutor2");
+            BattleNotif("chapter1", "battle4", "bosstutor");
         }
         public void AddStatus(string effect)
         {

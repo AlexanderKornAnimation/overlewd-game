@@ -15,14 +15,14 @@ namespace Overlewd
 
             protected Transform canvas;
 
-            protected Image art;
+            protected Image icon;
             protected TextMeshProUGUI level;
             protected TextMeshProUGUI characterClass;
 
             protected virtual void Awake()
             {
                 canvas = transform.Find("Canvas");
-                art = canvas.Find("Art").GetComponent<Image>();
+                icon = canvas.Find("Icon").GetComponent<Image>();
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 characterClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
             }
@@ -38,13 +38,9 @@ namespace Overlewd
                     return;
 
                 level.text = characterData.level.ToString();
-                art.sprite = ResourceManager.LoadSprite(characterData.teamEditPersIcon);
-                SetClassIcon();
-            }
-
-            protected virtual void SetClassIcon()
-            {
+                icon.sprite = characterData.iconSprite;
                 characterClass.text = characterData.classMarker;
+
             }
         }
     }

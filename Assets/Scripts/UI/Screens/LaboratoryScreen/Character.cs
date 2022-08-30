@@ -55,7 +55,7 @@ namespace Overlewd
 
                 var chData = chracterData;
 
-                girlIcon.sprite = ResourceManager.LoadSprite(chData.teamEditPersIcon);
+                girlIcon.sprite = chData.iconSprite;
                 level.text = chData.level.ToString();
                 girlClass.text = chData.classMarker;
 

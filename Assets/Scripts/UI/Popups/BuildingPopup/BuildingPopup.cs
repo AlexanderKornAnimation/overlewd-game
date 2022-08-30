@@ -29,7 +29,8 @@ namespace Overlewd
         private TextMeshProUGUI buildButtonText;
         private Button crystalBuildButton;
         private TextMeshProUGUI crystalBuildButtonText;
-        private Transform currencyBack;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         private void Awake()
         {
@@ -38,7 +39,7 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            currencyBack = canvas.Find("CurrencyBack");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
             
             background = canvas.Find("Background");
             imageSpawnPoint = background.Find("ImageSpawnPoint");
@@ -104,8 +105,8 @@ namespace Overlewd
 
                 description.text = buildingData.description ?? "EMPTY";
                 buildingName.text = buildingData.name ?? "EMPTY";
-                
-                UITools.FillWallet(currencyBack);
+
+                walletWidget = WalletWidget.GetInstance(walletWidgetPos);
             }
 
             await Task.CompletedTask;

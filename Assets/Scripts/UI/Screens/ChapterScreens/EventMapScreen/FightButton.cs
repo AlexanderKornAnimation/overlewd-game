@@ -30,7 +30,7 @@ namespace Overlewd
                 base.Customize();
                 var battleData = stageData.battleData;
                 title.text = stageData.title;
-                var stringRewards = UITools.RewardsToString(battleData.firstRewards) +
+                var stringRewards = UITools.RewardsToString(battleData.firstRewards) + " " +
                                     UITools.RewardsToString(battleData.rewards);
 
                 loot.text = stringRewards;

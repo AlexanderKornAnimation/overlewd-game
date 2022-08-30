@@ -15,6 +15,7 @@ namespace Overlewd
         public bool isHeal => skill.actionType == "heal";
         private GameObject vfx => oldSkill.vfx;
         private string sfx => oldSkill.sfx;
+        private CharDescription charDescription => FindObjectOfType<CharDescription>();
 
         public Image image;
         public Image effectSlot;
@@ -159,22 +160,27 @@ namespace Overlewd
                 }
                 else
                 {
-                    Debug.Log("Descr is open");
+                    //Debug.Log("Descr is open");
                     ShowDiscription();
                     pressTime = 0f;
                     pressed = false;
                 }
             }
         }
+
         public void OnPointerDown(PointerEventData eventData)
         {
+            eventData.clickTime = 0f;
             pressTime = 0f;
             pressed = true;
         }
         public void OnPointerUp(PointerEventData eventData)
         {
             if (pressed)
+            {
+                charDescription.Close();
                 OnClickAction.Invoke();
+            }
             pressTime = 0f;
             pressed = false;
         }

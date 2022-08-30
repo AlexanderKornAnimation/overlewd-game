@@ -14,12 +14,12 @@ namespace Overlewd
         public AdminBRO.Animation animationData { get; private set; }
         public List<SpineWidget> layers { get; private set; } = new List<SpineWidget>();
 
-        private void Initialize(AdminBRO.Animation _animationData)
+        private void Initialize(AdminBRO.Animation _animationData, bool loop)
         {
             animationData = _animationData;
             foreach (var layerData in animationData.layouts)
             {
-                var newLayer = SpineWidget.GetInstance(layerData, transform);
+                var newLayer = SpineWidget.GetInstance(layerData, transform, loop);
                 if (newLayer != null) layers.Add(newLayer);
             }
         }
@@ -48,7 +48,9 @@ namespace Overlewd
             }
         }
 
-        public static SpineScene GetInstance(AdminBRO.Animation animationData, Transform parent)
+        public bool IsComplete => !layers.Exists(l => !l.IsComplete);
+
+        public static SpineScene GetInstance(AdminBRO.Animation animationData, Transform parent, bool loop = true)
         {
             if (animationData == null)
                 return null;
@@ -57,7 +59,7 @@ namespace Overlewd
             var sceneGO_rt = sceneGO.AddComponent<RectTransform>();
             sceneGO_rt.SetParent(parent, false);
             var ss = sceneGO.AddComponent<SpineScene>();
-            ss.Initialize(animationData);
+            ss.Initialize(animationData, loop);
             return ss;
         }
     }

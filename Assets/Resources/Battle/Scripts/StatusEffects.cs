@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ namespace Overlewd
 {
     public class StatusEffects : MonoBehaviour
     {
+
         [HideInInspector]
         public CharController cc;
         private int focus_blind => cc.focus_blind;
@@ -15,6 +17,9 @@ namespace Overlewd
         private int silence => cc.silence;
         private int curse => cc.curse;
         private bool stun => cc.stun; //only ico
+
+        [HideInInspector]
+        public bool withDescription = false;
 
         private TextMeshProUGUI
             focus_tmp, blind_tmp,
@@ -37,30 +42,41 @@ namespace Overlewd
 
         private void Awake()
         {
-            focus_obj     = transform.Find("focus");
-            blind_obj     = transform.Find("blind");
-            defUp_obj     = transform.Find("defUp");
-            defDown_obj   = transform.Find("defDown");
-            regen_obj     = transform.Find("regen");
-            poison_obj    = transform.Find("poison");
-            bless_obj     = transform.Find("bless");
-            healBlock_obj = transform.Find("healBlock");
-            immunity_obj  = transform.Find("immunity");
-            silence_obj   = transform.Find("silence");
-            curse_obj     = transform.Find("curse");
-            stun_obj      = transform.Find("stun");
 
-            focus_tmp     = focus_obj.GetComponentInChildren<TextMeshProUGUI>();
-            blind_tmp     = blind_obj.GetComponentInChildren<TextMeshProUGUI>();
-            defUp_tmp     = defUp_obj.GetComponentInChildren<TextMeshProUGUI>();
-            defDown_tmp   = defDown_obj.GetComponentInChildren<TextMeshProUGUI>();
-            regen_tmp     = regen_obj.GetComponentInChildren<TextMeshProUGUI>();
-            poison_tmp    = poison_obj.GetComponentInChildren<TextMeshProUGUI>();
-            bless_tmp     = bless_obj.GetComponentInChildren<TextMeshProUGUI>();
-            healBlock_tmp = healBlock_obj.GetComponentInChildren<TextMeshProUGUI>();
-            immunity_tmp  = immunity_obj.GetComponentInChildren<TextMeshProUGUI>();
-            silence_tmp   = silence_obj.GetComponentInChildren<TextMeshProUGUI>();
-            curse_tmp     = curse_obj.GetComponentInChildren<TextMeshProUGUI>();
+            focus_obj = transform.Find("focus");
+            blind_obj = transform.Find("blind");
+            defUp_obj = transform.Find("defense_up");
+            defDown_obj = transform.Find("defense_down");
+            regen_obj = transform.Find("regeneration");
+            poison_obj = transform.Find("poison");
+            bless_obj = transform.Find("bless");
+            healBlock_obj = transform.Find("heal_block");
+            immunity_obj = transform.Find("immunity");
+            silence_obj = transform.Find("silence");
+            curse_obj = transform.Find("curse");
+            stun_obj = transform.Find("stun");
+
+            focus_tmp = focus_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            blind_tmp = blind_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            defUp_tmp = defUp_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            defDown_tmp = defDown_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            regen_tmp = regen_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            poison_tmp = poison_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            bless_tmp = bless_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            healBlock_tmp = healBlock_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            immunity_tmp = immunity_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            silence_tmp = silence_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            curse_tmp = curse_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+
+        }
+        private void Start()
+        {
+            if (withDescription)
+                foreach (Transform item in transform) //init skill description text field
+                {
+                    var descriptionTMP = item.Find("description").GetComponent<TextMeshProUGUI>();
+                    descriptionTMP.text = GameData.characters.effects.Find(e => e.name == item.name).description;
+                }
         }
 
         public void UpdateStatuses()
@@ -83,6 +99,16 @@ namespace Overlewd
 
             stun_obj.gameObject.SetActive(stun);
         }
+        public bool StatusCheck()
+        {
+            if (focus_blind == 0 && defUp_defDown == 0
+                && bless_healBlock == 0 && regen_poison == 0
+                && immunity == 0 && curse == 0 && silence == 0 && !stun
+                )
+                return false;
+            else
+                return true;
+        }
         void ApplyStat(int effect, Transform icon, TextMeshProUGUI text, bool buff = true)
         {
             if (effect == 0)
@@ -96,6 +122,5 @@ namespace Overlewd
                 text.text = (Mathf.Abs(effect) > 1) ? Mathf.Abs(effect).ToString() : "";
             }
         }
-
     }
 }

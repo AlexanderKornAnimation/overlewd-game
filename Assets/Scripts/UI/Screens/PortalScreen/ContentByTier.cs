@@ -10,23 +10,21 @@ namespace Overlewd
     {
         public class ContentByTier : BaseContent
         {
-            private Button buyButton;
-            private TextMeshProUGUI buyButtonText;
-            private TextMeshProUGUI timer;
+            private Button summonManyButton;
+            private TextMeshProUGUI summonButtonText;
             private List<Transform> steps = new List<Transform>();
 
             protected override void Awake()
             {
                 base.Awake();
-                
-                buyButton = content.Find("BuyButton").GetComponent<Button>();
-                buyButton.onClick.AddListener(BuyButtonClick);
-                buyButtonText = buyButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-                timer = content.Find("Timer").Find("Time").GetComponent<TextMeshProUGUI>();
 
-                for (int i = 0; i < 10; i++)
+                summonManyButton = canvas.Find("SummonManyButton").GetComponent<Button>();
+                summonManyButton.onClick.AddListener(SummonManyButtonClick);
+                summonButtonText = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+
+                for (int i = 1; i <= 10; i++)
                 {
-                    steps.Add(content.Find("Steps").Find($"Step{i + 1}"));
+                    steps.Add(canvas.Find("Steps").Find($"Step{i}"));
                 }
             }
 
@@ -40,21 +38,24 @@ namespace Overlewd
                 
             }
 
-            public void BuyButtonClick()
+            public async void SummonManyButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                 {
-                    tabType = gachaData.tabType,
-                    prevScreenInData = UIManager.prevScreenInData
+                    tabType = gachaData?.tabType,
+                    prevScreenInData = UIManager.prevScreenInData,
+                    isMany = true,
+                    summonData = summonData
                 }).RunShowScreenProcess();
             }
             
             public static ContentByTier GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<ContentByTier>
-                    ("Prefabs/UI/Screens/PortalScreen/TabByTier", parent);
+                    ("Prefabs/UI/Screens/PortalScreen/ContentByTier", parent);
             }
         }
     }

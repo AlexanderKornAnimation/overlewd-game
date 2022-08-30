@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class CharacterStatObserver : MonoBehaviour
+    public class CharacterStatObserver : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
 
         public CharController cc;
-
         public Transform persPos => cc.persPos;
         public CharacterPortrait charStats => cc.charStats;
 
@@ -21,8 +21,8 @@ namespace Overlewd
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
         public StatusEffects status_bar;
-        public Button bt;
         public GameObject border;
+        private CharDescription charDescription => FindObjectOfType<CharDescription>();
 
         public float health => cc.health;
         public float healthMax => cc.healthMax;
@@ -38,14 +38,14 @@ namespace Overlewd
         {
             status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
             status_bar.cc = cc;
-            bt = transform.Find("button").GetComponent<Button>();
-            bt?.onClick.AddListener(cc.Select);
             border = transform.Find("button/border").gameObject;
             border?.SetActive(false);
+            if (cc.isOverlord) border.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 60);
+
             if (sliderHP) sliderHP.maxValue = healthMax;
             if (sliderMP) sliderMP.maxValue = manaMax;
             sliderMP?.gameObject.SetActive(showMP);
-            if (charClass) SetClass();
+            if (charClass && classIcons != null) SetClass();
             UpdateUI();
             UpdateStatuses();
         }
@@ -73,10 +73,10 @@ namespace Overlewd
                 case AdminBRO.Character.Class_Assassin:
                     charClass.sprite = classIcons[1];
                     break;
-                case AdminBRO.Character.Class_Caster:
+                case AdminBRO.Character.Class_Bruiser:
                     charClass.sprite = classIcons[2];
                     break;
-                case AdminBRO.Character.Class_Bruiser:
+                case AdminBRO.Character.Class_Caster:
                     charClass.sprite = classIcons[3];
                     break;
                 case AdminBRO.Character.Class_Healer:
@@ -90,6 +90,41 @@ namespace Overlewd
                     break;
             }
             charClass.SetNativeSize();
+        }
+
+        private bool pressed = false;
+        private float pressTimer = .5f, pressTime = 0f;
+        private void Update()
+        {
+            if (pressed)
+            {
+                if (pressTime < pressTimer)
+                {
+                    pressTime += Time.deltaTime;
+                }
+                else
+                {
+                    Debug.Log("Descr is open");
+                    charDescription.Open(cc);
+                    pressTime = 0f;
+                    pressed = false;
+                }
+            }
+        }
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            pressTime = 0f;
+            pressed = true;
+        }
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (pressed)
+            {
+                charDescription.Close();
+                cc.Select();
+            }
+            pressTime = 0f;
+            pressed = false;
         }
         private void OnGUI()
         {
@@ -143,7 +178,7 @@ namespace Overlewd
                         var k = 0;
                         foreach (var item in cc.skill)
                         {
-                            GUI.Label(new Rect(pos.x + 40, pos.y -250 + k * 180 - i * 2, 180, 480),
+                            GUI.Label(new Rect(pos.x + 40, pos.y - 250 + k * 180 - i * 2, 180, 480),
                             $"Skill {k} Name: {item.name}\n" +
                             $"Damage Amount: {item.amount}\n" + //scale in % - (amount/100)
                             $"AOE: {item.AOE}   EffectProb: {item.effectProb}\n" +

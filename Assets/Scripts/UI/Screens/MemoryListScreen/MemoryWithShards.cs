@@ -54,10 +54,10 @@ namespace Overlewd
                 base.Customize();
                 if (memoryData != null)
                 {
-                    heroicShardAmount.text = $"{girlData?.goldShard?.amount}/{memoryData?.goldShard?.amount}";
-                    epicShardAmount.text = $"{girlData?.purpleShard?.amount}/{memoryData?.purpleShard?.amount}";
-                    advancedShardAmount.text = $"{girlData?.greenShard?.amount}/{memoryData?.greenShard?.amount}";
-                    basicShardAmount.text = $"{girlData?.whiteShard?.amount}/{memoryData?.whiteShard?.amount}";
+                    heroicShardAmount.text = $"{girlData?.heroicShard?.amount}/{memoryData?.heroicShard?.amount}";
+                    epicShardAmount.text = $"{girlData?.epicShard?.amount}/{memoryData?.epicShard?.amount}";
+                    advancedShardAmount.text = $"{girlData?.advancedShard?.amount}/{memoryData?.advancedShard?.amount}";
+                    basicShardAmount.text = $"{girlData?.basicShard?.amount}/{memoryData?.basicShard?.amount}";
                     closed.gameObject.SetActive(!memoryData.isOpen);
                 }
             }

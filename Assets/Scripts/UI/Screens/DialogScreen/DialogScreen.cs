@@ -25,6 +25,7 @@ namespace Overlewd
 
         private Button textContainer;
         private TextMeshProUGUI personageName;
+        private GameObject nameBackground;
 
         private Transform emotionBack;
         private Transform emotionPos;
@@ -74,11 +75,10 @@ namespace Overlewd
             rightCharacterPos = charactersPos.Find("RightCharacterPos");
 
             textContainer = canvas.Find("TextContainer").GetComponent<Button>();
-
-            
             textContainer.onClick.AddListener(TextContainerButtonClick);
-
-            personageName = canvas.Find("SubstrateName").Find("PersonageName").GetComponent<TextMeshProUGUI>();
+            
+            nameBackground = canvas.Find("SubstrateName").gameObject;
+            personageName = nameBackground.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
             emotionBack = textContainer.transform.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
             text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
@@ -118,6 +118,8 @@ namespace Overlewd
         {
             if (dialogData == null)
                 return;
+
+            SoundManager.StopBGMusic();
             
             Initialize();
             ShowCurrentReplica();
@@ -544,6 +546,7 @@ namespace Overlewd
 
                 ShowCharacter(keyName, keyPos);
                 CharacterSelect(keyName);
+                nameBackground.SetActive(replica.characterName != null);
             }
 
             ShowPersEmotion(replica, prevReplica);

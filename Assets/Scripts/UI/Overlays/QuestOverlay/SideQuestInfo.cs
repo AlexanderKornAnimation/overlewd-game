@@ -43,17 +43,11 @@ namespace Overlewd
 
             private void Start()
             {
-                    Customize();
+                Customize();
             }
 
             private void Customize()
             {
-                rewardResource[0].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/CopperWithSubstrate186x186");
-                rewardResource[1].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/WoodWithSubstrate186x186");
-                rewardResource[2].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/GoldWithSubstrate186x186");
-                rewardResource[3].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/GemsWithSubstrate186x186");
-                rewardResource[4].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/StoneWithSubstrate186x186");
-                rewardResource[5].sprite = ResourceManager.InstantiateAsset<Sprite>("Common/Images/186x186/CopperWithSubstrate186x186");
 
             }
             

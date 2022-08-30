@@ -14,6 +14,7 @@ namespace Overlewd
         private Transform map;
         private Image background;
         private Image banner;
+        private TextMeshProUGUI timer;
 
         private Button sidebarButton;
 
@@ -36,6 +37,7 @@ namespace Overlewd
             map = canvas.Find("Map");
             background = map.Find("Background").GetComponent<Image>();
             banner = canvas.Find("Banner").GetComponent<Image>();
+            timer = banner.transform.Find("TimerBack").Find("Timer").GetComponent<TextMeshProUGUI>();
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
@@ -60,9 +62,10 @@ namespace Overlewd
 
             foreach (var stageData in eventChapterData.stagesData)
             {
-                if (stageData.isClosed)
+                var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
+                if (!instantiateStageOnMap)
                 {
-                    //continue;
+                    continue;
                 }
 
                 if (stageData.battleId.HasValue)
