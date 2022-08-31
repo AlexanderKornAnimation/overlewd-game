@@ -104,7 +104,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakeScreen<BaseBattleScreen>().SetData(new BaseBattleScreenInData
             {
-                battleId = 19
+
             }).RunShowScreenProcess();
         }
     }
