@@ -57,7 +57,7 @@ namespace Overlewd
                 Customize();
             }
 
-            private void Customize()
+            protected override void Customize()
             {
                 var _eventData = eventData;
                 var _questData = questData;
@@ -131,12 +131,6 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 eventData.SetAsMapEvent();
                 UIManager.ShowScreen<EventMapScreen>();
-            }
-
-            protected override void ClaimClick()
-            {
-                base.ClaimClick();
-                Customize();
             }
 
             private IEnumerator TimerUpd()

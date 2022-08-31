@@ -24,7 +24,7 @@ namespace Overlewd
             private GameObject inProgress;
             private GameObject completed;
 
-            private void Awake()
+            void Awake()
             {
                 canvas = transform.Find("Canvas");
                 var grid = canvas.Find("Grid");
@@ -53,7 +53,7 @@ namespace Overlewd
                 Customize();
             }
 
-            private void Customize()
+            protected override void Customize()
             {
                 var _eventData = eventData;
                 var _questData = questData;
@@ -85,12 +85,6 @@ namespace Overlewd
                         rewardsAmount[i].text = _questData.rewards[i].amount.ToString();
                     }
                 }
-            }
-
-            protected override void ClaimClick()
-            {
-                base.ClaimClick();
-                Customize();
             }
 
             private void ToMapClick()
