@@ -21,7 +21,9 @@ namespace Overlewd
         private SpineScene portalFullScreenAnim;
         private List<Button> activeButtons = new List<Button>();
 
-        private void Awake()
+        private NSSummoningScreen.BaseShardsAnimCtrl animCtrl;
+
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
 
@@ -45,23 +47,18 @@ namespace Overlewd
             portalFullScreenAnim.Play();
             await UniTask.WaitUntil(() => portalFullScreenAnim.IsComplete);
 
-            foreach (var b in activeButtons)
-            {
-                b.gameObject.SetActive(true);
-            }
-
             if (inputData.isMany)
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
-
-                NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
+                animCtrl = NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
             }
             else
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
-
-                NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
+                animCtrl = NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
             }
+
+            StartCoroutine(WaitShardsIsOpened());
 
             await Task.CompletedTask;
         }
@@ -133,6 +130,20 @@ namespace Overlewd
                     }
                 })
                 .RunShowScreenProcess();
+        }
+
+        private IEnumerator WaitShardsIsOpened()
+        {
+            while (animCtrl?.IsCompleteOpened ?? true)
+            {
+                yield return new WaitForSeconds(1.0f);
+            }
+
+            //open buttons
+            foreach (var b in activeButtons)
+            {
+                b.gameObject.SetActive(true);
+            }
         }
     }
 
