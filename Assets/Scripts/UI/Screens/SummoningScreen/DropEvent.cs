@@ -11,6 +11,7 @@ namespace Overlewd
             public List<ItemDropController> items;
             public List<Material> mat;
             public List<GameObject> landParticles = null;
+            public int opened = 0;
 
             private void Awake()
             {
@@ -26,14 +27,15 @@ namespace Overlewd
                         i.parentDE = this;
                     }
             }
-            private void Update()
+            public void ShardIsOpen()
             {
-                if (Input.GetKeyDown(KeyCode.R))
+                opened++;
+                if (opened >= items.Count)
                 {
-                    UnityEngine.SceneManagement.SceneManager.LoadScene(
-                        UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+                    //all shards is opened
                 }
             }
+
         }
     }
 }

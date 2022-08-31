@@ -94,7 +94,7 @@ namespace Overlewd
                     if (parentDE.landParticles[grade] != null && grade > 0)
                         Instantiate(parentDE.landParticles[grade - 1], anchor);
                     maskObj.color = maskVal;
-                    //Debug.Log("Open");
+                    parentDE.ShardIsOpen();
                     grade++;
                 }
                 else
