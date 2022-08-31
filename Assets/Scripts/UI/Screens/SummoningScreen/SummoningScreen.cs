@@ -79,7 +79,7 @@ namespace Overlewd
                     haremButton.gameObject.SetActive(false);
                     activeButtons.Add(overlordButton);
                     break;
-                case AdminBRO.GachaItem.TabType_Matriachs:
+                case AdminBRO.GachaItem.TabType_Characters:
                     haremButtonText.text = "Go to the Harem\nto edit team";
                     overlordButton.gameObject.SetActive(false);
                     activeButtons.Add(haremButton);
@@ -89,7 +89,7 @@ namespace Overlewd
                     overlordButton.gameObject.SetActive(false);
                     activeButtons.Add(haremButton);
                     break;
-                case AdminBRO.GachaItem.TabType_Shards:
+                case AdminBRO.GachaItem.TabType_MatriachsShards:
                     haremButtonText.text = "Go to the Harem\nto activate shards";
                     overlordButton.gameObject.SetActive(false);
                     activeButtons.Add(haremButton);
@@ -127,8 +127,8 @@ namespace Overlewd
                     {
                         AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreen.TabOverlordEquip,
                         AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreen.TabBattleGirlsEquip,
-                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreen.TabBattleGirls,
-                        AdminBRO.GachaItem.TabType_Shards => PortalScreen.TabShards,
+                        AdminBRO.GachaItem.TabType_Characters => PortalScreen.TabBattleGirls,
+                        AdminBRO.GachaItem.TabType_MatriachsShards => PortalScreen.TabShards,
                         _ => PortalScreen.TabBattleGirls
                     }
                 })

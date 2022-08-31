@@ -1888,10 +1888,10 @@ namespace Overlewd
                 public int probability;
             }
 
-            public const string TabType_Matriachs = "matriarchs";
+            public const string TabType_Characters = "battle_characters";
             public const string TabType_CharactersEquipment = "battle_characters_equipment";
             public const string TabType_OverlordEquipment = "overlord_equipment";
-            public const string TabType_Shards = "shards";
+            public const string TabType_MatriachsShards = "matriarch_shards";
 
             public const string Type_TargetByCount = "target_by_count";
             public const string Type_TargetByTier = "target_by_tier";
