@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Overlewd
 {
@@ -19,7 +18,7 @@ namespace Overlewd
         public CharacterStatObserver observer;
         public GameObject popUpPrefab;
         public CharacterRes characterRes;
-        public Transform selfVFX, topVFX,  topVFX_L, topVFX_R;
+        public Transform selfVFX, topVFX, topVFX_L, topVFX_R;
         public Skill[] skillRes => characterRes.skill;
         private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
@@ -77,11 +76,26 @@ namespace Overlewd
         public float curse_dot = 0f;
 
         private string
-            msg_immunity = "Immunity",
-            msg_defence_down = "Defence down",
-            msg_poison = "Poison",
-            msg_defence_up = "Defence up",
-            msg_stun = "Stun",
+
+            msg_defence_up = "<sprite=\"BuffsNDebuffs\" name=\"BuffDefenceUp\"> Defence up",
+            msg_defence_down = "<sprite=\"BuffsNDebuffs\" name=\"DebuffDefenceDown\"> Defence down",
+
+            msg_regen = "<sprite=\"BuffsNDebuffs\" name=\"BuffRegeneration\"> Regeneration",
+            msg_poison = "<sprite=\"BuffsNDebuffs\" name=\"DebuffPoison\"> Poison",
+
+            msg_focus = "<sprite=\"BuffsNDebuffs\" name=\"BuffFocus\"> Focus",
+            msg_blind = "<sprite=\"BuffsNDebuffs\" name=\"DebuffBlind\"> Blind",
+
+            msg_bless = "<sprite=\"BuffsNDebuffs\" name=\"BuffBless\"> Bless",
+            msg_healblock = "<sprite=\"BuffsNDebuffs\" name=\"DebuffHealBlock\"> Heal Block",
+
+            msg_immunity = "<sprite=\"BuffsNDebuffs\" name=\"BuffImmunity\"> Immunity",
+            msg_curse = "<sprite=\"BuffsNDebuffs\" name=\"DebuffCurse\"> Curse",
+            msg_stun = "<sprite=\"BuffsNDebuffs\" name=\"DebuffStun\"> Stun",
+            msg_silence = "<sprite=\"BuffsNDebuffs\" name=\"DebuffSilence\"> Silence",
+
+            msg_safeguard = "<sprite=\"BuffsNDebuffs\" name=\"BuffSafeguard\"> Safeguard",
+            msg_dispel = "<sprite=\"BuffsNDebuffs\" name=\"BuffDispell\"> Dispell",
             msg_heal = "Heal:";
         private GameObject vfx_purple => bm.vfx_purple;
         private GameObject vfx_red => bm.vfx_red;
@@ -336,8 +350,8 @@ namespace Overlewd
                 yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(characterRes.ani_defeat_name));
                 spineWidget.PlayAnimation("defeat2", true); //!костыль
             }
-            else 
-            { 
+            else
+            {
                 spineWidget.PlayAnimation(characterRes.ani_defeat_name, false);
                 yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(characterRes.ani_defeat_name));
                 Destroy(gameObject);
@@ -405,7 +419,7 @@ namespace Overlewd
         void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null)
         {
             if (targetCC == null) targetCC = this;
-            bool hit = sk.effectProb >= Random.Range(0, 1);
+            bool hit = sk.effectProb >= Random.value;
             if (sk.effect != null)
                 if (hit)
                 {
@@ -418,7 +432,7 @@ namespace Overlewd
                             defUp_defDown = duration;
                             defUp_defDown_dot = ea;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
-                            DrawPopup(msg_defence_up, "green");
+                            DrawPopup(msg_defence_up, "blue");
                             break;
                         case "defense_down":
                             if (immunity == 0)
@@ -434,20 +448,23 @@ namespace Overlewd
                         case "focus":
                             focus_blind = duration;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+                            DrawPopup(msg_focus, "blue");
                             break;
                         case "blind":
                             if (immunity == 0)
                             {
                                 focus_blind = -duration;
                                 if (vfx_red) Instantiate(vfx_red, selfVFX);
+                                DrawPopup(msg_blind, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "regeneration":
                             regen_poison = duration;
                             regen_poison_dot = -effectAmount;
                             Instantiate(vfx_green, selfVFX);
+                            DrawPopup(msg_regen, "blue");
                             break;
                         case "poison":
                             if (immunity == 0)
@@ -458,45 +475,48 @@ namespace Overlewd
                                 DrawPopup(msg_poison, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "bless":
                             bless_healBlock = duration;
                             bless_dot = effectAmount;
-                            if (vfx_blue)
-                                Instantiate(vfx_blue, selfVFX);
+                            if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+                            DrawPopup(msg_bless, "blue");
                             break;
                         case "heal_block":
                             if (immunity == 0)
                             {
                                 if (vfx_red) Instantiate(vfx_red, selfVFX);
                                 bless_healBlock = -duration;
+                                DrawPopup(msg_blind, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "silence":
                             if (immunity == 0)
                             {
                                 if (vfx_red) Instantiate(vfx_red, selfVFX);
                                 silence = duration;
+                                DrawPopup(msg_silence, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "immunity":
                             immunity = duration;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
-                            DrawPopup(msg_immunity, "green");
+                            DrawPopup(msg_immunity, "blue");
                             break;
                         case "stun":
                             if (immunity == 0)
-                            { 
+                            {
                                 stun = true;
                                 if (vfx_stun) Instantiate(vfx_stun, selfVFX);
+                                DrawPopup(msg_stun, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "curse":
                             if (immunity == 0)
@@ -504,7 +524,10 @@ namespace Overlewd
                                 curse = duration;
                                 curse_dot = ea; //Calculate in total damage
                                 if (vfx_red) Instantiate(vfx_red, selfVFX);
+                                DrawPopup(msg_curse, "red");
                             }
+                            else
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "dispel":
                             Dispel();
@@ -521,10 +544,10 @@ namespace Overlewd
         }
         void PassiveBuff(AdminBRO.CharacterSkill sk)
         {
-            bool isCrit = critrate > Random.value;
+            bool isCrit = critrate >= Random.value;
 
             Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.Range(0, 1);
+            bool hitEffect = sk.effectProb >= Random.value;
 
             if (sk.effect != null)
                 if (hitEffect)
@@ -538,26 +561,29 @@ namespace Overlewd
                             defUp_defDown = duration;
                             defUp_defDown_dot = ea;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
-                            DrawPopup(msg_defence_up, "green");
+                            DrawPopup(msg_defence_up, "blue");
                             break;
                         case "focus":
                             focus_blind = duration;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+                            DrawPopup(msg_focus, "blue");
                             break;
                         case "regeneration":
                             regen_poison = duration;
                             regen_poison_dot = -effectAmount;
                             if (vfx_green) Instantiate(vfx_green, selfVFX);
+                            DrawPopup(msg_regen, "blue");
                             break;
                         case "bless":
                             bless_healBlock = duration;
                             bless_dot = effectAmount;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+                            DrawPopup(msg_bless, "blue");
                             break;
                         case "immunity":
                             immunity = duration;
                             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
-                            DrawPopup(msg_immunity, "green");
+                            DrawPopup(msg_immunity, "blue");
                             break;
                         case "dispel":
                             Dispel();
@@ -574,10 +600,10 @@ namespace Overlewd
         }
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
         {
-            bool isCrit = critrate > Random.value;
+            bool isCrit = critrate >= Random.value;
 
             Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.Range(0, 1);
+            bool hitEffect = sk.effectProb >= Random.value;
             if (sk.effect != null)
                 if (hitEffect)
                 {
@@ -598,13 +624,14 @@ namespace Overlewd
                                 DrawPopup(msg_immunity, "green");
                             break;
                         case "blind":
-                            if (targetCC.immunity == 0) 
-                            { 
+                            if (targetCC.immunity == 0)
+                            {
                                 targetCC.focus_blind = -duration;
                                 if (vfx_red) Instantiate(vfx_red, targetCC.selfVFX);
+                                DrawPopup(msg_blind, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "poison":
                             if (targetCC.immunity == 0)
@@ -615,34 +642,37 @@ namespace Overlewd
                                 DrawPopup(msg_poison, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "heal_block":
-                            if (targetCC.immunity == 0) 
-                            { 
+                            if (targetCC.immunity == 0)
+                            {
                                 targetCC.bless_healBlock = -duration;
                                 if (vfx_red) Instantiate(vfx_red, targetCC.selfVFX);
+                                DrawPopup(msg_healblock, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "silence":
                             if (targetCC.immunity == 0)
                             {
                                 targetCC.silence = duration;
                                 if (vfx_red) Instantiate(vfx_red, targetCC.selfVFX);
+                                DrawPopup(msg_silence, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "stun":
                             if (targetCC.immunity == 0)
-                            { 
+                            {
                                 targetCC.stun = true;
                                 if (vfx_stun) Instantiate(vfx_stun, targetCC.selfVFX);
+                                DrawPopup(msg_stun, "red");
                             }
                             else
-                                DrawPopup(msg_immunity, "blue");
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "curse":
                             if (targetCC.immunity == 0)
@@ -650,7 +680,10 @@ namespace Overlewd
                                 targetCC.curse = duration;
                                 targetCC.curse_dot = ea; //Calculate in total damage
                                 if (vfx_red) Instantiate(vfx_red, targetCC.selfVFX);
+                                DrawPopup(msg_curse, "red");
                             }
+                            else
+                                DrawPopup(msg_immunity, "green");
                             break;
                         case "dispel":
                             Dispel();
@@ -670,15 +703,15 @@ namespace Overlewd
             switch (effect)
             {
                 case "defense_up":
-                    defUp_defDown += duration;
+                    defUp_defDown = duration;
                     defUp_defDown_dot = ea;
                     if (vfx_blue) Instantiate(vfx_blue, selfVFX);
-                    DrawPopup(msg_defence_up, "green");
+                    DrawPopup(msg_defence_up, "blue");
                     break;
                 case "defense_down":
                     if (immunity == 0)
                     {
-                        defUp_defDown -= duration;
+                        defUp_defDown = -duration;
                         defUp_defDown_dot = effectAmount;
                         if (vfx_red) Instantiate(vfx_red, selfVFX);
                         DrawPopup(msg_defence_down, "red");
@@ -687,70 +720,77 @@ namespace Overlewd
                         DrawPopup(msg_immunity, "green");
                     break;
                 case "focus":
-                    focus_blind += duration;
+                    focus_blind = duration;
                     if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+                    DrawPopup(msg_focus, "blue");
                     break;
                 case "blind":
                     if (immunity == 0)
                     {
-                        focus_blind -= duration;
+                        focus_blind = -duration;
                         if (vfx_red) Instantiate(vfx_red, selfVFX);
+                        DrawPopup(msg_blind, "red");
                     }
                     else
-                        DrawPopup(msg_immunity, "blue");
+                        DrawPopup(msg_immunity, "green");
                     break;
                 case "regeneration":
-                    regen_poison += duration;
+                    regen_poison = duration;
                     regen_poison_dot = -effectAmount;
-                    if (vfx_green) Instantiate(vfx_green, selfVFX);
+                    Instantiate(vfx_green, selfVFX);
+                    DrawPopup(msg_regen, "blue");
                     break;
                 case "poison":
                     if (immunity == 0)
                     {
-                        regen_poison -= duration;
+                        regen_poison = -duration;
                         regen_poison_dot = effectAmount;
                         if (vfx_purple) Instantiate(vfx_purple, selfVFX);
                         DrawPopup(msg_poison, "red");
                     }
                     else
-                        DrawPopup(msg_immunity, "blue");
+                        DrawPopup(msg_immunity, "green");
                     break;
                 case "bless":
-                    bless_healBlock += duration;
+                    bless_healBlock = duration;
                     bless_dot = effectAmount;
                     if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+                    DrawPopup(msg_bless, "blue");
                     break;
                 case "heal_block":
                     if (immunity == 0)
                     {
-                        bless_healBlock -= duration;
                         if (vfx_red) Instantiate(vfx_red, selfVFX);
+                        bless_healBlock = -duration;
+                        DrawPopup(msg_blind, "red");
                     }
                     else
-                        DrawPopup(msg_immunity, "blue");
+                        DrawPopup(msg_immunity, "green");
                     break;
                 case "silence":
                     if (immunity == 0)
                     {
-                        silence = duration;
                         if (vfx_red) Instantiate(vfx_red, selfVFX);
+                        silence = duration;
+                        DrawPopup(msg_silence, "red");
                     }
                     else
-                        DrawPopup(msg_immunity, "blue");
+                        DrawPopup(msg_immunity, "green");
                     break;
                 case "immunity":
-                    immunity += duration;
+                    immunity = duration;
                     if (vfx_blue) Instantiate(vfx_blue, selfVFX);
-                    DrawPopup(msg_immunity, "green");
+                    DrawPopup(msg_immunity, "blue");
                     break;
                 case "stun":
                     if (immunity == 0)
                     {
                         stun = true;
                         if (vfx_stun) Instantiate(vfx_stun, selfVFX);
+                        DrawPopup(msg_stun, "red");
                     }
                     else
-                        DrawPopup(msg_immunity, "blue");
+                        DrawPopup(msg_immunity, "green");
                     break;
                 case "curse":
                     if (immunity == 0)
@@ -758,7 +798,10 @@ namespace Overlewd
                         curse = duration;
                         curse_dot = ea; //Calculate in total damage
                         if (vfx_red) Instantiate(vfx_red, selfVFX);
+                        DrawPopup(msg_curse, "red");
                     }
+                    else
+                        DrawPopup(msg_immunity, "green");
                     break;
                 case "dispel":
                     Dispel();
@@ -784,6 +827,7 @@ namespace Overlewd
             curse = 0;
             stun = false;
             if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+            DrawPopup(msg_dispel, "green");
             observer.UpdateStatuses();
         }
         public void Safeguard()
@@ -794,6 +838,7 @@ namespace Overlewd
                 DrawPopup("- " + msg_stun, "green");
                 observer.UpdateStatuses();
                 if (vfx_blue) Instantiate(vfx_blue, selfVFX);
+
             }
             if (defUp_defDown < 0)
             {
@@ -810,9 +855,9 @@ namespace Overlewd
                 Damage(regen_poison_dot, true, false, false);
                 regen_poison -= (int)Mathf.Sign(regen_poison);
             }
-            if (focus_blind != 0)       focus_blind     -= (int)Mathf.Sign(focus_blind);
-            if (defUp_defDown != 0)     defUp_defDown   -= (int)Mathf.Sign(defUp_defDown);
-            if (bless_healBlock != 0)   bless_healBlock -= (int)Mathf.Sign(bless_healBlock);
+            if (focus_blind != 0) focus_blind -= (int)Mathf.Sign(focus_blind);
+            if (defUp_defDown != 0) defUp_defDown -= (int)Mathf.Sign(defUp_defDown);
+            if (bless_healBlock != 0) bless_healBlock -= (int)Mathf.Sign(bless_healBlock);
 
             if (immunity != 0) immunity--;
             if (silence != 0) silence--;
@@ -826,7 +871,7 @@ namespace Overlewd
             if (popUpPrefab != null)
             {
                 var damageText = Instantiate(popUpPrefab, selfVFX).GetComponent<DamagePopup>();
-                damageText.Setup(msg, isEnemy && !isBoss, (float)popUpCounter/2, color, -popUpCounter * 22);
+                damageText.Setup(msg, isEnemy && !isBoss, (float)popUpCounter / 2, color, -popUpCounter * 22);
                 popUpCounter++;
                 StartCoroutine(PopCounterAfterLife(1f));
                 log.Add(name + ": " + msg);
