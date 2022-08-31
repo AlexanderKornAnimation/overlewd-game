@@ -141,5 +141,26 @@ namespace Overlewd
         public string tabType;
         public bool isMany;
         public List<AdminBRO.GachaBuyResult> summonData;
+
+        public List<SummoningScreenShardData> shardsData {
+            get {
+                var result = new List<SummoningScreenShardData>();
+                if (summonData != null)
+                {
+                    foreach (var s in summonData)
+                    {
+                        
+                    }
+                }
+                return result;
+            }
+        }
+    }
+
+    public class SummoningScreenShardData
+    {
+        public Sprite icon;
+        public string rarity;
+        public string type;
     }
 }
