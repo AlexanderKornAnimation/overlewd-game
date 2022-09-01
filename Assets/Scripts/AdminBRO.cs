@@ -1872,7 +1872,6 @@ namespace Overlewd
             public List<PriceItem> priceForOne;
             public List<PriceItem> priceForMany;
             public int? discount;
-            public int? limitOfCycles;
             public string type;
             public List<TierItem> tiers;
             public int? eventId;

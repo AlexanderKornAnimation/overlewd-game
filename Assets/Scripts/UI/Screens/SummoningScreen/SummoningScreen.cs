@@ -134,7 +134,7 @@ namespace Overlewd
 
         private IEnumerator WaitShardsIsOpened()
         {
-            while (animCtrl?.IsCompleteOpened ?? true)
+            while (!(animCtrl?.IsCompleteOpened ?? true))
             {
                 yield return new WaitForSeconds(1.0f);
             }
