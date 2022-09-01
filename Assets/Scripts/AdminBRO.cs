@@ -1837,7 +1837,8 @@ namespace Overlewd
         public static async Task<List<GachaBuyResult>> gachaBuyAsync(int id)
         {
             var url = $"http://api.overlewd.com/gacha/{id}/buy";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
             }
@@ -1846,7 +1847,8 @@ namespace Overlewd
         public static async Task<List<GachaBuyResult>> gachaBuyManyAsync(int id)
         {
             var url = $"http://api.overlewd.com/gacha/{id}/buy-many";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var form = new WWWForm();
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
             }
