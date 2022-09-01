@@ -56,7 +56,7 @@ namespace Overlewd
             switch (inputData.ftueStageData?.ftueState)
             {
                 case ("battle2", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
+                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1", false);
                     break;
                 case (_, _):
                     switch (GameData.ftue.activeChapter.key)

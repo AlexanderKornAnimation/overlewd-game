@@ -1241,6 +1241,9 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public AdminBRO.Dialog dialogData =>
                 GameData.dialogs.GetById(dialogId);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isShown { get; set; } = false;
         }
 
         [Serializable]
@@ -1264,13 +1267,24 @@ namespace Overlewd
                 return notifications.Find(n => n.key == key);
             }
 
-            public void ShowNotifByKey(string key)
+            public void ShowNotifByKey(string key, bool checkShowRestriction = true)
             {
+                var notifData = GetNotifByKey(key);
+                if (checkShowRestriction && (notifData?.isShown ?? false))
+                {
+                    return;
+                }
+
                 UIManager.MakeNotification<DialogNotification>().
                     SetData(new DialogNotificationInData
                     {
                         dialogId = GetNotifByKey(key)?.dialogId
                     }).RunShowNotificationProcess();
+
+                if (notifData != null)
+                {
+                    notifData.isShown = true;
+                }
             }
 
             public FTUEChapter SetAsMapChapter() =>
