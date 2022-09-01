@@ -620,7 +620,7 @@ namespace Overlewd
         {
             if (id.HasValue)
             {
-                var cr_struct = await AdminBRO.questClaimRewardAsync(id.Value);
+                await AdminBRO.questClaimRewardAsync(id.Value);
                 await Get();
                 await GameData.player.Get();
             }

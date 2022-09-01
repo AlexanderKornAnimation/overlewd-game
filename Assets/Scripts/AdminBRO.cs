@@ -756,28 +756,14 @@ namespace Overlewd
         }
 
         // //quests/{id}/claim-reward
-        public static async Task<QuestClaimReward> questClaimRewardAsync(int id)
+        public static async Task questClaimRewardAsync(int id)
         {
             var url = $"http://api.overlewd.com/quests/{id}/claim-reward";
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                return JsonHelper.DeserializeObject<QuestClaimReward>(request?.downloadHandler.text);
+                
             }
-        }
-
-        [Serializable]
-        public class QuestClaimReward
-        {
-            public int userId;
-            public int questId;
-            public string status;
-            public int id;
-            public int progressCount;
-            public string createdAt;
-            public string updatedAt;
-
-            public const string Status_Rewards_Claimed = "rewards_claimed";
         }
 
         // /i18n
