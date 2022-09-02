@@ -26,15 +26,11 @@ namespace Overlewd
 
         private NSPortalScreen.OfferButton selectedOffer;
 
-        private List<NSPortalScreen.OfferButton> battleGirlsOffers = new List<NSPortalScreen.OfferButton>();
-        private List<NSPortalScreen.OfferButton> battleGirlsEquipOffers = new List<NSPortalScreen.OfferButton>();
-        private List<NSPortalScreen.OfferButton> overlordOffers = new List<NSPortalScreen.OfferButton>();
-        private List<NSPortalScreen.OfferButton> shardsOffers = new List<NSPortalScreen.OfferButton>();
-
         private Button backButton;
         private Transform tabArea;
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
+        private Image backgroundImg;
 
         void Awake()
         {
@@ -59,6 +55,7 @@ namespace Overlewd
             }
 
             walletWidgetPos = canvas.Find("WalletWidgetPos");
+            backgroundImg = canvas.Find("Background").GetComponent<Image>();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -109,31 +106,21 @@ namespace Overlewd
         {
             foreach (var gacha in GameData.gacha.items)
             {
-                NSPortalScreen.OfferButton offerButton = null;
-                
-                switch (gacha.tabType)
+                var offerButton = gacha.tabType switch
                 {
-                    case AdminBRO.GachaItem.TabType_Characters:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabBattleGirls]);
-                        battleGirlsOffers.Add(offerButton);
-                        break;
-                    case AdminBRO.GachaItem.TabType_OverlordEquipment:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabOverlordEquip]);
-                        overlordOffers.Add(offerButton);
-                        break;
-                    case AdminBRO.GachaItem.TabType_MatriachsShards:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabShards]);
-                        shardsOffers.Add(offerButton);
-                        break;
-                    case AdminBRO.GachaItem.TabType_CharactersEquipment:
-                        offerButton = NSPortalScreen.OfferButton.GetInstance(contents[TabBattleGirlsEquip]);
-                        battleGirlsEquipOffers.Add(offerButton);
-                        break;
-                }
+                    AdminBRO.GachaItem.TabType_Characters =>
+                        NSPortalScreen.OfferButton.GetInstance(contents[TabBattleGirls]),
+                    AdminBRO.GachaItem.TabType_OverlordEquipment =>
+                        NSPortalScreen.OfferButton.GetInstance(contents[TabOverlordEquip]),
+                    AdminBRO.GachaItem.TabType_MatriachsShards =>
+                        NSPortalScreen.OfferButton.GetInstance(contents[TabShards]),
+                    AdminBRO.GachaItem.TabType_CharactersEquipment =>
+                        NSPortalScreen.OfferButton.GetInstance(contents[TabBattleGirlsEquip]),
+                        _ => null
+                };
                 
                 if (offerButton != null)
                 {
-                    offerButton.Initialize();
                     offerButton.gachaId = gacha.id;
                     offerButton.contentPos = transform;
                     offerButton.selectOffer += SelectOffer;
@@ -154,6 +141,7 @@ namespace Overlewd
             selectedOffer?.Deselect();
             selectedOffer = offerButton;
             selectedOffer?.Select();
+            CustomizeByGachaData(offerButton?.gachaData);
         }
 
         private void ButtonClick(int buttonId)
@@ -201,30 +189,7 @@ namespace Overlewd
             activeTabId = buttonId;
             pressedTabs[buttonId].SetActive(true);
             contents[buttonId].gameObject.SetActive(true);
-
-            switch (buttonId)
-            {
-                case TabBattleGirls:
-                    OpenTab(buttonId);
-                    if (battleGirlsOffers.Any())
-                        SelectOffer(battleGirlsOffers.First());
-                    break;
-                case TabBattleGirlsEquip:
-                    OpenTab(buttonId);
-                    if (battleGirlsEquipOffers.Any())
-                        SelectOffer(battleGirlsEquipOffers.First());
-                    break;
-                case TabOverlordEquip:
-                    OpenTab(buttonId);
-                    if (overlordOffers.Any())
-                        SelectOffer(overlordOffers.First());
-                    break;
-                case TabShards:
-                    OpenTab(buttonId);
-                    if (shardsOffers.Any())
-                        SelectOffer(shardsOffers.First());
-                    break;
-            }
+            OpenTab(buttonId);
         }
 
         private void LeaveTab(int buttonId)
@@ -238,6 +203,11 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
+        }
+
+        private void CustomizeByGachaData(AdminBRO.GachaItem gachaData)
+        {
+            backgroundImg.sprite = ResourceManager.LoadSprite(gachaData?.tabBackgroundImage);
         }
     }
 

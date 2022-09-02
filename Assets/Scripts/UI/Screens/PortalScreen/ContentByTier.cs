@@ -28,14 +28,14 @@ namespace Overlewd
                 }
             }
 
-            protected virtual void Start()
-            {
-                Customize();
-            }
-
-            protected virtual void Customize()
+            public override void Customize()
             {
                 
+            }
+
+            public override void OnGameDataEvent(GameDataEvent eventData)
+            {
+
             }
 
             public async void SummonManyButtonClick()

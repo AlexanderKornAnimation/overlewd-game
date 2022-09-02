@@ -35,12 +35,16 @@ namespace Overlewd
 
             }
 
-            protected virtual void Start()
+            public override void Customize()
             {
-                Customize();
+                var _gachaData = gachaData;
+
+                item.sprite = ResourceManager.LoadSprite(_gachaData?.image);
+                title.text = "-";
+                discount.text = $"-{_gachaData?.discount}%";
             }
 
-            protected virtual void Customize()
+            public override void OnGameDataEvent(GameDataEvent eventData)
             {
 
             }

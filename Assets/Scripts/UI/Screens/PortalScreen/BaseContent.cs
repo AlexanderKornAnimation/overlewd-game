@@ -9,7 +9,7 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-        public abstract class BaseContent : MonoBehaviour
+        public abstract class BaseContent : BaseWidget
         {
             protected Image contentBackground;
             protected TextMeshProUGUI title;
@@ -27,6 +27,18 @@ namespace Overlewd
             {
                 canvas = transform.Find("Canvas");
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
+
+                UIManager.widgetsGameDataListeners += OnGameDataEvent;
+            }
+
+            protected virtual void Start()
+            {
+                Customize();
+            }
+
+            public virtual void Customize()
+            {
+
             }
         }
     }

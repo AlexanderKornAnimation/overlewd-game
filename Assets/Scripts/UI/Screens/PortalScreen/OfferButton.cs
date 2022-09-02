@@ -13,8 +13,10 @@ namespace Overlewd
         {
             private Image background;
             private Button button;
+            private Image buttonPic;
             private TextMeshProUGUI title;
             private GameObject selectedButton;
+            private Image selectedPic;
             private TextMeshProUGUI selectedButtonTitle;
 
             public event Action<OfferButton> selectOffer;
@@ -28,7 +30,7 @@ namespace Overlewd
 
             private bool init = false;
 
-            public void Initialize()
+            private void Initialize()
             {
                 if (init) return;
 
@@ -36,30 +38,35 @@ namespace Overlewd
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
+                buttonPic = button.GetComponent<Image>();
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 background = button.gameObject.GetComponent<Image>();
                 selectedButton = canvas.Find("Selected").gameObject;
+                selectedPic = selectedButton.GetComponent<Image>();
                 selectedButtonTitle = selectedButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-                Deselect();
 
                 init = true;
             }
 
-            private void Awake()
+            void Awake()
             {
                 Initialize();
             }
 
-            private void Start()
+            void Start()
             {
                 Customize();
+                Deselect();
             }
 
             private void Customize()
             {
-                content = gachaData.type switch
+                Initialize();
+
+                var _gachaData = gachaData;
+
+                content = _gachaData.type switch
                 {
                     AdminBRO.GachaItem.Type_TargetByCount => ContentByCount.GetInstance(contentPos),
                     AdminBRO.GachaItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
@@ -70,6 +77,11 @@ namespace Overlewd
                 {
                     content.gachaId = gachaId;
                 }
+
+                selectedPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOn);
+                selectedButtonTitle.text = _gachaData.tabTitle;
+                buttonPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOff);
+                title.text = _gachaData.tabTitle;
             }
             
             protected virtual void ButtonClick()
@@ -82,6 +94,7 @@ namespace Overlewd
             {
                 selectedButton.SetActive(true);
                 content?.gameObject.SetActive(true);
+                content?.Customize();
             }
 
             public virtual void Deselect()
