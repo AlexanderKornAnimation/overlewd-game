@@ -28,12 +28,8 @@ namespace Overlewd
 
             public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
-            private bool init = false;
-
-            private void Initialize()
+            void Awake()
             {
-                if (init) return;
-
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
@@ -45,39 +41,29 @@ namespace Overlewd
                 selectedButton = canvas.Find("Selected").gameObject;
                 selectedPic = selectedButton.GetComponent<Image>();
                 selectedButtonTitle = selectedButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-                init = true;
-            }
-
-            void Awake()
-            {
-                Initialize();
             }
 
             void Start()
             {
-                Customize();
-                Deselect();
-            }
-
-            private void Customize()
-            {
-                Initialize();
-
                 var _gachaData = gachaData;
-
                 content = _gachaData.type switch
                 {
                     AdminBRO.GachaItem.Type_TargetByCount => ContentByCount.GetInstance(contentPos),
                     AdminBRO.GachaItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
                     _ => null
                 };
-                
                 if (content != null)
                 {
                     content.gachaId = gachaId;
                 }
 
+                Customize();
+                Deselect();
+            }
+
+            private void Customize()
+            {
+                var _gachaData = gachaData;
                 selectedPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOn);
                 selectedButtonTitle.text = _gachaData.tabTitle;
                 buttonPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOff);
