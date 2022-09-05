@@ -57,6 +57,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
                 animCtrl = NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
             }
+            animCtrl?.SetShardsData(inputData?.shardsData);
 
             StartCoroutine(WaitShardsIsOpened());
 
@@ -153,14 +154,19 @@ namespace Overlewd
         public bool isMany;
         public List<AdminBRO.GachaBuyResult> summonData;
 
-        public List<SummoningScreenShardData> shardsData {
+        public SummoningScreenShardsData shardsData {
             get {
-                var result = new List<SummoningScreenShardData>();
+                var result = new SummoningScreenShardsData();
+                result.type = tabType;
                 if (summonData != null)
                 {
                     foreach (var s in summonData)
                     {
-                        
+                        result.shards.Add(new SummoningScreenShardsData.Shard
+                        {
+                            icon = ResourceManager.LoadSprite(s.tradableData?.icon),
+                            rarity = s.rarity
+                        });
                     }
                 }
                 return result;
@@ -168,10 +174,25 @@ namespace Overlewd
         }
     }
 
-    public class SummoningScreenShardData
+    public class SummoningScreenShardsData
     {
-        public Sprite icon;
-        public string rarity;
+        public List<Shard> shards = new List<Shard>();
         public string type;
+
+        public bool isBattleCharactersType => type == AdminBRO.GachaItem.TabType_Characters;
+        public bool isEquipmentsType => type == AdminBRO.GachaItem.TabType_CharactersEquipment ||
+            type == AdminBRO.GachaItem.TabType_OverlordEquipment;
+        public bool isMemoriesType => type == AdminBRO.GachaItem.TabType_MatriachsShards;
+
+        public class Shard
+        {
+            public Sprite icon;
+            public string rarity;
+
+            public bool isBasic => rarity == AdminBRO.Rarity.Basic;
+            public bool isAdvanced => rarity == AdminBRO.Rarity.Advanced;
+            public bool isEpic => rarity == AdminBRO.Rarity.Epic;
+            public bool isHeroic => rarity == AdminBRO.Rarity.Heroic;
+        }
     }
 }

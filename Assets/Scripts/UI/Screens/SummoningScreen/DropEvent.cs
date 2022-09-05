@@ -40,6 +40,11 @@ namespace Overlewd
             }
 
             public bool IsComplete => allShardsOpened;
+
+            public void SetShardsData(SummoningScreenShardsData shardsData)
+            {
+
+            }
         }
     }
 }

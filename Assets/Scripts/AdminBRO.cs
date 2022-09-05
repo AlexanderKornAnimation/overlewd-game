@@ -1863,6 +1863,10 @@ namespace Overlewd
         {
             public int? tradableId;
             public string rarity;
+
+            [JsonProperty(Required = Required.Default)]
+            public TradableItem tradableData =>
+                GameData.markets.GetTradableById(tradableId);
         }
 
         [Serializable]

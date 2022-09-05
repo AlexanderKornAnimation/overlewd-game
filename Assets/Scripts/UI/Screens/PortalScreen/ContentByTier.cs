@@ -30,7 +30,8 @@ namespace Overlewd
 
             public override void Customize()
             {
-                
+
+                MakeSummonManyButton(summonManyButton, summonButtonText);
             }
 
             public override void OnGameDataEvent(GameDataEvent eventData)

@@ -17,6 +17,11 @@ namespace Overlewd
 
             public bool IsCompleteOpened =>
                 dropEvent?.IsComplete ?? true;
+
+            public void SetShardsData(SummoningScreenShardsData shardsData)
+            {
+                dropEvent.SetShardsData(shardsData);
+            }
         }
     }
 }
