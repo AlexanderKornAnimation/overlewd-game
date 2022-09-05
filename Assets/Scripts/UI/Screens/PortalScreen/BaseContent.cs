@@ -76,7 +76,7 @@ namespace Overlewd
                         AdminBRO.GachaItem.TabType_MatriachsShards => "memories",
                         _ => "-"
                     };
-                    title.text = $"Summon {_gachaData.manyAmount} {entityName} for " + UITools.PriceToString(_gachaData.priceForMany);
+                    title.text = $"Summon 5 {entityName} for " + UITools.PriceToString(_gachaData.priceForMany);
                     UITools.DisableButton(button, !GameData.player.CanBuy(_gachaData.priceForMany));
                 }
             }

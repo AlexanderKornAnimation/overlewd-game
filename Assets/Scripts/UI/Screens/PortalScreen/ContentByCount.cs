@@ -15,8 +15,6 @@ namespace Overlewd
             
             private Button summonManyButton;
             private TextMeshProUGUI priceForMany;
-            
-            private Image item;
 
             protected override void Awake()
             {
@@ -31,16 +29,13 @@ namespace Overlewd
                 priceForMany = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 discount = summonManyButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
-                item = canvas.Find("Item").GetComponent<Image>();
-
             }
 
             public override void Customize()
             {
                 var _gachaData = gachaData;
 
-                item.sprite = ResourceManager.LoadSprite(_gachaData?.image);
-                title.text = "-";
+                title.text = _gachaData.imageText;
                 discount.text = $"-{_gachaData?.discount}%";
 
                 MakeSummonOneButton(summonOneButton, priceForOne);

@@ -1888,6 +1888,8 @@ namespace Overlewd
             public int count;
             public int currentCount;
             public int manyAmount;
+            public bool available;
+            public string imageText;
 
             public class TierItem
             {
