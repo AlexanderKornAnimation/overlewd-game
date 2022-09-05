@@ -26,10 +26,22 @@ namespace Overlewd
                 {
                     steps.Add(canvas.Find("Steps").Find($"Step{i}"));
                 }
+
+                discountBack = summonManyButton.transform.Find("DiscountBack").gameObject;
+                discount = discountBack.transform.Find("Discount").GetComponent<TextMeshProUGUI>();
             }
 
             public override void Customize()
             {
+                var _gachaData = gachaData;
+
+                title.text = _gachaData.imageText;
+
+                discountBack.SetActive(_gachaData?.discount > 0);
+                if (discountBack.activeSelf)
+                {
+                    discount.text = $"-{_gachaData?.discount}%";
+                }
 
                 MakeSummonManyButton(summonManyButton, summonButtonText);
             }

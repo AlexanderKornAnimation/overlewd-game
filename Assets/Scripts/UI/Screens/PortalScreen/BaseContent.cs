@@ -14,6 +14,7 @@ namespace Overlewd
             protected Image contentBackground;
             protected TextMeshProUGUI title;
             protected TextMeshProUGUI markers;
+            protected GameObject discountBack;
             protected TextMeshProUGUI discount;
             
             protected Transform canvas;

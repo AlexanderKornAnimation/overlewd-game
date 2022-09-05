@@ -28,7 +28,8 @@ namespace Overlewd
                 summonManyButton.onClick.AddListener(SummonManyButtonClick);
                 priceForMany = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
-                discount = summonManyButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
+                discountBack = summonManyButton.transform.Find("DiscountBack").gameObject;
+                discount = discountBack.transform.Find("Discount").GetComponent<TextMeshProUGUI>();
             }
 
             public override void Customize()
@@ -36,7 +37,12 @@ namespace Overlewd
                 var _gachaData = gachaData;
 
                 title.text = _gachaData.imageText;
-                discount.text = $"-{_gachaData?.discount}%";
+
+                discountBack.SetActive(_gachaData?.discount > 0);
+                if (discountBack.activeSelf)
+                {
+                    discount.text = $"-{_gachaData?.discount}%";
+                }
 
                 MakeSummonOneButton(summonOneButton, priceForOne);
                 MakeSummonManyButton(summonManyButton, priceForMany);
