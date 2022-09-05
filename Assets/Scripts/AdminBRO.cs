@@ -733,6 +733,7 @@ namespace Overlewd
             public string status;
             public int progressCount;
             public int? eventId;
+            public int? ftueChapterId;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";

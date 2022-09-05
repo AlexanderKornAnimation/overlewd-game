@@ -15,9 +15,11 @@ namespace Overlewd
             private Button button;
             private Image buttonPic;
             private TextMeshProUGUI title;
+            private TextMeshProUGUI marker;
             private GameObject selectedButton;
             private Image selectedPic;
             private TextMeshProUGUI selectedButtonTitle;
+            private TextMeshProUGUI selectedMarker;
 
             public event Action<OfferButton> selectOffer;
 
@@ -36,11 +38,13 @@ namespace Overlewd
                 button.onClick.AddListener(ButtonClick);
                 buttonPic = button.GetComponent<Image>();
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                marker = button.transform.Find("Marker").GetComponent<TextMeshProUGUI>();
 
                 background = button.gameObject.GetComponent<Image>();
                 selectedButton = canvas.Find("Selected").gameObject;
                 selectedPic = selectedButton.GetComponent<Image>();
                 selectedButtonTitle = selectedButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                selectedMarker = selectedButton.transform.Find("Marker").GetComponent<TextMeshProUGUI>();
             }
 
             void Start()

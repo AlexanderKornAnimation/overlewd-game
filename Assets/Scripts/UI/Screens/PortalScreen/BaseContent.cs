@@ -16,6 +16,8 @@ namespace Overlewd
             protected TextMeshProUGUI markers;
             protected GameObject discountBack;
             protected TextMeshProUGUI discount;
+            protected GameObject timer;
+            protected TextMeshProUGUI timerTitle;
             
             protected Transform canvas;
             protected RectTransform rect;
@@ -28,6 +30,8 @@ namespace Overlewd
             {
                 canvas = transform.Find("Canvas");
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
+                timer = canvas.Find("Timer").gameObject;
+                timerTitle = timer.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 UIManager.widgetsGameDataListeners += OnGameDataEvent;
             }
