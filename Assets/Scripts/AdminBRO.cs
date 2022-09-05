@@ -1695,6 +1695,7 @@ namespace Overlewd
             public SkillData current;
             public SkillData next;
             public int currentSkillLevel;
+            public int requiredBuildingLevel;
             public int maxSkillLevel;
             public int skillId;
             public List<PriceItem> price;
@@ -1708,6 +1709,9 @@ namespace Overlewd
             
             [JsonProperty(Required = Required.Default)]
             public bool canCrystallvlUp => GameData.player.CanBuy(priceCrystal);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool canUpgrade => GameData.buildings.magicGuild.currentLevel >= requiredBuildingLevel && next != null;
             
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";

@@ -120,6 +120,7 @@ namespace Overlewd
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
                     await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                    UIManager.HidePopup();
                 }
                 else
                 {
@@ -127,7 +128,6 @@ namespace Overlewd
                     UIManager.ShowPopup<DeclinePopup>();
                 }
             }
-            UIManager.HidePopup();
         }
 
         private void CloseButtonClick()
