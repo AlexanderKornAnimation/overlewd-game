@@ -40,6 +40,46 @@ namespace Overlewd
             {
 
             }
+
+            protected void MakeSummonOneButton(Button button, TextMeshProUGUI title)
+            {
+                var _gachaData = gachaData;
+
+                button.gameObject.SetActive(_gachaData?.priceForOne?.Count > 0);
+                if (button.gameObject.activeSelf)
+                {
+                    var entityName = _gachaData.tabType switch
+                    {
+                        AdminBRO.GachaItem.TabType_Characters => "battle girl",
+                        AdminBRO.GachaItem.TabType_CharactersEquipment => "equipment",
+                        AdminBRO.GachaItem.TabType_OverlordEquipment => "equipment",
+                        AdminBRO.GachaItem.TabType_MatriachsShards => "memory",
+                        _ => "-"
+                    };
+                    title.text = $"Summon 1 {entityName} for " + UITools.PriceToString(_gachaData.priceForOne);
+                    UITools.DisableButton(button, !GameData.player.CanBuy(_gachaData.priceForOne));
+                }
+            }
+
+            protected void MakeSummonManyButton(Button button, TextMeshProUGUI title)
+            {
+                var _gachaData = gachaData;
+
+                button.gameObject.SetActive(_gachaData?.priceForMany?.Count > 0);
+                if (button.gameObject.activeSelf)
+                {
+                    var entityName = _gachaData.tabType switch
+                    {
+                        AdminBRO.GachaItem.TabType_Characters => "battle girls",
+                        AdminBRO.GachaItem.TabType_CharactersEquipment => "equipments",
+                        AdminBRO.GachaItem.TabType_OverlordEquipment => "equipments",
+                        AdminBRO.GachaItem.TabType_MatriachsShards => "memories",
+                        _ => "-"
+                    };
+                    title.text = $"Summon {_gachaData.manyAmount} {entityName} for " + UITools.PriceToString(_gachaData.priceForMany);
+                    UITools.DisableButton(button, !GameData.player.CanBuy(_gachaData.priceForMany));
+                }
+            }
         }
     }
 }

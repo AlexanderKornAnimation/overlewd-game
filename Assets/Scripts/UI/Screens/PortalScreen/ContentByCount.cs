@@ -42,6 +42,9 @@ namespace Overlewd
                 item.sprite = ResourceManager.LoadSprite(_gachaData?.image);
                 title.text = "-";
                 discount.text = $"-{_gachaData?.discount}%";
+
+                MakeSummonOneButton(summonOneButton, priceForOne);
+                MakeSummonManyButton(summonManyButton, priceForMany);
             }
 
             public override void OnGameDataEvent(GameDataEvent eventData)
