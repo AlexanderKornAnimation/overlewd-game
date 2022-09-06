@@ -62,7 +62,8 @@ namespace Overlewd
                         _ => "-"
                     };
                     title.text = $"Summon 1 {entityName} for " + UITools.PriceToString(_gachaData.priceForOne);
-                    UITools.DisableButton(button, !GameData.player.CanBuy(_gachaData.priceForOne));
+                    var canSummon = GameData.player.CanBuy(_gachaData.priceForOne) && _gachaData.available;
+                    UITools.DisableButton(button, !canSummon);
                 }
             }
 
@@ -82,7 +83,8 @@ namespace Overlewd
                         _ => "-"
                     };
                     title.text = $"Summon 5 {entityName} for " + UITools.PriceToString(_gachaData.priceForMany);
-                    UITools.DisableButton(button, !GameData.player.CanBuy(_gachaData.priceForMany));
+                    var canSummon = GameData.player.CanBuy(_gachaData.priceForMany) && _gachaData.available;
+                    UITools.DisableButton(button, !canSummon);
                 }
             }
         }
