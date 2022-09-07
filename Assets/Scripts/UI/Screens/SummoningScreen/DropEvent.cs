@@ -43,7 +43,19 @@ namespace Overlewd
 
             public void SetShardsData(SummoningScreenShardsData shardsData)
             {
+                int shape = 0;
+                if (shardsData.isMemoriesType) shape = 0;
+                if (shardsData.isEquipmentsType) shape = 1;
+                if (shardsData.isBattleCharactersType) shape = 2;
 
+                for (int i = 0; i < items.Count; i++)
+                {
+                    int maxGrade = 0;
+                    if (shardsData.shards[i].isAdvanced) maxGrade = 1;
+                    if (shardsData.shards[i].isEpic) maxGrade = 2;
+                    if (shardsData.shards[i].isHeroic) maxGrade = 3;
+                    items[i].SetUp(shape, maxGrade, shardsData.shards[i].icon);
+                }
             }
         }
     }

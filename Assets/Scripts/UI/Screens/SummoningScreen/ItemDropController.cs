@@ -12,8 +12,12 @@ namespace Overlewd
             Animator ani;
             Transform anchor;
             Button button;
-            public GameObject shardShape;
+
+            public GameObject battleGirlShape;
             public GameObject equipShape;
+            public GameObject memoShape;
+            private SpineWidget sw;
+
             private int grade = 0;
             public int maxGrade = 0;
             public bool canClick = false;
@@ -30,22 +34,20 @@ namespace Overlewd
                 ani = GetComponent<Animator>();
                 anchor = transform.Find("anchor");
                 button = GetComponent<Button>();
-
             }
 
-            private void Start()
-            {
-                button?.onClick.AddListener(Play);
-                var mg = Random.Range(0, 4);
-                //mg = 3;
-                SetUp(shape, mg); //Удалить или закомментить после добавления
-            }
+            private void Start() => button?.onClick.AddListener(Play);
 
-            public void SetUp(int shape, int maxGrade)
+            public void SetUp(int shape, int maxGrade, Sprite sprite)
             {
-                spineWiget = shape == 0 ?
-                    SpineWidget.GetInstance(shardShape, anchor) :
-                    SpineWidget.GetInstance(equipShape, anchor);
+                if (shape == 0)
+                    sw = SpineWidget.GetInstance(memoShape, anchor);
+                else if (shape == 1)
+                    sw = SpineWidget.GetInstance(equipShape, anchor);
+                else
+                    sw = SpineWidget.GetInstance(battleGirlShape, anchor);
+
+                sw.transform.Find("Mask/Item").GetComponent<Image>().sprite = sprite;
 
                 spineWiget?.PlayAnimation("cr_grey", true);
                 spineWiget?.transform.SetSiblingIndex(0);

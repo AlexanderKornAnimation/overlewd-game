@@ -155,16 +155,16 @@ namespace Overlewd
             charControllerList[step].Highlight();
             SetSkillCtrl(ccOnSelect);
             if (battleState == BattleState.PLAYER)
+            { 
                 ccOnSelect.CharPortraitSet();
-
+                ButtonPress(0);
+            }
             if (!battleStart) //skip button = true; back button = false
             {
                 if (battleScene != null)
                     battleScene.StartBattle();
                 battleStart = true;
             }
-            //if (battleSettings.powerBuff)
-            //    WinOrLose(wannaWin);
         }
         void DropCharactersFromList(List<AdminBRO.Character> characterList, bool isEnemy)
         {
@@ -381,7 +381,7 @@ namespace Overlewd
                 unselect?.Invoke();
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
-
+                ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
                 GameObject vfx = ccOnSelect.characterRes.skill[id].vfxOnTarget;
                 if (AOE)
                 {
@@ -462,15 +462,6 @@ namespace Overlewd
             foreach (var item in skillControllers)
                 item.Unselect();
         }
-        public void WinOrLose(bool isWin)
-        {
-            foreach (var cc in charControllerList)
-                if (cc.isEnemy != isWin)
-                {
-                    cc.PowerBuff();
-                }
-        }
-
         public void BattleOut()
         {
             UnselectButtons();
@@ -594,6 +585,7 @@ namespace Overlewd
                     ccOnSelect.CharPortraitSet();
                     battleState = BattleState.PLAYER;
                     bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
+                    ButtonPress(0);
                 }
             }
         }
@@ -655,8 +647,7 @@ namespace Overlewd
             }
             return true;
         }
-        public bool MagicGuildChecker() => 
-            !(battleScene.GetBattleData().ftueChapterKey == "chapter1" || battleScene.GetBattleData().ftueChapterKey == "chapter2");
+        public bool MagicGuildChecker() => GameData.buildings.magicGuild.isBuilt;
         
         public bool CheckBattleGameData(string chapterID, string battleID)
         {

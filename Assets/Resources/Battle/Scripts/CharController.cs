@@ -44,9 +44,6 @@ namespace Overlewd
         public float health = 100, healthMax = 100;
         public float mana = 100, manaMax = 100;
 
-        [HideInInspector] public bool isDamageBuff = false;
-        [HideInInspector] public int buffDamageScale = 1;
-
         public bool isDead = false;
 
         private Transform battleLayer;
@@ -123,6 +120,7 @@ namespace Overlewd
             idleScale = characterRes.idleScale;
             battleScale = characterRes.battleScale;
             skillStash = character.skills;
+
             if (isOverlord)
             {
                 passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_first_passive_skill"));
@@ -198,7 +196,6 @@ namespace Overlewd
             charStats.InitUI();
         }
 
-        public void PowerBuff() => buffDamageScale *= 2;
         public void CharPortraitSet() => charStats.SetUI(this);
         public void UpdateUI() => observer?.UpdateUI();
 
@@ -224,8 +221,9 @@ namespace Overlewd
                 if (ps.trigger == "on_attack")
                     if (ps.actionType == "heal")
                         PassiveBuff(ps);
-            damageTotal = Mathf.RoundToInt(damage * ((float)skill[id].amount) * buffDamageScale);
+            damageTotal = damage * ((float)skill[id].amount);
             damageTotal *= curseDotScale;
+            damageTotal = Mathf.Round(damageTotal);
             if (characterRes.ani_pAttack_name[id] == "")
                 preAttackDuration = 0f;
             else
@@ -234,7 +232,7 @@ namespace Overlewd
                 spineWidget.PlayAnimation(characterRes.ani_pAttack_name[id], false);
             }
 
-            if (isOverlord) mana -= skill[id].manaCost;                 //????
+            //ManaReduce(skill[id].manaCost); //reduce from BattleManager AttackAction
             SoundManager.PlayOneShot(skRes.sfx);                        //SFX
 
             yield return new WaitForSeconds(preAttackDuration);
@@ -374,6 +372,7 @@ namespace Overlewd
                     return;
                 }
                 health -= value;
+                health = Mathf.Round(health);
                 health = Mathf.Max(health, 0);
                 if (health <= 0)
                 {
@@ -404,6 +403,7 @@ namespace Overlewd
                 if (bless_healBlock > 0)
                     value += value * bless_dot;
                 health += value;
+                health = Mathf.Round(health);
                 health = Mathf.Min(health, healthMax);
                 DrawPopup($"{msg_heal} {value}", "green");
                 UpdateUI();
@@ -414,6 +414,14 @@ namespace Overlewd
             mana += value;
             mana = Mathf.Min(mana, manaMax);
             UpdateUI();
+        }
+        public void ManaReduce(float manaCost)
+        {
+            if (isOverlord) {
+                mana -= manaCost;
+                Mathf.RoundToInt(mana);
+                UpdateUI();
+            }
         }
 
         void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null)
