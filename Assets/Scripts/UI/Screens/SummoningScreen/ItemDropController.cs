@@ -16,7 +16,6 @@ namespace Overlewd
             public GameObject battleGirlShape;
             public GameObject equipShape;
             public GameObject memoShape;
-            private SpineWidget sw;
 
             private int grade = 0;
             public int maxGrade = 0;
@@ -41,13 +40,13 @@ namespace Overlewd
             public void SetUp(int shape, int maxGrade, Sprite sprite)
             {
                 if (shape == 0)
-                    sw = SpineWidget.GetInstance(memoShape, anchor);
+                    spineWiget = SpineWidget.GetInstance(memoShape, anchor);
                 else if (shape == 1)
-                    sw = SpineWidget.GetInstance(equipShape, anchor);
+                    spineWiget = SpineWidget.GetInstance(equipShape, anchor);
                 else
-                    sw = SpineWidget.GetInstance(battleGirlShape, anchor);
+                    spineWiget = SpineWidget.GetInstance(battleGirlShape, anchor);
 
-                sw.transform.Find("Mask/Item").GetComponent<Image>().sprite = sprite;
+                spineWiget.transform.Find("Mask/Item").GetComponent<Image>().sprite = sprite;
 
                 spineWiget?.PlayAnimation("cr_grey", true);
                 spineWiget?.transform.SetSiblingIndex(0);
@@ -86,13 +85,6 @@ namespace Overlewd
             {
                 if (grade == maxGrade)
                 {
-                    //Open shard create server based item
-
-                    /* Destroy(spineWiget.gameObject);
-                    //Or
-                    foreach (GameObject child in anchor.transform)
-                        Destroy(child);
-                    Instantiate(shard_from_server, anchor);*/
                     if (parentDE.landParticles[grade] != null && grade > 0)
                         Instantiate(parentDE.landParticles[grade - 1], anchor);
                     maskObj.color = maskVal;
