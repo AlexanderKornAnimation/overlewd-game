@@ -71,16 +71,16 @@ namespace Overlewd
         public const string IconArrowDown = "<sprite=\"BuffsNDebuffs\" name=\"ArrowDown\">";
         
         //asset NotificationNMarkers
-        public const string MarkerSideQuest = "<sprite=\"NotificationNMarkers\" name=\"MarkerSideQuest\">";
-        public const string MarkerMainQuest = "<sprite=\"NotificationNMarkers\" name=\"MarkerMainQuest\">";
-        public const string MarkerQuarterlyEvent = "<sprite=\"NotificationNMarkers\" name=\"MarkerQuarterlyEvent\">";
-        public const string MarkerMonthlyEvent = "<sprite=\"NotificationNMarkers\" name=\"MarkerMonthlyEvent\">";
-        public const string MarkerWeeklyEvent = "<sprite=\"NotificationNMarkers\" name=\"MarkerWeeklyEvent\">";
+        public const string MarkerSideQuest = "<sprite=\"NotificationsNMarkers\" name=\"MarkerSideQuest\">";
+        public const string MarkerMainQuest = "<sprite=\"NotificationsNMarkers\" name=\"MarkerMainQuest\">";
+        public const string MarkerQuarterlyEvent = "<sprite=\"NotificationsNMarkers\" name=\"MarkerQuarterlyEvent\">";
+        public const string MarkerMonthlyEvent = "<sprite=\"NotificationsNMarkers\" name=\"MarkerMonthlyEvent\">";
+        public const string MarkerWeeklyEvent = "<sprite=\"NotificationsNMarkers\" name=\"MarkerWeeklyEvent\">";
         
-        public const string NotificationSale = "<sprite=\"NotificationNMarkers\" name=\"NotificationSale\">";
-        public const string NotificationNew = "<sprite=\"NotificationNMarkers\" name=\"NotificationNew\">";
-        public const string NotificationTimeLimit = "<sprite=\"NotificationNMarkers\" name=\"NotificationTimeLimit\">";
-        public const string NotificationDone = "<sprite=\"NotificationNMarkers\" name=\"NotificationDone\">";
-        public const string NotificationLock = "<sprite=\"NotificationNMarkers\" name=\"NotificationLock\">";
+        public const string NotificationSale = "<sprite=\"NotificationsNMarkers\" name=\"NotificationSale\">";
+        public const string NotificationNew = "<sprite=\"NotificationsNMarkers\" name=\"NotificationNew\">";
+        public const string NotificationTimeLimit = "<sprite=\"NotificationsNMarkers\" name=\"NotificationTimeLimit\">";
+        public const string NotificationDone = "<sprite=\"NotificationsNMarkers\" name=\"NotificationDone\">";
+        public const string NotificationLock = "<sprite=\"NotificationsNMarkers\" name=\"NotificationLock\">";
     }
 }

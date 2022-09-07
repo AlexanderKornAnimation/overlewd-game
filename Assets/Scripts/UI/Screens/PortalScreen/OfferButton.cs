@@ -72,8 +72,8 @@ namespace Overlewd
                 selectedButtonTitle.text = _gachaData.tabTitle;
                 buttonPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOff);
                 title.text = _gachaData.tabTitle;
-                selectedMarker.text = marker.text =
-                    _gachaData.isTempOffer ? TMPSprite.NotificationTimeLimit : null;
+                selectedMarker.text = _gachaData.isTempOffer ? TMPSprite.NotificationTimeLimit : null;
+                marker.text = _gachaData.isTempOffer ? TMPSprite.NotificationTimeLimit : null;
             }
             
             protected virtual void ButtonClick()
