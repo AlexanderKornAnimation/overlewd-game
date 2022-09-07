@@ -106,6 +106,11 @@ namespace Overlewd
         {
             foreach (var gacha in GameData.gacha.items)
             {
+                if (gacha.isTempOffer ? !gacha.timePeriodIsActive : false)
+                {
+                    continue;
+                }
+
                 var offerButton = gacha.tabType switch
                 {
                     AdminBRO.GachaItem.TabType_Characters =>

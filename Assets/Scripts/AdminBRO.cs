@@ -597,6 +597,12 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public AdminBRO.MatriarchItem narratorMatriarch =>
                 GameData.matriarchs.GetMatriarchById(narratorMatriarchId);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool timePeriodIsActive => TimeTools.PeriodIsActive(dateStart, dateEnd);
+
+            [JsonProperty(Required = Required.Default)]
+            public string timePeriodLeft => TimeTools.AvailableTimeToString(dateEnd);
         }
         
 
@@ -1883,6 +1889,22 @@ namespace Overlewd
             public int manyAmount;
             public bool available;
             public string imageText;
+            public string dateStart;
+            public string dateEnd;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTempOffer => eventId.HasValue ||
+                !String.IsNullOrEmpty(dateStart) ||
+                !String.IsNullOrEmpty(dateEnd);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool timePeriodIsActive => eventData?.timePeriodIsActive ?? TimeTools.PeriodIsActive(dateStart, dateEnd);
+
+            [JsonProperty(Required = Required.Default)]
+            public string timePeriodLeft => eventData?.timePeriodLeft ?? TimeTools.AvailableTimeToString(dateEnd);
+
+            [JsonProperty(Required = Required.Default)]
+            public EventItem eventData => GameData.events.GetEventById(eventId);
 
             public class TierItem
             {

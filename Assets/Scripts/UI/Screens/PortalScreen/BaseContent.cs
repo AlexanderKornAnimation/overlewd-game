@@ -13,7 +13,6 @@ namespace Overlewd
         {
             protected Image contentBackground;
             protected TextMeshProUGUI title;
-            protected TextMeshProUGUI markers;
             protected GameObject discountBack;
             protected TextMeshProUGUI discount;
             protected GameObject timer;
@@ -22,7 +21,7 @@ namespace Overlewd
             protected Transform canvas;
             protected RectTransform rect;
             
-            public int gachaId { get; set; }
+            public int? gachaId { get; set; }
 
             public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
@@ -39,6 +38,15 @@ namespace Overlewd
             protected virtual void Start()
             {
                 Customize();
+
+                if (gachaData?.isTempOffer ?? false)
+                {
+                    StartCoroutine(TimerUpd());
+                }
+                else
+                {
+                    timer.SetActive(false);
+                }
             }
 
             public virtual void Customize()
@@ -86,6 +94,12 @@ namespace Overlewd
                     var canSummon = GameData.player.CanBuy(_gachaData.priceForMany) && _gachaData.available;
                     UITools.DisableButton(button, !canSummon);
                 }
+            }
+
+            private IEnumerator TimerUpd()
+            {
+                timerTitle.text = gachaData?.timePeriodLeft;
+                yield return new WaitForSeconds(1.0f);
             }
         }
     }

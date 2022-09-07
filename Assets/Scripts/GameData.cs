@@ -280,9 +280,14 @@ namespace Overlewd
         public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
-        public async Task<List<AdminBRO.GachaBuyResult>> Buy(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> Buy(int? id)
         {
-            var result = await AdminBRO.gachaBuyAsync(id);
+            if (!id.HasValue)
+            {
+                return new List<AdminBRO.GachaBuyResult>();
+            }
+
+            var result = await AdminBRO.gachaBuyAsync(id.Value);
             await Get();
             await GameData.player.Get();
 
@@ -298,9 +303,14 @@ namespace Overlewd
             return result;
         }
 
-        public async Task<List<AdminBRO.GachaBuyResult>> BuyMany(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> BuyMany(int? id)
         {
-            var result = await AdminBRO.gachaBuyManyAsync(id);
+            if (!id.HasValue)
+            {
+                return new List<AdminBRO.GachaBuyResult>();
+            }
+
+            var result = await AdminBRO.gachaBuyManyAsync(id.Value);
             await Get();
             await GameData.player.Get();
 
@@ -533,11 +543,11 @@ namespace Overlewd
         public AdminBRO.EventItem mapEventData { get; set; }
 
         public AdminBRO.EventItem activeWeekly =>
-            events.Where(e => e.isWeekly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+            events.Where(e => e.isWeekly && e.timePeriodIsActive).FirstOrDefault();
         public AdminBRO.EventItem activeMonthly =>
-            events.Where(e => e.isMonthly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+            events.Where(e => e.isMonthly && e.timePeriodIsActive).FirstOrDefault();
         public AdminBRO.EventItem activeQuarterly =>
-            events.Where(e => e.isQuarterly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+            events.Where(e => e.isQuarterly && e.timePeriodIsActive).FirstOrDefault();
         public AdminBRO.EventItem comingSoonMonthly =>
             events.Where(e => e.isMonthly && TimeTools.LessTimeDiff(e.dateStart, TimeSpan.FromDays(30))).FirstOrDefault();
         public AdminBRO.EventItem comingSoonQuarterly =>
