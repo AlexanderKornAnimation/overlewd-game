@@ -195,9 +195,6 @@ namespace Overlewd
                 public int energy;
                 public int replay;
             }
-
-            public const string Sprite_Energy = "<sprite=\"AssetResources\" name=\"Energy\">";
-            public const string Sprite_Scroll = "<sprite=\"AssetResources\" name=\"Scroll\">";
             
             public class WalletItem
             {
@@ -307,14 +304,14 @@ namespace Overlewd
             public string sprite =>
                 key switch
                 { 
-                    Key_Crystals => "<sprite=\"AssetResources\" name=\"Crystal\">",
-                    Key_Wood => "<sprite=\"AssetResources\" name=\"Wood\">",
-                    Key_Stone => "<sprite=\"AssetResources\" name=\"Stone\">",
-                    Key_Copper => "<sprite=\"AssetResources\" name=\"Copper\">",
-                    Key_Gold => "<sprite=\"AssetResources\" name=\"Gold\">",
-                    Key_Gems => "<sprite=\"AssetResources\" name=\"Gem\">",
-                    Key_Ears => "<sprite=\"EventCurrency\" name=\"CatEras\">",
-                    Key_Ngold => "<sprite=\"EventCurrency\" name=\"NutakuGold\">",
+                    Key_Crystals => TMPSprite.Crystal,
+                    Key_Wood => TMPSprite.Wood,
+                    Key_Stone => TMPSprite.Stone,
+                    Key_Copper => TMPSprite.Copper,
+                    Key_Gold => TMPSprite.Gold,
+                    Key_Gems => TMPSprite.Gem,
+                    Key_Ears => TMPSprite.EventCurrencyEar,
+                    Key_Ngold => TMPSprite.EventCurrencyNutakuGold,
                     _ => ""
                 };
 
@@ -1022,12 +1019,6 @@ namespace Overlewd
             public const string Class_Overlord = "Overlord";
             public const string Class_Tank = "Tank";
 
-            public const string Sprite_ClassAssassin = "<sprite=\"ClassesNLevel\" name=\"ClassAssassin\">";
-            public const string Sprite_ClassBruiser = "<sprite=\"ClassesNLevel\" name=\"ClassBruiser\">";
-            public const string Sprite_ClassCaster = "<sprite=\"ClassesNLevel\" name=\"ClassCaster\">";
-            public const string Sprite_ClassHealer = "<sprite=\"ClassesNLevel\" name=\"ClassHealer\">";
-            public const string Sprite_ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"ClassOverlord\">";
-            public const string Sprite_ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassTank\">";
 
             [JsonProperty(Required = Required.Default)]
             public Sprite iconSprite => rarity switch
@@ -1042,14 +1033,14 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public string classMarker => characterClass switch 
             {
-                    Class_Assassin => Sprite_ClassAssassin,
-                    Class_Bruiser => Sprite_ClassBruiser,
-                    Class_Caster => Sprite_ClassCaster,
-                    Class_Healer => Sprite_ClassHealer,
-                    Class_Overlord => Sprite_ClassOverlord,
-                    Class_Tank => Sprite_ClassTank,
+                    Class_Assassin => TMPSprite.ClassAssassin,
+                    Class_Bruiser => TMPSprite.ClassBruiser,
+                    Class_Caster => TMPSprite.ClassCaster,
+                    Class_Healer => TMPSprite.ClassHealer,
+                    Class_Overlord => TMPSprite.ClassOverlord,
+                    Class_Tank => TMPSprite.ClassTank,
                     _ => ""
-                };
+            };
             
             [JsonProperty(Required = Required.Default)]
             public bool isBasic => rarity == Rarity.Basic;
