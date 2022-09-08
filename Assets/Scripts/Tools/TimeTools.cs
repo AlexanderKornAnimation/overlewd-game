@@ -17,7 +17,7 @@ namespace Overlewd
         public static bool PeriodIsActive(string startDate, string endDate)
         {
             if (String.IsNullOrEmpty(startDate) && String.IsNullOrEmpty(endDate))
-                return false;
+                return true;
 
             var start = String.IsNullOrEmpty(startDate) ? default : DateTime.Parse(startDate);
             var end = String.IsNullOrEmpty(endDate) ? default : DateTime.Parse(endDate);
@@ -61,7 +61,7 @@ namespace Overlewd
         public static bool PeriodIsStarted(string startDate, string endDate)
         {
             if (String.IsNullOrEmpty(startDate) && String.IsNullOrEmpty(endDate))
-                return false;
+                return true;
 
             var start = String.IsNullOrEmpty(startDate) ? default : DateTime.Parse(startDate);
             var end = String.IsNullOrEmpty(endDate) ? default : DateTime.Parse(endDate);
@@ -79,6 +79,9 @@ namespace Overlewd
 
             return now >= start;
         }
+
+        public static bool PeriodHasEnd(string startDate, string endDate) =>
+            !String.IsNullOrEmpty(endDate);
 
         public static string AvailableTimeToString(string availableTime)
         {

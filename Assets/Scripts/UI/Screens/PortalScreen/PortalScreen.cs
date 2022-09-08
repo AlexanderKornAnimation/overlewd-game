@@ -106,7 +106,7 @@ namespace Overlewd
         {
             foreach (var gacha in GameData.gacha.items)
             {
-                if (gacha.isTempOffer ? !gacha.timePeriodIsActive : false)
+                if (!gacha.timePeriodIsActive)
                 {
                     continue;
                 }

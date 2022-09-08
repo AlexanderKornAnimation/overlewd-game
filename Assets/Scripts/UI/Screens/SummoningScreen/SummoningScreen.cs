@@ -46,6 +46,7 @@ namespace Overlewd
         {
             portalFullScreenAnim.Play();
             await UniTask.WaitUntil(() => portalFullScreenAnim.IsComplete);
+            Destroy(portalFullScreenAnim.gameObject);
 
             if (inputData.isMany)
             {

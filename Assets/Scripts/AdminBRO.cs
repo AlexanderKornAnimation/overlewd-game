@@ -1893,9 +1893,7 @@ namespace Overlewd
             public string dateEnd;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isTempOffer => eventId.HasValue ||
-                !String.IsNullOrEmpty(dateStart) ||
-                !String.IsNullOrEmpty(dateEnd);
+            public bool isTempOffer => eventId.HasValue || TimeTools.PeriodHasEnd(dateStart, dateEnd);
 
             [JsonProperty(Required = Required.Default)]
             public bool timePeriodIsActive => eventData?.timePeriodIsActive ?? TimeTools.PeriodIsActive(dateStart, dateEnd);
