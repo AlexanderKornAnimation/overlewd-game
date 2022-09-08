@@ -212,7 +212,7 @@ namespace Overlewd
 
         private void CustomizeByGachaData(AdminBRO.GachaItem gachaData)
         {
-            backgroundImg.sprite = ResourceManager.LoadSprite(gachaData?.tabBackgroundImage);
+            backgroundImg.sprite = ResourceManager.LoadSprite(gachaData?.backgroundImage);
         }
     }
 

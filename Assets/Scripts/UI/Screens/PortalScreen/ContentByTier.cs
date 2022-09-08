@@ -35,7 +35,7 @@ namespace Overlewd
             {
                 var _gachaData = gachaData;
 
-                title.text = _gachaData.imageText;
+                title.text = _gachaData.backgroundImageText;
 
                 discountBack.SetActive(_gachaData?.discount > 0);
                 if (discountBack.activeSelf)

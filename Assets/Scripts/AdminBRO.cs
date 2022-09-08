@@ -1873,10 +1873,10 @@ namespace Overlewd
         {
             public int id;
             public string tabTitle;
-            public string image;
             public string tabImageOn;
             public string tabImageOff;
-            public string tabBackgroundImage;
+            public string backgroundImage;
+            public string backgroundImageText;
             public string tabType;
             public List<PriceItem> priceForOne;
             public List<PriceItem> priceForMany;
@@ -1888,7 +1888,6 @@ namespace Overlewd
             public int currentCount;
             public int manyAmount;
             public bool available;
-            public string imageText;
             public string dateStart;
             public string dateEnd;
 
