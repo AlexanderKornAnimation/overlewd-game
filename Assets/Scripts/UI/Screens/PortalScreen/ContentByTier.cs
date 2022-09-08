@@ -43,7 +43,7 @@ namespace Overlewd
                     discount.text = $"-{_gachaData?.discount}%";
                 }
 
-                MakeSummonManyButton(summonManyButton, summonButtonText);
+                PortalScreenHelper.MakeSummonButton(_gachaData, true, summonManyButton, summonButtonText);
             }
 
             public override void OnGameDataEvent(GameDataEvent eventData)
@@ -57,12 +57,13 @@ namespace Overlewd
                 var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
-                {
-                    tabType = gachaData?.tabType,
-                    prevScreenInData = UIManager.prevScreenInData,
-                    isMany = true,
-                    summonData = summonData
-                }).RunShowScreenProcess();
+                    {
+                        gachaId = gachaId,
+                        tabType = gachaData?.tabType,
+                        prevScreenInData = UIManager.prevScreenInData,
+                        isMany = true,
+                        summonData = summonData
+                    }).RunShowScreenProcess();
             }
             
             public static ContentByTier GetInstance(Transform parent)

@@ -44,8 +44,8 @@ namespace Overlewd
                     discount.text = $"-{_gachaData?.discount}%";
                 }
 
-                MakeSummonOneButton(summonOneButton, priceForOne);
-                MakeSummonManyButton(summonManyButton, priceForMany);
+                PortalScreenHelper.MakeSummonButton(_gachaData, false, summonOneButton, priceForOne);
+                PortalScreenHelper.MakeSummonButton(_gachaData, true, summonManyButton, priceForMany);
             }
 
             public override void OnGameDataEvent(GameDataEvent eventData)
@@ -60,6 +60,7 @@ namespace Overlewd
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                     {
+                        gachaId = gachaId,
                         prevScreenInData = UIManager.prevScreenInData,
                         tabType = gachaData.tabType,
                         summonData = summonData
@@ -72,12 +73,13 @@ namespace Overlewd
                 var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
-                {
-                    prevScreenInData = UIManager.prevScreenInData,
-                    tabType = gachaData.tabType,
-                    isMany = true,
-                    summonData = summonData
-                }).RunShowScreenProcess();
+                    {
+                        gachaId = gachaId,
+                        prevScreenInData = UIManager.prevScreenInData,
+                        tabType = gachaData.tabType,
+                        isMany = true,
+                        summonData = summonData
+                    }).RunShowScreenProcess();
             }
 
             public static ContentByCount GetInstance(Transform parent)

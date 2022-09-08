@@ -51,10 +51,17 @@ namespace Overlewd
                 for (int i = 0; i < items.Count; i++)
                 {
                     int maxGrade = 0;
-                    if (shardsData.shards[i].isAdvanced) maxGrade = 1;
-                    if (shardsData.shards[i].isEpic) maxGrade = 2;
-                    if (shardsData.shards[i].isHeroic) maxGrade = 3;
-                    items[i].SetUp(shape, maxGrade, shardsData.shards[i].icon);
+                    if (i < shardsData.shards.Count)
+                    {
+                        if (shardsData.shards[i].isAdvanced) maxGrade = 1;
+                        if (shardsData.shards[i].isEpic) maxGrade = 2;
+                        if (shardsData.shards[i].isHeroic) maxGrade = 3;
+                        items[i].SetUp(shape, maxGrade, shardsData.shards[i].icon);
+                    }
+                    else
+                    {
+                        items[i].SetUp(shape, maxGrade, null);
+                    }
                 }
             }
         }

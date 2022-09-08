@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Threading.Tasks;
+using TMPro;
 
 namespace Overlewd
 {
@@ -215,6 +216,33 @@ namespace Overlewd
             backgroundImg.sprite = ResourceManager.LoadSprite(gachaData?.backgroundImage);
         }
     }
+
+    public class PortalScreenHelper
+    {
+        public static void MakeSummonButton(AdminBRO.GachaItem gachaData, bool many,
+            Button button, TextMeshProUGUI title)
+        {
+            button.gameObject.SetActive(many ? gachaData?.priceForMany?.Count > 0 :
+                gachaData?.priceForOne?.Count > 0);
+            if (button.gameObject.activeSelf)
+            {
+                var price = many ? gachaData.priceForMany : gachaData.priceForOne;
+
+                title.text = (many ? "Summon 5 " : "Summon 1 ") + gachaData.tabType switch
+                {
+                    AdminBRO.GachaItem.TabType_Characters => many ? "battle girls for " : "battle girl for ",
+                    AdminBRO.GachaItem.TabType_CharactersEquipment => many ? "pieces of equipment for " : "piece of equipment for ",
+                    AdminBRO.GachaItem.TabType_OverlordEquipment => many ? "pieces of equipment for " : "piece of equipment for ",
+                    AdminBRO.GachaItem.TabType_MatriachsShards => many ? "shards of memories for " : "shard of memories for ",
+                    _ => "- for "
+                } + UITools.PriceToString(price);
+
+                var canSummon = GameData.player.CanBuy(price) && gachaData.available;
+                UITools.DisableButton(button, !canSummon);
+            }
+        }
+    }
+
 
     public class PortalScreenInData : BaseFullScreenInData
     {
