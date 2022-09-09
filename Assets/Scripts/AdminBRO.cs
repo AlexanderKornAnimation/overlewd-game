@@ -32,7 +32,7 @@ namespace Overlewd
             public string icon => currencyData?.iconUrl;
 
             [JsonProperty(Required = Required.Default)]
-            public string sprite => currencyData?.sprite;
+            public string tmpSprite => currencyData?.tmpSprite;
 
             public static PriceItem operator* (int mul, PriceItem a) =>
                 new PriceItem { currencyId = a.currencyId, amount = a.amount * mul };
@@ -53,7 +53,7 @@ namespace Overlewd
             public string icon => tradableData?.icon;
 
             [JsonProperty(Required = Required.Default)]
-            public string sprite => tradableData?.sprite;
+            public string tmpSprite => tradableData?.tmpCurrencySprite;
         }
 
         [Serializable]
@@ -301,7 +301,7 @@ namespace Overlewd
             public string updatedAt;
 
             [JsonProperty(Required = Required.Default)]
-            public string sprite =>
+            public string tmpSprite =>
                 key switch
                 { 
                     Key_Crystals => TMPSprite.Crystal,
@@ -376,19 +376,22 @@ namespace Overlewd
             public const string Type_MatriarchShard = "matriarch_shard";
             public const string Type_ManaPotion = "mana_potion";
             public const string Type_HpPotion = "hp_potion";
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.CurrencyItem currencyData =>
-                GameData.currencies.GetById(currencyId);
+            public string icon => type switch
+            {
+                Type_Currency => GameData.currencies.GetById(currencyId)?.iconUrl,
+                Type_BattleCharacter => GameData.characters.GetById(characterId)?.basicIcon,
+                Type_BattleCharacterEquipment => GameData.equipment.GetById(equipmentId)?.icon,
+                Type_MatriarchShard => "",
+                _ => imageUrl
+            };
 
             [JsonProperty(Required = Required.Default)]
-            public string icon => currencyData?.iconUrl ?? imageUrl;
-
-            [JsonProperty(Required = Required.Default)]
-            public string sprite => currencyData?.sprite;
+            public string tmpCurrencySprite => GameData.currencies.GetById(currencyId)?.tmpSprite;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
@@ -1035,7 +1038,7 @@ namespace Overlewd
                 Rarity.Heroic => ResourceManager.LoadSprite(heroicIcon),
                 _ => null
             };
-            
+
             [JsonProperty(Required = Required.Default)]
             public string classMarker => characterClass switch 
             {

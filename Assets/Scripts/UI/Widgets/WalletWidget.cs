@@ -33,12 +33,12 @@ namespace Overlewd
 
         public void Customize()
         {
-            crystal.text = $"{GameData.currencies.Crystals.sprite}<size=44> {GameData.player.Crystal.amount}";
-            wood.text = $"{GameData.currencies.Wood.sprite}<size=44> {GameData.player.Wood.amount}";
-            copper.text = $"{GameData.currencies.Copper.sprite}<size=44> {GameData.player.Copper.amount}";
-            gold.text = $"{GameData.currencies.Gold.sprite}<size=44> {GameData.player.Gold.amount}";
-            gems.text = $"{GameData.currencies.Gems.sprite}<size=44> {GameData.player.Gems.amount}";
-            stone.text = $"{GameData.currencies.Stone.sprite}<size=44> {GameData.player.Stone.amount}";
+            crystal.text = $"{GameData.currencies.Crystals.tmpSprite}<size=44> {GameData.player.Crystal.amount}";
+            wood.text = $"{GameData.currencies.Wood.tmpSprite}<size=44> {GameData.player.Wood.amount}";
+            copper.text = $"{GameData.currencies.Copper.tmpSprite}<size=44> {GameData.player.Copper.amount}";
+            gold.text = $"{GameData.currencies.Gold.tmpSprite}<size=44> {GameData.player.Gold.amount}";
+            gems.text = $"{GameData.currencies.Gems.tmpSprite}<size=44> {GameData.player.Gems.amount}";
+            stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {GameData.player.Stone.amount}";
         }
 
         public static WalletWidget GetInstance(Transform parent)

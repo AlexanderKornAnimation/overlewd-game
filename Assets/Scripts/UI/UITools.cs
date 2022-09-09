@@ -31,7 +31,7 @@ namespace Overlewd
                 var tData = reward.tradableData;
                 if (tData?.type == AdminBRO.TradableItem.Type_Currency)
                 {
-                    var sprite = tData?.sprite;
+                    var sprite = tData?.tmpCurrencySprite;
                     result += String.IsNullOrEmpty(sprite) ?
                         "" :
                         String.IsNullOrEmpty(result) ? sprite : (" " + sprite);
@@ -45,7 +45,7 @@ namespace Overlewd
             string result = "";
             foreach (var p in price)
             {
-                var sprite = p.sprite;
+                var sprite = p.tmpSprite;
                 result += String.IsNullOrEmpty(sprite) ?
                         "" :
                         String.IsNullOrEmpty(result) ? sprite + $" {p.amount}" : (" " + sprite + $" {p.amount}");
