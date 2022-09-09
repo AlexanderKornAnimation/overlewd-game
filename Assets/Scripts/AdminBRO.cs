@@ -1086,8 +1086,8 @@ namespace Overlewd
             public bool hasEquipment => equipment.Count > 0;
             
             [JsonProperty(Required = Required.Default)]
-            public Equipment equipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
-
+            public Equipment characterEquipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
+            
             [JsonProperty(Required = Required.Default)]
             public Animation animationData => GameData.animations.GetById(animationId);
         }
@@ -1182,6 +1182,7 @@ namespace Overlewd
             public string characterClass;
             public string name;
             public string icon;
+            public string equipmentType;
             public float speed;
             public float power;
             public float constitution;
@@ -1203,6 +1204,15 @@ namespace Overlewd
             public const string Class_Tank = "Tank";
             public const string Class_Caster = "Caster";
             public const string Class_Healer = "Healer";
+            public const string Class_Overlord = "Overlord";
+
+            public const string Type_CharacterWeapon = "battle_character_weapon";
+            public const string Type_OverlordThighs = "overlord_thighs";
+            public const string Type_OverlordHelmet = "overlord_helmet";
+            public const string Type_OverlordBoots = "overlord_boots";
+            public const string Type_OverlordHarness = "overlord_harness";
+            public const string Type_OverlordWeapon = "overlord_weapon";
+            public const string Type_OverlordGloves = "overlord_gloves";
         }
 
         //ftue

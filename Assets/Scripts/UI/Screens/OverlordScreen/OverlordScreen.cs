@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -14,16 +15,16 @@ namespace Overlewd
         private const int TabGloves = 1;
         private const int TabHelmet = 2;
         private const int TabHarness = 3;
-        private const int TabTigh = 4;
+        private const int TabThigh = 4;
         private const int TabBoots = 5;
         private const int TabsCount = 6;
 
-        private int activeTabId;
+        private int activeTabId = TabWeapon;
 
         private Button[] tabs = new Button[TabsCount];
         private GameObject[] selectedTabs = new GameObject[TabsCount];
         private string[] tabNames = {"TabWeapon", "TabGloves", "TabHelmet", "TabHarness", "TabTigh", "TabBoots"};
-        private int[] tabIds = {TabWeapon, TabGloves, TabHelmet, TabHarness, TabTigh, TabBoots};
+        private int[] tabIds = {TabWeapon, TabGloves, TabHelmet, TabHarness, TabThigh, TabBoots};
         private GameObject[] scrolls = new GameObject[TabsCount];
         private Transform[] scrollContents = new Transform[TabsCount];
 
@@ -45,6 +46,20 @@ namespace Overlewd
         private Button forgeButton;
         private Button magicGuildButton;
         private Button backButton;
+        private Button missClickButton;
+
+        private Button cellWeapon;
+        private Button cellGloves;
+        private Button cellHelmet;
+        private Button cellHarness;
+        private Button cellTigh;
+        private Button cellBoots;
+
+        private NSOverlordScreen.EquipInfoPopup equipPopup;
+
+        public AdminBRO.Character overlordData => GameData.characters.overlord;
+        private List<NSOverlordScreen.Equipment> equippedItems = new List<NSOverlordScreen.Equipment>();
+        private List<NSOverlordScreen.Equipment> equipments = new List<NSOverlordScreen.Equipment>();
 
         private void Awake()
         {
@@ -58,7 +73,6 @@ namespace Overlewd
             var equipmentBack = canvas.Find("EquipmentBack");
             var tabArea = canvas.Find("TabArea");
             var selectedTabArea = canvas.Find("SelectedTabArea");
-            var equipmentCells = canvas.Find("EquipmentCells");
 
             speed = mainStats.Find("Speed").Find("Stat").GetComponent<TextMeshProUGUI>();
             power = mainStats.Find("Power").Find("Stat").GetComponent<TextMeshProUGUI>();
@@ -86,6 +100,18 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
+            missClickButton = canvas.Find("MissClickButton").GetComponent<Button>();
+            missClickButton.onClick.AddListener(MissClickButtonClick);
+            missClickButton.gameObject.SetActive(false);
+
+            var equipmentCells = canvas.Find("EquipmentCells");
+            cellWeapon = equipmentCells.Find("CellWeapon").GetComponent<Button>();
+            cellGloves = equipmentCells.Find("CellGloves").GetComponent<Button>();
+            cellHelmet = equipmentCells.Find("CellHelmet").GetComponent<Button>();
+            cellHarness = equipmentCells.Find("CellHarness").GetComponent<Button>();
+            cellTigh = equipmentCells.Find("CellTigh").GetComponent<Button>();
+            cellBoots = equipmentCells.Find("CellBoots").GetComponent<Button>();
+
             foreach (var id in tabIds)
             {
                 tabs[id] = tabArea.Find(tabNames[id]).GetComponent<Button>();
@@ -94,9 +120,10 @@ namespace Overlewd
                 selectedTabs[id].SetActive(false);
                 scrolls[id] = equipmentBack.Find($"Scroll{tabNames[id]}").gameObject;
                 scrollContents[id] = scrolls[id].transform.Find("Viewport").Find("Content");
+                scrolls[id].gameObject.SetActive(false);
             }
 
-            TabClick(activeTabId);
+            EnterTab(activeTabId);
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -109,8 +136,160 @@ namespace Overlewd
         private void Customize()
         {
             UITools.DisableButton(collectiblesButton);
+
+            health.text = overlordData.health.ToString();
+            mana.text = overlordData.mana.ToString();
+            speed.text = overlordData.speed.ToString();
+            power.text = overlordData.power.ToString();
+            constitution.text = overlordData.constitution.ToString();
+            agility.text = overlordData.agility.ToString();
+
+            accuracy.text = overlordData.accuracy * 100 + "%";
+            critChance.text = overlordData.critrate * 100 + "%";
+            dodgeChance.text = overlordData.dodge * 100 + "%";
+            damage.text = overlordData.damage.ToString();
+            potency.text = overlordData.potency.ToString();
+            
+            foreach (var equipment in GameData.equipment.equipment)
+            {
+                var content = GetContentByType(equipment.equipmentType);
+                if (content != null)
+                {
+                    var equip = NSOverlordScreen.Equipment.GetInstance(content);
+                    equip.equipId = equipment.id;
+                    equip.OnClick += ShowInfoPopup;
+                    equipments.Add(equip);
+                    
+                    if (equipment.isEquipped)
+                    {
+                        equip.transform.SetAsFirstSibling();
+                        equippedItems.Add(equip);
+                        var cell = GetCellByType(equipment.equipmentType);
+                        cell.GetComponent<Button>().onClick.AddListener(() => CellClick(equip));
+                        CustomizeCell(equip);
+                    }
+                }
+            }
+        }
+        
+        private void UpdateCell(int equipId, int newEquipId)
+        {
+            var newEquip = GetEquipById(newEquipId);
+            var equip = GetEquippedItemByType(newEquip.equipData.equipmentType);
+            
+            newEquip.Select();
+            equippedItems.Add(newEquip);
+            CustomizeCell(newEquip);
+            
+            equip?.Deselect();
+            equippedItems.Remove(equip);
+            DestroyPopup();
+        }
+        
+        private void CustomizeCell( NSOverlordScreen.Equipment equip)
+        {
+            var type = equip.equipData.equipmentType;
+            var cell = GetCellByType(type);
+
+            var icon = cell.Find("Equip").GetComponent<Image>();
+            var notification = cell.Find("Notification").gameObject;
+
+            icon.sprite = ResourceManager.LoadSprite(equip.equipData.icon);
         }
 
+        private void CellClick(NSOverlordScreen.Equipment equip)
+        {
+            var tabId = GetTabIdByEquipType(equip.equipData.equipmentType);
+            
+            TabClick(tabId);
+            DestroyPopup();
+            InstantiateInfoPopup(equip);
+            missClickButton.gameObject.SetActive(true);
+        }
+
+        private void ShowInfoPopup(NSOverlordScreen.Equipment newEquip)
+        {
+            DestroyPopup();
+            
+            var equip = GetEquippedItemByType(newEquip.equipData.equipmentType);
+            InstantiateInfoPopup(equip, newEquip);
+        }
+
+        private void InstantiateInfoPopup(NSOverlordScreen.Equipment equip, NSOverlordScreen.Equipment newEquip = null)
+        {
+            var cell = GetCellByType(equip.equipData?.equipmentType);
+
+            equipPopup = NSOverlordScreen.EquipInfoPopup.GetInstance(cell);
+            equipPopup.equipId = equip.equipId;
+            equipPopup.newEquipId = newEquip?.equipId;
+            equipPopup.OnEquip += UpdateCell;
+            missClickButton.gameObject.SetActive(true);
+            cell.SetAsLastSibling();
+        }
+        
+        private void MissClickButtonClick()
+        {
+            DestroyPopup();
+        }
+
+        private void DestroyPopup()
+        {
+            if (equipPopup != null)
+            {
+                Destroy(equipPopup.gameObject);
+                equipPopup = null;
+                missClickButton.gameObject.SetActive(false);
+            }
+        }
+       
+        private NSOverlordScreen.Equipment GetEquipById(int id) => 
+            equipments.FirstOrDefault(eq => eq.equipId == id);
+        
+        private NSOverlordScreen.Equipment GetEquippedItemByType(string type) => 
+            equippedItems.FirstOrDefault(eq => eq.equipData.equipmentType == type);
+
+        private int GetTabIdByEquipType(string type)
+        {
+            return type switch
+            {
+                AdminBRO.Equipment.Type_OverlordWeapon => TabWeapon,
+                AdminBRO.Equipment.Type_OverlordGloves => TabGloves,
+                AdminBRO.Equipment.Type_OverlordHelmet => TabHelmet,
+                AdminBRO.Equipment.Type_OverlordHarness => TabHarness,
+                AdminBRO.Equipment.Type_OverlordThighs => TabThigh,
+                AdminBRO.Equipment.Type_OverlordBoots => TabBoots,
+                _ => TabWeapon
+            };
+        }
+        
+        private Transform GetContentByType(string type)
+        {
+            return type switch
+            {
+                AdminBRO.Equipment.Type_OverlordWeapon => scrollContents[TabWeapon],
+                AdminBRO.Equipment.Type_OverlordGloves => scrollContents[TabGloves],
+                AdminBRO.Equipment.Type_OverlordHelmet => scrollContents[TabHelmet],
+                AdminBRO.Equipment.Type_OverlordHarness => scrollContents[TabHarness],
+                AdminBRO.Equipment.Type_OverlordThighs => scrollContents[TabThigh],
+                AdminBRO.Equipment.Type_OverlordBoots => scrollContents[TabBoots],
+                _ => null
+            };
+        }
+
+        private Transform GetCellByType(string type)
+        {
+            return type switch
+            {
+                AdminBRO.Equipment.Type_OverlordWeapon => cellWeapon.transform,
+                AdminBRO.Equipment.Type_OverlordGloves => cellGloves.transform,
+                AdminBRO.Equipment.Type_OverlordHelmet => cellHelmet.transform,
+                AdminBRO.Equipment.Type_OverlordHarness => cellHarness.transform,
+                AdminBRO.Equipment.Type_OverlordThighs => cellTigh.transform,
+                AdminBRO.Equipment.Type_OverlordBoots => cellBoots.transform,
+                _ => null
+            };
+        }
+        
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

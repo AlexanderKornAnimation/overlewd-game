@@ -213,7 +213,7 @@ namespace Overlewd
                 
                 if (weapon.gameObject.activeSelf)
                 {
-                    weapon.sprite = ResourceManager.LoadSprite(characterData.equipmentData?.icon);
+                    weapon.sprite = ResourceManager.LoadSprite(characterData.characterEquipmentData?.icon);
                 }
 
                 for (int i = 0; i < characterData?.levelUpPrice?.Count; i++)

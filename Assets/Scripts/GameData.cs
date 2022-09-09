@@ -466,6 +466,9 @@ namespace Overlewd
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
 
+        public AdminBRO.Equipment GetByType(string type) =>
+            equipment.Find(eq => eq.equipmentType == type);
+
         public async Task Equip(int chId, int eqId)
         {
             await AdminBRO.equipAsync(chId, eqId);
