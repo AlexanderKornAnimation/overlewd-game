@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1774, y: 2200.5767}
+  m_SizeDelta: {x: 1206, y: 1836}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4799990419370905208
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9846750585fe91f44bf757c19b330c4e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8f35b21451324a249af4c23a527398cd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5439617697822431305}
   m_Layer: 5
-  m_Name: AdrielCopy
+  m_Name: Inge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -49, y: -179}
-  m_SizeDelta: {x: 1563, y: 1888}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1206, y: 1836}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6975747599656670984
 GameObject:
@@ -147,7 +147,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1774, y: 2200.5767}
+  m_SizeDelta: {x: 1206, y: 1836}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7177178017289088923
 CanvasRenderer:
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9846750585fe91f44bf757c19b330c4e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8f35b21451324a249af4c23a527398cd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
