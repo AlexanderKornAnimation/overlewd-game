@@ -62,8 +62,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
-            activeTabId = inputData?.activeButtonId ?? TabBattleGirls;
-            ButtonClick(activeTabId);
+            ShowDefaultGacha();
 
             await Task.CompletedTask;
         }
@@ -214,6 +213,21 @@ namespace Overlewd
         private void CustomizeByGachaData(AdminBRO.GachaItem gachaData)
         {
             backgroundImg.sprite = ResourceManager.LoadSprite(gachaData?.backgroundImage);
+        }
+
+        private void ShowDefaultGacha()
+        {
+            foreach (var tabId in tabsIds)
+            {
+                var offerBtn = contents[tabId].GetComponentsInChildren<NSPortalScreen.OfferButton>().FirstOrDefault();
+                if (offerBtn != null)
+                {
+                    ButtonClick(tabId);
+                    SelectOffer(offerBtn);
+                    offerBtn.startSelect = true;
+                    return;
+                }
+            }
         }
     }
 

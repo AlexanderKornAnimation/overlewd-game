@@ -21,6 +21,7 @@ namespace Overlewd
             private TextMeshProUGUI selectedButtonTitle;
             private TextMeshProUGUI selectedMarker;
 
+            public bool startSelect { get; set; } = false;
             public event Action<OfferButton> selectOffer;
 
             private BaseContent content;
@@ -62,7 +63,10 @@ namespace Overlewd
                 }
 
                 Customize();
-                Deselect();
+                if (!startSelect)
+                {
+                    Deselect();
+                }
             }
 
             private void Customize()
@@ -82,14 +86,13 @@ namespace Overlewd
                 selectOffer?.Invoke(this);
             }
 
-            public virtual void Select()
+            public void Select()
             {
                 selectedButton.SetActive(true);
                 content?.gameObject.SetActive(true);
-                content?.Customize();
             }
 
-            public virtual void Deselect()
+            public void Deselect()
             {
                 selectedButton.SetActive(false);
                 content?.gameObject.SetActive(false);
