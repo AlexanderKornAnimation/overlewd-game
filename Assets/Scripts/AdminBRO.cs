@@ -507,15 +507,28 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
+            public AdminBRO.EventItem eventData => GameData.events.GetEventById(eventId);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isActive => GameData.events.activeChapter == this;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => GameData.devMode ? true : (isActive || isComplete);
+            
+            [JsonProperty(Required = Required.Default)]
             public EventChapter nextChapterData =>
                 GameData.events.GetChapterById(nextChapterId);
 
+            public void SetAsMapChapter() =>
+                GameData.events.mapChapter = this;
+            
             public AdminBRO.EventStageItem GetStageById(int? id) =>
                 GameData.events.GetStageById(id);
 
             [JsonProperty(Required = Required.Default)]
             public List<EventStageItem> stagesData =>
                 stages.Select(id => GameData.events.GetStageById(id)).Where(data => data != null).ToList();
+
         }
 
         // /events
@@ -562,30 +575,13 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public EventChapter firstChapter =>
                 chaptersData.FirstOrDefault();
-
-            [JsonProperty(Required = Required.Default)]
-            public EventChapter activeChapter {
-                get {
-                    var chapterData = firstChapter;
-                    while (chapterData?.isComplete ?? false)
-                    {
-                        if (chapterData.nextChapterId.HasValue)
-                        {
-                            chapterData = chapterData.nextChapterData;
-                            continue;
-                        }
-                        break;
-                    }
-                    return chapterData;
-                }
-            }
-
+            
             public EventChapter GetChapterById(int? id) =>
                 GameData.events.GetChapterById(id);
 
             public EventItem SetAsMapEvent() =>
                 GameData.events.mapEventData = this;
-
+            
             [JsonProperty(Required = Required.Default)]
             public List<EventMarketItem> marketsData =>
                 markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();

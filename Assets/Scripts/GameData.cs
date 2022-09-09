@@ -545,6 +545,26 @@ namespace Overlewd
             await GameData.player.Get();
         }
 
+        public AdminBRO.EventChapter activeChapter
+        {
+            get
+            {
+                var chapterData = mapEventData?.firstChapter;
+                while (chapterData?.isComplete ?? false)
+                {
+                    if (chapterData.nextChapterId.HasValue)
+                    {
+                        chapterData = chapterData.nextChapterData;
+                        continue;
+                    }
+                    break;
+                }
+                return chapterData;
+            }
+        }
+
+        public AdminBRO.EventChapter mapChapter { get; set; }
+
         public AdminBRO.EventItem mapEventData { get; set; }
 
         public AdminBRO.EventItem activeWeekly =>

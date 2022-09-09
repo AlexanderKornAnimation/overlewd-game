@@ -26,6 +26,11 @@ namespace Overlewd
 
             private void Customize()
             {
+                foreach (var chapter in GameData.events.mapEventData.chaptersData)
+                {
+                    var button = ChapterButton.GetInstance(grid);
+                    button.chapterId = chapter.id;
+                }
             }
 
             private void CloseButtonClick()
