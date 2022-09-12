@@ -38,7 +38,7 @@ namespace Overlewd
                     return;
 
                 level.text = characterData.level.ToString();
-                icon.sprite = characterData.iconSprite;
+                icon.sprite = ResourceManager.LoadSprite(characterData.iconUrl);
                 characterClass.text = characterData.classMarker;
 
             }

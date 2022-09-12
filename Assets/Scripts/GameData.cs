@@ -840,17 +840,23 @@ namespace Overlewd
     {
         public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
         public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
+        public List<AdminBRO.MemoryShardItem> memoryShards { get; private set; } = new List<AdminBRO.MemoryShardItem>();
 
         public override async Task Get()
         {
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
+            memoryShards = await AdminBRO.memoryShardsAsync();
         }
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>
             matriarchs.Find(m => m.id == id);
         public AdminBRO.MatriarchItem GetMatriarchByKey(string key) =>
             matriarchs.Find(m => m.name == key);
+        public AdminBRO.MemoryShardItem GetShardByMatriarchId(int? matriarchId, string rarity) =>
+            memoryShards.Find(ms => ms.matriarchId == matriarchId && ms.rarity == rarity);
+        public AdminBRO.MemoryShardItem GetShardById(int? id, string rarity) =>
+            memoryShards.Find(ms => ms.id == id && ms.rarity == rarity);
 
         public AdminBRO.MatriarchItem Ulvi =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ulvi);

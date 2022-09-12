@@ -34,9 +34,9 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public string tmpSprite => currencyData?.tmpSprite;
 
-            public static PriceItem operator* (int mul, PriceItem a) =>
+            public static PriceItem operator *(int mul, PriceItem a) =>
                 new PriceItem { currencyId = a.currencyId, amount = a.amount * mul };
-            public static PriceItem operator* (PriceItem a, int mul) => mul * a;
+            public static PriceItem operator *(PriceItem a, int mul) => mul * a;
         }
 
         [Serializable]
@@ -195,7 +195,7 @@ namespace Overlewd
                 public int energy;
                 public int replay;
             }
-            
+
             public class WalletItem
             {
                 public int currencyId;
@@ -231,7 +231,7 @@ namespace Overlewd
             form.AddField("amount", amount);
             using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me/currency", form, tokens?.accessToken))
             {
-                
+
             }
         }
 
@@ -303,7 +303,7 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public string tmpSprite =>
                 key switch
-                { 
+                {
                     Key_Crystals => TMPSprite.Crystal,
                     Key_Wood => TMPSprite.Wood,
                     Key_Stone => TMPSprite.Stone,
@@ -380,15 +380,17 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
 
-            [JsonProperty(Required = Required.Default)]
-            public string icon => type switch
+            public string GetIconByRarity(string rarity) => type switch
             {
                 Type_Currency => GameData.currencies.GetById(currencyId)?.iconUrl,
-                Type_BattleCharacter => GameData.characters.GetById(characterId)?.basicIcon,
+                Type_BattleCharacter => GameData.characters.GetById(characterId)?.GetIconByRarity(rarity),
                 Type_BattleCharacterEquipment => GameData.equipment.GetById(equipmentId)?.icon,
-                Type_MatriarchShard => "",
+                Type_MatriarchShard => GameData.matriarchs.GetShardById(matriarchShardId, rarity).icon,
                 _ => imageUrl
             };
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => GetIconByRarity(rarity);
 
             [JsonProperty(Required = Required.Default)]
             public string tmpCurrencySprite => GameData.currencies.GetById(currencyId)?.tmpSprite;
@@ -607,7 +609,7 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public string timePeriodLeft => TimeTools.AvailableTimeToString(dateEnd);
         }
-        
+
 
         // /event-stages
         public static async Task<List<EventStageItem>> eventStagesAsync()
@@ -664,7 +666,7 @@ namespace Overlewd
                 var form = new WWWForm();
                 form.AddField("result", win ? "win" : "lose");
                 form.AddField("mana", -mana);
-                form.AddField("hp",-hp);
+                form.AddField("hp", -hp);
                 return form;
             }
         }
@@ -751,13 +753,13 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isCompleted => status == Status_Complete;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool inProgress => status == Status_In_Progress;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isClaimed => status == Status_Rewards_Claimed;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
         }
@@ -769,7 +771,7 @@ namespace Overlewd
             var form = new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-                
+
             }
         }
 
@@ -893,7 +895,7 @@ namespace Overlewd
             public const string Type_Battle = "battle";
             public const string Type_Boss = "boss";
 
-            public class Phase 
+            public class Phase
             {
                 public List<Character> enemyCharacters;
             }
@@ -1028,41 +1030,42 @@ namespace Overlewd
             public const string Class_Overlord = "Overlord";
             public const string Class_Tank = "Tank";
 
-
-            [JsonProperty(Required = Required.Default)]
-            public Sprite iconSprite => rarity switch
+            public string GetIconByRarity(string rarity) => rarity switch
             {
-                Rarity.Basic => ResourceManager.LoadSprite(basicIcon),
-                Rarity.Advanced => ResourceManager.LoadSprite(advancedIcon),
-                Rarity.Epic => ResourceManager.LoadSprite(epicIcon),
-                Rarity.Heroic => ResourceManager.LoadSprite(heroicIcon),
+                Rarity.Basic => basicIcon,
+                Rarity.Advanced => advancedIcon,
+                Rarity.Epic => epicIcon,
+                Rarity.Heroic => heroicIcon,
                 _ => null
             };
 
             [JsonProperty(Required = Required.Default)]
-            public string classMarker => characterClass switch 
+            public string iconUrl => GetIconByRarity(rarity);
+
+            [JsonProperty(Required = Required.Default)]
+            public string classMarker => characterClass switch
             {
-                    Class_Assassin => TMPSprite.ClassAssassin,
-                    Class_Bruiser => TMPSprite.ClassBruiser,
-                    Class_Caster => TMPSprite.ClassCaster,
-                    Class_Healer => TMPSprite.ClassHealer,
-                    Class_Overlord => TMPSprite.ClassOverlord,
-                    Class_Tank => TMPSprite.ClassTank,
-                    _ => ""
+                Class_Assassin => TMPSprite.ClassAssassin,
+                Class_Bruiser => TMPSprite.ClassBruiser,
+                Class_Caster => TMPSprite.ClassCaster,
+                Class_Healer => TMPSprite.ClassHealer,
+                Class_Overlord => TMPSprite.ClassOverlord,
+                Class_Tank => TMPSprite.ClassTank,
+                _ => ""
             };
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isBasic => rarity == Rarity.Basic;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isAdvanced => rarity == Rarity.Advanced;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isEpic => rarity == Rarity.Epic;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isHeroic => rarity == Rarity.Heroic;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool canLvlUp => !isLvlMax && GameData.player.CanBuy(levelUpPrice);
 
@@ -1073,8 +1076,8 @@ namespace Overlewd
             {
                 var isMax = level == skill.level;
                 return !isMax && GameData.player.CanBuy(skill.levelUpPrice);
-            } 
-            
+            }
+
             [JsonProperty(Required = Required.Default)]
             public int maxLvl => rarity switch
             {
@@ -1087,10 +1090,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool hasEquipment => equipment.Count > 0;
-            
+
             [JsonProperty(Required = Required.Default)]
             public Equipment characterEquipmentData => GameData.equipment.GetById(equipment.FirstOrDefault());
-            
+
             [JsonProperty(Required = Required.Default)]
             public Animation animationData => GameData.animations.GetById(animationId);
         }
@@ -1196,6 +1199,7 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
+            public float potency;
 
             [JsonProperty(Required = Required.Default)]
             public bool isEquipped => characterId.HasValue;
@@ -1310,7 +1314,7 @@ namespace Overlewd
             public bool isOpen => GameData.devMode ? true : (isComplete || isActive);
 
             [JsonProperty(Required = Required.Default)]
-            public FTUEChapter nextChapterData => 
+            public FTUEChapter nextChapterData =>
                 GameData.ftue.info.GetChapterById(nextChapterId);
 
             public FTUEStageItem GetStageById(int? id) =>
@@ -1430,7 +1434,7 @@ namespace Overlewd
                 GameData.dialogs.GetById(dialogId);
 
             [JsonProperty(Required = Required.Default)]
-            public Battle battleData => 
+            public Battle battleData =>
                 GameData.battles.GetById(battleId);
 
             [JsonProperty(Required = Required.Default)]
@@ -1438,7 +1442,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isStarted => status == Status_Started;
-         
+
             [JsonProperty(Required = Required.Default)]
             public bool isComplete => status == Status_Complete;
 
@@ -1718,13 +1722,13 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool canlvlUp => GameData.player.CanBuy(current.levelUpPrice);
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool canCrystallvlUp => GameData.player.CanBuy(priceCrystal);
 
             [JsonProperty(Required = Required.Default)]
             public bool canUpgrade => GameData.buildings.magicGuild.currentLevel >= requiredBuildingLevel && next != null;
-            
+
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";
@@ -1818,7 +1822,7 @@ namespace Overlewd
                 public int mergeCount;
                 public List<MergePrice> pricesOfMergeType;
             }
-            
+
             public class MergeShardSettings
             {
                 public int mergeAmount;
@@ -1879,6 +1883,10 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public TradableItem tradableData =>
                 GameData.markets.GetTradableById(tradableId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon =>
+                tradableData?.GetIconByRarity(rarity);
         }
 
         [Serializable]
@@ -1937,6 +1945,7 @@ namespace Overlewd
         // /matriarchs/memories
         // /matriarchs/memories/{id}/buy
         // /matriarchs/{id}/seduce
+        // /matriarchs/shards
 
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
@@ -1961,7 +1970,7 @@ namespace Overlewd
             var url = $"http://api.overlewd.com/matriarchs/memories/{id}/buy";
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
-            
+
             }
         }
 
@@ -1972,6 +1981,15 @@ namespace Overlewd
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
 
+            }
+        }
+
+        public static async Task<List<MemoryShardItem>> memoryShardsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/matriarchs/shards";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<MemoryShardItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -1992,25 +2010,18 @@ namespace Overlewd
             public int? nextEmpathyLevel;
             public string rewardsClaimed;
             public string seduceAvailableAt;
-            public List<Shard> shards;
-
-            public class Shard
-            {
-                public string rarity;
-                public int amount;
-            }
 
             [JsonProperty(Required = Required.Default)]
-            public Shard basicShard => shards?.Find(s => s.rarity == Rarity.Basic);
-            
+            public MemoryShardItem basicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Basic);
+
             [JsonProperty(Required = Required.Default)]
-            public Shard advancedShard => shards?.Find(s => s.rarity == Rarity.Advanced);
-            
+            public MemoryShardItem advancedShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Advanced);
+
             [JsonProperty(Required = Required.Default)]
-            public Shard epicShard => shards?.Find(s => s.rarity == Rarity.Epic);
-            
+            public MemoryShardItem epicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Epic);
+
             [JsonProperty(Required = Required.Default)]
-            public Shard heroicShard => shards?.Find(s => s.rarity == Rarity.Heroic);
+            public MemoryShardItem heroicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Heroic);
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
@@ -2069,6 +2080,7 @@ namespace Overlewd
 
             public class OpenShard
             {
+                public int shardId;
                 public int amount;
                 public string shardRarity;
             }
@@ -2076,29 +2088,39 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public OpenShard basicShard =>
                 shardsToOpen?.Find(r => r.shardRarity == Rarity.Basic);
-            
+
             [JsonProperty(Required = Required.Default)]
             public OpenShard advancedShard =>
                 shardsToOpen.Find(r => r.shardRarity == Rarity.Advanced);
-            
+
             [JsonProperty(Required = Required.Default)]
             public OpenShard epicShard =>
                 shardsToOpen?.Find(r => r.shardRarity == Rarity.Epic);
-            
+
             [JsonProperty(Required = Required.Default)]
             public OpenShard heroicShard =>
                 shardsToOpen?.Find(r => r.shardRarity == Rarity.Heroic);
 
-            
+
             public const string Status_Visible = "visible";
             public const string Status_Open = "open";
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isVisible => status == Status_Visible;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
 
+        }
+
+        [Serializable]
+        public class MemoryShardItem
+        {
+            public int id;
+            public int matriarchId;
+            public string rarity;
+            public string icon;
+            public int amount;
         }
 
         // /potions

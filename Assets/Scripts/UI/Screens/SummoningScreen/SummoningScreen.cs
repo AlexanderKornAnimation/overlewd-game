@@ -137,9 +137,9 @@ namespace Overlewd
             {
                 foreach (var s in summonData)
                 {
-                    result.shards.Add(new SummoningScreenShardsData.Shard
+                    result.shards.Add(new Shard
                     {
-                        icon = ResourceManager.LoadSprite(s.tradableData?.icon),
+                        icon = ResourceManager.LoadSprite(s.icon),
                         rarity = s.rarity
                     });
                 }
