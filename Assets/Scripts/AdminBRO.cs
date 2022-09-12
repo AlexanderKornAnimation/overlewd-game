@@ -834,12 +834,22 @@ namespace Overlewd
             public const string CharacterName_Ulvi = "Ulvi";
             public const string CharacterName_Faye = "Faye";
             public const string CharacterName_Adriel = "Adriel";
+            public const string CharacterName_Dragon= "Dragon";
+            public const string CharacterName_Inge = "Inge";
+            public const string CharacterName_Lili = "Lili";
+            public const string CharacterName_Pisha = "Pisha";
+            public const string CharacterName_Valkyrie = "Valkyrie";
 
             public const string CharacterSkin_Overlord = "Overlord";
             public const string CharacterSkin_Ulvi = "Ulvi";
             public const string CharacterSkin_UlviWolf = "UlviWolf";
             public const string CharacterSkin_Adriel = "Adriel";
             public const string CharacterSkin_Inge = "Inge";
+            public const string CharacterSkin_Dragon = "Dragon";
+            public const string CharacterSkin_Faye = "Faye";
+            public const string CharacterSkin_Lili = "Lili";
+            public const string CharacterSkin_Pisha = "Pisha";
+            public const string CharacterSkin_Valkyrie = "Valkyrie";
         }
 
         [Serializable]

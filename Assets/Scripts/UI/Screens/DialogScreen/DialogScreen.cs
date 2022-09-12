@@ -53,11 +53,16 @@ namespace Overlewd
 
         private Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
         {
-            [AdminBRO.DialogReplica.CharacterSkin_Overlord] = "Prefabs/UI/Screens/DialogScreen/Overlord",
-            [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/Ulvi",
-            [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/UlviFurry",
-            [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/Adriel",
-            [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/Inge"
+            [AdminBRO.DialogReplica.CharacterSkin_Overlord] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Overlord",
+            [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Ulvi",
+            [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/UlviWolf",
+            [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Adriel",
+            [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Inge",
+            [AdminBRO.DialogReplica.CharacterSkin_Dragon] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Dragon",
+            [AdminBRO.DialogReplica.CharacterSkin_Faye] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Faye",
+            [AdminBRO.DialogReplica.CharacterSkin_Lili] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Lili",
+            [AdminBRO.DialogReplica.CharacterSkin_Pisha] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Pisha",
+            [AdminBRO.DialogReplica.CharacterSkin_Valkyrie] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Valkyrie",
         };
 
         private SpineScene cutInAnimation;
@@ -70,9 +75,9 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
 
             charactersPos = canvas.Find("CharactersPos");
-            leftCharacterPos = charactersPos.Find("LeftCharacterPos");
-            midCharacterPos = charactersPos.Find("MidCharacterPos");
-            rightCharacterPos = charactersPos.Find("RightCharacterPos");
+            leftCharacterPos = charactersPos.Find("LeftPos");
+            midCharacterPos = charactersPos.Find("MiddlePos");
+            rightCharacterPos = charactersPos.Find("RightPos");
 
             textContainer = canvas.Find("TextContainer").GetComponent<Button>();
             textContainer.onClick.AddListener(TextContainerButtonClick);
