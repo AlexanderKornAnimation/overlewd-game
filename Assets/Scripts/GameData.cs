@@ -290,6 +290,7 @@ namespace Overlewd
             var result = await AdminBRO.gachaBuyAsync(id.Value);
             await Get();
             await GameData.player.Get();
+            await GameData.characters.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -313,6 +314,7 @@ namespace Overlewd
             var result = await AdminBRO.gachaBuyManyAsync(id.Value);
             await Get();
             await GameData.player.Get();
+            await GameData.characters.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
