@@ -270,11 +270,12 @@ namespace Overlewd
             var attackerSkill = attacker.skill[id];
             if (attackerSkill.actionType != "heal")
                 spineWidget.PlayAnimation(characterRes.ani_defence_name, false);
-            yield return new WaitForSeconds(defenceDuration / 2);
 
             bool hit = attacker.accuracy > Random.value;
             bool isDodge = dodge > Random.value;
             bool isCrit = attacker.critrate > Random.value;
+
+            //yield return new WaitForSeconds(defenceDuration / 2);
 
             if (attacker.focus_blind != 0)
                 hit = attacker.focus_blind > 0 ? true : false;
@@ -290,15 +291,10 @@ namespace Overlewd
                         PassiveDeBuff(ps, attacker);
             }
 
-            Debug.Log($"attacker.damage: {attacker.damageTotal}");
-            Debug.Log($"hit {hit}, attacker.accuracy: {attacker.accuracy}");
-            Debug.Log($"dodge {isDodge}, attacker.dodge: {dodge}");
-            Debug.Log($"crit {isCrit}, attacker.critrate: {attacker.critrate}");
-
             float defScale = defUp_defDown != 0 ? attacker.damageTotal * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
-            Damage(attacker.damageTotal + defScale, hit, isDodge, isCrit);
+            Damage(attacker.damageTotal + defScale, hit, isDodge, isCrit, uiDelay: 1.2f);
 
-            yield return new WaitForSeconds(defenceDuration / 2);
+            yield return new WaitForSeconds(defenceDuration); // (/2)
             if (attackerSkill.actionType != "heal")
                 PlayIdle();
             BattleOut(AOE);
@@ -356,7 +352,7 @@ namespace Overlewd
             }
         }
 
-        public void Damage(float value, bool hit, bool dodge, bool crit)
+        public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f)
         {
             if (!hit)
             {
@@ -364,11 +360,12 @@ namespace Overlewd
                 return;
             }
             if (crit) value *= 2;
+            value = Mathf.Round(value);
             if (value > 0)
             {
                 if (dodge)
                 {
-                    DrawPopup("Dodge!", "yellow");
+                    DrawPopup("Dodge!", "blue");
                     return;
                 }
                 health -= value;
@@ -378,21 +375,29 @@ namespace Overlewd
                 {
                     isDead = true;
                     StartCoroutine(PlayDead());
-                    bm.StateUpdate(this);
+                    bm.StateUpdate(this, poison);
                 }
                 if (crit)
-                    DrawPopup($"Crit! {value}", "red");
+                    DrawPopup($"Crit! {value}", "yellow");
+                else if (poison)
+                    DrawPopup($"{value}", "purple");
                 else
-                    DrawPopup($"{value}", "red");
-                UpdateUI();
+                    DrawPopup($"{value}", "white");
+                StartCoroutine(UIDelay(uiDelay));
             }
             else if (value < 0)
             {
                 Heal(-value);
             }
         }
+        IEnumerator UIDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            UpdateUI();
+        }
         public void Heal(float value)
         {
+            value = Mathf.Round(value);
             if (bless_healBlock < 0)
             {
                 DrawPopup($"Heal blocked!", "red");
@@ -417,7 +422,8 @@ namespace Overlewd
         }
         public void ManaReduce(float manaCost)
         {
-            if (isOverlord) {
+            if (isOverlord)
+            {
                 mana -= manaCost;
                 Mathf.RoundToInt(mana);
                 UpdateUI();
@@ -480,7 +486,7 @@ namespace Overlewd
                                 regen_poison = -duration;
                                 regen_poison_dot = effectAmount;
                                 if (vfx_purple) Instantiate(vfx_purple, selfVFX);
-                                DrawPopup(msg_poison, "red");
+                                DrawPopup(msg_poison, "purple");
                             }
                             else
                                 DrawPopup(msg_immunity, "green");
@@ -609,7 +615,6 @@ namespace Overlewd
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
         {
             bool isCrit = critrate >= Random.value;
-
             Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb >= Random.value;
 
@@ -648,7 +653,7 @@ namespace Overlewd
                                 targetCC.regen_poison = -duration;
                                 targetCC.regen_poison_dot = effectAmount;
                                 if (vfx_purple) Instantiate(vfx_purple, targetCC.selfVFX);
-                                DrawPopup(msg_poison, "red");
+                                DrawPopup(msg_poison, "purple");
                             }
                             else
                                 DrawPopup(msg_immunity, "green");
@@ -755,7 +760,7 @@ namespace Overlewd
                         regen_poison -= duration;
                         regen_poison_dot = effectAmount;
                         if (vfx_purple) Instantiate(vfx_purple, selfVFX);
-                        DrawPopup(msg_poison, "red");
+                        DrawPopup(msg_poison, "purple");
                     }
                     else
                         DrawPopup(msg_immunity, "green");
@@ -859,11 +864,6 @@ namespace Overlewd
         }
         public void UpadeteRoundEnd()
         {
-            if (regen_poison != 0)
-            {
-                Damage(regen_poison_dot, true, false, false);
-                regen_poison -= (int)Mathf.Sign(regen_poison);
-            }
             if (focus_blind != 0) focus_blind -= (int)Mathf.Sign(focus_blind);
             if (defUp_defDown != 0) defUp_defDown -= (int)Mathf.Sign(defUp_defDown);
             if (bless_healBlock != 0) bless_healBlock -= (int)Mathf.Sign(bless_healBlock);
@@ -871,6 +871,16 @@ namespace Overlewd
             if (immunity != 0) immunity--;
             if (silence != 0) silence--;
             if (curse != 0) curse--;
+            observer.UpdateStatuses();
+        }
+        public void UpadeteDot()
+        {
+            if (regen_poison != 0)
+            {
+                Damage(regen_poison_dot, true, false, false, poison: true);
+                regen_poison -= (int)Mathf.Sign(regen_poison);
+            }
+            if (stun) stun = false;
             observer.UpdateStatuses();
         }
         private int popUpCounter = 0;

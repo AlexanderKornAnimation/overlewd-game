@@ -9,7 +9,7 @@ public class DamagePopup : MonoBehaviour
     private RectTransform rt;
 
     [SerializeField] private AnimationCurve curve;
-    [SerializeField] private Color green, yellow, white, blue, red;
+    [SerializeField] private Color green, yellow, white, blue, red, purple;
 
     public float lifetime = 1.5f;
 
@@ -34,6 +34,9 @@ public class DamagePopup : MonoBehaviour
                 break;
             case "blue":
                 text.color = blue;
+                break;
+            case "purple":
+                text.color = purple;
                 break;
             default:
                 text.color = red;

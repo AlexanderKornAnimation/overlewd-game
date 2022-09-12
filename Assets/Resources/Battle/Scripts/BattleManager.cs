@@ -155,7 +155,7 @@ namespace Overlewd
             charControllerList[step].Highlight();
             SetSkillCtrl(ccOnSelect);
             if (battleState == BattleState.PLAYER)
-            { 
+            {
                 ccOnSelect.CharPortraitSet();
                 ButtonPress(0);
             }
@@ -419,24 +419,27 @@ namespace Overlewd
         IEnumerator EnemyAttack()
         {
             //Must be empty
-            yield return new WaitForSeconds(0.5f); //Pause then show target stats
-            int id = Random.Range(0, ccOnSelect.skill.Count);
-            if (ccOnSelect.skill[id].AOE)
-                ccTarget = null;
-            else if (ccOnSelect.skill[id].actionType == "heal")
-                ccTarget = enemyAllyList[Random.Range(0, enemyAllyList.Count)];
-            else
-                ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
-            ccTarget?.Highlight();
-            ccTarget?.CharPortraitSet();
-            yield return new WaitForSeconds(0.5f);
-            AttackAction(id, isEnemyAttack: true);
+            yield return new WaitForSeconds(0.75f); //Pause then show target stats
+            if (!ccOnSelect.isDead) {
+                int id = Random.Range(0, ccOnSelect.skill.Count);
+                if (ccOnSelect.skill[id].AOE)
+                    ccTarget = null;
+                else if (ccOnSelect.skill[id].actionType == "heal")
+                    ccTarget = enemyAllyList[Random.Range(0, enemyAllyList.Count)];
+                else
+                    ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
+                ccTarget?.Highlight();
+                ccTarget?.CharPortraitSet();
+                yield return new WaitForSeconds(0.5f);
+                AttackAction(id, isEnemyAttack: true);
+            }
         }
         public void UseHPPotion()
         {
             if (potion_hp.potionAmount > 0 && overlord.health < overlord.healthMax && !overlord.isDead)
                 if (battleState == BattleState.PLAYER)
                 {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_Battle_Healpotion);
                     overlord.Heal(Mathf.RoundToInt(overlord.healthMax * 0.2f));
                     potion_hp.InstVFX(overlord.persPos);
                     potion_hp.potionAmount--;
@@ -476,7 +479,7 @@ namespace Overlewd
             ccTarget = null;
         }
 
-        public void StateUpdate(CharController invoker) //call when any character is dead
+        public void StateUpdate(CharController invoker, bool poison = false) //call when any character is dead
         {
             var index = charControllerList.FindIndex(x => x == invoker);
             if (!bossLevel)
@@ -525,6 +528,7 @@ namespace Overlewd
                     //battleList[1].powerBuff = true; BUFF ON
                     Debug.Log("LOOSING");
             }
+            if (poison) Step(); //if we dead from DOT on start move we call next step
         }
         IEnumerator WinScreenWithDelay()
         {
@@ -550,7 +554,7 @@ namespace Overlewd
                 {
                     BattleNotif("chapter1", "battle1", "battletutor2"); //one round later
                 }
-                roundEnd?.Invoke(); //снимает два статуса почему-то
+                roundEnd?.Invoke(); //drop some statuses
                 round++;
                 roundTMP.text = $"Round {round}";
                 log.Add($"Round {round}");
@@ -561,32 +565,39 @@ namespace Overlewd
                 BattleNotif("chapter1", "battle5", "potionstutor3"); //AOE Cast
             }
             var cc = charControllerList[step];
-            if (cc.stun) //skip dead/stun character
+
+            ccOnSelect = cc;
+            if (!bossLevel) QueueElements.Find(i => i?.cc == ccOnSelect).Select();
+
+            if (cc.stun)
             {
-                cc.stun = false;
+                cc.UpadeteDot();
                 Step();
+                return;
+            }
+            bPosEnemy.SetSiblingIndex(siblingEnemy);
+            bPosPlayer.SetSiblingIndex(siblingPlayer);
+
+            if (ccOnSelect.regen_poison != 0)
+            {
+                //battleState = BattleState.APPLYDOT;
+                ccOnSelect.UpadeteDot();
+            }
+            //else 
+            if (ccOnSelect.isEnemy)
+            {
+                battleState = BattleState.ENEMY;
+                StartCoroutine(EnemyAttack());
+                if (!ccOnSelect.isBoss)
+                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
             }
             else
             {
-                ccOnSelect = charControllerList[step];
-                if (!bossLevel) QueueElements.Find(i => i?.cc == ccOnSelect).Select();
-                bPosEnemy.SetSiblingIndex(siblingEnemy);
-                bPosPlayer.SetSiblingIndex(siblingPlayer);
-                if (ccOnSelect.isEnemy)
-                {
-                    battleState = BattleState.ENEMY;
-                    StartCoroutine(EnemyAttack());
-                    if (!ccOnSelect.isBoss)
-                        bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
-                }
-                else
-                {
-                    SetSkillCtrl(ccOnSelect);
-                    ccOnSelect.CharPortraitSet();
-                    battleState = BattleState.PLAYER;
-                    bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
-                    ButtonPress(0);
-                }
+                SetSkillCtrl(ccOnSelect);
+                ccOnSelect.CharPortraitSet();
+                battleState = BattleState.PLAYER;
+                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
+                ButtonPress(0);
             }
         }
 
@@ -648,7 +659,7 @@ namespace Overlewd
             return true;
         }
         public bool MagicGuildChecker() => GameData.buildings.magicGuild.isBuilt;
-        
+
         public bool CheckBattleGameData(string chapterID, string battleID)
         {
             return false;
@@ -706,7 +717,7 @@ namespace Overlewd
             return 0;
         }
 
-        public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE, NEXTWAVE }
+        public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE, NEXTWAVE, APPLYDOT }
         public BattleState battleState = BattleState.INIT;
     }
 }
