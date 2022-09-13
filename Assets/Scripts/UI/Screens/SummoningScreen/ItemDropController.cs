@@ -47,7 +47,9 @@ namespace Overlewd
                 else
                     spineWiget = SpineWidget.GetInstance(battleGirlShape, anchor);
 
-                spineWiget.transform.Find("Mask/Item").GetComponent<Image>().sprite = sprite;
+                var persIcon = spineWiget.transform.Find("Mask/Item").GetComponent<Image>();
+                persIcon.sprite = sprite;
+                persIcon.SetNativeSize();
 
                 spineWiget?.PlayAnimation("cr_grey", true);
                 spineWiget?.transform.SetSiblingIndex(0);
