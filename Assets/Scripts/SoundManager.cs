@@ -42,6 +42,10 @@ namespace Overlewd
         /// <summary>
         /// Sound for click at mana potion button
         /// </summary>
+        public const string UI_Battle_Healpotion = "event:/UI/Battle_Interface/Misc/Healpotion";
+        /// <summary>
+        /// Sound for click at mana potion button
+        /// </summary>
         public const string UI_Battle_Manapotion = "event:/UI/Battle_Interface/Misc/Manapotion";
         /// <summary>
         /// Sound for melee attack

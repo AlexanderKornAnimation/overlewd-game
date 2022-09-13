@@ -63,7 +63,7 @@ namespace Overlewd
                 else
                 {
                     var equippedCharacter = GameData.characters.GetById(weaponData.characterId);
-                    equippedCharacterIcon.sprite = equippedCharacter?.iconSprite;
+                    equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter?.iconUrl);
                 }
             }
 
@@ -95,7 +95,7 @@ namespace Overlewd
 
                             if (characterData.hasEquipment)
                             {
-                                await Unequip(characterId.Value, characterData.equipmentData.id);
+                                await Unequip(characterId.Value, characterData.characterEquipmentData.id);
                             }
                             await Equip(characterId.Value, weaponId);
                         }
@@ -104,7 +104,7 @@ namespace Overlewd
                     {
                         if (characterData.hasEquipment)
                         {
-                           await Unequip(characterId.Value, characterData.equipmentData.id);
+                           await Unequip(characterId.Value, characterData.characterEquipmentData.id);
                         }
                         await Equip(characterId.Value, weaponId);
                     }

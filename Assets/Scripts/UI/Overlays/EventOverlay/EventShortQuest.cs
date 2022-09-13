@@ -24,12 +24,11 @@ namespace Overlewd
             private GameObject inProgress;
             private GameObject completed;
 
-            private void Awake()
+            void Awake()
             {
                 canvas = transform.Find("Canvas");
                 var grid = canvas.Find("Grid");
 
-                claimButton = canvas.Find("ClaimButton").GetComponent<Button>();
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 quest = canvas.Find("Quest").GetComponent<TextMeshProUGUI>();
                 progress = canvas.Find("Progress").GetComponent<TextMeshProUGUI>();
@@ -39,6 +38,9 @@ namespace Overlewd
 
                 mapButton = canvas.Find("MapButton").GetComponent<Button>();
                 mapButton.onClick.AddListener(ToMapClick);
+
+                claimButton = canvas.Find("ClaimButton").GetComponent<Button>();
+                claimButton.onClick.AddListener(ClaimClick);
 
                 for (int i = 0; i < rewardsCount; i++)
                 {
@@ -53,7 +55,7 @@ namespace Overlewd
                 Customize();
             }
 
-            private void Customize()
+            protected override void Customize()
             {
                 var _eventData = eventData;
                 var _questData = questData;
@@ -85,12 +87,6 @@ namespace Overlewd
                         rewardsAmount[i].text = _questData.rewards[i].amount.ToString();
                     }
                 }
-            }
-
-            protected override void ClaimClick()
-            {
-                base.ClaimClick();
-                Customize();
             }
 
             private void ToMapClick()

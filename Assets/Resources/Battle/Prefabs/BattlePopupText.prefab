@@ -109,7 +109,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -194,3 +194,5 @@ MonoBehaviour:
   white: {r: 1, g: 1, b: 1, a: 1}
   blue: {r: 0.35933605, g: 0.609247, b: 0.8018868, a: 1}
   red: {r: 0.990566, g: 0.3016184, b: 0.2943663, a: 1}
+  purple: {r: 0.4901961, g: 0.20784315, b: 1, a: 1}
+  lifetime: 1.5

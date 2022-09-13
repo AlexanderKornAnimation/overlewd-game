@@ -13,6 +13,8 @@ namespace Overlewd
         private Button overlordButton;
         private Button haremButton;
         private Button editTeamButton;
+        private Button repeatButton;
+        private Button mapButton;
 
         void Awake()
         {
@@ -20,19 +22,24 @@ namespace Overlewd
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/DefeatPopup/DefeatPopup", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
-            var grid = canvas.Find("Grid");
 
-            magicGuildButton = grid.Find("MagicGuildButton").GetComponent<Button>();
+            magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
             magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
 
-            overlordButton = grid.Find("OverlordButton").GetComponent<Button>();
+            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
             overlordButton.onClick.AddListener(OverlordButtonClick);
 
-            haremButton = grid.Find("HaremButton").GetComponent<Button>();
+            haremButton = canvas.Find("HaremButton").GetComponent<Button>();
             haremButton.onClick.AddListener(HaremButtonClick);
 
-            editTeamButton = grid.Find("EditTeamButton").GetComponent<Button>();
+            editTeamButton = canvas.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
+
+            repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
+            repeatButton.onClick.AddListener(RepeatButtonClick);
+
+            mapButton = canvas.Find("MapButton").GetComponent<Button>();
+            mapButton.onClick.AddListener(MapButtonClick);
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -43,6 +50,8 @@ namespace Overlewd
                     UITools.DisableButton(magicGuildButton);
                     UITools.DisableButton(overlordButton);
                     UITools.DisableButton(editTeamButton);
+                    UITools.DisableButton(repeatButton);
+                    UITools.DisableButton(mapButton);
                     break;
                 default:
                     break;
@@ -56,7 +65,7 @@ namespace Overlewd
             switch (inputData.ftueStageData?.ftueState)
             {
                 case ("battle2", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1");
+                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1", false);
                     break;
                 case (_, _):
                     switch (GameData.ftue.activeChapter.key)
@@ -127,6 +136,31 @@ namespace Overlewd
                         prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
                     }).RunShowScreenProcess();
                     break;
+            }
+        }
+
+        private void RepeatButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.MakeScreen<BattleScreen>().
+                SetData(new BaseBattleScreenInData
+                {
+                    ftueStageId = inputData?.ftueStageId,
+                    eventStageId = inputData?.eventStageId
+                }).RunShowScreenProcess();
+        }
+
+        private void MapButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+
+            if (inputData.hasFTUEStage)
+            {
+                UIManager.ShowScreen<MapScreen>();
+            }
+            else if (inputData.hasEventStage)
+            {
+                UIManager.ShowScreen<EventMapScreen>();
             }
         }
     }

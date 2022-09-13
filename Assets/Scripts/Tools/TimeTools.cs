@@ -16,25 +16,72 @@ namespace Overlewd
 
         public static bool PeriodIsActive(string startDate, string endDate)
         {
-            if (String.IsNullOrEmpty(startDate) || String.IsNullOrEmpty(endDate))
-                return false;
+            if (String.IsNullOrEmpty(startDate) && String.IsNullOrEmpty(endDate))
+                return true;
 
-            var start = DateTime.Parse(startDate);
-            var end = DateTime.Parse(endDate);
+            var start = String.IsNullOrEmpty(startDate) ? default : DateTime.Parse(startDate);
+            var end = String.IsNullOrEmpty(endDate) ? default : DateTime.Parse(endDate);
             var now = DateTime.Now;
+
+            if (String.IsNullOrEmpty(startDate))
+            {
+                return now <= end;
+            }
+
+            if (String.IsNullOrEmpty(endDate))
+            {
+                return now >= start;
+            }
+
             return now >= start && now <= end;
         }
 
         public static bool PeriodIsEnded(string startDate, string endDate)
         {
-            if (String.IsNullOrEmpty(startDate) || String.IsNullOrEmpty(endDate))
+            if (String.IsNullOrEmpty(startDate) && String.IsNullOrEmpty(endDate))
                 return false;
 
-            var start = DateTime.Parse(startDate);
-            var end = DateTime.Parse(endDate);
+            var start = String.IsNullOrEmpty(startDate) ? default : DateTime.Parse(startDate);
+            var end = String.IsNullOrEmpty(endDate) ? default : DateTime.Parse(endDate);
             var now = DateTime.Now;
-            return now > start && now > end;
+
+            if (String.IsNullOrEmpty(startDate))
+            {
+                return now >= end;
+            }
+
+            if (String.IsNullOrEmpty(endDate))
+            {
+                return false;
+            }
+
+            return now >= end;
         }
+
+        public static bool PeriodIsStarted(string startDate, string endDate)
+        {
+            if (String.IsNullOrEmpty(startDate) && String.IsNullOrEmpty(endDate))
+                return true;
+
+            var start = String.IsNullOrEmpty(startDate) ? default : DateTime.Parse(startDate);
+            var end = String.IsNullOrEmpty(endDate) ? default : DateTime.Parse(endDate);
+            var now = DateTime.Now;
+
+            if (String.IsNullOrEmpty(startDate))
+            {
+                return true;
+            }
+
+            if (String.IsNullOrEmpty(endDate))
+            {
+                return now >= start;
+            }
+
+            return now >= start;
+        }
+
+        public static bool PeriodHasEnd(string startDate, string endDate) =>
+            !String.IsNullOrEmpty(endDate);
 
         public static string AvailableTimeToString(string availableTime)
         {

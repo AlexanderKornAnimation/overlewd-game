@@ -17,9 +17,15 @@ namespace Overlewd
             public AdminBRO.QuestItem questData =>
                 GameData.quests.GetById(questId);
             
-            protected virtual async void ClaimClick()
+            protected async void ClaimClick()
             {
                 await GameData.quests.ClaimReward(questId);
+                Customize();
+            }
+
+            protected virtual void Customize()
+            {
+
             }
             
             public void SetCanvasActive(bool value)

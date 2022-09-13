@@ -141,7 +141,7 @@ namespace Overlewd
                     await GameData.matriarchs.Get();
                 }
             }
-
+            
             await Task.CompletedTask;
         }
 
@@ -204,7 +204,6 @@ namespace Overlewd
             {
                 sexCooldown.gameObject.SetActive(false);
             }
-
             await Task.CompletedTask;
         }
 

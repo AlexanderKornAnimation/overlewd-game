@@ -10,32 +10,26 @@ namespace Overlewd
 {
     public class SummoningScreen : BaseFullScreenParent<SummoningScreenInData>
     {
-        private Button haremButton;
-        private TextMeshProUGUI haremButtonText;
-        private Button overlordButton;
         private Button portalButton;
-        private TextMeshProUGUI portalButtonText;
+        private Button summonButton;
+        private TextMeshProUGUI summonButtonText;
         private Transform canvas;
         private Transform shardsPos;
 
         private SpineScene portalFullScreenAnim;
-        private List<Button> activeButtons = new List<Button>();
+        private NSSummoningScreen.BaseShardsAnimCtrl animCtrl;
 
-        private void Awake()
+        void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/SummoningScreen/SummoningScreen", transform);
 
             canvas = screenInst.transform.Find("Canvas");
-            overlordButton = canvas.Find("OverlordButton").GetComponent<Button>();
-            overlordButton.onClick.AddListener(OverlordButtonClick);
-
-            haremButton = canvas.Find("HaremButton").GetComponent<Button>();
-            haremButtonText = haremButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            haremButton.onClick.AddListener(HaremButtonClick);
-
             portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            portalButtonText = portalButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             portalButton.onClick.AddListener(PortalButtonClick);
+
+            summonButton = canvas.Find("SummonButton").GetComponent<Button>();
+            summonButtonText = summonButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            summonButton.onClick.AddListener(SummonButtonClick);
 
             shardsPos = canvas.Find("ShardsPos");
         }
@@ -44,24 +38,21 @@ namespace Overlewd
         {
             portalFullScreenAnim.Play();
             await UniTask.WaitUntil(() => portalFullScreenAnim.IsComplete);
-
-            foreach (var b in activeButtons)
-            {
-                b.gameObject.SetActive(true);
-            }
+            Destroy(portalFullScreenAnim.gameObject);
 
             if (inputData.isMany)
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
-
-                NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
+                animCtrl = NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
             }
             else
             {
                 SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
-
-                NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
+                animCtrl = NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
             }
+            animCtrl?.SetShardsData(SummoningScreenShardsData.FromSummonData(inputData?.tabType, inputData?.summonData));
+
+            StartCoroutine(WaitShardsIsOpened());
 
             await Task.CompletedTask;
         }
@@ -71,55 +62,23 @@ namespace Overlewd
             portalFullScreenAnim = SpineScene.GetInstance(GameData.animations["gacha_portal_scene1"], shardsPos, false);
             portalFullScreenAnim.Pause();
 
-            activeButtons.Add(portalButton);
+            PortalScreenHelper.MakeSummonButton(inputData.gachaData, inputData.isMany, summonButton, summonButtonText);
 
-            switch (inputData.tabType)
-            {
-                case AdminBRO.GachaItem.TabType_OverlordEquipment:
-                    haremButton.gameObject.SetActive(false);
-                    activeButtons.Add(overlordButton);
-                    break;
-                case AdminBRO.GachaItem.TabType_Matriachs:
-                    haremButtonText.text = "Go to the Harem\nto edit team";
-                    overlordButton.gameObject.SetActive(false);
-                    activeButtons.Add(haremButton);
-                    break;
-                case AdminBRO.GachaItem.TabType_CharactersEquipment:
-                    haremButtonText.text = "Go to the Harem\nto equip new weapon";
-                    overlordButton.gameObject.SetActive(false);
-                    activeButtons.Add(haremButton);
-                    break;
-                case AdminBRO.GachaItem.TabType_Shards:
-                    haremButtonText.text = "Go to the Harem\nto activate shards";
-                    overlordButton.gameObject.SetActive(false);
-                    activeButtons.Add(haremButton);
-                    break;
-            }
-
-            foreach (var b in activeButtons)
-            {
-                b.gameObject.SetActive(false);
-            }
+            portalButton.gameObject.SetActive(false);
+            summonButton.gameObject.SetActive(false);
 
             await Task.CompletedTask;
         }
 
-        private void OverlordButtonClick()
+        private void SummonButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<OverlordScreen>();
-        }
 
-        private void HaremButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<HaremScreen>();
         }
 
         private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
             UIManager.MakeScreen<PortalScreen>().
                 SetData(new PortalScreenInData
                 {
@@ -127,19 +86,76 @@ namespace Overlewd
                     {
                         AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreen.TabOverlordEquip,
                         AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreen.TabBattleGirlsEquip,
-                        AdminBRO.GachaItem.TabType_Matriachs => PortalScreen.TabBattleGirls,
-                        AdminBRO.GachaItem.TabType_Shards => PortalScreen.TabShards,
+                        AdminBRO.GachaItem.TabType_Characters => PortalScreen.TabBattleGirls,
+                        AdminBRO.GachaItem.TabType_MatriachsShards => PortalScreen.TabShards,
                         _ => PortalScreen.TabBattleGirls
                     }
                 })
                 .RunShowScreenProcess();
         }
+
+        private IEnumerator WaitShardsIsOpened()
+        {
+            while (!(animCtrl?.IsCompleteOpened ?? true))
+            {
+                yield return new WaitForSeconds(1.0f);
+            }
+
+            portalButton.gameObject.SetActive(true);
+            summonButton.gameObject.SetActive(true);
+            UITools.DisableButton(summonButton);
+        }
     }
 
     public class SummoningScreenInData : BaseFullScreenInData
     {
+        public int? gachaId;
         public string tabType;
         public bool isMany;
         public List<AdminBRO.GachaBuyResult> summonData;
+
+        public AdminBRO.GachaItem gachaData =>
+            GameData.gacha.GetGachaById(gachaId);
+    }
+
+    public class SummoningScreenShardsData
+    {
+        public List<Shard> shards = new List<Shard>();
+        public string type;
+
+        public bool isBattleCharactersType => type == AdminBRO.GachaItem.TabType_Characters;
+        public bool isEquipmentsType => type == AdminBRO.GachaItem.TabType_CharactersEquipment ||
+            type == AdminBRO.GachaItem.TabType_OverlordEquipment;
+        public bool isMemoriesType => type == AdminBRO.GachaItem.TabType_MatriachsShards;
+
+        public static SummoningScreenShardsData FromSummonData(string gachaTabType,
+            List<AdminBRO.GachaBuyResult> summonData)
+        {
+            var result = new SummoningScreenShardsData();
+            result.type = gachaTabType;
+            if (summonData != null)
+            {
+                foreach (var s in summonData)
+                {
+                    result.shards.Add(new Shard
+                    {
+                        icon = ResourceManager.LoadSprite(s.icon),
+                        rarity = s.rarity
+                    });
+                }
+            }
+            return result;
+        }
+
+        public class Shard
+        {
+            public Sprite icon;
+            public string rarity;
+
+            public bool isBasic => rarity == AdminBRO.Rarity.Basic;
+            public bool isAdvanced => rarity == AdminBRO.Rarity.Advanced;
+            public bool isEpic => rarity == AdminBRO.Rarity.Epic;
+            public bool isHeroic => rarity == AdminBRO.Rarity.Heroic;
+        }
     }
 }

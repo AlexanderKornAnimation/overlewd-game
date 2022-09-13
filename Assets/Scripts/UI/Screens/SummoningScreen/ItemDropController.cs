@@ -12,8 +12,11 @@ namespace Overlewd
             Animator ani;
             Transform anchor;
             Button button;
-            public GameObject shardShape;
+
+            public GameObject memoShape;
             public GameObject equipShape;
+            public GameObject battleGirlShape;
+
             private int grade = 0;
             public int maxGrade = 0;
             public bool canClick = false;
@@ -30,22 +33,21 @@ namespace Overlewd
                 ani = GetComponent<Animator>();
                 anchor = transform.Find("anchor");
                 button = GetComponent<Button>();
-
             }
 
-            private void Start()
-            {
-                button?.onClick.AddListener(Play);
-                var mg = Random.Range(0, 4);
-                //mg = 3;
-                SetUp(shape, mg); //Удалить или закомментить после добавления
-            }
+            private void Start() => button?.onClick.AddListener(Play);
 
-            public void SetUp(int shape, int maxGrade)
+            public void SetUp(int shape, int maxGrade, Sprite sprite)
             {
-                spineWiget = shape == 0 ?
-                    SpineWidget.GetInstance(shardShape, anchor) :
-                    SpineWidget.GetInstance(equipShape, anchor);
+                this.shape = shape;
+                if (shape == 0)
+                    spineWiget = SpineWidget.GetInstance(memoShape, anchor);
+                else if (shape == 1)
+                    spineWiget = SpineWidget.GetInstance(equipShape, anchor);
+                else
+                    spineWiget = SpineWidget.GetInstance(battleGirlShape, anchor);
+
+                spineWiget.transform.Find("Mask/Item").GetComponent<Image>().sprite = sprite;
 
                 spineWiget?.PlayAnimation("cr_grey", true);
                 spineWiget?.transform.SetSiblingIndex(0);
@@ -84,17 +86,10 @@ namespace Overlewd
             {
                 if (grade == maxGrade)
                 {
-                    //Open shard create server based item
-
-                    /* Destroy(spineWiget.gameObject);
-                    //Or
-                    foreach (GameObject child in anchor.transform)
-                        Destroy(child);
-                    Instantiate(shard_from_server, anchor);*/
                     if (parentDE.landParticles[grade] != null && grade > 0)
                         Instantiate(parentDE.landParticles[grade - 1], anchor);
                     maskObj.color = maskVal;
-                    //Debug.Log("Open");
+                    parentDE.ShardIsOpen();
                     grade++;
                 }
                 else

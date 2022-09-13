@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,12 @@ namespace Overlewd
 
         private Button nextButton;
         private Button repeatButton;
+        private Image firstTimeReward;
+        private TextMeshProUGUI firstTimeRewardAmount;
+        private GameObject firstTimeRewardStatus;
+        private Image[] rewards = new Image[RewardsCount];
+        private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[RewardsCount];
+        private const int RewardsCount = 3;
 
         void Awake()
         {
@@ -27,28 +34,43 @@ namespace Overlewd
 
             repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
             repeatButton.onClick.AddListener(RepeatButtonClick);
+
+            firstTimeReward = grid.Find("FirstTimeReward").GetComponent<Image>();
+            firstTimeRewardAmount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+            firstTimeRewardStatus = firstTimeReward.transform.Find("ClaimStatus").gameObject;
+            firstTimeRewardStatus.SetActive(false);
+
+            for (int i = 0; i < RewardsCount; i++)
+            {
+                rewards[i] = grid.Find($"Reward{i + 1}").GetComponent<Image>();
+                rewardsAmount[i] = rewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                rewards[i].gameObject.SetActive(false);
+            }
         }
 
         public override async Task BeforeShowMakeAsync()
         {
             var battleData = inputData?.ftueStageData?.battleData ?? inputData?.eventStageData?.battleData;
 
-            int revId = 0;
-            foreach (Transform reward in grid)
+            var firstReward = battleData?.firstRewards?.FirstOrDefault();
+
+            firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward?.icon);
+            firstTimeRewardAmount.text = firstReward?.amount.ToString();
+            var isStageComplete = inputData?.ftueStageData?.isComplete ?? inputData?.eventStageData?.isComplete;
+            
+            if (isStageComplete.HasValue)
             {
-                if (revId < battleData?.rewards?.Count)
-                {
-                    var icon = reward.GetComponent<Image>();
-                    var count = reward.Find("Count").GetComponent<TextMeshProUGUI>();
-                    icon.sprite = ResourceManager.LoadSprite(battleData?.rewards[revId].icon);
-                    count.text = battleData?.rewards[revId].amount?.ToString() ?? "_";
-                    reward.gameObject.SetActive(true);
-                }
-                else
-                {
-                    reward.gameObject.SetActive(false);
-                }
-                revId++;
+                firstTimeRewardStatus.SetActive(isStageComplete.Value);
+                firstTimeReward.color = isStageComplete.Value ? Color.gray : Color.white;
+
+            }
+            
+            for (int i = 0; i < battleData?.rewards?.Count; i++)
+            {
+                var reward = battleData.rewards[i];
+                rewards[i].sprite = ResourceManager.LoadSprite(reward.icon);
+                rewardsAmount[i].text = reward.amount.ToString();
+                rewards[i].gameObject.SetActive(true);
             }
 
             switch (inputData.ftueStageData?.ftueState)

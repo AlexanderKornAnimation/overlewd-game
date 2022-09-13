@@ -6,11 +6,11 @@ namespace Overlewd
 {
     namespace NSSummoningScreen
     {
-        public class GroupShardsAnimCtrl : MonoBehaviour
+        public class GroupShardsAnimCtrl : BaseShardsAnimCtrl
         {
-            void Awake()
+            protected override void Awake()
             {
-
+                base.Awake();
             }
 
             public static GroupShardsAnimCtrl GetInstance(Transform parent)

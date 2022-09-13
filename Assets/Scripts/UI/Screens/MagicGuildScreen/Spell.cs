@@ -49,6 +49,7 @@ namespace Overlewd
                 title.text = _skillData.current.name;
                 icon.sprite = ResourceManager.LoadSprite(_skillData.current.icon);
                 isMax.gameObject.SetActive(_skillData.isLvlMax);
+                UITools.DisableButton(isMax, !_skillData.canUpgrade);
             }
 
             private void IsMaxButtonClick()

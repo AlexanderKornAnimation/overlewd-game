@@ -68,16 +68,13 @@ namespace Overlewd
 
 		public virtual void OnBattleNotification(string stageKey, string chapterKey, string notifKey)
 		{
-			GameData.ftue.info.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey);
+			GameData.ftue.info.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey, false);
 		}
 
 		public BattleManagerInData GetBattleData()
 		{
-			return inputData.battleId.HasValue ?
-				BattleManagerInData.InstFromBattleData(inputData.battleData) :
-				inputData.ftueStageId.HasValue ?
-					BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
-					BattleManagerInData.InstFromEventStage(inputData.eventStageData);
+			return inputData.hasFTUEStage ? BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
+				inputData.hasEventStage ? BattleManagerInData.InstFromEventStage(inputData.eventStageData) : null;
 		}
 	}
 
@@ -90,9 +87,7 @@ namespace Overlewd
 
 	public class BaseBattleScreenInData : BaseFullScreenInData
 	{
-		public int? battleId { get; set; }
-		public AdminBRO.Battle battleData =>
-			GameData.battles.GetById(battleId);
+
 	}
 
 	public class BattleManagerInData

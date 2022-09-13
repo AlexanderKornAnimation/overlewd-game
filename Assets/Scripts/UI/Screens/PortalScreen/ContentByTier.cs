@@ -26,16 +26,29 @@ namespace Overlewd
                 {
                     steps.Add(canvas.Find("Steps").Find($"Step{i}"));
                 }
+
+                discountBack = summonManyButton.transform.Find("DiscountBack").gameObject;
+                discount = discountBack.transform.Find("Discount").GetComponent<TextMeshProUGUI>();
             }
 
-            protected virtual void Start()
+            public override void Customize()
             {
-                Customize();
+                var _gachaData = gachaData;
+
+                title.text = _gachaData.backgroundImageText;
+
+                discountBack.SetActive(_gachaData?.discount > 0);
+                if (discountBack.activeSelf)
+                {
+                    discount.text = $"-{_gachaData?.discount}%";
+                }
+
+                PortalScreenHelper.MakeSummonButton(_gachaData, true, summonManyButton, summonButtonText);
             }
 
-            protected virtual void Customize()
+            public override void OnGameDataEvent(GameDataEvent eventData)
             {
-                
+
             }
 
             public async void SummonManyButtonClick()
@@ -44,12 +57,13 @@ namespace Overlewd
                 var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
-                {
-                    tabType = gachaData?.tabType,
-                    prevScreenInData = UIManager.prevScreenInData,
-                    isMany = true,
-                    summonData = summonData
-                }).RunShowScreenProcess();
+                    {
+                        gachaId = gachaId,
+                        tabType = gachaData?.tabType,
+                        prevScreenInData = UIManager.prevScreenInData,
+                        isMany = true,
+                        summonData = summonData
+                    }).RunShowScreenProcess();
             }
             
             public static ContentByTier GetInstance(Transform parent)

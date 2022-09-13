@@ -6,11 +6,11 @@ namespace Overlewd
 {
     namespace NSSummoningScreen
     {
-        public class SingleShardAnimCtrl : MonoBehaviour
+        public class SingleShardAnimCtrl : BaseShardsAnimCtrl
         {
-            void Awake()
+            protected override void Awake()
             {
-
+                base.Awake();
             }
 
             public static SingleShardAnimCtrl GetInstance(Transform parent)

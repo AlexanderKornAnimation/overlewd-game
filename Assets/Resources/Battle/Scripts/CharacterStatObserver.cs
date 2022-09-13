@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,6 +19,7 @@ namespace Overlewd
         public Image charClass;
         public Slider sliderHP;
         public Slider sliderMP;
+        public Slider whiteSlider;
         public bool showMP => cc.isOverlord;
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
@@ -24,8 +27,8 @@ namespace Overlewd
         public GameObject border;
         private CharDescription charDescription => FindObjectOfType<CharDescription>();
 
-        public float health => cc.health;
-        public float healthMax => cc.healthMax;
+        public float hp => cc.health;
+        public float maxHp => cc.healthMax;
         public float mana => cc.mana;
         public float manaMax => cc.manaMax;
         public bool isEnemy => cc.isEnemy;
@@ -41,27 +44,39 @@ namespace Overlewd
             border = transform.Find("button/border").gameObject;
             border?.SetActive(false);
             if (cc.isOverlord) border.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 60);
-
-            if (sliderHP) sliderHP.maxValue = healthMax;
+            if (sliderHP) sliderHP.maxValue = maxHp;
+            
             if (sliderMP) sliderMP.maxValue = manaMax;
             sliderMP?.gameObject.SetActive(showMP);
             if (charClass && classIcons != null) SetClass();
             UpdateUI();
             UpdateStatuses();
+            //sliderHP.onValueChanged.AddListener(delegate { ChangeHP(); });
         }
 
         public void UpdateUI()
         {
-            string hpTxt = $"{health}/{healthMax}";
+            string hpTxt = $"{hp}/{maxHp}";
             if (hpTMP != null) hpTMP.text = hpTxt; else Debug.Log("hpTMP = null");
-            if (sliderHP != null) sliderHP.value = health;
+            if (sliderHP != null) sliderHP.DOValue(hp, 0.3f).SetEase(Ease.OutQuint); //value = health;
             if (isOverlord)
             {
                 string mpTxt = $"{mana}/{manaMax}";
                 if (mpTMP != null) mpTMP.text = mpTxt;
                 if (sliderMP != null) sliderMP.value = mana;
             }
+            if (whiteSlider)
+                StartCoroutine(HPChangePause());
             charStats.UpdateUI();
+        }
+        IEnumerator HPChangePause()
+        {
+            whiteSlider.fillRect.GetComponent<Image>().enabled = true;
+            whiteSlider.maxValue = maxHp;
+            yield return new WaitForSeconds(1.1f);
+            whiteSlider.DOValue(hp, 0.75f).SetEase(Ease.OutQuint);
+            yield return new WaitForSeconds(0.75f);
+            whiteSlider.fillRect.GetComponent<Image>().enabled = false;
         }
 
         public void UpdateStatuses() => status_bar?.UpdateStatuses();

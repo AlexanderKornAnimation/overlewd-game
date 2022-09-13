@@ -44,7 +44,8 @@ namespace Overlewd
         }
         public void ChangeStats()
         {
-            rt.sizeDelta = status_bar.StatusCheck() ? new Vector2(786, 546) : new Vector2(344, 546);
+            bool haveAnyStatus = status_bar.StatusCheck();
+            rt.sizeDelta = haveAnyStatus ? new Vector2(786, 546) : new Vector2(344, 546);
             nameTMP.text = cc.Name;
             classTMP.text = cc.isBoss ? "Boss" : cc.characterClass;
 
@@ -64,7 +65,7 @@ namespace Overlewd
 
             status_bar.withDescription = true;
             status_bar.UpdateStatuses();
-            statusBarGO.SetActive(status_bar.StatusCheck());
+            statusBarGO.SetActive(haveAnyStatus);
         }
         public void Close()
         {

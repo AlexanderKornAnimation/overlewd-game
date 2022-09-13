@@ -110,6 +110,8 @@ namespace Overlewd
 
         private static List<UserInputLocker> userInputLockers = new List<UserInputLocker>();
 
+        public static event Action<GameDataEvent> widgetsGameDataListeners;
+
         public static void AddUserInputLocker(UserInputLocker locker)
         {
             if (!locker.IsNull())
@@ -314,6 +316,8 @@ namespace Overlewd
             currentPopup?.OnGameDataEvent(eventData);
             currentSubPopup?.OnGameDataEvent(eventData);
             currentOverlay?.OnGameDataEvent(eventData);
+
+            widgetsGameDataListeners?.Invoke(eventData);
         }
 
         public static void ThrowUIEvent(UIEvent eventData)

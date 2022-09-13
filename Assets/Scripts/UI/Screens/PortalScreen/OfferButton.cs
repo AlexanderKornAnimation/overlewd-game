@@ -13,10 +13,15 @@ namespace Overlewd
         {
             private Image background;
             private Button button;
+            private Image buttonPic;
             private TextMeshProUGUI title;
+            private TextMeshProUGUI marker;
             private GameObject selectedButton;
+            private Image selectedPic;
             private TextMeshProUGUI selectedButtonTitle;
+            private TextMeshProUGUI selectedMarker;
 
+            public bool startSelect { get; set; } = false;
             public event Action<OfferButton> selectOffer;
 
             private BaseContent content;
@@ -26,50 +31,53 @@ namespace Overlewd
 
             public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
-            private bool init = false;
-
-            public void Initialize()
+            void Awake()
             {
-                if (init) return;
-
                 var canvas = transform.Find("Canvas");
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
+                buttonPic = button.GetComponent<Image>();
                 title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+                marker = button.transform.Find("Marker").GetComponent<TextMeshProUGUI>();
 
                 background = button.gameObject.GetComponent<Image>();
                 selectedButton = canvas.Find("Selected").gameObject;
+                selectedPic = selectedButton.GetComponent<Image>();
                 selectedButtonTitle = selectedButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-                Deselect();
-
-                init = true;
+                selectedMarker = selectedButton.transform.Find("Marker").GetComponent<TextMeshProUGUI>();
             }
 
-            private void Awake()
+            void Start()
             {
-                Initialize();
-            }
-
-            private void Start()
-            {
-                Customize();
-            }
-
-            private void Customize()
-            {
-                content = gachaData.type switch
+                var _gachaData = gachaData;
+                content = _gachaData.type switch
                 {
                     AdminBRO.GachaItem.Type_TargetByCount => ContentByCount.GetInstance(contentPos),
                     AdminBRO.GachaItem.Type_TargetByTier => ContentByTier.GetInstance(contentPos),
                     _ => null
                 };
-                
                 if (content != null)
                 {
                     content.gachaId = gachaId;
                 }
+
+                Customize();
+                if (!startSelect)
+                {
+                    Deselect();
+                }
+            }
+
+            private void Customize()
+            {
+                var _gachaData = gachaData;
+                selectedPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOn);
+                selectedButtonTitle.text = _gachaData.tabTitle;
+                buttonPic.sprite = ResourceManager.LoadSprite(_gachaData.tabImageOff);
+                title.text = _gachaData.tabTitle;
+                selectedMarker.text = _gachaData.isTempOffer ? TMPSprite.NotificationTimeLimit : null;
+                marker.text = _gachaData.isTempOffer ? TMPSprite.NotificationTimeLimit : null;
             }
             
             protected virtual void ButtonClick()
@@ -78,13 +86,13 @@ namespace Overlewd
                 selectOffer?.Invoke(this);
             }
 
-            public virtual void Select()
+            public void Select()
             {
                 selectedButton.SetActive(true);
                 content?.gameObject.SetActive(true);
             }
 
-            public virtual void Deselect()
+            public void Deselect()
             {
                 selectedButton.SetActive(false);
                 content?.gameObject.SetActive(false);

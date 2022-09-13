@@ -210,9 +210,9 @@ namespace Overlewd
             stageTitle.text = battleData?.title;
             
             battleButtonText.text =
-                $"Make them suffer\nwith <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {energyCost} energy!";
+                $"Make them suffer\nwith <size=40>{TMPSprite.Energy}</size> {energyCost} energy!";
             fastBattleText.text =
-                $"Give an order to hunt\nfor <size=40>{AdminBRO.PlayerInfo.Sprite_Energy}</size> {fastBattleCost.energyCost} and {AdminBRO.PlayerInfo.Sprite_Scroll} {fastBattleCost.scrollCost}";
+                $"Give an order to hunt\nfor <size=40>{TMPSprite.Energy}</size> {fastBattleCost.energyCost} and {TMPSprite.Scroll} {fastBattleCost.scrollCost}";
             CheckButtonState();
         }
 
@@ -234,6 +234,8 @@ namespace Overlewd
                     UITools.DisableButton(editTeamButton);
                     break;
             }
+
+            StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergy));
 
             await Task.CompletedTask;
         }
@@ -295,7 +297,7 @@ namespace Overlewd
         private void CheckButtonState()
         {
             fastBattleText.text =
-                $"Give an order to hunt\nfor {AdminBRO.PlayerInfo.Sprite_Energy} {fastBattleCost.energyCost} and {AdminBRO.PlayerInfo.Sprite_Scroll} {fastBattleCost.scrollCost}";
+                $"Give an order to hunt\nfor {TMPSprite.Energy} {fastBattleCost.energyCost} and {TMPSprite.Scroll} {fastBattleCost.scrollCost}";
             buttonPlus.gameObject.SetActive(battlesCount < 5);
             buttonMinus.gameObject.SetActive(battlesCount > 1);
         }
@@ -394,6 +396,11 @@ namespace Overlewd
         public override async Task BeforeHideAsync()
         {
             await UITools.RightHideAsync(buffRect, 0.2f);
+        }
+
+        private void RefreshEnergy()
+        {
+            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
         }
     }
 

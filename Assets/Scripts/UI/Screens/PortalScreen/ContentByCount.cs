@@ -15,8 +15,6 @@ namespace Overlewd
             
             private Button summonManyButton;
             private TextMeshProUGUI priceForMany;
-            
-            private Image item;
 
             protected override void Awake()
             {
@@ -30,17 +28,27 @@ namespace Overlewd
                 summonManyButton.onClick.AddListener(SummonManyButtonClick);
                 priceForMany = summonManyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
-                discount = summonManyButton.transform.Find("DiscountBack").Find("Discount").GetComponent<TextMeshProUGUI>();
-                item = canvas.Find("Item").GetComponent<Image>();
-
+                discountBack = summonManyButton.transform.Find("DiscountBack").gameObject;
+                discount = discountBack.transform.Find("Discount").GetComponent<TextMeshProUGUI>();
             }
 
-            protected virtual void Start()
+            public override void Customize()
             {
-                Customize();
+                var _gachaData = gachaData;
+
+                title.text = _gachaData.backgroundImageText;
+
+                discountBack.SetActive(_gachaData?.discount > 0);
+                if (discountBack.activeSelf)
+                {
+                    discount.text = $"-{_gachaData?.discount}%";
+                }
+
+                PortalScreenHelper.MakeSummonButton(_gachaData, false, summonOneButton, priceForOne);
+                PortalScreenHelper.MakeSummonButton(_gachaData, true, summonManyButton, priceForMany);
             }
 
-            protected virtual void Customize()
+            public override void OnGameDataEvent(GameDataEvent eventData)
             {
 
             }
@@ -52,6 +60,7 @@ namespace Overlewd
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
                     {
+                        gachaId = gachaId,
                         prevScreenInData = UIManager.prevScreenInData,
                         tabType = gachaData.tabType,
                         summonData = summonData
@@ -64,12 +73,13 @@ namespace Overlewd
                 var summonData = await GameData.gacha.BuyMany(gachaId);
                 UIManager.MakeScreen<SummoningScreen>().
                     SetData(new SummoningScreenInData
-                {
-                    prevScreenInData = UIManager.prevScreenInData,
-                    tabType = gachaData.tabType,
-                    isMany = true,
-                    summonData = summonData
-                }).RunShowScreenProcess();
+                    {
+                        gachaId = gachaId,
+                        prevScreenInData = UIManager.prevScreenInData,
+                        tabType = gachaData.tabType,
+                        isMany = true,
+                        summonData = summonData
+                    }).RunShowScreenProcess();
             }
 
             public static ContentByCount GetInstance(Transform parent)

@@ -13,8 +13,8 @@ namespace Overlewd
             private Button button;
             private TextMeshProUGUI title;
             private TextMeshProUGUI markers;
-            public int? eventId { get; set; }
-            public AdminBRO.EventChapter chapterData => GameData.events.GetChapterById(eventId);
+            public int? chapterId { get; set; }
+            public AdminBRO.EventChapter chapterData => GameData.events.GetChapterById(chapterId);
 
             private void Awake()
             {
@@ -32,11 +32,22 @@ namespace Overlewd
             private void Customize()
             {
                 title.text = chapterData?.name;
+
+                if (chapterData.isOpen)
+                {
+                    UITools.DisableButton(button, GameData.events.mapChapter.id == chapterId);
+                }
+                else
+                {
+                    UITools.DisableButton(button);
+                }
             }
 
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                chapterData.SetAsMapChapter();
+                UIManager.ShowScreen<EventMapScreen>();
             }
 
             public static ChapterButton GetInstance(Transform parent)

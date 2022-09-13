@@ -9,17 +9,19 @@ namespace Overlewd
 {
     namespace NSPortalScreen
     {
-        public abstract class BaseContent : MonoBehaviour
+        public abstract class BaseContent : BaseWidget
         {
             protected Image contentBackground;
             protected TextMeshProUGUI title;
-            protected TextMeshProUGUI markers;
+            protected GameObject discountBack;
             protected TextMeshProUGUI discount;
+            protected GameObject timer;
+            protected TextMeshProUGUI timerTitle;
             
             protected Transform canvas;
             protected RectTransform rect;
             
-            public int gachaId { get; set; }
+            public int? gachaId { get; set; }
 
             public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
@@ -27,6 +29,35 @@ namespace Overlewd
             {
                 canvas = transform.Find("Canvas");
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
+                timer = canvas.Find("Timer").gameObject;
+                timerTitle = timer.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+
+                UIManager.widgetsGameDataListeners += OnGameDataEvent;
+            }
+
+            protected virtual void Start()
+            {
+                Customize();
+
+                if (gachaData?.isTempOffer ?? false)
+                {
+                    StartCoroutine(TimerUpd());
+                }
+                else
+                {
+                    timer.SetActive(false);
+                }
+            }
+
+            public virtual void Customize()
+            {
+
+            }
+
+            private IEnumerator TimerUpd()
+            {
+                timerTitle.text = gachaData?.timePeriodLeft;
+                yield return new WaitForSeconds(1.0f);
             }
         }
     }

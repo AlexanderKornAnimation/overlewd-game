@@ -280,11 +280,17 @@ namespace Overlewd
         public AdminBRO.GachaItem GetGachaById(int? id) =>
             items.Find(g => g.id == id);
 
-        public async Task<List<AdminBRO.GachaBuyResult>> Buy(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> Buy(int? id)
         {
-            var result = await AdminBRO.gachaBuyAsync(id);
+            if (!id.HasValue)
+            {
+                return new List<AdminBRO.GachaBuyResult>();
+            }
+
+            var result = await AdminBRO.gachaBuyAsync(id.Value);
             await Get();
             await GameData.player.Get();
+            await GameData.characters.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -298,11 +304,17 @@ namespace Overlewd
             return result;
         }
 
-        public async Task<List<AdminBRO.GachaBuyResult>> BuyMany(int id)
+        public async Task<List<AdminBRO.GachaBuyResult>> BuyMany(int? id)
         {
-            var result = await AdminBRO.gachaBuyManyAsync(id);
+            if (!id.HasValue)
+            {
+                return new List<AdminBRO.GachaBuyResult>();
+            }
+
+            var result = await AdminBRO.gachaBuyManyAsync(id.Value);
             await Get();
             await GameData.player.Get();
+            await GameData.characters.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -456,6 +468,9 @@ namespace Overlewd
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
 
+        public AdminBRO.Equipment GetByType(string type) =>
+            equipment.Find(eq => eq.equipmentType == type);
+
         public async Task Equip(int chId, int eqId)
         {
             await AdminBRO.equipAsync(chId, eqId);
@@ -530,14 +545,34 @@ namespace Overlewd
             await GameData.player.Get();
         }
 
+        public AdminBRO.EventChapter activeChapter
+        {
+            get
+            {
+                var chapterData = mapEventData?.firstChapter;
+                while (chapterData?.isComplete ?? false)
+                {
+                    if (chapterData.nextChapterId.HasValue)
+                    {
+                        chapterData = chapterData.nextChapterData;
+                        continue;
+                    }
+                    break;
+                }
+                return chapterData;
+            }
+        }
+
+        public AdminBRO.EventChapter mapChapter { get; set; }
+
         public AdminBRO.EventItem mapEventData { get; set; }
 
         public AdminBRO.EventItem activeWeekly =>
-            events.Where(e => e.isWeekly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+            events.Where(e => e.isWeekly && e.timePeriodIsActive).FirstOrDefault();
         public AdminBRO.EventItem activeMonthly =>
-            events.Where(e => e.isMonthly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+            events.Where(e => e.isMonthly && e.timePeriodIsActive).FirstOrDefault();
         public AdminBRO.EventItem activeQuarterly =>
-            events.Where(e => e.isQuarterly && TimeTools.PeriodIsActive(e.dateStart, e.dateEnd)).FirstOrDefault();
+            events.Where(e => e.isQuarterly && e.timePeriodIsActive).FirstOrDefault();
         public AdminBRO.EventItem comingSoonMonthly =>
             events.Where(e => e.isMonthly && TimeTools.LessTimeDiff(e.dateStart, TimeSpan.FromDays(30))).FirstOrDefault();
         public AdminBRO.EventItem comingSoonQuarterly =>
@@ -620,7 +655,7 @@ namespace Overlewd
         {
             if (id.HasValue)
             {
-                var cr_struct = await AdminBRO.questClaimRewardAsync(id.Value);
+                await AdminBRO.questClaimRewardAsync(id.Value);
                 await Get();
                 await GameData.player.Get();
             }
@@ -674,7 +709,38 @@ namespace Overlewd
         {
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
+
+            lastTimeUpd = DateTime.Now;
+            accEnergyPoints = 0.0f;
         }
+
+        private DateTime lastTimeUpd;
+        private float accEnergyPoints = 0.0f;
+        public IEnumerator UpdLocalEnergyPoints(Action action)
+        {
+            while (true)
+            {
+                var time = DateTime.Now;
+                var dt = time - lastTimeUpd;
+                lastTimeUpd = time;
+
+                if (info.energyPoints < GameData.potions.baseEnergyVolume)
+                {
+                    accEnergyPoints += (float)dt.TotalMinutes * GameData.potions.energyRecoverySpeed;
+                    int accPointsIntPart = (int)accEnergyPoints;
+                    accEnergyPoints -= accPointsIntPart;
+                    info.energyPoints = Math.Min(info.energyPoints + accPointsIntPart, GameData.potions.baseEnergyVolume);
+                }
+                else
+                {
+                    accEnergyPoints = 0.0f;
+                }
+
+                action?.Invoke();
+                yield return new WaitForSeconds(1.0f);
+            }
+        }
+
 
         public async Task AddCrystals(int amount = 1000)
         {
@@ -796,17 +862,23 @@ namespace Overlewd
     {
         public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
         public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
+        public List<AdminBRO.MemoryShardItem> memoryShards { get; private set; } = new List<AdminBRO.MemoryShardItem>();
 
         public override async Task Get()
         {
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
+            memoryShards = await AdminBRO.memoryShardsAsync();
         }
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>
             matriarchs.Find(m => m.id == id);
         public AdminBRO.MatriarchItem GetMatriarchByKey(string key) =>
             matriarchs.Find(m => m.name == key);
+        public AdminBRO.MemoryShardItem GetShardByMatriarchId(int? matriarchId, string rarity) =>
+            memoryShards.Find(ms => ms.matriarchId == matriarchId && ms.rarity == rarity);
+        public AdminBRO.MemoryShardItem GetShardById(int? id, string rarity) =>
+            memoryShards.Find(ms => ms.id == id && ms.rarity == rarity);
 
         public AdminBRO.MatriarchItem Ulvi =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ulvi);

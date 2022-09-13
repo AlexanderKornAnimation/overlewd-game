@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System;
 
 namespace Overlewd
 {
@@ -17,6 +18,11 @@ namespace Overlewd
         private int silence => cc.silence;
         private int curse => cc.curse;
         private bool stun => cc.stun; //only ico
+
+        private float defDOT => cc.defUp_defDown_dot;
+        private float regPoisDOT => cc.regen_poison_dot;
+        private float blessDOT => cc.bless_dot;
+        private float curseDOT => cc.curse_dot;
 
         [HideInInspector]
         public bool withDescription = false;
@@ -42,7 +48,6 @@ namespace Overlewd
 
         private void Awake()
         {
-
             focus_obj = transform.Find("focus");
             blind_obj = transform.Find("blind");
             defUp_obj = transform.Find("defense_up");
@@ -67,16 +72,6 @@ namespace Overlewd
             immunity_tmp = immunity_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
             silence_tmp = silence_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
             curse_tmp = curse_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-
-        }
-        private void Start()
-        {
-            if (withDescription)
-                foreach (Transform item in transform) //init skill description text field
-                {
-                    var descriptionTMP = item.Find("description").GetComponent<TextMeshProUGUI>();
-                    descriptionTMP.text = GameData.characters.effects.Find(e => e.name == item.name).description;
-                }
         }
 
         public void UpdateStatuses()
@@ -98,13 +93,28 @@ namespace Overlewd
             ApplyStat(silence, silence_obj, silence_tmp);
 
             stun_obj.gameObject.SetActive(stun);
+
+            if (withDescription)
+                foreach (Transform item in transform) //init skill description text field
+                {
+                    var descriptionTMP = item.Find("description").GetComponent<TextMeshProUGUI>();
+                    descriptionTMP.text = GameData.characters.effects.Find(e => e.name == item.name).description;
+
+                    if (item.name == "defense_up" || item.name == "defense_down")
+                        descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(defDOT*100)}%</size>");
+                    else if (item.name == "regeneration" || item.name == "poison")
+                        descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(regPoisDOT)}</size>");
+                    else if (item.name == "bless")
+                        descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(blessDOT)}</size>");
+                    else if (item.name == "curse")
+                        descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(curseDOT*100)}%</size>");
+                }
         }
         public bool StatusCheck()
         {
             if (focus_blind == 0 && defUp_defDown == 0
                 && bless_healBlock == 0 && regen_poison == 0
-                && immunity == 0 && curse == 0 && silence == 0 && !stun
-                )
+                && immunity == 0 && curse == 0 && silence == 0 && !stun)
                 return false;
             else
                 return true;
@@ -112,7 +122,10 @@ namespace Overlewd
         void ApplyStat(int effect, Transform icon, TextMeshProUGUI text, bool buff = true)
         {
             if (effect == 0)
+            {
                 icon.gameObject.SetActive(false);
+                
+            }
             else
             {
                 if (buff)

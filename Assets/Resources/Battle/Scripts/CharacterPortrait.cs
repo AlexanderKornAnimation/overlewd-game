@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using System.Collections;
 
 namespace Overlewd
 {
@@ -13,6 +15,7 @@ namespace Overlewd
         private TextMeshProUGUI textMP;
         private Slider sliderHP;
         private Slider sliderMP;
+        private Slider whiteSlider;
         private Image BattleBackgroundIco;
         private Image BattlePortraitIco;
         [SerializeField]
@@ -39,6 +42,7 @@ namespace Overlewd
             BattlePortraitIco = transform.Find("Portrait")?.GetComponent<Image>();
             sliderHP = transform.Find("sliderHP")?.GetComponent<Slider>();
             sliderMP = transform.Find("sliderMP")?.GetComponent<Slider>();
+            whiteSlider = sliderHP.transform.Find("WhiteSlider")?.GetComponent<Slider>();
             textHP = transform.Find("sliderHP/Text")?.GetComponent<TextMeshProUGUI>();
             textMP = transform.Find("sliderMP/Text")?.GetComponent<TextMeshProUGUI>();
 
@@ -104,10 +108,20 @@ namespace Overlewd
         public void UpdateUI()
         {
             textHP.text = $"{hp}/{maxHp}";
-            sliderHP.value = hp;
+            sliderHP.DOValue(hp, 0.3f).SetEase(Ease.OutQuint);
             if (textMP) textMP.text = $"{mp}/{maxMp}";
             if (sliderMP) sliderMP.value = mp;
             status_bar?.UpdateStatuses();
+            if (whiteSlider) StartCoroutine(HPChangePause());
+        }
+        IEnumerator HPChangePause()
+        {
+            whiteSlider.fillRect.GetComponent<Image>().enabled = true;
+            whiteSlider.maxValue = maxHp;
+            yield return new WaitForSeconds(1.1f);
+            whiteSlider.DOValue(hp, 0.75f).SetEase(Ease.OutQuint);
+            yield return new WaitForSeconds(0.75f);
+            whiteSlider.fillRect.GetComponent<Image>().enabled = false;
         }
     }
 }

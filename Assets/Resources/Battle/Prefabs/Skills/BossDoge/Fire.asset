@@ -15,8 +15,8 @@ MonoBehaviour:
   battleIco: {fileID: 21300000, guid: e0083e70215ae0147848dc78e9a5f60f, type: 3}
   vfx: {fileID: 0}
   vfxOnSelf: {fileID: 0}
-  vfxOnTarget: {fileID: 5541813711829063474, guid: a06fe1cae5d4ac64b8d3458e7afc06bc, type: 3}
-  vfxAOETarget: {fileID: 0}
+  vfxOnTarget: {fileID: 0}
+  vfxAOETarget: {fileID: 5541813711829063474, guid: a06fe1cae5d4ac64b8d3458e7afc06bc, type: 3}
   vfxDuration: 0
   vfxCascadeTimer: 0
   shake: 1
