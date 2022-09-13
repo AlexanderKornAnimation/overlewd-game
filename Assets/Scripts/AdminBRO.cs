@@ -380,12 +380,12 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
 
-            public string GetIconByRarity(string rarity) => type switch
+            public string GetIconByRarity(string rarity, int? entityId = null) => type switch
             {
-                Type_Currency => GameData.currencies.GetById(currencyId)?.iconUrl,
-                Type_BattleCharacter => GameData.characters.GetById(characterId)?.GetIconByRarity(rarity),
-                Type_BattleCharacterEquipment => GameData.equipment.GetById(equipmentId)?.icon,
-                Type_MatriarchShard => GameData.matriarchs.GetShardById(matriarchShardId, rarity).icon,
+                Type_Currency => GameData.currencies.GetById(entityId.HasValue ? entityId : currencyId)?.iconUrl,
+                Type_BattleCharacter => GameData.characters.GetById(entityId.HasValue ? entityId : characterId)?.GetIconByRarity(rarity),
+                Type_BattleCharacterEquipment => GameData.equipment.GetById(entityId.HasValue ? entityId : equipmentId)?.icon,
+                Type_MatriarchShard => GameData.matriarchs.GetShardById(entityId.HasValue ? entityId : matriarchShardId, rarity).icon,
                 _ => imageUrl
             };
 
@@ -1884,6 +1884,7 @@ namespace Overlewd
         public class GachaBuyResult
         {
             public int? tradableId;
+            public int? entityUserProgressId;
             public string rarity;
 
             [JsonProperty(Required = Required.Default)]
@@ -1892,7 +1893,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string icon =>
-                tradableData?.GetIconByRarity(rarity);
+                tradableData?.GetIconByRarity(rarity, entityUserProgressId);
         }
 
         [Serializable]
