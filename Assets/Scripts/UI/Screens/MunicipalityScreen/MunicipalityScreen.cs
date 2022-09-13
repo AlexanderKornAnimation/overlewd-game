@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,6 +70,14 @@ namespace Overlewd
 
         private Button backButton;
 
+        private Image unactiveBannerImage;
+        private Image activeBannerImage;
+        private TextMeshProUGUI goldPerHour;
+        private Button collectButton;
+        private TextMeshProUGUI goldPerPeriod;
+        private TextMeshProUGUI timer;
+        private int millisecondsLeft;
+        
         void Awake()
         {
             var screenInst =
@@ -157,6 +166,15 @@ namespace Overlewd
             aerostatButton.onClick.AddListener(AerostatButtonClick);
             catacombsButton.onClick.AddListener(CatacombsButtonClick);
             haremButton.onClick.AddListener(HaremButtonClick);
+
+            var banner = canvas.Find("Banner");
+            unactiveBannerImage = banner.Find("Unactive").GetComponent<Image>();
+            activeBannerImage = banner.Find("Active").GetComponent<Image>();
+            goldPerHour = banner.Find("Headline").Find("Counter").GetComponent<TextMeshProUGUI>();
+            collectButton = banner.Find("CollectButton").Find("Button").GetComponent<Button>();
+            collectButton.onClick.AddListener(CollectButtonClick);
+            goldPerPeriod = collectButton.transform.Find("GoldPerPeriod").GetComponent<TextMeshProUGUI>();
+            timer = banner.Find("CollectButton").Find("Timer").GetComponent<TextMeshProUGUI>();
         }
 
         private void Customize()
@@ -184,10 +202,29 @@ namespace Overlewd
                     }
                 }
             }
+
+            CustomizeBanner();
+            if (millisecondsLeft > 0)
+            {
+                StartCoroutine(StartCollectTimer());
+            }
         }
 
+        private void CustomizeBanner()
+        {
+            var canCollect = millisecondsLeft <= 0;
+            timer.gameObject.SetActive(!canCollect);
+            unactiveBannerImage.gameObject.SetActive(!canCollect);
+            
+            timer.text = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
+            activeBannerImage.gameObject.SetActive(canCollect);
+            collectButton.gameObject.SetActive(canCollect); 
+            goldPerPeriod.gameObject.SetActive(canCollect);
+        }
+        
         public override async Task BeforeShowMakeAsync()
         {
+            millisecondsLeft = await GameData.buildings.MunicipalityTimeLeft();
             Customize();
 
             await Task.CompletedTask;
@@ -210,6 +247,26 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        private IEnumerator StartCollectTimer()
+        {
+            var time = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
+            while (!String.IsNullOrEmpty(time))
+            {
+                timer.text = time;
+                Debug.Log(millisecondsLeft);
+                yield return new WaitForSeconds(1.0f);
+                millisecondsLeft-=1000;
+                time = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
+            }
+
+            CustomizeBanner();
+        }
+
+        private async void CollectButtonClick()
+        {
+            await GameData.buildings.MunicipalityCollect();
+        }
+        
         public override async Task BeforeShowAsync()
         {
             SoundManager.GetEventInstance(FMODEventPath.Castle_Screen_BGM_Attn);
