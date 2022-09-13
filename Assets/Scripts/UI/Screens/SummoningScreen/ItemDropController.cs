@@ -13,9 +13,9 @@ namespace Overlewd
             Transform anchor;
             Button button;
 
-            public GameObject battleGirlShape;
-            public GameObject equipShape;
             public GameObject memoShape;
+            public GameObject equipShape;
+            public GameObject battleGirlShape;
 
             private int grade = 0;
             public int maxGrade = 0;
@@ -39,6 +39,7 @@ namespace Overlewd
 
             public void SetUp(int shape, int maxGrade, Sprite sprite)
             {
+                this.shape = shape;
                 if (shape == 0)
                     spineWiget = SpineWidget.GetInstance(memoShape, anchor);
                 else if (shape == 1)
