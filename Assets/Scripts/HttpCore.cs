@@ -9,9 +9,9 @@ namespace Overlewd
     public static class HttpCore
     {
 #if !UNITY_EDITOR && !DEV_BUILD
-        public const string ApiVersion = "12"; //active api version
+        public const string ApiVersion = "13"; //active api version
 #else
-        public const string ApiVersion = "13"; //dev api version
+        public const string ApiVersion = "14"; //dev api version
 #endif
 
         public static bool HasNetworkConection()
