@@ -72,6 +72,7 @@ namespace Overlewd
         public AdminBRO.FTUEInfo info { get; private set; }
         public List<AdminBRO.FTUEStageItem> stages { get; private set; }
         public AdminBRO.FTUEStats stats { get; private set; }
+        public TutorFlags tutorFlags { get; private set; } = new TutorFlags();
         public AdminBRO.FTUEChapter activeChapter
         {
             get
@@ -126,6 +127,14 @@ namespace Overlewd
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
+        }
+
+        public class TutorFlags
+        {
+            public bool showSidebarButton =>
+                GameData.devMode ? true : GameData.buildings.castle.isBuilt;
+            public bool lockBuff =>
+                GameData.devMode ? false : !GameData.buildings.castle.isBuilt;
         }
     }
 

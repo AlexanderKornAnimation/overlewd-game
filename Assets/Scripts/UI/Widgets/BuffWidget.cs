@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class BuffWidget : MonoBehaviour
+    public class BuffWidget : BaseWidget
     {
         private RectTransform backRect;
         private Image icon;
@@ -25,6 +25,11 @@ namespace Overlewd
             timer = button.transform.Find("Timer").GetComponent<TextMeshProUGUI>();
             
             button.onClick.AddListener(ButtonClick);
+        }
+
+        void Start()
+        {
+            UITools.DisableButton(button, GameData.ftue.tutorFlags.lockBuff);    
         }
 
         protected virtual void ButtonClick()

@@ -47,6 +47,8 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            sidebarButton.gameObject.SetActive(GameData.ftue.tutorFlags.showSidebarButton);
+
             if (GameData.ftue.mapChapter == null)
             {
                 GameData.ftue.mapChapter = GameData.devMode ?
