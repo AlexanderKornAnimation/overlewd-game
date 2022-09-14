@@ -172,6 +172,7 @@ namespace Overlewd
             {
                 stage.gameObject.SetActive(true);
                 waitStagesShowAnims = true;
+                stage.transform.SetAsLastSibling();
             }
             if (waitStagesShowAnims) await UniTask.Delay(2000);
 
