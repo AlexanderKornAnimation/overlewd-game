@@ -82,14 +82,7 @@ namespace Overlewd
             UIManager.MakeScreen<PortalScreen>().
                 SetData(new PortalScreenInData
                 {
-                    activeButtonId = inputData.tabType switch
-                    {
-                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreen.TabOverlordEquip,
-                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreen.TabBattleGirlsEquip,
-                        AdminBRO.GachaItem.TabType_Characters => PortalScreen.TabBattleGirls,
-                        AdminBRO.GachaItem.TabType_MatriachsShards => PortalScreen.TabShards,
-                        _ => PortalScreen.TabBattleGirls
-                    }
+                    activeGachaId = inputData?.gachaId
                 })
                 .RunShowScreenProcess();
         }
