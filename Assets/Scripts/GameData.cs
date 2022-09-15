@@ -39,6 +39,7 @@ namespace Overlewd
     public static class GameData
     {
         public static bool devMode { get; set; } = false;
+        public static ProgressFlags progressFlags { get; } = new ProgressFlags();
         public static Quests quests { get; } = new Quests();
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
@@ -66,13 +67,21 @@ namespace Overlewd
         }
     }
 
+    //progress
+    public class ProgressFlags
+    {
+        public bool showSidebarButton =>
+            GameData.devMode ? true : GameData.buildings.castle.isBuilt;
+        public bool lockBuff =>
+            GameData.devMode ? false : !GameData.buildings.castle.isBuilt;
+    }
+
     //ftue
     public class FTUE : BaseGameMeta
     {
         public AdminBRO.FTUEInfo info { get; private set; }
         public List<AdminBRO.FTUEStageItem> stages { get; private set; }
         public AdminBRO.FTUEStats stats { get; private set; }
-        public TutorFlags tutorFlags { get; private set; } = new TutorFlags();
         public AdminBRO.FTUEChapter activeChapter
         {
             get
@@ -127,14 +136,6 @@ namespace Overlewd
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
-        }
-
-        public class TutorFlags
-        {
-            public bool showSidebarButton =>
-                GameData.devMode ? true : GameData.buildings.castle.isBuilt;
-            public bool lockBuff =>
-                GameData.devMode ? false : !GameData.buildings.castle.isBuilt;
         }
     }
 

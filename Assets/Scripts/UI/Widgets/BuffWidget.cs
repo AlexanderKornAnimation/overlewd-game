@@ -29,7 +29,7 @@ namespace Overlewd
 
         void Start()
         {
-            UITools.DisableButton(button, GameData.ftue.tutorFlags.lockBuff);    
+            UITools.DisableButton(button, GameData.progressFlags.lockBuff);    
         }
 
         protected virtual void ButtonClick()
