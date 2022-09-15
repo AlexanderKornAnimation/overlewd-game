@@ -62,6 +62,9 @@ namespace Overlewd
 
             portalButton.gameObject.SetActive(false);
             summonButton.gameObject.SetActive(false);
+
+            animCtrl.HideShards();
+            await UniTask.Delay(1400);
             Destroy(animCtrl?.gameObject);
 
             var summonData = inputData.isMany ?
