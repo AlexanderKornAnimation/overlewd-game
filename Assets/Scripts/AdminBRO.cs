@@ -1124,10 +1124,23 @@ namespace Overlewd
             public float amount;
             public string trigger;
             public float effectAmount;
+            public int? vfxAnimationId;
+            public int? vfxAOEAnimationId;
+            public int? sfxSoundId;
+            public bool shakeScreen;
 
             public const string Type_Passive = "passive_skill";
             public const string Type_Attack = "attack";
             public const string Type_Enhanced = "enhanced_attack";
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxSoundData => GameData.sounds.GetById(sfxSoundId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation vfxAnimationData => GameData.animations.GetById(vfxAnimationId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation vfxAOEAnimationData => GameData.animations.GetById(vfxAOEAnimationId);
         }
 
         [Serializable]
@@ -1556,6 +1569,12 @@ namespace Overlewd
             public string title;
             public string soundBankId;
             public string eventPath;
+
+            [JsonProperty(Required = Required.Default)]
+            public int play => SoundManager.PlayOneShot(eventPath, soundBankId);
+
+            [JsonProperty(Required = Required.Default)]
+            public FMODEvent instantiate => SoundManager.GetEventInstance(eventPath, soundBankId);
         }
 
         // /buildings
@@ -1714,8 +1733,8 @@ namespace Overlewd
         public class MagicGuildSkill
         {
             public string type;
-            public SkillData current;
-            public SkillData next;
+            public CharacterSkill current;
+            public CharacterSkill next;
             public int currentSkillLevel;
             public int requiredBuildingLevel;
             public int maxSkillLevel;
@@ -1739,27 +1758,6 @@ namespace Overlewd
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";
             public const string Type_PassiveSkill2 = "overlord_second_passive_skill";
-
-            public class SkillData
-            {
-                public int id;
-                public string name;
-                public string description;
-                public string actionType;
-                public bool AOE;
-                public float amount;
-                public string effect;
-                public string type;
-                public string trigger;
-                public float effectAmount;
-                public float effectProb;
-                public string icon;
-                public float effectActingDuration;
-                public float effectCooldownDuration;
-                public float manaCost;
-                public List<PriceItem> levelUpPrice;
-                public int level;
-            }
         }
 
         // /forge/price
