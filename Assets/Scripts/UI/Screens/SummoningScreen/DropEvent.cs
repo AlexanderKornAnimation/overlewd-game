@@ -64,6 +64,11 @@ namespace Overlewd
                     }
                 }
             }
+            public void Hide()
+            {
+                foreach (var item in items)
+                    item.DestroySpineWiget();
+            }
         }
     }
 }

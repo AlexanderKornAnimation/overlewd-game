@@ -40,6 +40,7 @@ namespace Overlewd
             public void SetUp(int shape, int maxGrade, Sprite sprite)
             {
                 this.shape = shape;
+                this.maxGrade = maxGrade;
                 if (shape == 0)
                     spineWiget = SpineWidget.GetInstance(memoShape, anchor);
                 else if (shape == 1)
@@ -54,7 +55,6 @@ namespace Overlewd
                 spineWiget?.PlayAnimation("cr_grey", true);
                 spineWiget?.transform.SetSiblingIndex(0);
                 if (delay > 0) StartCoroutine(SpineDelay());
-                this.maxGrade = maxGrade;
                 maskObj = spineWiget?.transform.Find("Mask").GetComponent<Image>();
                 maskObj.color = new Color(1, 1, 1, 0);
             }
@@ -76,6 +76,12 @@ namespace Overlewd
                 }
             }
 
+            public void DestroySpineWiget()
+            {
+                ani?.Play("Base Layer.Destroy");
+                Destroy(spineWiget.gameObject, 0.99f);
+            }
+
             public void CanClick()
             {
                 if (grade != maxGrade + 1)
@@ -92,20 +98,17 @@ namespace Overlewd
                         Instantiate(parentDE.landParticles[grade - 1], anchor);
                     maskObj.color = maskVal;
                     parentDE.ShardIsOpen();
-                    grade++;
                 }
                 else
                 {
                     string animationName = "cr_green";
                     if (grade == 1)
                         animationName = "cr_violet";
-                    else if (grade == 2)
+                    else if (grade >= 2)
                         animationName = "cr_gold";
-
-                    if (spineWiget)
-                        spineWiget.PlayAnimation(animationName, true);
-                    grade++;
+                    spineWiget?.PlayAnimation(animationName, true);
                 }
+                grade++;
             }
         }
     }
