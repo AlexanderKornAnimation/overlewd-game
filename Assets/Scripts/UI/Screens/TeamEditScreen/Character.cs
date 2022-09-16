@@ -11,6 +11,9 @@ namespace Overlewd
         public class Character : MonoBehaviour
         {
             public int characterId { get; set; }
+            public AdminBRO.Character characterData =>
+                GameData.characters.GetById(characterId);
+
             public TeamEditScreen screen { private get; set; }
             public TeamEditScreenInData inputData { get; set; }
 
@@ -45,7 +48,7 @@ namespace Overlewd
 
             public void Customize()
             {
-                var chData = GameData.characters.GetById(characterId);
+                var chData = characterData;
                 girlIcon.sprite = ResourceManager.LoadSprite(chData.iconUrl);
                 level.text = chData.level.ToString();
                 girlClass.text = chData.classMarker;

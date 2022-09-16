@@ -1102,6 +1102,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public Animation animationData => GameData.animations.GetById(animationId);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool inTeam => teamPosition == TeamPosition_Slot1 || teamPosition == TeamPosition_Slot2;
         }
 
         [Serializable]

@@ -206,19 +206,34 @@ namespace Overlewd
             }
         }
 
+        private void SortCharactersInTabs()
+        {
+            foreach (var tabId in tabIds)
+            {
+                var tabChars = scrollContents[tabId].GetComponentsInChildren<NSTeamEditScreen.Character>().ToList();
+                var tabCharsSort = tabChars.OrderByDescending(ch => ch.characterData.level + (ch.characterData.inTeam ? 100 : 0));
+                var chSiblingIndex = 0;
+                foreach (var character in tabCharsSort)
+                {
+                    character?.transform.SetSiblingIndex(chSiblingIndex);
+                    chSiblingIndex++;
+                }
+            }
+        }
+
         private void Customize()
         {
             foreach (var tabId in tabIds)
             {
-                foreach (Transform child in scrollContents[tabId])
+                foreach (var character in scrollContents[tabId].GetComponentsInChildren<NSTeamEditScreen.Character>())
                 {
-                    var character = child.GetComponent<NSTeamEditScreen.Character>();
                     character?.Customize();
                 }
             }
             
             teamPotency.text = GameData.characters.myTeamPotency.ToString();
             CustomizeSlots();
+            SortCharactersInTabs();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -257,6 +272,7 @@ namespace Overlewd
                 newChAll.inputData = inputData;
             }
 
+            SortCharactersInTabs();
             CustomizeSlots();
 
             //
