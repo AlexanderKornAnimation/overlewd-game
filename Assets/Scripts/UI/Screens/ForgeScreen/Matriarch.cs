@@ -54,7 +54,7 @@ namespace Overlewd
                 isTarget.SetActive(false);
                 isConsume.SetActive(false);
                 button.gameObject.SetActive(matriarchData.isOpen);
-                notActive?.SetActive(matriarchData.isClose);
+                notActive?.SetActive(!matriarchData.isOpen);
             }
         }
     }

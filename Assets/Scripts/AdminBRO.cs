@@ -2037,9 +2037,6 @@ namespace Overlewd
             public const string Key_Faye = "Faye";
             public const string Key_Lili = "Lili";
 
-            public const string Status_Open = "open";
-            public const string Status_Close = "close";
-
             public const string RewardsClaimed_None = "none";
             public const string RewardsClaimed_TwentFive = "twenty_five";
             public const string RewardsClaimed_Fifty = "fifty";
@@ -2064,10 +2061,16 @@ namespace Overlewd
             public bool isLili => name == Key_Lili;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isOpen => status == Status_Open;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isClose => status == Status_Close;
+            public bool isOpen => GameData.devMode ? true :
+                name switch
+                {
+                    Key_Ulvi => true,
+                    Key_Adriel => GameData.ftue.info.chapter1.GetStageByKey("dialogue3").isComplete,
+                    Key_Ingie => GameData.ftue.info.chapter2.GetStageByKey("dialogue4").isComplete,
+                    Key_Faye => false,
+                    Key_Lili => false,
+                    _ => false
+                };
         }
 
         [Serializable]

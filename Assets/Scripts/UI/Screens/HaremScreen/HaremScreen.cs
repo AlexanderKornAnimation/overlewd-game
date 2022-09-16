@@ -95,21 +95,21 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            adrielActive.gameObject.SetActive(GameData.matriarchs.AdrielIsOpen);
-            adrielNotActive.gameObject.SetActive(!GameData.matriarchs.AdrielIsOpen);
-            adrielButton.interactable = GameData.matriarchs.AdrielIsOpen;
+            adrielActive.gameObject.SetActive(GameData.matriarchs.Adriel.isOpen);
+            adrielNotActive.gameObject.SetActive(!GameData.matriarchs.Adriel.isOpen);
+            adrielButton.interactable = GameData.matriarchs.Adriel.isOpen;
 
-            ingieActive.gameObject.SetActive(GameData.matriarchs.IngieIsOpen);
-            ingieNotActive.gameObject.SetActive(!GameData.matriarchs.IngieIsOpen);
-            ingieButton.interactable = GameData.matriarchs.IngieIsOpen;
+            ingieActive.gameObject.SetActive(GameData.matriarchs.Ingie.isOpen);
+            ingieNotActive.gameObject.SetActive(!GameData.matriarchs.Ingie.isOpen);
+            ingieButton.interactable = GameData.matriarchs.Ingie.isOpen;
 
-            fayeActive.gameObject.SetActive(GameData.matriarchs.FayeIsOpen);
-            fayeNotActive.gameObject.SetActive(!GameData.matriarchs.FayeIsOpen);
-            fayeButton.interactable = GameData.matriarchs.FayeIsOpen;
+            fayeActive.gameObject.SetActive(GameData.matriarchs.Faye.isOpen);
+            fayeNotActive.gameObject.SetActive(!GameData.matriarchs.Faye.isOpen);
+            fayeButton.interactable = GameData.matriarchs.Faye.isOpen;
 
-            liliActive.gameObject.SetActive(GameData.matriarchs.LiliIsOpen);
-            liliNotActive.gameObject.SetActive(!GameData.matriarchs.LiliIsOpen);
-            liliButton.interactable = GameData.matriarchs.LiliIsOpen;
+            liliActive.gameObject.SetActive(GameData.matriarchs.Lili.isOpen);
+            liliNotActive.gameObject.SetActive(!GameData.matriarchs.Lili.isOpen);
+            liliButton.interactable = GameData.matriarchs.Lili.isOpen;
 
             if (inputData?.prevScreenInData != null)
             {
