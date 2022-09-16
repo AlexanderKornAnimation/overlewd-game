@@ -38,23 +38,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            backButton.gameObject.SetActive(false);
-
-
             await Task.CompletedTask;
-        }
-
-        protected override void BackButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData.ftueStageId.HasValue)
-            {
-                UIManager.ShowScreen<MapScreen>();
-            }
-            else
-            {
-                UIManager.ShowScreen<EventMapScreen>();
-            }
         }
 
         public override async Task BeforeShowDataAsync()
