@@ -145,12 +145,14 @@ namespace Overlewd
         public List<AdminBRO.Building> buildings { get; private set; }
         public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
         public AdminBRO.ForgePrice forgePrices { get; private set; }
+        public AdminBRO.MunicipalitySettings municipalitySettings { get; private set; }
 
         public override async Task Get()
         {
             buildings = await AdminBRO.buildingsAsync();
             magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
             forgePrices = await AdminBRO.forgePrices();
+            municipalitySettings = await AdminBRO.municipalitySettingsAsync();
         }
         public AdminBRO.Building GetBuildingById(int? id) =>
             buildings.Find(b => b.id == id);
@@ -229,10 +231,12 @@ namespace Overlewd
             var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
             return timeLeft.timeLeft;
         }
-
+        
         public async Task MunicipalityCollect()
         {
             await AdminBRO.municipalityCollectAsync();
+            municipalitySettings = await AdminBRO.municipalitySettingsAsync();
+            await GameData.player.Get();
         }
 
         //MagicGuild

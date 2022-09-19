@@ -1083,11 +1083,10 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool isLvlMax => maxLvl == level;
 
-            public bool CanSkillLvlUp(CharacterSkill skill)
-            {
-                var isMax = level == skill.level;
-                return !isMax && GameData.player.CanBuy(skill.levelUpPrice);
-            }
+            public bool CanSkillLvlUpByPrice(CharacterSkill skill) =>
+                GameData.player.CanBuy(skill.levelUpPrice);
+
+            public bool CanSkillLvlUpByLevel(CharacterSkill skill) => level > skill.level;
 
             [JsonProperty(Required = Required.Default)]
             public int maxLvl => rarity switch
@@ -1700,6 +1699,7 @@ namespace Overlewd
 
         // /municipality/time-left
         // /municipality/collect
+        // /municipality/settings
         public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
         {
             var url = "http://api.overlewd.com/municipality/time-left";
@@ -1719,12 +1719,31 @@ namespace Overlewd
             }
         }
 
+        public static async Task<MunicipalitySettings> municipalitySettingsAsync()
+        {
+            var url = "http://overlewd-api.herokuapp.com/municipality/settings";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<MunicipalitySettings>(request.downloadHandler.text);
+            }
+        }
+
         [Serializable]
         public class MunicipalityTimeLeft
         {
             public int timeLeft;
         }
 
+        [Serializable]
+        public class MunicipalitySettings
+        {
+            public int currentLevelNumber;
+            public int moneyPerPeriod;
+            public int currencyPerHour;
+            public int periodInSeconds;
+            public int? currencyId;
+        }
+        
         // /magicguild/skills
         // /magicguild/{skillType}/levelup
         public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()

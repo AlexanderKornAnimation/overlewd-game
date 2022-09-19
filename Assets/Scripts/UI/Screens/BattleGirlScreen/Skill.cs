@@ -38,6 +38,7 @@ namespace Overlewd
 
             public void Customize()
             {
+                UITools.DisableButton(levelUpButton, !characterData.CanSkillLvlUpByLevel(skillData));
                 icon.sprite = ResourceManager.LoadSprite(skillData?.icon);
                 title.text = skillData?.name;
                 description.text = skillData?.description;
@@ -57,7 +58,7 @@ namespace Overlewd
             {
                 if (characterData != null && characterId.HasValue && skillData != null)
                 {
-                    if (characterData.CanSkillLvlUp(skillData))
+                    if (characterData.CanSkillLvlUpByPrice(skillData))
                     {
                         await GameData.characters.SkillLvlUp(characterId.Value, skillData.id);
                     }

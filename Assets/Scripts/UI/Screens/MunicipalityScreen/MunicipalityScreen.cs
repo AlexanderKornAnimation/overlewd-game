@@ -74,9 +74,10 @@ namespace Overlewd
         private Image activeBannerImage;
         private TextMeshProUGUI goldPerHour;
         private Button collectButton;
+        private Image timerProgress;
         private TextMeshProUGUI goldPerPeriod;
         private TextMeshProUGUI timer;
-        private int millisecondsLeft;
+        private int secondsLeft;
         
         void Awake()
         {
@@ -174,7 +175,8 @@ namespace Overlewd
             collectButton = banner.Find("CollectButton").Find("Button").GetComponent<Button>();
             collectButton.onClick.AddListener(CollectButtonClick);
             goldPerPeriod = collectButton.transform.Find("GoldPerPeriod").GetComponent<TextMeshProUGUI>();
-            timer = banner.Find("CollectButton").Find("Timer").GetComponent<TextMeshProUGUI>();
+            timerProgress = banner.Find("CollectButton").Find("Unactive").GetComponent<Image>();
+            timer = timerProgress.transform.Find("Timer").GetComponent<TextMeshProUGUI>();
         }
 
         private void Customize()
@@ -204,27 +206,32 @@ namespace Overlewd
             }
 
             CustomizeBanner();
-            if (millisecondsLeft > 0)
+        }
+
+        private async void CustomizeBanner()
+        {
+            secondsLeft = await GameData.buildings.MunicipalityTimeLeft();
+            
+            var canCollect = secondsLeft <= 0;
+            timer.gameObject.SetActive(!canCollect);
+            unactiveBannerImage.gameObject.SetActive(!canCollect);
+            timerProgress.gameObject.SetActive(!canCollect);
+            
+            timer.text = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
+            activeBannerImage.gameObject.SetActive(canCollect);
+            collectButton.interactable = canCollect;
+            goldPerPeriod.gameObject.SetActive(canCollect);
+            goldPerHour.text = $"<size=38>{GameData.buildings.municipalitySettings.currencyPerHour}</size>/h";
+            goldPerPeriod.text = $" {GameData.buildings.municipalitySettings.moneyPerPeriod}";
+            
+            if (secondsLeft > 0)
             {
                 StartCoroutine(StartCollectTimer());
             }
         }
-
-        private void CustomizeBanner()
-        {
-            var canCollect = millisecondsLeft <= 0;
-            timer.gameObject.SetActive(!canCollect);
-            unactiveBannerImage.gameObject.SetActive(!canCollect);
-            
-            timer.text = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
-            activeBannerImage.gameObject.SetActive(canCollect);
-            collectButton.gameObject.SetActive(canCollect); 
-            goldPerPeriod.gameObject.SetActive(canCollect);
-        }
         
         public override async Task BeforeShowMakeAsync()
         {
-            millisecondsLeft = await GameData.buildings.MunicipalityTimeLeft();
             Customize();
 
             await Task.CompletedTask;
@@ -249,14 +256,14 @@ namespace Overlewd
 
         private IEnumerator StartCollectTimer()
         {
-            var time = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
+            var time = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
             while (!String.IsNullOrEmpty(time))
             {
                 timer.text = time;
-                Debug.Log(millisecondsLeft);
+                timerProgress.fillAmount = (float) secondsLeft / GameData.buildings.municipalitySettings.periodInSeconds;
                 yield return new WaitForSeconds(1.0f);
-                millisecondsLeft-=1000;
-                time = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
+                secondsLeft--;
+                time = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
             }
 
             CustomizeBanner();
@@ -265,6 +272,7 @@ namespace Overlewd
         private async void CollectButtonClick()
         {
             await GameData.buildings.MunicipalityCollect();
+            CustomizeBanner();
         }
         
         public override async Task BeforeShowAsync()
