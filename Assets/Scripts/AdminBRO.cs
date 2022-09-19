@@ -1024,6 +1024,11 @@ namespace Overlewd
             public string key;
             public List<PriceItem> levelUpPrice;
             public List<PriceItem> mergePrice;
+            public int? sfxAttack1Id;
+            public int? sfxAttack2Id;
+            public int? sfxDefeatId;
+            public int? sfxDefenseId;
+            public int? sfxIdleId;
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -1105,6 +1110,21 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool inTeam => teamPosition == TeamPosition_Slot1 || teamPosition == TeamPosition_Slot2;
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxAttack2 => GameData.sounds.GetById(sfxAttack2Id);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxDefeat => GameData.sounds.GetById(sfxDefeatId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxDefense => GameData.sounds.GetById(sfxDefenseId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxIdle => GameData.sounds.GetById(sfxIdleId);
         }
 
         [Serializable]
@@ -1129,7 +1149,8 @@ namespace Overlewd
             public float effectAmount;
             public int? vfxAnimationId;
             public int? vfxAOEAnimationId;
-            public int? sfxSoundId;
+            public int? sfxAttack1Id;
+            public int? sfxAttack2Id;
             public bool shakeScreen;
 
             public const string Type_Passive = "passive_skill";
@@ -1137,13 +1158,16 @@ namespace Overlewd
             public const string Type_Enhanced = "enhanced_attack";
 
             [JsonProperty(Required = Required.Default)]
-            public Sound sfxSoundData => GameData.sounds.GetById(sfxSoundId);
+            public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
 
             [JsonProperty(Required = Required.Default)]
-            public Animation vfxAnimationData => GameData.animations.GetById(vfxAnimationId);
+            public Sound sfxAttack2 => GameData.sounds.GetById(sfxAttack2Id);
 
             [JsonProperty(Required = Required.Default)]
-            public Animation vfxAOEAnimationData => GameData.animations.GetById(vfxAOEAnimationId);
+            public Animation vfxAnimation => GameData.animations.GetById(vfxAnimationId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation vfxAOEAnimation => GameData.animations.GetById(vfxAOEAnimationId);
         }
 
         [Serializable]
