@@ -12,27 +12,50 @@ namespace Overlewd
         public class EquipInfoPopup : MonoBehaviour
         {
             private Image equippedItemIcon;
-            private TextMeshProUGUI equippedItemSpeed;
-            private TextMeshProUGUI equippedItemPower;
-            private TextMeshProUGUI equippedItemCritRate;
-            private TextMeshProUGUI equippedItemDamage;
-            private Image equippedItemEffectRarity;
-            private TextMeshProUGUI equippedItemEffect;
-            private TextMeshProUGUI equippedItemBuff;
+            private GameObject equippedConstitutionBack;
+            private TextMeshProUGUI equippedConstitution;
+
+            private GameObject equippedAgilityBack;
+            private TextMeshProUGUI equippedAgility;
+
+            private GameObject equippedAccuracyBack;
+            private TextMeshProUGUI equippedAccuracy;
+
+            private GameObject equippedDodgeBack;
+            private TextMeshProUGUI equippedDodge;
+
+            private GameObject equippedCritrateBack;
+            private TextMeshProUGUI equippedCritrate;
+
+            private GameObject equippedDamageBack;
+            private TextMeshProUGUI equippedDamage;
 
             private GameObject selectedItem;
             private Image selectedItemIcon;
-            private TextMeshProUGUI selectedItemSpeed;
-            private TextMeshProUGUI selectedItemSpeedArrow;
-            private TextMeshProUGUI selectedItemPower;
-            private TextMeshProUGUI selectedItemPowerArrow;
-            private TextMeshProUGUI selectedItemCritRate;
-            private TextMeshProUGUI selectedItemCritRateArrow;
-            private TextMeshProUGUI selectedItemDamage;
-            private TextMeshProUGUI selectedItemDamageArrow;
-            private Image selectedItemEffectRarity;
-            private TextMeshProUGUI selectedItemEffect;
-            private TextMeshProUGUI selectedItemBuff;
+
+            private GameObject selectedConstitutionBack;
+            private TextMeshProUGUI selectedConstitution;
+            private TextMeshProUGUI selectedConstitutionArrow;
+
+            private GameObject selectedAgilityBack;
+            private TextMeshProUGUI selectedAgility;
+            private TextMeshProUGUI selectedAgilityArrow;
+
+            private GameObject selectedAccuracyBack;
+            private TextMeshProUGUI selectedAccuracy;
+            private TextMeshProUGUI selectedAccuracyArrow;
+
+            private GameObject selectedDodgeBack;
+            private TextMeshProUGUI selectedDodge;
+            private TextMeshProUGUI selectedDodgeArrow;
+
+            private GameObject selectedCritRateBack;
+            private TextMeshProUGUI selectedCritRate;
+            private TextMeshProUGUI selectedCritRateArrow;
+
+            private GameObject selectedDamageBack;
+            private TextMeshProUGUI selectedDamage;
+            private TextMeshProUGUI selectedDamageArrow;
             private Button equipButton;
 
             public int equipId;
@@ -47,38 +70,54 @@ namespace Overlewd
             {
                 var canvas = transform.Find("Canvas");
                 var equippedItem = canvas.Find("EquippedItem");
-                var equippedStats = equippedItem.Find("Stats");
 
                 equippedItemIcon = equippedItem.Find("EquipIcon").GetComponent<Image>();
-                equippedItemSpeed = equippedStats.Find("Speed").Find("Stat").GetComponent<TextMeshProUGUI>();
-                equippedItemPower = equippedStats.Find("Power").Find("Stat").GetComponent<TextMeshProUGUI>();
-                equippedItemCritRate = equippedStats.Find("CritRate").Find("Stat").GetComponent<TextMeshProUGUI>();
-                equippedItemDamage = equippedStats.Find("Damage").Find("Stat").GetComponent<TextMeshProUGUI>();
-                equippedItemEffectRarity = equippedItem.Find("EffectRarity").GetComponent<Image>();
-                equippedItemEffect = equippedItemEffectRarity.transform.Find("Effect").GetComponent<TextMeshProUGUI>();
-                equippedItemBuff = equippedItemEffectRarity.transform.Find("BuffIcon").GetComponent<TextMeshProUGUI>();
+                equippedConstitutionBack = equippedItem.Find("Constitution").gameObject;
+                equippedConstitution = equippedConstitutionBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
+                equippedAgilityBack = equippedItem.Find("Agility").gameObject;
+                equippedAgility = equippedAgilityBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
+                equippedAccuracyBack = equippedItem.Find("Accuracy").gameObject;
+                equippedAccuracy = equippedAccuracyBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
+                equippedDodgeBack = equippedItem.Find("Dodge").gameObject;
+                equippedDodge = equippedDodgeBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
+                equippedCritrateBack = equippedItem.Find("Critrate").gameObject;
+                equippedCritrate = equippedCritrateBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
+                equippedDamageBack = equippedItem.Find("Damage").gameObject;
+                equippedDamage = equippedDamageBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
 
                 selectedItem = canvas.Find("NewItem").gameObject;
-                var newItemStats = selectedItem.transform.Find("Stats");
                 selectedItemIcon = selectedItem.transform.Find("EquipIcon").GetComponent<Image>();
-                
-                selectedItemSpeed = newItemStats.Find("Speed").Find("Stat").GetComponent<TextMeshProUGUI>();
-                selectedItemSpeedArrow = selectedItemSpeed.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
-                
-                selectedItemPower = newItemStats.Find("Power").Find("Stat").GetComponent<TextMeshProUGUI>();
-                selectedItemPowerArrow = selectedItemPower.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
-                
-                selectedItemCritRate = newItemStats.Find("CritRate").Find("Stat").GetComponent<TextMeshProUGUI>();
-                selectedItemCritRateArrow = selectedItemCritRate.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
-                
-                selectedItemDamage = newItemStats.Find("Damage").Find("Stat").GetComponent<TextMeshProUGUI>();
-                selectedItemDamageArrow = selectedItemDamage.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
-                
-                selectedItemEffectRarity = selectedItem.transform.Find("EffectRarity").GetComponent<Image>();
-                selectedItemEffect = selectedItemEffectRarity.transform.Find("Effect").GetComponent<TextMeshProUGUI>();
-                selectedItemBuff = selectedItemEffectRarity.transform.Find("BuffIcon").GetComponent<TextMeshProUGUI>();
-                
-                equipButton = selectedItem.transform.Find("EquipButton").GetComponent<Button>();
+
+                selectedConstitutionBack = selectedItem.transform.Find("Constitution").gameObject;
+                selectedConstitution = selectedConstitutionBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedConstitutionArrow = selectedConstitution.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                selectedAgilityBack = selectedItem.transform.Find("Agility").gameObject;
+                selectedAgility = selectedAgilityBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedAgilityArrow = selectedAgility.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                selectedAccuracyBack = selectedItem.transform.Find("Accuracy").gameObject;
+                selectedAccuracy = selectedAccuracyBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedAccuracyArrow = selectedAccuracy.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                selectedDodgeBack = selectedItem.transform.Find("Dodge").gameObject;
+                selectedDodge = selectedDodgeBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedDodgeArrow = selectedDodge.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                selectedCritRateBack = selectedItem.transform.Find("Critrate").gameObject;
+                selectedCritRate = selectedCritRateBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedCritRateArrow = selectedCritRate.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                selectedDamageBack = selectedItem.transform.Find("Damage").gameObject;
+                selectedDamage = selectedDamageBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedDamageArrow = selectedDamage.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                equipButton = selectedItem.transform.Find("Substrate").Find("EquipButton").GetComponent<Button>();
                 equipButton.onClick.AddListener(EquipButtonClick);
             }
 
@@ -92,25 +131,50 @@ namespace Overlewd
                 selectedItem.SetActive(newEquipId.HasValue);
 
                 equippedItemIcon.sprite = ResourceManager.LoadSprite(equipData.icon);
-                equippedItemSpeed.text = "+" + equipData.speed;
-                equippedItemPower.text = "+" + equipData.power;
-                equippedItemCritRate.text = "+" + equipData.critrate * 100 + "%";
-                equippedItemDamage.text = "+" + equipData.damage;
+                equippedConstitution.text = "+" + equipData.constitution;
+                equippedConstitutionBack.SetActive(equipData.constitution != 0);
+
+                equippedAgility.text = "+" + equipData.agility;
+                equippedAgilityBack.SetActive(equipData.agility != 0);
+
+                equippedAccuracy.text = "+" + equipData.accuracy * 100 + "%";
+                equippedAccuracyBack.SetActive(equipData.accuracy != 0);
+
+                equippedDodge.text = "+" + equipData.dodge * 100 + "%";
+                equippedDodgeBack.SetActive(equipData.dodge != 0);
+
+                equippedCritrate.text = "+" + equipData.critrate * 100 + "%";
+                equippedCritrateBack.SetActive(equipData.critrate != 0);
+
+                equippedDamage.text = "+" + equipData.damage;
+                equippedDamageBack.SetActive(equipData.damage != 0);
 
                 if (selectedItem.activeSelf)
                 {
                     selectedItemIcon.sprite = ResourceManager.LoadSprite(selectedEquipData.icon);
-                    selectedItemSpeed.text = "+" + selectedEquipData.speed;
-                    selectedItemSpeedArrow.text = GetArrowByStats(equipData.speed, selectedEquipData.speed);
-                    
-                    selectedItemPower.text = "+" + selectedEquipData.power;
-                    selectedItemPowerArrow.text = GetArrowByStats(equipData.power, selectedEquipData.power);
-                    
-                    selectedItemCritRate.text = "+" + selectedEquipData.critrate * 100 + "%";
-                    selectedItemCritRateArrow.text = GetArrowByStats(equipData.critrate, selectedEquipData.critrate);
-                    
-                    selectedItemDamage.text = "+" + selectedEquipData.damage;
-                    selectedItemDamageArrow.text = GetArrowByStats(equipData.damage, selectedEquipData.damage);
+                    selectedConstitution.text = "+" + selectedEquipData.constitution;
+                    selectedConstitutionArrow.text = GetArrowByStats(equipData.constitution, selectedEquipData.constitution);
+                    selectedConstitutionBack.SetActive(selectedEquipData.constitution != 0.0f);
+
+                    selectedAgility.text = "+" + selectedEquipData.agility;
+                    selectedAgilityArrow.text = GetArrowByStats(equipData.agility, selectedEquipData.agility);
+                    selectedAgilityBack.SetActive(selectedEquipData.agility != 0.0f);
+
+                    selectedAccuracy.text = "+" + selectedEquipData.accuracy * 100 + "%";
+                    selectedAccuracyArrow.text = GetArrowByStats(equipData.accuracy, selectedEquipData.accuracy);
+                    selectedAccuracyBack.SetActive(selectedEquipData.accuracy != 0.0f);
+
+                    selectedDodge.text = "+" + selectedEquipData.dodge * 100 + "%";
+                    selectedDodgeArrow.text = GetArrowByStats(equipData.dodge, selectedEquipData.dodge);
+                    selectedDodgeBack.SetActive(selectedEquipData.dodge != 0.0f);
+
+                    selectedCritRate.text = "+" + selectedEquipData.critrate * 100 + "%";
+                    selectedCritRateArrow.text = GetArrowByStats(equipData.critrate, selectedEquipData.critrate);
+                    selectedCritRateBack.SetActive(selectedEquipData.critrate != 0.0f);
+
+                    selectedDamage.text = "+" + selectedEquipData.damage;
+                    selectedDamageArrow.text = GetArrowByStats(equipData.damage, selectedEquipData.damage);
+                    selectedDamageBack.SetActive(selectedEquipData.damage != 0.0f);
                 }
             }
 
@@ -120,14 +184,14 @@ namespace Overlewd
                 {
                     return "";
                 }
-                
+
                 return equippedItemStat < selectedItemStat ? TMPSprite.IconArrowUp : TMPSprite.IconArrowDown;
             }
 
             private async void EquipButtonClick()
             {
                 var overlordData = GameData.characters.overlord;
-                
+
                 if (overlordData.id.HasValue && newEquipId.HasValue)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -135,7 +199,7 @@ namespace Overlewd
                     OnEquip?.Invoke(equipId, newEquipId.Value);
                 }
             }
-            
+
             public static EquipInfoPopup GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<EquipInfoPopup>(

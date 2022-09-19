@@ -17,13 +17,15 @@ namespace Overlewd
 
             protected Image icon;
             protected TextMeshProUGUI level;
+            protected GameObject levelBack;
             protected TextMeshProUGUI characterClass;
 
             protected virtual void Awake()
             {
                 canvas = transform.Find("Canvas");
                 icon = canvas.Find("Icon").GetComponent<Image>();
-                level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
+                levelBack = canvas.Find("LevelBack").gameObject;
+                level = levelBack.transform.Find("Level").GetComponent<TextMeshProUGUI>();
                 characterClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
             }
 

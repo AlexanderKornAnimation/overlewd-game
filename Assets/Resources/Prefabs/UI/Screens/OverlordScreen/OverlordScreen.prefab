@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 2540851838560264297}
   - component: {fileID: 2540851838560264299}
   - component: {fileID: 2540851838560264296}
-  - component: {fileID: 912879602661061110}
+  - component: {fileID: 239182092109708114}
   m_Layer: 0
   m_Name: CellBoots
   m_TagString: Untagged
@@ -395,7 +395,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &912879602661061110
+--- !u!114 &239182092109708114
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -450,7 +450,7 @@ GameObject:
   - component: {fileID: 2540851838571911301}
   - component: {fileID: 2540851838571911303}
   - component: {fileID: 2540851838571911300}
-  - component: {fileID: 2820466855545113891}
+  - component: {fileID: 5921536084187686238}
   m_Layer: 0
   m_Name: CellGloves
   m_TagString: Untagged
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2820466855545113891
+--- !u!114 &5921536084187686238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1556,7 +1556,7 @@ GameObject:
   - component: {fileID: 2540851838719239286}
   - component: {fileID: 2540851838719239280}
   - component: {fileID: 2540851838719239281}
-  - component: {fileID: 7726321400230627651}
+  - component: {fileID: 5556903817174311928}
   m_Layer: 0
   m_Name: CellTigh
   m_TagString: Untagged
@@ -1623,7 +1623,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7726321400230627651
+--- !u!114 &5556903817174311928
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5040,7 +5040,7 @@ GameObject:
   - component: {fileID: 2540851839490115531}
   - component: {fileID: 2540851839490115525}
   - component: {fileID: 2540851839490115530}
-  - component: {fileID: 3441777239227399839}
+  - component: {fileID: 677107975242147957}
   m_Layer: 0
   m_Name: CellWeapon
   m_TagString: Untagged
@@ -5107,7 +5107,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3441777239227399839
+--- !u!114 &677107975242147957
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6121,7 +6121,7 @@ GameObject:
   - component: {fileID: 2540851839619757197}
   - component: {fileID: 2540851839619757199}
   - component: {fileID: 2540851839619757196}
-  - component: {fileID: 6000938566045190565}
+  - component: {fileID: 4898428672984013094}
   m_Layer: 0
   m_Name: CellHelmet
   m_TagString: Untagged
@@ -6188,7 +6188,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6000938566045190565
+--- !u!114 &4898428672984013094
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8824,7 +8824,7 @@ GameObject:
   - component: {fileID: 2540851840111904448}
   - component: {fileID: 2540851840111904450}
   - component: {fileID: 2540851840111904451}
-  - component: {fileID: 6434672489875368982}
+  - component: {fileID: 7850564438913812182}
   m_Layer: 0
   m_Name: CellHarness
   m_TagString: Untagged
@@ -8891,7 +8891,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6434672489875368982
+--- !u!114 &7850564438913812182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,7 +53,7 @@ namespace Overlewd
         private Button cellGloves;
         private Button cellHelmet;
         private Button cellHarness;
-        private Button cellTigh;
+        private Button cellThigh;
         private Button cellBoots;
 
         private NSOverlordScreen.EquipInfoPopup equipPopup;
@@ -109,7 +110,7 @@ namespace Overlewd
             cellGloves = equipmentCells.Find("CellGloves").GetComponent<Button>();
             cellHelmet = equipmentCells.Find("CellHelmet").GetComponent<Button>();
             cellHarness = equipmentCells.Find("CellHarness").GetComponent<Button>();
-            cellTigh = equipmentCells.Find("CellTigh").GetComponent<Button>();
+            cellThigh = equipmentCells.Find("CellTigh").GetComponent<Button>();
             cellBoots = equipmentCells.Find("CellBoots").GetComponent<Button>();
 
             foreach (var id in tabIds)
@@ -137,18 +138,7 @@ namespace Overlewd
         {
             UITools.DisableButton(collectiblesButton);
 
-            health.text = overlordData.health.ToString();
-            mana.text = overlordData.mana.ToString();
-            speed.text = overlordData.speed.ToString();
-            power.text = overlordData.power.ToString();
-            constitution.text = overlordData.constitution.ToString();
-            agility.text = overlordData.agility.ToString();
-
-            accuracy.text = overlordData.accuracy * 100 + "%";
-            critChance.text = overlordData.critrate * 100 + "%";
-            dodgeChance.text = overlordData.dodge * 100 + "%";
-            damage.text = overlordData.damage.ToString();
-            potency.text = overlordData.potency.ToString();
+            CustomizeStats();
             
             foreach (var equipment in GameData.equipment.equipment)
             {
@@ -164,8 +154,6 @@ namespace Overlewd
                     {
                         equip.transform.SetAsFirstSibling();
                         equippedItems.Add(equip);
-                        var cell = GetCellByType(equipment.equipmentType);
-                        cell.GetComponent<Button>().onClick.AddListener(() => CellClick(equip));
                         CustomizeCell(equip);
                     }
                 }
@@ -180,17 +168,39 @@ namespace Overlewd
             newEquip.Select();
             equippedItems.Add(newEquip);
             CustomizeCell(newEquip);
-            
+
             equip?.Deselect();
             equippedItems.Remove(equip);
             DestroyPopup();
+            
+            CustomizeStats();
+        }
+
+        private void CustomizeStats()
+        {
+            health.text = overlordData.health.ToString();
+            mana.text = overlordData.mana.ToString();
+            speed.text = overlordData.speed.ToString();
+            power.text = overlordData.power.ToString();
+            constitution.text = overlordData.constitution.ToString();
+            agility.text = overlordData.agility.ToString();
+
+            accuracy.text = overlordData.accuracy * 100 + "%";
+            critChance.text = overlordData.critrate * 100 + "%";
+            dodgeChance.text = overlordData.dodge * 100 + "%";
+            damage.text = overlordData.damage.ToString();
+            potency.text = overlordData.potency.ToString();
         }
         
-        private void CustomizeCell( NSOverlordScreen.Equipment equip)
+        private void CustomizeCell(NSOverlordScreen.Equipment equip)
         {
             var type = equip.equipData.equipmentType;
             var cell = GetCellByType(type);
-
+            
+            var cellButton = cell.GetComponent<Button>();
+            cellButton.onClick.RemoveAllListeners();
+            cellButton.onClick.AddListener(() => CellClick(equip));
+            
             var icon = cell.Find("Equip").GetComponent<Image>();
             var notification = cell.Find("Notification").gameObject;
 
@@ -201,10 +211,12 @@ namespace Overlewd
         {
             var tabId = GetTabIdByEquipType(equip.equipData.equipmentType);
             
-            TabClick(tabId);
-            DestroyPopup();
-            InstantiateInfoPopup(equip);
-            missClickButton.gameObject.SetActive(true);
+            if (tabId != activeTabId || equipPopup == null)
+            {
+                TabClick(tabId);
+                DestroyPopup();
+                InstantiateInfoPopup(equip);
+            }
         }
 
         private void ShowInfoPopup(NSOverlordScreen.Equipment newEquip)
@@ -218,7 +230,7 @@ namespace Overlewd
         private void InstantiateInfoPopup(NSOverlordScreen.Equipment equip, NSOverlordScreen.Equipment newEquip = null)
         {
             var cell = GetCellByType(equip.equipData?.equipmentType);
-
+            
             equipPopup = NSOverlordScreen.EquipInfoPopup.GetInstance(cell);
             equipPopup.equipId = equip.equipId;
             equipPopup.newEquipId = newEquip?.equipId;
@@ -284,7 +296,7 @@ namespace Overlewd
                 AdminBRO.Equipment.Type_OverlordGloves => cellGloves.transform,
                 AdminBRO.Equipment.Type_OverlordHelmet => cellHelmet.transform,
                 AdminBRO.Equipment.Type_OverlordHarness => cellHarness.transform,
-                AdminBRO.Equipment.Type_OverlordThighs => cellTigh.transform,
+                AdminBRO.Equipment.Type_OverlordThighs => cellThigh.transform,
                 AdminBRO.Equipment.Type_OverlordBoots => cellBoots.transform,
                 _ => null
             };
