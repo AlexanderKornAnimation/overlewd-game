@@ -1,24 +1,24 @@
 fileFormatVersion: 2
-guid: a3b9e77c65ff0e74da8763726073b6cf
+guid: 83677e955b0031245ac5d6fa5415237e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6861348804563171602
+      213: 7604542990020992631
     second: IconZodiacCapricorn
   - first:
-      213: -3945673498972149286
+      213: 3485749080206032153
     second: IconZodiacLeo
   - first:
-      213: 7439421601780870266
+      213: -1504191122029643135
     second: IconZodiacScorpion
   - first:
-      213: -372190807605254048
+      213: 435075155047163272
     second: IconZodiacVirgin
   - first:
-      213: 6805415457331301574
+      213: 8503197135812076249
     second: IconZodiacAries
   - first:
-      213: 7981711759973171460
+      213: -7500923554629560736
     second: IconBirthday
   externalObjects: {}
   serializedVersion: 11
@@ -149,9 +149,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 56
-        width: 33
-        height: 35
+        y: 58
+        width: 48
+        height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,8 +159,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ee606ff7d9797c0a0800000000000000
-      internalID: -6861348804563171602
+      spriteID: 77e536f0f83c88960800000000000000
+      internalID: 7604542990020992631
       vertices: []
       indices: 
       edges: []
@@ -169,10 +169,10 @@ TextureImporter:
       name: IconZodiacLeo
       rect:
         serializedVersion: 2
-        x: 49
-        y: 56
-        width: 31
-        height: 35
+        x: 59
+        y: 58
+        width: 41
+        height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,8 +180,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ad9a7169bd62e39c0800000000000000
-      internalID: -3945673498972149286
+      spriteID: 91d33d5f15edf5030800000000000000
+      internalID: 3485749080206032153
       vertices: []
       indices: 
       edges: []
@@ -190,10 +190,10 @@ TextureImporter:
       name: IconZodiacScorpion
       rect:
         serializedVersion: 2
-        x: 96
-        y: 56
-        width: 35
-        height: 35
+        x: 110
+        y: 58
+        width: 49
+        height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -201,8 +201,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7c2484f7822e3760800000000000000
-      internalID: 7439421601780870266
+      spriteID: 18a7021e42a002be0800000000000000
+      internalID: -1504191122029643135
       vertices: []
       indices: 
       edges: []
@@ -213,8 +213,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 33
-        height: 35
+        width: 50
+        height: 49
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -222,8 +222,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 068e504be66b5daf0800000000000000
-      internalID: -372190807605254048
+      spriteID: 8852f236c82b90600800000000000000
+      internalID: 435075155047163272
       vertices: []
       indices: 
       edges: []
@@ -232,10 +232,10 @@ TextureImporter:
       name: IconZodiacAries
       rect:
         serializedVersion: 2
-        x: 49
-        y: 0
-        width: 33
-        height: 35
+        x: 56
+        y: 3
+        width: 48
+        height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -243,8 +243,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6cc4f234d41b17e50800000000000000
-      internalID: 6805415457331301574
+      spriteID: 9d2a23f3ebc610670800000000000000
+      internalID: 8503197135812076249
       vertices: []
       indices: 
       edges: []
@@ -253,10 +253,10 @@ TextureImporter:
       name: IconBirthday
       rect:
         serializedVersion: 2
-        x: 98
-        y: 4
-        width: 31
-        height: 35
+        x: 109
+        y: 3
+        width: 50
+        height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -264,8 +264,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 40142c88e8cb4ce60800000000000000
-      internalID: 7981711759973171460
+      spriteID: 066d1f6c4cd57e790800000000000000
+      internalID: -7500923554629560736
       vertices: []
       indices: 
       edges: []

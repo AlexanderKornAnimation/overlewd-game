@@ -13,7 +13,6 @@ namespace Overlewd
         private Image icon;
         private Button button;
         private TextMeshProUGUI description;
-        private TextMeshProUGUI timer;
         
         void Awake()
         {
@@ -22,7 +21,6 @@ namespace Overlewd
             button = backRect.Find("Button").GetComponent<Button>();
             icon = button.transform.Find("Icon").GetComponent<Image>();
             description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
-            timer = button.transform.Find("Timer").GetComponent<TextMeshProUGUI>();
             
             button.onClick.AddListener(ButtonClick);
         }

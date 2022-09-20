@@ -39,8 +39,7 @@ namespace Overlewd
         private TextMeshProUGUI receivedTier3;
 
         private Transform buffInfo;
-        private TextMeshProUGUI buffPower;
-        private TextMeshProUGUI buffType;
+        private TextMeshProUGUI buffDescription;
 
         private Button bannerUlviButton;
         private Button bannerAdrielButton;
@@ -77,7 +76,7 @@ namespace Overlewd
             liliZodiac = girlInfo.Find("ZodiacInfo").Find("LiliZodiacIcon");
             zodiacName = girlInfo.Find("ZodiacInfo").Find("ZodiacName").GetComponent<TextMeshProUGUI>();
             birthday = girlInfo.Find("BirthdayInfo").Find("BirthdayDate").GetComponent<TextMeshProUGUI>();
-            girlName = girlInfo.Find("NameBack").Find("Name").GetComponent<TextMeshProUGUI>();
+            girlName = girlInfo.Find("Name").GetComponent<TextMeshProUGUI>();
 
             girlUlviImage = canvas.Find("GirlUlvi");
             girlAdrielImage = canvas.Find("GirlAdriel");
@@ -98,8 +97,7 @@ namespace Overlewd
             receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<TextMeshProUGUI>();
 
             buffInfo = progressBar.Find("BuffInfo");
-            buffPower = buffInfo.Find("Power").GetComponent<TextMeshProUGUI>();
-            buffType = buffInfo.Find("Type").GetComponent<TextMeshProUGUI>();
+            buffDescription = buffInfo.Find("Description").GetComponent<TextMeshProUGUI>();
 
             bannerUlviButton = canvas.Find("Banner").Find("BannerButtonUlvi").GetComponent<Button>();
             bannerAdrielButton = canvas.Find("Banner").Find("BannerButtonAdriel").GetComponent<Button>();
