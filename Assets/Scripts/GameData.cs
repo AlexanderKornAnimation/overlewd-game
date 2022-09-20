@@ -456,6 +456,9 @@ namespace Overlewd
             {
                 float potency = 0;
 
+                if (overlord.potency.HasValue)
+                    potency += overlord.potency.Value;
+                
                 foreach (var character in myTeamCharacters)
                 {
                     if (character.potency.HasValue)
