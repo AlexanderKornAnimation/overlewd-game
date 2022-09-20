@@ -13,6 +13,7 @@ namespace Overlewd
         public const string ClassHealer = "<sprite=\"ClassesNLevel\" name=\"ClassHealer\">";
         public const string ClassOverlord = "<sprite=\"ClassesNLevel\" name=\"ClassOverlord\">";
         public const string ClassTank = "<sprite=\"ClassesNLevel\" name=\"ClassTank\">";
+        public const string ClassBoss = "<sprite=\"ClassesNLevel\" name=\"ClassBoss\">";
         public const string BackLevelMax = "<sprite=\"ClassesNLevel\" name=\"BackLevelMax\">";
         public const string BackLevel = "<sprite=\"ClassesNLevel\" name=\"BackLevel\">";
         
