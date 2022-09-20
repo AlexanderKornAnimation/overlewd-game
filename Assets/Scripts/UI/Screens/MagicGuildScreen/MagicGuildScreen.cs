@@ -22,7 +22,7 @@ namespace Overlewd
         private Button backButton;
 
         private TextMeshProUGUI buildingLevel;
-        private AdminBRO.Building buildingData => GameData.buildings.magicGuild;
+        private AdminBRO.Building buildingData => GameData.buildings.magicGuild.meta;
 
         void Awake()
         {

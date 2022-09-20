@@ -21,32 +21,29 @@ namespace Overlewd
                 collectNotification = transform.Find("CollectNotification").Find("Text").GetComponent<TextMeshProUGUI>();
             }
 
-            protected override async void Customize()
+            protected override void Start()
             {
-                secondsLeft = await GameData.buildings.MunicipalityTimeLeft();
-                
-                if (secondsLeft > 0)
+                base.Start();
+                StartCoroutine(GameData.buildings.municipality.TimeLeftLocalUpd(NotifTitleCustomize));
+            }
+
+            protected override void Customize()
+            {
+                NotifTitleCustomize();
+            }
+
+            private void NotifTitleCustomize()
+            {
+                var timeLeftMs = GameData.buildings.municipality.goldAccTimeLeftMs;
+                if (timeLeftMs > 0.0f)
                 {
-                    StartCoroutine(StartCollectTimer());
+                    var timeLeftStr = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
+                    collectNotification.text = $"Collect gold in\n {timeLeftStr}";
                 }
                 else
                 {
-                    collectNotification.text = $"Collect {GameData.buildings.municipalitySettings.moneyPerPeriod} gold";
+                    collectNotification.text = $"Collect {GameData.buildings.municipality.settings.moneyPerPeriod} gold";
                 }
-            }
-
-            private IEnumerator StartCollectTimer()
-            {
-                var time = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
-                while (!String.IsNullOrEmpty(time))
-                {
-                    collectNotification.text = $"Collect gold in\n {time}";
-                    yield return new WaitForSeconds(1.0f);
-                    secondsLeft--;
-                    time = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
-                }
-                
-                Customize();
             }
             
             protected override void ButtonClick()

@@ -658,7 +658,7 @@ namespace Overlewd
             }
             return true;
         }
-        public bool MagicGuildChecker() => GameData.buildings.magicGuild.isBuilt;
+        public bool MagicGuildChecker() => GameData.buildings.magicGuild.meta.isBuilt;
 
         public bool CheckBattleGameData(string chapterID, string battleID)
         {

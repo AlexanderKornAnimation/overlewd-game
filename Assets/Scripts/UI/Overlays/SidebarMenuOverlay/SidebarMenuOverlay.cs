@@ -144,7 +144,7 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (GameData.buildings.castle.isBuilt)
+                    if (GameData.buildings.castle.meta.isBuilt)
                     {
                         UITools.DisableButton(castleButton);
                         UITools.DisableButton(portalButton);
@@ -159,11 +159,11 @@ namespace Overlewd
                     break;
 
                 default:
-                    UITools.DisableButton(portalButton, !GameData.buildings.portal.isBuilt);
-                    UITools.DisableButton(haremButton, !GameData.buildings.harem.isBuilt);
-                    UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.isBuilt);
-                    UITools.DisableButton(laboratoryButton, !GameData.buildings.laboratory.isBuilt);
-                    UITools.DisableButton(forgeButton, !GameData.buildings.forge.isBuilt);
+                    UITools.DisableButton(portalButton, !GameData.buildings.portal.meta.isBuilt);
+                    UITools.DisableButton(haremButton, !GameData.buildings.harem.meta.isBuilt);
+                    UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.meta.isBuilt);
+                    UITools.DisableButton(laboratoryButton, !GameData.buildings.laboratory.meta.isBuilt);
+                    UITools.DisableButton(forgeButton, !GameData.buildings.forge.meta.isBuilt);
                     // UITools.DisableButton(overlordButton);
                     break;
             }

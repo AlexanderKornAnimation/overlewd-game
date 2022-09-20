@@ -77,7 +77,6 @@ namespace Overlewd
         private Image timerProgress;
         private TextMeshProUGUI goldPerPeriod;
         private TextMeshProUGUI timer;
-        private int secondsLeft;
         
         void Awake()
         {
@@ -208,31 +207,35 @@ namespace Overlewd
             CustomizeBanner();
         }
 
-        private async void CustomizeBanner()
+        private void CustomizeBanner()
         {
-            secondsLeft = await GameData.buildings.MunicipalityTimeLeft();
-            
-            var canCollect = secondsLeft <= 0;
+            var timeLeftMs = GameData.buildings.municipality.goldAccTimeLeftMs;
+
+            var canCollect = !(timeLeftMs > 0.0f);
             timer.gameObject.SetActive(!canCollect);
             unactiveBannerImage.gameObject.SetActive(!canCollect);
             timerProgress.gameObject.SetActive(!canCollect);
             
-            timer.text = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
+            timer.text = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
+            timerProgress.fillAmount = timeLeftMs / (GameData.buildings.municipality.settings.periodInSeconds * 1000.0f);
             activeBannerImage.gameObject.SetActive(canCollect);
             collectButton.interactable = canCollect;
             goldPerPeriod.gameObject.SetActive(canCollect);
-            goldPerHour.text = $"<size=38>{GameData.buildings.municipalitySettings.currencyPerHour}</size>/h";
-            goldPerPeriod.text = $" {GameData.buildings.municipalitySettings.moneyPerPeriod}";
-            
-            if (secondsLeft > 0)
-            {
-                StartCoroutine(StartCollectTimer());
-            }
+            goldPerHour.text = $"<size=38>{GameData.buildings.municipality.settings.currencyPerHour}</size>/h";
+            goldPerPeriod.text = $" {GameData.buildings.municipality.settings.moneyPerPeriod}";
         }
-        
+
+        public override async Task BeforeShowDataAsync()
+        {
+            await GameData.buildings.municipality.GetTimeLeft();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
+            StartCoroutine(GameData.buildings.municipality.TimeLeftLocalUpd(CustomizeBanner));
 
             await Task.CompletedTask;
         }
@@ -243,7 +246,7 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (!GameData.buildings.castle.isBuilt)
+                    if (!GameData.buildings.castle.meta.isBuilt)
                     {
                         GameData.ftue.info.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
@@ -254,24 +257,9 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private IEnumerator StartCollectTimer()
-        {
-            var time = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
-            while (!String.IsNullOrEmpty(time))
-            {
-                timer.text = time;
-                timerProgress.fillAmount = (float) secondsLeft / GameData.buildings.municipalitySettings.periodInSeconds;
-                yield return new WaitForSeconds(1.0f);
-                secondsLeft--;
-                time = TimeTools.TimeToString(new TimeSpan(0, 0, secondsLeft));
-            }
-
-            CustomizeBanner();
-        }
-
         private async void CollectButtonClick()
         {
-            await GameData.buildings.MunicipalityCollect();
+            await GameData.buildings.municipality.GoldCollect();
             CustomizeBanner();
         }
         
@@ -400,7 +388,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.municipality?.id
+                buildingId = GameData.buildings.municipality.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -410,7 +398,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.forge?.id
+                buildingId = GameData.buildings.forge.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -420,7 +408,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.magicGuild?.id
+                buildingId = GameData.buildings.magicGuild.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -430,7 +418,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.market?.id
+                buildingId = GameData.buildings.market.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -440,7 +428,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.portal?.id
+                buildingId = GameData.buildings.portal.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -450,7 +438,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.castle?.id,
+                buildingId = GameData.buildings.castle.meta?.id,
             }).RunShowPopupProcess();
         }
 
@@ -460,7 +448,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.laboratory?.id
+                buildingId = GameData.buildings.laboratory.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -470,7 +458,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.aerostat?.id
+                buildingId = GameData.buildings.aerostat.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -480,7 +468,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.catacombs?.id
+                buildingId = GameData.buildings.catacombs.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -490,7 +478,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.harem?.id
+                buildingId = GameData.buildings.harem.meta?.id
             }).RunShowPopupProcess();
         }
 

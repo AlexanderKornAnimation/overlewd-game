@@ -1731,7 +1731,7 @@ namespace Overlewd
         [Serializable]
         public class MunicipalityTimeLeft
         {
-            public int timeLeft;
+            public float timeLeft;
         }
 
         [Serializable]
@@ -1798,7 +1798,9 @@ namespace Overlewd
             public bool canCrystallvlUp => GameData.player.CanBuy(priceCrystal);
 
             [JsonProperty(Required = Required.Default)]
-            public bool canUpgrade => GameData.buildings.magicGuild.currentLevel >= requiredBuildingLevel && next != null;
+            public bool canUpgrade =>
+                GameData.buildings.magicGuild.meta.currentLevel >=
+                requiredBuildingLevel && next != null;
 
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";

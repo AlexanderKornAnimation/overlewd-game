@@ -100,7 +100,7 @@ namespace Overlewd
                 if (spellData.canCrystallvlUp)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-                    await GameData.buildings.MagicGuildSkillLvlUpCrystal(spellData.type);
+                    await GameData.buildings.magicGuild.SkillLvlUpCrystal(spellData.type);
                 }
                 else
                 {
@@ -119,7 +119,7 @@ namespace Overlewd
                 if (spellData.canlvlUp)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-                    await GameData.buildings.MagicGuildSkillLvlUp(spellData.type);
+                    await GameData.buildings.magicGuild.SkillLvlUp(spellData.type);
                     UIManager.HidePopup();
                 }
                 else
@@ -150,6 +150,6 @@ namespace Overlewd
     public class SpellPopupInData : BasePopupInData
     {
         public int spellId;
-        public AdminBRO.MagicGuildSkill spellData => GameData.buildings.GetMagicGuildSkillById(spellId);
+        public AdminBRO.MagicGuildSkill spellData => GameData.buildings.magicGuild.GetSkillById(spellId);
     }
 }

@@ -20,7 +20,7 @@ namespace Overlewd
 
             public string skillType { get; set; }
             public AdminBRO.MagicGuildSkill skillData =>
-                GameData.buildings.GetMagicGuildSkillByType(skillType);
+                GameData.buildings.magicGuild.GetSkillByType(skillType);
             
             void Awake()
             {

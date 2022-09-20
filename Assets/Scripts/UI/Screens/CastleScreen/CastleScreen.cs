@@ -92,6 +92,13 @@ namespace Overlewd
             aerostatBuildingPos = canvas.Find("AerostatBuildingPos");
         }
 
+        public override async Task BeforeShowDataAsync()
+        {
+            await GameData.buildings.municipality.GetTimeLeft();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             foreach (var buildingData in GameData.buildings.buildings)
@@ -175,7 +182,7 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (!GameData.buildings.castle.isBuilt)
+                    if (!GameData.buildings.castle.meta.isBuilt)
                     {
                         UITools.DisableButton(sidebarButton);
                     }
@@ -211,7 +218,7 @@ namespace Overlewd
                         await Task.WhenAll(showPanelTasks);
                     }
 
-                    if (GameData.buildings.castle.isBuilt)
+                    if (GameData.buildings.castle.meta.isBuilt)
                     {
                         await castleButton.ShowAsync();
                         GameData.ftue.info.chapter1.ShowNotifByKey("barrackstutor2");   
