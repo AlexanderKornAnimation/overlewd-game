@@ -263,8 +263,8 @@ namespace Overlewd
             CustomizeBanner();
 
             UpInfoFX.GetInstance(collectButton.transform).
-                Run($"+{GameData.buildings.municipality.settings.moneyPerPeriod}",
-                Color.yellow, 80, 150, 1.6f);
+                RunX($"+{GameData.buildings.municipality.settings.moneyPerPeriod}",
+                Color.yellow, 80, 150.0f);
         }
         
         public override async Task BeforeShowAsync()
