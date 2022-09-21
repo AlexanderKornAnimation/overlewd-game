@@ -219,7 +219,7 @@ namespace Overlewd
             timer.text = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
             timerProgress.fillAmount = timeLeftMs / (GameData.buildings.municipality.settings.periodInSeconds * 1000.0f);
             activeBannerImage.gameObject.SetActive(canCollect);
-            collectButton.interactable = canCollect;
+            //collectButton.interactable = canCollect;
             goldPerPeriod.gameObject.SetActive(canCollect);
             goldPerHour.text = $"<size=38>{GameData.buildings.municipality.settings.currencyPerHour}</size>/h";
             goldPerPeriod.text = $" {GameData.buildings.municipality.settings.moneyPerPeriod}";
@@ -261,6 +261,10 @@ namespace Overlewd
         {
             await GameData.buildings.municipality.GoldCollect();
             CustomizeBanner();
+
+            UpInfoFX.GetInstance(collectButton.transform).
+                Run($"+{GameData.buildings.municipality.settings.moneyPerPeriod}",
+                Color.yellow, 80, 150, 1.6f);
         }
         
         public override async Task BeforeShowAsync()

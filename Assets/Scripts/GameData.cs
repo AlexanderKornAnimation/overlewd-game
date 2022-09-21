@@ -211,7 +211,7 @@ namespace Overlewd
             public async Task GetTimeLeft()
             {
                 var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
-                goldAccTimeLeftMs = timeLeft.timeLeft;
+                goldAccTimeLeftMs = timeLeft?.timeLeft ?? 0.0f;
                 lastTimeLeftGoldAccUpd = DateTime.Now;
                 await Task.CompletedTask;
             }
