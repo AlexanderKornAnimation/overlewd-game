@@ -756,13 +756,13 @@ namespace Overlewd
             public bool isEvent => eventId.HasValue;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isMain => ftueQuestType == QuestType_Main;
+            public bool isFTUEMain => ftueQuestType == QuestType_Main;
             
             [JsonProperty(Required = Required.Default)]
-            public bool isSide => ftueQuestType == QuestType_Side;
+            public bool isFTUESide => ftueQuestType == QuestType_Side;
             
             [JsonProperty(Required = Required.Default)]
-            public bool isMatriarch => ftueQuestType == QuestType_Matriarch;
+            public bool isFTUEMatriarch => ftueQuestType == QuestType_Matriarch;
             
             [JsonProperty(Required = Required.Default)]
             public bool hasDescription => !String.IsNullOrEmpty(description);

@@ -734,9 +734,14 @@ namespace Overlewd
 
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
-        
-        public AdminBRO.QuestItem GetFirstOrDefaultByType(string type) =>
-            quests.FirstOrDefault(q => q.ftueQuestType == type);
+
+        public AdminBRO.QuestItem ftueMainQuest =>
+            quests.Find(q => q.isFTUEMain);
+        public List<AdminBRO.QuestItem> ftueMatriarchQuests =>
+            quests.FindAll(q => q.isFTUEMatriarch);
+        public List<AdminBRO.QuestItem> ftueSideQuests =>
+            quests.FindAll(q => q.isFTUESide);
+
 
         public async Task ClaimReward(int? id)
         {

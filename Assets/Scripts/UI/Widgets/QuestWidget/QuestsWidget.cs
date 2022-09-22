@@ -45,7 +45,7 @@ namespace Overlewd
             
             foreach (var questData in quests)
             {
-                if (questData.isMain)
+                if (questData.isFTUEMain)
                 {
                     mainQuestButtonTitle.text = questData.name;
                 }
@@ -67,7 +67,7 @@ namespace Overlewd
         protected virtual void MainQuestButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            var mainQuest = GameData.quests.GetFirstOrDefaultByType(AdminBRO.QuestItem.QuestType_Main);
+            var mainQuest = GameData.quests.ftueMainQuest;
             
             UIManager.MakeOverlay<QuestOverlay>().
                 SetData(new QuestOverlayInData

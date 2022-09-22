@@ -29,7 +29,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                if (questData.isMain)
+                if (questData.isFTUEMain)
                 {
                     var questInfo = MainQuestInfo.GetInstance(content);
                     questInfo.questId = questId;
