@@ -130,10 +130,7 @@ namespace Overlewd
 				inst.myTeam.Add(overlordCh);
             }
 
-			if (battleData.isTypeBattle)
-			{
-				inst.myTeam.AddRange(GameData.characters.myTeamCharacters);
-			}
+			inst.myTeam.AddRange(GameData.characters.myTeamCharacters);
 
 			//enemy teams
 			foreach (var phase in battleData.battlePhases)
