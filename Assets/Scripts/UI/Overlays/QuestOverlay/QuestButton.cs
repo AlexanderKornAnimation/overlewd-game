@@ -9,42 +9,46 @@ namespace Overlewd
 {
     namespace NSQuestOverlay
     {
-        public abstract class QuestButton : MonoBehaviour
+        public class QuestButton : MonoBehaviour
         {
-            public QuestContentScrollView contentScrollView { get; set; }
-
+            private QuestContentScrollView contentScrollView;
+            public Transform questContentPos { get; set; }
             public event Action<QuestButton> buttonPressed;
 
-            protected Button blueButton;
-            protected Image blueButtonImage;
-            protected Button darkButton;
-            protected TextMeshProUGUI title;
-            protected TextMeshProUGUI notification;
-            protected Image darkButtonImage;
+            private Button button;
+            private GameObject pressedButton;
+            private TextMeshProUGUI title;
+            private TextMeshProUGUI notification;
 
-            private Sprite blueButtonDefaultSprite;
-            private Sprite darkButtonDefaultSprite;
-
-            protected virtual void Awake()
+            public int? questId { get; set; }
+            public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
+            
+            private void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
-                blueButton = canvas.Find("BlueButton").GetComponent<Button>();
-                blueButton.onClick.AddListener(ButtonClick);
-                blueButtonImage = blueButton.GetComponent<Image>();
-
-                darkButton = canvas.Find("DarkButton").GetComponent<Button>();
-                darkButton.onClick.AddListener(ButtonClick);
+                button = canvas.Find("Button").GetComponent<Button>();
+                button.onClick.AddListener(ButtonClick);
+                pressedButton = canvas.Find("Pressed").gameObject;
+                pressedButton.SetActive(false);
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
-                darkButtonImage = darkButton.GetComponent<Image>();
 
                 notification = canvas.Find("Notification").GetComponent<TextMeshProUGUI>();
-
-                blueButtonDefaultSprite = blueButtonImage.sprite;
-                darkButtonDefaultSprite = darkButtonImage.sprite;
             }
 
-            protected virtual void ButtonClick()
+            private void Start()
+            {
+                // Customize();
+            }
+
+            public void Customize()
+            {
+                title.text = questData?.name;
+                contentScrollView = QuestContentScrollView.GetInstance(questContentPos);
+                contentScrollView.questId = questId;
+            }
+            
+            private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 buttonPressed?.Invoke(this);
@@ -52,16 +56,20 @@ namespace Overlewd
 
             public void Select()
             {
-                blueButtonImage.sprite = blueButton.spriteState.selectedSprite;
-                darkButtonImage.sprite = darkButton.spriteState.selectedSprite;
+                pressedButton.SetActive(true);
                 contentScrollView?.Show();
             }
 
             public void Deselect()
             {
-                blueButtonImage.sprite = blueButtonDefaultSprite;
-                darkButtonImage.sprite = darkButtonDefaultSprite;
+                pressedButton.SetActive(false);
                 contentScrollView?.Hide();
+            }
+
+            public static QuestButton GetInstance(Transform parent)
+            {
+                return ResourceManager.InstantiateWidgetPrefab<QuestButton>(
+                    "Prefabs/UI/Overlays/QuestOverlay/QuestButton", parent);
             }
         }
     }

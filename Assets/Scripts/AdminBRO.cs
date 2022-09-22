@@ -738,12 +738,32 @@ namespace Overlewd
             public int progressCount;
             public int? eventId;
             public int? ftueChapterId;
+            public string ftueQuestType;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
 
+            public const string QuestType_Main = "main";
+            public const string QuestType_Side = "side";
+            public const string QuestType_Matriarch = "matriarch";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFTUE => ftueChapterId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEvent => eventId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isMain => ftueQuestType == QuestType_Main;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isSide => ftueQuestType == QuestType_Side;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isMatriarch => ftueQuestType == QuestType_Matriarch;
+            
             [JsonProperty(Required = Required.Default)]
             public bool hasDescription => !String.IsNullOrEmpty(description);
 
