@@ -8,7 +8,7 @@ using DG.Tweening;
 
 namespace Overlewd
 {
-    public class UpInfoFX : BaseWidget
+    public class MoveTextNotif : BaseWidget
     {
         private TextMeshProUGUI text;
 
@@ -28,7 +28,7 @@ namespace Overlewd
             text.text = title;
 
             var seq = DOTween.Sequence();
-            seq.Join(transform.DOMoveY(transform.position.x + xOffset, duration));
+            seq.Join(transform.DOMoveX(transform.position.x + xOffset, duration));
             seq.Join(transform.DOMoveY(transform.position.y + yOffset, duration));
             seq.Join(text.DOFade(0.0f, duration));
             seq.onComplete = () => Destroy(gameObject);
@@ -51,10 +51,10 @@ namespace Overlewd
             Run(title, color, tSize, 0.0f, yOffset, duration);
         }
 
-        public static UpInfoFX GetInstance(Transform parent)
+        public static MoveTextNotif GetInstance(Transform parent)
         {
-            return ResourceManager.InstantiateScreenPrefab<UpInfoFX>
-                ("Prefabs/UI/Widgets/InfoFX/UpInfoFX", parent);
+            return ResourceManager.InstantiateWidgetPrefab<MoveTextNotif>
+                ("Prefabs/UI/Widgets/Notifications/MoveTextNotif", parent);
         }
     }
 }
