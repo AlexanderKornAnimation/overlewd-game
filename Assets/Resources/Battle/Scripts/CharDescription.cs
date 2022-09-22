@@ -10,7 +10,6 @@ namespace Overlewd
         [SerializeField] private TextMeshProUGUI nameTMP, classTMP;
         [SerializeField] private Image portraitIco, classIco;
         [SerializeField] private Sprite[] classIcons;
-        [SerializeField] private TextMeshProUGUI spd, pow, con, agi;
         [SerializeField] private TextMeshProUGUI accur, dodge, crit, health, damage;
         [SerializeField] private StatusEffects status_bar;
         private BattleManager bm => FindObjectOfType<BattleManager>();
@@ -49,13 +48,8 @@ namespace Overlewd
             nameTMP.text = cc.Name;
             classTMP.text = cc.isBoss ? "Boss" : cc.characterClass;
 
-            portraitIco.sprite = cc.characterRes.icoPortrait;
+            if (cc.icon != null) portraitIco.sprite = cc.icon;
             if (classIco && classIcons != null) SetClass();
-
-            spd.text = cc.speed.ToString();
-            pow.text = cc.power.ToString();
-            con.text = cc.constitution.ToString();
-            agi.text = cc.agility.ToString();
 
             accur.text = $"{cc.accuracy * 100}%";
             dodge.text = $"{cc.dodge * 100}%";

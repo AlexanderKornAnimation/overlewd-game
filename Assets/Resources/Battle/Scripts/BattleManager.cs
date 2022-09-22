@@ -151,7 +151,7 @@ namespace Overlewd
         }
         IEnumerator LateInit()
         {
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForEndOfFrame();
             charControllerList[step].Highlight();
             SetSkillCtrl(ccOnSelect);
             if (battleState == BattleState.PLAYER)
@@ -219,7 +219,7 @@ namespace Overlewd
 
         IEnumerator NextWave()
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(3f);
             step = 0;
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             //Destroy phase ============================================================
@@ -243,7 +243,7 @@ namespace Overlewd
             CreatePortraitQueue();                  //drop new portraits with sorting
             QueueElements[0].Select(); //Scale Up First Element
             StateCheck();
-            LateInit();
+            StartCoroutine(LateInit());
         }
         void StateCheck()
         {
@@ -419,7 +419,7 @@ namespace Overlewd
         IEnumerator EnemyAttack()
         {
             //Must be empty
-            yield return new WaitForSeconds(0.75f); //Pause then show target stats
+            yield return new WaitForSeconds(1.5f); //Pause then show target stats
             if (!ccOnSelect.isDead) {
                 int id = Random.Range(0, ccOnSelect.skill.Count);
                 if (ccOnSelect.skill[id].AOE)
@@ -470,7 +470,7 @@ namespace Overlewd
             UnselectButtons();
             ani.SetTrigger("BattleOut");
             if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
-            {
+            {                     //—ﬁƒ¿ —ÃŒ“–», “”“ Ã¿√»ﬂ
                 Step();
                 unselect?.Invoke();
                 charControllerList[step].Highlight();
@@ -532,7 +532,7 @@ namespace Overlewd
         }
         IEnumerator WinScreenWithDelay()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2.2f);
             if (battleScene != null)
                 battleScene.EndBattle(new BattleManagerOutData
                 {
@@ -640,9 +640,7 @@ namespace Overlewd
                 if (chapterID == battleScene.GetBattleData().ftueChapterKey &&
                     battleID == battleScene.GetBattleData().ftueStageKey)
                 {
-#if UNITY_EDITOR
                     Debug.Log($"{chapterID} {battleID} {notifID}");
-#endif
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
                 }
         }
