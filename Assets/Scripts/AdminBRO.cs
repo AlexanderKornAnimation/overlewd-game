@@ -1019,6 +1019,7 @@ namespace Overlewd
             public string heroicIcon;
             public string teamEditSlotPersIcon;
             public string fullScreenPersIcon;
+            public string battlePortraitIcon;
             public string name;
             public string characterClass;
             public int? animationId;
