@@ -83,9 +83,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            var ftueQuests = GameData.quests.quests.Where(q => q.isFTUE).ToList();
-
-            foreach (var questItem in ftueQuests)
+            foreach (var questItem in GameData.quests.ftueQuests)
             {
                 if (GameData.ftue.activeChapter.id == questItem.ftueChapterId)
                 {
