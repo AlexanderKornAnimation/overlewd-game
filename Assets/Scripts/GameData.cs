@@ -955,12 +955,14 @@ namespace Overlewd
         public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
         public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
         public List<AdminBRO.MemoryShardItem> memoryShards { get; private set; } = new List<AdminBRO.MemoryShardItem>();
+        public List<AdminBRO.BuffItem> buffs { get; private set; } = new List<AdminBRO.BuffItem>();
 
         public override async Task Get()
         {
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
             memoryShards = await AdminBRO.memoryShardsAsync();
+            buffs = await AdminBRO.buffsAsync();
         }
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>

@@ -514,14 +514,14 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => GameData.devMode ? true : (isActive || isComplete);
-            
+
             [JsonProperty(Required = Required.Default)]
             public EventChapter nextChapterData =>
                 GameData.events.GetChapterById(nextChapterId);
 
             public void SetAsMapChapter() =>
                 GameData.events.mapChapter = this;
-            
+
             public AdminBRO.EventStageItem GetStageById(int? id) =>
                 GameData.events.GetStageById(id);
 
@@ -575,13 +575,13 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public EventChapter firstChapter =>
                 chaptersData.FirstOrDefault();
-            
+
             public EventChapter GetChapterById(int? id) =>
                 GameData.events.GetChapterById(id);
 
             public EventItem SetAsMapEvent() =>
                 GameData.events.mapEventData = this;
-            
+
             [JsonProperty(Required = Required.Default)]
             public List<EventMarketItem> marketsData =>
                 markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
@@ -757,13 +757,13 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isFTUEMain => ftueQuestType == QuestType_Main;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isFTUESide => ftueQuestType == QuestType_Side;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool isFTUEMatriarch => ftueQuestType == QuestType_Matriarch;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool hasDescription => !String.IsNullOrEmpty(description);
 
@@ -854,7 +854,7 @@ namespace Overlewd
             public const string CharacterName_Ulvi = "Ulvi";
             public const string CharacterName_Faye = "Faye";
             public const string CharacterName_Adriel = "Adriel";
-            public const string CharacterName_Dragon= "Dragon";
+            public const string CharacterName_Dragon = "Dragon";
             public const string CharacterName_Inge = "Inge";
             public const string CharacterName_Lili = "Lili";
             public const string CharacterName_Pisha = "Pisha";
@@ -1764,7 +1764,7 @@ namespace Overlewd
             public int periodInSeconds;
             public int? currencyId;
         }
-        
+
         // /magicguild/skills
         // /magicguild/{skillType}/levelup
         public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()
@@ -2020,6 +2020,7 @@ namespace Overlewd
         // /matriarchs/memories/{id}/buy
         // /matriarchs/{id}/seduce
         // /matriarchs/shards
+        // /matriarchs/buffs
 
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
@@ -2064,6 +2065,15 @@ namespace Overlewd
             using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<List<MemoryShardItem>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<BuffItem>> buffsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/matriarchs/buffs";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<BuffItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -2198,6 +2208,24 @@ namespace Overlewd
             public string rarity;
             public string icon;
             public int amount;
+        }
+
+        [Serializable]
+        public class BuffItem
+        {
+            public int id;
+            public int? matriarchId;
+            public string name;
+            public string description;
+            public string postDescription;
+            public bool AOE;
+            public string icon;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
         }
 
         // /potions
