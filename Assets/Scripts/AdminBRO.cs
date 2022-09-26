@@ -2226,6 +2226,11 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
+            public bool active;
+
+            [JsonProperty(Required = Required.Default)]
+            public MatriarchItem matriarch =>
+                GameData.matriarchs.GetMatriarchById(matriarchId);
         }
 
         // /potions
