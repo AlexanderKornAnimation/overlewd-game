@@ -26,8 +26,6 @@ namespace Overlewd
         [Tooltip("selected as target")] public CharController ccTarget = null;
         public Animator ani;
 
-        private List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
         public BattleLog log => GetComponent<BattleLog>();
@@ -135,8 +133,6 @@ namespace Overlewd
 
             transform.Find("BattleUICanvas/Character/Buttons/Bottles/").gameObject.SetActive(ManaPotionsChecker()); //turn off bottles
 
-            characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
-
             DropCharactersFromList(playerTeam, isEnemy: false);
             DropCharactersFromList(enemyTeam, isEnemy: true);
 
@@ -175,13 +171,6 @@ namespace Overlewd
                 var charGO = new GameObject($"{c.name}_{k}");
                 var cc = charGO.AddComponent<CharController>();
                 cc.character = c;
-
-                var cRes = characterResList?.Find(item => item.key == c.key);
-                var defaultSkin = bossLevel ?
-                    characterResList?.Find(item => item.key == "CERBERUS") :
-                    characterResList?.Find(item => item.key == "DEFAULT");
-                cc.characterRes = cRes == null ? defaultSkin : cRes; //load default skin if key not found
-
                 charControllerList.Add(cc);
                 cc.bm = this;
                 unselect += cc.UnHiglight;
@@ -382,7 +371,7 @@ namespace Overlewd
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
                 ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
-                GameObject vfx = ccOnSelect.characterRes.skill[id].vfxOnTarget;
+                GameObject vfx = null; //ccOnSelect.skill[id].vfxOnTarget;
                 if (AOE)
                 {
                     ani.SetTrigger("General");
@@ -611,7 +600,7 @@ namespace Overlewd
                 sk.gameObject.SetActive(true);
                 if (i > 0)
                 {
-                    sk.ReplaceSkill(cc.skill[j], cc.characterRes.skill[j]);
+                    sk.ReplaceSkill(cc.skill[j], cc.isOverlord);
                     if (j != 0) sk.silence = silent; //silence realisation
                 }
                 else
@@ -626,7 +615,7 @@ namespace Overlewd
             {
                 sk.gameObject.SetActive(true);
                 if (i > 0)
-                    sk.ReplaceSkill(cc.passiveSkill[j], cc.characterRes.pSkill[j]);
+                    sk.ReplaceSkill(cc.passiveSkill[j], cc.isOverlord);
                 else
                     sk.gameObject.SetActive(false);
                 i--;

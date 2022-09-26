@@ -321,19 +321,13 @@ namespace Overlewd
             return null;
         }
 
-        public static int PlayOneShot(string eventPath, string bankId = null)
+        public static void PlayOneShot(string eventPath, string bankId = null)
         {
-            if (String.IsNullOrEmpty(eventPath))
-                return -1;
-
             if (!HasLocalEvent(eventPath) && !String.IsNullOrEmpty(bankId))
             {
                 ResourceManager.LoadFMODBank(bankId);
             }
-
             RuntimeManager.PlayOneShot(eventPath.Trim());
-
-            return 0;
         }
 
         public static void StopAll()

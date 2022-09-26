@@ -80,6 +80,7 @@ namespace Overlewd
             if (replaceCharacter)
                 cc = replaceCharacter;
             if (cc.bigIcon != null) BattlePortraitIco.sprite = cc.bigIcon;
+            if (bigPortrait) BattlePortraitIco.SetNativeSize();
             if (sliderHP) sliderHP.maxValue = maxHp;
             sliderMP?.gameObject.SetActive(cc.isOverlord);
             status_bar.cc = cc;

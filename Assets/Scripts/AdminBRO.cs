@@ -1617,8 +1617,7 @@ namespace Overlewd
             public string soundBankId;
             public string eventPath;
 
-            [JsonProperty(Required = Required.Default)]
-            public int play => SoundManager.PlayOneShot(eventPath, soundBankId);
+            public void Play() => SoundManager.PlayOneShot(eventPath, soundBankId);
 
             [JsonProperty(Required = Required.Default)]
             public FMODEvent instantiate => SoundManager.GetEventInstance(eventPath, soundBankId);
