@@ -323,10 +323,14 @@ namespace Overlewd
 
         public static void PlayOneShot(string eventPath, string bankId = null)
         {
+            if (String.IsNullOrEmpty(eventPath))
+                return;
+
             if (!HasLocalEvent(eventPath) && !String.IsNullOrEmpty(bankId))
             {
                 ResourceManager.LoadFMODBank(bankId);
             }
+
             RuntimeManager.PlayOneShot(eventPath.Trim());
         }
 
