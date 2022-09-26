@@ -40,13 +40,19 @@ namespace Overlewd
 
         private Transform buffInfo;
         private TextMeshProUGUI buffDescription;
-
+        private GameObject buffActive;
+        private Image ulviBuffIcon;
+        private Image adrielBuffIcon;
+        private Image ingieBuffIcon;
+        private Image fayeBuffIcon;
+        private Image liliBuffIcon;
+        
         private Button bannerUlviButton;
         private Button bannerAdrielButton;
         private Button bannerIngieButton;
         private Button bannerFayeButton;
         private Button bannerLiliButton;
-        private GameObject bannerNotification; 
+        private GameObject bannerNotification;
 
         private Button sexButton;
         private Button dialogButton;
@@ -98,6 +104,12 @@ namespace Overlewd
 
             buffInfo = progressBar.Find("BuffInfo");
             buffDescription = buffInfo.Find("Description").GetComponent<TextMeshProUGUI>();
+            buffActive = buffInfo.Find("BuffActive").gameObject;
+            ulviBuffIcon = buffInfo.Find("UlviBuffIcon").GetComponent<Image>();
+            adrielBuffIcon = buffInfo.Find("AdrielBuffIcon").GetComponent<Image>();
+            ingieBuffIcon = buffInfo.Find("IngieBuffIcon").GetComponent<Image>();
+            fayeBuffIcon = buffInfo.Find("FayeBuffIcon").GetComponent<Image>();
+            liliBuffIcon = buffInfo.Find("LiliBuffIcon").GetComponent<Image>();
 
             bannerUlviButton = canvas.Find("Banner").Find("BannerButtonUlvi").GetComponent<Button>();
             bannerAdrielButton = canvas.Find("Banner").Find("BannerButtonAdriel").GetComponent<Button>();
@@ -163,6 +175,13 @@ namespace Overlewd
             ingieZodiac.gameObject.SetActive(girlData.isIngie);
             fayeZodiac.gameObject.SetActive(girlData.isFaye);
             liliZodiac.gameObject.SetActive(girlData.isLili);
+            
+            ulviBuffIcon.gameObject.SetActive(girlData.isUlvi);
+            adrielBuffIcon.gameObject.SetActive(girlData.isAdriel);
+            ingieBuffIcon.gameObject.SetActive(girlData.isIngie);
+            fayeBuffIcon.gameObject.SetActive(girlData.isFaye);
+            liliBuffIcon.gameObject.SetActive(girlData.isLili);
+            
             zodiacName.text = girlData.paramZodiac;
             birthday.text = girlData.paramAge.ToString();
             girlName.text = girlData.name;
