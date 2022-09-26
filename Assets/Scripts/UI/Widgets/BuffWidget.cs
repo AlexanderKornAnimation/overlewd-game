@@ -45,7 +45,7 @@ namespace Overlewd
         private void Customize()
         {
             icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
-            title.text = GameData.matriarchs.activeBuff?.postDescription;
+            title.text = GameData.matriarchs.activeBuff?.name;
             description.text = GameData.matriarchs.activeBuff?.description;
             iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
             iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
