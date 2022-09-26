@@ -975,6 +975,10 @@ namespace Overlewd
             memoryShards.Find(ms => ms.matriarchId == matriarchId && ms.rarity == rarity);
         public AdminBRO.MemoryShardItem GetShardById(int? id, string rarity) =>
             memoryShards.Find(ms => ms.id == id && ms.rarity == rarity);
+        public AdminBRO.BuffItem GetBuffById(int? id) =>
+            buffs.Find(b => b.id == id);
+        public AdminBRO.BuffItem GetBuffByMatriarchId(int? id) =>
+            buffs.Find(b => b.matriarchId == id);
 
         public AdminBRO.MatriarchItem Ulvi =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ulvi);
@@ -991,6 +995,9 @@ namespace Overlewd
         public AdminBRO.MemoryItem GetMemoryById(int? id) =>
             memories.Find(m => m.id == id);
 
+        public AdminBRO.BuffItem activeBuff =>
+            buffs.Find(b => b.active);
+
         public async Task memoryBuy(int? id)
         {
             if (id.HasValue)
@@ -1006,6 +1013,7 @@ namespace Overlewd
             {
                 await AdminBRO.seduceMatriarchAsync(id.Value);
                 matriarchs = await AdminBRO.matriarchsAsync();
+                buffs = await AdminBRO.buffsAsync();
             }
         }
     }

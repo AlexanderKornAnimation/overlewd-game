@@ -11,7 +11,13 @@ namespace Overlewd
     {
         private RectTransform backRect;
         private Image icon;
+        private Transform iconUlvi;
+        private Transform iconAdriel;
+        private Transform iconIngie;
+        private Transform iconLili;
+        private Transform iconFaye;
         private Button button;
+        private TextMeshProUGUI title;
         private TextMeshProUGUI description;
         
         void Awake()
@@ -20,6 +26,12 @@ namespace Overlewd
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
             button = backRect.Find("Button").GetComponent<Button>();
             icon = button.transform.Find("Icon").GetComponent<Image>();
+            iconUlvi = button.transform.Find("IconUlvi");
+            iconAdriel = button.transform.Find("IconAdriel");
+            iconIngie = button.transform.Find("IconIngie");
+            iconLili = button.transform.Find("IconLili");
+            iconFaye = button.transform.Find("IconFaye");
+            title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
             
             button.onClick.AddListener(ButtonClick);
@@ -27,7 +39,21 @@ namespace Overlewd
 
         void Start()
         {
-            UITools.DisableButton(button, GameData.progressFlags.lockBuff);    
+            Customize();
+        }
+
+        private void Customize()
+        {
+            icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
+            title.text = GameData.matriarchs.activeBuff?.postDescription;
+            description.text = GameData.matriarchs.activeBuff?.description;
+            iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
+            iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
+            iconIngie.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isIngie ?? false);
+            iconLili.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isLili ?? false);
+            iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
+
+            UITools.DisableButton(button, GameData.progressFlags.lockBuff);
         }
 
         protected virtual void ButtonClick()

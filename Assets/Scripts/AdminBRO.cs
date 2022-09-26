@@ -2146,6 +2146,9 @@ namespace Overlewd
                     Key_Lili => false,
                     _ => false
                 };
+
+            [JsonProperty(Required = Required.Default)]
+            public BuffItem buff => GameData.matriarchs.GetBuffByMatriarchId(id);
         }
 
         [Serializable]
