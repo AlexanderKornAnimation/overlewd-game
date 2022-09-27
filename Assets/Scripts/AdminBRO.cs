@@ -2226,9 +2226,9 @@ namespace Overlewd
             public string description
             {
                 get => _description.
-                    Replace("%accuracy%", ((int)(accuracy * 100)).ToString()).
-                    Replace("%dodge%", ((int)(dodge * 100)).ToString()).
-                    Replace("%critrate%", ((int)(critrate * 100)).ToString()).
+                    Replace("%accuracy%", ((int)(accuracy)).ToString()).
+                    Replace("%dodge%", ((int)(dodge)).ToString()).
+                    Replace("%critrate%", ((int)(critrate)).ToString()).
                     Replace("%health%", ((int)(health * 100)).ToString()).
                     Replace("%damage%", ((int)(damage * 100)).ToString()).
                     Replace("%mana%", ((int)(mana * 100)).ToString());
