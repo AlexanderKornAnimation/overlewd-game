@@ -1167,10 +1167,11 @@ namespace Overlewd
             public float amount;
             public string trigger;
             public float effectAmount;
-            public int? vfxAnimationId;
-            public int? vfxAOEAnimationId;
-            public int? sfxAttack1Id;
-            public int? sfxAttack2Id;
+            public int? vfxSelfId;
+            public int? vfxAOEId;
+            public int? vfxTargetId;
+            public int? sfxAttackId;
+            public int? sfxTargetId;
             public bool shakeScreen;
 
             public const string Type_Passive = "passive_skill";
@@ -1178,16 +1179,19 @@ namespace Overlewd
             public const string Type_Enhanced = "enhanced_attack";
 
             [JsonProperty(Required = Required.Default)]
-            public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
+            public Animation vfxSelf => GameData.animations.GetById(vfxSelfId);
 
             [JsonProperty(Required = Required.Default)]
-            public Sound sfxAttack2 => GameData.sounds.GetById(sfxAttack2Id);
+            public Animation vfxAOE => GameData.animations.GetById(vfxAOEId);
 
             [JsonProperty(Required = Required.Default)]
-            public Animation vfxAnimation => GameData.animations.GetById(vfxAnimationId);
+            public Animation vfxTarget => GameData.animations.GetById(vfxTargetId);
 
             [JsonProperty(Required = Required.Default)]
-            public Animation vfxAOEAnimation => GameData.animations.GetById(vfxAOEAnimationId);
+            public Sound sfxAttack => GameData.sounds.GetById(sfxAttackId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxTarget => GameData.sounds.GetById(sfxTargetId);
         }
 
         [Serializable]
