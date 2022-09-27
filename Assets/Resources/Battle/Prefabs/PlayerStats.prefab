@@ -1994,7 +1994,6 @@ MonoBehaviour:
   cc: {fileID: 0}
   button: {fileID: 0}
   bigPortrait: 0
-  backRarityIcons: []
 --- !u!1 &5347306762731563074
 GameObject:
   m_ObjectHideFlags: 0
@@ -2027,10 +2026,10 @@ RectTransform:
   m_Father: {fileID: 3518402923709907139}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 797, y: 416}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3170734311209890164
 CanvasRenderer:

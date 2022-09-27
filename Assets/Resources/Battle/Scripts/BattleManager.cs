@@ -26,8 +26,6 @@ namespace Overlewd
         [Tooltip("selected as target")] public CharController ccTarget = null;
         public Animator ani;
 
-        private List<CharacterRes> characterResList; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
         public BattleLog log => GetComponent<BattleLog>();
@@ -135,8 +133,6 @@ namespace Overlewd
 
             transform.Find("BattleUICanvas/Character/Buttons/Bottles/").gameObject.SetActive(ManaPotionsChecker()); //turn off bottles
 
-            characterResList = new List<CharacterRes>(Resources.LoadAll<CharacterRes>("Battle/BattlePersonages/Profiles"));
-
             DropCharactersFromList(playerTeam, isEnemy: false);
             DropCharactersFromList(enemyTeam, isEnemy: true);
 
@@ -151,7 +147,7 @@ namespace Overlewd
         }
         IEnumerator LateInit()
         {
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForEndOfFrame();
             charControllerList[step].Highlight();
             SetSkillCtrl(ccOnSelect);
             if (battleState == BattleState.PLAYER)
@@ -175,13 +171,6 @@ namespace Overlewd
                 var charGO = new GameObject($"{c.name}_{k}");
                 var cc = charGO.AddComponent<CharController>();
                 cc.character = c;
-
-                var cRes = characterResList?.Find(item => item.key == c.key);
-                var defaultSkin = bossLevel ?
-                    characterResList?.Find(item => item.key == "CERBERUS") :
-                    characterResList?.Find(item => item.key == "DEFAULT");
-                cc.characterRes = cRes == null ? defaultSkin : cRes; //load default skin if key not found
-
                 charControllerList.Add(cc);
                 cc.bm = this;
                 unselect += cc.UnHiglight;
@@ -219,7 +208,7 @@ namespace Overlewd
 
         IEnumerator NextWave()
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(3f);
             step = 0;
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             //Destroy phase ============================================================
@@ -243,7 +232,7 @@ namespace Overlewd
             CreatePortraitQueue();                  //drop new portraits with sorting
             QueueElements[0].Select(); //Scale Up First Element
             StateCheck();
-            LateInit();
+            StartCoroutine(LateInit());
         }
         void StateCheck()
         {
@@ -382,7 +371,7 @@ namespace Overlewd
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
                 ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
-                GameObject vfx = ccOnSelect.characterRes.skill[id].vfxOnTarget;
+                GameObject vfx = null; //ccOnSelect.skill[id].vfxOnTarget;
                 if (AOE)
                 {
                     ani.SetTrigger("General");
@@ -419,7 +408,7 @@ namespace Overlewd
         IEnumerator EnemyAttack()
         {
             //Must be empty
-            yield return new WaitForSeconds(0.75f); //Pause then show target stats
+            yield return new WaitForSeconds(1.5f); //Pause then show target stats
             if (!ccOnSelect.isDead) {
                 int id = Random.Range(0, ccOnSelect.skill.Count);
                 if (ccOnSelect.skill[id].AOE)
@@ -470,7 +459,7 @@ namespace Overlewd
             UnselectButtons();
             ani.SetTrigger("BattleOut");
             if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
-            {
+            {                     //ÑÞÄÀ ÑÌÎÒÐÈ, ÒÓÒ ÌÀÃÈß
                 Step();
                 unselect?.Invoke();
                 charControllerList[step].Highlight();
@@ -532,7 +521,7 @@ namespace Overlewd
         }
         IEnumerator WinScreenWithDelay()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2.2f);
             if (battleScene != null)
                 battleScene.EndBattle(new BattleManagerOutData
                 {
@@ -611,7 +600,7 @@ namespace Overlewd
                 sk.gameObject.SetActive(true);
                 if (i > 0)
                 {
-                    sk.ReplaceSkill(cc.skill[j], cc.characterRes.skill[j]);
+                    sk.ReplaceSkill(cc.skill[j], cc.isOverlord);
                     if (j != 0) sk.silence = silent; //silence realisation
                 }
                 else
@@ -626,7 +615,7 @@ namespace Overlewd
             {
                 sk.gameObject.SetActive(true);
                 if (i > 0)
-                    sk.ReplaceSkill(cc.passiveSkill[j], cc.characterRes.pSkill[j]);
+                    sk.ReplaceSkill(cc.passiveSkill[j], cc.isOverlord);
                 else
                     sk.gameObject.SetActive(false);
                 i--;
@@ -640,9 +629,7 @@ namespace Overlewd
                 if (chapterID == battleScene.GetBattleData().ftueChapterKey &&
                     battleID == battleScene.GetBattleData().ftueStageKey)
                 {
-#if UNITY_EDITOR
                     Debug.Log($"{chapterID} {battleID} {notifID}");
-#endif
                     battleScene.OnBattleNotification(battleID, chapterID, notifID);
                 }
         }
@@ -658,7 +645,7 @@ namespace Overlewd
             }
             return true;
         }
-        public bool MagicGuildChecker() => GameData.buildings.magicGuild.isBuilt;
+        public bool MagicGuildChecker() => GameData.buildings.magicGuild.meta.isBuilt;
 
         public bool CheckBattleGameData(string chapterID, string battleID)
         {

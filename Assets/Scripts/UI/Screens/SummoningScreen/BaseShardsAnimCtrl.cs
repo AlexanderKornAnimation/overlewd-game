@@ -22,6 +22,11 @@ namespace Overlewd
             {
                 dropEvent.SetShardsData(shardsData);
             }
+
+            public void HideShards()
+            {
+                dropEvent?.Hide();
+            }
         }
     }
 }

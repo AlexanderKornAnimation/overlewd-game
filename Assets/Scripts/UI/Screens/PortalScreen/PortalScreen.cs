@@ -62,7 +62,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
-            ShowDefaultGacha();
+            ShowStartingGacha(inputData?.activeButtonId, inputData?.activeGachaId);
 
             await Task.CompletedTask;
         }
@@ -229,6 +229,43 @@ namespace Overlewd
                 }
             }
         }
+
+        private void ShowStartingGacha(int? tabButtonId, int? gachaId)
+        {
+            if (!tabButtonId.HasValue && !gachaId.HasValue)
+            {
+                ShowDefaultGacha();
+            }
+            else if (gachaId.HasValue)
+            {
+                foreach (var tabId in tabsIds)
+                {
+                    var offerBtn = contents[tabId].GetComponentsInChildren<NSPortalScreen.OfferButton>().
+                        Where(ob => ob.gachaId == gachaId).FirstOrDefault();
+                    if (offerBtn != null)
+                    {
+                        ButtonClick(tabId);
+                        SelectOffer(offerBtn);
+                        offerBtn.startSelect = true;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                var offerBtn = contents[tabButtonId.Value].GetComponentsInChildren<NSPortalScreen.OfferButton>().FirstOrDefault();
+                if (offerBtn != null)
+                {
+                    ButtonClick(tabButtonId.Value);
+                    SelectOffer(offerBtn);
+                    offerBtn.startSelect = true;
+                }
+                else
+                {
+                    ShowDefaultGacha();
+                }
+            }
+        }
     }
 
     public class PortalScreenHelper
@@ -260,6 +297,7 @@ namespace Overlewd
 
     public class PortalScreenInData : BaseFullScreenInData
     {
-        public int? activeButtonId;
+        public int? activeButtonId { get; set; }
+        public int? activeGachaId { get; set; }
     }
 }

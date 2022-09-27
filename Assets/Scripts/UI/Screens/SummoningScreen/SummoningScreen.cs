@@ -40,19 +40,7 @@ namespace Overlewd
             await UniTask.WaitUntil(() => portalFullScreenAnim.IsComplete);
             Destroy(portalFullScreenAnim.gameObject);
 
-            if (inputData.isMany)
-            {
-                SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
-                animCtrl = NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
-            }
-            else
-            {
-                SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
-                animCtrl = NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
-            }
-            animCtrl?.SetShardsData(SummoningScreenShardsData.FromSummonData(inputData?.tabType, inputData?.summonData));
-
-            StartCoroutine(WaitShardsIsOpened());
+            MakeShardsAnimCtrl(inputData.isMany, inputData.tabType, inputData.summonData);
 
             await Task.CompletedTask;
         }
@@ -62,18 +50,28 @@ namespace Overlewd
             portalFullScreenAnim = SpineScene.GetInstance(GameData.animations["gacha_portal_scene1"], shardsPos, false);
             portalFullScreenAnim.Pause();
 
-            PortalScreenHelper.MakeSummonButton(inputData.gachaData, inputData.isMany, summonButton, summonButtonText);
-
             portalButton.gameObject.SetActive(false);
             summonButton.gameObject.SetActive(false);
 
             await Task.CompletedTask;
         }
 
-        private void SummonButtonClick()
+        private async void SummonButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
+            portalButton.gameObject.SetActive(false);
+            summonButton.gameObject.SetActive(false);
+
+            animCtrl.HideShards();
+            await UniTask.Delay(1400);
+            Destroy(animCtrl?.gameObject);
+
+            var summonData = inputData.isMany ?
+                await GameData.gacha.BuyMany(inputData.gachaId) :
+                await GameData.gacha.Buy(inputData.gachaId);
+
+            MakeShardsAnimCtrl(inputData.isMany, inputData.tabType, summonData);
         }
 
         private void PortalButtonClick()
@@ -82,14 +80,7 @@ namespace Overlewd
             UIManager.MakeScreen<PortalScreen>().
                 SetData(new PortalScreenInData
                 {
-                    activeButtonId = inputData.tabType switch
-                    {
-                        AdminBRO.GachaItem.TabType_OverlordEquipment => PortalScreen.TabOverlordEquip,
-                        AdminBRO.GachaItem.TabType_CharactersEquipment => PortalScreen.TabBattleGirlsEquip,
-                        AdminBRO.GachaItem.TabType_Characters => PortalScreen.TabBattleGirls,
-                        AdminBRO.GachaItem.TabType_MatriachsShards => PortalScreen.TabShards,
-                        _ => PortalScreen.TabBattleGirls
-                    }
+                    activeGachaId = inputData?.gachaId
                 })
                 .RunShowScreenProcess();
         }
@@ -103,7 +94,24 @@ namespace Overlewd
 
             portalButton.gameObject.SetActive(true);
             summonButton.gameObject.SetActive(true);
-            UITools.DisableButton(summonButton);
+            PortalScreenHelper.MakeSummonButton(inputData.gachaData, inputData.isMany, summonButton, summonButtonText);
+        }
+
+        private void MakeShardsAnimCtrl(bool many, string gachaTabType, List<AdminBRO.GachaBuyResult> summonData)
+        {
+            if (many)
+            {
+                SoundManager.PlayOneShot(FMODEventPath.Gacha_x10_open);
+                animCtrl = NSSummoningScreen.GroupShardsAnimCtrl.GetInstance(shardsPos);
+            }
+            else
+            {
+                SoundManager.PlayOneShot(FMODEventPath.Gacha_x1_open);
+                animCtrl = NSSummoningScreen.SingleShardAnimCtrl.GetInstance(shardsPos);
+            }
+            animCtrl?.SetShardsData(SummoningScreenShardsData.FromSummonData(gachaTabType, summonData));
+
+            StartCoroutine(WaitShardsIsOpened());
         }
     }
 

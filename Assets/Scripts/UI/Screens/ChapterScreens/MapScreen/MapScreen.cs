@@ -47,6 +47,8 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            sidebarButton.gameObject.SetActive(GameData.progressFlags.showSidebarButton);
+
             if (GameData.ftue.mapChapter == null)
             {
                 GameData.ftue.mapChapter = GameData.devMode ?
@@ -172,6 +174,7 @@ namespace Overlewd
             {
                 stage.gameObject.SetActive(true);
                 waitStagesShowAnims = true;
+                stage.transform.SetAsLastSibling();
             }
             if (waitStagesShowAnims) await UniTask.Delay(2000);
 

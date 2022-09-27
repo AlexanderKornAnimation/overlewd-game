@@ -9,18 +9,18 @@ namespace Overlewd
 {
     namespace NSQuestOverlay
     {
-        public class SideQuestInfo : MonoBehaviour
+        public class SideQuestInfo : BaseQuestInfo
         {
             private TextMeshProUGUI title;
             private TextMeshProUGUI progress;
 
-            private Image[] rewardResource = new Image[6];
-            private TextMeshProUGUI[] rewardCount = new TextMeshProUGUI[6];
+            private Image[] rewards = new Image[6];
+            private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[6];
 
             private Button toQuestButton;
             private TextMeshProUGUI toQuestButtonText;
 
-            void Awake()
+            private void Awake()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -30,10 +30,12 @@ namespace Overlewd
                 progress = rewardWindow.Find("Progress").GetComponent<TextMeshProUGUI>();
 
                 var rewardGrid = rewardWindow.Find("RewardGrid");
+
                 for (int i = 0; i < 6; i++)
                 {
-                    rewardResource[i] = rewardGrid.Find($"Reward{i + 1}").GetComponent<Image>();
-                    rewardCount[i] = rewardResource[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                    rewards[i] = rewardGrid.Find($"Reward{i + 1}").GetComponent<Image>();
+                    rewardsAmount[i] = rewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                    rewards[i].gameObject.SetActive(false);
                 }
 
                 toQuestButton = rewardWindow.Find("ToQuestButton").GetComponent<Button>();
@@ -48,7 +50,19 @@ namespace Overlewd
 
             private void Customize()
             {
+                title.text = questData?.name;
+                progress.text = $"{questData?.progressCount} / {questData?.goalCount}";
+                
+                for (int i = 0; i < questData?.rewards?.Count; i++)
+                {
+                    var reward = rewards[i];
+                    var rewardAmount = rewardsAmount[i];
+                    var questItem = questData.rewards[i];
 
+                    reward.gameObject.SetActive(true);
+                    reward.sprite = ResourceManager.LoadSprite(questItem.icon);
+                    rewardAmount.text = questItem.amount.ToString();
+                }
             }
             
             private void ToQuestButtonClick()

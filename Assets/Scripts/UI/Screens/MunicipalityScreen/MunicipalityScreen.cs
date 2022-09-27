@@ -74,9 +74,9 @@ namespace Overlewd
         private Image activeBannerImage;
         private TextMeshProUGUI goldPerHour;
         private Button collectButton;
+        private Image timerProgress;
         private TextMeshProUGUI goldPerPeriod;
         private TextMeshProUGUI timer;
-        private int millisecondsLeft;
         
         void Awake()
         {
@@ -174,7 +174,8 @@ namespace Overlewd
             collectButton = banner.Find("CollectButton").Find("Button").GetComponent<Button>();
             collectButton.onClick.AddListener(CollectButtonClick);
             goldPerPeriod = collectButton.transform.Find("GoldPerPeriod").GetComponent<TextMeshProUGUI>();
-            timer = banner.Find("CollectButton").Find("Timer").GetComponent<TextMeshProUGUI>();
+            timerProgress = banner.Find("CollectButton").Find("Unactive").GetComponent<Image>();
+            timer = timerProgress.transform.Find("Timer").GetComponent<TextMeshProUGUI>();
         }
 
         private void Customize()
@@ -204,28 +205,37 @@ namespace Overlewd
             }
 
             CustomizeBanner();
-            if (millisecondsLeft > 0)
-            {
-                StartCoroutine(StartCollectTimer());
-            }
         }
 
         private void CustomizeBanner()
         {
-            var canCollect = millisecondsLeft <= 0;
+            var timeLeftMs = GameData.buildings.municipality.goldAccTimeLeftMs;
+
+            var canCollect = !(timeLeftMs > 0.0f);
             timer.gameObject.SetActive(!canCollect);
             unactiveBannerImage.gameObject.SetActive(!canCollect);
+            timerProgress.gameObject.SetActive(!canCollect);
             
-            timer.text = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
+            timer.text = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
+            timerProgress.fillAmount = timeLeftMs / (GameData.buildings.municipality.settings.periodInSeconds * 1000.0f);
             activeBannerImage.gameObject.SetActive(canCollect);
-            collectButton.gameObject.SetActive(canCollect); 
+            collectButton.interactable = canCollect;
             goldPerPeriod.gameObject.SetActive(canCollect);
+            goldPerHour.text = $"<size=38>{GameData.buildings.municipality.settings.currencyPerHour}</size>/h";
+            goldPerPeriod.text = $" {GameData.buildings.municipality.settings.moneyPerPeriod}";
         }
-        
+
+        public override async Task BeforeShowDataAsync()
+        {
+            await GameData.buildings.municipality.GetTimeLeft();
+
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
-            millisecondsLeft = await GameData.buildings.MunicipalityTimeLeft();
             Customize();
+            StartCoroutine(GameData.buildings.municipality.TimeLeftLocalUpd(CustomizeBanner));
 
             await Task.CompletedTask;
         }
@@ -236,7 +246,7 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    if (!GameData.buildings.castle.isBuilt)
+                    if (!GameData.buildings.castle.meta.isBuilt)
                     {
                         GameData.ftue.info.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
@@ -247,24 +257,13 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private IEnumerator StartCollectTimer()
-        {
-            var time = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
-            while (!String.IsNullOrEmpty(time))
-            {
-                timer.text = time;
-                Debug.Log(millisecondsLeft);
-                yield return new WaitForSeconds(1.0f);
-                millisecondsLeft-=1000;
-                time = TimeTools.TimeToString(new TimeSpan(0, 0, 0, 0, millisecondsLeft));
-            }
-
-            CustomizeBanner();
-        }
-
         private async void CollectButtonClick()
         {
-            await GameData.buildings.MunicipalityCollect();
+            await GameData.buildings.municipality.GoldCollect();
+            CustomizeBanner();
+
+            UIManager.MakeGetResourceNotif().Play("Gold collect",
+                $"+{GameData.buildings.municipality.settings.moneyPerPeriod}" + TMPSprite.Gold);
         }
         
         public override async Task BeforeShowAsync()
@@ -392,7 +391,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.municipality?.id
+                buildingId = GameData.buildings.municipality.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -402,7 +401,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.forge?.id
+                buildingId = GameData.buildings.forge.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -412,7 +411,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.magicGuild?.id
+                buildingId = GameData.buildings.magicGuild.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -422,7 +421,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.market?.id
+                buildingId = GameData.buildings.market.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -432,7 +431,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.portal?.id
+                buildingId = GameData.buildings.portal.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -442,7 +441,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.castle?.id,
+                buildingId = GameData.buildings.castle.meta?.id,
             }).RunShowPopupProcess();
         }
 
@@ -452,7 +451,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.laboratory?.id
+                buildingId = GameData.buildings.laboratory.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -462,7 +461,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.aerostat?.id
+                buildingId = GameData.buildings.aerostat.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -472,7 +471,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.catacombs?.id
+                buildingId = GameData.buildings.catacombs.meta?.id
             }).RunShowPopupProcess();
         }
 
@@ -482,7 +481,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().
                 SetData(new BuildingPopupInData
             {
-                buildingId = GameData.buildings.harem?.id
+                buildingId = GameData.buildings.harem.meta?.id
             }).RunShowPopupProcess();
         }
 

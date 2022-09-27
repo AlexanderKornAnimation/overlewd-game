@@ -103,7 +103,7 @@ namespace Overlewd
                     if (item.name == "defense_up" || item.name == "defense_down")
                         descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(defDOT*100)}%</size>");
                     else if (item.name == "regeneration" || item.name == "poison")
-                        descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(regPoisDOT)}</size>");
+                        descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Abs(Math.Round(regPoisDOT))}</size>");
                     else if (item.name == "bless")
                         descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(blessDOT)}</size>");
                     else if (item.name == "curse")

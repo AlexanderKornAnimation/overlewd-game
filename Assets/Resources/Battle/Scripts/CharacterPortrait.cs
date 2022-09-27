@@ -16,10 +16,8 @@ namespace Overlewd
         private Slider sliderHP;
         private Slider sliderMP;
         private Slider whiteSlider;
-        private Image BattleBackgroundIco;
+        private Image icon;
         private Image BattlePortraitIco;
-        [SerializeField]
-        private Sprite[] backRarityIcons;
 
         private StatusEffects status_bar;
 
@@ -36,9 +34,11 @@ namespace Overlewd
             button = GetComponent<Button>();
         }
 
-        public void InitUI()
+        public void InitUI(CharController charC)
         {
-            BattleBackgroundIco = GetComponent<Image>();
+            cc = charC;
+            //BattleBackgroundIco = GetComponent<Image>();
+            //icon = GetComponent<Image>();
             BattlePortraitIco = transform.Find("Portrait")?.GetComponent<Image>();
             sliderHP = transform.Find("sliderHP")?.GetComponent<Slider>();
             sliderMP = transform.Find("sliderMP")?.GetComponent<Slider>();
@@ -49,25 +49,6 @@ namespace Overlewd
             if (sliderHP) sliderHP.maxValue = maxHp;
             if (sliderMP) sliderMP.maxValue = maxMp;
 
-            if (BattleBackgroundIco != null && backRarityIcons.Length != 0)
-                switch (rarity)
-                {
-                    case AdminBRO.Rarity.Basic:
-                        BattleBackgroundIco.sprite = backRarityIcons[0];
-                        break;
-                    case AdminBRO.Rarity.Advanced:
-                        BattleBackgroundIco.sprite = backRarityIcons[1];
-                        break;
-                    case AdminBRO.Rarity.Epic:
-                        BattleBackgroundIco.sprite = backRarityIcons[2];
-                        break;
-                    case AdminBRO.Rarity.Heroic:
-                        BattleBackgroundIco.sprite = backRarityIcons[3];
-                        break;
-                    default:
-                        BattleBackgroundIco.sprite = backRarityIcons[0];
-                        break;
-                }
             if (cc && status_bar)
             {
                 status_bar.cc = cc;
@@ -78,12 +59,13 @@ namespace Overlewd
 
             if (bigPortrait)
             {
-                BattlePortraitIco.sprite = cc.characterRes.bigPortrait;
+                BattlePortraitIco.sprite = cc.bigIcon;
+                BattlePortraitIco.SetNativeSize();
                 transform.SetSiblingIndex(0);
             }
             else
             {
-                BattlePortraitIco.sprite = cc.characterRes.icoPortrait;
+                BattlePortraitIco.sprite = cc.icon;
                 if (transform.GetSiblingIndex() > cc.battleOrder)
                 {
                     transform.SetSiblingIndex(5);
@@ -97,7 +79,8 @@ namespace Overlewd
         {
             if (replaceCharacter)
                 cc = replaceCharacter;
-            BattlePortraitIco.sprite = cc.characterRes.bigPortrait;
+            if (cc.bigIcon != null) BattlePortraitIco.sprite = cc.bigIcon;
+            if (bigPortrait) BattlePortraitIco.SetNativeSize();
             if (sliderHP) sliderHP.maxValue = maxHp;
             sliderMP?.gameObject.SetActive(cc.isOverlord);
             status_bar.cc = cc;

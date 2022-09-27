@@ -214,6 +214,8 @@ namespace Overlewd
             fastBattleText.text =
                 $"Give an order to hunt\nfor <size=40>{TMPSprite.Energy}</size> {fastBattleCost.energyCost} and {TMPSprite.Scroll} {fastBattleCost.scrollCost}";
             CheckButtonState();
+
+            CustomizeBuff();
         }
 
         public override async Task BeforeShowDataAsync()
@@ -401,6 +403,27 @@ namespace Overlewd
         private void RefreshEnergy()
         {
             userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
+        }
+
+        private void CustomizeBuff()
+        {
+            var iconUlvi = buffRect.Find("IconUlvi");
+            var iconAdriel = buffRect.Find("IconAdriel");
+            var iconIngie = buffRect.Find("IconIngie");
+            var iconLili = buffRect.Find("IconLili");
+            var iconFaye = buffRect.Find("IconFaye");
+            var descr = buffRect.Find("Description").GetComponent<TextMeshProUGUI>();
+            var title = buffRect.Find("Title").GetComponent<TextMeshProUGUI>();
+            var icon = buffRect.Find("Icon").GetComponent<Image>();
+
+            iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
+            iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
+            iconIngie.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isIngie ?? false);
+            iconLili.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isLili ?? false);
+            iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
+            icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
+            title.text = GameData.matriarchs.activeBuff?.name;
+            descr.text = GameData.matriarchs.activeBuff?.description;
         }
     }
 

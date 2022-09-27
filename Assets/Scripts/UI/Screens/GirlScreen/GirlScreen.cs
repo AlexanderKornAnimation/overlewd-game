@@ -38,16 +38,20 @@ namespace Overlewd
         private Image rewardTier3;
         private TextMeshProUGUI receivedTier3;
 
+        
         private Transform buffInfo;
-        private TextMeshProUGUI buffPower;
-        private TextMeshProUGUI buffType;
-
+        private TextMeshProUGUI buffTitle;
+        private TextMeshProUGUI buffDescription;
+        private TextMeshProUGUI buffHint;
+        private GameObject buffActive;
+        private Image buffIcon;
+        
         private Button bannerUlviButton;
         private Button bannerAdrielButton;
         private Button bannerIngieButton;
         private Button bannerFayeButton;
         private Button bannerLiliButton;
-        private GameObject bannerNotification; 
+        private GameObject bannerNotification;
 
         private Button sexButton;
         private Button dialogButton;
@@ -77,7 +81,7 @@ namespace Overlewd
             liliZodiac = girlInfo.Find("ZodiacInfo").Find("LiliZodiacIcon");
             zodiacName = girlInfo.Find("ZodiacInfo").Find("ZodiacName").GetComponent<TextMeshProUGUI>();
             birthday = girlInfo.Find("BirthdayInfo").Find("BirthdayDate").GetComponent<TextMeshProUGUI>();
-            girlName = girlInfo.Find("NameBack").Find("Name").GetComponent<TextMeshProUGUI>();
+            girlName = girlInfo.Find("Name").GetComponent<TextMeshProUGUI>();
 
             girlUlviImage = canvas.Find("GirlUlvi");
             girlAdrielImage = canvas.Find("GirlAdriel");
@@ -97,9 +101,14 @@ namespace Overlewd
             rewardTier3 = progressBar.Find("RewardTier3").GetComponent<Image>();
             receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<TextMeshProUGUI>();
 
+           
             buffInfo = progressBar.Find("BuffInfo");
-            buffPower = buffInfo.Find("Power").GetComponent<TextMeshProUGUI>();
-            buffType = buffInfo.Find("Type").GetComponent<TextMeshProUGUI>();
+            buffTitle = buffInfo.Find("Title").GetComponent<TextMeshProUGUI>();
+            buffDescription = buffInfo.Find("Description").GetComponent<TextMeshProUGUI>();
+            buffHint = buffInfo.Find("Hint").Find("Text").GetComponent<TextMeshProUGUI>();
+            buffActive = buffInfo.Find("BuffActive").gameObject;
+            buffIcon = buffInfo.Find("Icon").GetComponent<Image>();
+            
 
             bannerUlviButton = canvas.Find("Banner").Find("BannerButtonUlvi").GetComponent<Button>();
             bannerAdrielButton = canvas.Find("Banner").Find("BannerButtonAdriel").GetComponent<Button>();
@@ -165,6 +174,7 @@ namespace Overlewd
             ingieZodiac.gameObject.SetActive(girlData.isIngie);
             fayeZodiac.gameObject.SetActive(girlData.isFaye);
             liliZodiac.gameObject.SetActive(girlData.isLili);
+            
             zodiacName.text = girlData.paramZodiac;
             birthday.text = girlData.paramAge.ToString();
             girlName.text = girlData.name;
@@ -204,6 +214,9 @@ namespace Overlewd
             {
                 sexCooldown.gameObject.SetActive(false);
             }
+
+            CustomizeBuffInfo();
+
             await Task.CompletedTask;
         }
 
@@ -319,6 +332,7 @@ namespace Overlewd
                 time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             }
             UnlockSexButton();
+            CustomizeBuffInfo();
         }
 
         private async void UnlockSexButton()
@@ -326,6 +340,18 @@ namespace Overlewd
             await GameData.matriarchs.Get();
             sexCooldown.gameObject.SetActive(false);
             UITools.DisableButton(sexButton, false);
+        }
+
+        private void CustomizeBuffInfo()
+        {
+            var girlData = inputData?.girlData;
+
+            var buffIsActive = girlData?.buff?.active ?? false;
+            buffTitle.gameObject.SetActive(buffIsActive);
+            buffDescription.text = girlData?.buff?.description;
+            buffHint.text = girlData?.buff?.postDescription;
+            buffActive.SetActive(buffIsActive);
+            buffIcon.sprite = ResourceManager.LoadSprite(girlData?.buff?.icon);
         }
     }
 

@@ -10,51 +10,41 @@ public class DamagePopup : MonoBehaviour
 
     [SerializeField] private AnimationCurve curve;
     [SerializeField] private Color green, yellow, white, blue, red, purple;
+    private Animator ani;
 
-    public float lifetime = 1.5f;
+    public float lifetime = .75f;
 
     private void Awake()
     {
-        text = GetComponent<TextMeshProUGUI>();
+        text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         rt = GetComponent<RectTransform>();
+        ani = GetComponent<Animator>();
     }
 
     public void Setup(string msg, bool invertXScale, float delay = 0f, string textColor = null, int yOffset = 0)
     {
-        switch (textColor)
+        if (text)
         {
-            case "green":
-                text.color = green;
-                break;
-            case "yellow":
-                text.color = yellow;
-                break;
-            case "white":
-                text.color = white;
-                break;
-            case "blue":
-                text.color = blue;
-                break;
-            case "purple":
-                text.color = purple;
-                break;
-            default:
-                text.color = red;
-                break;
+            text.color = textColor switch
+            {
+                "green" => green,
+                "yellow" => yellow,
+                "white" => white,
+                "blue" => blue,
+                "purple" => purple,
+                _ => red
+            };
+            text.SetText(msg);
         }
-        text.alpha = 0f;
         if (invertXScale)
             rt.localScale = new Vector3(-1, 1, 1);
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.anchoredPosition.y + yOffset);
-        text.SetText(msg);
         StartCoroutine(RunAnimation(delay, yOffset));
     }
     IEnumerator RunAnimation(float startDelay, int yOffset)
     {
         yield return new WaitForSeconds(startDelay);
-        text.alpha = 1f;
-        rt.DOMoveY(800 + yOffset, 0.33f);
-        rt.DOScaleY(0, lifetime).SetEase(curve);
+        ani?.Play("Base Layer.BattlePopupAnimation");
         yield return new WaitForSeconds(lifetime);
         Destroy(gameObject);
     }

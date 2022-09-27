@@ -174,6 +174,7 @@ namespace Overlewd
             foreach (var stage in newStages)
             {
                 stage.gameObject.SetActive(true);
+                stage.transform.SetAsLastSibling();
             }
             
             await Task.CompletedTask;

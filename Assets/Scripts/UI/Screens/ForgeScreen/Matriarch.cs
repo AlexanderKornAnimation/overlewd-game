@@ -11,7 +11,8 @@ namespace Overlewd
     {
         public class Matriarch : MonoBehaviour
         {
-            private Button button;
+            private Button selectButton;
+            private Button confirmButton;
             private GameObject notActive;
             private GameObject isTarget;
             private GameObject isConsume;
@@ -26,17 +27,19 @@ namespace Overlewd
 
             private void Awake()
             {
-                button = transform.Find("ButtonActive").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
-                notActive = transform.Find("NotActive")?.gameObject;
-                isTarget = button.transform.Find("IsTarget").gameObject;
-                isConsume = button.transform.Find("IsConsume").gameObject;
+                selectButton = transform.Find("ButtonActive").GetComponent<Button>();
+                selectButton.onClick.AddListener(ButtonClick);
+                notActive = transform.Find("NotActive").gameObject;
+                isTarget = selectButton.transform.Find("IsTarget").gameObject;
+                isConsume = selectButton.transform.Find("IsConsume").gameObject;
+                confirmButton = transform.Find("ConfirmButton").GetComponent<Button>();
+                confirmButton.onClick.AddListener(ConfirmButtonClick);
 
-                basicShardAmount = button.transform.Find("BasicShard").Find("Count").GetComponent<TextMeshProUGUI>();
+                basicShardAmount = selectButton.transform.Find("BasicShard").Find("Count").GetComponent<TextMeshProUGUI>();
                 advancedShardAmount =
-                    button.transform.Find("AdvancedShard").Find("Count").GetComponent<TextMeshProUGUI>();
-                epicShardAmount = button.transform.Find("EpicShard").Find("Count").GetComponent<TextMeshProUGUI>();
-                heroicShardAmount = button.transform.Find("HeroicShard").Find("Count").GetComponent<TextMeshProUGUI>();
+                    selectButton.transform.Find("AdvancedShard").Find("Count").GetComponent<TextMeshProUGUI>();
+                epicShardAmount = selectButton.transform.Find("EpicShard").Find("Count").GetComponent<TextMeshProUGUI>();
+                heroicShardAmount = selectButton.transform.Find("HeroicShard").Find("Count").GetComponent<TextMeshProUGUI>();
             }
 
             private void Start()
@@ -44,6 +47,11 @@ namespace Overlewd
                 Customize();
             }
 
+            private void ConfirmButtonClick()
+            {
+                
+            }
+            
             private void ButtonClick()
             {
                 
@@ -53,8 +61,8 @@ namespace Overlewd
             {
                 isTarget.SetActive(false);
                 isConsume.SetActive(false);
-                button.gameObject.SetActive(matriarchData.isOpen);
-                notActive?.SetActive(matriarchData.isClose);
+                selectButton.gameObject.SetActive(matriarchData.isOpen);
+                notActive?.SetActive(!matriarchData.isOpen);
             }
         }
     }

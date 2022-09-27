@@ -39,6 +39,7 @@ namespace Overlewd
     public static class GameData
     {
         public static bool devMode { get; set; } = false;
+        public static ProgressFlags progressFlags { get; } = new ProgressFlags();
         public static Quests quests { get; } = new Quests();
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
@@ -64,6 +65,15 @@ namespace Overlewd
         {
             await Task.CompletedTask;
         }
+    }
+
+    //progress
+    public class ProgressFlags
+    {
+        public bool showSidebarButton =>
+            GameData.devMode ? true : GameData.buildings.castle.meta.isBuilt;
+        public bool lockBuff =>
+            GameData.devMode ? false : !GameData.buildings.castle.meta.isBuilt;
     }
 
     //ftue
@@ -133,64 +143,36 @@ namespace Overlewd
     public class Buildings : BaseGameMeta
     {
         public List<AdminBRO.Building> buildings { get; private set; }
-        public List<AdminBRO.MagicGuildSkill> magicGuildSkills { get; private set; }
-        public AdminBRO.ForgePrice forgePrices { get; private set; }
+        public Municipality municipality { get; private set; } = new Municipality();
+        public MagicGuild magicGuild { get; private set; } = new MagicGuild();
+        public Forge forge { get; private set; } = new Forge();
+        public Castle castle { get; private set; } = new Castle();
+        public Catacombs catacombs { get; private set; } = new Catacombs();
+        public Laboratory laboratory { get; private set; } = new Laboratory();
+        public Aerostat aerostat { get; private set; } = new Aerostat();
+        public Harem harem { get; private set; } = new Harem();
+        public Market market { get; private set; } = new Market();
+        public Portal portal { get; private set; } = new Portal();
 
         public override async Task Get()
         {
             buildings = await AdminBRO.buildingsAsync();
-            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
-            forgePrices = await AdminBRO.forgePrices();
+            magicGuild.skills = await AdminBRO.magicGuildSkillsAsync();
+            forge.prices = await AdminBRO.forgePrices();
+            municipality.settings = await AdminBRO.municipalitySettingsAsync();
         }
         public AdminBRO.Building GetBuildingById(int? id) =>
             buildings.Find(b => b.id == id);
         public AdminBRO.Building GetBuildingByKey(string key) =>
             buildings.Find(b => b.key == key);
-        public AdminBRO.Building castle =>
-            GetBuildingByKey(AdminBRO.Building.Key_Castle);
-        public AdminBRO.Building catacombs =>
-            GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
-        public AdminBRO.Building laboratory =>
-            GetBuildingByKey(AdminBRO.Building.Key_Laboratory);
-        public AdminBRO.Building aerostat =>
-            GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
-        public AdminBRO.Building forge =>
-            GetBuildingByKey(AdminBRO.Building.Key_Forge);
-        public AdminBRO.Building harem =>
-            GetBuildingByKey(AdminBRO.Building.Key_Harem);
-        public AdminBRO.Building magicGuild =>
-            GetBuildingByKey(AdminBRO.Building.Key_MagicGuild);
-        public AdminBRO.Building market =>
-            GetBuildingByKey(AdminBRO.Building.Key_Market);
-        public AdminBRO.Building municipality =>
-            GetBuildingByKey(AdminBRO.Building.Key_Municipality);
-        public AdminBRO.Building portal =>
-            GetBuildingByKey(AdminBRO.Building.Key_Portal);
 
-        public AdminBRO.MagicGuildSkill GetMagicGuildSkillByType(string type) =>
-            magicGuildSkills.Find(s => s.type == type);
-
-        public AdminBRO.MagicGuildSkill GetMagicGuildSkillById(int id) =>
-            magicGuildSkills.Find(s => s.current.id == id);
-
-        public AdminBRO.MagicGuildSkill magicGuild_activeSkill =>
-            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_ActiveSkill);
-
-        public AdminBRO.MagicGuildSkill magicGuild_ultimateSkill =>
-            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_UltimateSkill);
-
-        public AdminBRO.MagicGuildSkill magicGuild_passiveSkill1 =>
-            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill1);
-
-        public AdminBRO.MagicGuildSkill magicGuild_PassiveSkill2 =>
-            GetMagicGuildSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill2);
-
-        //Municipality
         public async Task Build(int buildingId)
         {
             await AdminBRO.buildingBuildAsync(buildingId);
             await Get();
             await GameData.player.Get();
+            municipality.settings = await AdminBRO.municipalitySettingsAsync();
+
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
@@ -205,6 +187,8 @@ namespace Overlewd
             await AdminBRO.buildingBuildCrystalsAsync(buildingId);
             await Get();
             await GameData.player.Get();
+            municipality.settings = await AdminBRO.municipalitySettingsAsync();
+
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
@@ -214,56 +198,153 @@ namespace Overlewd
             await GameData.quests.Get();
         }
 
-        public async Task<int> MunicipalityTimeLeft()
+        public class Municipality
         {
-            var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
-            return timeLeft.timeLeft;
-        }
+            public AdminBRO.MunicipalitySettings settings { get; set; }
 
-        public async Task MunicipalityCollect()
-        {
-            await AdminBRO.municipalityCollectAsync();
-        }
+            private DateTime lastTimeLeftGoldAccUpd;
+            public float goldAccTimeLeftMs { get; set; }
 
-        //MagicGuild
-        public async Task MagicGuildSkillLvlUp(string skillType)
-        {
-            await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
-            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
-            await GameData.player.Get();
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Municipality);
 
-            UIManager.ThrowGameDataEvent(new GameDataEvent
+            public async Task GetTimeLeft()
             {
-                type = GameDataEvent.Type.MagicGuildSpellLvlUp
-            });
-        }
+                var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
+                goldAccTimeLeftMs = timeLeft?.timeLeft ?? 0.0f;
+                lastTimeLeftGoldAccUpd = DateTime.Now;
+                await Task.CompletedTask;
+            }
 
-        public async Task MagicGuildSkillLvlUpCrystal(string skillType)
-        {
-            await AdminBRO.magicGuildSkillLvlUpCrystalAsync(skillType);
-            magicGuildSkills = await AdminBRO.magicGuildSkillsAsync();
-            await GameData.player.Get();
-
-            UIManager.ThrowGameDataEvent(new GameDataEvent
+            public async Task GoldCollect()
             {
-                type = GameDataEvent.Type.MagicGuildSpellLvlUp
-            });
+                await AdminBRO.municipalityCollectAsync();
+                await GameData.player.Get();
+                await GetTimeLeft();
+            }
+
+            public IEnumerator TimeLeftLocalUpd(Action action)
+            {
+                while (true)
+                {
+                    var time = DateTime.Now;
+                    var dt = time - lastTimeLeftGoldAccUpd;
+                    lastTimeLeftGoldAccUpd = time;
+
+                    goldAccTimeLeftMs -= (float)dt.TotalMilliseconds;
+                    goldAccTimeLeftMs = goldAccTimeLeftMs > 0.0f ? goldAccTimeLeftMs : 0.0f;
+
+                    action?.Invoke();
+                    yield return new WaitForSeconds(1.0f);
+                }
+            }
         }
 
-        //Forge
-        public async Task ForgeMergeEquipment(string mergeType, int[] mergeIds)
+        public class MagicGuild
         {
-            await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
+            public List<AdminBRO.MagicGuildSkill> skills { get; set; }
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_MagicGuild);
+            public AdminBRO.MagicGuildSkill GetSkillByType(string type) =>
+                skills.Find(s => s.type == type);
+            public AdminBRO.MagicGuildSkill GetSkillById(int id) =>
+                skills.Find(s => s.current.id == id);
+            public AdminBRO.MagicGuildSkill activeSkill =>
+                GetSkillByType(AdminBRO.MagicGuildSkill.Type_ActiveSkill);
+            public AdminBRO.MagicGuildSkill ultimateSkill =>
+                GetSkillByType(AdminBRO.MagicGuildSkill.Type_UltimateSkill);
+            public AdminBRO.MagicGuildSkill passiveSkill1 =>
+                GetSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill1);
+            public AdminBRO.MagicGuildSkill PassiveSkill2 =>
+                GetSkillByType(AdminBRO.MagicGuildSkill.Type_PassiveSkill2);
+
+            public async Task SkillLvlUp(string skillType)
+            {
+                await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
+                skills = await AdminBRO.magicGuildSkillsAsync();
+                await GameData.player.Get();
+
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    type = GameDataEvent.Type.MagicGuildSpellLvlUp
+                });
+            }
+
+            public async Task SkillLvlUpCrystal(string skillType)
+            {
+                await AdminBRO.magicGuildSkillLvlUpCrystalAsync(skillType);
+                skills = await AdminBRO.magicGuildSkillsAsync();
+                await GameData.player.Get();
+
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    type = GameDataEvent.Type.MagicGuildSpellLvlUp
+                });
+            }
         }
 
-        public async Task ForgeMergeShard(int matriarchId, string rarity, int amount)
+        public class Forge
         {
-            await AdminBRO.forgeMergeShard(matriarchId, rarity, amount);
+            public AdminBRO.ForgePrice prices { get; set; }
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Forge);
+
+            public async Task MergeEquipment(string mergeType, int[] mergeIds)
+            {
+                await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
+            }
+
+            public async Task MergeShard(int matriarchId, string rarity, int amount)
+            {
+                await AdminBRO.forgeMergeShard(matriarchId, rarity, amount);
+            }
+
+            public async Task ExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
+            {
+                await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity, amount);
+            }
         }
 
-        public async Task ForgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
+        public class Castle
         {
-            await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity, amount);
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Castle);
+        }
+
+        public class Catacombs
+        {
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
+        }
+
+        public class Laboratory
+        {
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Laboratory);
+        }
+
+        public class Aerostat
+        {
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
+        }
+
+        public class Harem
+        {
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Harem);
+        }
+
+        public class Market
+        {
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Market);
+        }
+
+        public class Portal
+        {
+            public AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Portal);
         }
     }
 
@@ -442,6 +523,9 @@ namespace Overlewd
             {
                 float potency = 0;
 
+                if (overlord.potency.HasValue)
+                    potency += overlord.potency.Value;
+                
                 foreach (var character in myTeamCharacters)
                 {
                     if (character.potency.HasValue)
@@ -651,6 +735,16 @@ namespace Overlewd
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
 
+        public List<AdminBRO.QuestItem> ftueQuests =>
+            quests.FindAll(q => q.isFTUE);
+        public AdminBRO.QuestItem ftueMainQuest =>
+            quests.Find(q => q.isFTUEMain);
+        public List<AdminBRO.QuestItem> ftueMatriarchQuests =>
+            quests.FindAll(q => q.isFTUEMatriarch);
+        public List<AdminBRO.QuestItem> ftueSideQuests =>
+            quests.FindAll(q => q.isFTUESide);
+
+
         public async Task ClaimReward(int? id)
         {
             if (id.HasValue)
@@ -855,6 +949,8 @@ namespace Overlewd
 
         public AdminBRO.Sound GetById(int? id) =>
             sounds.Find(s => s.id == id);
+        public AdminBRO.Sound GetByTitle(string title) =>
+            sounds.Find(s => s.title == title);
     }
 
     //matriarchs
@@ -863,12 +959,14 @@ namespace Overlewd
         public List<AdminBRO.MatriarchItem> matriarchs { get; private set; } = new List<AdminBRO.MatriarchItem>();
         public List<AdminBRO.MemoryItem> memories { get; private set; } = new List<AdminBRO.MemoryItem>();
         public List<AdminBRO.MemoryShardItem> memoryShards { get; private set; } = new List<AdminBRO.MemoryShardItem>();
+        public List<AdminBRO.BuffItem> buffs { get; private set; } = new List<AdminBRO.BuffItem>();
 
         public override async Task Get()
         {
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
             memoryShards = await AdminBRO.memoryShardsAsync();
+            buffs = await AdminBRO.buffsAsync();
         }
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>
@@ -879,27 +977,28 @@ namespace Overlewd
             memoryShards.Find(ms => ms.matriarchId == matriarchId && ms.rarity == rarity);
         public AdminBRO.MemoryShardItem GetShardById(int? id, string rarity) =>
             memoryShards.Find(ms => ms.id == id && ms.rarity == rarity);
+        public AdminBRO.BuffItem GetBuffById(int? id) =>
+            buffs.Find(b => b.id == id);
+        public AdminBRO.BuffItem GetBuffByMatriarchId(int? id) =>
+            buffs.Find(b => b.matriarchId == id);
 
         public AdminBRO.MatriarchItem Ulvi =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ulvi);
-        public bool UlviIsOpen => Ulvi?.isOpen ?? false;
         public AdminBRO.MatriarchItem Adriel =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Adriel);
-        public bool AdrielIsOpen => Adriel?.isOpen ?? false;
         public AdminBRO.MatriarchItem Ingie =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ingie);
-        public bool IngieIsOpen => Ingie?.isOpen ?? false;
         public AdminBRO.MatriarchItem Faye =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Faye);
-        public bool FayeIsOpen => Faye?.isOpen ?? false;
         public AdminBRO.MatriarchItem Lili =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Lili);
-        public bool LiliIsOpen => Lili?.isOpen ?? false;
-
 
 
         public AdminBRO.MemoryItem GetMemoryById(int? id) =>
             memories.Find(m => m.id == id);
+
+        public AdminBRO.BuffItem activeBuff =>
+            buffs.Find(b => b.active);
 
         public async Task memoryBuy(int? id)
         {
@@ -916,6 +1015,7 @@ namespace Overlewd
             {
                 await AdminBRO.seduceMatriarchAsync(id.Value);
                 matriarchs = await AdminBRO.matriarchsAsync();
+                buffs = await AdminBRO.buffsAsync();
             }
         }
     }

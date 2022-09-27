@@ -461,9 +461,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 843960724}
     m_Modifications:
+    - target: {fileID: 1604665681454201621, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1604843056431147578, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
       propertyPath: m_Name
       value: SingleShardAnimation
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328764218725692431, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3959212926468188000, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
       propertyPath: m_Pivot.x
@@ -548,6 +556,14 @@ PrefabInstance:
     - target: {fileID: 3959212926468188000, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5009942938887353788, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8995651633878609339, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fdd8fbc6b6f9e440b543b0f9f5fa48f, type: 3}

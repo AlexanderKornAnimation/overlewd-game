@@ -819,6 +819,11 @@ namespace Overlewd
             HideNotificationProcess();
         }
 
+        public static GetResourceNotif MakeGetResourceNotif()
+        {
+            return GetResourceNotif.GetInstance(uiNotificationLayerGO.transform);
+        }
+
         //Dialog Layer
         public static void ShowDialogBox(string title, string message, Action yes, Action no = null)
         {

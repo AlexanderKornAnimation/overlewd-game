@@ -7,7 +7,6 @@ namespace Overlewd
 {
 	public class BaseBattleScreen : BaseFullScreenParent<BaseBattleScreenInData>
 	{
-		protected Button backButton;
 		protected Button skipButton;
 		protected BattleManager bm;
 		protected BattleManagerOutData endBattleData;
@@ -20,8 +19,6 @@ namespace Overlewd
 			bm = screenInst.GetComponent<BattleManager>();
 
 			var canvas = screenInst.transform.Find("Canvas");
-			backButton = canvas.Find("BackButton").GetComponent<Button>();
-			backButton.onClick.AddListener(BackButtonClick);
 
 			skipButton = canvas.Find("SkipButton").GetComponent<Button>();
 			skipButton.onClick.AddListener(SkipButtonClick);
@@ -31,12 +28,6 @@ namespace Overlewd
         public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
-        }
-
-        protected virtual void BackButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<MapScreen>();
         }
 
 		private void SkipButtonClick()
@@ -50,14 +41,12 @@ namespace Overlewd
 
 		public virtual void StartBattle()
         {
-			backButton.gameObject.SetActive(false);
 			skipButton.gameObject.SetActive(true);
 		}
 
 		public virtual void EndBattle(BattleManagerOutData data)
         {
 			endBattleData = data;
-			backButton.gameObject.SetActive(true);
 			skipButton.gameObject.SetActive(false);
 		}
 
@@ -141,10 +130,7 @@ namespace Overlewd
 				inst.myTeam.Add(overlordCh);
             }
 
-			if (battleData.isTypeBattle)
-			{
-				inst.myTeam.AddRange(GameData.characters.myTeamCharacters);
-			}
+			inst.myTeam.AddRange(GameData.characters.myTeamCharacters);
 
 			//enemy teams
 			foreach (var phase in battleData.battlePhases)

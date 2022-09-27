@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 namespace Overlewd
 {
@@ -12,6 +13,7 @@ namespace Overlewd
     {
         protected RectTransform backRect;
         protected Button mainQuestButton;
+        protected TextMeshProUGUI mainQuestButtonTitle;
         protected Transform content;
         protected GameObject scrollMarker;
 
@@ -23,6 +25,7 @@ namespace Overlewd
             var sideQuests = background.Find("SideQuests");
 
             mainQuestButton = background.Find("MainQuest").GetComponent<Button>();
+            mainQuestButtonTitle = mainQuestButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             scrollMarker = background.Find("ScrollMarker").gameObject;
             content = sideQuests.Find("ScrollView").Find("Viewport").Find("Content");
 
@@ -37,15 +40,26 @@ namespace Overlewd
         protected virtual void Customize()
         {
             var questNum = 0;
-            foreach (var questData in GameData.quests.quests.Where(q => !q.eventId.HasValue))
+            var quests =
+                GameData.quests.quests.Where(q => q.isFTUE && q.ftueChapterId == GameData.ftue.activeChapter.id);
+            
+            foreach (var questData in quests)
             {
-                NSQuestWidget.BaseQuestButton questButton = (questNum % 2) switch
+                if (questData.isFTUEMain)
                 {
-                    0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
-                    1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
-                    _ => null
-                };
-                questButton.questId = questData.id;
+                    mainQuestButtonTitle.text = questData.name;
+                }
+                else
+                {
+                    NSQuestWidget.BaseQuestButton questButton = (questNum % 2) switch
+                    {
+                        0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
+                        1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
+                        _ => null
+                    };
+                    questButton.questId = questData.id;
+                }
+
                 questNum++;
             }
         }
@@ -53,7 +67,13 @@ namespace Overlewd
         protected virtual void MainQuestButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowOverlay<QuestOverlay>();
+            var mainQuest = GameData.quests.ftueMainQuest;
+            
+            UIManager.MakeOverlay<QuestOverlay>().
+                SetData(new QuestOverlayInData
+                {
+                    questId = mainQuest?.id
+                }).RunShowOverlayProcess();
         }
 
         public void Show()

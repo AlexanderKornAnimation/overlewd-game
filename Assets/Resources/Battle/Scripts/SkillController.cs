@@ -2,19 +2,18 @@ using DG.Tweening;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Overlewd
 {
     public class SkillController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        public Skill oldSkill;
         public AdminBRO.CharacterSkill skill;
         public bool isHeal => skill.actionType == "heal";
-        private GameObject vfx => oldSkill.vfx;
-        private string sfx => oldSkill.sfx;
+        //private AdminBRO.Animation vfx => skill.vfxAnimation;
+        //private AdminBRO.Sound sfx => skill.sfxAttack1;
         private CharDescription charDescription => FindObjectOfType<CharDescription>();
 
         public Image image;
@@ -26,7 +25,9 @@ namespace Overlewd
         private TextMeshProUGUI textCount;
         public UnityEvent OnClickAction = new UnityEvent();
 
-        public bool potion => oldSkill.potion;
+        public Sprite standartIco, overlordIco;
+
+        public bool potion;
         public int potionAmount;
 
         [HideInInspector]
@@ -63,9 +64,6 @@ namespace Overlewd
         }
         private void StatInit()
         {
-            image.sprite = oldSkill.battleIco;
-            image.SetNativeSize();
-
             if (slider != null)
             {
                 cooldown = Mathf.RoundToInt(skill.effectCooldownDuration);
@@ -74,17 +72,24 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (oldSkill.potion)
+                if (potion)
                     textCount.text = $"{potionAmount}";
                 else
                     textCount.text = $"{cooldownCount}";
         }
 
-        public void ReplaceSkill(AdminBRO.CharacterSkill sk, Skill skillSkin)
+        public void ReplaceSkill(AdminBRO.CharacterSkill sk, bool isOverlord = false)
         {
             skill = sk;
-            oldSkill = skillSkin;
-            if (!potion) SetEffectIco();
+            if (!potion)
+            {
+                if (isOverlord)
+                    image.sprite = overlordIco;
+                else
+                    image.sprite = standartIco;
+                image.SetNativeSize();
+                SetEffectIco();
+            }
             StatInit();
         }
 
@@ -96,7 +101,7 @@ namespace Overlewd
                 slider.value = cooldownCount;
             }
             if (textCount != null)
-                if (oldSkill.potion) //old
+                if (potion)
                     textCount.text = $"{potionAmount}";
                 else
                     textCount.text = $"{cooldownCount}";
@@ -116,7 +121,7 @@ namespace Overlewd
 
         public void InstVFX(Transform target)
         {
-            if (vfx) Instantiate(vfx, target);
+            return;//if (vfx) SpineWidget.Instantiate(vfx, target);
         }
 
         public void Disable()

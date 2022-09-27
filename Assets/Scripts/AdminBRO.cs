@@ -514,14 +514,14 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => GameData.devMode ? true : (isActive || isComplete);
-            
+
             [JsonProperty(Required = Required.Default)]
             public EventChapter nextChapterData =>
                 GameData.events.GetChapterById(nextChapterId);
 
             public void SetAsMapChapter() =>
                 GameData.events.mapChapter = this;
-            
+
             public AdminBRO.EventStageItem GetStageById(int? id) =>
                 GameData.events.GetStageById(id);
 
@@ -575,13 +575,13 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public EventChapter firstChapter =>
                 chaptersData.FirstOrDefault();
-            
+
             public EventChapter GetChapterById(int? id) =>
                 GameData.events.GetChapterById(id);
 
             public EventItem SetAsMapEvent() =>
                 GameData.events.mapEventData = this;
-            
+
             [JsonProperty(Required = Required.Default)]
             public List<EventMarketItem> marketsData =>
                 markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
@@ -738,11 +738,31 @@ namespace Overlewd
             public int progressCount;
             public int? eventId;
             public int? ftueChapterId;
+            public string ftueQuestType;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
+
+            public const string QuestType_Main = "main";
+            public const string QuestType_Side = "side";
+            public const string QuestType_Matriarch = "matriarch";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFTUE => ftueChapterId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEvent => eventId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFTUEMain => ftueQuestType == QuestType_Main;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFTUESide => ftueQuestType == QuestType_Side;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isFTUEMatriarch => ftueQuestType == QuestType_Matriarch;
 
             [JsonProperty(Required = Required.Default)]
             public bool hasDescription => !String.IsNullOrEmpty(description);
@@ -834,7 +854,7 @@ namespace Overlewd
             public const string CharacterName_Ulvi = "Ulvi";
             public const string CharacterName_Faye = "Faye";
             public const string CharacterName_Adriel = "Adriel";
-            public const string CharacterName_Dragon= "Dragon";
+            public const string CharacterName_Dragon = "Dragon";
             public const string CharacterName_Inge = "Inge";
             public const string CharacterName_Lili = "Lili";
             public const string CharacterName_Pisha = "Pisha";
@@ -999,6 +1019,7 @@ namespace Overlewd
             public string heroicIcon;
             public string teamEditSlotPersIcon;
             public string fullScreenPersIcon;
+            public string battlePortraitIcon;
             public string name;
             public string characterClass;
             public int? animationId;
@@ -1024,6 +1045,11 @@ namespace Overlewd
             public string key;
             public List<PriceItem> levelUpPrice;
             public List<PriceItem> mergePrice;
+            public int? sfxAttack1Id;
+            public int? sfxAttack2Id;
+            public int? sfxDefeatId;
+            public int? sfxDefenseId;
+            public int? sfxIdleId;
 
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
@@ -1078,11 +1104,10 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool isLvlMax => maxLvl == level;
 
-            public bool CanSkillLvlUp(CharacterSkill skill)
-            {
-                var isMax = level == skill.level;
-                return !isMax && GameData.player.CanBuy(skill.levelUpPrice);
-            }
+            public bool CanSkillLvlUpByPrice(CharacterSkill skill) =>
+                GameData.player.CanBuy(skill.levelUpPrice);
+
+            public bool CanSkillLvlUpByLevel(CharacterSkill skill) => level > skill.level;
 
             [JsonProperty(Required = Required.Default)]
             public int maxLvl => rarity switch
@@ -1102,6 +1127,24 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public Animation animationData => GameData.animations.GetById(animationId);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool inTeam => teamPosition == TeamPosition_Slot1 || teamPosition == TeamPosition_Slot2;
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxAttack2 => GameData.sounds.GetById(sfxAttack2Id);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxDefeat => GameData.sounds.GetById(sfxDefeatId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxDefense => GameData.sounds.GetById(sfxDefenseId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxIdle => GameData.sounds.GetById(sfxIdleId);
         }
 
         [Serializable]
@@ -1124,10 +1167,27 @@ namespace Overlewd
             public float amount;
             public string trigger;
             public float effectAmount;
+            public int? vfxAnimationId;
+            public int? vfxAOEAnimationId;
+            public int? sfxAttack1Id;
+            public int? sfxAttack2Id;
+            public bool shakeScreen;
 
             public const string Type_Passive = "passive_skill";
             public const string Type_Attack = "attack";
             public const string Type_Enhanced = "enhanced_attack";
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
+
+            [JsonProperty(Required = Required.Default)]
+            public Sound sfxAttack2 => GameData.sounds.GetById(sfxAttack2Id);
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation vfxAnimation => GameData.animations.GetById(vfxAnimationId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Animation vfxAOEAnimation => GameData.animations.GetById(vfxAOEAnimationId);
         }
 
         [Serializable]
@@ -1556,6 +1616,11 @@ namespace Overlewd
             public string title;
             public string soundBankId;
             public string eventPath;
+
+            public void Play() => SoundManager.PlayOneShot(eventPath, soundBankId);
+
+            [JsonProperty(Required = Required.Default)]
+            public FMODEvent instantiate => SoundManager.GetEventInstance(eventPath, soundBankId);
         }
 
         // /buildings
@@ -1654,6 +1719,7 @@ namespace Overlewd
 
         // /municipality/time-left
         // /municipality/collect
+        // /municipality/settings
         public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
         {
             var url = "http://api.overlewd.com/municipality/time-left";
@@ -1673,10 +1739,29 @@ namespace Overlewd
             }
         }
 
+        public static async Task<MunicipalitySettings> municipalitySettingsAsync()
+        {
+            var url = "http://overlewd-api.herokuapp.com/municipality/settings";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<MunicipalitySettings>(request.downloadHandler.text);
+            }
+        }
+
         [Serializable]
         public class MunicipalityTimeLeft
         {
-            public int timeLeft;
+            public float timeLeft;
+        }
+
+        [Serializable]
+        public class MunicipalitySettings
+        {
+            public int currentLevelNumber;
+            public int moneyPerPeriod;
+            public int currencyPerHour;
+            public int periodInSeconds;
+            public int? currencyId;
         }
 
         // /magicguild/skills
@@ -1714,8 +1799,8 @@ namespace Overlewd
         public class MagicGuildSkill
         {
             public string type;
-            public SkillData current;
-            public SkillData next;
+            public CharacterSkill current;
+            public CharacterSkill next;
             public int currentSkillLevel;
             public int requiredBuildingLevel;
             public int maxSkillLevel;
@@ -1733,33 +1818,14 @@ namespace Overlewd
             public bool canCrystallvlUp => GameData.player.CanBuy(priceCrystal);
 
             [JsonProperty(Required = Required.Default)]
-            public bool canUpgrade => GameData.buildings.magicGuild.currentLevel >= requiredBuildingLevel && next != null;
+            public bool canUpgrade =>
+                GameData.buildings.magicGuild.meta.currentLevel >=
+                requiredBuildingLevel && next != null;
 
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";
             public const string Type_PassiveSkill2 = "overlord_second_passive_skill";
-
-            public class SkillData
-            {
-                public int id;
-                public string name;
-                public string description;
-                public string actionType;
-                public bool AOE;
-                public float amount;
-                public string effect;
-                public string type;
-                public string trigger;
-                public float effectAmount;
-                public float effectProb;
-                public string icon;
-                public float effectActingDuration;
-                public float effectCooldownDuration;
-                public float manaCost;
-                public List<PriceItem> levelUpPrice;
-                public int level;
-            }
         }
 
         // /forge/price
@@ -1953,6 +2019,7 @@ namespace Overlewd
         // /matriarchs/memories/{id}/buy
         // /matriarchs/{id}/seduce
         // /matriarchs/shards
+        // /matriarchs/buffs
 
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
@@ -2000,6 +2067,15 @@ namespace Overlewd
             }
         }
 
+        public static async Task<List<BuffItem>> buffsAsync()
+        {
+            var url = "https://overlewd-api.herokuapp.com/matriarchs/buffs";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<BuffItem>>(request?.downloadHandler.text);
+            }
+        }
+
         [Serializable]
         public class MatriarchItem
         {
@@ -2036,9 +2112,6 @@ namespace Overlewd
             public const string Key_Faye = "Faye";
             public const string Key_Lili = "Lili";
 
-            public const string Status_Open = "open";
-            public const string Status_Close = "close";
-
             public const string RewardsClaimed_None = "none";
             public const string RewardsClaimed_TwentFive = "twenty_five";
             public const string RewardsClaimed_Fifty = "fifty";
@@ -2063,10 +2136,19 @@ namespace Overlewd
             public bool isLili => name == Key_Lili;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isOpen => status == Status_Open;
+            public bool isOpen => GameData.devMode ? true :
+                name switch
+                {
+                    Key_Ulvi => true,
+                    Key_Adriel => GameData.ftue.info.chapter1.GetStageByKey("dialogue3").isComplete,
+                    Key_Ingie => GameData.ftue.info.chapter2.GetStageByKey("dialogue4").isComplete,
+                    Key_Faye => false,
+                    Key_Lili => false,
+                    _ => false
+                };
 
             [JsonProperty(Required = Required.Default)]
-            public bool isClose => status == Status_Close;
+            public BuffItem buff => GameData.matriarchs.GetBuffByMatriarchId(id);
         }
 
         [Serializable]
@@ -2128,6 +2210,40 @@ namespace Overlewd
             public string rarity;
             public string icon;
             public int amount;
+        }
+
+        [Serializable]
+        public class BuffItem
+        {
+            public int id;
+            public int? matriarchId;
+            public string name;
+            private string _description;
+            public string description
+            {
+                get => _description.
+                    Replace("%accuracy%", ((int)(accuracy * 100)).ToString()).
+                    Replace("%dodge%", ((int)(dodge * 100)).ToString()).
+                    Replace("%critrate%", ((int)(critrate * 100)).ToString()).
+                    Replace("%health%", ((int)(health * 100)).ToString()).
+                    Replace("%damage%", ((int)(damage * 100)).ToString()).
+                    Replace("%mana%", ((int)(mana * 100)).ToString());
+                set => _description = value;
+            }
+            public string postDescription;
+            public bool AOE;
+            public string icon;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
+            public bool active;
+
+            [JsonProperty(Required = Required.Default)]
+            public MatriarchItem matriarch =>
+                GameData.matriarchs.GetMatriarchById(matriarchId);
         }
 
         // /potions

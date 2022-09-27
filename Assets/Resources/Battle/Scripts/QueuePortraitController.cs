@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,8 +22,13 @@ namespace Overlewd
         public void SetUp(CharController cc)
         {
             this.cc = cc;
-            image.sprite = cc.characterRes.icoPortrait;
             btn.onClick.AddListener(cc.Select);
+            StartCoroutine(SetIcon());
+        }
+        IEnumerator SetIcon()
+        {
+            yield return new WaitForEndOfFrame();
+            image.sprite = cc.icon;
         }
         public void Select()
         {

@@ -7,28 +7,21 @@ namespace Overlewd
 {
     public class VFXManager : MonoBehaviour
     {
-
-        [SerializeField] private string path = "Battle/";
         [SerializeField] private string animationName = "action";
         [SerializeField] private bool loop = false;
 
-        public float delay = 0f; //predelay
-        public float duration = 1f; //ms
         private SpineWidget spineWiget;
+        public float delay = 0f;
+        public float duration = 1f;
         [SerializeField] private GameObject spineVFXPrefab;
-
-        private void Start()
+        
+        public float Setup(AdminBRO.Animation sw, Transform spawnPoint, float preDelay = 0f)
         {
-            var parent = GetComponentInParent<Transform>().localScale;
-            //UITools.SetStretch(GetComponent<RectTransform>());
-
-            spineWiget = spineVFXPrefab ?
-                SpineWidget.GetInstance(spineVFXPrefab, transform) :
-                SpineWidget.GetInstance(path, transform);
-
-            if (spineWiget)
-                duration = spineWiget.GetAnimationDuaration(animationName);
+            delay = preDelay;
+            spineWiget = SpineWidget.GetInstance(sw, spawnPoint);
             StartCoroutine(StartAfterDelay());
+            duration = spineWiget.GetAnimationDuaration(animationName);
+            return duration;
         }
 
         IEnumerator StartAfterDelay()
@@ -36,6 +29,7 @@ namespace Overlewd
             yield return new WaitForSeconds(delay);
             spineWiget.PlayAnimation(animationName, loop);
             yield return new WaitForSeconds(duration);
+            Destroy(spineWiget.gameObject);
             Destroy(this.gameObject);
         }
     }

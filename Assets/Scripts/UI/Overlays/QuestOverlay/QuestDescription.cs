@@ -14,8 +14,11 @@ namespace Overlewd
             private Image girlEmotion1;
             private TextMeshProUGUI bottomText;
             private Image girlEmotion2;
+            
+            public int? questId { get; set; }
+            public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
 
-            void Awake()
+            private void Awake()
             {
                 var canvas = transform.Find("Canvas");
 

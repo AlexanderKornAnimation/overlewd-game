@@ -6,12 +6,19 @@ namespace Overlewd
 {
     public class StatusEffect : MonoBehaviour
     {
-        public string eName = "defense_up";
+        /// <summary>
+        /// накидываемый активный эффект добавляется на персонажа
+        /// </summary>
         public bool isActive = false;
-        public int duration = 1;
-        public float dot = 1f;
-        public float effectAmount = 1f;
         public bool buff = true;
         public bool deBuff = false;
+
+        public string effect = "defense_up";
+        
+        public int duration = 1;
+
+        public float effectAmount = 1f;
+        public float dot = 1f;
+        
     }
 }

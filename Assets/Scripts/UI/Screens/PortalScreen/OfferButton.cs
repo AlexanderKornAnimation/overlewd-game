@@ -90,6 +90,7 @@ namespace Overlewd
             {
                 selectedButton.SetActive(true);
                 content?.gameObject.SetActive(true);
+                content?.Customize();
             }
 
             public void Deselect()

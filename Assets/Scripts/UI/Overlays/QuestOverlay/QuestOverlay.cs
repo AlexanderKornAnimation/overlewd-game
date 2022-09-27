@@ -83,57 +83,44 @@ namespace Overlewd
 
         private void Customize()
         {
-            AddMainQuest();
-            AddMainQuest();
-
-            AddMatriarchQuest();
-            AddMatriarchQuest();
-            AddMatriarchQuest();
-
-            AddSideQuest();
-            AddSideQuest();
-
-            if (quests.Any())
+            foreach (var questItem in GameData.quests.ftueQuests)
             {
-                SelectQuest(quests.First());
+                if (GameData.ftue.activeChapter.id == questItem.ftueChapterId)
+                {
+                    var grid = GetQuestGridByType(questItem.ftueQuestType);
+
+                    if (grid != null)
+                    {
+                        var quest = NSQuestOverlay.QuestButton.GetInstance(grid);
+                        quest.questId = questItem.id;
+                        quest.questContentPos = questContentScrollViewPos;
+                        quest.buttonPressed += SelectQuest;
+                        quest.Customize();
+                        quests.Add(quest);
+                    }
+                }
             }
+
+            var selectedQuest = quests?.FirstOrDefault(q => q.questId == inputData?.questId);
+            SelectQuest(selectedQuest != null ? selectedQuest : quests?.FirstOrDefault());
         }
 
-        private void AddMainQuest()
+        private Transform GetQuestGridByType(string type)
         {
-            var newQuest = NSQuestOverlay.MainQuestButton.GetInstance(mainQuestGrid);
-            newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
-                GetInstance(questContentScrollViewPos);
-            newQuest.buttonPressed += SelectQuest;
-
-            quests.Add(newQuest);
+            return type switch
+            {
+                AdminBRO.QuestItem.QuestType_Main => mainQuestGrid,
+                AdminBRO.QuestItem.QuestType_Matriarch => matriarchQuestGrid,
+                AdminBRO.QuestItem.QuestType_Side => sideQuestGrid,
+                _ => null
+            };
         }
-
-        private void AddMatriarchQuest()
-        {
-            var newQuest = NSQuestOverlay.MatriarchQuestButton.GetInstance(matriarchQuestGrid);
-            newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
-                GetInstance(questContentScrollViewPos);
-            newQuest.buttonPressed += SelectQuest;
-
-            quests.Add(newQuest);
-        }
-
-        private void AddSideQuest()
-        {
-            var newQuest = NSQuestOverlay.SideQuestButton.GetInstance(sideQuestGrid);
-            newQuest.contentScrollView = NSQuestOverlay.QuestContentScrollView.
-                GetInstance(questContentScrollViewPos);
-            newQuest.buttonPressed += SelectQuest;
-
-            quests.Add(newQuest);
-        }
-
-        public void SelectQuest(NSQuestOverlay.QuestButton quest)
+        
+        private void SelectQuest(NSQuestOverlay.QuestButton quest)
         {
             selectedQuest?.Deselect();
+            quest?.Select();
             selectedQuest = quest;
-            selectedQuest?.Select();
         }
 
         private void BackButtonClick()
@@ -145,6 +132,7 @@ namespace Overlewd
 
     public class QuestOverlayInData : BaseOverlayInData
     {
-
+        public int? questId;
+        public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
     }
 }

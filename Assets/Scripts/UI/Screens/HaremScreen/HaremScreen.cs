@@ -13,30 +13,40 @@ namespace Overlewd
         private TextMeshProUGUI backButtonText;
 
         private Button ulviButton;
+        private Image ulviBuffIcon;
         private TextMeshProUGUI ulviBuffDescription;
+        private GameObject ulviBuffActive;
         private TextMeshProUGUI ulviName;
 
         private Button adrielButton;
+        private Image adrielBuffIcon;
         private Transform adrielActive;
         private TextMeshProUGUI adrielName;
         private TextMeshProUGUI adrielBuffDescription;
+        private GameObject adrielBuffActive;
         private GameObject adrielNotActive;
 
         private Button ingieButton;
+        private Image ingieBuffIcon;
         private Transform ingieActive;
         private TextMeshProUGUI ingieName;
         private TextMeshProUGUI ingieBuffDescription;
+        private GameObject ingieBuffActive;
         private GameObject ingieNotActive;
 
         private Button fayeButton;
+        private Image fayeBuffIcon;
         private Transform fayeActive;
         private TextMeshProUGUI fayeBuffDescription;
+        private GameObject fayeBuffActive;
         private TextMeshProUGUI fayeName;
         private GameObject fayeNotActive;
 
         private Button liliButton;
+        private Image liliBuffIcon;
         private Transform liliActive;
         private TextMeshProUGUI liliBuffDescription;
+        private GameObject liliBuffActive;
         private TextMeshProUGUI liliName;
         private GameObject liliNotActive;
 
@@ -56,34 +66,44 @@ namespace Overlewd
 
             ulviButton = canvas.Find("UlviButton").GetComponent<Button>();
             ulviButton.onClick.AddListener(UlviButtonClick);
+            ulviBuffIcon = ulviButton.transform.Find("Buff").GetComponent<Image>();
             ulviBuffDescription = ulviButton.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+            ulviBuffActive = ulviButton.transform.Find("BuffActive").gameObject;
             ulviName = ulviButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
 
             adrielButton = canvas.Find("AdrielButton").GetComponent<Button>();
             adrielButton.onClick.AddListener(AdrielButtonClick);
             adrielActive = adrielButton.transform.Find("Active");
+            adrielBuffIcon = adrielActive.Find("Buff").GetComponent<Image>();
             adrielBuffDescription = adrielActive.Find("Description").GetComponent<TextMeshProUGUI>();
+            adrielBuffActive = adrielActive.Find("BuffActive").gameObject;
             adrielName = adrielButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             adrielNotActive = adrielButton.transform.Find("NotActive").gameObject;
 
             ingieButton = canvas.Find("IngieButton").GetComponent<Button>();
             ingieButton.onClick.AddListener(IngieButtonClick);
             ingieActive = ingieButton.transform.Find("Active");
+            ingieBuffIcon = ingieActive.Find("Buff").GetComponent<Image>();
             ingieBuffDescription = ingieActive.Find("Description").GetComponent<TextMeshProUGUI>();
+            ingieBuffActive = ingieActive.Find("BuffActive").gameObject;
             ingieName = ingieButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             ingieNotActive = ingieButton.transform.Find("NotActive").gameObject;
 
             fayeButton = canvas.Find("FayeButton").GetComponent<Button>();
             fayeButton.onClick.AddListener(FayeButtonClick);
             fayeActive = fayeButton.transform.Find("Active");
+            fayeBuffIcon = fayeActive.Find("Buff").GetComponent<Image>();
             fayeBuffDescription = fayeActive.Find("Description").GetComponent<TextMeshProUGUI>();
+            fayeBuffActive = fayeActive.Find("BuffActive").gameObject;
             fayeName = fayeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             fayeNotActive = fayeButton.transform.Find("NotActive").gameObject;
 
             liliButton = canvas.Find("LiliButton").GetComponent<Button>();
             liliButton.onClick.AddListener(LiliButtonClick);
             liliActive = liliButton.transform.Find("Active");
+            liliBuffIcon = liliActive.Find("Buff").GetComponent<Image>();
             liliBuffDescription = liliActive.Find("Description").GetComponent<TextMeshProUGUI>();
+            liliBuffActive = liliActive.Find("BuffActive").gameObject;
             liliName = liliButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             liliNotActive = liliButton.transform.Find("NotActive").gameObject;
 
@@ -95,21 +115,37 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            adrielActive.gameObject.SetActive(GameData.matriarchs.AdrielIsOpen);
-            adrielNotActive.gameObject.SetActive(!GameData.matriarchs.AdrielIsOpen);
-            adrielButton.interactable = GameData.matriarchs.AdrielIsOpen;
+            ulviBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ulvi.buff?.icon);
+            ulviBuffDescription.text = GameData.matriarchs.Ulvi.buff?.description;
+            ulviBuffActive.SetActive(GameData.matriarchs.Ulvi.buff?.active ?? false);
 
-            ingieActive.gameObject.SetActive(GameData.matriarchs.IngieIsOpen);
-            ingieNotActive.gameObject.SetActive(!GameData.matriarchs.IngieIsOpen);
-            ingieButton.interactable = GameData.matriarchs.IngieIsOpen;
+            adrielActive.gameObject.SetActive(GameData.matriarchs.Adriel.isOpen);
+            adrielNotActive.gameObject.SetActive(!GameData.matriarchs.Adriel.isOpen);
+            adrielButton.interactable = GameData.matriarchs.Adriel.isOpen;
+            adrielBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Adriel.buff?.icon);
+            adrielBuffDescription.text = GameData.matriarchs.Adriel.buff?.description;
+            adrielBuffActive.SetActive(GameData.matriarchs.Adriel.buff?.active ?? false);
 
-            fayeActive.gameObject.SetActive(GameData.matriarchs.FayeIsOpen);
-            fayeNotActive.gameObject.SetActive(!GameData.matriarchs.FayeIsOpen);
-            fayeButton.interactable = GameData.matriarchs.FayeIsOpen;
+            ingieActive.gameObject.SetActive(GameData.matriarchs.Ingie.isOpen);
+            ingieNotActive.gameObject.SetActive(!GameData.matriarchs.Ingie.isOpen);
+            ingieButton.interactable = GameData.matriarchs.Ingie.isOpen;
+            ingieBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ingie.buff?.icon);
+            ingieBuffDescription.text = GameData.matriarchs.Ingie.buff?.description;
+            ingieBuffActive.SetActive(GameData.matriarchs.Ingie.buff?.active ?? false);
 
-            liliActive.gameObject.SetActive(GameData.matriarchs.LiliIsOpen);
-            liliNotActive.gameObject.SetActive(!GameData.matriarchs.LiliIsOpen);
-            liliButton.interactable = GameData.matriarchs.LiliIsOpen;
+            fayeActive.gameObject.SetActive(GameData.matriarchs.Faye.isOpen);
+            fayeNotActive.gameObject.SetActive(!GameData.matriarchs.Faye.isOpen);
+            fayeButton.interactable = GameData.matriarchs.Faye.isOpen;
+            fayeBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Faye.buff?.icon);
+            fayeBuffDescription.text = GameData.matriarchs.Faye.buff?.description;
+            fayeBuffActive.SetActive(GameData.matriarchs.Faye.buff?.active ?? false);
+
+            liliActive.gameObject.SetActive(GameData.matriarchs.Lili.isOpen);
+            liliNotActive.gameObject.SetActive(!GameData.matriarchs.Lili.isOpen);
+            liliButton.interactable = GameData.matriarchs.Lili.isOpen;
+            liliBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Lili.buff?.icon);
+            liliBuffDescription.text = GameData.matriarchs.Lili.buff?.description;
+            liliBuffActive.SetActive(GameData.matriarchs.Lili.buff?.active ?? false);
 
             if (inputData?.prevScreenInData != null)
             {

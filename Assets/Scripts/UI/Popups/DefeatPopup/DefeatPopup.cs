@@ -53,6 +53,11 @@ namespace Overlewd
                     UITools.DisableButton(repeatButton);
                     UITools.DisableButton(mapButton);
                     break;
+                case (_, "chapter1"):
+                    UITools.DisableButton(editTeamButton);
+                    UITools.DisableButton(magicGuildButton);
+                    UITools.DisableButton(overlordButton);
+                    break;
                 default:
                     break;
             }

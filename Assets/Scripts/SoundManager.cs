@@ -296,7 +296,7 @@ namespace Overlewd
         }
 
         public static FMODEvent GetEventInstance(string eventPath, string bankId = null)
-        {//for music
+        {
             if (String.IsNullOrEmpty(eventPath))
                 return null;
 
@@ -321,8 +321,16 @@ namespace Overlewd
             return null;
         }
 
-        public static void PlayOneShot(string eventPath)
-        {//for sfx
+        public static void PlayOneShot(string eventPath, string bankId = null)
+        {
+            if (String.IsNullOrEmpty(eventPath))
+                return;
+
+            if (!HasLocalEvent(eventPath) && !String.IsNullOrEmpty(bankId))
+            {
+                ResourceManager.LoadFMODBank(bankId);
+            }
+
             RuntimeManager.PlayOneShot(eventPath.Trim());
         }
 

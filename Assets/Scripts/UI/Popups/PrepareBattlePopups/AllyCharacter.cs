@@ -9,6 +9,12 @@ namespace Overlewd
     {
         public class AllyCharacter : BaseCharacter
         {
+            protected override void Customize()
+            {
+                base.Customize();
+                levelBack.SetActive(characterData.characterClass != AdminBRO.Character.Class_Overlord);
+            }
+
             public static AllyCharacter GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<AllyCharacter>(
