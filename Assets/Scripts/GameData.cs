@@ -949,6 +949,8 @@ namespace Overlewd
 
         public AdminBRO.Sound GetById(int? id) =>
             sounds.Find(s => s.id == id);
+        public AdminBRO.Sound GetByTitle(string title) =>
+            sounds.Find(s => s.title == title);
     }
 
     //matriarchs
