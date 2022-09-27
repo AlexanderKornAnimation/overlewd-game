@@ -72,7 +72,7 @@ namespace Overlewd
             UIManager.MakeOverlay<QuestOverlay>().
                 SetData(new QuestOverlayInData
                 {
-                    questId = mainQuest.id
+                    questId = mainQuest?.id
                 }).RunShowOverlayProcess();
         }
 
