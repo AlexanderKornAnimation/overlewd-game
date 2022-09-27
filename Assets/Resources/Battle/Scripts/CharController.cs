@@ -233,7 +233,7 @@ namespace Overlewd
 
             vfxDuration = 0f;
             
-            if (skill[id].vfxAOEAnimation != null)
+            if (skill[id].vfxAOE != null)
             {
                 VFXManager vfx = new VFXManager();
                 Transform spawnPoint = topVFX;
@@ -243,12 +243,12 @@ namespace Overlewd
                     spawnPoint = topVFX;
                 else
                     spawnPoint = isEnemy && heal ? topVFX_R : topVFX_L;
-                vfxDuration = vfx.Setup(skill[id].vfxAnimation, spawnPoint);
+                vfxDuration = vfx.Setup(skill[id].vfxSelf, spawnPoint);
             }
-            if (skill[id].vfxAnimation != null)
+            if (skill[id].vfxSelf != null)
             {
                 VFXManager vfx = new VFXManager();
-                vfx.Setup(skill[id].vfxAnimation, target.selfVFX, vfxDuration);
+                vfx.Setup(skill[id].vfxSelf, target.selfVFX, vfxDuration);
             }
 
             yield return new WaitForSeconds(zoomSpeed);
@@ -268,14 +268,14 @@ namespace Overlewd
                 if (character.sfxAttack1 != null)
                     character.sfxAttack1.Play();
                 else
-                    skill[id].sfxAttack1?.Play();
+                    skill[id].sfxAttack?.Play();
             else if (id == 1)
                 if (character.sfxAttack2 != null)
                     character.sfxAttack2.Play();
                 else
-                    skill[id].sfxAttack1?.Play();
+                    skill[id].sfxAttack?.Play();
             else
-                skill[id].sfxAttack1?.Play();
+                skill[id].sfxAttack?.Play();
 
             yield return new WaitForSeconds(preAttackDuration);
             if (skill[id].shakeScreen)                                  //Shake
