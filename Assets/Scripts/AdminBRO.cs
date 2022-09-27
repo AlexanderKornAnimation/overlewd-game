@@ -2218,7 +2218,18 @@ namespace Overlewd
             public int id;
             public int? matriarchId;
             public string name;
-            public string description;
+            private string _description;
+            public string description
+            {
+                get => _description.
+                    Replace("%accuracy%", ((int)(accuracy * 100)).ToString()).
+                    Replace("%dodge%", ((int)(dodge * 100)).ToString()).
+                    Replace("%critrate%", ((int)(critrate * 100)).ToString()).
+                    Replace("%health%", ((int)(health * 100)).ToString()).
+                    Replace("%damage%", ((int)(damage * 100)).ToString()).
+                    Replace("%mana%", ((int)(mana * 100)).ToString());
+                set => _description = value;
+            }
             public string postDescription;
             public bool AOE;
             public string icon;
