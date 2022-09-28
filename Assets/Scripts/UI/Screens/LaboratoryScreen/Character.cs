@@ -13,7 +13,7 @@ namespace Overlewd
         {
             public LaboratoryScreen labScreen { get; set; }
             public int? characterId { get; set; }
-            public AdminBRO.Character chracterData =>
+            public AdminBRO.Character characterData =>
                 GameData.characters.GetById(characterId);
 
             private Image girlIcon;
@@ -53,7 +53,7 @@ namespace Overlewd
                 if (!initialized)
                     return;
 
-                var chData = chracterData;
+                var chData = characterData;
 
                 girlIcon.sprite = ResourceManager.LoadSprite(chData.iconUrl);
                 level.text = chData.level.ToString();

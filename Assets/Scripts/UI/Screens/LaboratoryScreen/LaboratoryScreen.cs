@@ -144,6 +144,7 @@ namespace Overlewd
 
             walletWidget = WalletWidget.GetInstance(walletWidgetPos);
             UpdFlaskState();
+            UpdChStates();
         }
         
         public override async Task BeforeShowMakeAsync()
@@ -234,7 +235,7 @@ namespace Overlewd
                 return false;
             }
 
-            var chData = ch.chracterData;
+            var chData = ch.characterData;
             if (chData.isHeroic || !chData.isLvlMax)
             {
                 return false;
@@ -246,7 +247,7 @@ namespace Overlewd
             }
             else if (flaskCharacters.Count == 1)
             {
-                var fChData = flaskCharacters.First().chracterData;
+                var fChData = flaskCharacters.First().characterData;
                 return (fChData.key == chData.key &&
                     fChData.level == chData.level);
             }
@@ -286,7 +287,7 @@ namespace Overlewd
             }
             else
             {
-                var chData = flaskCharacters.First().chracterData;
+                var chData = flaskCharacters.First().characterData;
                 if (flaskCharacters.Count == 1)
                 {
                     if (HasPair())
@@ -355,6 +356,23 @@ namespace Overlewd
             foreach (var ch in actTabsChs)
             {
                 ch.Customize();
+            }
+
+            SortCharactersInTabs();
+        }
+
+        private void SortCharactersInTabs()
+        {
+            foreach (var tabId in tabIds)
+            {
+                var tabChars = scrollContents[tabId].GetComponentsInChildren<NSLaboratoryScreen.Character>().ToList();
+                var tabCharsSort = tabChars.OrderByDescending(ch => ch.characterData.level + (IsInFlask(ch) ? 100 : 0));
+                var chSiblingIndex = 0;
+                foreach (var character in tabCharsSort)
+                {
+                    character?.transform.SetSiblingIndex(chSiblingIndex);
+                    chSiblingIndex++;
+                }
             }
         }
 
