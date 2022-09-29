@@ -153,7 +153,7 @@ namespace Overlewd
             if (battleState == BattleState.PLAYER)
             {
                 ccOnSelect.CharPortraitSet();
-                ButtonPress(0);
+                if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
             }
             if (!battleStart) //skip button = true; back button = false
             {
@@ -371,7 +371,6 @@ namespace Overlewd
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
                 ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
-                GameObject vfx = null; //ccOnSelect.skill[id].vfxOnTarget;
                 if (AOE)
                 {
                     ani.SetTrigger("General");
@@ -382,7 +381,7 @@ namespace Overlewd
                     foreach (var cc in charControllerList)
                         if (!cc.isDead && cc.isEnemy != HEAL)
                         {
-                            cc.Defence(ccOnSelect, id, vfx, aoe: true);
+                            cc.Defence(ccOnSelect, id, aoe: true);
                             cc.UnHiglight();
                         }
                     if (ccOnSelect.isOverlord && id > 1)
@@ -397,7 +396,7 @@ namespace Overlewd
                     else
                         ani.SetTrigger("Player");
                     ccOnSelect.Attack(id, AOE: HEAL, ccTarget);
-                    ccTarget.Defence(ccOnSelect, id, vfx, aoe: HEAL);
+                    ccTarget.Defence(ccOnSelect, id, aoe: HEAL);
                 }
                 battleState = BattleState.ANIMATION;
             }
@@ -514,7 +513,6 @@ namespace Overlewd
                         hpSpent = usedHP
                     });
                 if (CheckBattleGameData("chapter1", "battle2"))
-                    //battleList[1].powerBuff = true; BUFF ON
                     Debug.Log("LOOSING");
             }
             if (poison) Step(); //if we dead from DOT on start move we call next step
@@ -586,7 +584,7 @@ namespace Overlewd
                 ccOnSelect.CharPortraitSet();
                 battleState = BattleState.PLAYER;
                 bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
-                ButtonPress(0);
+                if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
             }
         }
 

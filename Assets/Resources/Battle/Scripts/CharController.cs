@@ -22,6 +22,7 @@ namespace Overlewd
         private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
+        private List<AdminBRO.Sound> sound = new List<AdminBRO.Sound>() { null, null, null };
 
         //New Resources:
         private string ani_idle_name = "idle";
@@ -140,9 +141,12 @@ namespace Overlewd
                 passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_first_passive_skill"));
                 passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_second_passive_skill"));
                 skill.Add(skillStash?.Find(f => f.type == "overlord_attack"));
-                if (bm.MagicGuildChecker() == false) return; //skip other skills if MG is unavailable (chapter 1 & 2)
-                skill.Add(skillStash?.Find(f => f.type == "overlord_enhanced_attack"));
-                skill.Add(skillStash?.Find(f => f.type == "overlord_ultimate_attack"));
+                //skip other skills if MagicGuild is unavailable (chapter 1 & 2)
+                if (bm.MagicGuildChecker() == true)
+                {
+                    skill.Add(skillStash?.Find(f => f.type == "overlord_enhanced_attack"));
+                    skill.Add(skillStash?.Find(f => f.type == "overlord_ultimate_attack"));
+                }
             }
             else
             {
@@ -150,12 +154,14 @@ namespace Overlewd
                 skill.Add(skillStash?.Find(f => f.type == "attack"));
                 skill.Add(skillStash?.Find(f => f.type == "enhanced_attack"));
             }
+            sound[0] = (character.sfxAttack1 != null ? character.sfxAttack1 : skill[0].sfxAttack);
+            if (skill.Count >= 2) sound[1] = (character.sfxAttack2 != null ? character.sfxAttack2 : skill[1].sfxAttack);
+            if (skill.Count >= 3) sound[2] = (skill[2].sfxAttack);
         }
         private void ShapeInit()
         {
             icon = ResourceManager.LoadSprite(character.GetIconByRarity(character.rarity));
             bigIcon = ResourceManager.LoadSprite(character.battlePortraitIcon);
-            Debug.Log(bigIcon);
             rt = gameObject.AddComponent<RectTransform>();
             UITools.SetStretch(rt);
             rt.localScale *= idleScale;
@@ -216,7 +222,8 @@ namespace Overlewd
 
         public void PlayIdle()
         {
-            if (!isDead) {
+            if (!isDead)
+            {
                 character.sfxIdle?.Play();
                 spineWidget.PlayAnimation(ani_idle_name, true);
             }
@@ -228,60 +235,44 @@ namespace Overlewd
         IEnumerator PlayAttack(int id, bool AOE = false, CharController target = null)
         {
             if (id >= skill.Count) id = 0;                              //Overflow insurance
+            var skillID = skill[id];
             var curseDotScale = curse > 0 ? 1 - curse_dot : 1f;
             BattleIn(AOE);
-
             vfxDuration = 0f;
-            
-            if (skill[id].vfxAOE != null)
-            {
-                VFXManager vfx = new VFXManager();
-                Transform spawnPoint = topVFX;
-                bool heal = skill[id].actionType == "heal";
+            preAttackDuration = spineWidget.GetAnimationDuaration(ani_pAttack_name[id]);    //send to target Defence Animation
+            attackDuration = spineWidget.GetAnimationDuaration(ani_attack_name[id]);
 
-                if (isOverlord)
-                    spawnPoint = topVFX;
-                else
-                    spawnPoint = isEnemy && heal ? topVFX_R : topVFX_L;
-                vfxDuration = vfx.Setup(skill[id].vfxSelf, spawnPoint);
-            }
-            if (skill[id].vfxSelf != null)
+            if (skillID.vfxAOE != null && skillID.AOE)                 //VFX AOE            is here cuz we need vfxDuration
             {
-                VFXManager vfx = new VFXManager();
-                vfx.Setup(skill[id].vfxSelf, target.selfVFX, vfxDuration);
+                var vfxGO = new GameObject($"vfx_{skillID.vfxAOE.title}");
+                var vfx = vfxGO.AddComponent<VFXManager>();
+                var spawnPoint = topVFX;
+                var heal = skillID.actionType == "heal";
+                spawnPoint = (isOverlord) ? topVFX : (isEnemy == heal || !isEnemy == !heal) ? topVFX_R : topVFX_L;
+                vfxDuration = vfx.Setup(skillID.vfxAOE, spawnPoint, preAttackDuration + zoomSpeed);
             }
 
             yield return new WaitForSeconds(zoomSpeed);
-            attackDuration = spineWidget.GetAnimationDuaration(ani_attack_name[id]);
             foreach (var ps in passiveSkill)                            //on_attack Passive Skill Buff
                 if (ps.trigger == "on_attack")
                     if (ps.actionType == "heal")
                         PassiveBuff(ps);
-            damageTotal = damage * ((float)skill[id].amount);
+            damageTotal = damage * ((float)skillID.amount);
             damageTotal *= curseDotScale;
             damageTotal = Mathf.Round(damageTotal);
-
-            preAttackDuration = spineWidget.GetAnimationDuaration(ani_pAttack_name[id]);  //send to target Defence Animation
-            spineWidget.PlayAnimation(ani_pAttack_name[id], false);
-                                                                        //SFX
-            if (id == 0)                                                
-                if (character.sfxAttack1 != null)
-                    character.sfxAttack1.Play();
-                else
-                    skill[id].sfxAttack?.Play();
-            else if (id == 1)
-                if (character.sfxAttack2 != null)
-                    character.sfxAttack2.Play();
-                else
-                    skill[id].sfxAttack?.Play();
-            else
-                skill[id].sfxAttack?.Play();
-
+            spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW                      
+            sound[id]?.Play();                                          //SFX
             yield return new WaitForSeconds(preAttackDuration);
-            if (skill[id].shakeScreen)                                  //Shake
+            if (skillID.vfxSelf != null)                                //VFX Self
+            {
+                var vfxGO = new GameObject($"vfx_{skillID.vfxSelf.title}");
+                var vfx = vfxGO.AddComponent<VFXManager>();
+                vfx.Setup(skillID.vfxSelf, selfVFX);
+            }
+            if (skillID.shakeScreen)                                  //Shake
                 bm.Shake(shakeDuration, shakeStrength);
 
-            yield return new WaitForSeconds(vfxDuration);               //VFX Delay if it need (!=0)
+            if (AOE) yield return new WaitForSeconds(vfxDuration);           //VFX Delay if it need (!=0)
 
             foreach (var ps in passiveSkill)                            //on_attack Passive Skill DeBuff
                 if (ps.trigger == "on_attack")
@@ -295,41 +286,45 @@ namespace Overlewd
             bm.BattleOut();
         }
 
-        public void Defence(CharController attacker, int id, GameObject vfx = null, bool aoe = false) => StartCoroutine(PlayDefence(attacker, id, vfx, aoe));
+        public void Defence(CharController attacker, int id, bool aoe = false) => StartCoroutine(PlayDefence(attacker, id, aoe));
 
-        IEnumerator PlayDefence(CharController attacker, int id, GameObject vfx = null, bool AOE = false)
+        IEnumerator PlayDefence(CharController attacker, int id, bool AOE = false)
         {
             BattleIn(AOE);
+            var attackerSkill = attacker.skill[id];
+            
             yield return new WaitForSeconds(zoomSpeed);
             transform.SetParent(battlePos);
             UnHiglight();
 
             yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             character.sfxDefense?.Play();
-            //if (vfx != null) Instantiate(vfx, selfVFX);
-            var attackerSkill = attacker.skill[id];
+
             if (attackerSkill.actionType != "heal")
                 spineWidget.PlayAnimation(ani_defence_name, false);
-            bool hit = attacker.accuracy > Random.value;
-            bool isDodge = dodge > Random.value;
-            bool isCrit = attacker.critrate > Random.value;
 
-            //yield return new WaitForSeconds(defenceDuration / 2);
-
-            if (attacker.focus_blind != 0)
-                hit = attacker.focus_blind > 0 ? true : false;
-
-            if (hit) AddEffect(attackerSkill); //calculate probability and add effect
+            attackerSkill.sfxTarget?.Play();                    //Play on target SFX
+            var isHit = (attacker.focus_blind == 0) ? attacker.accuracy > Random.value
+                : (attacker.focus_blind > 0) ? true : false;
+            var isDodge = dodge > Random.value;
+            var isCrit = attacker.critrate > Random.value;
+            if (isHit) AddEffect(attackerSkill);                  //calculate probability and add effect
+            if (attackerSkill.vfxTarget != null && !isDodge)    //VFX on Self
+            {
+                var vfxGO = new GameObject($"vfx_{attackerSkill.vfxTarget.title}");
+                var vfx = vfxGO.AddComponent<VFXManager>();
+                vfx.Setup(attackerSkill.vfxTarget, selfVFX);
+            }
             foreach (var ps in passiveSkill)
             {
                 if (ps?.trigger == "when_attacked")
-                    if (ps.actionType == "heal") //who is target "heal" = self    !"heal" = enemy
+                    if (ps.actionType == "heal")                //who is target "heal" = self    !"heal" = enemy
                         PassiveBuff(ps);
                     else
                         PassiveDeBuff(ps, attacker);
             }
             float defScale = defUp_defDown != 0 ? attacker.damageTotal * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
-            Damage(attacker.damageTotal + defScale, hit, isDodge, isCrit, uiDelay: 1.2f);
+            Damage(attacker.damageTotal + defScale, isHit, isDodge, isCrit, uiDelay: 1.2f);
 
             yield return new WaitForSeconds(defenceDuration); // (/2)
 
@@ -393,7 +388,7 @@ namespace Overlewd
 
         public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f)
         {
-            if (!hit)
+            if (hit == false)
             {
                 DrawPopup("Miss!", "blue");
                 return;
@@ -660,7 +655,7 @@ namespace Overlewd
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
         {
             bool isCrit = critrate >= Random.value;
-            Damage(sk.amount, true, false, isCrit);
+            targetCC.Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb >= Random.value;
 
             if (sk.effect != null)
@@ -836,7 +831,7 @@ namespace Overlewd
                 StartCoroutine(PopCounterAfterLife(1f));
                 log.Add(name + ": " + msg);
             }
-            else Debug.LogError($"Null Draw Popup Prefab: {gameObject.name}");
+            else log.Add($"Null Draw Popup Prefab: {gameObject.name}", true);
         }
         IEnumerator PopCounterAfterLife(float lifetime)
         {
@@ -851,6 +846,5 @@ namespace Overlewd
             Destroy(observer.gameObject);
             if (isEnemy) Destroy(charStats.gameObject);
         }
-
     }
 }
