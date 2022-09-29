@@ -144,6 +144,7 @@ namespace Overlewd
 
                     var equipped = weapons.FirstOrDefault(w => w.weaponData.IsMy(inputData?.characterId));
                     CustomizeSlot(equipped);
+                    SortWeaponsInTabs();
                     break;
             }
         }
@@ -175,7 +176,7 @@ namespace Overlewd
             }
             
             CustomizeSlot(weapons.FirstOrDefault(w => w.weaponData.IsMy(inputData?.characterId)));
-
+            SortWeaponsInTabs();
         }
 
         private async void SlotButtonClick()
@@ -228,6 +229,21 @@ namespace Overlewd
                 UIManager.MakeScreen<BattleGirlScreen>().
                     SetData(inputData.prevScreenInData as BattleGirlScreenInData).
                     RunShowScreenProcess();
+            }
+        }
+
+        private void SortWeaponsInTabs()
+        {
+            foreach (var tabId in tabIds)
+            {
+                var tabWeapon = scrollContents[tabId].GetComponentsInChildren<NSWeaponScreen.Weapon>().ToList();
+                var tabWeaponSort = tabWeapon.OrderByDescending(w => w.weaponData.rarityLevel + (w.weaponData.isEquipped ? 100 : 0));
+                var wSiblingIndex = 0;
+                foreach (var weapon in tabWeaponSort)
+                {
+                    weapon?.transform.SetSiblingIndex(wSiblingIndex);
+                    wSiblingIndex++;
+                }
             }
         }
     }

@@ -158,6 +158,7 @@ namespace Overlewd
                     }
                 }
             }
+            SortEquipInTabs();
         }
         
         private void UpdateCell(int equipId, int newEquipId)
@@ -174,6 +175,7 @@ namespace Overlewd
             DestroyPopup();
             
             CustomizeStats();
+            SortEquipInTabs();
         }
 
         private void CustomizeStats()
@@ -364,6 +366,21 @@ namespace Overlewd
         private void CollectiblesButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+        }
+
+        private void SortEquipInTabs()
+        {
+            foreach (var tabId in tabIds)
+            {
+                var tabEquip = scrollContents[tabId].GetComponentsInChildren<NSOverlordScreen.Equipment>().ToList();
+                var tabEquipSort = tabEquip.OrderByDescending(e => e.equipData.rarityLevel + (e.equipData.isEquipped ? 100 : 0));
+                var eSiblingIndex = 0;
+                foreach (var equip in tabEquipSort)
+                {
+                    equip?.transform.SetSiblingIndex(eSiblingIndex);
+                    eSiblingIndex++;
+                }
+            }
         }
     }
 

@@ -384,7 +384,7 @@ namespace Overlewd
             {
                 Type_Currency => GameData.currencies.GetById(entityId.HasValue ? entityId : currencyId)?.iconUrl,
                 Type_BattleCharacter => GameData.characters.GetById(entityId.HasValue ? entityId : characterId)?.GetIconByRarity(rarity),
-                Type_BattleCharacterEquipment => GameData.equipment.GetById(entityId.HasValue ? entityId : equipmentId)?.icon,
+                Type_BattleCharacterEquipment => GameData.equipment.GetById(entityId.HasValue ? entityId : equipmentId)?.GetIconByRarity(rarity),
                 Type_MatriarchShard => GameData.matriarchs.GetShardById(entityId.HasValue ? entityId : matriarchShardId, rarity).icon,
                 _ => imageUrl
             };
@@ -1257,7 +1257,6 @@ namespace Overlewd
             public int? characterId;
             public string characterClass;
             public string name;
-            public string icon;
             public string equipmentType;
             public float speed;
             public float power;
@@ -1270,11 +1269,11 @@ namespace Overlewd
             public float damage;
             public float mana;
             public float potency;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isEquipped => characterId.HasValue;
-
-            public bool IsMy(int? myId) => isEquipped && myId == characterId;
+            public string basicIcon;
+            public string advancedIcon;
+            public string epicIcon;
+            public string heroicIcon;
+            public string rariry;
 
             public const string Class_Assassin = "Assassin";
             public const string Class_Bruiser = "Bruiser";
@@ -1290,6 +1289,33 @@ namespace Overlewd
             public const string Type_OverlordHarness = "overlord_harness";
             public const string Type_OverlordWeapon = "overlord_weapon";
             public const string Type_OverlordGloves = "overlord_gloves";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEquipped => characterId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public int rarityLevel => rariry switch
+            {
+                Rarity.Basic => 10,
+                Rarity.Advanced => 20,
+                Rarity.Epic => 30,
+                Rarity.Heroic => 40,
+                _ => 0
+            };
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => GetIconByRarity(rariry);
+
+            public string GetIconByRarity(string rarity) => rarity switch
+            {
+                Rarity.Basic => basicIcon,
+                Rarity.Advanced => advancedIcon,
+                Rarity.Epic => epicIcon,
+                Rarity.Heroic => heroicIcon,
+                _ => null
+            };
+
+            public bool IsMy(int? myId) => isEquipped && myId == characterId;
         }
 
         //ftue
