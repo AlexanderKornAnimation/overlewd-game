@@ -32,16 +32,16 @@ namespace Overlewd
             entityTitle.text = sEntityTitle;
 
             backCG.alpha = 0.0f;
-            var backEndPosY = back.position.y + canvasRT.rect.height * 0.4f;
+            var backEndPosY = back.position.y + canvasRT.rect.height * 0.3f;
             var tPos = back.position;
-            tPos.y += canvasRT.rect.height * 0.25f;
+            tPos.y += canvasRT.rect.height * 0.05f;
             back.position = tPos;
 
             var seq = DOTween.Sequence();
-            seq.Join(back.DOMoveY(backEndPosY, 1.8f));
+            seq.Join(back.DOMoveY(backEndPosY, 2.1f));
             var fadeSeq = DOTween.Sequence();
             fadeSeq.Append(backCG.DOFade(0.9f, 0.3f));
-            fadeSeq.AppendInterval(1.0f);
+            fadeSeq.AppendInterval(1.3f);
             fadeSeq.Append(backCG.DOFade(0.0f, 0.5f));
             seq.Join(fadeSeq);
             seq.onComplete = () => Destroy(gameObject);
