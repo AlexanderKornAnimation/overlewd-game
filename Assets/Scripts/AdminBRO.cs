@@ -1273,7 +1273,7 @@ namespace Overlewd
             public string advancedIcon;
             public string epicIcon;
             public string heroicIcon;
-            public string rariry;
+            public string rarity;
 
             public const string Class_Assassin = "Assassin";
             public const string Class_Bruiser = "Bruiser";
@@ -1294,7 +1294,7 @@ namespace Overlewd
             public bool isEquipped => characterId.HasValue;
 
             [JsonProperty(Required = Required.Default)]
-            public int rarityLevel => rariry switch
+            public int rarityLevel => rarity switch
             {
                 Rarity.Basic => 10,
                 Rarity.Advanced => 20,
@@ -1304,7 +1304,7 @@ namespace Overlewd
             };
 
             [JsonProperty(Required = Required.Default)]
-            public string icon => GetIconByRarity(rariry);
+            public string icon => GetIconByRarity(rarity);
 
             public string GetIconByRarity(string rarity) => rarity switch
             {
