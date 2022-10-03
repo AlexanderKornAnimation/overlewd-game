@@ -2114,6 +2114,7 @@ namespace Overlewd
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
+            public int? dailyQuestGiverDialogId;
             public int seduceCooldown;
             public int? seduceBuffSkillId;
             public string status;
