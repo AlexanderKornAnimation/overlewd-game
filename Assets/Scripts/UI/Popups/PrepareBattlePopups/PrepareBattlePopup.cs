@@ -145,7 +145,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            float enemyPotency = 0;
+            var enemyPotency = 0;
             foreach (var phase in battleData.battlePhases)
             {
                 foreach (var enemy in phase.enemyCharacters)
@@ -155,10 +155,7 @@ namespace Overlewd
 
                     if (enemy != null)
                     {
-                        if (enemy.potency.HasValue)
-                        {
-                            enemyPotency += enemy.potency.Value;
-                        }
+                        enemyPotency += enemy.potency;
                     }
                 }
             }

@@ -517,21 +517,17 @@ namespace Overlewd
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
 
-        public float myTeamPotency
+        public int myTeamPotency
         {
             get
             {
-                float potency = 0;
+                int potency = 0;
 
-                if (overlord.potency.HasValue)
-                    potency += overlord.potency.Value;
+                potency += overlord.potency;
                 
                 foreach (var character in myTeamCharacters)
                 {
-                    if (character.potency.HasValue)
-                    {
-                        potency += character.potency.Value;
-                    }
+                    potency += character.potency;
                 }
 
                 return potency;

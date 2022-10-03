@@ -47,6 +47,7 @@ namespace Overlewd
 
         private Image weapon;
         private Button weaponScreenButton;
+        private TextMeshProUGUI weaponButtonTitle;
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
         private Image girl;
@@ -73,8 +74,10 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
-            weapon = canvas.Find("Weapon").GetComponent<Image>();
-            weaponScreenButton = canvas.Find("WeaponScreenButton").GetComponent<Button>();
+            var weaponCell = canvas.Find("WeaponCell");
+            weapon = weaponCell.Find("Weapon").GetComponent<Image>();
+            weaponScreenButton = weaponCell.Find("WeaponScreenButton").GetComponent<Button>();
+            weaponButtonTitle = weaponScreenButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
 
             levelUpButton = canvas.Find("LevelUpButton");
@@ -214,6 +217,7 @@ namespace Overlewd
                 if (weapon.gameObject.activeSelf)
                 {
                     weapon.sprite = ResourceManager.LoadSprite(characterData.characterEquipmentData?.icon);
+                    weaponButtonTitle.text = "Swap weapon";
                 }
 
                 for (int i = 0; i < characterData?.levelUpPrice?.Count; i++)

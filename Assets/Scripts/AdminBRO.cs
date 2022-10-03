@@ -1037,7 +1037,7 @@ namespace Overlewd
             public float health;
             public float damage;
             public int mana;
-            public float? potency;
+            public int potency;
             public int? sexSceneId;
             public string sexSceneVisibleByRarity;
             public string sexSceneClosedBanner;
@@ -1071,6 +1071,9 @@ namespace Overlewd
                 _ => null
             };
 
+            [JsonProperty(Required = Required.Default)]
+            public int? potencyInt => (int?) potency;
+            
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
 

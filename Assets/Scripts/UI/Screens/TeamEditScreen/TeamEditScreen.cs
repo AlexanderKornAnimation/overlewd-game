@@ -179,7 +179,7 @@ namespace Overlewd
                 slot1_characterIcon.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
                 slot1_name.text = chData.name;
                 slot1_Level.text = chData.level.ToString();
-                slot1_PotencyValue.text = chData.potency.HasValue ? chData.potency.ToString() : "_";;
+                slot1_PotencyValue.text = chData.potency.ToString();
             }
             else
             {
@@ -197,7 +197,7 @@ namespace Overlewd
                 slot2_characterIcon.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
                 slot2_name.text = chData.name;
                 slot2_Level.text = chData.level.ToString();
-                slot2_PotencyValue.text = chData.potency.HasValue ? chData.potency.ToString() : "_";
+                slot2_PotencyValue.text = chData.potency.ToString();
             }
             else
             {
@@ -239,7 +239,6 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var overlordData = GameData.characters.overlord;
-            slotOverlord_characterIcon.sprite = ResourceManager.LoadSprite(overlordData.teamEditSlotPersIcon);
             slotOverlord_level.text = overlordData.level.ToString();
             slotOverlord_name.text = overlordData.name;
             slotOverlord_potencyValue.text = overlordData.potency.ToString();
