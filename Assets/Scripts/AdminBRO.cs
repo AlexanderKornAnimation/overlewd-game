@@ -1070,9 +1070,6 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
-
-            [JsonProperty(Required = Required.Default)]
-            public int? potencyInt => (int?) potency;
             
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
