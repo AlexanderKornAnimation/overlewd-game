@@ -25,14 +25,14 @@ namespace Overlewd
 
             public AdminBRO.GachaItem gachaData => GameData.gacha.GetGachaById(gachaId);
 
-            protected virtual void Awake()
+            protected override void Awake()
             {
+                base.Awake();
+
                 canvas = transform.Find("Canvas");
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 timer = canvas.Find("Timer").gameObject;
                 timerTitle = timer.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-                UIManager.widgetsGameDataListeners += OnGameDataEvent;
             }
 
             protected virtual void Start()

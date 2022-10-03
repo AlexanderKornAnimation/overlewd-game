@@ -15,15 +15,16 @@ namespace Overlewd
         private TextMeshProUGUI gold;
         private TextMeshProUGUI gems;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             crystal = transform.Find("Crystal").GetComponent<TextMeshProUGUI>();
             wood = transform.Find("Wood").GetComponent<TextMeshProUGUI>();
             stone = transform.Find("Stone").GetComponent<TextMeshProUGUI>();
             copper = transform.Find("Copper").GetComponent<TextMeshProUGUI>();
             gold = transform.Find("Gold").GetComponent<TextMeshProUGUI>();
             gems = transform.Find("Gems").GetComponent<TextMeshProUGUI>();
-
         }
 
         private void Start()
@@ -39,6 +40,11 @@ namespace Overlewd
             gold.text = $"{GameData.currencies.Gold.tmpSprite}<size=44> {GameData.player.Gold.amount}";
             gems.text = $"{GameData.currencies.Gems.tmpSprite}<size=44> {GameData.player.Gems.amount}";
             stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {GameData.player.Stone.amount}";
+        }
+
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            Customize();
         }
 
         public static WalletWidget GetInstance(Transform parent)
