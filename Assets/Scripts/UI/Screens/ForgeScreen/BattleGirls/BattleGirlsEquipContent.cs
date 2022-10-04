@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,27 +8,31 @@ namespace Overlewd
 {
     namespace NSForgeScreen
     {
-        public class OverlordEquipContent : MonoBehaviour
+        public class BattleGirlsEquipContent : BaseContent
         {
-            public const int TabWeapon = 0;
-            public const int TabGloves = 1;
-            public const int TabHelmet = 2;
-            public const int TabHarness = 3;
-            public const int TabTigh = 4;
-            public const int TabBoots = 5;
+            public const int TabAll = 0;
+            public const int TabAssassin = 1;
+            public const int TabCaster = 2;
+            public const int TabHealer = 3;
+            public const int TabBruiser = 4;
+            public const int TabTank = 5;
             public const int TabsCount = 6;
 
-            public int activeTabId { get; private set; }= TabWeapon;
+            public int activeTabId { get; private set; }= TabAll;
 
             private Button[] tabs = new Button[TabsCount];
             private GameObject[] selectedTabs = new GameObject[TabsCount];
             private GameObject[] scrolls = new GameObject[TabsCount];
             private Transform[] contents = new Transform[TabsCount];
-            private int[] tabIds = {TabWeapon, TabGloves, TabHelmet, TabHarness, TabTigh, TabBoots};
-            private string[] tabNames = {"Weapon", "Gloves", "Helmet", "Harness", "Tigh", "Boots"};
+            private int[] tabIds = {TabAll, TabAssassin, TabCaster, TabHealer, TabBruiser, TabTank};
+            private string[] tabNames = {"AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks"};
 
-            private void Awake()
+            private InfoBlockBattleGirlEquip infoBlock;
+
+            protected override void Awake()
             {
+                base.Awake();
+
                 var tabArea = transform.Find("TabArea");
                 var selectedTabArea = transform.Find("SelectedTabArea");
                 var bottomSubstrate = transform.Find("BottomSubstrate");
@@ -44,6 +47,8 @@ namespace Overlewd
 
                     selectedTabs[i].SetActive(false);
                 }
+
+                infoBlock = transform.Find("InfoBlock").GetComponent<InfoBlockBattleGirlEquip>();
             }
 
             private void Start()
@@ -60,7 +65,7 @@ namespace Overlewd
                     Equipment.GetInstance(contents[0]);
                 }
             }
-            
+
             private void TabClick(int tabId)
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -79,6 +84,25 @@ namespace Overlewd
             {
                 selectedTabs[tabId].SetActive(false);
                 scrolls[tabId].SetActive(false);
+            }
+
+            protected override void MergeButtonClick()
+            {
+
+            }
+
+            protected override void PortalButtonClick()
+            {
+                UIManager.MakeScreen<PortalScreen>().
+                SetData(new PortalScreenInData
+                {
+                    activeButtonId = PortalScreen.TabBattleGirlsEquip
+                }).RunShowScreenProcess();
+            }
+
+            protected override void MarketButtonClick()
+            {
+                UIManager.ShowOverlay<MarketOverlay>();
             }
         }
     }

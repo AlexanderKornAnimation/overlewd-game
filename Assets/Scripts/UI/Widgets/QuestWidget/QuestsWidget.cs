@@ -17,7 +17,7 @@ namespace Overlewd
         protected Transform content;
         protected GameObject scrollMarker;
 
-        private void Awake()
+        protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();

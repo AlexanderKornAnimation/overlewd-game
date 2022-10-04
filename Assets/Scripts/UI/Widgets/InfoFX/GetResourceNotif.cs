@@ -16,7 +16,7 @@ namespace Overlewd
         private TextMeshProUGUI title;
         private TextMeshProUGUI entityTitle;
 
-        void Awake()
+        protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             canvasRT = canvas.GetComponent<RectTransform>();

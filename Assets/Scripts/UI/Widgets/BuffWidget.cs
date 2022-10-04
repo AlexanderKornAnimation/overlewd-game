@@ -21,7 +21,7 @@ namespace Overlewd
         private TextMeshProUGUI title;
         private TextMeshProUGUI description;
         
-        void Awake()
+        protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();

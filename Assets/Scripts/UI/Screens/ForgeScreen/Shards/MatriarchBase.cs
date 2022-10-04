@@ -9,23 +9,23 @@ namespace Overlewd
 {
     namespace NSForgeScreen
     {
-        public class Matriarch : MonoBehaviour
+        public abstract class MatriarchBase : MonoBehaviour
         {
-            private Button selectButton;
-            private Button confirmButton;
-            private GameObject notActive;
-            private GameObject isTarget;
-            private GameObject isConsume;
+            protected Button selectButton;
+            protected Button confirmButton;
+            protected GameObject notActive;
+            protected GameObject isTarget;
+            protected GameObject isConsume;
 
-            private TextMeshProUGUI basicShardAmount;
-            private TextMeshProUGUI advancedShardAmount;
-            private TextMeshProUGUI epicShardAmount;
-            private TextMeshProUGUI heroicShardAmount;
+            protected TextMeshProUGUI basicShardAmount;
+            protected TextMeshProUGUI advancedShardAmount;
+            protected TextMeshProUGUI epicShardAmount;
+            protected TextMeshProUGUI heroicShardAmount;
             
             public string matriarchKey { get; set; }
             public AdminBRO.MatriarchItem matriarchData => GameData.matriarchs.GetMatriarchByKey(matriarchKey);
 
-            private void Awake()
+            protected virtual void Awake()
             {
                 selectButton = transform.Find("ButtonActive").GetComponent<Button>();
                 selectButton.onClick.AddListener(ButtonClick);
@@ -42,22 +42,22 @@ namespace Overlewd
                 heroicShardAmount = selectButton.transform.Find("HeroicShard").Find("Count").GetComponent<TextMeshProUGUI>();
             }
 
-            private void Start()
+            protected virtual void Start()
             {
                 Customize();
             }
 
-            private void ConfirmButtonClick()
+            protected virtual void ConfirmButtonClick()
             {
                 
             }
-            
-            private void ButtonClick()
+
+            protected virtual void ButtonClick()
             {
                 
             }
-                
-            private void Customize()
+
+            protected virtual void Customize()
             {
                 isTarget.SetActive(false);
                 isConsume.SetActive(false);

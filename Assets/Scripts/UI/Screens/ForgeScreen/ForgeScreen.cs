@@ -9,61 +9,22 @@ namespace Overlewd
 {
     public class ForgeScreen : BaseFullScreenParent<ForgeScreenInData>
     {
-        private Transform infoBlock;
-        private Transform consumeCell;
-        private TextMeshProUGUI consumeCount;
-        private GameObject consumeItem;
-        private Image consumeRarityBack;
-        private Image consumeShard;
-        private Image consumeShardGirl;
-        private Image consumeEquip;
-        
-        private Transform targetCell;
-        private GameObject targetItem;
-        private Image targetRarityBack;
-        private Image targetShard;
-        private Image targetShardGirl;
-        private Image targetEquip;
-        private TextMeshProUGUI targetCount;
-        private Button targetIncreaseButton;
-        private Button targetDecreaseButton;
-        
-        private Transform buttons;
-        private Button marketButton;
-        private TextMeshProUGUI marketButtonText;
-        private Button portalButton;
-        private TextMeshProUGUI portalButtonText;
-        private Button mergeButton;
-        private Image[] mergePrice = new Image[2];
-        private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
-
-        private GameObject shardsContentGO;
-        private GameObject battleGirlsEquipContentGO;
-        private GameObject overlordContentGO;
-        
-        private Transform walletWidgetPos;
-        private WalletWidget walletWidget;
-        private Transform tabArea;
-        private Button backButton;
-
         public const int TabShard = 0;
         public const int TabBattleGirlsEquip = 1;
         public const int TabOverlordEquip = 2;
-        public const int SubTabExchangeShard = 3;
-        public const int SubTabMergeShard = 4;
-        public const int TabsCount = 5;
 
-        private int[] tabIds = {TabShard, TabBattleGirlsEquip, TabOverlordEquip};
-        private Button[] tabs = new Button[TabsCount];
-        private GameObject[] pressedTabs = new GameObject[TabsCount];
-        private string[] tabNames = {"Shards", "BattleGirlsEquip", "OverlordEquip"};
-        
-        private int activeTabId;
-        private int activeSubTabId = SubTabExchangeShard;
+        private Transform tabArea;
+        private Transform tabAreaShards;
+        private Transform tabAreaGirls;
+        private Transform tabAreaOverlord;
+        private Button backButton;
 
-        private NSForgeScreen.ShardContent shardsContent;
-        private NSForgeScreen.BattleGirlsEquipContent battleGirlsEquipEquipContent;
-        private NSForgeScreen.OverlordEquipContent overlordEquipEquipContent;
+        private WalletWidget walletWidget;
+        private Transform shardsContent;
+        private NSForgeScreen.ShardContentExchange shardsContentExhange;
+        private NSForgeScreen.ShardContentMerge shardsContentMerge;
+        private NSForgeScreen.BattleGirlsEquipContent battleGirlsEquipContent;
+        private NSForgeScreen.OverlordEquipContent overlordEquipContent;
 
         private void Awake()
         {
@@ -72,83 +33,45 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
             tabArea = canvas.Find("TabArea");
+            tabAreaShards = tabArea.Find("Shards");
+            tabAreaGirls = tabArea.Find("BattleGirlsEquip");
+            tabAreaOverlord = tabArea.Find("OverlordEquip");
+
+            tabAreaShards.Find("Button").GetComponent<Button>().onClick.AddListener(ShardsTabClick);
+            tabAreaShards.Find("TabOpened/MergeTab").GetComponent<Button>().onClick.AddListener(ShardsMergeTabClick);
+            tabAreaShards.Find("TabOpened/ExchangeTab").GetComponent<Button>().onClick.AddListener(ShardsExchangeTabClick);
+            tabAreaGirls.Find("Button").GetComponent<Button>().onClick.AddListener(BattleGirlsTabClick);
+            tabAreaOverlord.Find("Button").GetComponent<Button>().onClick.AddListener(OverlordTabClick);
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-            
-            infoBlock = canvas.Find("InfoBlock");
-            consumeCell = infoBlock.Find("ConsumeCell");
-            var counter = consumeCell.Find("Counter");
-            consumeCount = counter.Find("Count").GetComponent<TextMeshProUGUI>();
-            consumeItem = consumeCell.Find("Item").gameObject;
-            consumeRarityBack = consumeItem.transform.Find("RarityBackground").GetComponent<Image>();
-            consumeShard = consumeItem.transform.Find("Shard").GetComponent<Image>();
-            consumeShardGirl = consumeShard.transform.Find("Girl").GetComponent<Image>();
-            consumeEquip = consumeItem.transform.Find("Equip").GetComponent<Image>();
 
-            targetCell = infoBlock.Find("TargetCell");
-            counter = targetCell.Find("Counter");
-            targetCount = counter.Find("Count").GetComponent<TextMeshProUGUI>();
-            
-            targetDecreaseButton = counter.Find("DecreaseButton").GetComponent<Button>();
-            targetDecreaseButton.onClick.AddListener(DecreaseButtonClick);
-            targetIncreaseButton = counter.Find("IncreaseButton").GetComponent<Button>();
-            targetIncreaseButton.onClick.AddListener(IncreaseButtonClick);
-            
-            targetItem = targetCell.Find("Item").gameObject;
-            targetRarityBack = targetItem.transform.Find("RarityBackground").GetComponent<Image>();
-            targetShard = targetItem.transform.Find("Shard").GetComponent<Image>();
-            targetShardGirl = targetShard.transform.Find("Girl").GetComponent<Image>();
-            targetEquip = targetItem.transform.Find("Equip").GetComponent<Image>();
-
-            buttons = canvas.Find("Buttons");
-            marketButton = buttons.Find("MarketButton").GetComponent<Button>();
-            marketButton.onClick.AddListener(MarketButtonClick);
-            marketButtonText = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            
-            portalButton = buttons.Find("PortalButton").GetComponent<Button>();
-            portalButton.onClick.AddListener(PortalButtonClick);
-            portalButtonText = portalButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            
-            mergeButton = buttons.Find("MergeButton").GetComponent<Button>();
-            mergeButton.onClick.AddListener(MergeButtonClick);
-
-            shardsContentGO = canvas.Find("ShardsContent").gameObject;
-            battleGirlsEquipContentGO = canvas.Find("BattleGirlsEquipContent").gameObject;
-            overlordContentGO = canvas.Find("OverlordContent").gameObject;
-
-            foreach (var i in tabIds)
-            {
-                tabs[i] = tabArea.Find(tabNames[i]).Find("Button").GetComponent<Button>();
-                tabs[i].onClick.AddListener(() => TabClick(i));
-                
-                pressedTabs[i] = tabs[i].transform.Find("IconBack").Find("IconBackSelected").gameObject;
-                pressedTabs[i].SetActive(false);
-            }
-
-            var tabOpened = tabArea.Find("Shards").Find("TabOpened");
-            tabs[SubTabExchangeShard] = tabOpened.Find("ExchangeTab").GetComponent<Button>();
-            tabs[SubTabExchangeShard].onClick.AddListener(() => EnterSubTab(SubTabExchangeShard));
-            pressedTabs[SubTabExchangeShard] = tabOpened.Find("ExchangeTabSelected").gameObject;
-            pressedTabs[SubTabExchangeShard].SetActive(false);
-                    
-            tabs[SubTabMergeShard] = tabOpened.Find("MergeTab").GetComponent<Button>();
-            tabs[SubTabMergeShard].onClick.AddListener(() => EnterSubTab(SubTabMergeShard));
-            pressedTabs[SubTabMergeShard] = tabOpened.Find("MergeTabSelected").gameObject;
-            pressedTabs[SubTabMergeShard].SetActive(false);
-            
-            for (int i = 0; i < mergePrice.Length; i++)
-            {
-                mergePrice[i] = mergeButton.transform.Find($"Resource{i + 1}").GetComponent<Image>();
-                mergePriceAmount[i] = mergePrice[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            }
-            
-            walletWidgetPos = canvas.Find("WalletWidgetPos");
+            shardsContent = canvas.Find("ShardsContent");
+            shardsContentExhange = shardsContent.Find("ShardsContentExchange").GetComponent<NSForgeScreen.ShardContentExchange>();
+            shardsContentMerge = shardsContent.Find("ShardsContentMerge").GetComponent<NSForgeScreen.ShardContentMerge>();
+            battleGirlsEquipContent = canvas.Find("BattleGirlsEquipContent").GetComponent<NSForgeScreen.BattleGirlsEquipContent>();
+            overlordEquipContent = canvas.Find("OverlordContent").GetComponent<NSForgeScreen.OverlordEquipContent>();
+            walletWidget = WalletWidget.GetInstance(canvas.Find("WalletWidgetPos"));
         }
 
         public override async Task BeforeShowMakeAsync()
         {
-            Customize();
+            switch (inputData?.activeTabId)
+            {
+                case TabShard:
+                    ShardsTabClick();
+                    break;
+                case TabBattleGirlsEquip:
+                    BattleGirlsTabClick();
+                    break;
+                case TabOverlordEquip:
+                    OverlordTabClick();
+                    break;
+                default:
+                    ShardsTabClick();
+                    break;
+            }
+
             await Task.CompletedTask;
         }
 
@@ -164,168 +87,75 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private void Customize()
-        {
-            shardsContent = shardsContentGO.AddComponent<NSForgeScreen.ShardContent>();
-            battleGirlsEquipEquipContent = battleGirlsEquipContentGO.AddComponent<NSForgeScreen.BattleGirlsEquipContent>();
-            overlordEquipEquipContent = overlordContentGO.AddComponent<NSForgeScreen.OverlordEquipContent>();
-
-            activeTabId = inputData.activeTabId ?? TabShard;
-            targetItem.SetActive(false);
-            consumeItem.SetActive(false);
-            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
-            EnterTab(activeTabId);
-        }
-
-        private void EnterSubTab(int tabId)
+        private void ShardsTabClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            LeaveSubTab(activeSubTabId);
-            pressedTabs[tabId].SetActive(true);
-            activeSubTabId = tabId;
-            shardsContent.isMergeMode = activeSubTabId == SubTabMergeShard;
-            shardsContent.OnModeChanged();
+
+            tabAreaShards.Find("TabOpened").gameObject.SetActive(true);
+            tabAreaShards.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(true);
+            shardsContent.gameObject.SetActive(true);
+
+            tabAreaGirls.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 451);
+            tabAreaGirls.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(false);
+            battleGirlsEquipContent.gameObject.SetActive(false);
+
+            tabAreaOverlord.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 329);
+            tabAreaOverlord.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(false);
+            overlordEquipContent.gameObject.SetActive(false);
         }
 
-        private void LeaveSubTab(int tabId)
-        {
-            pressedTabs[tabId].SetActive(false);
-        }
-        
-        private void TabClick(int tabId)
+        private void ShardsMergeTabClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            LeaveTab(activeTabId);
-            EnterTab(tabId);
+
+            tabAreaShards.Find("TabOpened/MergeTabSelected").gameObject.SetActive(true);
+            tabAreaShards.Find("TabOpened/ExchangeTabSelected").gameObject.SetActive(false);
+            shardsContentMerge.gameObject.SetActive(true);
+            shardsContentExhange.gameObject.SetActive(false);
         }
 
-        private void EnterTab(int tabId)
+        private void ShardsExchangeTabClick()
         {
-            var content = tabId switch
-            {
-                TabShard => shardsContentGO,
-                TabBattleGirlsEquip => battleGirlsEquipContentGO,
-                TabOverlordEquip => overlordContentGO,
-                _ => null
-            };
-            
-            activeTabId = tabId;
-            pressedTabs[tabId].SetActive(true);
-            content?.SetActive(true);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            switch (tabId)
-            {
-                case TabOverlordEquip:
-                    MoveUpButtonsAndInfoBlockPos();
-                    marketButtonText.text = "Go to the Market to\nbuy sets with equipment";
-                    portalButtonText.text = "Go to the portal to\nsummon more equipment";
-                    break;
-                case TabBattleGirlsEquip:
-                    MoveUpButtonsAndInfoBlockPos();
-                    marketButtonText.text = "Go to the Market\nto buy sets with weapon";
-                    portalButtonText.text = "Go to the portal\nto summon more weapon";
-                    break;
-                case TabShard:
-                    SetButtonsAndInfoBlockDefaultPos();
-                    marketButtonText.text = "Go to the Market\nto buy sets with shards";
-                    portalButtonText.text = "Go to the portal\nto summon more shards";
-                    OpenShardTab();
-                    break;
-            }
+            tabAreaShards.Find("TabOpened/MergeTabSelected").gameObject.SetActive(false);
+            tabAreaShards.Find("TabOpened/ExchangeTabSelected").gameObject.SetActive(true);
+            shardsContentMerge.gameObject.SetActive(false);
+            shardsContentExhange.gameObject.SetActive(true);
         }
 
-        private void LeaveTab(int tabId)
+        private void BattleGirlsTabClick()
         {
-            var content = tabId switch
-            {
-                TabShard => shardsContentGO,
-                TabBattleGirlsEquip => battleGirlsEquipContentGO,
-                TabOverlordEquip => overlordContentGO,
-                _ => null
-            };
-            
-            pressedTabs[tabId].SetActive(false);
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            if (tabId == TabShard)
-            {
-                CloseShardTab();
-            }
+            tabAreaShards.Find("TabOpened").gameObject.SetActive(false);
+            tabAreaShards.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(false);
+            shardsContent.gameObject.SetActive(false);
 
-            content?.SetActive(false);
-        }
-        
-        private void OpenShardTab()
-        {
-            var tabShard = tabArea.Find("Shards");
-            var openedTab = tabShard.transform.Find("TabOpened");
-            
-            openedTab.gameObject.SetActive(true);
-            tabArea.Find("BattleGirlsEquip").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 451);
-            tabArea.Find("OverlordEquip").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 329);
-            EnterSubTab(activeSubTabId);
+            tabAreaGirls.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 672);
+            tabAreaGirls.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(true);
+            battleGirlsEquipContent.gameObject.SetActive(true);
+
+            tabAreaOverlord.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 550);
+            tabAreaOverlord.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(false);
+            overlordEquipContent.gameObject.SetActive(false);
         }
 
-        private void CloseShardTab()
+        private void OverlordTabClick()
         {
-            var tabShard = tabArea.Find("Shards");
-            var openedTab = tabShard.Find("TabOpened").gameObject;
-            
-            openedTab.SetActive(false);
-            tabArea.Find("BattleGirlsEquip").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 672);
-            tabArea.Find("OverlordEquip").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 550);
-        }
-        
-        private void SetButtonsAndInfoBlockDefaultPos()
-        {
-            var buttonsRect = buttons.GetComponent<RectTransform>();
-            var buttonsPos = buttonsRect.anchoredPosition;
-            buttonsRect.anchoredPosition = new Vector2(buttonsPos.x, 367);
-            infoBlock.GetComponent<RectTransform>().anchoredPosition = new Vector2(247, -137);
-        }
-        
-        private void MoveUpButtonsAndInfoBlockPos()
-        {
-            var buttonsRect = buttons.GetComponent<RectTransform>();
-            var buttonsPos = buttonsRect.anchoredPosition;
-            buttonsRect.anchoredPosition = new Vector2(buttonsPos.x, 438);
-            infoBlock.GetComponent<RectTransform>().anchoredPosition = new Vector2(247, -112);
-        }
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-        private void MergeButtonClick()
-        {
-            
-        }
-        
-        private void PortalButtonClick()
-        {
-            var portalScreenTab = activeTabId switch
-            {
-                TabShard => PortalScreen.TabShards,
-                TabOverlordEquip => PortalScreen.TabOverlordEquip,
-                TabBattleGirlsEquip => PortalScreen.TabBattleGirlsEquip,
-                _ => PortalScreen.TabBattleGirls
-            };
-            
-            UIManager.MakeScreen<PortalScreen>().
-                SetData(new PortalScreenInData
-            {
-                activeButtonId = portalScreenTab
-            }).RunShowScreenProcess();
-        }
-        
-        private void MarketButtonClick()
-        {
-            UIManager.ShowOverlay<MarketOverlay>();
-        }
-        
-        private void DecreaseButtonClick()
-        {
-            
-        }
-        
-        private void IncreaseButtonClick()
-        {
-            
+            tabAreaShards.Find("TabOpened").gameObject.SetActive(false);
+            tabAreaShards.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(false);
+            shardsContent.gameObject.SetActive(false);
+
+            tabAreaGirls.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 672);
+            tabAreaGirls.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(false);
+            battleGirlsEquipContent.gameObject.SetActive(false);
+
+            tabAreaOverlord.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 550);
+            tabAreaOverlord.Find("Button/IconBack/IconBackSelected").gameObject.SetActive(true);
+            overlordEquipContent.gameObject.SetActive(true);
         }
         
         private void BackButtonClick()
