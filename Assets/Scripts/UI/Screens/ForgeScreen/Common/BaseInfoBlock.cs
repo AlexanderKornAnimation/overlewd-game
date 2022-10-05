@@ -43,6 +43,8 @@ namespace Overlewd
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             }
+
+            public int targetCountValue => int.Parse(targetCount.text);
         }
     }
 }

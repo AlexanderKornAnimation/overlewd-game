@@ -11,6 +11,10 @@ namespace Overlewd
     {
         public class InfoBlockShardsMerge : BaseInfoBlock
         {
+            public ShardContentMerge shardsCtrl { get; set; }
+            public MatriarchMerge consumeMtrch { get; set; }
+            public MatriarchMerge targetMtrch { get; set; }
+
             protected override void IncClick()
             {
                 base.IncClick();
@@ -20,6 +24,11 @@ namespace Overlewd
             protected override void DecClick()
             {
                 base.DecClick();
+
+            }
+
+            public void RefreshState()
+            {
 
             }
         }
