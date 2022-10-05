@@ -11,6 +11,10 @@ namespace Overlewd
     {
         public class InfoBlockShardsExchange : BaseInfoBlock
         {
+            public ShardContentExchange shardsCtrl { get; set; }
+            public MatriarchExchange consumeMtrch { get; set; }
+            public MatriarchExchange targetMtrch { get; set; }
+
             protected override void IncClick()
             {
                 base.IncClick();
@@ -20,6 +24,11 @@ namespace Overlewd
             protected override void DecClick()
             {
                 base.DecClick();
+
+            }
+
+            public void RefreshState()
+            {
 
             }
         }

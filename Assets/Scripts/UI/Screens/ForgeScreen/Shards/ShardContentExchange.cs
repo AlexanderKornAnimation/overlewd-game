@@ -31,6 +31,7 @@ namespace Overlewd
                 base.Awake();
 
                 infoBlock = transform.Find("InfoBlock").GetComponent<InfoBlockShardsExchange>();
+                infoBlock.shardsCtrl = this;
 
                 sideTabs = transform.Find("SideTabs");
                 sideTabs.Find("Tabs/Basic").GetComponent<Button>().onClick.AddListener(() => SideTabClick(SideTabBasic));
@@ -41,14 +42,28 @@ namespace Overlewd
                 var matrs = transform.Find("Matriarchs");
                 mUlvi = matrs.Find("Ulvi").gameObject.AddComponent<MatriarchExchange>();
                 mUlvi.matriarchKey = GameData.matriarchs.Ulvi.key;
+                mUlvi.shardsCtrl = this;
+                mUlvi.ctrl_InfoBlock = infoBlock;
+
                 mAdriel = matrs.Find("Adriel").gameObject.AddComponent<MatriarchExchange>();
                 mAdriel.matriarchKey = GameData.matriarchs.Adriel.key;
+                mAdriel.shardsCtrl = this;
+                mAdriel.ctrl_InfoBlock = infoBlock;
+
                 mIngie = matrs.Find("Ingie").gameObject.AddComponent<MatriarchExchange>();
                 mIngie.matriarchKey = GameData.matriarchs.Ingie.key;
+                mIngie.shardsCtrl = this;
+                mIngie.ctrl_InfoBlock = infoBlock;
+
                 mFaye = matrs.Find("Faye").gameObject.AddComponent<MatriarchExchange>();
                 mFaye.matriarchKey = GameData.matriarchs.Faye.key;
+                mFaye.shardsCtrl = this;
+                mFaye.ctrl_InfoBlock = infoBlock;
+
                 mLili = matrs.Find("Lili").gameObject.AddComponent<MatriarchExchange>();
                 mLili.matriarchKey = GameData.matriarchs.Lili.key;
+                mLili.shardsCtrl = this;
+                mLili.ctrl_InfoBlock = infoBlock;
             }
 
             private void Start()
@@ -82,6 +97,26 @@ namespace Overlewd
             protected override void MarketButtonClick()
             {
                 UIManager.ShowOverlay<MarketOverlay>();
+            }
+
+            public void RefreshState()
+            {
+                infoBlock.RefreshState();
+                mUlvi.RefreshState();
+                mAdriel.RefreshState();
+                mIngie.RefreshState();
+                mFaye.RefreshState();
+                mLili.RefreshState();
+            }
+
+            public string ExchangeRaritySelected()
+            {
+                var selectedRarity = AdminBRO.Rarity.Basic;
+                selectedRarity = sideTabs.Find("Selected/Basic").gameObject.activeSelf ? AdminBRO.Rarity.Basic : selectedRarity;
+                selectedRarity = sideTabs.Find("Selected/Advanced").gameObject.activeSelf ? AdminBRO.Rarity.Advanced : selectedRarity;
+                selectedRarity = sideTabs.Find("Selected/Epic").gameObject.activeSelf ? AdminBRO.Rarity.Epic : selectedRarity;
+                selectedRarity = sideTabs.Find("Selected/Heroic").gameObject.activeSelf ? AdminBRO.Rarity.Heroic : selectedRarity;
+                return selectedRarity;
             }
         }
     }
