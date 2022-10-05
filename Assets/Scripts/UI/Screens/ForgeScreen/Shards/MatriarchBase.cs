@@ -11,35 +11,34 @@ namespace Overlewd
     {
         public abstract class MatriarchBase : MonoBehaviour
         {
-            protected Button selectButton;
-            protected Button confirmButton;
-            protected GameObject notActive;
-            protected GameObject isTarget;
-            protected GameObject isConsume;
-
             protected TextMeshProUGUI basicShardAmount;
             protected TextMeshProUGUI advancedShardAmount;
             protected TextMeshProUGUI epicShardAmount;
             protected TextMeshProUGUI heroicShardAmount;
+
+            protected Transform shadeInfo;
+            protected Transform isTarget;
+            protected Transform isConsume;
+            protected TextMeshProUGUI msgTitle;
+            protected Button button;
             
             public string matriarchKey { get; set; }
             public AdminBRO.MatriarchItem matriarchData => GameData.matriarchs.GetMatriarchByKey(matriarchKey);
 
             protected virtual void Awake()
             {
-                selectButton = transform.Find("ButtonActive").GetComponent<Button>();
-                selectButton.onClick.AddListener(ButtonClick);
-                notActive = transform.Find("NotActive").gameObject;
-                isTarget = selectButton.transform.Find("IsTarget").gameObject;
-                isConsume = selectButton.transform.Find("IsConsume").gameObject;
-                confirmButton = transform.Find("ConfirmButton").GetComponent<Button>();
-                confirmButton.onClick.AddListener(ConfirmButtonClick);
+                var info = transform.Find("Info");
+                basicShardAmount = info.Find("BasicShard/Count").GetComponent<TextMeshProUGUI>();
+                advancedShardAmount = info.Find("AdvancedShard/Count").GetComponent<TextMeshProUGUI>();
+                epicShardAmount = info.Find("EpicShard/Count").GetComponent<TextMeshProUGUI>();
+                heroicShardAmount = info.Find("HeroicShard/Count").GetComponent<TextMeshProUGUI>();
 
-                basicShardAmount = selectButton.transform.Find("BasicShard").Find("Count").GetComponent<TextMeshProUGUI>();
-                advancedShardAmount =
-                    selectButton.transform.Find("AdvancedShard").Find("Count").GetComponent<TextMeshProUGUI>();
-                epicShardAmount = selectButton.transform.Find("EpicShard").Find("Count").GetComponent<TextMeshProUGUI>();
-                heroicShardAmount = selectButton.transform.Find("HeroicShard").Find("Count").GetComponent<TextMeshProUGUI>();
+                shadeInfo = info.Find("ShadeInfo");
+                isTarget = info.Find("IsTarget");
+                isConsume = info.Find("IsConsume");
+                msgTitle = info.Find("MsgTitle").GetComponent<TextMeshProUGUI>();
+                button = info.Find("Button").GetComponent<Button>();
+                button.onClick.AddListener(ButtonClick);
             }
 
             protected virtual void Start()
@@ -47,22 +46,24 @@ namespace Overlewd
                 Customize();
             }
 
-            protected virtual void ConfirmButtonClick()
+            protected virtual void Customize()
             {
-                
+                transform.Find("Ulvi").gameObject.SetActive(matriarchData?.isUlvi ?? false);
+                transform.Find("Ulvi/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
+                transform.Find("Adriel").gameObject.SetActive(matriarchData?.isAdriel ?? false);
+                transform.Find("Adriel/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
+                transform.Find("Ingie").gameObject.SetActive(matriarchData?.isIngie ?? false);
+                transform.Find("Ingie/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
+                transform.Find("Faye").gameObject.SetActive(matriarchData?.isFaye ?? false);
+                transform.Find("Faye/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
+                transform.Find("Lili").gameObject.SetActive(matriarchData?.isLili ?? false);
+                transform.Find("Lili/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
+                transform.Find("Info").gameObject.SetActive(matriarchData?.isOpen ?? false);
             }
 
             protected virtual void ButtonClick()
             {
-                
-            }
 
-            protected virtual void Customize()
-            {
-                isTarget.SetActive(false);
-                isConsume.SetActive(false);
-                selectButton.gameObject.SetActive(matriarchData.isOpen);
-                notActive?.SetActive(!matriarchData.isOpen);
             }
         }
     }

@@ -74,7 +74,15 @@ namespace Overlewd
         private void FTUE_ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            LoadingScreen.RunFTUE();
+            if (UIManager.HasScreen<CastleScreen>())
+            {
+                GameData.devMode = false;
+                UIManager.ShowScreen<CastleScreen>();
+            }
+            else
+            {
+                LoadingScreen.RunFTUE();
+            }
         }
 
         private void FTUE_Dev_ButtonClick()
@@ -82,8 +90,15 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
             GameData.devMode = true;
-            GameData.ftue.info.chapter1.SetAsMapChapter();
-            UIManager.ShowScreen<MapScreen>();
+            if (UIManager.HasScreen<CastleScreen>())
+            {
+                UIManager.ShowScreen<CastleScreen>();
+            }
+            else
+            {
+                GameData.ftue.info.chapter1.SetAsMapChapter();
+                UIManager.ShowScreen<MapScreen>();
+            }
         }
 
         private async void Reset_ButtonClick()
