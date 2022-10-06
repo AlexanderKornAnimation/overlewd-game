@@ -68,7 +68,7 @@ namespace Overlewd
 
             private void Start()
             {
-
+                RefreshState();
             }
 
             private void SideTabClick(int tabId)
@@ -78,6 +78,8 @@ namespace Overlewd
                 sideTabs.Find("Selected/Advanced").gameObject.SetActive(tabId == SideTabAdvanced);
                 sideTabs.Find("Selected/Epic").gameObject.SetActive(tabId == SideTabEpic);
                 sideTabs.Find("Selected/Heroic").gameObject.SetActive(tabId == SideTabHeroic);
+
+                RefreshState();
             }
 
             protected override void MergeButtonClick()

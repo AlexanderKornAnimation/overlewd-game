@@ -21,11 +21,46 @@ namespace Overlewd
             protected Transform isConsume;
             protected TextMeshProUGUI msgTitle;
             protected Button button;
-            
-            public string matriarchKey { get; set; }
+
+            private string _matriarchKey;
+            public string matriarchKey
+            {
+                get => _matriarchKey;
+                set
+                {
+                    _matriarchKey = value;
+
+                    transform.Find("Ulvi").gameObject.SetActive(matriarchData?.isUlvi ?? false);
+                    transform.Find("Ulvi/NoActive").gameObject.SetActive(!IsOpen);
+                    transform.Find("Adriel").gameObject.SetActive(matriarchData?.isAdriel ?? false);
+                    transform.Find("Adriel/NoActive").gameObject.SetActive(!IsOpen);
+                    transform.Find("Ingie").gameObject.SetActive(matriarchData?.isIngie ?? false);
+                    transform.Find("Ingie/NoActive").gameObject.SetActive(!IsOpen);
+                    transform.Find("Faye").gameObject.SetActive(matriarchData?.isFaye ?? false);
+                    transform.Find("Faye/NoActive").gameObject.SetActive(!IsOpen);
+                    transform.Find("Lili").gameObject.SetActive(matriarchData?.isLili ?? false);
+                    transform.Find("Lili/NoActive").gameObject.SetActive(!IsOpen);
+                    transform.Find("Info").gameObject.SetActive(IsOpen);
+
+                    var mtrch = matriarchData?.key switch
+                    {
+                        AdminBRO.MatriarchItem.Key_Ulvi => transform.Find("Ulvi"),
+                        AdminBRO.MatriarchItem.Key_Adriel => transform.Find("Adriel"),
+                        AdminBRO.MatriarchItem.Key_Ingie => transform.Find("Ingie"),
+                        AdminBRO.MatriarchItem.Key_Faye => transform.Find("Faye"),
+                        AdminBRO.MatriarchItem.Key_Lili => transform.Find("Lili"),
+                        _ => null
+                    };
+                    button = mtrch?.GetComponent<Button>();
+                    button?.onClick.AddListener(ButtonClick);
+                    button.interactable = IsOpen;
+                }
+            }
             public AdminBRO.MatriarchItem matriarchData => GameData.matriarchs.GetMatriarchByKey(matriarchKey);
 
-            protected virtual void Awake()
+            public bool IsOpen => matriarchData?.isOpen ?? false;
+
+            void Awake()
             {
                 var info = transform.Find("Info");
                 basicShardAmount = info.Find("BasicShard/Count").GetComponent<TextMeshProUGUI>();
@@ -37,33 +72,20 @@ namespace Overlewd
                 isTarget = info.Find("IsTarget");
                 isConsume = info.Find("IsConsume");
                 msgTitle = info.Find("MsgTitle").GetComponent<TextMeshProUGUI>();
-                button = info.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
-            }
-
-            protected virtual void Start()
-            {
-                Customize();
-            }
-
-            protected virtual void Customize()
-            {
-                transform.Find("Ulvi").gameObject.SetActive(matriarchData?.isUlvi ?? false);
-                transform.Find("Ulvi/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
-                transform.Find("Adriel").gameObject.SetActive(matriarchData?.isAdriel ?? false);
-                transform.Find("Adriel/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
-                transform.Find("Ingie").gameObject.SetActive(matriarchData?.isIngie ?? false);
-                transform.Find("Ingie/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
-                transform.Find("Faye").gameObject.SetActive(matriarchData?.isFaye ?? false);
-                transform.Find("Faye/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
-                transform.Find("Lili").gameObject.SetActive(matriarchData?.isLili ?? false);
-                transform.Find("Lili/NoActive").gameObject.SetActive(!matriarchData?.isOpen ?? false);
-                transform.Find("Info").gameObject.SetActive(matriarchData?.isOpen ?? false);
             }
 
             protected virtual void ButtonClick()
             {
 
+            }
+
+            public virtual void RefreshState()
+            {
+                var mData = matriarchData;
+                basicShardAmount.text = mData?.basicShard?.amount.ToString();
+                advancedShardAmount.text = mData?.advancedShard?.amount.ToString();
+                epicShardAmount.text = mData?.epicShard?.amount.ToString();
+                heroicShardAmount.text = mData?.heroicShard?.amount.ToString();
             }
         }
     }

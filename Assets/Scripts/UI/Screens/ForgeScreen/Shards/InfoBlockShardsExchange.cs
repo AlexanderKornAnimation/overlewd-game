@@ -19,17 +19,39 @@ namespace Overlewd
             {
                 base.IncClick();
 
+                shardsCtrl.RefreshState();
             }
 
             protected override void DecClick()
             {
                 base.DecClick();
 
+
+                shardsCtrl.RefreshState();
             }
 
             public void RefreshState()
             {
+                if (consumeMtrch == null || targetMtrch == null)
+                {
+                    msgTitle.text = "Tap to matriarchs whose shards you want to exchange";
+                    msgTitle.gameObject.SetActive(true);
+                    arrow.gameObject.SetActive(false);
+                    consumeCell.gameObject.SetActive(false);
+                    targetCell.gameObject.SetActive(false);
+                }
+                else
+                {
+                    msgTitle.gameObject.SetActive(false);
+                    arrow.gameObject.SetActive(true);
+                    consumeCell.gameObject.SetActive(true);
+                    targetCell.gameObject.SetActive(true);
 
+                    consumeSubstrate.sprite = GetShardSubstrate(shardsCtrl.ExchangeRaritySelected());
+                    consumeIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
+                    targetSubstrate.sprite = GetShardSubstrate(shardsCtrl.ExchangeRaritySelected());
+                    targetIcon.sprite = GetShardIcon(targetMtrch?.matriarchData);
+                }
             }
         }
     }
