@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,10 +11,8 @@ namespace Overlewd
     {
         public class QuestDescription : MonoBehaviour
         {
-            private TextMeshProUGUI topText;
-            private Image girlEmotion1;
-            private TextMeshProUGUI bottomText;
-            private Image girlEmotion2;
+            private TextMeshProUGUI text;
+            private Image girlEmotion;
             
             public int? questId { get; set; }
             public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
@@ -22,12 +21,20 @@ namespace Overlewd
             {
                 var canvas = transform.Find("Canvas");
 
-                topText = canvas.Find("TopText").GetComponent<TextMeshProUGUI>();
-                girlEmotion1 = canvas.Find("GirlEmotion1").GetComponent<Image>();
-                bottomText = canvas.Find("BottomText").GetComponent<TextMeshProUGUI>();
-                girlEmotion2 = canvas.Find("GirlEmotion2").GetComponent<Image>();
+                text = canvas.Find("Text").GetComponent<TextMeshProUGUI>();
+                girlEmotion = canvas.Find("GirlEmotion").GetComponent<Image>();
             }
 
+            private void Start()
+            {
+                Customize();
+            }
+
+            private void Customize()
+            {
+                text.text = questData.description;
+            }
+            
             public static QuestDescription GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<QuestDescription>

@@ -33,7 +33,7 @@ namespace Overlewd
                 {
                     title.text = questData?.name;
                     progress.text = questData.goalCount.HasValue
-                        ? $"{questData?.progressCount} / {questData?.goalCount}"
+                        ? $"{questData?.progressCount}/{questData?.goalCount}"
                         : "";
                 }
             }

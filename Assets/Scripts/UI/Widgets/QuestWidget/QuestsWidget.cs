@@ -41,7 +41,7 @@ namespace Overlewd
         {
             var questNum = 0;
             var quests =
-                GameData.quests.quests.Where(q => q.isFTUE && q.ftueChapterId == GameData.ftue.activeChapter.id);
+                GameData.quests.quests.Where(q => q.ftueChapterId == GameData.ftue.mapChapter.id);
             
             foreach (var questData in quests)
             {
