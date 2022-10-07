@@ -73,9 +73,9 @@ namespace Overlewd
         {
             whiteSlider.fillRect.GetComponent<Image>().enabled = true;
             whiteSlider.maxValue = maxHp;
-            yield return new WaitForSeconds(1.1f);
-            whiteSlider.DOValue(hp, 0.75f).SetEase(Ease.OutQuint);
-            yield return new WaitForSeconds(0.75f);
+            yield return new WaitForSeconds(0.6f);
+            whiteSlider.DOValue(hp, 0.3f).SetEase(Ease.OutQuint);
+            yield return new WaitForSeconds(0.6f);
             whiteSlider.fillRect.GetComponent<Image>().enabled = false;
         }
 
