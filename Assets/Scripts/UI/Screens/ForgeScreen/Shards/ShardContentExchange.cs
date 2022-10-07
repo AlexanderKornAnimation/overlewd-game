@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,7 +85,7 @@ namespace Overlewd
 
             protected override void MergeButtonClick()
             {
-
+                Exchange();
             }
 
             protected override void PortalButtonClick()
@@ -109,6 +110,11 @@ namespace Overlewd
                 mIngie.RefreshState();
                 mFaye.RefreshState();
                 mLili.RefreshState();
+
+                //merge button
+                mergeButton.gameObject.SetActive(infoBlock.isFilled);
+                SetMergeBtnPrice(infoBlock.exchangePrice);
+                UITools.DisableButton(mergeButton, !infoBlock.canExchange);
             }
 
             public string ExchangeRaritySelected()
@@ -119,6 +125,16 @@ namespace Overlewd
                 selectedRarity = sideTabs.Find("Selected/Epic").gameObject.activeSelf ? AdminBRO.Rarity.Epic : selectedRarity;
                 selectedRarity = sideTabs.Find("Selected/Heroic").gameObject.activeSelf ? AdminBRO.Rarity.Heroic : selectedRarity;
                 return selectedRarity;
+            }
+
+            private async void Exchange()
+            {
+                await GameData.buildings.forge.ExchangeShard(
+                    infoBlock.consumeMtrch.matriarchData.id,
+                    infoBlock.targetMtrch.matriarchData.id,
+                    ExchangeRaritySelected(),
+                    infoBlock.shardsNeeded);
+                RefreshState();
             }
         }
     }

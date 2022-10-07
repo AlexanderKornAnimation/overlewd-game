@@ -18,21 +18,18 @@ namespace Overlewd
             protected override void IncClick()
             {
                 base.IncClick();
-
                 shardsCtrl.RefreshState();
             }
 
             protected override void DecClick()
             {
                 base.DecClick();
-
-
                 shardsCtrl.RefreshState();
             }
 
             public void RefreshState()
             {
-                if (consumeMtrch == null || targetMtrch == null)
+                if (!isFilled)
                 {
                     msgTitle.text = "Tap to matriarchs whose shards you want to exchange";
                     msgTitle.gameObject.SetActive(true);
@@ -46,13 +43,37 @@ namespace Overlewd
                     arrow.gameObject.SetActive(true);
                     consumeCell.gameObject.SetActive(true);
                     targetCell.gameObject.SetActive(true);
+                    consumeIcon.gameObject.SetActive(false);
+                    targetIcon.gameObject.SetActive(false);
 
                     consumeSubstrate.sprite = GetShardSubstrate(shardsCtrl.ExchangeRaritySelected());
-                    consumeIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
+                    consumeShardIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
                     targetSubstrate.sprite = GetShardSubstrate(shardsCtrl.ExchangeRaritySelected());
-                    targetIcon.sprite = GetShardIcon(targetMtrch?.matriarchData);
+                    targetShardIcon.sprite = GetShardIcon(targetMtrch?.matriarchData);
+
+                    //counter buttons
+                    consumeCount.text = $"{shardsCount}/{shardsNeeded}";
+                    UITools.DisableButton(decButton, targetCountValue == 1);
+                    UITools.DisableButton(incButton, shardsNeeded >= maxShardsResult);
                 }
             }
+
+            public bool isFilled => consumeMtrch != null && targetMtrch != null;
+            public int exchangeAmount =>
+                GameData.buildings.forge.prices.exchangeShardSettings.exchangeAmount;
+            public int maxShardsResult =>
+                GameData.buildings.forge.prices.exchangeShardSettings.maxPossibleResultAmount;
+            public int? shardsCount => 
+                GameData.matriarchs.GetShardByMatriarchId(consumeMtrch?.matriarchData?.id,
+                    shardsCtrl.ExchangeRaritySelected())?.amount;
+            public int shardsNeeded => targetCountValue * exchangeAmount;
+            public List<AdminBRO.PriceItem> exchangePrice => 
+                UITools.PriceMul(GameData.buildings.forge.prices.exchangeShardSettings.
+                    GetPrice(shardsCtrl.ExchangeRaritySelected()),
+                    targetCountValue);
+            public bool canExchange =>
+                GameData.player.CanBuy(exchangePrice) &&
+                shardsCount >= shardsNeeded;
         }
     }
 }

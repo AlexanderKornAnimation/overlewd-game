@@ -18,20 +18,18 @@ namespace Overlewd
             protected override void IncClick()
             {
                 base.IncClick();
-
                 shardsCtrl.RefreshState();
             }
 
             protected override void DecClick()
             {
                 base.DecClick();
-
                 shardsCtrl.RefreshState();
             }
 
             public void RefreshState()
             {
-                if (consumeMtrch == null || targetMtrch == null)
+                if (!isFilled)
                 {
                     msgTitle.text = "Tap to matriarchs whose shards you want to merge";
                     msgTitle.gameObject.SetActive(true);
@@ -45,9 +43,11 @@ namespace Overlewd
                     arrow.gameObject.SetActive(true);
                     consumeCell.gameObject.SetActive(true);
                     targetCell.gameObject.SetActive(true);
+                    consumeIcon.gameObject.SetActive(false);
+                    targetIcon.gameObject.SetActive(false);
 
-                    consumeIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
-                    targetIcon.sprite = GetShardIcon(targetMtrch?.matriarchData);
+                    consumeShardIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
+                    targetShardIcon.sprite = GetShardIcon(targetMtrch?.matriarchData);
                     switch (shardsCtrl.MergeRaritySelected())
                     {
                         case AdminBRO.Rarity.Basic:
@@ -63,8 +63,30 @@ namespace Overlewd
                             targetSubstrate.sprite = GetShardSubstrate(AdminBRO.Rarity.Heroic);
                             break;
                     }
+
+                    //counter buttons
+                    consumeCount.text = $"{shardsCount}/{shardsNeeded}";
+                    UITools.DisableButton(decButton, targetCountValue == 1);
+                    UITools.DisableButton(incButton, shardsNeeded >= maxShardsResult);
                 }
             }
+
+            public bool isFilled => consumeMtrch != null && targetMtrch != null;
+            public int mergeAmount =>
+                GameData.buildings.forge.prices.mergeShardSettings.mergeAmount;
+            public int maxShardsResult =>
+                GameData.buildings.forge.prices.mergeShardSettings.maxPossibleResultAmount;
+            public int? shardsCount =>
+                GameData.matriarchs.GetShardByMatriarchId(consumeMtrch?.matriarchData?.id,
+                    shardsCtrl.MergeRaritySelected())?.amount;
+            public int shardsNeeded => targetCountValue * mergeAmount;
+            public List<AdminBRO.PriceItem> mergePrice =>
+                UITools.PriceMul(GameData.buildings.forge.prices.mergeShardSettings.
+                    GetPrice(shardsCtrl.MergeRaritySelected()),
+                    targetCountValue);
+            public bool canMerge =>
+                GameData.player.CanBuy(mergePrice) &&
+                shardsCount >= shardsNeeded;
         }
     }
 }

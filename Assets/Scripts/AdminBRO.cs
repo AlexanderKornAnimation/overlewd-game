@@ -1923,6 +1923,9 @@ namespace Overlewd
                 public string mergeType;
                 public int mergeCount;
                 public List<MergePrice> pricesOfMergeType;
+
+                public List<PriceItem> GetPrice(string rarity) =>
+                    pricesOfMergeType.Find(p => p.rarity == rarity)?.price ?? new List<PriceItem>();
             }
 
             public class MergeShardSettings
@@ -1930,6 +1933,9 @@ namespace Overlewd
                 public int mergeAmount;
                 public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfMergeType;
+
+                public List<PriceItem> GetPrice(string rarity) =>
+                    pricesOfMergeType.Find(p => p.rarity == rarity)?.price ?? new List<PriceItem>();
             }
 
             public class ExchangeShardSettings
@@ -1937,6 +1943,9 @@ namespace Overlewd
                 public int exchangeAmount;
                 public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfExchangeType;
+
+                public List<PriceItem> GetPrice(string rarity) =>
+                    pricesOfExchangeType.Find(p => p.rarity == rarity)?.price ?? new List<PriceItem>();
             }
 
             public class MergePrice

@@ -104,9 +104,9 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.eventId)
             {
-                case GameDataEvent.Type.MagicGuildSpellLvlUp:
+                case GameDataEvent.EventId.MagicGuildSpellLvlUp:
                     activeSpell?.Customize();
                     ultimateSpell?.Customize();
                     passiveSpell1?.Customize();

@@ -133,10 +133,10 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.eventId)
             {
-                case GameDataEvent.Type.EquipmentEquipped:
-                case GameDataEvent.Type.EquipmentUnequipped:
+                case GameDataEvent.EventId.EquipmentEquipped:
+                case GameDataEvent.EventId.EquipmentUnequipped:
                     foreach (var weapon in weapons)
                     {
                         weapon.Customize();

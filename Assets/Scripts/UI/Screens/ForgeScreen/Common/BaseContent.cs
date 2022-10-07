@@ -55,6 +55,20 @@ namespace Overlewd
             {
                 UIManager.ShowOverlay<MarketOverlay>();
             }
+
+            protected void SetMergeBtnPrice(List<AdminBRO.PriceItem> price)
+            {
+                mergePrice[0].gameObject.SetActive(false);
+                mergePrice[1].gameObject.SetActive(false);
+                var i = 0;
+                foreach (var p in price)
+                {
+                    mergePrice[i].gameObject.SetActive(true);
+                    mergePrice[i].sprite = ResourceManager.LoadSprite(p.icon);
+                    mergePriceAmount[i].text = p.amount.ToString();
+                    i++;
+                }
+            }
         }
     }
 }

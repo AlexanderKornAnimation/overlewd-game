@@ -17,11 +17,13 @@ namespace Overlewd
             protected Transform consumeCell;
             protected TextMeshProUGUI consumeCount;
             protected Image consumeSubstrate;
+            protected Image consumeShardIcon;
             protected Image consumeIcon;
 
             protected Transform targetCell;
             protected TextMeshProUGUI targetCount;
             protected Image targetSubstrate;
+            protected Image targetShardIcon;
             protected Image targetIcon;
             protected Button decButton;
             protected Button incButton;
@@ -34,6 +36,7 @@ namespace Overlewd
                 consumeCell = transform.Find("ConsumeCell");
                 consumeCount = consumeCell.Find("Counter/Count").GetComponent<TextMeshProUGUI>();
                 consumeSubstrate = consumeCell.Find("Substrate").GetComponent<Image>();
+                consumeShardIcon = consumeCell.Find("ShardIcon").GetComponent<Image>();
                 consumeIcon = consumeCell.Find("Icon").GetComponent<Image>();
 
                 targetCell = transform.Find("TargetCell");
@@ -43,17 +46,20 @@ namespace Overlewd
                 incButton = targetCell.Find("Counter/Inc").GetComponent<Button>();
                 incButton.onClick.AddListener(IncClick);
                 targetSubstrate = targetCell.Find("Substrate").GetComponent<Image>();
+                targetShardIcon = targetCell.Find("ShardIcon").GetComponent<Image>();
                 targetIcon = targetCell.Find("Icon").GetComponent<Image>();
             }
 
             protected virtual void IncClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                targetCount.text = (targetCountValue + 1).ToString();
             }
 
             protected virtual void DecClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                targetCount.text = (targetCountValue - 1).ToString();
             }
 
             public int targetCountValue => int.Parse(targetCount.text);
