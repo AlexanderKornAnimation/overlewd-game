@@ -10,6 +10,9 @@ namespace Overlewd
     {
         public class EquipmentBattleGirls : EquipmentBase
         {
+            public BattleGirlsEquipContent equipCtrl { get; set; }
+            public InfoBlockBattleGirlEquip ctrl_InfoBlock { get; set; }
+
             public override void RefreshState()
             {
 
@@ -17,7 +20,7 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
-                
+                equipCtrl.RefreshState();
             }
             
             public static EquipmentBattleGirls GetInstance(Transform parent)

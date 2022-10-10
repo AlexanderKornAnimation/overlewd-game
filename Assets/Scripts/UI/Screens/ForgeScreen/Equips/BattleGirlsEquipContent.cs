@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -17,8 +18,6 @@ namespace Overlewd
             public const int TabBruiser = 4;
             public const int TabTank = 5;
             public const int TabsCount = 6;
-
-            public int activeTabId { get; private set; }= TabAll;
 
             private Button[] tabs = new Button[TabsCount];
             private GameObject[] selectedTabs = new GameObject[TabsCount];
@@ -37,53 +36,35 @@ namespace Overlewd
                 var selectedTabArea = transform.Find("SelectedTabArea");
                 var bottomSubstrate = transform.Find("BottomSubstrate");
                 
-                foreach (var i in tabIds)
+                foreach (var tabId in tabIds)
                 {
-                    tabs[i] = tabArea.Find(tabNames[i]).GetComponent<Button>();
-                    tabs[i].onClick.AddListener(() => TabClick(i));
-                    selectedTabs[i] = selectedTabArea.Find(tabNames[i]).gameObject;
-                    scrolls[i] = bottomSubstrate.Find("ScrollView_" + tabNames[i]).gameObject;
-                    contents[i] = scrolls[i].transform.Find("Viewport").Find("Content");
-
-                    selectedTabs[i].SetActive(false);
+                    tabs[tabId] = tabArea.Find(tabNames[tabId]).GetComponent<Button>();
+                    tabs[tabId].onClick.AddListener(() => TabClick(tabId));
+                    selectedTabs[tabId] = selectedTabArea.Find(tabNames[tabId]).gameObject;
+                    scrolls[tabId] = bottomSubstrate.Find("ScrollView_" + tabNames[tabId]).gameObject;
+                    contents[tabId] = scrolls[tabId].transform.Find("Viewport").Find("Content");
                 }
 
                 infoBlock = transform.Find("InfoBlock").GetComponent<InfoBlockBattleGirlEquip>();
+                infoBlock.equipCtrl = this;
             }
 
             private void Start()
             {
-                Customize();
+                TabClick(TabAll, false);
+                RefreshState();
             }
 
-            private void Customize()
+            private void TabClick(int tabId, bool playSound = true)
             {
-                EnterTab(activeTabId);
+                if (playSound)
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                for (int i = 0; i <= 5; i++)
+                foreach (var _tabId in tabIds)
                 {
-                    EquipmentBattleGirls.GetInstance(contents[0]);
+                    selectedTabs[_tabId].SetActive(_tabId == tabId);
+                    scrolls[_tabId].SetActive(_tabId == tabId);
                 }
-            }
-
-            private void TabClick(int tabId)
-            {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                LeaveTab(activeTabId);
-                EnterTab(tabId);
-            }
-
-            private void EnterTab(int tabId)
-            {
-                activeTabId = tabId;
-                selectedTabs[tabId].SetActive(true);
-                scrolls[tabId].SetActive(true);
-            }
-
-            private void LeaveTab(int tabId)
-            {
-                selectedTabs[tabId].SetActive(false);
-                scrolls[tabId].SetActive(false);
             }
 
             protected override void MergeButtonClick()
@@ -103,6 +84,43 @@ namespace Overlewd
             protected override void MarketButtonClick()
             {
                 UIManager.ShowOverlay<MarketOverlay>();
+            }
+
+            public void RefreshState()
+            {
+                RefreshTabContent(TabAll, GameData.equipment.chAll);
+                RefreshTabContent(TabAssassin, GameData.equipment.chAssassins);
+                RefreshTabContent(TabCaster, GameData.equipment.chCasters);
+                RefreshTabContent(TabHealer, GameData.equipment.chHealers);
+                RefreshTabContent(TabBruiser, GameData.equipment.chBruisers);
+                RefreshTabContent(TabTank, GameData.equipment.chTanks);
+
+                infoBlock.RefreshState();
+            }
+
+            private void RefreshTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
+            {
+                var tabEq = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().ToList();
+                var removedTabEq = tabEq.FindAll(te => !actualEq.Exists(ae => ae.id == te.equipId));
+                var newEq = actualEq.FindAll(ae => !tabEq.Exists(te => te.equipId == ae.id));
+                
+                foreach (var re in removedTabEq)
+                {
+                    DestroyImmediate(re.gameObject);
+                }
+
+                foreach (var ne in newEq)
+                {
+                    var equip = EquipmentBattleGirls.GetInstance(contents[tabId]);
+                    equip.equipCtrl = this;
+                    equip.ctrl_InfoBlock = infoBlock;
+                }
+
+                var tabEqNew = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().ToList();
+                foreach (var te in tabEqNew)
+                {
+                    te.RefreshState();
+                }
             }
         }
     }

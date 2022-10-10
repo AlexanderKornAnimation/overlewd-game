@@ -12,6 +12,7 @@ namespace Overlewd
         {
             protected Button button;
             protected Image icon;
+            protected Transform shade;
             protected Transform isConsume;
 
             public int? equipId { get; set; }
@@ -22,6 +23,7 @@ namespace Overlewd
                 button = transform.GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
                 icon = transform.GetComponent<Image>();
+                shade = transform.Find("Shade");
                 isConsume = transform.Find("IsConsume");
             }
 

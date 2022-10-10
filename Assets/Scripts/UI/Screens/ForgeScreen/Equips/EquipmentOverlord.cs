@@ -10,6 +10,9 @@ namespace Overlewd
     {
         public class EquipmentOverlord : EquipmentBase
         {
+            public OverlordEquipContent equipCtrl { get; set; }
+            public InfoBlockOverlordEquip ctrl_InfoBlock { get; set; }
+
             public override void RefreshState()
             {
 
@@ -17,7 +20,7 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
-                
+                equipCtrl.RefreshState();
             }
             
             public static EquipmentOverlord GetInstance(Transform parent)

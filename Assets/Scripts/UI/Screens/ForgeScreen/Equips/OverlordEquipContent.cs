@@ -19,8 +19,6 @@ namespace Overlewd
             public const int TabBoots = 5;
             public const int TabsCount = 6;
 
-            public int activeTabId { get; private set; }= TabWeapon;
-
             private Button[] tabs = new Button[TabsCount];
             private GameObject[] selectedTabs = new GameObject[TabsCount];
             private GameObject[] scrolls = new GameObject[TabsCount];
@@ -38,53 +36,37 @@ namespace Overlewd
                 var selectedTabArea = transform.Find("SelectedTabArea");
                 var bottomSubstrate = transform.Find("BottomSubstrate");
                 
-                foreach (var i in tabIds)
+                foreach (var tabId in tabIds)
                 {
-                    tabs[i] = tabArea.Find(tabNames[i]).GetComponent<Button>();
-                    tabs[i].onClick.AddListener(() => TabClick(i));
-                    selectedTabs[i] = selectedTabArea.Find(tabNames[i]).gameObject;
-                    scrolls[i] = bottomSubstrate.Find("ScrollView_" + tabNames[i]).gameObject;
-                    contents[i] = scrolls[i].transform.Find("Viewport").Find("Content");
+                    tabs[tabId] = tabArea.Find(tabNames[tabId]).GetComponent<Button>();
+                    tabs[tabId].onClick.AddListener(() => TabClick(tabId));
+                    selectedTabs[tabId] = selectedTabArea.Find(tabNames[tabId]).gameObject;
+                    scrolls[tabId] = bottomSubstrate.Find("ScrollView_" + tabNames[tabId]).gameObject;
+                    contents[tabId] = scrolls[tabId].transform.Find("Viewport").Find("Content");
 
-                    selectedTabs[i].SetActive(false);
+                    selectedTabs[tabId].SetActive(false);
                 }
 
                 infoBlock = transform.Find("InfoBlock").GetComponent<InfoBlockOverlordEquip>();
+                infoBlock.equipCtrl = this;
             }
 
             private void Start()
             {
-                Customize();
-            }
-
-            private void Customize()
-            {
-                EnterTab(activeTabId);
-
-                for (int i = 0; i <= 5; i++)
-                {
-                    EquipmentOverlord.GetInstance(contents[0]);
-                }
+                TabClick(TabWeapon, false);
+                RefreshState();
             }
             
-            private void TabClick(int tabId)
+            private void TabClick(int tabId, bool playSound = true)
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                LeaveTab(activeTabId);
-                EnterTab(tabId);
-            }
+                if (playSound)
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            private void EnterTab(int tabId)
-            {
-                activeTabId = tabId;
-                selectedTabs[tabId].SetActive(true);
-                scrolls[tabId].SetActive(true);
-            }
-
-            private void LeaveTab(int tabId)
-            {
-                selectedTabs[tabId].SetActive(false);
-                scrolls[tabId].SetActive(false);
+                foreach (var _tabId in tabIds)
+                {
+                    selectedTabs[_tabId].SetActive(_tabId == tabId);
+                    scrolls[_tabId].SetActive(_tabId == tabId);
+                }
             }
 
             protected override void MergeButtonClick()
@@ -104,6 +86,43 @@ namespace Overlewd
             protected override void MarketButtonClick()
             {
                 UIManager.ShowOverlay<MarketOverlay>();
+            }
+
+            public void RefreshState()
+            {
+                RefreshTabContent(TabWeapon, GameData.equipment.ovWeapons);
+                RefreshTabContent(TabGloves, GameData.equipment.ovGloves);
+                RefreshTabContent(TabHelmet, GameData.equipment.ovHelmets);
+                RefreshTabContent(TabHarness, GameData.equipment.ovHarness);
+                RefreshTabContent(TabTigh, GameData.equipment.ovThighs);
+                RefreshTabContent(TabBoots, GameData.equipment.ovBoots);
+
+                infoBlock.RefreshState();
+            }
+
+            private void RefreshTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
+            {
+                var tabEq = contents[tabId].GetComponentsInChildren<EquipmentOverlord>().ToList();
+                var removedTabEq = tabEq.FindAll(te => !actualEq.Exists(ae => ae.id == te.equipId));
+                var newEq = actualEq.FindAll(ae => !tabEq.Exists(te => te.equipId == ae.id));
+
+                foreach (var re in removedTabEq)
+                {
+                    DestroyImmediate(re.gameObject);
+                }
+
+                foreach (var ne in newEq)
+                {
+                    var equip = EquipmentOverlord.GetInstance(contents[tabId]);
+                    equip.equipCtrl = this;
+                    equip.ctrl_InfoBlock = infoBlock;
+                }
+
+                var tabEqNew = contents[tabId].GetComponentsInChildren<EquipmentOverlord>().ToList();
+                foreach (var te in tabEqNew)
+                {
+                    te.RefreshState();
+                }
             }
         }
     }
