@@ -13,7 +13,6 @@ namespace Overlewd
         {
             public ShardContentMerge shardsCtrl { get; set; }
             public MatriarchMerge consumeMtrch { get; set; }
-            public MatriarchMerge targetMtrch { get; set; }
 
             protected override void IncClick()
             {
@@ -47,7 +46,7 @@ namespace Overlewd
                     targetIcon.gameObject.SetActive(false);
 
                     consumeShardIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
-                    targetShardIcon.sprite = GetShardIcon(targetMtrch?.matriarchData);
+                    targetShardIcon.sprite = GetShardIcon(consumeMtrch?.matriarchData);
                     switch (shardsCtrl.MergeRaritySelected())
                     {
                         case AdminBRO.Rarity.Basic:
@@ -71,7 +70,7 @@ namespace Overlewd
                 }
             }
 
-            public bool isFilled => consumeMtrch != null && targetMtrch != null;
+            public bool isFilled => consumeMtrch != null;
             public int mergeAmount =>
                 GameData.buildings.forge.prices.mergeShardSettings.mergeAmount;
             public int maxShardsResult =>
