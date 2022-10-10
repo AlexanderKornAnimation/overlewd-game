@@ -51,8 +51,9 @@ namespace Overlewd
 
             private void Start()
             {
-                TabClick(TabAll, false);
+                ActializeTabsContent();
                 RefreshState();
+                TabClick(TabAll, false);
             }
 
             private void TabClick(int tabId, bool playSound = true)
@@ -70,6 +71,8 @@ namespace Overlewd
             protected override void MergeButtonClick()
             {
 
+                ActializeTabsContent();
+                RefreshState();
             }
 
             protected override void PortalButtonClick()
@@ -88,22 +91,34 @@ namespace Overlewd
 
             public void RefreshState()
             {
-                RefreshTabContent(TabAll, GameData.equipment.chAll);
-                RefreshTabContent(TabAssassin, GameData.equipment.chAssassins);
-                RefreshTabContent(TabCaster, GameData.equipment.chCasters);
-                RefreshTabContent(TabHealer, GameData.equipment.chHealers);
-                RefreshTabContent(TabBruiser, GameData.equipment.chBruisers);
-                RefreshTabContent(TabTank, GameData.equipment.chTanks);
-
                 infoBlock.RefreshState();
+
+                foreach (var tabContent in contents)
+                {
+                    var tabEqs = tabContent.GetComponentsInChildren<EquipmentBattleGirls>();
+                    foreach (var e in tabEqs)
+                    {
+                        e.RefreshState();
+                    }
+                }
             }
 
-            private void RefreshTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
+            private void ActializeTabsContent()
+            {
+                ActializeTabContent(TabAll, GameData.equipment.chAll);
+                ActializeTabContent(TabAssassin, GameData.equipment.chAssassins);
+                ActializeTabContent(TabCaster, GameData.equipment.chCasters);
+                ActializeTabContent(TabHealer, GameData.equipment.chHealers);
+                ActializeTabContent(TabBruiser, GameData.equipment.chBruisers);
+                ActializeTabContent(TabTank, GameData.equipment.chTanks);
+            }
+
+            private void ActializeTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
             {
                 var tabEq = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().ToList();
                 var removedTabEq = tabEq.FindAll(te => !actualEq.Exists(ae => ae.id == te.equipId));
                 var newEq = actualEq.FindAll(ae => !tabEq.Exists(te => te.equipId == ae.id));
-                
+
                 foreach (var re in removedTabEq)
                 {
                     DestroyImmediate(re.gameObject);
@@ -114,12 +129,6 @@ namespace Overlewd
                     var equip = EquipmentBattleGirls.GetInstance(contents[tabId]);
                     equip.equipCtrl = this;
                     equip.ctrl_InfoBlock = infoBlock;
-                }
-
-                var tabEqNew = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().ToList();
-                foreach (var te in tabEqNew)
-                {
-                    te.RefreshState();
                 }
             }
         }
