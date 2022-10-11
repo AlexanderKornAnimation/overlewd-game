@@ -2323,15 +2323,16 @@ namespace Overlewd
         [Serializable]
         public class PotionsInfo
         {
-            public List<PotionPrice> prices;
+            public List<PotionInfo> prices;
             public int maxEnergyVolume;
             public int energyPerCan;
             public float energyRecoverySpeedPerMinute;
 
-            public class PotionPrice
+            public class PotionInfo
             {
                 public string type;
                 public List<PriceItem> price;
+                public float magnitude;
             }
 
             public const string Type_hp = "hp";

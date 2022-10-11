@@ -45,7 +45,6 @@ namespace Overlewd
                     consumeShardIcon.gameObject.SetActive(false);
                     targetShardIcon.gameObject.SetActive(false);
 
-
                 }
             }
 

@@ -88,6 +88,8 @@ namespace Overlewd
 		public AdminBRO.Battle battleData { get; private set; }
 		public int mana { get; private set; }
 		public int hp { get; private set; }
+		public float manaMagnitude { get; private set; }
+		public float hpMagnitude { get; private set; }
 		
 
 		public class EnemyWave
@@ -143,6 +145,8 @@ namespace Overlewd
 			//poison
 			inst.mana = GameData.player.info.potion.mana;
 			inst.hp = GameData.player.info.potion.hp;
+			inst.manaMagnitude = GameData.potions.manaInfo.magnitude;
+			inst.hpMagnitude = GameData.potions.hpInfo.magnitude;
 
 			return inst;
         }

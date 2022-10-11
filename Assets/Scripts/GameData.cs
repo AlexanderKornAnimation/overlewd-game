@@ -1105,14 +1105,14 @@ namespace Overlewd
             potions = await AdminBRO.potionsAsync();
         }
 
-        public List<AdminBRO.PriceItem> hpPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_hp)?.price ?? new List<AdminBRO.PriceItem>();
-        public List<AdminBRO.PriceItem> manaPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_mana)?.price ?? new List<AdminBRO.PriceItem>();
-        public List<AdminBRO.PriceItem> energyPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_energy)?.price ?? new List<AdminBRO.PriceItem>();
-        public List<AdminBRO.PriceItem> replayPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_replay)?.price ?? new List<AdminBRO.PriceItem>();
+        public AdminBRO.PotionsInfo.PotionInfo hpInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_hp);
+        public AdminBRO.PotionsInfo.PotionInfo manaInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_mana);
+        public AdminBRO.PotionsInfo.PotionInfo energyInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_energy);
+        public AdminBRO.PotionsInfo.PotionInfo replayInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_replay);
 
         public int baseEnergyVolume => potions.maxEnergyVolume;
         public int energyPerPotion => potions.energyPerCan;

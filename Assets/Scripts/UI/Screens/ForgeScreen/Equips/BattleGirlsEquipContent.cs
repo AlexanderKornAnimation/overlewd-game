@@ -124,11 +124,21 @@ namespace Overlewd
                     DestroyImmediate(re.gameObject);
                 }
 
-                foreach (var ne in newEq)
+                foreach (var e in newEq)
                 {
                     var equip = EquipmentBattleGirls.GetInstance(contents[tabId]);
+                    equip.equipId = e.id;
                     equip.equipCtrl = this;
                     equip.ctrl_InfoBlock = infoBlock;
+                }
+
+                var sortTabEq = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().
+                    OrderBy(e => e.equipData.rarityLevel);
+                var siblingIndex = 0;
+                foreach (var e in sortTabEq)
+                {
+                    e.transform.SetSiblingIndex(siblingIndex);
+                    siblingIndex++;
                 }
             }
         }

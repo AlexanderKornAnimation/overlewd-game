@@ -14,6 +14,7 @@ namespace Overlewd
             protected Image icon;
             protected Transform shade;
             protected Transform isConsume;
+            protected Transform isMaxRarity;
 
             public int? equipId { get; set; }
             public AdminBRO.Equipment equipData => GameData.equipment.GetById(equipId);
@@ -25,6 +26,7 @@ namespace Overlewd
                 icon = transform.GetComponent<Image>();
                 shade = transform.Find("Shade");
                 isConsume = transform.Find("IsConsume");
+                isMaxRarity = transform.Find("IsMaxRarity");
             }
 
             void Start()
@@ -34,7 +36,9 @@ namespace Overlewd
 
             public virtual void RefreshState()
             {
-
+                icon.sprite = ResourceManager.LoadSprite(equipData?.icon);
+                button.interactable = (equipData?.rarity != AdminBRO.Rarity.Heroic);
+                isMaxRarity.gameObject.SetActive(equipData?.rarity == AdminBRO.Rarity.Heroic);
             }
 
             protected virtual void ButtonClick()
