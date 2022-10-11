@@ -48,9 +48,9 @@ namespace Overlewd
 
             public void Customize()
             {
-                forAnotherClass.SetActive(weaponData.characterClass != characterData.characterClass);
-                button.gameObject.SetActive(weaponData.characterClass == characterData.characterClass);
-                notificationEquipped.SetActive(weaponData.isEquipped);
+                forAnotherClass.SetActive(!weaponData.IsMyClass(characterData.characterClass));
+                button.gameObject.SetActive(weaponData.IsMyClass(characterData.characterClass));
+                notificationEquipped.SetActive(weaponData.isEquipped && weaponData.IsMyClass(characterData.characterClass));
                 equippedCharacterIcon.gameObject.SetActive(!weaponData.IsMy(characterId));
                 weaponIcon.sprite = ResourceManager.LoadSprite(weaponData.icon);
 

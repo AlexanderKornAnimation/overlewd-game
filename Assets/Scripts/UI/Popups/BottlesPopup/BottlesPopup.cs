@@ -175,19 +175,19 @@ namespace Overlewd
 
         private void CheckBuyButtonsState()
         {
-            var staminaPrice = UITools.PriceMul(GameData.potions.energyPrice, _staminaCount);
+            var staminaPrice = UITools.PriceMul(GameData.potions.energyInfo.price, _staminaCount);
             staminaBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(staminaPrice);
             UITools.DisableButton(staminaBuyButton, !GameData.player.CanBuy(staminaPrice));
 
-            var scrollPrice = UITools.PriceMul(GameData.potions.replayPrice, _scrollCount);
+            var scrollPrice = UITools.PriceMul(GameData.potions.replayInfo.price, _scrollCount);
             scrollBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(scrollPrice);
             UITools.DisableButton(scrollBuyButton, !GameData.player.CanBuy(scrollPrice));
 
-            var healthPrice = UITools.PriceMul(GameData.potions.hpPrice, _healthCount);
+            var healthPrice = UITools.PriceMul(GameData.potions.hpInfo.price, _healthCount);
             healthBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(healthPrice);
             UITools.DisableButton(healthBuyButton, !GameData.player.CanBuy(healthPrice));
 
-            var manaPrice = UITools.PriceMul(GameData.potions.manaPrice, _manaCount);
+            var manaPrice = UITools.PriceMul(GameData.potions.manaInfo.price, _manaCount);
             manaBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(manaPrice);
             UITools.DisableButton(manaBuyButton, !GameData.player.CanBuy(manaPrice));
         }

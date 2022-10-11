@@ -17,7 +17,7 @@ namespace Overlewd
         protected Transform content;
         protected GameObject scrollMarker;
 
-        private void Awake()
+        protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
@@ -41,7 +41,7 @@ namespace Overlewd
         {
             var questNum = 0;
             var quests =
-                GameData.quests.quests.Where(q => q.isFTUE && q.ftueChapterId == GameData.ftue.activeChapter.id);
+                GameData.quests.quests.Where(q => q.ftueChapterId == GameData.ftue.mapChapter.id);
             
             foreach (var questData in quests)
             {

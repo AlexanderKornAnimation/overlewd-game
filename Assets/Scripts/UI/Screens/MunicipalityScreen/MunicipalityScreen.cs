@@ -280,10 +280,10 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData?.type)
+            switch (eventData?.eventId)
             {
-                case GameDataEvent.Type.BuildingBuild:
-                case GameDataEvent.Type.BuildingBuildCrystal:
+                case GameDataEvent.EventId.BuildingBuild:
+                case GameDataEvent.EventId.BuildingBuildCrystal:
                     Customize();
                     break;
             }

@@ -133,10 +133,10 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.eventId)
             {
-                case GameDataEvent.Type.EquipmentEquipped:
-                case GameDataEvent.Type.EquipmentUnequipped:
+                case GameDataEvent.EventId.EquipmentEquipped:
+                case GameDataEvent.EventId.EquipmentUnequipped:
                     foreach (var weapon in weapons)
                     {
                         weapon.Customize();
@@ -144,6 +144,7 @@ namespace Overlewd
 
                     var equipped = weapons.FirstOrDefault(w => w.weaponData.IsMy(inputData?.characterId));
                     CustomizeSlot(equipped);
+                    SortWeaponsInTabs();
                     break;
             }
         }
@@ -152,9 +153,10 @@ namespace Overlewd
         {
             foreach (var equip in GameData.equipment.equipment)
             {
-                var weaponData = GameData.equipment.GetById(equip.id);
-
-                var tabId = weaponData.characterClass switch
+                if (equip.characterClass == AdminBRO.Character.Class_Overlord)
+                    continue;
+                    
+                var tabId = equip.characterClass switch
                 {
                     AdminBRO.Equipment.Class_Bruiser => tabBruisers,
                     AdminBRO.Equipment.Class_Assassin => tabAssassins,
@@ -175,7 +177,7 @@ namespace Overlewd
             }
             
             CustomizeSlot(weapons.FirstOrDefault(w => w.weaponData.IsMy(inputData?.characterId)));
-
+            SortWeaponsInTabs();
         }
 
         private async void SlotButtonClick()
@@ -184,7 +186,7 @@ namespace Overlewd
             if (charData != null)
             {
                 var weapon = weapons.FirstOrDefault(w => w.weaponData.isEquipped);
-                await weapon?.Unequip(charData.id.Value, charData.equipment.FirstOrDefault());
+                await weapon?.Unequip(charData.id.Value, charData.characterEquipmentData.id);
             }
         }
         
@@ -219,15 +221,30 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
+            if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
             {
-                UIManager.ShowScreen<TeamEditScreen>();
+                UIManager.ShowScreen<BattleGirlListScreen>();
             }
             else
             {
                 UIManager.MakeScreen<BattleGirlScreen>().
                     SetData(inputData.prevScreenInData as BattleGirlScreenInData).
                     RunShowScreenProcess();
+            }
+        }
+
+        private void SortWeaponsInTabs()
+        {
+            foreach (var tabId in tabIds)
+            {
+                var tabWeapon = scrollContents[tabId].GetComponentsInChildren<NSWeaponScreen.Weapon>().ToList();
+                var tabWeaponSort = tabWeapon.OrderByDescending(w => w.weaponData.rarityLevel + (w.weaponData.isEquipped ? 100 : 0));
+                var wSiblingIndex = 0;
+                foreach (var weapon in tabWeaponSort)
+                {
+                    weapon?.transform.SetSiblingIndex(wSiblingIndex);
+                    wSiblingIndex++;
+                }
             }
         }
     }

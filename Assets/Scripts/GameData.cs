@@ -9,10 +9,10 @@ namespace Overlewd
 {
     public class GameDataEvent
     {
-        public Type type = Type.None;
+        public EventId eventId = EventId.None;
         public Data data;
 
-        public enum Type
+        public enum EventId
         {
             None,
             BuyTradable,
@@ -26,7 +26,12 @@ namespace Overlewd
             EquipmentUnequipped,
             BuyPotions,
             UsePotions,
-            GachaBuy
+            GachaBuy,
+
+            ForgeMergeShards,
+            ForgeExchangeShards,
+            ForgeMergeEquip,
+
         }
 
         public abstract class Data
@@ -176,7 +181,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    type = GameDataEvent.Type.BuildingBuild
+                    eventId = GameDataEvent.EventId.BuildingBuild
                 });
 
             await GameData.quests.Get();
@@ -192,7 +197,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    type = GameDataEvent.Type.BuildingBuildCrystal
+                    eventId = GameDataEvent.EventId.BuildingBuildCrystal
                 });
 
             await GameData.quests.Get();
@@ -266,7 +271,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    type = GameDataEvent.Type.MagicGuildSpellLvlUp
+                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp
                 });
             }
 
@@ -278,7 +283,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    type = GameDataEvent.Type.MagicGuildSpellLvlUp
+                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp
                 });
             }
         }
@@ -292,16 +297,37 @@ namespace Overlewd
             public async Task MergeEquipment(string mergeType, int[] mergeIds)
             {
                 await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
+                await GameData.equipment.Get();
+                await GameData.player.Get();
+
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    eventId = GameDataEvent.EventId.ForgeMergeEquip
+                });
             }
 
             public async Task MergeShard(int matriarchId, string rarity, int amount)
             {
                 await AdminBRO.forgeMergeShard(matriarchId, rarity, amount);
+                await GameData.matriarchs.Get();
+                await GameData.player.Get();
+
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    eventId = GameDataEvent.EventId.ForgeMergeShards
+                });
             }
 
             public async Task ExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
             {
                 await AdminBRO.forgeExchangeShard(matriarchSourceId, matriarchTargetId, rarity, amount);
+                await GameData.matriarchs.Get();
+                await GameData.player.Get();
+
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    eventId = GameDataEvent.EventId.ForgeExchangeShards
+                });
             }
         }
 
@@ -375,7 +401,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.GachaBuy,
+                eventId = GameDataEvent.EventId.GachaBuy,
                 data = new EventData
                 {
                     buyResult = result
@@ -399,7 +425,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.GachaBuy,
+                eventId = GameDataEvent.EventId.GachaBuy,
                 data = new EventData
                 {
                     buyResult = result
@@ -459,7 +485,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.CharacterLvlUp
+                eventId = GameDataEvent.EventId.CharacterLvlUp
             });
         }
 
@@ -470,7 +496,7 @@ namespace Overlewd
             await GameData.player.Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.CharacterSkillLvlUp
+                eventId = GameDataEvent.EventId.CharacterSkillLvlUp
             });
         }
 
@@ -484,7 +510,7 @@ namespace Overlewd
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.CharacterMerge
+                eventId = GameDataEvent.EventId.CharacterMerge
             });
         }
 
@@ -517,21 +543,17 @@ namespace Overlewd
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
 
-        public float myTeamPotency
+        public int myTeamPotency
         {
             get
             {
-                float potency = 0;
+                int potency = 0;
 
-                if (overlord.potency.HasValue)
-                    potency += overlord.potency.Value;
+                potency += overlord.potency;
                 
                 foreach (var character in myTeamCharacters)
                 {
-                    if (character.potency.HasValue)
-                    {
-                        potency += character.potency.Value;
-                    }
+                    potency += character.potency;
                 }
 
                 return potency;
@@ -551,9 +573,46 @@ namespace Overlewd
 
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
-
-        public AdminBRO.Equipment GetByType(string type) =>
-            equipment.Find(eq => eq.equipmentType == type);
+        public List<AdminBRO.Equipment> chAll =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon &&
+                !String.IsNullOrEmpty(e.characterClass) && e.characterClass != AdminBRO.Equipment.Class_Overlord);
+        public List<AdminBRO.Equipment> chAssassins =>
+            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Assassin &&
+                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+        public List<AdminBRO.Equipment> chBruisers =>
+            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Bruiser &&
+                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+        public List<AdminBRO.Equipment> chTanks =>
+            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Tank &&
+                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+        public List<AdminBRO.Equipment> chCasters =>
+            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Caster &&
+                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+        public List<AdminBRO.Equipment> chHealers =>
+            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Healer &&
+                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+        
+        public List<AdminBRO.Equipment> ovAll =>
+            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Overlord &&
+                !String.IsNullOrEmpty(e.equipmentType) && e.equipmentType != AdminBRO.Equipment.Type_CharacterWeapon);
+        public List<AdminBRO.Equipment> ovThighs =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordThighs &&
+                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+        public List<AdminBRO.Equipment> ovHelmets =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordHelmet &&
+                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+        public List<AdminBRO.Equipment> ovBoots =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordHarness &&
+                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+        public List<AdminBRO.Equipment> ovWeapons =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordWeapon &&
+                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+        public List<AdminBRO.Equipment> ovGloves =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordGloves &&
+                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+        public List<AdminBRO.Equipment> ovHarness =>
+            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordHarness &&
+                e.characterClass == AdminBRO.Equipment.Class_Overlord);
 
         public async Task Equip(int chId, int eqId)
         {
@@ -562,7 +621,7 @@ namespace Overlewd
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.EquipmentEquipped
+                eventId = GameDataEvent.EventId.EquipmentEquipped
             });
         }
 
@@ -574,7 +633,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                type = GameDataEvent.Type.EquipmentUnequipped
+                eventId = GameDataEvent.EventId.EquipmentUnequipped
             });
         }
     }
@@ -694,7 +753,7 @@ namespace Overlewd
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
                     {
-                        type = GameDataEvent.Type.BuyTradable
+                        eventId = GameDataEvent.EventId.BuyTradable
                     });
             }
 
@@ -714,7 +773,7 @@ namespace Overlewd
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
                     {
-                        type = GameDataEvent.Type.BuyTradable
+                        eventId = GameDataEvent.EventId.BuyTradable
                     });
             }
 
@@ -1046,14 +1105,14 @@ namespace Overlewd
             potions = await AdminBRO.potionsAsync();
         }
 
-        public List<AdminBRO.PriceItem> hpPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_hp)?.price ?? new List<AdminBRO.PriceItem>();
-        public List<AdminBRO.PriceItem> manaPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_mana)?.price ?? new List<AdminBRO.PriceItem>();
-        public List<AdminBRO.PriceItem> energyPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_energy)?.price ?? new List<AdminBRO.PriceItem>();
-        public List<AdminBRO.PriceItem> replayPrice =>
-            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_replay)?.price ?? new List<AdminBRO.PriceItem>();
+        public AdminBRO.PotionsInfo.PotionInfo hpInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_hp);
+        public AdminBRO.PotionsInfo.PotionInfo manaInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_mana);
+        public AdminBRO.PotionsInfo.PotionInfo energyInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_energy);
+        public AdminBRO.PotionsInfo.PotionInfo replayInfo =>
+            potions.prices.Find(p => p.type == AdminBRO.PotionsInfo.Type_replay);
 
         public int baseEnergyVolume => potions.maxEnergyVolume;
         public int energyPerPotion => potions.energyPerCan;
@@ -1067,7 +1126,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    type = GameDataEvent.Type.BuyPotions
+                    eventId = GameDataEvent.EventId.BuyPotions
                 });
         }
 
@@ -1079,7 +1138,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    type = GameDataEvent.Type.UsePotions
+                    eventId = GameDataEvent.EventId.UsePotions
                 });
         }
 

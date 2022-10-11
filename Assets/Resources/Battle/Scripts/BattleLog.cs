@@ -9,11 +9,15 @@ namespace Overlewd
 
         public void Add(string text, bool error = false)
         {
-            if (log) log.text += (text + "\n");
-            if (error)
+            if (!error) 
+            { 
+                if (log) log.text += ($"{text}\n");
+            }
+            else
             {
+                if (log) log.text += ($"<color=\"red\">{text}</color>\n");
                 Debug.LogError(text);
-                FindObjectOfType<BattleManager>().debug = 2;
+                //FindObjectOfType<BattleManager>().debug = 2;
             }
         }
     } 

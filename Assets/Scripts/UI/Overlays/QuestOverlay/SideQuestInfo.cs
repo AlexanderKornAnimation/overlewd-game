@@ -17,8 +17,9 @@ namespace Overlewd
             private Image[] rewards = new Image[6];
             private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[6];
 
-            private Button toQuestButton;
-            private TextMeshProUGUI toQuestButtonText;
+            private Button claimButton;
+            private GameObject inProgress;
+            private GameObject completed;
 
             private void Awake()
             {
@@ -38,9 +39,11 @@ namespace Overlewd
                     rewards[i].gameObject.SetActive(false);
                 }
 
-                toQuestButton = rewardWindow.Find("ToQuestButton").GetComponent<Button>();
-                toQuestButton.onClick.AddListener(ToQuestButtonClick);
-                toQuestButtonText = toQuestButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+                claimButton = rewardWindow.Find("ClaimButton").GetComponent<Button>();
+                claimButton.onClick.AddListener(ClaimButtonClick);
+
+                inProgress = rewardWindow.Find("InProgress").gameObject;
+                completed = rewardWindow.Find("Completed").gameObject;
             }
 
             private void Start()
@@ -50,24 +53,34 @@ namespace Overlewd
 
             private void Customize()
             {
-                title.text = questData?.name;
-                progress.text = $"{questData?.progressCount} / {questData?.goalCount}";
-                
-                for (int i = 0; i < questData?.rewards?.Count; i++)
+                if (questData != null)
                 {
-                    var reward = rewards[i];
-                    var rewardAmount = rewardsAmount[i];
-                    var questItem = questData.rewards[i];
+                    title.text = questData.name;
+                    
+                    progress.text = questData.goalCount.HasValue
+                        ? $"{questData?.progressCount}/{questData?.goalCount}" : "";
+                    
+                    for (int i = 0; i < questData.rewards?.Count; i++)
+                    {
+                        var reward = rewards[i];
+                        var rewardAmount = rewardsAmount[i];
+                        var questItem = questData.rewards[i];
 
-                    reward.gameObject.SetActive(true);
-                    reward.sprite = ResourceManager.LoadSprite(questItem.icon);
-                    rewardAmount.text = questItem.amount.ToString();
+                        reward.gameObject.SetActive(true);
+                        reward.sprite = ResourceManager.LoadSprite(questItem.icon);
+                        rewardAmount.text = questItem.amount.ToString();
+                    }
+                    
+                    inProgress.SetActive(questData.inProgress);
+                    claimButton.gameObject.SetActive(questData.isCompleted);
+                    completed.SetActive(questData.isClaimed);
                 }
             }
             
-            private void ToQuestButtonClick()
+            private async void ClaimButtonClick()
             {
-
+                await GameData.quests.ClaimReward(questId);
+                Customize();
             }
 
             public static SideQuestInfo GetInstance(Transform parent)

@@ -14,15 +14,12 @@ namespace Overlewd
         private Transform questScrollView;
 
         private Transform mainQuestGrid;
-        private TextMeshProUGUI mainQuestGridTitle;
         private GameObject mainQuestGridMark;
 
         private Transform matriarchQuestGrid;
-        private TextMeshProUGUI matriarchQuestGridTitle;
         private GameObject matriarchQuestGridMark;
 
         private Transform sideQuestGrid;
-        private TextMeshProUGUI sideQuestGridTitle;
         private GameObject sideQuestGridMark;
 
         private TextMeshProUGUI headlineTitle;
@@ -46,15 +43,12 @@ namespace Overlewd
             var questScrollView_content = questScrollView.Find("Viewport").Find("Content");
 
             mainQuestGrid = questScrollView_content.Find("MainQuestGrid");
-            mainQuestGridTitle = mainQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
             mainQuestGridMark = mainQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
 
             matriarchQuestGrid = questScrollView_content.Find("MatriarchQuestGrid");
-            matriarchQuestGridTitle = matriarchQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
             matriarchQuestGridMark = matriarchQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
 
             sideQuestGrid = questScrollView_content.Find("SideQuestGrid");
-            sideQuestGridTitle = sideQuestGrid.Find("QuestHead").Find("Title").GetComponent<TextMeshProUGUI>();
             sideQuestGridMark = sideQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
 
             var headline = canvas.Find("Headline");
@@ -85,7 +79,7 @@ namespace Overlewd
         {
             foreach (var questItem in GameData.quests.ftueQuests)
             {
-                if (GameData.ftue.activeChapter.id == questItem.ftueChapterId)
+                if (GameData.ftue.mapChapter.id == questItem.ftueChapterId)
                 {
                     var grid = GetQuestGridByType(questItem.ftueQuestType);
 
@@ -112,7 +106,7 @@ namespace Overlewd
                 AdminBRO.QuestItem.QuestType_Main => mainQuestGrid,
                 AdminBRO.QuestItem.QuestType_Matriarch => matriarchQuestGrid,
                 AdminBRO.QuestItem.QuestType_Side => sideQuestGrid,
-                _ => null
+                _ => null,
             };
         }
         
@@ -121,6 +115,7 @@ namespace Overlewd
             selectedQuest?.Deselect();
             quest?.Select();
             selectedQuest = quest;
+            headlineTitle.text = selectedQuest?.questData?.name;
         }
 
         private void BackButtonClick()

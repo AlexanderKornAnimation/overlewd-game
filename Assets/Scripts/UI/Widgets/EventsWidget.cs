@@ -18,7 +18,7 @@ namespace Overlewd
         protected TextMeshProUGUI monthlyEventTitle;
         protected TextMeshProUGUI quarterlyEventTitle;
 
-        private void Awake()
+        protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();

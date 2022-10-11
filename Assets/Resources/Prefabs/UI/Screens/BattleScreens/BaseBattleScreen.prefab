@@ -996,7 +996,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: b6132739c375a544c8d7f9d739ee1004, type: 2}
   skill:
     id: 0
     name: 
@@ -5706,7 +5705,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 5046061623185131473, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
+  m_Sprite: {fileID: 3149700336500657537, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7558,7 +7557,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: 2c6c9b4af2495e54e922d4ae0b29f24b, type: 2}
   skill:
     id: 0
     name: 
@@ -8754,12 +8752,13 @@ MonoBehaviour:
   portraitIco: {fileID: 945108276}
   classIco: {fileID: 1537116913}
   classIcons:
-  - {fileID: 5046061623185131473, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
-  - {fileID: 552338910092524330, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
-  - {fileID: -4757170484863805961, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
-  - {fileID: -2397568867031626440, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
-  - {fileID: -3685960548396402733, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
-  - {fileID: -7966359982097946647, guid: 74c20e7d47e53b345a360085b4f3588d, type: 3}
+  - {fileID: 3149700336500657537, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
+  - {fileID: -7996149183787772606, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
+  - {fileID: -8265771453971952494, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
+  - {fileID: -6706939906499159191, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
+  - {fileID: -1908217220475142352, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
+  - {fileID: -1020735670535023958, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
+  - {fileID: -7995483115558685704, guid: cd1b7fc47a8783540bdd16fd4a179793, type: 3}
   accur: {fileID: 1594844530}
   dodge: {fileID: 907162796}
   crit: {fileID: 532542664}
@@ -11055,7 +11054,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: 24e9378b9a3027942ad6693ed2e4454e, type: 2}
   skill:
     id: 0
     name: 
@@ -11183,7 +11181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: 2b9ce2c01a57f1d4387b4e4e5cd3bd6a, type: 2}
   skill:
     id: 0
     name: 
@@ -12020,7 +12017,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: d5331169b980ce342aacea53904c756b, type: 2}
   skill:
     id: 0
     name: 
@@ -12689,7 +12685,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: a708f32b7652b2947836ef592188c3c7, type: 2}
   skill:
     id: 0
     name: 
@@ -12907,7 +12902,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed40f7b5cce9e2c409036751d3611483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldSkill: {fileID: 11400000, guid: 3b5f8a6341cf4eb4189c634860a36c8e, type: 2}
   skill:
     id: 0
     name: 

@@ -70,9 +70,6 @@ namespace Overlewd
         //statistic, trackers, notif flags
         private bool castAOEForNotify = false;
         private bool battleStart = false;
-        private bool hidePotion = false;
-        private bool hideAOE = false;
-        private bool notifIsShow = false;
 
         //potions
         int potionMP => battleScene.GetBattleData().mana;
@@ -142,7 +139,19 @@ namespace Overlewd
             CreatePortraitQueue();
             maxStep = charControllerList.Count;
             if (!bossLevel) QueueElements[0].Select(); //Scale Up First Element
-            StateCheck();
+            ccOnSelect = charControllerList[step];
+            if (ccOnSelect.isEnemy)
+            {
+                battleState = BattleState.ENEMY;
+                if (!ccOnSelect.isBoss)
+                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
+                StartCoroutine(EnemyAttack());
+            }
+            else
+            {
+                battleState = BattleState.PLAYER;
+                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
+            }
             StartCoroutine(LateInit());
         }
         IEnumerator LateInit()
@@ -153,7 +162,7 @@ namespace Overlewd
             if (battleState == BattleState.PLAYER)
             {
                 ccOnSelect.CharPortraitSet();
-                ButtonPress(0);
+                if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
             }
             if (!battleStart) //skip button = true; back button = false
             {
@@ -208,7 +217,7 @@ namespace Overlewd
 
         IEnumerator NextWave()
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(3.5f);
             step = 0;
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             //Destroy phase ============================================================
@@ -231,24 +240,9 @@ namespace Overlewd
             maxStep = charControllerList.Count;
             CreatePortraitQueue();                  //drop new portraits with sorting
             QueueElements[0].Select(); //Scale Up First Element
-            StateCheck();
-            StartCoroutine(LateInit());
-        }
-        void StateCheck()
-        {
             ccOnSelect = charControllerList[step];
-            if (ccOnSelect.isEnemy)
-            {
-                battleState = BattleState.ENEMY;
-                if (!ccOnSelect.isBoss)
-                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
-                StartCoroutine(EnemyAttack());
-            }
-            else
-            {
-                battleState = BattleState.PLAYER;
-                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
-            }
+            battleState = BattleState.ANIMATION;
+            ccOnSelect.UpadeteDot();
         }
         private void CreatePortraitQueue()
         {
@@ -371,7 +365,6 @@ namespace Overlewd
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
                 ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
-                GameObject vfx = null; //ccOnSelect.skill[id].vfxOnTarget;
                 if (AOE)
                 {
                     ani.SetTrigger("General");
@@ -382,7 +375,7 @@ namespace Overlewd
                     foreach (var cc in charControllerList)
                         if (!cc.isDead && cc.isEnemy != HEAL)
                         {
-                            cc.Defence(ccOnSelect, id, vfx, aoe: true);
+                            cc.Defence(ccOnSelect, id, aoe: true);
                             cc.UnHiglight();
                         }
                     if (ccOnSelect.isOverlord && id > 1)
@@ -397,7 +390,7 @@ namespace Overlewd
                     else
                         ani.SetTrigger("Player");
                     ccOnSelect.Attack(id, AOE: HEAL, ccTarget);
-                    ccTarget.Defence(ccOnSelect, id, vfx, aoe: HEAL);
+                    ccTarget.Defence(ccOnSelect, id, aoe: HEAL);
                 }
                 battleState = BattleState.ANIMATION;
             }
@@ -409,7 +402,8 @@ namespace Overlewd
         {
             //Must be empty
             yield return new WaitForSeconds(1.5f); //Pause then show target stats
-            if (!ccOnSelect.isDead) {
+            if (!ccOnSelect.isDead)
+            {
                 int id = Random.Range(0, ccOnSelect.skill.Count);
                 if (ccOnSelect.skill[id].AOE)
                     ccTarget = null;
@@ -459,16 +453,15 @@ namespace Overlewd
             UnselectButtons();
             ani.SetTrigger("BattleOut");
             if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
-            {                     //ÑÞÄÀ ÑÌÎÒÐÈ, ÒÓÒ ÌÀÃÈß
+            {
                 Step();
                 unselect?.Invoke();
-                charControllerList[step].Highlight();
             }
             charOnSelect = -1;
             ccTarget = null;
         }
 
-        public void StateUpdate(CharController invoker, bool poison = false) //call when any character is dead
+        public void DeadStatesUpdate(CharController invoker, bool poison = false) //call when any character is dead
         {
             var index = charControllerList.FindIndex(x => x == invoker);
             if (!bossLevel)
@@ -514,14 +507,19 @@ namespace Overlewd
                         hpSpent = usedHP
                     });
                 if (CheckBattleGameData("chapter1", "battle2"))
-                    //battleList[1].powerBuff = true; BUFF ON
                     Debug.Log("LOOSING");
             }
-            if (poison) Step(); //if we dead from DOT on start move we call next step
+            if (battleState == BattleState.ANIMATION && poison)
+                StartCoroutine(PoisonStep()); //if we dead from DOT on start move we call next step
+        }
+        IEnumerator PoisonStep()
+        {
+            yield return new WaitForSeconds(0.5f);
+            Step();
         }
         IEnumerator WinScreenWithDelay()
         {
-            yield return new WaitForSeconds(2.2f);
+            yield return new WaitForSeconds(3.5f);
             if (battleScene != null)
                 battleScene.EndBattle(new BattleManagerOutData
                 {
@@ -553,40 +551,37 @@ namespace Overlewd
             {
                 BattleNotif("chapter1", "battle5", "potionstutor3"); //AOE Cast
             }
-            var cc = charControllerList[step];
+            ccOnSelect = charControllerList[step];
+            if (!bossLevel)
+                QueueElements.Find(i => i?.cc == ccOnSelect).Select();
 
-            ccOnSelect = cc;
-            if (!bossLevel) QueueElements.Find(i => i?.cc == ccOnSelect).Select();
-
-            if (cc.stun)
-            {
-                cc.UpadeteDot();
-                Step();
-                return;
-            }
             bPosEnemy.SetSiblingIndex(siblingEnemy);
             bPosPlayer.SetSiblingIndex(siblingPlayer);
 
-            if (ccOnSelect.regen_poison != 0)
+            battleState = BattleState.ANIMATION;
+            ccOnSelect.UpadeteDot();
+        }
+        public void StepLate()
+        {
+            if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
             {
-                //battleState = BattleState.APPLYDOT;
-                ccOnSelect.UpadeteDot();
-            }
-            //else 
-            if (ccOnSelect.isEnemy)
-            {
-                battleState = BattleState.ENEMY;
-                StartCoroutine(EnemyAttack());
-                if (!ccOnSelect.isBoss)
-                    bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
-            }
-            else
-            {
-                SetSkillCtrl(ccOnSelect);
-                ccOnSelect.CharPortraitSet();
-                battleState = BattleState.PLAYER;
-                bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
-                ButtonPress(0);
+                battleState = ccOnSelect.isEnemy ? BattleState.ENEMY : BattleState.PLAYER;
+                if (ccOnSelect.isEnemy)
+                {
+                    battleState = BattleState.ENEMY;
+                    if (!ccOnSelect.isBoss)
+                        bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
+                    StartCoroutine(EnemyAttack());
+                }
+                else
+                {
+                    battleState = BattleState.PLAYER;
+                    SetSkillCtrl(ccOnSelect);
+                    ccOnSelect.CharPortraitSet();
+                    bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
+                    if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
+                }
+                ccOnSelect.Highlight();
             }
         }
 
@@ -704,7 +699,7 @@ namespace Overlewd
             return 0;
         }
 
-        public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE, NEXTWAVE, APPLYDOT }
+        public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE, NEXTWAVE }
         public BattleState battleState = BattleState.INIT;
     }
 }

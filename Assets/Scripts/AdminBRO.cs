@@ -384,7 +384,7 @@ namespace Overlewd
             {
                 Type_Currency => GameData.currencies.GetById(entityId.HasValue ? entityId : currencyId)?.iconUrl,
                 Type_BattleCharacter => GameData.characters.GetById(entityId.HasValue ? entityId : characterId)?.GetIconByRarity(rarity),
-                Type_BattleCharacterEquipment => GameData.equipment.GetById(entityId.HasValue ? entityId : equipmentId)?.icon,
+                Type_BattleCharacterEquipment => GameData.equipment.GetById(entityId.HasValue ? entityId : equipmentId)?.GetIconByRarity(rarity),
                 Type_MatriarchShard => GameData.matriarchs.GetShardById(entityId.HasValue ? entityId : matriarchShardId, rarity).icon,
                 _ => imageUrl
             };
@@ -1037,7 +1037,7 @@ namespace Overlewd
             public float health;
             public float damage;
             public int mana;
-            public float? potency;
+            public int potency;
             public int? sexSceneId;
             public string sexSceneVisibleByRarity;
             public string sexSceneClosedBanner;
@@ -1070,7 +1070,7 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
-
+            
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
 
@@ -1120,6 +1120,9 @@ namespace Overlewd
             };
 
             [JsonProperty(Required = Required.Default)]
+            public bool isSexSceneOpen => sexSceneId.HasValue;
+            
+            [JsonProperty(Required = Required.Default)]
             public bool hasEquipment => equipment.Count > 0;
 
             [JsonProperty(Required = Required.Default)]
@@ -1130,6 +1133,18 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool inTeam => teamPosition == TeamPosition_Slot1 || teamPosition == TeamPosition_Slot2;
+
+            [JsonProperty(Required = Required.Default)]
+            public CharacterSkill basicSkill =>
+                skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Attack);
+            
+            [JsonProperty(Required = Required.Default)]
+            public CharacterSkill ultimateSkill =>
+                skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Enhanced);
+            
+            [JsonProperty(Required = Required.Default)]
+            public CharacterSkill passiveSkill =>
+                skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Passive);
 
             [JsonProperty(Required = Required.Default)]
             public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
@@ -1257,7 +1272,6 @@ namespace Overlewd
             public int? characterId;
             public string characterClass;
             public string name;
-            public string icon;
             public string equipmentType;
             public float speed;
             public float power;
@@ -1270,11 +1284,11 @@ namespace Overlewd
             public float damage;
             public float mana;
             public float potency;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isEquipped => characterId.HasValue;
-
-            public bool IsMy(int? myId) => isEquipped && myId == characterId;
+            public string basicIcon;
+            public string advancedIcon;
+            public string epicIcon;
+            public string heroicIcon;
+            public string rarity;
 
             public const string Class_Assassin = "Assassin";
             public const string Class_Bruiser = "Bruiser";
@@ -1290,6 +1304,35 @@ namespace Overlewd
             public const string Type_OverlordHarness = "overlord_harness";
             public const string Type_OverlordWeapon = "overlord_weapon";
             public const string Type_OverlordGloves = "overlord_gloves";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEquipped => characterId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public int rarityLevel => rarity switch
+            {
+                Rarity.Basic => 10,
+                Rarity.Advanced => 20,
+                Rarity.Epic => 30,
+                Rarity.Heroic => 40,
+                _ => 0
+            };
+
+            [JsonProperty(Required = Required.Default)]
+            public string icon => GetIconByRarity(rarity);
+
+            public string GetIconByRarity(string rarity) => rarity switch
+            {
+                Rarity.Basic => basicIcon,
+                Rarity.Advanced => advancedIcon,
+                Rarity.Epic => epicIcon,
+                Rarity.Heroic => heroicIcon,
+                _ => null
+            };
+            
+            public bool IsMyClass(string chClass) => chClass == characterClass;
+            
+            public bool IsMy(int? myId) => isEquipped && myId == characterId;
         }
 
         //ftue
@@ -1826,6 +1869,7 @@ namespace Overlewd
                 GameData.buildings.magicGuild.meta.currentLevel >=
                 requiredBuildingLevel && next != null;
 
+            public const string Type_Attack = "overlord_attack";
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";
@@ -1897,6 +1941,9 @@ namespace Overlewd
                 public string mergeType;
                 public int mergeCount;
                 public List<MergePrice> pricesOfMergeType;
+
+                public List<PriceItem> GetPrice(string rarity) =>
+                    pricesOfMergeType.Find(p => p.rarity == rarity)?.price ?? new List<PriceItem>();
             }
 
             public class MergeShardSettings
@@ -1904,6 +1951,9 @@ namespace Overlewd
                 public int mergeAmount;
                 public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfMergeType;
+
+                public List<PriceItem> GetPrice(string rarity) =>
+                    pricesOfMergeType.Find(p => p.rarity == rarity)?.price ?? new List<PriceItem>();
             }
 
             public class ExchangeShardSettings
@@ -1911,6 +1961,9 @@ namespace Overlewd
                 public int exchangeAmount;
                 public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfExchangeType;
+
+                public List<PriceItem> GetPrice(string rarity) =>
+                    pricesOfExchangeType.Find(p => p.rarity == rarity)?.price ?? new List<PriceItem>();
             }
 
             public class MergePrice
@@ -2088,6 +2141,7 @@ namespace Overlewd
             public int? paramAge;
             public string paramZodiac;
             public int? seduceSexSceneId;
+            public int? dailyQuestGiverDialogId;
             public int seduceCooldown;
             public int? seduceBuffSkillId;
             public string status;
@@ -2229,9 +2283,9 @@ namespace Overlewd
                     Replace("%accuracy%", ((int)(accuracy * 100)).ToString()).
                     Replace("%dodge%", ((int)(dodge * 100)).ToString()).
                     Replace("%critrate%", ((int)(critrate * 100)).ToString()).
-                    Replace("%health%", ((int)(health * 100)).ToString()).
-                    Replace("%damage%", ((int)(damage * 100)).ToString()).
-                    Replace("%mana%", ((int)(mana * 100)).ToString());
+                    Replace("%health%", ((int)(health)).ToString()).
+                    Replace("%damage%", ((int)(damage)).ToString()).
+                    Replace("%mana%", ((int)(mana)).ToString());
                 set => _description = value;
             }
             public string postDescription;
@@ -2287,15 +2341,16 @@ namespace Overlewd
         [Serializable]
         public class PotionsInfo
         {
-            public List<PotionPrice> prices;
+            public List<PotionInfo> prices;
             public int maxEnergyVolume;
             public int energyPerCan;
             public float energyRecoverySpeedPerMinute;
 
-            public class PotionPrice
+            public class PotionInfo
             {
                 public string type;
                 public List<PriceItem> price;
+                public float magnitude;
             }
 
             public const string Type_hp = "hp";

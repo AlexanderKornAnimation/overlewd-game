@@ -12,7 +12,7 @@ namespace Overlewd
     {
         private TextMeshProUGUI text;
 
-        void Awake()
+        protected override void Awake()
         {
             text = transform.Find("Canvas").Find("Text").GetComponent<TextMeshProUGUI>();
         }

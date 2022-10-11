@@ -9,9 +9,17 @@ namespace Overlewd
 {
     namespace NSOverlordScreen
     {
-        public class EquipInfoPopup : MonoBehaviour
+        public class EquipInfoPopup : BaseInfoPopup
         {
             private Image equippedItemIcon;
+            private TextMeshProUGUI equippedItemName;
+
+            private GameObject equippedSpeedBack;
+            private TextMeshProUGUI equippedSpeed;
+
+            private GameObject equippedPowerBack;
+            private TextMeshProUGUI equippedPower;
+
             private GameObject equippedConstitutionBack;
             private TextMeshProUGUI equippedConstitution;
 
@@ -32,6 +40,15 @@ namespace Overlewd
 
             private GameObject selectedItem;
             private Image selectedItemIcon;
+            private TextMeshProUGUI selectedItemName;
+
+            private GameObject selectedSpeedBack;
+            private TextMeshProUGUI selectedSpeed;
+            private TextMeshProUGUI selectedSpeedArrow;
+
+            private GameObject selectedPowerBack;
+            private TextMeshProUGUI selectedPower;
+            private TextMeshProUGUI selectedPowerArrow;
 
             private GameObject selectedConstitutionBack;
             private TextMeshProUGUI selectedConstitution;
@@ -61,17 +78,24 @@ namespace Overlewd
             public int equipId;
             public AdminBRO.Equipment equipData => GameData.equipment.GetById(equipId);
 
-            public int? newEquipId;
-            private AdminBRO.Equipment selectedEquipData => GameData.equipment.GetById(newEquipId);
+            public int? selectedEquipId;
+            private AdminBRO.Equipment selectedEquipData => GameData.equipment.GetById(selectedEquipId);
 
             public event Action<int, int> OnEquip;
 
-            private void Awake()
+            protected override void Awake()
             {
-                var canvas = transform.Find("Canvas");
-                var equippedItem = canvas.Find("EquippedItem");
-
+                base.Awake();
+                var equippedItem = transform.Find("Equips/EquippedItem");
                 equippedItemIcon = equippedItem.Find("EquipIcon").GetComponent<Image>();
+                equippedItemName = equippedItem.Find("EquipName").GetComponent<TextMeshProUGUI>();
+
+                equippedSpeedBack = equippedItem.Find("Speed").gameObject;
+                equippedSpeed = equippedSpeedBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
+                equippedPowerBack = equippedItem.Find("Power").gameObject;
+                equippedPower = equippedPowerBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+
                 equippedConstitutionBack = equippedItem.Find("Constitution").gameObject;
                 equippedConstitution = equippedConstitutionBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
 
@@ -90,8 +114,17 @@ namespace Overlewd
                 equippedDamageBack = equippedItem.Find("Damage").gameObject;
                 equippedDamage = equippedDamageBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
 
-                selectedItem = canvas.Find("NewItem").gameObject;
+                selectedItem = transform.Find("Equips/NewItem").gameObject;
                 selectedItemIcon = selectedItem.transform.Find("EquipIcon").GetComponent<Image>();
+                selectedItemName = selectedItem.transform.Find("EquipName").GetComponent<TextMeshProUGUI>();
+
+                selectedSpeedBack = selectedItem.transform.Find("Speed").gameObject;
+                selectedSpeed = selectedSpeedBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedSpeedArrow = selectedSpeed.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
+
+                selectedPowerBack = selectedItem.transform.Find("Power").gameObject;
+                selectedPower = selectedPowerBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                selectedPowerArrow = selectedPower.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
 
                 selectedConstitutionBack = selectedItem.transform.Find("Constitution").gameObject;
                 selectedConstitution = selectedConstitutionBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
@@ -117,7 +150,7 @@ namespace Overlewd
                 selectedDamage = selectedDamageBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
                 selectedDamageArrow = selectedDamage.transform.Find("Arrow").GetComponent<TextMeshProUGUI>();
 
-                equipButton = selectedItem.transform.Find("Substrate").Find("EquipButton").GetComponent<Button>();
+                equipButton = selectedItem.transform.Find("EquipButton").GetComponent<Button>();
                 equipButton.onClick.AddListener(EquipButtonClick);
             }
 
@@ -128,9 +161,66 @@ namespace Overlewd
 
             private void Customize()
             {
-                selectedItem.SetActive(newEquipId.HasValue);
+                CustomizeEquippedItem();
 
+                selectedItem.SetActive(selectedEquipId.HasValue);
+
+                if (selectedItem.activeSelf)
+                {
+                    CustomizeSelectedItem();
+                }
+            }
+
+            private void CustomizeSelectedItem()
+            {
+                selectedItemIcon.sprite = ResourceManager.LoadSprite(selectedEquipData.icon);
+                selectedItemName.text = selectedEquipData.name;
+
+                selectedSpeed.text = "+" + selectedEquipData.speed;
+                selectedSpeedArrow.text = GetArrowByStats(equipData.speed, selectedEquipData.speed);
+                selectedSpeedBack.SetActive(selectedEquipData.speed != 0);
+
+                selectedPower.text = "+" + selectedEquipData.power;
+                selectedPowerArrow.text = GetArrowByStats(equipData.power, selectedEquipData.power);
+                selectedPowerBack.SetActive(selectedEquipData.power != 0);
+
+                selectedConstitution.text = "+" + selectedEquipData.constitution;
+                selectedConstitutionArrow.text =
+                    GetArrowByStats(equipData.constitution, selectedEquipData.constitution);
+                selectedConstitutionBack.SetActive(selectedEquipData.constitution != 0.0f);
+
+                selectedAgility.text = "+" + selectedEquipData.agility;
+                selectedAgilityArrow.text = GetArrowByStats(equipData.agility, selectedEquipData.agility);
+                selectedAgilityBack.SetActive(selectedEquipData.agility != 0.0f);
+
+                selectedAccuracy.text = "+" + selectedEquipData.accuracy * 100 + "%";
+                selectedAccuracyArrow.text = GetArrowByStats(equipData.accuracy, selectedEquipData.accuracy);
+                selectedAccuracyBack.SetActive(selectedEquipData.accuracy != 0.0f);
+
+                selectedDodge.text = "+" + selectedEquipData.dodge * 100 + "%";
+                selectedDodgeArrow.text = GetArrowByStats(equipData.dodge, selectedEquipData.dodge);
+                selectedDodgeBack.SetActive(selectedEquipData.dodge != 0.0f);
+
+                selectedCritRate.text = "+" + selectedEquipData.critrate * 100 + "%";
+                selectedCritRateArrow.text = GetArrowByStats(equipData.critrate, selectedEquipData.critrate);
+                selectedCritRateBack.SetActive(selectedEquipData.critrate != 0.0f);
+
+                selectedDamage.text = "+" + selectedEquipData.damage;
+                selectedDamageArrow.text = GetArrowByStats(equipData.damage, selectedEquipData.damage);
+                selectedDamageBack.SetActive(selectedEquipData.damage != 0.0f);
+            }
+
+            private void CustomizeEquippedItem()
+            {
                 equippedItemIcon.sprite = ResourceManager.LoadSprite(equipData.icon);
+                equippedItemName.text = equipData.name;
+
+                equippedSpeed.text = "+" + equipData.speed;
+                equippedSpeedBack.SetActive(equipData.speed != 0);
+
+                equippedPower.text = "+" + equipData.power;
+                equippedPowerBack.SetActive(equipData.power != 0);
+
                 equippedConstitution.text = "+" + equipData.constitution;
                 equippedConstitutionBack.SetActive(equipData.constitution != 0);
 
@@ -141,41 +231,13 @@ namespace Overlewd
                 equippedAccuracyBack.SetActive(equipData.accuracy != 0);
 
                 equippedDodge.text = "+" + equipData.dodge * 100 + "%";
-                equippedDodgeBack.SetActive(equipData.dodge != 0);
+                equippedDodgeBack.SetActive(equipData.dodge != 0.0f);
 
                 equippedCritrate.text = "+" + equipData.critrate * 100 + "%";
-                equippedCritrateBack.SetActive(equipData.critrate != 0);
+                equippedCritrateBack.SetActive(equipData.critrate != 0.0f);
 
                 equippedDamage.text = "+" + equipData.damage;
                 equippedDamageBack.SetActive(equipData.damage != 0);
-
-                if (selectedItem.activeSelf)
-                {
-                    selectedItemIcon.sprite = ResourceManager.LoadSprite(selectedEquipData.icon);
-                    selectedConstitution.text = "+" + selectedEquipData.constitution;
-                    selectedConstitutionArrow.text = GetArrowByStats(equipData.constitution, selectedEquipData.constitution);
-                    selectedConstitutionBack.SetActive(selectedEquipData.constitution != 0.0f);
-
-                    selectedAgility.text = "+" + selectedEquipData.agility;
-                    selectedAgilityArrow.text = GetArrowByStats(equipData.agility, selectedEquipData.agility);
-                    selectedAgilityBack.SetActive(selectedEquipData.agility != 0.0f);
-
-                    selectedAccuracy.text = "+" + selectedEquipData.accuracy * 100 + "%";
-                    selectedAccuracyArrow.text = GetArrowByStats(equipData.accuracy, selectedEquipData.accuracy);
-                    selectedAccuracyBack.SetActive(selectedEquipData.accuracy != 0.0f);
-
-                    selectedDodge.text = "+" + selectedEquipData.dodge * 100 + "%";
-                    selectedDodgeArrow.text = GetArrowByStats(equipData.dodge, selectedEquipData.dodge);
-                    selectedDodgeBack.SetActive(selectedEquipData.dodge != 0.0f);
-
-                    selectedCritRate.text = "+" + selectedEquipData.critrate * 100 + "%";
-                    selectedCritRateArrow.text = GetArrowByStats(equipData.critrate, selectedEquipData.critrate);
-                    selectedCritRateBack.SetActive(selectedEquipData.critrate != 0.0f);
-
-                    selectedDamage.text = "+" + selectedEquipData.damage;
-                    selectedDamageArrow.text = GetArrowByStats(equipData.damage, selectedEquipData.damage);
-                    selectedDamageBack.SetActive(selectedEquipData.damage != 0.0f);
-                }
             }
 
             private string GetArrowByStats(float equippedItemStat, float selectedItemStat)
@@ -192,11 +254,11 @@ namespace Overlewd
             {
                 var overlordData = GameData.characters.overlord;
 
-                if (overlordData.id.HasValue && newEquipId.HasValue)
+                if (overlordData.id.HasValue && selectedEquipId.HasValue)
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                    await GameData.equipment.Equip(overlordData.id.Value, newEquipId.Value);
-                    OnEquip?.Invoke(equipId, newEquipId.Value);
+                    await GameData.equipment.Equip(overlordData.id.Value, selectedEquipId.Value);
+                    OnEquip?.Invoke(equipId, selectedEquipId.Value);
                 }
             }
 

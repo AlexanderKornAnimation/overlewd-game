@@ -10,7 +10,7 @@ namespace Overlewd
     {
         private Button button;
 
-        private void Awake()
+        protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             button = canvas.Find("Button").GetComponent<Button>();

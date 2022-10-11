@@ -18,7 +18,7 @@ namespace Overlewd
             private Button button;
             private GameObject pressedButton;
             private TextMeshProUGUI title;
-            private TextMeshProUGUI notification;
+            private GameObject notification;
 
             public int? questId { get; set; }
             public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
@@ -33,17 +33,13 @@ namespace Overlewd
                 pressedButton.SetActive(false);
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
 
-                notification = canvas.Find("Notification").GetComponent<TextMeshProUGUI>();
-            }
-
-            private void Start()
-            {
-                // Customize();
+                notification = canvas.Find("Notification").gameObject;
             }
 
             public void Customize()
             {
                 title.text = questData?.name;
+                notification.gameObject.SetActive(questData.isClaimed);
                 contentScrollView = QuestContentScrollView.GetInstance(questContentPos);
                 contentScrollView.questId = questId;
             }

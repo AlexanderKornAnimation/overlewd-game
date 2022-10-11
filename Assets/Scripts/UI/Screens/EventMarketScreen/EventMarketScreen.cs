@@ -59,9 +59,9 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData?.type)
+            switch (eventData?.eventId)
             {
-                case GameDataEvent.Type.BuyTradable:
+                case GameDataEvent.EventId.BuyTradable:
                     Customize();
                     foreach (var marketItem in scrollViewContent.GetComponentsInChildren<NSEventMarketScreen.EventMarketItem>())
                     {
