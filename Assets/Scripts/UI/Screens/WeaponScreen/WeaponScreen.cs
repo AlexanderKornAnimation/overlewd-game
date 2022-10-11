@@ -153,9 +153,10 @@ namespace Overlewd
         {
             foreach (var equip in GameData.equipment.equipment)
             {
-                var weaponData = GameData.equipment.GetById(equip.id);
-
-                var tabId = weaponData.characterClass switch
+                if (equip.characterClass == AdminBRO.Character.Class_Overlord)
+                    continue;
+                    
+                var tabId = equip.characterClass switch
                 {
                     AdminBRO.Equipment.Class_Bruiser => tabBruisers,
                     AdminBRO.Equipment.Class_Assassin => tabAssassins,
@@ -185,7 +186,7 @@ namespace Overlewd
             if (charData != null)
             {
                 var weapon = weapons.FirstOrDefault(w => w.weaponData.isEquipped);
-                await weapon?.Unequip(charData.id.Value, charData.equipment.FirstOrDefault());
+                await weapon?.Unequip(charData.id.Value, charData.characterEquipmentData.id);
             }
         }
         
@@ -220,9 +221,9 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
+            if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
             {
-                UIManager.ShowScreen<TeamEditScreen>();
+                UIManager.ShowScreen<BattleGirlListScreen>();
             }
             else
             {

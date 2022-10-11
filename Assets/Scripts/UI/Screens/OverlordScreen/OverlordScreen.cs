@@ -28,7 +28,8 @@ namespace Overlewd
         private int[] tabIds = {TabWeapon, TabGloves, TabHelmet, TabHarness, TabThigh, TabBoots};
         private GameObject[] scrolls = new GameObject[TabsCount];
         private Transform[] scrollContents = new Transform[TabsCount];
-
+        private Transform canvas;
+        
         private TextMeshProUGUI speed;
         private TextMeshProUGUI power;
         private TextMeshProUGUI constitution;
@@ -44,10 +45,7 @@ namespace Overlewd
         private TextMeshProUGUI mana;
 
         private Button collectiblesButton;
-        private Button forgeButton;
-        private Button magicGuildButton;
         private Button backButton;
-        private Button missClickButton;
 
         private Button cellWeapon;
         private Button cellGloves;
@@ -56,7 +54,14 @@ namespace Overlewd
         private Button cellThigh;
         private Button cellBoots;
 
+        private Transform infoPopupPos;
         private NSOverlordScreen.EquipInfoPopup equipPopup;
+
+        private NSOverlordScreen.Skill passiveSkill1;
+        private NSOverlordScreen.Skill passiveSkill2;
+        private NSOverlordScreen.Skill basicAttack;
+        private NSOverlordScreen.Skill enhancedAttack;
+        private NSOverlordScreen.Skill ultimate;
 
         public AdminBRO.Character overlordData => GameData.characters.overlord;
         private List<NSOverlordScreen.Equipment> equippedItems = new List<NSOverlordScreen.Equipment>();
@@ -67,7 +72,7 @@ namespace Overlewd
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/OverlordScreen/OverlordScreen", transform);
 
-            var canvas = screenInst.transform.Find("Canvas");
+            canvas = screenInst.transform.Find("Canvas");
             var statsInfo = canvas.Find("StatsInfo");
             var mainStats = statsInfo.Find("MainStats");
             var secondaryStats = statsInfo.Find("SecondaryStats");
@@ -92,18 +97,9 @@ namespace Overlewd
             collectiblesButton = canvas.Find("CollectiblesButton").GetComponent<Button>();
             collectiblesButton.onClick.AddListener(CollectiblesButtonClick);
 
-            forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
-            forgeButton.onClick.AddListener(ForgeButtonClick);
-
-            magicGuildButton = canvas.Find("MagicGuildButton").GetComponent<Button>();
-            magicGuildButton.onClick.AddListener(MagicGuildButtonClick);
-
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            missClickButton = canvas.Find("MissClickButton").GetComponent<Button>();
-            missClickButton.onClick.AddListener(MissClickButtonClick);
-            missClickButton.gameObject.SetActive(false);
+            infoPopupPos = canvas.Find("InfoPopupPos");
 
             var equipmentCells = canvas.Find("EquipmentCells");
             cellWeapon = equipmentCells.Find("CellWeapon").GetComponent<Button>();
@@ -158,6 +154,28 @@ namespace Overlewd
                     }
                 }
             }
+
+            var skills = canvas.Find("Skills");
+            passiveSkill1 = skills.Find("PassiveSkill1").gameObject.AddComponent<NSOverlordScreen.Skill>();
+            passiveSkill1.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill1;
+            passiveSkill1.infoPopupPos = infoPopupPos;
+            
+            passiveSkill2 = skills.Find("PassiveSkill2").gameObject.AddComponent<NSOverlordScreen.Skill>();
+            passiveSkill2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
+            passiveSkill2.infoPopupPos = infoPopupPos;
+            
+            basicAttack = skills.Find("BasicAttack").gameObject.AddComponent<NSOverlordScreen.Skill>();
+            basicAttack.skillType = AdminBRO.MagicGuildSkill.Type_Attack;
+            basicAttack.infoPopupPos = infoPopupPos;
+            
+            enhancedAttack = skills.Find("EnhancedSkill").gameObject.AddComponent<NSOverlordScreen.Skill>();
+            enhancedAttack.skillType = AdminBRO.MagicGuildSkill.Type_ActiveSkill;
+            enhancedAttack.infoPopupPos = infoPopupPos;
+            
+            ultimate = skills.Find("UltimateSkill").gameObject.AddComponent<NSOverlordScreen.Skill>();
+            ultimate.skillType = AdminBRO.MagicGuildSkill.Type_UltimateSkill;
+            ultimate.infoPopupPos = infoPopupPos;
+            
             SortEquipInTabs();
         }
         
@@ -172,7 +190,6 @@ namespace Overlewd
 
             equip?.Deselect();
             equippedItems.Remove(equip);
-            DestroyPopup();
             
             CustomizeStats();
             SortEquipInTabs();
@@ -216,46 +233,24 @@ namespace Overlewd
             if (tabId != activeTabId || equipPopup == null)
             {
                 TabClick(tabId);
-                DestroyPopup();
                 InstantiateInfoPopup(equip);
             }
         }
 
         private void ShowInfoPopup(NSOverlordScreen.Equipment newEquip)
         {
-            DestroyPopup();
-            
             var equip = GetEquippedItemByType(newEquip.equipData.equipmentType);
             InstantiateInfoPopup(equip, newEquip);
         }
 
         private void InstantiateInfoPopup(NSOverlordScreen.Equipment equip, NSOverlordScreen.Equipment newEquip = null)
         {
-            var cell = GetCellByType(equip.equipData?.equipmentType);
-            
-            equipPopup = NSOverlordScreen.EquipInfoPopup.GetInstance(cell);
+            equipPopup = NSOverlordScreen.EquipInfoPopup.GetInstance(infoPopupPos);
             equipPopup.equipId = equip.equipId;
-            equipPopup.newEquipId = newEquip?.equipId;
+            equipPopup.selectedEquipId = newEquip?.equipId;
             equipPopup.OnEquip += UpdateCell;
-            missClickButton.gameObject.SetActive(true);
-            cell.SetAsLastSibling();
         }
         
-        private void MissClickButtonClick()
-        {
-            DestroyPopup();
-        }
-
-        private void DestroyPopup()
-        {
-            if (equipPopup != null)
-            {
-                Destroy(equipPopup.gameObject);
-                equipPopup = null;
-                missClickButton.gameObject.SetActive(false);
-            }
-        }
-       
         private NSOverlordScreen.Equipment GetEquipById(int id) => 
             equipments.FirstOrDefault(eq => eq.equipId == id);
         
@@ -345,22 +340,6 @@ namespace Overlewd
             {
                 UIManager.ShowScreen<CastleScreen>();
             }
-        }
-
-        private void ForgeButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<ForgeScreen>().
-                SetData(new ForgeScreenInData
-                {
-                    activeTabId = ForgeScreen.TabOverlordEquip
-                }).RunShowScreenProcess();
-        }
-
-        private void MagicGuildButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<MagicGuildScreen>();
         }
 
         private void CollectiblesButtonClick()

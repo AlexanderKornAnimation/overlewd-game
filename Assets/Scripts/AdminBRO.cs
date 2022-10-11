@@ -1120,6 +1120,9 @@ namespace Overlewd
             };
 
             [JsonProperty(Required = Required.Default)]
+            public bool isSexSceneOpen => sexSceneId.HasValue;
+            
+            [JsonProperty(Required = Required.Default)]
             public bool hasEquipment => equipment.Count > 0;
 
             [JsonProperty(Required = Required.Default)]
@@ -1130,6 +1133,18 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool inTeam => teamPosition == TeamPosition_Slot1 || teamPosition == TeamPosition_Slot2;
+
+            [JsonProperty(Required = Required.Default)]
+            public CharacterSkill basicSkill =>
+                skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Attack);
+            
+            [JsonProperty(Required = Required.Default)]
+            public CharacterSkill ultimateSkill =>
+                skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Enhanced);
+            
+            [JsonProperty(Required = Required.Default)]
+            public CharacterSkill passiveSkill =>
+                skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Passive);
 
             [JsonProperty(Required = Required.Default)]
             public Sound sfxAttack1 => GameData.sounds.GetById(sfxAttack1Id);
@@ -1314,7 +1329,9 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
-
+            
+            public bool IsMyClass(string chClass) => chClass == characterClass;
+            
             public bool IsMy(int? myId) => isEquipped && myId == characterId;
         }
 
@@ -1852,6 +1869,7 @@ namespace Overlewd
                 GameData.buildings.magicGuild.meta.currentLevel >=
                 requiredBuildingLevel && next != null;
 
+            public const string Type_Attack = "overlord_attack";
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";

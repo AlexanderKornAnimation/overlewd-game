@@ -240,12 +240,12 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             if (inputData == null)
             {
-                UIManager.ShowScreen<TeamEditScreen>();
+                UIManager.ShowScreen<BattleGirlListScreen>();
             }
             else
             {
-                UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>())
+                UIManager.MakeScreen<BattleGirlListScreen>().
+                    SetData(inputData.prevScreenInData.As<BattleGirlListScreenInData>())
                     .RunShowScreenProcess();
             }
         }

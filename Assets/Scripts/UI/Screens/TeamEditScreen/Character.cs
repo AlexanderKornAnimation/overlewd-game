@@ -21,7 +21,6 @@ namespace Overlewd
             private TextMeshProUGUI level;
             private TextMeshProUGUI girlClass;
             private Transform equipStatus;
-            private Button girlScreenButton;
             private Button equipButton;
             private GameObject notificationNew;
 
@@ -36,8 +35,6 @@ namespace Overlewd
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 girlClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
                 equipStatus = canvas.Find("EquipStatus");
-                girlScreenButton = canvas.Find("GirlScreenButton").GetComponent<Button>();
-                girlScreenButton.onClick.AddListener(GirlScreenButtonClick);
                 notificationNew = canvas.Find("NotificationNew").GetComponent<GameObject>();
             }
 
@@ -68,25 +65,6 @@ namespace Overlewd
             private void EquipButtonClick()
             {
                 screen.TryEquipOrUnequip(characterId);
-            }
-
-            private void GirlScreenButtonClick()
-            {
-                if (inputData == null)
-                {
-                    UIManager.ShowScreen<BattleGirlScreen>();
-                }
-                else
-                {
-                    UIManager.MakeScreen<BattleGirlScreen>().
-                        SetData(new BattleGirlScreenInData 
-                        {
-                            prevScreenInData = inputData,
-                            ftueStageId = inputData.ftueStageId,
-                            eventStageId = inputData.eventStageId,
-                            characterId = characterId
-                        }).RunShowScreenProcess();
-                }
             }
 
             public static Character GetInstance(Transform parent)
