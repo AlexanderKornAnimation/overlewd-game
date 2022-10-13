@@ -13,10 +13,7 @@ namespace Overlewd
         {
             public OverlordEquipContent equipCtrl { get; set; }
             public InfoBlockOverlordEquip ctrl_InfoBlock { get; set; }
-            public bool IsConsume => ctrl_InfoBlock.isFilled &&
-                ctrl_InfoBlock.consumeEquip.equipData.characterClass == equipData.characterClass &&
-                ctrl_InfoBlock.consumeEquip.equipData.equipmentType == equipData.equipmentType &&
-                ctrl_InfoBlock.consumeEquip.equipData.rarity == equipData.rarity;
+            public bool IsConsume => ctrl_InfoBlock.IsConsume(this);
 
             public override void RefreshState()
             {
@@ -27,9 +24,17 @@ namespace Overlewd
 
             protected override void ButtonClick()
             {
+                if (IsConsume)
+                {
+                    ctrl_InfoBlock.RemoveConsume(this);
+                }
+                else
+                {
+                    ctrl_InfoBlock.Consume(this);
+                }
                 equipCtrl.RefreshState();
             }
-            
+
             public static EquipmentOverlord GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<EquipmentOverlord>("Prefabs/UI/Screens/ForgeScreen/Equipment",

@@ -1309,12 +1309,37 @@ namespace Overlewd
             public bool isEquipped => characterId.HasValue;
 
             [JsonProperty(Required = Required.Default)]
-            public int rarityLevel => rarity switch
+            public int raritySortLevel => rarity switch
             {
-                Rarity.Basic => 10,
-                Rarity.Advanced => 20,
-                Rarity.Epic => 30,
-                Rarity.Heroic => 40,
+                Rarity.Basic => 1,
+                Rarity.Advanced => 2,
+                Rarity.Epic => 3,
+                Rarity.Heroic => 4,
+                _ => 0
+            };
+
+            [JsonProperty(Required = Required.Default)]
+            public int classSortLevel => rarity switch
+            {
+                Class_Assassin => 1,
+                Class_Bruiser => 2,
+                Class_Tank => 3,
+                Class_Caster => 4,
+                Class_Healer => 5,
+                Class_Overlord => 6,
+                _ => 0
+            };
+
+            [JsonProperty(Required = Required.Default)]
+            public int typeSortLevel => rarity switch
+            {
+                Type_OverlordThighs => 1,
+                Type_OverlordHelmet => 2,
+                Type_OverlordBoots => 3,
+                Type_OverlordHarness => 4,
+                Type_OverlordWeapon => 5,
+                Type_OverlordGloves => 6,
+                Type_CharacterWeapon => 7,
                 _ => 0
             };
 
@@ -1939,7 +1964,8 @@ namespace Overlewd
             public class MergeEquipmentSettings
             {
                 public string mergeType;
-                public int mergeCount;
+                public int mergeAmount;
+                public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfMergeType;
 
                 public List<PriceItem> GetPrice(string rarity) =>
@@ -1971,6 +1997,34 @@ namespace Overlewd
                 public string rarity;
                 public List<PriceItem> price;
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentCharacterSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_battle_character");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordHelmetSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_helmet");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordWeaponSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_weapon");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordGlovesSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_gloves");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordThighsSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_thighs");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordBootsSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_boots");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordHarnessSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_harness");
         }
 
         // gacha

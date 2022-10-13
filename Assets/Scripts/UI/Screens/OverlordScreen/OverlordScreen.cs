@@ -352,7 +352,7 @@ namespace Overlewd
             foreach (var tabId in tabIds)
             {
                 var tabEquip = scrollContents[tabId].GetComponentsInChildren<NSOverlordScreen.Equipment>().ToList();
-                var tabEquipSort = tabEquip.OrderByDescending(e => e.equipData.rarityLevel + (e.equipData.isEquipped ? 100 : 0));
+                var tabEquipSort = tabEquip.OrderByDescending(e => e.equipData.raritySortLevel + (e.equipData.isEquipped ? 100 : 0));
                 var eSiblingIndex = 0;
                 foreach (var equip in tabEquipSort)
                 {

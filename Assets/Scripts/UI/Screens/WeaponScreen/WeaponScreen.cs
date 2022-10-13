@@ -238,7 +238,7 @@ namespace Overlewd
             foreach (var tabId in tabIds)
             {
                 var tabWeapon = scrollContents[tabId].GetComponentsInChildren<NSWeaponScreen.Weapon>().ToList();
-                var tabWeaponSort = tabWeapon.OrderByDescending(w => w.weaponData.rarityLevel + (w.weaponData.isEquipped ? 100 : 0));
+                var tabWeaponSort = tabWeapon.OrderByDescending(w => w.weaponData.raritySortLevel + (w.weaponData.isEquipped ? 100 : 0));
                 var wSiblingIndex = 0;
                 foreach (var weapon in tabWeaponSort)
                 {

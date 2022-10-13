@@ -298,6 +298,7 @@ namespace Overlewd
             {
                 await AdminBRO.forgeMergeEquipment(mergeType, mergeIds);
                 await GameData.equipment.Get();
+                await GameData.characters.Get();
                 await GameData.player.Get();
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
@@ -573,6 +574,7 @@ namespace Overlewd
 
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
+
         public List<AdminBRO.Equipment> chAll =>
             equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon &&
                 !String.IsNullOrEmpty(e.characterClass) && e.characterClass != AdminBRO.Equipment.Class_Overlord);

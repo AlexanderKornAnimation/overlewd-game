@@ -59,21 +59,20 @@ namespace Overlewd
             }
 
             public bool isFilled => consumeMtrch != null && targetMtrch != null;
-            public int exchangeAmount =>
-                GameData.buildings.forge.prices.exchangeShardSettings.exchangeAmount;
-            public int maxShardsResult =>
-                GameData.buildings.forge.prices.exchangeShardSettings.maxPossibleResultAmount;
+            public int exchangeAmount => exchangeSettings.exchangeAmount;
+            public int maxShardsResult => exchangeSettings.maxPossibleResultAmount;
             public int? shardsCount => 
                 GameData.matriarchs.GetShardByMatriarchId(consumeMtrch?.matriarchData?.id,
                     shardsCtrl.ExchangeRaritySelected())?.amount;
             public int shardsNeeded => targetCountValue * exchangeAmount;
             public List<AdminBRO.PriceItem> exchangePrice => 
-                UITools.PriceMul(GameData.buildings.forge.prices.exchangeShardSettings.
-                    GetPrice(shardsCtrl.ExchangeRaritySelected()),
+                UITools.PriceMul(exchangeSettings.GetPrice(shardsCtrl.ExchangeRaritySelected()),
                     targetCountValue);
             public bool canExchange =>
                 GameData.player.CanBuy(exchangePrice) &&
                 shardsCount >= shardsNeeded;
+            public AdminBRO.ForgePrice.ExchangeShardSettings exchangeSettings =>
+                GameData.buildings.forge.prices.exchangeShardSettings;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -51,7 +52,7 @@ namespace Overlewd
 
             private void Start()
             {
-                ActializeTabsContent();
+                ActualizeTabsContent();
                 RefreshState();
                 TabClick(TabAll, false);
             }
@@ -70,9 +71,7 @@ namespace Overlewd
 
             protected override void MergeButtonClick()
             {
-
-                ActializeTabsContent();
-                RefreshState();
+                Merge();
             }
 
             protected override void PortalButtonClick()
@@ -93,27 +92,38 @@ namespace Overlewd
             {
                 infoBlock.RefreshState();
 
-                foreach (var tabContent in contents)
+                SortAndRefreshTabContent(TabAll);
+                SortAndRefreshTabContent(TabAssassin);
+                SortAndRefreshTabContent(TabCaster);
+                SortAndRefreshTabContent(TabHealer);
+                SortAndRefreshTabContent(TabBruiser);
+                SortAndRefreshTabContent(TabTank);
+
+                //merge button
+                if (infoBlock.isFilled)
                 {
-                    var tabEqs = tabContent.GetComponentsInChildren<EquipmentBattleGirls>();
-                    foreach (var e in tabEqs)
-                    {
-                        e.RefreshState();
-                    }
+                    mergeButton.gameObject.SetActive(infoBlock.isFilled);
+                    SetMergeBtnPrice(infoBlock.mergePrice);
+                    UITools.DisableButton(mergeButton, !infoBlock.canMerge);
+                }
+                else
+                {
+                    mergeButton.gameObject.SetActive(false);
                 }
             }
 
-            private void ActializeTabsContent()
+            private void ActualizeTabsContent()
             {
-                ActializeTabContent(TabAll, GameData.equipment.chAll);
-                ActializeTabContent(TabAssassin, GameData.equipment.chAssassins);
-                ActializeTabContent(TabCaster, GameData.equipment.chCasters);
-                ActializeTabContent(TabHealer, GameData.equipment.chHealers);
-                ActializeTabContent(TabBruiser, GameData.equipment.chBruisers);
-                ActializeTabContent(TabTank, GameData.equipment.chTanks);
+                ActualizeTabContent(TabAll, GameData.equipment.chAll);
+                ActualizeTabContent(TabAssassin, GameData.equipment.chAssassins);
+                ActualizeTabContent(TabCaster, GameData.equipment.chCasters);
+                ActualizeTabContent(TabHealer, GameData.equipment.chHealers);
+                ActualizeTabContent(TabBruiser, GameData.equipment.chBruisers);
+                ActualizeTabContent(TabTank, GameData.equipment.chTanks);
+                infoBlock.ActualizeConsumeEquips();
             }
 
-            private void ActializeTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
+            private void ActualizeTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
             {
                 var tabEq = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().ToList();
                 var removedTabEq = tabEq.FindAll(te => !actualEq.Exists(ae => ae.id == te.equipId));
@@ -131,15 +141,28 @@ namespace Overlewd
                     equip.equipCtrl = this;
                     equip.ctrl_InfoBlock = infoBlock;
                 }
+            }
 
-                var sortTabEq = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().
-                    OrderBy(e => e.equipData.rarityLevel);
+            private void SortAndRefreshTabContent(int tabId)
+            {
+                var tabSortEqs = contents[tabId].GetComponentsInChildren<EquipmentBattleGirls>().
+                    OrderBy(e => (e.equipData.raritySortLevel * 10 + e.equipData.classSortLevel) * (e.IsConsume ? 0 : 1));
                 var siblingIndex = 0;
-                foreach (var e in sortTabEq)
+                foreach (var e in tabSortEqs)
                 {
                     e.transform.SetSiblingIndex(siblingIndex);
                     siblingIndex++;
+                    e.RefreshState();
                 }
+            }
+
+            private async void Merge()
+            {
+                await GameData.buildings.forge.MergeEquipment(
+                    infoBlock.mergeSettings.mergeType,
+                    infoBlock.mergeIds);
+                ActualizeTabsContent();
+                RefreshState();
             }
         }
     }

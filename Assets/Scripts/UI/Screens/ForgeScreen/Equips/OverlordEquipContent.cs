@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -72,9 +73,7 @@ namespace Overlewd
 
             protected override void MergeButtonClick()
             {
-
-                ActualizeTabsContent();
-                RefreshState();
+                Merge();
             }
 
             protected override void PortalButtonClick()
@@ -95,27 +94,38 @@ namespace Overlewd
             {
                 infoBlock.RefreshState();
 
-                foreach (var tabContent in contents)
+                SortAndRefreshTabContent(TabWeapon);
+                SortAndRefreshTabContent(TabGloves);
+                SortAndRefreshTabContent(TabHelmet);
+                SortAndRefreshTabContent(TabHarness);
+                SortAndRefreshTabContent(TabTigh);
+                SortAndRefreshTabContent(TabBoots);
+
+                //merge button
+                if (infoBlock.isFilled)
                 {
-                    var tabEqs = tabContent.GetComponentsInChildren<EquipmentOverlord>();
-                    foreach (var e in tabEqs)
-                    {
-                        e.RefreshState();
-                    }
+                    mergeButton.gameObject.SetActive(infoBlock.isFilled);
+                    SetMergeBtnPrice(infoBlock.mergePrice);
+                    UITools.DisableButton(mergeButton, !infoBlock.canMerge);
+                }
+                else
+                {
+                    mergeButton.gameObject.SetActive(false);
                 }
             }
 
             private void ActualizeTabsContent()
             {
-                ActializeTabContent(TabWeapon, GameData.equipment.ovWeapons);
-                ActializeTabContent(TabGloves, GameData.equipment.ovGloves);
-                ActializeTabContent(TabHelmet, GameData.equipment.ovHelmets);
-                ActializeTabContent(TabHarness, GameData.equipment.ovHarness);
-                ActializeTabContent(TabTigh, GameData.equipment.ovThighs);
-                ActializeTabContent(TabBoots, GameData.equipment.ovBoots);
+                ActualizeTabContent(TabWeapon, GameData.equipment.ovWeapons);
+                ActualizeTabContent(TabGloves, GameData.equipment.ovGloves);
+                ActualizeTabContent(TabHelmet, GameData.equipment.ovHelmets);
+                ActualizeTabContent(TabHarness, GameData.equipment.ovHarness);
+                ActualizeTabContent(TabTigh, GameData.equipment.ovThighs);
+                ActualizeTabContent(TabBoots, GameData.equipment.ovBoots);
+                infoBlock.ActualizeConsumeEquips();
             }
 
-            private void ActializeTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
+            private void ActualizeTabContent(int tabId, List<AdminBRO.Equipment> actualEq)
             {
                 var tabEq = contents[tabId].GetComponentsInChildren<EquipmentOverlord>().ToList();
                 var removedTabEq = tabEq.FindAll(te => !actualEq.Exists(ae => ae.id == te.equipId));
@@ -133,15 +143,28 @@ namespace Overlewd
                     equip.equipCtrl = this;
                     equip.ctrl_InfoBlock = infoBlock;
                 }
+            }
 
-                var sortTabEq = contents[tabId].GetComponentsInChildren<EquipmentOverlord>().
-                    OrderBy(e => e.equipData.rarityLevel);
+            private void SortAndRefreshTabContent(int tabId)
+            {
+                var tabSortEqs = contents[tabId].GetComponentsInChildren<EquipmentOverlord>().
+                    OrderBy(e => (e.equipData.raritySortLevel * 10 + e.equipData.typeSortLevel) * (e.IsConsume ? 0 : 1));
                 var siblingIndex = 0;
-                foreach (var e in sortTabEq)
+                foreach (var e in tabSortEqs)
                 {
                     e.transform.SetSiblingIndex(siblingIndex);
                     siblingIndex++;
+                    e.RefreshState();
                 }
+            }
+
+            private async void Merge()
+            {
+                await GameData.buildings.forge.MergeEquipment(
+                    infoBlock.mergeSettings.mergeType,
+                    infoBlock.mergeIds);
+                ActualizeTabsContent();
+                RefreshState();
             }
         }
     }
