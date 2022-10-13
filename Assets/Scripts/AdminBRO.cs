@@ -1319,7 +1319,7 @@ namespace Overlewd
             };
 
             [JsonProperty(Required = Required.Default)]
-            public int classSortLevel => rarity switch
+            public int classSortLevel => characterClass switch
             {
                 Class_Assassin => 1,
                 Class_Bruiser => 2,
@@ -1331,7 +1331,7 @@ namespace Overlewd
             };
 
             [JsonProperty(Required = Required.Default)]
-            public int typeSortLevel => rarity switch
+            public int typeSortLevel => equipmentType switch
             {
                 Type_OverlordThighs => 1,
                 Type_OverlordHelmet => 2,
