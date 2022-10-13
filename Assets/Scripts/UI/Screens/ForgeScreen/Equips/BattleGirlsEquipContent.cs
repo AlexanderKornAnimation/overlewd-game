@@ -57,6 +57,11 @@ namespace Overlewd
                 TabClick(TabAll, false);
             }
 
+            private void OnEnable()
+            {
+                RefreshState();
+            }
+
             private void TabClick(int tabId, bool playSound = true)
             {
                 if (playSound)

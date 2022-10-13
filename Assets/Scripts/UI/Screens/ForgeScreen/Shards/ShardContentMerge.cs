@@ -70,6 +70,11 @@ namespace Overlewd
                 RefreshState();
             }
 
+            private void OnEnable()
+            {
+                RefreshState();
+            }
+
             private void SideTabClick(int tabId)
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
