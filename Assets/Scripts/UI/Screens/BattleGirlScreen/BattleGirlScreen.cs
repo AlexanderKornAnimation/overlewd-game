@@ -48,6 +48,7 @@ namespace Overlewd
         private Image weapon;
         private Button weaponScreenButton;
         private TextMeshProUGUI weaponButtonTitle;
+        private GameObject cellBackground;
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
         private Image girl;
@@ -79,6 +80,7 @@ namespace Overlewd
             weaponScreenButton = weaponCell.Find("WeaponScreenButton").GetComponent<Button>();
             weaponButtonTitle = weaponScreenButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
+            cellBackground = weaponCell.Find("Background").gameObject;
 
             levelUpButton = canvas.Find("LevelUpButton");
             levelUpButtonCanLvlUp = levelUpButton.Find("CanLvlUp").GetComponent<Button>();
@@ -213,6 +215,7 @@ namespace Overlewd
                 rarityHeroic.SetActive(characterData.isHeroic);
                 
                 weapon.gameObject.SetActive(characterData.hasEquipment);
+                cellBackground.SetActive(!characterData.hasEquipment);
                 
                 if (weapon.gameObject.activeSelf)
                 {
