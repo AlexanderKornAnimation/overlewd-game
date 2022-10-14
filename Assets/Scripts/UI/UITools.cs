@@ -56,25 +56,13 @@ namespace Overlewd
         public static void DisableButton(Button button, bool disable = true)
         {
             var bColors = button.colors;
-            if (disable)
-            {
-                button.interactable = false;
-                bColors.disabledColor = Color.gray;
-                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
-                {
-                    cr.SetColor(Color.gray);
-                }
-            }
-            else
-            {
-                button.interactable = true;
-                bColors.disabledColor = Color.white;
-                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
-                {
-                    cr.SetColor(Color.white);
-                }
-            }
+            button.interactable = !disable;
+            bColors.disabledColor = disable ? Color.gray : Color.white;
             button.colors = bColors;
+            foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>(true))
+            {
+                cr.SetColor(disable ? Color.gray : Color.white);
+            }
         }
 
         public static void SetStretch(RectTransform rectTransform)
