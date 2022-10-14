@@ -58,17 +58,14 @@ namespace Overlewd
             textCount = GetComponentInChildren<TextMeshProUGUI>();
             selectBorder = transform.Find("select")?.gameObject;
         }
-        private void Start()
-        {
-            StatInit();
-        }
+        private void Start() => StatInit();
+        
         private void StatInit()
         {
             if (slider != null)
             {
                 cooldown = Mathf.RoundToInt(skill.effectCooldownDuration);
                 slider.maxValue = cooldown;
-                cooldownCount = 0;
                 slider.value = cooldownCount;
             }
             if (textCount != null)
@@ -78,8 +75,10 @@ namespace Overlewd
                     textCount.text = $"{cooldownCount}";
         }
 
-        public void ReplaceSkill(AdminBRO.CharacterSkill sk, bool isOverlord = false)
+        public void ReplaceSkill(AdminBRO.CharacterSkill sk, Dictionary<AdminBRO.CharacterSkill, int> cd, bool isOverlord = false)
         {
+            if (!cd.TryGetValue(sk, out cooldownCount))
+                cooldownCount = 0;
             skill = sk;
             if (!potion)
             {
@@ -155,6 +154,8 @@ namespace Overlewd
                 effectSlot.gameObject.SetActive(false);
             }
         }
+        public bool SkillOnCD() => cooldownCount > 0;
+        
         private void Update()
         {
             if (pressed && !potion)
@@ -165,7 +166,6 @@ namespace Overlewd
                 }
                 else
                 {
-                    //Debug.Log("Descr is open");
                     ShowDiscription();
                     pressTime = 0f;
                     pressed = false;

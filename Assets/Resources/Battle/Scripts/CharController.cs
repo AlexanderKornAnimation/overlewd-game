@@ -22,7 +22,8 @@ namespace Overlewd
         private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
-        private List<AdminBRO.Sound> sound = new List<AdminBRO.Sound>() { null, null, null };
+        public Dictionary<AdminBRO.CharacterSkill, int> skillCD = new Dictionary<AdminBRO.CharacterSkill, int>(5);
+        private List<AdminBRO.Sound> skillSFX = new List<AdminBRO.Sound>(3) { null, null, null };
 
         //New Resources:
         private string ani_idle_name = "idle";
@@ -153,9 +154,13 @@ namespace Overlewd
                 skill.Add(skillStash?.Find(f => f.type == "attack"));
                 skill.Add(skillStash?.Find(f => f.type == "enhanced_attack"));
             }
-            sound[0] = (character.sfxAttack1 != null ? character.sfxAttack1 : skill[0].sfxAttack);
-            if (skill.Count > 1) sound[1] = (character.sfxAttack2 != null ? character.sfxAttack2 : skill[1].sfxAttack);
-            if (skill.Count > 2) sound[2] = (skill[2].sfxAttack);
+            skillSFX[0] = (character.sfxAttack1 != null ? character.sfxAttack1 : skill[0].sfxAttack);
+            if (skill.Count > 1) skillSFX[1] = (character.sfxAttack2 != null ? character.sfxAttack2 : skill[1].sfxAttack);
+            if (skill.Count > 2) skillSFX[2] = (skill[2].sfxAttack);
+            foreach (var sk in skill)
+                skillCD.Add(sk, 0);
+            foreach (var ps in passiveSkill)
+                skillCD.Add(ps, 0);
         }
         private void ShapeInit()
         {
@@ -257,7 +262,7 @@ namespace Overlewd
             damageTotal *= curseDotScale;
             damageTotal = Mathf.Round(damageTotal);
             spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW                      
-            sound[id]?.Play();                                          //SFX
+            skillSFX[id]?.Play();                                          //SFX
             yield return new WaitForSeconds(preAttackDuration);
             if (skillID.vfxSelf != null)                                //VFX Self
             {
@@ -601,6 +606,11 @@ namespace Overlewd
 
         void PassiveBuff(AdminBRO.CharacterSkill sk)
         {
+            if (skillCD[sk] > 0) //skip if skill on Cool Down
+                return;
+            else
+                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
+
             bool isCrit = critrate >= Random.value;
             Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb >= Random.value;
@@ -657,6 +667,10 @@ namespace Overlewd
         }
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
         {
+            if (skillCD[sk] > 0) //skip if skill on Cool Down
+                return;
+            else
+                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
             bool isCrit = critrate >= Random.value;
             targetCC.Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb >= Random.value;
@@ -807,6 +821,10 @@ namespace Overlewd
             if (immunity != 0) immunity--;
             if (silence != 0) silence--;
             if (curse != 0) curse--;
+            foreach (var item in skill) //drop cool down from skills
+                if (skillCD[item] > 0) skillCD[item] -= 1;
+            foreach (var item in passiveSkill) //drop cool down from skills
+                if (skillCD[item] > 0) skillCD[item] -= 1;
             observer.UpdateStatuses();
         }
         public void UpadeteDot()

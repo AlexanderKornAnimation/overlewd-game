@@ -7,7 +7,7 @@ namespace Overlewd
     public class CharDescription : MonoBehaviour
     {
         private CharController cc;
-        [SerializeField] private TextMeshProUGUI nameTMP, classTMP;
+        [SerializeField] private TextMeshProUGUI nameTMP, lvlTMP;
         [SerializeField] private Image portraitIco, classIco;
         [SerializeField] private Sprite[] classIcons;
         [SerializeField] private TextMeshProUGUI accur, dodge, crit, health, damage;
@@ -46,7 +46,7 @@ namespace Overlewd
             bool haveAnyStatus = status_bar.StatusCheck();
             rt.sizeDelta = haveAnyStatus ? new Vector2(786, 546) : new Vector2(344, 546);
             nameTMP.text = cc.Name;
-            classTMP.text = cc.isBoss ? "Boss" : cc.characterClass;
+            //classTMP.text = cc.isBoss ? "Boss" : cc.characterClass;
 
             if (cc.icon != null) portraitIco.sprite = cc.icon;
             if (classIco && classIcons != null) SetClass();

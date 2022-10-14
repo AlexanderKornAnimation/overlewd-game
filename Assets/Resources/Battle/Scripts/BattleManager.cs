@@ -320,7 +320,7 @@ namespace Overlewd
             var sc = skillControllers[id];
             var AOE = sc.skill.AOE;
 
-            if (sc.CheckMana(ccOnSelect.mana))
+            if (sc.CheckMana(ccOnSelect.mana) && !sc.SkillOnCD())
             {
                 if (sc.selectable && !sc.silence)
                 {
@@ -392,6 +392,7 @@ namespace Overlewd
                     ccOnSelect.Attack(id, AOE: HEAL, ccTarget);
                     ccTarget.Defence(ccOnSelect, id, aoe: HEAL);
                 }
+                ccOnSelect.skillCD[ccOnSelect.skill[id]] = Mathf.RoundToInt(ccOnSelect.skill[id].effectCooldownDuration);
                 battleState = BattleState.ANIMATION;
             }
         }
@@ -404,7 +405,7 @@ namespace Overlewd
             yield return new WaitForSeconds(1.5f); //Pause then show target stats
             if (!ccOnSelect.isDead)
             {
-                int id = Random.Range(0, ccOnSelect.skill.Count);
+                int id = (ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0) ? Random.Range(0, ccOnSelect.skill.Count) : 0;
                 if (ccOnSelect.skill[id].AOE)
                     ccTarget = null;
                 else if (ccOnSelect.skill[id].actionType == "heal")
@@ -595,7 +596,7 @@ namespace Overlewd
                 sk.gameObject.SetActive(true);
                 if (i > 0)
                 {
-                    sk.ReplaceSkill(cc.skill[j], cc.isOverlord);
+                    sk.ReplaceSkill(cc.skill[j], cc.skillCD, cc.isOverlord);
                     if (j != 0) sk.silence = silent; //silence realisation
                 }
                 else
@@ -610,7 +611,7 @@ namespace Overlewd
             {
                 sk.gameObject.SetActive(true);
                 if (i > 0)
-                    sk.ReplaceSkill(cc.passiveSkill[j], cc.isOverlord);
+                    sk.ReplaceSkill(cc.passiveSkill[j], cc.skillCD, cc.isOverlord);
                 else
                     sk.gameObject.SetActive(false);
                 i--;
@@ -662,13 +663,9 @@ namespace Overlewd
         public void AddStatus(string effect)
         {
             if (ccTarget != null)
-            {
                 ccTarget.AddEffectManual(effect);
-            }
             else
-            {
                 log.Add("Please select character");
-            }
         }
         private void OnGUI()
         {
