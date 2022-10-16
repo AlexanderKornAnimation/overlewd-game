@@ -44,6 +44,7 @@ namespace Overlewd
         {
             public int? amount;
             public int? tradableId;
+            public float? probability;
 
             [JsonProperty(Required = Required.Default)]
             public AdminBRO.TradableItem tradableData =>
