@@ -21,6 +21,10 @@ namespace Overlewd
             LogCollector.Initialize();
             UIManager.Initialize();
             ResourceManager.Initialize();
+
+#if !UNITY_EDITOR && UNITY_ANDROID && !DEV_BUILD
+            Nutaku.Unity.SdkPlugin.Initialize();
+#endif
         }
 
         IEnumerator Start()
