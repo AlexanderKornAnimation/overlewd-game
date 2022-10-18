@@ -225,7 +225,8 @@ namespace Overlewd
                 GameData.gacha,
                 GameData.matriarchs,
                 GameData.battlePass,
-                GameData.potions
+                GameData.potions,
+                GameData.nutaku
             };
 
             foreach (var metaSplit in SplitGameMeta(gameMeta, 10))

@@ -62,6 +62,7 @@ namespace Overlewd
         public static Matriarchs matriarchs { get; } = new Matriarchs();
         public static BattlePass battlePass { get; } = new BattlePass();
         public static Potions potions { get; } = new Potions();
+        public static Nutaku nutaku { get; } = new Nutaku();
     }
 
     public abstract class BaseGameMeta
@@ -551,7 +552,7 @@ namespace Overlewd
                 int potency = 0;
 
                 potency += overlord.potency;
-                
+
                 foreach (var character in myTeamCharacters)
                 {
                     potency += character.potency;
@@ -593,7 +594,7 @@ namespace Overlewd
         public List<AdminBRO.Equipment> chHealers =>
             equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Healer &&
                 e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
-        
+
         public List<AdminBRO.Equipment> ovAll =>
             equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Overlord &&
                 !String.IsNullOrEmpty(e.equipmentType) && e.equipmentType != AdminBRO.Equipment.Type_CharacterWeapon);
@@ -767,7 +768,7 @@ namespace Overlewd
             if (!tradableId.HasValue)
                 return new AdminBRO.TradableBuyStatus { status = false }; ;
 
-            var result  = await AdminBRO.tradableBuyAsync(tradableId.Value);
+            var result = await AdminBRO.tradableBuyAsync(tradableId.Value);
             await GameData.player.Get();
 
             if (result.status == true)
@@ -1080,7 +1081,7 @@ namespace Overlewd
             }
         }
     }
-    
+
     //battlePass
     public class BattlePass : BaseGameMeta
     {
@@ -1159,6 +1160,17 @@ namespace Overlewd
         public async Task BuyReplay(int count)
         {
             await Buy(AdminBRO.PotionsInfo.Type_replay, count);
+        }
+    }
+
+    //nutaku
+    public class Nutaku : BaseGameMeta
+    {
+        public AdminBRO.NutakuSettings settings { get; private set; } = new AdminBRO.NutakuSettings();
+
+        public override async Task Get()
+        {
+            settings = await AdminBRO.nutakuSettingsAsync();
         }
     }
 }

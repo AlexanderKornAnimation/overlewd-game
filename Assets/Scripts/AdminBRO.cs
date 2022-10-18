@@ -58,6 +58,15 @@ namespace Overlewd
         }
 
         [Serializable]
+        public class GenRewardItem
+        {
+            public int? amount;
+            public int? tradableId;
+            public int? entityUserProgressId;
+            public string rarity;
+        }
+
+        [Serializable]
         public class MapPosition
         {
             public float mapCX;
@@ -493,8 +502,10 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isComplete {
-                get {
+            public bool isComplete
+            {
+                get
+                {
                     foreach (var stageId in stages)
                     {
                         var stageData = GetStageById(stageId);
@@ -1071,7 +1082,7 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
-            
+
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
 
@@ -1122,7 +1133,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isSexSceneOpen => sexSceneId.HasValue;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool hasEquipment => equipment.Count > 0;
 
@@ -1138,11 +1149,11 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public CharacterSkill basicSkill =>
                 skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Attack);
-            
+
             [JsonProperty(Required = Required.Default)]
             public CharacterSkill ultimateSkill =>
                 skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Enhanced);
-            
+
             [JsonProperty(Required = Required.Default)]
             public CharacterSkill passiveSkill =>
                 skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Passive);
@@ -1355,9 +1366,9 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
-            
+
             public bool IsMyClass(string chClass) => chClass == characterClass;
-            
+
             public bool IsMy(int? myId) => isEquipped && myId == characterId;
         }
 
@@ -1432,8 +1443,10 @@ namespace Overlewd
                 GameData.ftue.mapChapter = this;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isComplete {
-                get {
+            public bool isComplete
+            {
+                get
+                {
                     foreach (var stageId in stages)
                     {
                         var stageData = GetStageById(stageId);
@@ -1522,7 +1535,8 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public (string stageKey, string chapterKey)? lastEndedState =>
-                GameData.devMode switch {
+                GameData.devMode switch
+                {
                     false => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
                     _ => null
                 };
@@ -1609,13 +1623,13 @@ namespace Overlewd
         }
 
         // /ftue-stages/{id}/end
-        public static async Task ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
+        public static async Task<List<GenRewardItem>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
         {
             var url = $"http://api.overlewd.com/ftue-stages/{stageId}/end";
             var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-
+                return JsonHelper.DeserializeObject<List<GenRewardItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -2414,6 +2428,24 @@ namespace Overlewd
             public const string Type_energy = "energy";
             public const string Type_replay = "replay";
         }
-        
+
+        // /nutaku
+        // /nutaku/settings
+        public static async Task<NutakuSettings> nutakuSettingsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/nutaku/settings";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<NutakuSettings>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class NutakuSettings
+        {
+            public string callbackUrl;
+            public string completeUrl;
+        }
+
     }
 }
