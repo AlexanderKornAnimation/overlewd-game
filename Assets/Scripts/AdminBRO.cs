@@ -1874,12 +1874,13 @@ namespace Overlewd
             public string type;
             public CharacterSkill current;
             public CharacterSkill next;
-            public int currentSkillLevel;
-            public int requiredBuildingLevel;
-            public int maxSkillLevel;
+            public int? currentSkillLevel;
+            public int? requiredBuildingLevel;
+            public int? maxSkillLevel;
             public int skillId;
             public List<PriceItem> price;
             public List<PriceItem> priceCrystal;
+            public bool locked;
 
             [JsonProperty(Required = Required.Default)]
             public bool isLvlMax => currentSkillLevel == maxSkillLevel;
