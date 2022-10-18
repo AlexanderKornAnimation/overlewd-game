@@ -17,10 +17,12 @@ namespace Overlewd
     {
         public static void Initialize()
         {
-#if !UNITY_EDITOR && UNITY_ANDROID && !DEV_BUILD
+#if UNITY_EDITOR || UNITY_ANDROID
             SdkPlugin.Initialize();
 #endif
         }
+
+        public static bool loggedIn => !String.IsNullOrEmpty(SdkPlugin.loginInfo?.userId);
 
         public static async Task<Payment> PostPaymentAsync(MonoBehaviour myMonoBehaviour)
         {

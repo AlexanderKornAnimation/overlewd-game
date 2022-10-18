@@ -38,7 +38,7 @@ namespace Nutaku.Unity
         {
             get
             {
-                if (_loginInfo == null)
+                //if (_loginInfo == null) //TODO: fix paramaon'ka
                     _loginInfo = nativeBridge.loginInfo;
                 return _loginInfo;
             }
@@ -66,7 +66,7 @@ namespace Nutaku.Unity
         {
             get
             {
-                if (_settings == null)
+                //if (_settings == null) //TODO: fix paramaon'ka
                     _settings = nativeBridge.settings;
 
                 return _settings;

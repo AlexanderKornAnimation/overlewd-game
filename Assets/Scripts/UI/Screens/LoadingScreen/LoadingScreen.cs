@@ -185,6 +185,9 @@ namespace Overlewd
 
         private async void DoLoading()
         {
+            //wait Nutaku loggedIn
+            await UniTask.WaitUntil(() => NutakuApi.loggedIn);
+
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
