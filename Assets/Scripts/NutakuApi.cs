@@ -229,7 +229,28 @@ namespace Overlewd
 
         private static void logMessage(string message, LogType logType = LogType.Log)
         {
-            
+            switch (logType)
+            {
+                case LogType.Exception:
+                    Debug.LogException(new Exception(message));
+                    break;
+
+                case LogType.Warning:
+                    Debug.LogWarning(message);
+                    break;
+
+                case LogType.Error:
+                    Debug.LogError(message);
+                    break;
+
+                case LogType.Assert:
+                    Debug.LogAssertion(message);
+                    break;
+
+                default:
+                    Debug.Log(message);
+                    break;
+            }
         }
 
         private static void logError(string message)
