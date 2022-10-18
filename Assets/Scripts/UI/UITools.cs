@@ -13,6 +13,18 @@ namespace Overlewd
 {
     public static class UITools
     {
+        public static string ChangeTextSize(string text, float fontSize)
+        {
+            var result = "";
+
+            foreach (var ch in text)
+            {
+                result += char.IsNumber(ch) || ch == '%' || ch == '+' ? $"<size={fontSize + 8}>{ch}</size>" : ch.ToString();
+            }
+
+            return result;
+        }
+        
         public static List<AdminBRO.PriceItem> PriceMul(List<AdminBRO.PriceItem> price, int mul)
         {
             var result = new List<AdminBRO.PriceItem>();

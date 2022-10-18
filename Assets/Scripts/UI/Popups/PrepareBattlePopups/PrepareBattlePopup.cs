@@ -124,8 +124,8 @@ namespace Overlewd
             buffButton.onClick.AddListener(BuffButtonClick);
             UITools.RightHide(buffRect);
 
-            markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
             stageTitle = levelTitle.Find("Title").GetComponent<TextMeshProUGUI>();
+            markers = stageTitle.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
 
             firstTimeReward = rewardsTr.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardCount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
@@ -422,7 +422,7 @@ namespace Overlewd
             iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
             icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
             title.text = GameData.matriarchs.activeBuff?.name;
-            descr.text = GameData.matriarchs.activeBuff?.description;
+            descr.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, descr.fontSize);
         }
     }
 

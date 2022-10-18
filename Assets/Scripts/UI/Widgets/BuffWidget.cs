@@ -18,7 +18,6 @@ namespace Overlewd
         private Transform iconLili;
         private Transform iconFaye;
         private Button button;
-        private TextMeshProUGUI title;
         private TextMeshProUGUI description;
         
         protected override void Awake()
@@ -32,7 +31,6 @@ namespace Overlewd
             iconIngie = button.transform.Find("IconIngie");
             iconLili = button.transform.Find("IconLili");
             iconFaye = button.transform.Find("IconFaye");
-            title = button.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
             
             button.onClick.AddListener(ButtonClick);
@@ -46,8 +44,7 @@ namespace Overlewd
         private void Customize()
         {
             icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
-            title.text = GameData.matriarchs.activeBuff?.name;
-            description.text = GameData.matriarchs.activeBuff?.description;
+            description.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, description.fontSize);
             iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
             iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
             iconIngie.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isIngie ?? false);
