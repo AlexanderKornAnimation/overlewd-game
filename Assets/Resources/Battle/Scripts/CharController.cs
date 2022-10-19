@@ -19,7 +19,6 @@ namespace Overlewd
         public GameObject popUpPrefab;
         public Transform selfVFX, topVFX, topVFX_L, topVFX_R;
 
-        private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
         public Dictionary<AdminBRO.CharacterSkill, int> skillCD = new Dictionary<AdminBRO.CharacterSkill, int>(5);
@@ -135,32 +134,38 @@ namespace Overlewd
             mana = (float)character.mana;
             manaMax = mana;
             if (isBoss) battleScale = 1f;
-            skillStash = character.skills;
+            var skillStash = character.skills;
+            foreach (var sk in skillStash)
+                skillCD.Add(sk, 0);
+            AdminBRO.CharacterSkill tempSK = null;
             if (isOverlord)
             {
-                passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_first_passive_skill"));
-                passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_second_passive_skill"));
-                skill.Add(skillStash?.Find(f => f.type == "overlord_attack"));
-                //skip other skills if MagicGuild is unavailable (chapter 1 & 2)
-                if (bm.MagicGuildChecker() == true)
+                tempSK = skillStash?.Find(f => f.type == "overlord_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                //if (bm.MagicGuildChecker() == true)
                 {
-                    skill.Add(skillStash?.Find(f => f.type == "overlord_enhanced_attack"));
-                    skill.Add(skillStash?.Find(f => f.type == "overlord_ultimate_attack"));
+                    tempSK = skillStash?.Find(f => f.type == "overlord_enhanced_attack");
+                    if (tempSK != null) skill.Add(tempSK);
+                    tempSK = skillStash?.Find(f => f.type == "overlord_ultimate_attack");
+                    if (tempSK != null) skill.Add(tempSK);
+                    tempSK = skillStash?.Find(f => f.type == "overlord_first_passive_skill");
+                    if (tempSK != null) passiveSkill.Add(tempSK);
+                    tempSK = skillStash?.Find(f => f.type == "overlord_second_passive_skill");
+                    if (tempSK != null) passiveSkill.Add(tempSK);
                 }
             }
             else
             {
-                passiveSkill.Add(skillStash?.Find(f => f.type == "passive_skill"));
-                skill.Add(skillStash?.Find(f => f.type == "attack"));
-                skill.Add(skillStash?.Find(f => f.type == "enhanced_attack"));
+                tempSK = skillStash?.Find(f => f.type == "attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "enhanced_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "passive_skill");
+                if (tempSK != null) passiveSkill.Add(tempSK);
             }
             skillSFX[0] = (character.sfxAttack1 != null ? character.sfxAttack1 : skill[0].sfxAttack);
             if (skill.Count > 1) skillSFX[1] = (character.sfxAttack2 != null ? character.sfxAttack2 : skill[1].sfxAttack);
             if (skill.Count > 2) skillSFX[2] = (skill[2].sfxAttack);
-            foreach (var sk in skill)
-                skillCD.Add(sk, 0);
-            foreach (var ps in passiveSkill)
-                skillCD.Add(ps, 0);
         }
         private void ShapeInit()
         {
@@ -215,10 +220,10 @@ namespace Overlewd
             observer.cc = this;
 
             popUpPrefab = Resources.Load("Battle/Prefabs/BattlePopup") as GameObject;
-            charStats.InitUI(this);
+            charStats?.InitUI(this);
         }
 
-        public void CharPortraitSet() => charStats.SetUI(this);
+        public void CharPortraitSet() => charStats?.SetUI(this);
         public void UpdateUI() => observer?.UpdateUI();
 
         public void PlayIdle()
@@ -300,8 +305,6 @@ namespace Overlewd
         {
             BattleIn(AOE);
             var attackerSkill = attacker.skill[id];
-            var attackerPassiveSkill = attacker.passiveSkill[0];
-            //var overlordSecondPassiveSkill = attacker.passiveSkill[1];
 
             yield return new WaitForSeconds(zoomSpeed);
             transform.SetParent(battlePos);
@@ -358,8 +361,8 @@ namespace Overlewd
             }
         }
 
-        public void Highlight() => observer.Border(true);
-        public void UnHiglight() => observer.Border(false);
+        public void Highlight() => observer?.Border(true);
+        public void UnHiglight() => observer?.Border(false);
 
         public void BattleIn(bool AOE = false)
         {
@@ -600,7 +603,7 @@ namespace Overlewd
                             log.Add($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}", true);
                             break;
                     }
-                    observer.UpdateStatuses();
+                    observer?.UpdateStatuses();
                 } //else DrawPopup("Effect miss", "red");
         }
 
@@ -662,7 +665,7 @@ namespace Overlewd
                             log.Add($"Unknow Value or Debuff Effect on Passive Heal AdminBRO.CharacterSkill.effect: {sk.effect}", true);
                             break;
                     }
-                    observer.UpdateStatuses();
+                    observer?.UpdateStatuses();
                 }
         }
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
@@ -763,7 +766,7 @@ namespace Overlewd
                             log.Add($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}", true);
                             break;
                     }
-                    observer.UpdateStatuses();
+                    observer?.UpdateStatuses();
                 }
         }
         public void AddEffectManual(string effect)
@@ -792,7 +795,7 @@ namespace Overlewd
             stun = false;
             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
             DrawPopup(msg_dispel, "green", buffDelay);
-            observer.UpdateStatuses();
+            observer?.UpdateStatuses();
         }
         public void Safeguard()
         {
@@ -800,7 +803,7 @@ namespace Overlewd
             {
                 stun = false;
                 DrawPopup("- " + msg_stun, "green", buffDelay);
-                observer.UpdateStatuses();
+                observer?.UpdateStatuses();
                 StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
 
             }
@@ -808,7 +811,7 @@ namespace Overlewd
             {
                 defUp_defDown = 0;
                 DrawPopup("- " + msg_defence_down, "green", buffDelay);
-                observer.UpdateStatuses();
+                observer?.UpdateStatuses();
                 StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
             }
         }
@@ -825,7 +828,7 @@ namespace Overlewd
                 if (skillCD[item] > 0) skillCD[item] -= 1;
             foreach (var item in passiveSkill) //drop cool down from skills
                 if (skillCD[item] > 0) skillCD[item] -= 1;
-            observer.UpdateStatuses();
+            observer?.UpdateStatuses();
         }
         public void UpadeteDot()
         {
@@ -842,7 +845,7 @@ namespace Overlewd
                 regen_poison -= (int)Mathf.Sign(regen_poison);
                 delay = 0.5f;
             }
-            observer.UpdateStatuses();
+            observer?.UpdateStatuses();
             if (!isDead)
                 StartCoroutine(ChangeState(delay));
         }
@@ -877,8 +880,8 @@ namespace Overlewd
         {
             bm.unselect -= UnHiglight;
             bm.roundEnd -= UpadeteRoundEnd;
-            Destroy(observer.gameObject);
-            if (isEnemy) Destroy(charStats.gameObject);
+            Destroy(observer?.gameObject);
+            //if (isEnemy) Destroy(charStats.gameObject);
         }
     }
 }

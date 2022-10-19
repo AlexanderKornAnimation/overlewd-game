@@ -77,8 +77,12 @@ namespace Overlewd
 
         public void ReplaceSkill(AdminBRO.CharacterSkill sk, Dictionary<AdminBRO.CharacterSkill, int> cd, bool isOverlord = false)
         {
-            if (!cd.TryGetValue(sk, out cooldownCount))
-                cooldownCount = 0;
+            if (sk != null) { 
+                if (!cd.TryGetValue(sk, out cooldownCount))
+                    cooldownCount = 0;
+            }
+            else
+                sk = new AdminBRO.CharacterSkill();
             skill = sk;
             if (!potion)
             {

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -119,8 +120,8 @@ namespace Overlewd
                 skillControllers[x].OnClickAction.AddListener(delegate { ButtonPress(x); });
             }
             skillPanelWidthScale = transform.Find("BattleUICanvas/Character/Buttons/Skills/").GetComponent<RectTransform>();
-            passiveControllers[0] = transform.Find("BattleUICanvas/Character/Buttons/Passives/Button_0").GetComponent<SkillController>();
-            passiveControllers[1] = transform.Find("BattleUICanvas/Character/Buttons/Passives/Button_1").GetComponent<SkillController>();
+            passiveControllers[0] = transform.Find("BattleUICanvas/Character/Buttons/Skills/Button_0/Passives/Button_0").GetComponent<SkillController>();
+            passiveControllers[1] = transform.Find("BattleUICanvas/Character/Buttons/Skills/Button_0/Passives/Button_1").GetComponent<SkillController>();
             if (potion_mp == null) potion_mp = transform.Find("BattleUICanvas/Character/Buttons/Bottles/Potion_mp").GetComponent<SkillController>();
             if (potion_hp == null) potion_hp = transform.Find("BattleUICanvas/Character/Buttons/Bottles/Potion_hp").GetComponent<SkillController>();
             potion_hp.potionAmount = potionHP;
@@ -196,10 +197,10 @@ namespace Overlewd
                     }
                     else
                     {
-                        var pos = EnemyStatsContent.Find($"portrait_pos_{orderCount}"); //Drop portrait on Content Queue and turn on
-                        pos.gameObject.SetActive(true);
-                        var eStats = Instantiate(EnemyStats, pos);
-                        cc.charStats = eStats.GetComponent<CharacterPortrait>();
+                        //var pos = EnemyStatsContent.Find($"portrait_pos_{orderCount}"); //Drop portrait on Content Queue and turn on
+                        //pos.gameObject.SetActive(true);
+                        //var eStats = Instantiate(EnemyStats, pos);
+                        //cc.charStats = eStats.GetComponent<CharacterPortrait>();
                     }
                     enemyAllyList.Add(cc);
                     enemyNum++;
@@ -607,9 +608,10 @@ namespace Overlewd
 
             i = cc.passiveSkill?.Count;
             j = 0;
+            bool k = cc.passiveSkill.Any();
             foreach (var sk in passiveControllers)
             {
-                sk.gameObject.SetActive(true);
+                sk.gameObject.SetActive(k);
                 if (i > 0)
                     sk.ReplaceSkill(cc.passiveSkill[j], cc.skillCD, cc.isOverlord);
                 else

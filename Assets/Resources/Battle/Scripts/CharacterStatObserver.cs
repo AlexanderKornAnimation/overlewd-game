@@ -67,7 +67,7 @@ namespace Overlewd
             }
             if (whiteSlider)
                 StartCoroutine(HPChangePause());
-            charStats.UpdateUI();
+            charStats?.UpdateUI();
         }
         IEnumerator HPChangePause()
         {
