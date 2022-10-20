@@ -1,23 +1,42 @@
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using UnityEditor.Android;
 using UnityEngine;
 
 public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidProject
 {
+    private const string AndroidXmlNamespace = "{http://schemas.android.com/apk/res/android}";
 
     public void OnPostGenerateGradleAndroidProject(string basePath)
     {
         // If needed, add condition checks on whether you need to run the modification routine.
         // For example, specific configuration/app options enabled
 
-        var androidManifest = new AndroidManifest(GetManifestPath(basePath));
+        //my way
 
+        //change Nutaku app params
+#if !UNITY_EDITOR && !DEV_BUILD
+        XDocument doc = XDocument.Load(GetManifestPath(basePath));
+        var eApp = doc.Root.Element("application");
+        var eAppMetaData = eApp.Elements("meta-data");
+        var e_sdk_ai = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_ai").FirstOrDefault();
+        var e_sdk_ck = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_ck").FirstOrDefault();
+        var e_sdk_cs = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_cs").FirstOrDefault();
+        var e_sdk_en = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_en").FirstOrDefault();
+        e_sdk_ai?.SetAttributeValue($"{AndroidXmlNamespace}value", "25308");
+        e_sdk_ck?.SetAttributeValue($"{AndroidXmlNamespace}value", "hKvfDU43X7sgom34");
+        e_sdk_cs?.SetAttributeValue($"{AndroidXmlNamespace}value", "vwpLY2DiKiGVki-tYszmatf5rA=HP5B#");
+        e_sdk_en?.SetAttributeValue($"{AndroidXmlNamespace}value", "sandbox");
+        doc.Save(_manifestFilePath);
+#endif
+
+        //second way
+        //var androidManifest = new AndroidManifest(GetManifestPath(basePath));
         //androidManifest.SetMicrophonePermission();
-
         // Add your XML manipulation routines
-
         //androidManifest.Save();
     }
 
