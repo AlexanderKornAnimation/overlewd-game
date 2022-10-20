@@ -249,7 +249,7 @@ namespace Overlewd
                 case ("battle4", "chapter1"):
                     if (!GameData.buildings.castle.meta.isBuilt)
                     {
-                        GameData.ftue.info.chapter1.ShowNotifByKey("quickbuildtutor");
+                        GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
 
                     break;

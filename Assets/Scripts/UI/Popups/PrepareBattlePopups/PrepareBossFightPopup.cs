@@ -387,7 +387,7 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle4", "chapter1"):
-                    GameData.ftue.info.chapter1.ShowNotifByKey("potionstutor1");
+                    GameData.ftue.chapter1.ShowNotifByKey("potionstutor1");
                     break;
             }
         }

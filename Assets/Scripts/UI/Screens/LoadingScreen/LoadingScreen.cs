@@ -305,7 +305,7 @@ namespace Overlewd
         {
             GameData.devMode = false;
             GameData.ftue.activeChapter.SetAsMapChapter();
-            var firstSexStage = GameData.ftue.info.chapter1.GetStageByKey("sex1");
+            var firstSexStage = GameData.ftue.chapter1_stages.sex1;
             if (firstSexStage.isComplete)
             {
                 UIManager.ShowScreen<MapScreen>();

@@ -130,7 +130,7 @@ namespace Overlewd
                     UIManager.MakeScreen<SexScreen>().
                         SetData(new SexScreenInData
                         {
-                            ftueStageId = GameData.ftue.info.chapter1.GetStageByKey("sex2")?.id
+                            ftueStageId = GameData.ftue.chapter1_stages.sex2?.id
                         }).RunShowScreenProcess();
                     break;
 

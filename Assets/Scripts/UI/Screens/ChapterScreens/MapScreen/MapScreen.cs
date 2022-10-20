@@ -52,7 +52,7 @@ namespace Overlewd
             if (GameData.ftue.mapChapter == null)
             {
                 GameData.ftue.mapChapter = GameData.devMode ?
-                    GameData.ftue.info.chapter1 : GameData.ftue.activeChapter;
+                    GameData.ftue.chapter1 : GameData.ftue.activeChapter;
             }
             
             //backbutton.gameObject.SetActive(false);
@@ -64,7 +64,7 @@ namespace Overlewd
 
                 foreach (var stageId in GameData.ftue.mapChapter.stages)
                 {
-                    var stageData = GameData.ftue.info.GetStageById(stageId);
+                    var stageData = GameData.ftue.GetStageById(stageId);
 
                     var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
                     if (instantiateStageOnMap)
@@ -203,14 +203,14 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedState)
             {
                 case ("battle1", "chapter1"):
-                    GameData.ftue.info.chapter1.ShowNotifByKey("maptutor");
+                    GameData.ftue.chapter1.ShowNotifByKey("maptutor");
                     await UIManager.WaitHideNotifications();
                     await questsPanel.ShowAsync();
-                    GameData.ftue.info.chapter1.ShowNotifByKey("qbtutor");
+                    GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
                     break;
                 case ("sex2", "chapter1"):
                     await questsPanel.ShowAsync();
-                    GameData.ftue.info.chapter1.ShowNotifByKey("bufftutor2");
+                    GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
                     break;
                 default:
                     var showPanelTasks = new List<Task>();
@@ -243,6 +243,6 @@ namespace Overlewd
     public class MapScreenInData : BaseFullScreenInData
     {
         public int chapterId;
-        public AdminBRO.FTUEChapter chapterData => GameData.ftue.info.GetChapterById(chapterId);
+        public AdminBRO.FTUEChapter chapterData => GameData.ftue.GetChapterById(chapterId);
     }
 }

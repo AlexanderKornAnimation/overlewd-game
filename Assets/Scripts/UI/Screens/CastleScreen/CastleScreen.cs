@@ -219,11 +219,11 @@ namespace Overlewd
                     if (GameData.buildings.castle.meta.isBuilt)
                     {
                         await castleButton.ShowAsync();
-                        GameData.ftue.info.chapter1.ShowNotifByKey("barrackstutor2");   
+                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");   
                     }
                     else
                     {
-                        GameData.ftue.info.chapter1.ShowNotifByKey("barrackstutor1");
+                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
                     }
                     break;
 

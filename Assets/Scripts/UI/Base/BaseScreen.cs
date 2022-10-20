@@ -111,7 +111,7 @@ namespace Overlewd
 
         public int? ftueStageId;
         public AdminBRO.FTUEStageItem ftueStageData =>
-            GameData.ftue.info.GetStageById(ftueStageId);
+            GameData.ftue.GetStageById(ftueStageId);
 
         public bool hasEventStage => eventStageId.HasValue;
         public bool hasFTUEStage => ftueStageId.HasValue;

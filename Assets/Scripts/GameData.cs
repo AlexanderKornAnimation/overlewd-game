@@ -84,16 +84,76 @@ namespace Overlewd
     }
 
     //ftue
+    public class FTUEChapter1Stages
+    {
+        public AdminBRO.FTUEChapter meta => GameData.ftue.chapter1;
+        public AdminBRO.FTUEStageItem battle1 => meta.GetStageByKey("battle1");
+        public AdminBRO.FTUEStageItem battle2 => meta.GetStageByKey("battle2");
+        public AdminBRO.FTUEStageItem battle3 => meta.GetStageByKey("battle3");
+        public AdminBRO.FTUEStageItem battle4 => meta.GetStageByKey("battle4");
+        public AdminBRO.FTUEStageItem battle5 => meta.GetStageByKey("battle5");
+        public AdminBRO.FTUEStageItem dialogue1 => meta.GetStageByKey("dialogue1");
+        public AdminBRO.FTUEStageItem dialogue2 => meta.GetStageByKey("dialogue2");
+        public AdminBRO.FTUEStageItem dialogue3 => meta.GetStageByKey("dialogue3");
+        public AdminBRO.FTUEStageItem dialogue4 => meta.GetStageByKey("dialogue4");
+        public AdminBRO.FTUEStageItem sex1 => meta.GetStageByKey("sex1");
+        public AdminBRO.FTUEStageItem sex2 => meta.GetStageByKey("sex2");
+        public AdminBRO.FTUEStageItem sex3 => meta.GetStageByKey("sex3");
+    }
+
+    public class FTUEChapter2Stages
+    {
+        public AdminBRO.FTUEChapter meta => GameData.ftue.chapter2;
+        public AdminBRO.FTUEStageItem battle1 => meta.GetStageByKey("battle1");
+        public AdminBRO.FTUEStageItem battle2 => meta.GetStageByKey("battle2");
+        public AdminBRO.FTUEStageItem battle3 => meta.GetStageByKey("battle3");
+        public AdminBRO.FTUEStageItem battle4 => meta.GetStageByKey("battle4");
+        public AdminBRO.FTUEStageItem battle5 => meta.GetStageByKey("battle5");
+        public AdminBRO.FTUEStageItem dialogue1 => meta.GetStageByKey("dialogue1");
+        public AdminBRO.FTUEStageItem dialogue2 => meta.GetStageByKey("dialogue2");
+        public AdminBRO.FTUEStageItem dialogue3 => meta.GetStageByKey("dialogue3");
+        public AdminBRO.FTUEStageItem dialogue4 => meta.GetStageByKey("dialogue4");
+        public AdminBRO.FTUEStageItem dialogue5 => meta.GetStageByKey("dialogue5");
+        public AdminBRO.FTUEStageItem sex2 => meta.GetStageByKey("sex2");
+    }
+
+    public class FTUEChapter3Stages
+    {
+        public AdminBRO.FTUEChapter meta => GameData.ftue.chapter3;
+        public AdminBRO.FTUEStageItem battle1 => meta.GetStageByKey("battle1");
+        public AdminBRO.FTUEStageItem battle2 => meta.GetStageByKey("battle2");
+        public AdminBRO.FTUEStageItem battle3 => meta.GetStageByKey("battle3");
+        public AdminBRO.FTUEStageItem battle4 => meta.GetStageByKey("battle4");
+        public AdminBRO.FTUEStageItem dialogue1 => meta.GetStageByKey("dialogue1");
+        public AdminBRO.FTUEStageItem dialogue2 => meta.GetStageByKey("dialogue2");
+        public AdminBRO.FTUEStageItem dialogue3 => meta.GetStageByKey("dialogue3");
+        public AdminBRO.FTUEStageItem dialogue4 => meta.GetStageByKey("dialogue4");
+        public AdminBRO.FTUEStageItem dialogue5 => meta.GetStageByKey("dialogue5");
+        public AdminBRO.FTUEStageItem sex1 => meta.GetStageByKey("sex1");
+        public AdminBRO.FTUEStageItem sex2 => meta.GetStageByKey("sex2");
+        public AdminBRO.FTUEStageItem sex3 => meta.GetStageByKey("sex3");
+    }
+
     public class FTUE : BaseGameMeta
     {
         public AdminBRO.FTUEInfo info { get; private set; }
         public List<AdminBRO.FTUEStageItem> stages { get; private set; }
         public AdminBRO.FTUEStats stats { get; private set; }
+
+        public AdminBRO.FTUEChapter chapter1 => GetChapterByKey("chapter1");
+        public AdminBRO.FTUEChapter chapter2 => GetChapterByKey("chapter2");
+        public AdminBRO.FTUEChapter chapter3 => GetChapterByKey("chapter3");
+        public FTUEChapter1Stages chapter1_stages { get; private set; } = new FTUEChapter1Stages();
+        public FTUEChapter2Stages chapter2_stages { get; private set; } = new FTUEChapter2Stages();
+        public FTUEChapter3Stages chapter3_stages { get; private set; } = new FTUEChapter3Stages();
+        public AdminBRO.FTUEChapter GetChapterByKey(string key) => info.chapters.Find(ch => ch.key == key);
+        public AdminBRO.FTUEChapter GetChapterById(int? id) => info.chapters.Find(ch => ch.id == id);
+        public AdminBRO.FTUEStageItem GetStageById(int? id) => stages.Find(s => s.id == id);
         public AdminBRO.FTUEChapter activeChapter
         {
             get
             {
-                var chapterData = info.chapter1;
+                var chapterData = chapter1;
                 while (chapterData.isComplete)
                 {
                     if (chapterData.nextChapterId.HasValue)

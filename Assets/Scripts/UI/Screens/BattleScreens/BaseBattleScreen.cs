@@ -57,7 +57,7 @@ namespace Overlewd
 
 		public virtual void OnBattleNotification(string stageKey, string chapterKey, string notifKey)
 		{
-			GameData.ftue.info.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey, false);
+			GameData.ftue.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey, false);
 		}
 
 		public BattleManagerInData GetBattleData()

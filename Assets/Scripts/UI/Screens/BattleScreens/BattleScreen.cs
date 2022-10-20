@@ -19,7 +19,7 @@ namespace Overlewd
 
             endBattleData.battleWin = inputData.ftueStageData?.ftueState switch
             {
-                ("battle2", "chapter1") => GameData.ftue.info.StageIsComplete("sex2", "chapter1"),
+                ("battle2", "chapter1") => GameData.ftue.chapter1_stages.sex2.isComplete,
                 _ => endBattleData.battleWin
             };
 

@@ -74,7 +74,7 @@ namespace Overlewd
             switch (inputData.ftueStageData?.ftueState)
             {
                 case (_, _):
-                    skipButton.gameObject.SetActive(GameData.ftue.info.chapter1.GetStageByKey("battle3").isComplete);
+                    skipButton.gameObject.SetActive(GameData.ftue.chapter1_stages.battle3.isComplete);
                     break;
             }
 
