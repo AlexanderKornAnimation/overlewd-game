@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -17,23 +14,29 @@ namespace Overlewd
         private Transform iconIngie;
         private Transform iconLili;
         private Transform iconFaye;
-        private Button button;
         private TextMeshProUGUI description;
-        
+        private Button activeButton;
+        private Button unactiveButton;
+
         protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
-            button = backRect.Find("Button").GetComponent<Button>();
-            icon = button.transform.Find("Icon").GetComponent<Image>();
-            iconUlvi = button.transform.Find("IconUlvi");
-            iconAdriel = button.transform.Find("IconAdriel");
-            iconIngie = button.transform.Find("IconIngie");
-            iconLili = button.transform.Find("IconLili");
-            iconFaye = button.transform.Find("IconFaye");
-            description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+
+            unactiveButton = backRect.Find("UnactiveButton").GetComponent<Button>();
+            unactiveButton.onClick.AddListener(ButtonClick);
             
-            button.onClick.AddListener(ButtonClick);
+            activeButton = backRect.Find("ActiveButton").GetComponent<Button>();
+            activeButton.onClick.AddListener(ButtonClick);
+            
+            icon = activeButton.transform.Find("Icon").GetComponent<Image>();
+            iconUlvi = activeButton.transform.Find("IconUlvi");
+            iconAdriel = activeButton.transform.Find("IconAdriel");
+            iconIngie = activeButton.transform.Find("IconIngie");
+            iconLili = activeButton.transform.Find("IconLili");
+            iconFaye = activeButton.transform.Find("IconFaye");
+            description = activeButton.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+            
         }
 
         void Start()
@@ -43,15 +46,21 @@ namespace Overlewd
 
         private void Customize()
         {
-            icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
-            description.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, description.fontSize);
-            iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
-            iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
-            iconIngie.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isIngie ?? false);
-            iconLili.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isLili ?? false);
-            iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
+            activeButton.gameObject.SetActive(!GameData.progressFlags.lockBuff);
 
-            UITools.DisableButton(button, GameData.progressFlags.lockBuff);
+            if (activeButton.gameObject.activeSelf)
+            {
+                icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
+                description.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, description.fontSize);
+                iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
+                iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
+                iconIngie.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isIngie ?? false);
+                iconLili.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isLili ?? false);
+                iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
+            }
+
+            UITools.DisableButton(activeButton, GameData.progressFlags.lockBuff);
+            UITools.DisableButton(unactiveButton, GameData.progressFlags.lockBuff);
         }
 
         protected virtual void ButtonClick()
@@ -62,26 +71,6 @@ namespace Overlewd
                 {
                     prevScreenInData = UIManager.prevScreenInData
                 }).RunShowScreenProcess();
-        }
-
-        public void Show()
-        {
-            UITools.RightShow(backRect);
-        }
-
-        public void Hide()
-        {
-            UITools.RightHide(backRect);
-        }
-
-        public async Task ShowAsync()
-        {
-            await UITools.RightShowAsync(backRect);
-        }
-
-        public async Task HideAsync()
-        {
-            await UITools.RightHideAsync(backRect);
         }
         
         public static BuffWidget GetInstance(Transform parent)

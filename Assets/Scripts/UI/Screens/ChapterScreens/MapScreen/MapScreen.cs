@@ -140,7 +140,6 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
-            buffPanel.Hide();
             DevWidget.GetInstance(transform);
             chapterSelector = NSMapScreen.ChapterSelector.GetInstance(transform);
             chapterSelector.Hide();
@@ -211,13 +210,11 @@ namespace Overlewd
                     break;
                 case ("sex2", "chapter1"):
                     await questsPanel.ShowAsync();
-                    await buffPanel.ShowAsync();
                     GameData.ftue.info.chapter1.ShowNotifByKey("bufftutor2");
                     break;
                 default:
                     var showPanelTasks = new List<Task>();
                     showPanelTasks.Add(questsPanel.ShowAsync());
-                    showPanelTasks.Add(buffPanel.ShowAsync());
                     await Task.WhenAll(showPanelTasks);
                     break;
             }

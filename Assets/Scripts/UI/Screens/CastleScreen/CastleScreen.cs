@@ -176,7 +176,6 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
-            buffPanel.Hide();
             DevWidget.GetInstance(transform);
 
             switch (GameData.ftue.stats.lastEndedState)
@@ -214,7 +213,6 @@ namespace Overlewd
                     {
                         var showPanelTasks = new List<Task>();
                         showPanelTasks.Add(questsPanel.ShowAsync());
-                        showPanelTasks.Add(buffPanel.ShowAsync());
                         await Task.WhenAll(showPanelTasks);
                     }
 
@@ -233,7 +231,6 @@ namespace Overlewd
                     {
                         var showPanelTasks = new List<Task>();
                         showPanelTasks.Add(questsPanel.ShowAsync());
-                        showPanelTasks.Add(buffPanel.ShowAsync());
                         showPanelTasks.Add(eventsPanel.ShowAsync());
                         await Task.WhenAll(showPanelTasks);
                     }
