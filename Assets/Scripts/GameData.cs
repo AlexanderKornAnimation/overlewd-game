@@ -62,7 +62,7 @@ namespace Overlewd
         public static Matriarchs matriarchs { get; } = new Matriarchs();
         public static BattlePass battlePass { get; } = new BattlePass();
         public static Potions potions { get; } = new Potions();
-        public static Nutaku nutaku { get; } = new Nutaku();
+        public static NutakuMy nutaku { get; } = new NutakuMy();
     }
 
     public abstract class BaseGameMeta
@@ -1164,7 +1164,7 @@ namespace Overlewd
     }
 
     //nutaku
-    public class Nutaku : BaseGameMeta
+    public class NutakuMy : BaseGameMeta
     {
         public AdminBRO.NutakuSettings settings { get; private set; } = new AdminBRO.NutakuSettings();
 

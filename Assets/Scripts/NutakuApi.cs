@@ -23,9 +23,26 @@ namespace Overlewd
         }
 
         public static bool loggedIn => !String.IsNullOrEmpty(SdkPlugin.loginInfo?.userId);
+        public static LoginInfo loginInfo => SdkPlugin.loginInfo;
+        public static Person userInfo { get; private set; }
 
-        public static async Task<Payment> PostPaymentAsync(MonoBehaviour myMonoBehaviour)
+        public static async Task WaitLoggedIn(MonoBehaviour myMonoBehaviour)
         {
+#if UNITY_EDITOR || UNITY_ANDROID
+            await UniTask.WaitUntil(() => loggedIn);
+            userInfo = await NutakuApi.GetMyProfileAsync(myMonoBehaviour);
+#endif
+            await Task.CompletedTask;
+        }
+
+        public static async Task<Payment> PostPaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
+        {
+            if (tradable?.nutakuPriceValid ?? false)
+            {
+                logMessage("Nutaku tradable is not valid");
+                return default;
+            }
+
             BeginLoading();
             try
             {
@@ -42,11 +59,11 @@ namespace Overlewd
 
                 PaymentItem item = new PaymentItem
                 {
-                    itemId = "item1",
-                    itemName = "Much Doge",
-                    unitPrice = 100,
+                    itemId = tradable.id.ToString(),
+                    itemName = tradable.name,
+                    unitPrice = tradable.price.First().amount,
                     imageUrl = "https://dogecoin.com/imgs/dogecoin-300.png",
-                    description = "item description text"
+                    description = tradable.description
                 };
                 payment.paymentItems.Add(item);
 

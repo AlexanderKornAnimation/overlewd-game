@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using System.Linq;
 using TMPro;
+using System.Text;
 
 namespace Overlewd
 {
@@ -171,6 +172,11 @@ namespace Overlewd
             var form = new WWWForm();
             form.AddField("name", name);
             form.AddField("currentVersion", HttpCore.ApiVersion);
+            if (NutakuApi.loggedIn)
+            {
+                form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApi.userInfo), Encoding.UTF8);
+            }
+
             using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me", form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
@@ -389,6 +395,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool nutakuPriceValid =>
+                (price.Count == 1) && (price.First().currencyData?.nutaku ?? false);
 
             public string GetIconByRarity(string rarity, int? entityId = null) => type switch
             {
