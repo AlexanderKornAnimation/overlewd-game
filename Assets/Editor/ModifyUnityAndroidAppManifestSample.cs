@@ -22,14 +22,15 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
         XDocument doc = XDocument.Load(GetManifestPath(basePath));
         var eApp = doc.Root.Element("application");
         var eAppMetaData = eApp.Elements("meta-data");
-        var e_sdk_ai = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_ai").FirstOrDefault();
-        var e_sdk_ck = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_ck").FirstOrDefault();
-        var e_sdk_cs = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_cs").FirstOrDefault();
-        var e_sdk_en = eAppMetaData.Where(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_en").FirstOrDefault();
+        var e_sdk_ai = eAppMetaData.FirstOrDefault(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_ai");
+        var e_sdk_ck = eAppMetaData.FirstOrDefault(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_ck");
+        var e_sdk_cs = eAppMetaData.FirstOrDefault(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_cs");
+        var e_sdk_en = eAppMetaData.FirstOrDefault(e => e.Attribute($"{AndroidXmlNamespace}name")?.Value == "sdk_en");
         e_sdk_ai?.SetAttributeValue($"{AndroidXmlNamespace}value", "25308");
         e_sdk_ck?.SetAttributeValue($"{AndroidXmlNamespace}value", "hKvfDU43X7sgom34");
         e_sdk_cs?.SetAttributeValue($"{AndroidXmlNamespace}value", "vwpLY2DiKiGVki-tYszmatf5rA=HP5B#");
         e_sdk_en?.SetAttributeValue($"{AndroidXmlNamespace}value", "sandbox");
+        e_sdk_en?.Remove();
         doc.Save(_manifestFilePath);
 #endif
 
