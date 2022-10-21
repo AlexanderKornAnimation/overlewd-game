@@ -18,7 +18,7 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
         //my way
 
         //change Nutaku app params
-#if !UNITY_EDITOR && !DEV_BUILD
+#if NUTAKU_PROD
         XDocument doc = XDocument.Load(GetManifestPath(basePath));
         var eApp = doc.Root.Element("application");
         var eAppMetaData = eApp.Elements("meta-data");
