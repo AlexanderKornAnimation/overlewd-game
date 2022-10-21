@@ -22,7 +22,12 @@ namespace Overlewd
 #endif
         }
 
-        public static bool loggedIn => !String.IsNullOrEmpty(SdkPlugin.loginInfo?.userId);
+        public static bool loggedIn =>
+#if UNITY_EDITOR || UNITY_ANDROID
+            !String.IsNullOrEmpty(SdkPlugin.loginInfo?.userId);
+#else
+            false;
+#endif
         public static LoginInfo loginInfo => SdkPlugin.loginInfo;
         public static Person userInfo { get; private set; }
 
