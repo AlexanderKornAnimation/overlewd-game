@@ -383,6 +383,7 @@ namespace Overlewd
             public bool soldOut;
             public int? matriarchShardId;
             public string rarity;
+            public int? ingredientId;
 
             public const string Type_Default = "default";
             public const string Type_Currency = "currency";
@@ -2089,6 +2090,7 @@ namespace Overlewd
             public int? tradableId;
             public int? entityUserProgressId;
             public string rarity;
+            public int amount;
 
             [JsonProperty(Required = Required.Default)]
             public TradableItem tradableData =>
@@ -2457,5 +2459,87 @@ namespace Overlewd
             public string completeUrl;
         }
 
+        // /alchemy
+        // /alchemy/my/ingredients
+        // /alchemy/my/mixtures
+        // /alchemy/recipes
+        // /alchemy/brew
+        public static async Task<List<AlchemyIngredient>> alchemyIngredientsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/alchemy/my/ingredients";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<AlchemyIngredient>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<AlchemyMixture>> alchemyMixturesAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/alchemy/my/mixtures";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<AlchemyMixture>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<AlchemyRecipe>> alchemyRecipesAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/alchemy/recipes";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<AlchemyRecipe>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<BrewResult> alchemyBrewAsync(int[] ingredientIds)
+        {
+            var url = $"http://api.overlewd.com/alchemy/brew";
+            var form = new WWWForm();
+            form.AddField("ingredientIds", JsonHelper.SerializeObject(ingredientIds));
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<BrewResult> (request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class AlchemyIngredient
+        {
+            public int ingredientId;
+            public int amount;
+            public string name;
+            public int dropChance;
+            public int dropChanceBoss;
+            public string icon;
+        }
+
+        [Serializable]
+        public class AlchemyMixture
+        {
+            public int mixtureId;
+            public int amount;
+            public string name;
+            public int magnitude;
+            public string mixtureType;
+            public string effectDescription;
+            public string icon;
+        }
+
+        [Serializable]
+        public class AlchemyRecipe
+        {
+            public int recipeId;
+            public string recipeName;
+            public List<int> ingredientIds;
+            public int resultMixtureId;
+        }
+
+        [Serializable]
+        public class BrewResult
+        {
+            public string result;
+            public int? usedRecipeId;
+            public int? resultMixtureId;
+        }
     }
 }

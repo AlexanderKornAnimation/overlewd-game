@@ -63,6 +63,7 @@ namespace Overlewd
         public static BattlePass battlePass { get; } = new BattlePass();
         public static Potions potions { get; } = new Potions();
         public static NutakuMy nutaku { get; } = new NutakuMy();
+        public static Alchemy alchemy { get; } = new Alchemy();
     }
 
     public abstract class BaseGameMeta
@@ -120,9 +121,9 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
         }
-        public async Task EndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
+        public async Task<List<AdminBRO.GenRewardItem>> EndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
         {
-            await AdminBRO.ftueStageEndAsync(stageId, data);
+            var genRewards = await AdminBRO.ftueStageEndAsync(stageId, data);
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
 
@@ -130,6 +131,8 @@ namespace Overlewd
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
+
+            return genRewards;
         }
 
         public async Task ReplayStage(int stageId, int count)
@@ -1171,6 +1174,25 @@ namespace Overlewd
         public override async Task Get()
         {
             settings = await AdminBRO.nutakuSettingsAsync();
+        }
+    }
+
+    //alchemy
+    public class Alchemy : BaseGameMeta
+    {
+        public List<AdminBRO.AlchemyIngredient> ingredients { get; private set; } = new List<AdminBRO.AlchemyIngredient>();
+        public List<AdminBRO.AlchemyMixture> mixture { get; private set; } = new List<AdminBRO.AlchemyMixture>();
+        public List<AdminBRO.AlchemyRecipe> recipe { get; private set; } = new List<AdminBRO.AlchemyRecipe>();
+        public override async Task Get()
+        {
+            ingredients = await AdminBRO.alchemyIngredientsAsync();
+            mixture = await AdminBRO.alchemyMixturesAsync();
+            recipe = await AdminBRO.alchemyRecipesAsync();
+        }
+
+        public async Task<AdminBRO.BrewResult> Brew(int[] ingredientIds)
+        {
+            return await AdminBRO.alchemyBrewAsync(ingredientIds);
         }
     }
 }
