@@ -134,6 +134,225 @@ namespace Overlewd
         public AdminBRO.FTUEStageItem sex3 => meta.GetStageByKey("sex3");
     }
 
+    public class FTUELernActions
+    {
+        private const string CH1 = "chapter1";
+        private const string CH2 = "chapter2";
+        private const string CH3 = "chapter3";
+        private const string B1 = "battle1";
+        private const string B2 = "battle2";
+        private const string B3 = "battle3";
+        private const string B4 = "battle4";
+        private const string B5 = "battle5";
+        private const string D1 = "dialogue1";
+        private const string D2 = "dialogue2";
+        private const string D3 = "dialogue3";
+        private const string D4 = "dialogue4";
+        private const string D5 = "dialogue5";
+        private const string S1 = "sex1";
+        private const string S2 = "sex2";
+        private const string S3 = "sex3";
+
+        public Action ch1_b1;
+        public Action ch1_b2;
+        public Action ch1_b3;
+        public Action ch1_b4;
+        public Action ch1_b5;
+        public Action ch1_d1;
+        public Action ch1_d2;
+        public Action ch1_d3;
+        public Action ch1_d4;
+        public Action ch1_s1;
+        public Action ch1_s2;
+        public Action ch1_s3;
+
+        public Action ch2_b1;
+        public Action ch2_b2;
+        public Action ch2_b3;
+        public Action ch2_b4;
+        public Action ch2_b5;
+        public Action ch2_d1;
+        public Action ch2_d2;
+        public Action ch2_d3;
+        public Action ch2_d4;
+        public Action ch2_d5;
+        public Action ch2_s2;
+
+        public Action ch3_b1;
+        public Action ch3_b2;
+        public Action ch3_b3;
+        public Action ch3_b4;
+        public Action ch3_d1;
+        public Action ch3_d2;
+        public Action ch3_d3;
+        public Action ch3_d4;
+        public Action ch3_d5;
+        public Action ch3_s1;
+        public Action ch3_s2;
+        public Action ch3_s3;
+
+        public Action ch1_any;
+        public Action ch2_any;
+        public Action ch3_any;
+
+        public Action any_any;
+
+        public Action def;
+
+        private bool action_is_call = false;
+        private void call_action(Action action)
+        {
+            if (action != null && !action_is_call)
+            {
+                action.Invoke();
+                action_is_call = true;
+            }
+        }
+
+        public void Invoke((string chKey, string sKey)? stageKey)
+        {
+            //ch_s
+            switch (stageKey)
+            {
+                //ch1
+                case (CH1, B1):
+                    call_action(ch1_b1);
+                    break;
+                case (CH1, B2):
+                    call_action(ch1_b2);
+                    break;
+                case (CH1, B3):
+                    call_action(ch1_b3);
+                    break;
+                case (CH1, B4):
+                    call_action(ch1_b4);
+                    break;
+                case (CH1, B5):
+                    call_action(ch1_b5);
+                    break;
+                case (CH1, D1):
+                    call_action(ch1_d1);
+                    break;
+                case (CH1, D2):
+                    call_action(ch1_d2);
+                    break;
+                case (CH1, D3):
+                    call_action(ch1_d3);
+                    break;
+                case (CH1, D4):
+                    call_action(ch1_d4);
+                    break;
+                case (CH1, S1):
+                    call_action(ch1_s1);
+                    break;
+                case (CH1, S2):
+                    call_action(ch1_s2);
+                    break;
+                case (CH1, S3):
+                    call_action(ch1_s3);
+                    break;
+
+                //ch2
+                case (CH2, B1):
+                    call_action(ch2_b1);
+                    break;
+                case (CH2, B2):
+                    call_action(ch2_b2);
+                    break;
+                case (CH2, B3):
+                    call_action(ch2_b3);
+                    break;
+                case (CH2, B4):
+                    call_action(ch2_b4);
+                    break;
+                case (CH2, B5):
+                    call_action(ch2_b5);
+                    break;
+                case (CH2, D1):
+                    call_action(ch2_d1);
+                    break;
+                case (CH2, D2):
+                    call_action(ch2_d2);
+                    break;
+                case (CH2, D3):
+                    call_action(ch2_d3);
+                    break;
+                case (CH2, D4):
+                    call_action(ch2_d4);
+                    break;
+                case (CH2, D5):
+                    call_action(ch2_d5);
+                    break;
+                case (CH2, S2):
+                    call_action(ch2_s2);
+                    break;
+
+                //ch3
+                case (CH3, B1):
+                    call_action(ch3_b1);
+                    break;
+                case (CH3, B2):
+                    call_action(ch3_b2);
+                    break;
+                case (CH3, B3):
+                    call_action(ch3_b3);
+                    break;
+                case (CH3, B4):
+                    call_action(ch3_b4);
+                    break;
+                case (CH3, D1):
+                    call_action(ch3_d1);
+                    break;
+                case (CH3, D2):
+                    call_action(ch3_d2);
+                    break;
+                case (CH3, D3):
+                    call_action(ch3_d3);
+                    break;
+                case (CH3, D4):
+                    call_action(ch3_d4);
+                    break;
+                case (CH3, D5):
+                    call_action(ch3_d5);
+                    break;
+                case (CH3, S1):
+                    call_action(ch3_s1);
+                    break;
+                case (CH3, S2):
+                    call_action(ch3_s2);
+                    break;
+                case (CH3, S3):
+                    call_action(ch3_s3);
+                    break;
+            }
+
+            //ch_any
+            switch (stageKey)
+            {
+                case (CH1, _):
+                    call_action(ch1_any);
+                    break;
+                case (CH2, _):
+                    call_action(ch2_any);
+                    break;
+                case (CH3, _):
+                    call_action(ch3_any);
+                    break;
+            }
+
+            //any_any
+            switch (stageKey)
+            {
+                case (_, _):
+                    call_action(any_any);
+                    break;
+            }
+
+            //def
+            call_action(def);
+        }
+    }
+
     public class FTUE : BaseGameMeta
     {
         public AdminBRO.FTUEInfo info { get; private set; }
@@ -205,6 +424,11 @@ namespace Overlewd
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
+        }
+
+        public void DoLern(AdminBRO.FTUEStageItem stageData, FTUELernActions actions)
+        {
+            actions.Invoke(GameData.devMode ? ((string, string)?)null : (stageData?.ftueChapterData.key, stageData?.key));
         }
     }
 

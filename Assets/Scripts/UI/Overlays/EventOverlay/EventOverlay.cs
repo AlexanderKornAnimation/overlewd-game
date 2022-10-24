@@ -92,23 +92,14 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            switch(GameData.ftue.stats.lastEndedState)
-            {
-                case (_, _):
-                    switch (GameData.ftue.activeChapter.key)
-                    {
-                        case "chapter1":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_eventbook);
-                            break;
-                        case "chapter2":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_eventbook);
-                            break;
-                        case "chapter3":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_eventbook);
-                            break;
-                    }
-                    break;
-            }
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastStartedStageData,
+                new FTUELernActions
+                {
+                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_eventbook),
+                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_eventbook),
+                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_eventbook)
+                });
 
             await Task.CompletedTask;
         }

@@ -178,15 +178,12 @@ namespace Overlewd
             buffPanel = BuffWidget.GetInstance(transform);
             DevWidget.GetInstance(transform);
 
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case ("battle4", "chapter1"):
-                    if (!GameData.buildings.castle.meta.isBuilt)
-                    {
-                        UITools.DisableButton(sidebarButton);
-                    }
-                    break;
-            }
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_b4 = () => UITools.DisableButton(sidebarButton)
+                });
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
 
@@ -206,35 +203,36 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            //ftue part
-            switch (GameData.ftue.stats.lastEndedState)
+            var ftue_ch1_b4 = false;
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_b4 = () => ftue_ch1_b4 = true
+                });
+
+            if (ftue_ch1_b4)
             {
-                case ("battle4", "chapter1"):
-                    {
-                        var showPanelTasks = new List<Task>();
-                        showPanelTasks.Add(questsPanel.ShowAsync());
-                        await Task.WhenAll(showPanelTasks);
-                    }
+                var showPanelTasks = new List<Task>();
+                showPanelTasks.Add(questsPanel.ShowAsync());
+                await Task.WhenAll(showPanelTasks);
 
-                    if (GameData.buildings.castle.meta.isBuilt)
-                    {
-                        await castleButton.ShowAsync();
-                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");   
-                    }
-                    else
-                    {
-                        GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
-                    }
-                    break;
-
-                default:
-                    {
-                        var showPanelTasks = new List<Task>();
-                        showPanelTasks.Add(questsPanel.ShowAsync());
-                        showPanelTasks.Add(eventsPanel.ShowAsync());
-                        await Task.WhenAll(showPanelTasks);
-                    }
-                    break;
+                if (GameData.buildings.castle.meta.isBuilt)
+                {
+                    await castleButton.ShowAsync();
+                    GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");
+                }
+                else
+                {
+                    GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
+                }
+            }
+            else
+            {
+                var showPanelTasks = new List<Task>();
+                showPanelTasks.Add(questsPanel.ShowAsync());
+                showPanelTasks.Add(eventsPanel.ShowAsync());
+                await Task.WhenAll(showPanelTasks);
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);

@@ -1499,10 +1499,6 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
                 GameData.ftue.GetStageById(lastEndedStage);
-
-            [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey)? lastEndedState =>
-                lastEndedStageData?.ftueState;
         }
 
         // /ftue-stages
@@ -1561,10 +1557,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isClosed => status == Status_Closed;
-
-            [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey)? ftueState =>
-                GameData.devMode ? ((string, string)?)null : (key, ftueChapterData?.key);
         }
 
         // /ftue-stages/{id}/start

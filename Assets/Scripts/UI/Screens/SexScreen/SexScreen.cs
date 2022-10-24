@@ -71,12 +71,12 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case (_, _):
-                    skipButton.gameObject.SetActive(GameData.ftue.chapter1_stages.battle3.isComplete);
-                    break;
-            }
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    any_any = () => skipButton.gameObject.SetActive(GameData.ftue.chapter1_stages.battle3.isComplete)
+                });
 
             await Task.CompletedTask;
         }
@@ -108,45 +108,48 @@ namespace Overlewd
         
         private void LeaveScreen()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("sex1", "chapter1"):
-                    UIManager.MakeScreen<DialogScreen>().
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_s1 = () =>
+                    {
+                        UIManager.MakeScreen<DialogScreen>().
                         SetData(new DialogScreenInData
                         {
-                            ftueStageId = GameData.ftue.mapChapter.GetStageByKey("dialogue1")?.id
+                            ftueStageId = GameData.ftue.chapter1_stages.dialogue1.id
                         }).RunShowScreenProcess();
-                    break;
-
-                default:
-                    if (inputData.ftueStageId.HasValue)
+                    },
+                    def = () =>
                     {
-                        UIManager.ShowScreen<MapScreen>();
+                        if (inputData.ftueStageId.HasValue)
+                        {
+                            UIManager.ShowScreen<MapScreen>();
+                        }
+                        else if (inputData.eventStageId.HasValue)
+                        {
+                            UIManager.ShowScreen<EventMapScreen>();
+                        }
+                        else if (inputData.prevScreenInData.IsType<GirlScreenInData>())
+                        {
+                            UIManager.MakeScreen<GirlScreen>().
+                                SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                                .RunShowScreenProcess();
+                        }
+                        else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
+                        {
+                            UIManager.MakeScreen<MemoryListScreen>()
+                                .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
+                                .RunShowScreenProcess();
+                        }
+                        else
+                        {
+                            UIManager.MakeScreen<BattleGirlScreen>().
+                                SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>())
+                                .RunShowScreenProcess();
+                        }
                     }
-                    else if (inputData.eventStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<EventMapScreen>();
-                    }
-                    else if (inputData.prevScreenInData.IsType<GirlScreenInData>())
-                    {
-                        UIManager.MakeScreen<GirlScreen>().
-                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                            .RunShowScreenProcess();
-                    }
-                    else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
-                    {
-                        UIManager.MakeScreen<MemoryListScreen>()
-                            .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
-                            .RunShowScreenProcess();
-                    }
-                    else
-                    {
-                        UIManager.MakeScreen<BattleGirlScreen>().
-                            SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>())
-                            .RunShowScreenProcess();
-                    }
-                    break;
-            }
+                });
         }
 
         public override async Task BeforeShowDataAsync()
