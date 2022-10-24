@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using System.Linq;
 using TMPro;
 using System.Text;
-using Overlewd.NSOverlordScreen;
 
 namespace Overlewd
 {
