@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using TMPro;
 using System.Text;
+using Overlewd.NSOverlordScreen;
 
 namespace Overlewd
 {
@@ -1094,6 +1095,9 @@ namespace Overlewd
                 _ => null
             };
 
+            public CharacterSkill GetSkillByType(string type) =>
+                skills.FirstOrDefault(s => s.type == type);
+            
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
 
@@ -1217,6 +1221,27 @@ namespace Overlewd
             public const string Type_Enhanced = "enhanced_attack";
 
             [JsonProperty(Required = Required.Default)]
+            public string effectSprite => effect switch
+            {
+                SkillEffect.Key_Bless => TMPSprite.BuffBless,
+                SkillEffect.Key_DefenceUp => TMPSprite.BuffDefenceUp,
+                SkillEffect.Key_Dispel => TMPSprite.BuffDispell,
+                SkillEffect.Key_Focus => TMPSprite.BuffFocus,
+                SkillEffect.Key_Immunity => TMPSprite.BuffImmunity,
+                SkillEffect.Key_Regeneration => TMPSprite.BuffRegeneration,
+                SkillEffect.Key_Safeguard => TMPSprite.BuffSafeguard,
+                SkillEffect.Key_AttackUp => TMPSprite.BuffAttackUp,
+                SkillEffect.Key_Blind => TMPSprite.DebuffBlind,
+                SkillEffect.Key_Curse => TMPSprite.DebuffCurse,
+                SkillEffect.Key_DefenceDown => TMPSprite.DebuffDefenceDown,
+                SkillEffect.Key_HealBlock => TMPSprite.DebuffHealBlock,
+                SkillEffect.Key_Posion => TMPSprite.DebuffPoison,
+                SkillEffect.Key_Silence => TMPSprite.DebuffSilence,
+                SkillEffect.Key_Stun => TMPSprite.DebuffStun,
+                _ => null
+            };
+            
+            [JsonProperty(Required = Required.Default)]
             public Animation vfxSelf => GameData.animations.GetById(vfxSelfId);
 
             [JsonProperty(Required = Required.Default)]
@@ -1237,6 +1262,23 @@ namespace Overlewd
         {
             public string name;
             public string description;
+
+            public const string Key_Bless = "bless";
+            public const string Key_Blind = "blind";
+            public const string Key_Curse = "curse";
+            public const string Key_DefenceDown = "defence_down";
+            public const string Key_DefenceUp = "defence_up";
+            public const string Key_Dispel = "dispel";
+            public const string Key_Focus = "focus";
+            public const string Key_HealBlock = "heal_block";
+            public const string Key_Immunity = "immunity";
+            public const string Key_Posion = "poison";
+            public const string Key_Regeneration = "regeneration";
+            public const string Key_Safeguard = "safeguard";
+            public const string Key_Silence = "silence";
+            public const string Key_Stun = "stun";
+            public const string Key_AttackUp = "attack_up";
+            
         }
 
         [Serializable]
@@ -1365,7 +1407,19 @@ namespace Overlewd
                 Type_CharacterWeapon => 7,
                 _ => 0
             };
-
+            
+            [JsonProperty(Required = Required.Default)]
+            public string classMarker => characterClass switch
+            {
+                Class_Assassin => TMPSprite.ClassAssassin,
+                Class_Bruiser => TMPSprite.ClassBruiser,
+                Class_Caster => TMPSprite.ClassCaster,
+                Class_Healer => TMPSprite.ClassHealer,
+                Class_Overlord => TMPSprite.ClassOverlord,
+                Class_Tank => TMPSprite.ClassTank,
+                _ => ""
+            };
+            
             [JsonProperty(Required = Required.Default)]
             public string icon => GetIconByRarity(rarity);
 
