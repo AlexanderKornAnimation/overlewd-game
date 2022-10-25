@@ -71,7 +71,6 @@ namespace Overlewd
                     transform.SetSiblingIndex(5);
                 }
             }
-            sliderMP?.gameObject.SetActive(cc.isOverlord);
             UpdateUI();
         }
 
@@ -82,14 +81,13 @@ namespace Overlewd
             if (cc.bigIcon != null) BattlePortraitIco.sprite = cc.bigIcon;
             if (bigPortrait) BattlePortraitIco.SetNativeSize();
             if (sliderHP) sliderHP.maxValue = maxHp;
-            sliderMP?.gameObject.SetActive(cc.isOverlord);
             status_bar.cc = cc;
-            status_bar?.UpdateStatuses();
             UpdateUI();
         }
 
         public void UpdateUI()
         {
+            //sliderMP?.gameObject.SetActive(cc.isOverlord);
             textHP.text = $"{hp}/{maxHp}";
             sliderHP.DOValue(hp, 0.3f).SetEase(Ease.OutQuint);
             if (textMP) textMP.text = $"{mp}/{maxMp}";

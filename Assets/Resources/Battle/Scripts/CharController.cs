@@ -49,7 +49,8 @@ namespace Overlewd
 
 
         public float zoomSpeed = 0.15f;
-        private float idleScale = 1f, battleScale = 1.5f;
+        private float idleScale = .9f, battleScale = 1.5f;
+        private float overIdleScale = .85f, overBattleScale = 1.4f; //0.93f
         public int battleOrder = 1;
         public float health = 100, healthMax = 100;
         public float mana = 100, manaMax = 100;
@@ -126,8 +127,8 @@ namespace Overlewd
             if (isOverlord)
             {
                 bm.overlord = this;
-                idleScale = 0.93f;
-                battleScale = 1.4f;
+                idleScale = overIdleScale;
+                battleScale = overBattleScale;
             }
             health = (float)character.health;
             healthMax = health;
@@ -142,17 +143,14 @@ namespace Overlewd
             {
                 tempSK = skillStash?.Find(f => f.type == "overlord_attack");
                 if (tempSK != null) skill.Add(tempSK);
-                //if (bm.MagicGuildChecker() == true)
-                {
-                    tempSK = skillStash?.Find(f => f.type == "overlord_enhanced_attack");
-                    if (tempSK != null) skill.Add(tempSK);
-                    tempSK = skillStash?.Find(f => f.type == "overlord_ultimate_attack");
-                    if (tempSK != null) skill.Add(tempSK);
-                    tempSK = skillStash?.Find(f => f.type == "overlord_first_passive_skill");
-                    if (tempSK != null) passiveSkill.Add(tempSK);
-                    tempSK = skillStash?.Find(f => f.type == "overlord_second_passive_skill");
-                    if (tempSK != null) passiveSkill.Add(tempSK);
-                }
+                tempSK = skillStash?.Find(f => f.type == "overlord_enhanced_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_ultimate_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_first_passive_skill");
+                if (tempSK != null) passiveSkill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_second_passive_skill");
+                if (tempSK != null) passiveSkill.Add(tempSK);
             }
             else
             {
@@ -230,8 +228,8 @@ namespace Overlewd
         {
             //if (!isDead)
             //{
-                character.sfxIdle?.Play();
-                spineWidget.PlayAnimation(ani_idle_name, true);
+            character.sfxIdle?.Play();
+            spineWidget.PlayAnimation(ani_idle_name, true);
             //}
         }
 

@@ -65,8 +65,9 @@ namespace Overlewd
         public delegate void RoundEnd();
         public Unselect unselect;
         public RoundEnd roundEnd;
-
-        private Color redColor;
+        [SerializeField] private Color redColor;
+        private Transform aniDropPoint;
+        [SerializeField] private GameObject aniRound, aniBoss, aniWave;
 
         //statistic, trackers, notif flags
         private bool castAOEForNotify = false;
@@ -136,11 +137,37 @@ namespace Overlewd
 
             charControllerList.Sort(SortBySpeed); //Sorting then create portraits
 
-            ColorUtility.TryParseHtmlString("#A64646", out redColor);
             CreatePortraitQueue();
             maxStep = charControllerList.Count;
             if (!bossLevel) QueueElements[0].Select(); //Scale Up First Element
             ccOnSelect = charControllerList[step];
+
+            aniDropPoint = transform.Find("Animations");
+            
+            StartCoroutine(LateInit());
+            StartCoroutine(ShowStartAnimation());
+            StartCoroutine(PreBattlePause());
+        }
+        IEnumerator LateInit()
+        {
+            yield return new WaitForEndOfFrame();
+            SetSkillCtrl(ccOnSelect);
+            if (!ccOnSelect.isEnemy)
+                ccOnSelect.CharPortraitSet();
+        }
+        IEnumerator ShowStartAnimation()
+        {
+            yield return new WaitForSeconds(.7f);
+            if (bossLevel && aniBoss)
+                Instantiate(aniBoss, aniDropPoint);
+            else if (aniWave)
+                Instantiate(aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp("Wave 1");
+            else if (aniRound)
+                Instantiate(aniRound, aniDropPoint).GetComponent<AnimationController>().SetUp("Round 1");
+        }
+        IEnumerator PreBattlePause()
+        {
+            yield return new WaitForSeconds(1.75f);
             if (ccOnSelect.isEnemy)
             {
                 battleState = BattleState.ENEMY;
@@ -153,18 +180,11 @@ namespace Overlewd
                 battleState = BattleState.PLAYER;
                 bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
             }
-            StartCoroutine(LateInit());
-        }
-        IEnumerator LateInit()
-        {
-            yield return new WaitForEndOfFrame();
+
             charControllerList[step].Highlight();
-            SetSkillCtrl(ccOnSelect);
-            if (battleState == BattleState.PLAYER)
-            {
-                ccOnSelect.CharPortraitSet();
-                if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
-            }
+            if (battleState == BattleState.PLAYER && !ccOnSelect.skill[0].AOE)
+                ButtonPress(0);
+            
             if (!battleStart) //skip button = true; back button = false
             {
                 if (battleScene != null)
@@ -244,6 +264,8 @@ namespace Overlewd
             ccOnSelect = charControllerList[step];
             battleState = BattleState.ANIMATION;
             ccOnSelect.UpadeteDot();
+            if (aniWave)
+                Instantiate(aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp($"Wave {wave + 1}");
         }
         private void CreatePortraitQueue()
         {
@@ -548,6 +570,8 @@ namespace Overlewd
                 roundTMP.text = $"Round {round}";
                 log.Add($"Round {round}");
                 step = 0;
+                if (aniRound)
+                    Instantiate(aniRound, aniDropPoint).GetComponent<AnimationController>().SetUp($"Round {round}");
             }
             if (castAOEForNotify == true)
             {

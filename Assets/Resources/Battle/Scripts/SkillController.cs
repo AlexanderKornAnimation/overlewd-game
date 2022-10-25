@@ -39,6 +39,7 @@ namespace Overlewd
         public int manaCost => skill.manaCost;
         public string Name => skill.name;
         public string description => skill.description;
+        public int level => skill.level;
 
         public bool selectable = true;
         public bool isSelected = false;

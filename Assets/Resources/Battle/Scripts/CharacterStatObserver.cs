@@ -43,7 +43,7 @@ namespace Overlewd
             status_bar.cc = cc;
             border = transform.Find("button/border").gameObject;
             border?.SetActive(false);
-            if (cc.isOverlord) border.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 60);
+            border.GetComponent<RectTransform>().anchoredPosition = (cc.isOverlord) ? new Vector2(0, 0): new Vector2(0, -60);
             if (sliderHP) sliderHP.maxValue = maxHp;
             
             if (sliderMP) sliderMP.maxValue = manaMax;
