@@ -19,9 +19,10 @@ namespace Overlewd
             private Image girlIcon;
             private TextMeshProUGUI level;
             private TextMeshProUGUI girlClass;
-            private Transform equipStatus;
             private Button equipButton;
             private GameObject notificationNew;
+            private GameObject equipStatus;
+            private GameObject inTeamStatus;
 
             private bool initialized = false;
 
@@ -35,10 +36,9 @@ namespace Overlewd
                 equipButton.onClick.AddListener(OnClick);
                 level = canvas.Find("LevelBack").Find("Level").GetComponent<TextMeshProUGUI>();
                 girlClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
-                equipStatus = canvas.Find("EquipStatus");
                 notificationNew = canvas.Find("NotificationNew").GetComponent<GameObject>();
-
-                equipStatus.gameObject.SetActive(false);
+                equipStatus = canvas.Find("EquipStatus").gameObject;
+                inTeamStatus = canvas.Find("InTeamStatus").gameObject;
 
                 initialized = true;
             }
@@ -58,22 +58,24 @@ namespace Overlewd
                 girlIcon.sprite = ResourceManager.LoadSprite(chData.iconUrl);
                 level.text = chData.level.ToString();
                 girlClass.text = chData.classMarker;
+                inTeamStatus.SetActive(characterData.inTeam);
 
                 if (labScreen.IsInFlask(this))
                 {
-                    equipStatus.gameObject.SetActive(true);
+                    equipStatus.SetActive(true);
+                    inTeamStatus.SetActive(false);
                     girlIcon.color = Color.gray;
                     equipButton.interactable = true;
                 }
                 else if (labScreen.CanAddToFlask(this))
                 {
-                    equipStatus.gameObject.SetActive(false);
+                    equipStatus.SetActive(false);
                     girlIcon.color = Color.white;
                     equipButton.interactable = true;
                 }
                 else
                 {
-                    equipStatus.gameObject.SetActive(false);
+                    equipStatus.SetActive(false);
                     girlIcon.color = Color.gray;
                     equipButton.interactable = false;
                 }

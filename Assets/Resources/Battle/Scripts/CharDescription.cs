@@ -7,11 +7,12 @@ namespace Overlewd
     public class CharDescription : MonoBehaviour
     {
         private CharController cc;
-        [SerializeField] private TextMeshProUGUI nameTMP, classTMP;
+        [SerializeField] private TextMeshProUGUI nameTMP, lvlTMP;
         [SerializeField] private Image portraitIco, classIco;
         [SerializeField] private Sprite[] classIcons;
         [SerializeField] private TextMeshProUGUI accur, dodge, crit, health, damage;
-        [SerializeField] private StatusEffects status_bar;
+        [SerializeField] private StatusEffects status_bar, status_bar_debuff;
+        [SerializeField] private GameObject titleBuffs, titleDebuffs;
         private BattleManager bm => FindObjectOfType<BattleManager>();
         Animator ani;
         RectTransform rt;
@@ -32,6 +33,7 @@ namespace Overlewd
             {
                 cc = charC;
                 status_bar.cc = cc;
+                status_bar_debuff.cc = cc;
                 if (!isOpen) { 
                     ChangeStats();
                     ani.SetTrigger("Open");
@@ -43,10 +45,11 @@ namespace Overlewd
         }
         public void ChangeStats()
         {
-            bool haveAnyStatus = status_bar.StatusCheck();
-            rt.sizeDelta = haveAnyStatus ? new Vector2(786, 546) : new Vector2(344, 546);
+            bool haveAnyStatus = status_bar.StatusCheck(true);
+            bool haveAnyStatusDebuff = status_bar_debuff.StatusCheck(false);
+            rt.sizeDelta = (haveAnyStatus || haveAnyStatusDebuff) ? new Vector2(786, 546) : new Vector2(344, 546);
+            lvlTMP.text = cc.level.ToString();
             nameTMP.text = cc.Name;
-            classTMP.text = cc.isBoss ? "Boss" : cc.characterClass;
 
             if (cc.icon != null) portraitIco.sprite = cc.icon;
             if (classIco && classIcons != null) SetClass();
@@ -56,10 +59,11 @@ namespace Overlewd
             crit.text = $"{cc.critrate * 100}%";
             health.text = cc.healthMax.ToString();
             damage.text = cc.damage.ToString();
-
-            status_bar.withDescription = true;
-            status_bar.UpdateStatuses();
-            statusBarGO.SetActive(haveAnyStatus);
+            status_bar.UpdateStatuses(true);
+            status_bar_debuff.UpdateStatuses(true);
+            titleBuffs.SetActive(haveAnyStatus);
+            titleDebuffs.SetActive(haveAnyStatusDebuff);
+            statusBarGO.SetActive(haveAnyStatus || haveAnyStatusDebuff);
         }
         public void Close()
         {

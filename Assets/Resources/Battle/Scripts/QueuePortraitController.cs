@@ -33,7 +33,7 @@ namespace Overlewd
         public void Select()
         {
             transform.SetSiblingIndex(0);
-            rt.localScale *= 1.5f;
+            rt.localScale *= 1.2f;
         }
         public void Deselect()
         {

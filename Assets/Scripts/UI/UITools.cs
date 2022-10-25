@@ -13,6 +13,18 @@ namespace Overlewd
 {
     public static class UITools
     {
+        public static string ChangeTextSize(string text, float fontSize)
+        {
+            var result = "";
+
+            foreach (var ch in text)
+            {
+                result += char.IsNumber(ch) || ch == '%' || ch == '+' ? $"<size={fontSize + 8}>{ch}</size>" : ch.ToString();
+            }
+
+            return result;
+        }
+        
         public static List<AdminBRO.PriceItem> PriceMul(List<AdminBRO.PriceItem> price, int mul)
         {
             var result = new List<AdminBRO.PriceItem>();
@@ -56,25 +68,13 @@ namespace Overlewd
         public static void DisableButton(Button button, bool disable = true)
         {
             var bColors = button.colors;
-            if (disable)
-            {
-                button.interactable = false;
-                bColors.disabledColor = Color.gray;
-                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
-                {
-                    cr.SetColor(Color.gray);
-                }
-            }
-            else
-            {
-                button.interactable = true;
-                bColors.disabledColor = Color.white;
-                foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>())
-                {
-                    cr.SetColor(Color.white);
-                }
-            }
+            button.interactable = !disable;
+            bColors.disabledColor = disable ? Color.gray : Color.white;
             button.colors = bColors;
+            foreach (var cr in button.GetComponentsInChildren<CanvasRenderer>(true))
+            {
+                cr.SetColor(disable ? Color.gray : Color.white);
+            }
         }
 
         public static void SetStretch(RectTransform rectTransform)

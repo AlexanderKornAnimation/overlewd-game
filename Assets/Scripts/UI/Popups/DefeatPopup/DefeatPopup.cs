@@ -44,49 +44,44 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle2", "chapter1"):
-                    UITools.DisableButton(magicGuildButton);
-                    UITools.DisableButton(overlordButton);
-                    UITools.DisableButton(editTeamButton);
-                    UITools.DisableButton(repeatButton);
-                    UITools.DisableButton(mapButton);
-                    break;
-                case (_, "chapter1"):
-                    UITools.DisableButton(editTeamButton);
-                    UITools.DisableButton(magicGuildButton);
-                    UITools.DisableButton(overlordButton);
-                    break;
-                default:
-                    break;
-            }
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_b2 = () =>
+                    {
+                        UITools.DisableButton(editTeamButton);
+                        UITools.DisableButton(magicGuildButton);
+                        UITools.DisableButton(overlordButton);
+                        UITools.DisableButton(repeatButton);
+                        UITools.DisableButton(mapButton);
+                    },
+                    ch1_any = () => 
+                    {
+                        UITools.DisableButton(editTeamButton);
+                        UITools.DisableButton(magicGuildButton);
+                        UITools.DisableButton(overlordButton);
+                    }
+                });
 
             await Task.CompletedTask;
         }
 
         public override async Task AfterShowAsync()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle2", "chapter1"):
-                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1", false);
-                    break;
-                case (_, _):
-                    switch (GameData.ftue.activeChapter.key)
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_b2 = () =>
                     {
-                        case "chapter1":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
-                            break;
-                        case "chapter2":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Losing_a_battle);
-                            break;
-                        case "chapter3":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Losing_a_battle);
-                            break;
-                    }
-                    break;
-            }
+                        SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
+                        GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1", false);
+                    },
+                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle),
+                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Losing_a_battle),
+                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Losing_a_battle)
+                });
 
             await Task.CompletedTask;
         }
@@ -124,24 +119,27 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
 
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle2", "chapter1"):
-                    UIManager.MakeScreen<SexScreen>().
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_b2 = () =>
+                    {
+                        UIManager.MakeScreen<SexScreen>().
                         SetData(new SexScreenInData
                         {
-                            ftueStageId = GameData.ftue.info.chapter1.GetStageByKey("sex2")?.id
+                            ftueStageId = GameData.ftue.chapter1_stages.sex2?.id
                         }).RunShowScreenProcess();
-                    break;
-
-                default:
-                    UIManager.MakeScreen<HaremScreen>().
-                        SetData(new HaremScreenInData
+                    },
+                    def = () =>
                     {
-                        prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
-                    }).RunShowScreenProcess();
-                    break;
-            }
+                        UIManager.MakeScreen<HaremScreen>().
+                        SetData(new HaremScreenInData
+                        {
+                            prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
+                        }).RunShowScreenProcess();
+                    }
+                });
         }
 
         private void RepeatButtonClick()

@@ -10,9 +10,8 @@ namespace Overlewd
         public abstract class BaseStageButton : BaseButton
         {
             public int? stageId { get; set; }
-
             protected AdminBRO.FTUEStageItem stageData =>
-                GameData.ftue.info.GetStageById(stageId);
+                GameData.ftue.GetStageById(stageId);
 
 
             protected Transform done;

@@ -52,7 +52,7 @@ namespace Overlewd
             if (GameData.ftue.mapChapter == null)
             {
                 GameData.ftue.mapChapter = GameData.devMode ?
-                    GameData.ftue.info.chapter1 : GameData.ftue.activeChapter;
+                    GameData.ftue.chapter1 : GameData.ftue.activeChapter;
             }
             
             //backbutton.gameObject.SetActive(false);
@@ -64,7 +64,7 @@ namespace Overlewd
 
                 foreach (var stageId in GameData.ftue.mapChapter.stages)
                 {
-                    var stageData = GameData.ftue.info.GetStageById(stageId);
+                    var stageData = GameData.ftue.GetStageById(stageId);
 
                     var instantiateStageOnMap = GameData.devMode ? true : !stageData.isClosed;
                     if (instantiateStageOnMap)
@@ -140,7 +140,6 @@ namespace Overlewd
             questsPanel = QuestsWidget.GetInstance(transform);
             questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
-            buffPanel.Hide();
             DevWidget.GetInstance(transform);
             chapterSelector = NSMapScreen.ChapterSelector.GetInstance(transform);
             chapterSelector.Hide();
@@ -200,28 +199,34 @@ namespace Overlewd
                 }
             }
 
-            //ftue part
-            switch (GameData.ftue.stats.lastEndedState)
+            bool ftue_ch1_b1 = false;
+            bool ftue_ch1_s2 = false;
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_b1 = () => ftue_ch1_b1 = true,
+                    ch1_s2 = () => ftue_ch1_s2 = true
+                });
+            if (ftue_ch1_b1)
             {
-                case ("battle1", "chapter1"):
-                    GameData.ftue.info.chapter1.ShowNotifByKey("maptutor");
-                    await UIManager.WaitHideNotifications();
-                    await questsPanel.ShowAsync();
-                    GameData.ftue.info.chapter1.ShowNotifByKey("qbtutor");
-                    break;
-                case ("sex2", "chapter1"):
-                    await questsPanel.ShowAsync();
-                    await buffPanel.ShowAsync();
-                    GameData.ftue.info.chapter1.ShowNotifByKey("bufftutor2");
-                    break;
-                default:
-                    var showPanelTasks = new List<Task>();
-                    showPanelTasks.Add(questsPanel.ShowAsync());
-                    showPanelTasks.Add(buffPanel.ShowAsync());
-                    await Task.WhenAll(showPanelTasks);
-                    break;
+                GameData.ftue.chapter1.ShowNotifByKey("maptutor");
+                await UIManager.WaitHideNotifications();
+                await questsPanel.ShowAsync();
+                GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
             }
-
+            else if (ftue_ch1_s2)
+            {
+                await questsPanel.ShowAsync();
+                GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
+            }
+            else
+            {
+                var showPanelTasks = new List<Task>();
+                showPanelTasks.Add(questsPanel.ShowAsync());
+                await Task.WhenAll(showPanelTasks);
+            }
+                    
             await Task.CompletedTask;
         }
 
@@ -246,6 +251,6 @@ namespace Overlewd
     public class MapScreenInData : BaseFullScreenInData
     {
         public int chapterId;
-        public AdminBRO.FTUEChapter chapterData => GameData.ftue.info.GetChapterById(chapterId);
+        public AdminBRO.FTUEChapter chapterData => GameData.ftue.GetChapterById(chapterId);
     }
 }

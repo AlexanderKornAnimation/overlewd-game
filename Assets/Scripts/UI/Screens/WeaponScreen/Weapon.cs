@@ -19,6 +19,8 @@ namespace Overlewd
             private GameObject notificationNew;
             private Image weaponIcon;
             private Image equippedCharacterIcon;
+            private GameObject frame;
+            private bool isInitialized = false;
 
             public int weaponId;
             public AdminBRO.Equipment weaponData => GameData.equipment.GetById(weaponId);
@@ -26,8 +28,15 @@ namespace Overlewd
             public int? characterId;
             public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
 
+            public Action<Weapon> OnSelect;
 
             private void Awake()
+            {
+                if (!isInitialized)
+                    Initialize();
+            }
+
+            public void Initialize()
             {
                 var canvas = transform.Find("Canvas");
 
@@ -39,8 +48,10 @@ namespace Overlewd
                 notificationNew = canvas.Find("NotificationNew").gameObject;
                 weaponIcon = canvas.Find("WeaponIcon").GetComponent<Image>();
                 equippedCharacterIcon = notificationEquipped.transform.Find("CharacterIcon").GetComponent<Image>();
+                frame = canvas.Find("Frame").gameObject;
+                isInitialized = true;
             }
-
+            
             private void Start()
             {
                 Customize();
@@ -53,62 +64,40 @@ namespace Overlewd
                 notificationEquipped.SetActive(weaponData.isEquipped && weaponData.IsMyClass(characterData.characterClass));
                 equippedCharacterIcon.gameObject.SetActive(!weaponData.IsMy(characterId));
                 weaponIcon.sprite = ResourceManager.LoadSprite(weaponData.icon);
-
                 weaponIcon.color = weaponData.isEquipped ? Color.gray : Color.white;
+                frame.SetActive(false);
                 
                 if (weaponData.IsMy(characterId))
                 {
                     transform.SetAsFirstSibling();
+                    button.gameObject.SetActive(false);
                 }
                 else
                 {
                     var equippedCharacter = GameData.characters.GetById(weaponData.characterId);
                     equippedCharacterIcon.sprite = ResourceManager.LoadSprite(equippedCharacter?.iconUrl);
+                    button.gameObject.SetActive(true);
                 }
             }
 
-            public async Task Equip(int chId, int eqId)
+            public void Select()
             {
-                await GameData.equipment.Equip(chId, eqId);
+                var siblingIndex = characterData.hasEquipment ? 1 : 0;
+                transform.SetSiblingIndex(siblingIndex);
+                frame.SetActive(true);
+                button.gameObject.SetActive(false);
             }
 
-            public async Task Unequip(int chId, int eqId)
+            public void Deselect()
             {
-                await GameData.equipment.Unequip(chId, eqId);
+                frame.SetActive(false);
+                button.gameObject.SetActive(true);
             }
             
-            private async void ButtonClick()
+            private void ButtonClick()
             {
-                if (characterId.HasValue)
-                {
-                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                    
-                    if (weaponData.isEquipped)
-                    {
-                        if (weaponData.IsMy(characterId.Value))
-                        {
-                            await Unequip(characterId.Value, weaponId);
-                        }
-                        else
-                        {
-                            await Unequip(weaponData.characterId.Value, weaponId);
-
-                            if (characterData.hasEquipment)
-                            {
-                                await Unequip(characterId.Value, characterData.characterEquipmentData.id);
-                            }
-                            await Equip(characterId.Value, weaponId);
-                        }
-                    }
-                    else
-                    {
-                        if (characterData.hasEquipment)
-                        {
-                           await Unequip(characterId.Value, characterData.characterEquipmentData.id);
-                        }
-                        await Equip(characterId.Value, weaponId);
-                    }
-                }
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                OnSelect?.Invoke(this);
             }
 
             public static Weapon GetInstance(Transform parent)

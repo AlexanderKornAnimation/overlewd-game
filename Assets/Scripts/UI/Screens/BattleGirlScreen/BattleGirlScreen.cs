@@ -48,6 +48,7 @@ namespace Overlewd
         private Image weapon;
         private Button weaponScreenButton;
         private TextMeshProUGUI weaponButtonTitle;
+        private GameObject cellBackground;
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
         private Image girl;
@@ -79,6 +80,7 @@ namespace Overlewd
             weaponScreenButton = weaponCell.Find("WeaponScreenButton").GetComponent<Button>();
             weaponButtonTitle = weaponScreenButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
+            cellBackground = weaponCell.Find("Background").gameObject;
 
             levelUpButton = canvas.Find("LevelUpButton");
             levelUpButtonCanLvlUp = levelUpButton.Find("CanLvlUp").GetComponent<Button>();
@@ -141,23 +143,14 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case (_, _):
-                    switch (GameData.ftue.activeChapter.key)
-                    {
-                        case "chapter1":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls);
-                            break;
-                        case "chapter2":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_battle_girls);
-                            break;
-                        case "chapter3":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_battle_girls);
-                            break;
-                    }
-                    break;
-            }
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastStartedStageData,
+                new FTUELernActions
+                {
+                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls),
+                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_battle_girls),
+                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_battle_girls)
+                });
 
             await Task.CompletedTask;
         }
@@ -213,6 +206,7 @@ namespace Overlewd
                 rarityHeroic.SetActive(characterData.isHeroic);
                 
                 weapon.gameObject.SetActive(characterData.hasEquipment);
+                cellBackground.SetActive(!characterData.hasEquipment);
                 
                 if (weapon.gameObject.activeSelf)
                 {

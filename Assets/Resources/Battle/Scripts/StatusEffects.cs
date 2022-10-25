@@ -24,9 +24,6 @@ namespace Overlewd
         private float blessDOT => cc.bless_dot;
         private float curseDOT => cc.curse_dot;
 
-        [HideInInspector]
-        public bool withDescription = false;
-
         private TextMeshProUGUI
             focus_tmp, blind_tmp,
             defUp_tmp, defDown_tmp,
@@ -48,33 +45,33 @@ namespace Overlewd
 
         private void Awake()
         {
-            focus_obj = transform.Find("focus");
-            blind_obj = transform.Find("blind");
-            defUp_obj = transform.Find("defense_up");
-            defDown_obj = transform.Find("defense_down");
-            regen_obj = transform.Find("regeneration");
-            poison_obj = transform.Find("poison");
-            bless_obj = transform.Find("bless");
+            focus_obj     = transform.Find("focus");
+            blind_obj     = transform.Find("blind");
+            defUp_obj     = transform.Find("defense_up");
+            defDown_obj   = transform.Find("defense_down");
+            regen_obj     = transform.Find("regeneration");
+            poison_obj    = transform.Find("poison");
+            bless_obj     = transform.Find("bless");
             healBlock_obj = transform.Find("heal_block");
-            immunity_obj = transform.Find("immunity");
-            silence_obj = transform.Find("silence");
-            curse_obj = transform.Find("curse");
-            stun_obj = transform.Find("stun");
+            immunity_obj  = transform.Find("immunity");
+            silence_obj   = transform.Find("silence");
+            curse_obj     = transform.Find("curse");
+            stun_obj      = transform.Find("stun");
 
-            focus_tmp = focus_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            blind_tmp = blind_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            defUp_tmp = defUp_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            defDown_tmp = defDown_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            regen_tmp = regen_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            poison_tmp = poison_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            bless_tmp = bless_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            healBlock_tmp = healBlock_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            immunity_tmp = immunity_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            silence_tmp = silence_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
-            curse_tmp = curse_obj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            focus_tmp = focus_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            blind_tmp = blind_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            defUp_tmp = defUp_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            defDown_tmp = defDown_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            regen_tmp = regen_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            poison_tmp = poison_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            bless_tmp = bless_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            healBlock_tmp = healBlock_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            immunity_tmp = immunity_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            silence_tmp = silence_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
+            curse_tmp = curse_obj?.transform.Find("text").GetComponent<TextMeshProUGUI>();
         }
 
-        public void UpdateStatuses()
+        public void UpdateStatuses(bool withDescription = false)
         {
             ApplyStat(focus_blind, focus_obj, focus_tmp);
             ApplyStat(focus_blind, blind_obj, blind_tmp, buff: false);
@@ -92,7 +89,7 @@ namespace Overlewd
             ApplyStat(curse, curse_obj, curse_tmp);
             ApplyStat(silence, silence_obj, silence_tmp);
 
-            stun_obj.gameObject.SetActive(stun);
+            stun_obj?.gameObject.SetActive(stun);
 
             if (withDescription)
                 foreach (Transform item in transform) //init skill description text field
@@ -110,29 +107,39 @@ namespace Overlewd
                         descriptionTMP.text = descriptionTMP.text.Replace("%N%", $"<size=125%>{Math.Round(curseDOT*100)}%</size>");
                 }
         }
-        public bool StatusCheck()
+        public bool StatusCheck(bool isBuff = true)
         {
-            if (focus_blind == 0 && defUp_defDown == 0
-                && bless_healBlock == 0 && regen_poison == 0
-                && immunity == 0 && curse == 0 && silence == 0 && !stun)
-                return false;
+            if (isBuff)
+            {
+                if (focus_blind > 0 || defUp_defDown > 0
+                || bless_healBlock > 0 || regen_poison > 0
+                || immunity > 0)
+                    return true;
+                else
+                    return false;
+            }
             else
-                return true;
+            {
+                if (focus_blind < 0 || defUp_defDown < 0
+                || bless_healBlock < 0 || regen_poison < 0
+                || curse > 0 || silence > 0 || stun)
+                    return true;
+                else
+                    return false;
+            }
         }
         void ApplyStat(int effect, Transform icon, TextMeshProUGUI text, bool buff = true)
         {
             if (effect == 0)
-            {
-                icon.gameObject.SetActive(false);
-                
-            }
+                icon?.gameObject.SetActive(false);
             else
             {
                 if (buff)
-                    icon.gameObject.SetActive(effect > 0);
+                    icon?.gameObject.SetActive(effect > 0);
                 else
-                    icon.gameObject.SetActive(effect < 0);
-                text.text = (Mathf.Abs(effect) > 1) ? Mathf.Abs(effect).ToString() : "";
+                    icon?.gameObject.SetActive(effect < 0);
+                if (text != null)
+                    text.text = (Mathf.Abs(effect) > 1) ? Mathf.Abs(effect).ToString() : "";
             }
         }
     }

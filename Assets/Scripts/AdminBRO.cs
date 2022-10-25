@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using Newtonsoft.Json;
 using System.Linq;
 using TMPro;
+using System.Text;
 
 namespace Overlewd
 {
@@ -44,6 +45,7 @@ namespace Overlewd
         {
             public int? amount;
             public int? tradableId;
+            public float? probability;
 
             [JsonProperty(Required = Required.Default)]
             public AdminBRO.TradableItem tradableData =>
@@ -54,6 +56,15 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string tmpSprite => tradableData?.tmpCurrencySprite;
+        }
+
+        [Serializable]
+        public class GenRewardItem
+        {
+            public int? amount;
+            public int? tradableId;
+            public int? entityUserProgressId;
+            public string rarity;
         }
 
         [Serializable]
@@ -161,6 +172,11 @@ namespace Overlewd
             var form = new WWWForm();
             form.AddField("name", name);
             form.AddField("currentVersion", HttpCore.ApiVersion);
+            if (NutakuApi.loggedIn)
+            {
+                form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApi.userInfo), Encoding.UTF8);
+            }
+
             using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me", form, tokens?.accessToken))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
@@ -367,6 +383,7 @@ namespace Overlewd
             public bool soldOut;
             public int? matriarchShardId;
             public string rarity;
+            public int? ingredientId;
 
             public const string Type_Default = "default";
             public const string Type_Currency = "currency";
@@ -379,6 +396,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool nutakuPriceValid =>
+                (price.Count == 1) && (price.First().currencyData?.nutaku ?? false);
 
             public string GetIconByRarity(string rarity, int? entityId = null) => type switch
             {
@@ -492,8 +513,10 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isComplete {
-                get {
+            public bool isComplete
+            {
+                get
+                {
                     foreach (var stageId in stages)
                     {
                         var stageData = GetStageById(stageId);
@@ -553,6 +576,8 @@ namespace Overlewd
             public List<int> currencies;
             public string mapBackgroundImage;
             public string mapBannerImage;
+            public string marketBannerImage;
+            public string overlayBannerImage;
             public string eventListBannerImage;
             public string bannerOverlayText;
             public List<int> markets;
@@ -1070,6 +1095,9 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
+
+            public CharacterSkill GetSkillByType(string type) =>
+                skills.FirstOrDefault(s => s.type == type);
             
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
@@ -1121,7 +1149,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isSexSceneOpen => sexSceneId.HasValue;
-            
+
             [JsonProperty(Required = Required.Default)]
             public bool hasEquipment => equipment.Count > 0;
 
@@ -1137,11 +1165,11 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public CharacterSkill basicSkill =>
                 skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Attack);
-            
+
             [JsonProperty(Required = Required.Default)]
             public CharacterSkill ultimateSkill =>
                 skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Enhanced);
-            
+
             [JsonProperty(Required = Required.Default)]
             public CharacterSkill passiveSkill =>
                 skills.FirstOrDefault(s => s.type == AdminBRO.CharacterSkill.Type_Passive);
@@ -1194,6 +1222,27 @@ namespace Overlewd
             public const string Type_Enhanced = "enhanced_attack";
 
             [JsonProperty(Required = Required.Default)]
+            public string effectSprite => effect switch
+            {
+                SkillEffect.Key_Bless => TMPSprite.BuffBless,
+                SkillEffect.Key_DefenceUp => TMPSprite.BuffDefenceUp,
+                SkillEffect.Key_Dispel => TMPSprite.BuffDispell,
+                SkillEffect.Key_Focus => TMPSprite.BuffFocus,
+                SkillEffect.Key_Immunity => TMPSprite.BuffImmunity,
+                SkillEffect.Key_Regeneration => TMPSprite.BuffRegeneration,
+                SkillEffect.Key_Safeguard => TMPSprite.BuffSafeguard,
+                SkillEffect.Key_AttackUp => TMPSprite.BuffAttackUp,
+                SkillEffect.Key_Blind => TMPSprite.DebuffBlind,
+                SkillEffect.Key_Curse => TMPSprite.DebuffCurse,
+                SkillEffect.Key_DefenceDown => TMPSprite.DebuffDefenceDown,
+                SkillEffect.Key_HealBlock => TMPSprite.DebuffHealBlock,
+                SkillEffect.Key_Posion => TMPSprite.DebuffPoison,
+                SkillEffect.Key_Silence => TMPSprite.DebuffSilence,
+                SkillEffect.Key_Stun => TMPSprite.DebuffStun,
+                _ => null
+            };
+            
+            [JsonProperty(Required = Required.Default)]
             public Animation vfxSelf => GameData.animations.GetById(vfxSelfId);
 
             [JsonProperty(Required = Required.Default)]
@@ -1214,6 +1263,23 @@ namespace Overlewd
         {
             public string name;
             public string description;
+
+            public const string Key_Bless = "bless";
+            public const string Key_Blind = "blind";
+            public const string Key_Curse = "curse";
+            public const string Key_DefenceDown = "defence_down";
+            public const string Key_DefenceUp = "defence_up";
+            public const string Key_Dispel = "dispel";
+            public const string Key_Focus = "focus";
+            public const string Key_HealBlock = "heal_block";
+            public const string Key_Immunity = "immunity";
+            public const string Key_Posion = "poison";
+            public const string Key_Regeneration = "regeneration";
+            public const string Key_Safeguard = "safeguard";
+            public const string Key_Silence = "silence";
+            public const string Key_Stun = "stun";
+            public const string Key_AttackUp = "attack_up";
+            
         }
 
         [Serializable]
@@ -1309,15 +1375,52 @@ namespace Overlewd
             public bool isEquipped => characterId.HasValue;
 
             [JsonProperty(Required = Required.Default)]
-            public int rarityLevel => rarity switch
+            public int raritySortLevel => rarity switch
             {
-                Rarity.Basic => 10,
-                Rarity.Advanced => 20,
-                Rarity.Epic => 30,
-                Rarity.Heroic => 40,
+                Rarity.Basic => 1,
+                Rarity.Advanced => 2,
+                Rarity.Epic => 3,
+                Rarity.Heroic => 4,
                 _ => 0
             };
 
+            [JsonProperty(Required = Required.Default)]
+            public int classSortLevel => characterClass switch
+            {
+                Class_Assassin => 1,
+                Class_Bruiser => 2,
+                Class_Tank => 3,
+                Class_Caster => 4,
+                Class_Healer => 5,
+                Class_Overlord => 6,
+                _ => 0
+            };
+
+            [JsonProperty(Required = Required.Default)]
+            public int typeSortLevel => equipmentType switch
+            {
+                Type_OverlordThighs => 1,
+                Type_OverlordHelmet => 2,
+                Type_OverlordBoots => 3,
+                Type_OverlordHarness => 4,
+                Type_OverlordWeapon => 5,
+                Type_OverlordGloves => 6,
+                Type_CharacterWeapon => 7,
+                _ => 0
+            };
+            
+            [JsonProperty(Required = Required.Default)]
+            public string classMarker => characterClass switch
+            {
+                Class_Assassin => TMPSprite.ClassAssassin,
+                Class_Bruiser => TMPSprite.ClassBruiser,
+                Class_Caster => TMPSprite.ClassCaster,
+                Class_Healer => TMPSprite.ClassHealer,
+                Class_Overlord => TMPSprite.ClassOverlord,
+                Class_Tank => TMPSprite.ClassTank,
+                _ => ""
+            };
+            
             [JsonProperty(Required = Required.Default)]
             public string icon => GetIconByRarity(rarity);
 
@@ -1329,9 +1432,9 @@ namespace Overlewd
                 Rarity.Heroic => heroicIcon,
                 _ => null
             };
-            
+
             public bool IsMyClass(string chClass) => chClass == characterClass;
-            
+
             public bool IsMy(int? myId) => isEquipped && myId == characterId;
         }
 
@@ -1377,11 +1480,25 @@ namespace Overlewd
             public int? order;
             public int? battleEnergyPointsCost;
 
-            public FTUENotificationItem GetNotifByKey(string key)
-            {
-                return notifications.Find(n => n.key == key);
-            }
+            [JsonProperty(Required = Required.Default)]
+            public List<FTUEStageItem> stagesData => stages.Select(sId => GetStageById(sId)).Where(s => s != null).ToList();
 
+            [JsonProperty(Required = Required.Default)]
+            public bool isComplete => !stagesData.Exists(s => !s.isComplete);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isActive => GameData.ftue.activeChapter == this;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isOpen => GameData.devMode ? true : (isComplete || isActive);
+
+            [JsonProperty(Required = Required.Default)]
+            public FTUEChapter nextChapterData => GameData.ftue.GetChapterById(nextChapterId);
+
+            public FTUENotificationItem GetNotifByKey(string key) => notifications.Find(n => n.key == key);
+            public FTUEStageItem GetStageById(int? id) => GameData.ftue.GetStageById(id);
+            public FTUEStageItem GetStageByKey(string key) => stagesData.Find(s => s.key == key);
+            public AdminBRO.FTUEChapter SetAsMapChapter() => GameData.ftue.mapChapter = this;
             public void ShowNotifByKey(string key, bool checkShowRestriction = true)
             {
                 var notifData = GetNotifByKey(key);
@@ -1401,68 +1518,12 @@ namespace Overlewd
                     notifData.isShown = true;
                 }
             }
-
-            public FTUEChapter SetAsMapChapter() =>
-                GameData.ftue.mapChapter = this;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isComplete {
-                get {
-                    foreach (var stageId in stages)
-                    {
-                        var stageData = GetStageById(stageId);
-                        if (!stageData?.isComplete ?? true)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            }
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isActive => GameData.ftue.activeChapter == this;
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isOpen => GameData.devMode ? true : (isComplete || isActive);
-
-            [JsonProperty(Required = Required.Default)]
-            public FTUEChapter nextChapterData =>
-                GameData.ftue.info.GetChapterById(nextChapterId);
-
-            public FTUEStageItem GetStageById(int? id) =>
-                GameData.ftue.stages.Find(s => s.id == id);
-            public FTUEStageItem GetStageByKey(string key) =>
-                GameData.ftue.stages.Find(s => s.key == key && s.ftueChapterId == id);
         }
 
         [Serializable]
         public class FTUEInfo
         {
             public List<FTUEChapter> chapters;
-
-            [JsonProperty(Required = Required.Default)]
-            public FTUEChapter chapter1 => GetChapterByKey("chapter1");
-
-            [JsonProperty(Required = Required.Default)]
-            public FTUEChapter chapter2 => GetChapterByKey("chapter2");
-
-            [JsonProperty(Required = Required.Default)]
-            public FTUEChapter chapter3 => GetChapterByKey("chapter3");
-
-            public FTUEChapter GetChapterByKey(string key) =>
-                chapters.Find(ch => ch.key == key);
-            public FTUEChapter GetChapterById(int? id) =>
-                chapters.Find(ch => ch.id == id);
-            public FTUEStageItem GetStageById(int? id) =>
-                GameData.ftue.stages.Find(s => s.id == id);
-            public FTUEStageItem GetStageByKey(string stageKey, int chapterId) =>
-                GetChapterById(chapterId).GetStageByKey(stageKey);
-            public FTUEStageItem GetStageByKey(string stageKey, string chapterKey) =>
-                GetChapterByKey(chapterKey).GetStageByKey(stageKey);
-            public bool StageIsComplete(string stageKey, string chapterKey) =>
-                GetStageByKey(stageKey, chapterKey).isComplete;
-
         }
 
         // ftue/stats
@@ -1484,25 +1545,15 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastStartedStageData =>
-                GameData.ftue.info.GetStageById(lastStartedStage);
+                GameData.ftue.GetStageById(lastStartedStage);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastUpdatedStageData =>
-                GameData.ftue.info.GetStageById(lastUpdatedStage);
+                GameData.ftue.GetStageById(lastUpdatedStage);
 
             [JsonProperty(Required = Required.Default)]
             public FTUEStageItem lastEndedStageData =>
-                GameData.ftue.info.GetStageById(lastEndedStage);
-
-            [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey)? lastEndedState =>
-                GameData.devMode switch {
-                    false => (lastEndedStageData?.key, lastEndedStageData?.ftueChapterData?.key),
-                    _ => null
-                };
-
-            public bool IsLastEnededStage(string stageKey, string chapterKey) =>
-                lastEndedState == (stageKey, chapterKey);
+                GameData.ftue.GetStageById(lastEndedStage);
         }
 
         // /ftue-stages
@@ -1540,7 +1591,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public FTUEChapter ftueChapterData =>
-                GameData.ftue.info.GetChapterById(ftueChapterId);
+                GameData.ftue.GetChapterById(ftueChapterId);
 
             [JsonProperty(Required = Required.Default)]
             public Dialog dialogData =>
@@ -1561,14 +1612,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isClosed => status == Status_Closed;
-
-            [JsonProperty(Required = Required.Default)]
-            public (string stageKey, string chapterKey)? ftueState =>
-                GameData.devMode switch
-                {
-                    false => (key, ftueChapterData?.key),
-                    _ => null
-                };
         }
 
         // /ftue-stages/{id}/start
@@ -1583,13 +1626,13 @@ namespace Overlewd
         }
 
         // /ftue-stages/{id}/end
-        public static async Task ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
+        public static async Task<List<GenRewardItem>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
         {
             var url = $"http://api.overlewd.com/ftue-stages/{stageId}/end";
             var form = data?.ToWWWForm() ?? new WWWForm();
             using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
             {
-
+                return JsonHelper.DeserializeObject<List<GenRewardItem>>(request?.downloadHandler.text);
             }
         }
 
@@ -1848,12 +1891,13 @@ namespace Overlewd
             public string type;
             public CharacterSkill current;
             public CharacterSkill next;
-            public int currentSkillLevel;
-            public int requiredBuildingLevel;
-            public int maxSkillLevel;
+            public int? currentSkillLevel;
+            public int? requiredBuildingLevel;
+            public int? maxSkillLevel;
             public int skillId;
             public List<PriceItem> price;
             public List<PriceItem> priceCrystal;
+            public bool locked;
 
             [JsonProperty(Required = Required.Default)]
             public bool isLvlMax => currentSkillLevel == maxSkillLevel;
@@ -1939,7 +1983,8 @@ namespace Overlewd
             public class MergeEquipmentSettings
             {
                 public string mergeType;
-                public int mergeCount;
+                public int mergeAmount;
+                public int maxPossibleResultAmount;
                 public List<MergePrice> pricesOfMergeType;
 
                 public List<PriceItem> GetPrice(string rarity) =>
@@ -1971,6 +2016,34 @@ namespace Overlewd
                 public string rarity;
                 public List<PriceItem> price;
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentCharacterSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_battle_character");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordHelmetSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_helmet");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordWeaponSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_weapon");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordGlovesSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_gloves");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordThighsSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_thighs");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordBootsSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_boots");
+
+            [JsonProperty(Required = Required.Default)]
+            public MergeEquipmentSettings mergeEquipmentOverlordHarnessSettings =>
+                mergeEquipmentSettings.Find(ms => ms.mergeType == "merge_overlord_harness");
         }
 
         // gacha
@@ -2009,6 +2082,7 @@ namespace Overlewd
             public int? tradableId;
             public int? entityUserProgressId;
             public string rarity;
+            public int amount;
 
             [JsonProperty(Required = Required.Default)]
             public TradableItem tradableData =>
@@ -2198,8 +2272,8 @@ namespace Overlewd
                 name switch
                 {
                     Key_Ulvi => true,
-                    Key_Adriel => GameData.ftue.info.chapter1.GetStageByKey("dialogue3").isComplete,
-                    Key_Ingie => GameData.ftue.info.chapter2.GetStageByKey("dialogue4").isComplete,
+                    Key_Adriel => GameData.ftue.chapter1_stages.dialogue3.isComplete,
+                    Key_Ingie => GameData.ftue.chapter2_stages.dialogue4.isComplete,
                     Key_Faye => false,
                     Key_Lili => false,
                     _ => false
@@ -2358,6 +2432,106 @@ namespace Overlewd
             public const string Type_energy = "energy";
             public const string Type_replay = "replay";
         }
-        
+
+        // /nutaku
+        // /nutaku/settings
+        public static async Task<NutakuSettings> nutakuSettingsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/nutaku/settings";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<NutakuSettings>(request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class NutakuSettings
+        {
+            public string callbackUrl;
+            public string completeUrl;
+        }
+
+        // /alchemy
+        // /alchemy/my/ingredients
+        // /alchemy/my/mixtures
+        // /alchemy/recipes
+        // /alchemy/brew
+        public static async Task<List<AlchemyIngredient>> alchemyIngredientsAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/alchemy/my/ingredients";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<AlchemyIngredient>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<AlchemyMixture>> alchemyMixturesAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/alchemy/my/mixtures";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<AlchemyMixture>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<List<AlchemyRecipe>> alchemyRecipesAsync()
+        {
+            var url = $"https://overlewd-api.herokuapp.com/alchemy/recipes";
+            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<List<AlchemyRecipe>>(request?.downloadHandler.text);
+            }
+        }
+
+        public static async Task<BrewResult> alchemyBrewAsync(int[] ingredientIds)
+        {
+            var url = $"http://api.overlewd.com/alchemy/brew";
+            var form = new WWWForm();
+            form.AddField("ingredientIds", JsonHelper.SerializeObject(ingredientIds));
+            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            {
+                return JsonHelper.DeserializeObject<BrewResult> (request?.downloadHandler.text);
+            }
+        }
+
+        [Serializable]
+        public class AlchemyIngredient
+        {
+            public int ingredientId;
+            public int amount;
+            public string name;
+            public int dropChance;
+            public int dropChanceBoss;
+            public string icon;
+        }
+
+        [Serializable]
+        public class AlchemyMixture
+        {
+            public int mixtureId;
+            public int amount;
+            public string name;
+            public int magnitude;
+            public string mixtureType;
+            public string effectDescription;
+            public string icon;
+        }
+
+        [Serializable]
+        public class AlchemyRecipe
+        {
+            public int recipeId;
+            public string recipeName;
+            public List<int> ingredientIds;
+            public int resultMixtureId;
+        }
+
+        [Serializable]
+        public class BrewResult
+        {
+            public string result;
+            public int? usedRecipeId;
+            public int? resultMixtureId;
+        }
     }
 }

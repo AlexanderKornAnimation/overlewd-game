@@ -10,7 +10,7 @@ namespace Overlewd
         {
             public int? chapterId { get; set; }
 
-            public AdminBRO.FTUEChapter chapterData => GameData.ftue.info.GetChapterById(chapterId);
+            public AdminBRO.FTUEChapter chapterData => GameData.ftue.GetChapterById(chapterId);
 
             private void Start()
             {

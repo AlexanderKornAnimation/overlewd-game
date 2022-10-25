@@ -116,36 +116,41 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             ulviBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ulvi.buff?.icon);
-            ulviBuffDescription.text = GameData.matriarchs.Ulvi.buff?.description;
             ulviBuffActive.SetActive(GameData.matriarchs.Ulvi.buff?.active ?? false);
+            ulviBuffDescription.text = 
+                UITools.ChangeTextSize(GameData.matriarchs.Ulvi.buff?.description, ulviBuffDescription.fontSize);
 
             adrielActive.gameObject.SetActive(GameData.matriarchs.Adriel.isOpen);
             adrielNotActive.gameObject.SetActive(!GameData.matriarchs.Adriel.isOpen);
             adrielButton.interactable = GameData.matriarchs.Adriel.isOpen;
             adrielBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Adriel.buff?.icon);
-            adrielBuffDescription.text = GameData.matriarchs.Adriel.buff?.description;
             adrielBuffActive.SetActive(GameData.matriarchs.Adriel.buff?.active ?? false);
+            adrielBuffDescription.text = 
+                UITools.ChangeTextSize(GameData.matriarchs.Adriel.buff?.description, adrielBuffDescription.fontSize);
 
             ingieActive.gameObject.SetActive(GameData.matriarchs.Ingie.isOpen);
             ingieNotActive.gameObject.SetActive(!GameData.matriarchs.Ingie.isOpen);
             ingieButton.interactable = GameData.matriarchs.Ingie.isOpen;
             ingieBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ingie.buff?.icon);
-            ingieBuffDescription.text = GameData.matriarchs.Ingie.buff?.description;
             ingieBuffActive.SetActive(GameData.matriarchs.Ingie.buff?.active ?? false);
+            ingieBuffDescription.text = 
+                UITools.ChangeTextSize(GameData.matriarchs.Ingie.buff?.description, ingieBuffDescription.fontSize);
 
             fayeActive.gameObject.SetActive(GameData.matriarchs.Faye.isOpen);
             fayeNotActive.gameObject.SetActive(!GameData.matriarchs.Faye.isOpen);
             fayeButton.interactable = GameData.matriarchs.Faye.isOpen;
             fayeBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Faye.buff?.icon);
-            fayeBuffDescription.text = GameData.matriarchs.Faye.buff?.description;
             fayeBuffActive.SetActive(GameData.matriarchs.Faye.buff?.active ?? false);
+            fayeBuffDescription.text =
+                UITools.ChangeTextSize(GameData.matriarchs.Faye.buff?.description, fayeBuffDescription.fontSize);
 
             liliActive.gameObject.SetActive(GameData.matriarchs.Lili.isOpen);
             liliNotActive.gameObject.SetActive(!GameData.matriarchs.Lili.isOpen);
             liliButton.interactable = GameData.matriarchs.Lili.isOpen;
             liliBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Lili.buff?.icon);
-            liliBuffDescription.text = GameData.matriarchs.Lili.buff?.description;
             liliBuffActive.SetActive(GameData.matriarchs.Lili.buff?.active ?? false);
+            liliBuffDescription.text =
+                UITools.ChangeTextSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
 
             if (inputData?.prevScreenInData != null)
             {
@@ -160,23 +165,14 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case (_, _):
-                    switch (GameData.ftue.activeChapter.key)
-                    {
-                        case "chapter1":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_harem);
-                            break;
-                        case "chapter2":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_harem);
-                            break;
-                        case "chapter3":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_harem);
-                            break;
-                    }
-                    break;
-            }
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_harem),
+                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_harem),
+                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_harem)
+                });
 
             await Task.CompletedTask;
         }

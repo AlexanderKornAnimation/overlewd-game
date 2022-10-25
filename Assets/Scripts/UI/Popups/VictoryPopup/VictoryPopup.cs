@@ -73,35 +73,26 @@ namespace Overlewd
                 rewards[i].gameObject.SetActive(true);
             }
 
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle1", "chapter1"):
-                    UITools.DisableButton(repeatButton);
-                    break;
-            }
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_b1 = () => UITools.DisableButton(repeatButton)
+                });
 
             await Task.CompletedTask;
         }
 
         public override async Task AfterShowAsync()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case (_, _):
-                    switch (GameData.ftue.activeChapter.key)
-                    {
-                        case "chapter1":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Winning_a_battle);
-                            break;
-                        case "chapter2":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Winning_a_battle);
-                            break;
-                        case "chapter3":
-                            SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Winning_a_battle);
-                            break;
-                    }
-                    break;
-            }
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Winning_a_battle),
+                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Winning_a_battle),
+                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Winning_a_battle)
+                });
 
             await Task.CompletedTask;
         }
@@ -114,24 +105,25 @@ namespace Overlewd
 
         private void NextButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);            
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("battle4", "chapter1"):
-                    UIManager.ShowScreen<CastleScreen>();
-                    break;
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                default:
-                    if (inputData.ftueStageId.HasValue)
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_b4 = () => UIManager.ShowScreen<CastleScreen>(),
+                    def = () =>
                     {
-                        UIManager.ShowScreen<MapScreen>();
+                        if (inputData.ftueStageId.HasValue)
+                        {
+                            UIManager.ShowScreen<MapScreen>();
+                        }
+                        else if (inputData.eventStageId.HasValue)
+                        {
+                            UIManager.ShowScreen<EventMapScreen>();
+                        }
                     }
-                    else if (inputData.eventStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<EventMapScreen>();
-                    }
-                    break;
-            }
+                });
         }
 
         private void RepeatButtonClick()

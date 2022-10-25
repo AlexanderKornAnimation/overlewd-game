@@ -327,7 +327,7 @@ namespace Overlewd
             var time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             while (!String.IsNullOrEmpty(time))
             {
-                sexCooldownTimer.text = time;
+                sexCooldownTimer.text = UITools.ChangeTextSize(time, sexCooldownTimer.fontSize);
                 yield return new WaitForSeconds(1.0f);
                 time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             }

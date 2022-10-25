@@ -216,7 +216,8 @@ namespace Overlewd
             unactiveBannerImage.gameObject.SetActive(!canCollect);
             timerProgress.gameObject.SetActive(!canCollect);
             
-            timer.text = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
+            var timeStr = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
+            timer.text = UITools.ChangeTextSize(timeStr, timer.fontSize);
             timerProgress.fillAmount = timeLeftMs / (GameData.buildings.municipality.settings.periodInSeconds * 1000.0f);
             activeBannerImage.gameObject.SetActive(canCollect);
             collectButton.interactable = canCollect;
@@ -242,17 +243,18 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            //ftue part
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case ("battle4", "chapter1"):
-                    if (!GameData.buildings.castle.meta.isBuilt)
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_b4 = () =>
                     {
-                        GameData.ftue.info.chapter1.ShowNotifByKey("quickbuildtutor");
+                        if (!GameData.buildings.castle.meta.isBuilt)
+                        {
+                            GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
+                        }
                     }
-
-                    break;
-            }
+                });
 
             await Task.CompletedTask;
         }

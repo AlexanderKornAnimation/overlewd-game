@@ -71,21 +71,20 @@ namespace Overlewd
             }
 
             public bool isFilled => consumeMtrch != null;
-            public int mergeAmount =>
-                GameData.buildings.forge.prices.mergeShardSettings.mergeAmount;
-            public int maxShardsResult =>
-                GameData.buildings.forge.prices.mergeShardSettings.maxPossibleResultAmount;
-            public int? shardsCount =>
+            public int mergeAmount => mergeSettings.mergeAmount;
+            public int maxShardsResult => mergeSettings.maxPossibleResultAmount;
+            public int? shardsCount => 
                 GameData.matriarchs.GetShardByMatriarchId(consumeMtrch?.matriarchData?.id,
                     shardsCtrl.MergeRaritySelected())?.amount;
             public int shardsNeeded => targetCountValue * mergeAmount;
             public List<AdminBRO.PriceItem> mergePrice =>
-                UITools.PriceMul(GameData.buildings.forge.prices.mergeShardSettings.
-                    GetPrice(shardsCtrl.MergeRaritySelected()),
+                UITools.PriceMul(mergeSettings.GetPrice(shardsCtrl.MergeRaritySelected()),
                     targetCountValue);
             public bool canMerge =>
                 GameData.player.CanBuy(mergePrice) &&
                 shardsCount >= shardsNeeded;
+            public AdminBRO.ForgePrice.MergeShardSettings mergeSettings =>
+                GameData.buildings.forge.prices.mergeShardSettings;
         }
     }
 }

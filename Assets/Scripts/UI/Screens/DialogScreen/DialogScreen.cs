@@ -104,12 +104,12 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case (_, _):
-                    skipButton.gameObject.SetActive(GameData.ftue.info.chapter1.GetStageByKey("battle3").isComplete);
-                    break;
-            } 
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    any_any = () => skipButton.gameObject.SetActive(GameData.ftue.chapter1_stages.battle3.isComplete)
+                });
 
             await Task.CompletedTask;
         }
@@ -167,32 +167,36 @@ namespace Overlewd
 
         private void LeaveScreen()
         {
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case ("dialogue1", "chapter1"):
-                    UIManager.MakeScreen<BattleScreen>().
-                        SetData(new BaseBattleScreenInData
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_d1 = () =>
+                    {
+                        UIManager.MakeScreen<BattleScreen>().
+                           SetData(new BaseBattleScreenInData
+                           {
+                               ftueStageId = GameData.ftue.chapter1_stages.battle1.id
+                           }).RunShowScreenProcess();
+                    },
+                    def = () =>
+                    {
+                        if (inputData.eventStageId.HasValue)
                         {
-                            ftueStageId = GameData.ftue.mapChapter.GetStageByKey("battle1")?.id
-                        }).RunShowScreenProcess();
-                    break;
-                default:
-                    if (inputData.eventStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<EventMapScreen>();
+                            UIManager.ShowScreen<EventMapScreen>();
+                        }
+                        else if (inputData.ftueStageId.HasValue)
+                        {
+                            UIManager.ShowScreen<MapScreen>();
+                        }
+                        else
+                        {
+                            UIManager.MakeScreen<GirlScreen>().
+                                SetData(inputData.prevScreenInData.As<GirlScreenInData>())
+                                .RunShowScreenProcess();
+                        }
                     }
-                    else if (inputData.ftueStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<MapScreen>();
-                    }
-                    else
-                    {
-                        UIManager.MakeScreen<GirlScreen>().
-                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                            .RunShowScreenProcess();
-                    }
-                    break;
-            }
+                });
         }
 
         private void HideCharacterByName(string keyName)

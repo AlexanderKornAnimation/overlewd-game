@@ -19,10 +19,10 @@ namespace Overlewd
         public GameObject popUpPrefab;
         public Transform selfVFX, topVFX, topVFX_L, topVFX_R;
 
-        private List<AdminBRO.CharacterSkill> skillStash = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> skill = new List<AdminBRO.CharacterSkill>();
         public List<AdminBRO.CharacterSkill> passiveSkill = new List<AdminBRO.CharacterSkill>();
-        private List<AdminBRO.Sound> sound = new List<AdminBRO.Sound>() { null, null, null };
+        public Dictionary<AdminBRO.CharacterSkill, int> skillCD = new Dictionary<AdminBRO.CharacterSkill, int>(5);
+        private List<AdminBRO.Sound> skillSFX = new List<AdminBRO.Sound>(3) { null, null, null };
 
         //New Resources:
         private string ani_idle_name = "idle";
@@ -49,7 +49,8 @@ namespace Overlewd
 
 
         public float zoomSpeed = 0.15f;
-        private float idleScale = 1f, battleScale = 1.5f;
+        private float idleScale = .9f, battleScale = 1.5f;
+        private float overIdleScale = .85f, overBattleScale = 1.4f; //0.93f
         public int battleOrder = 1;
         public float health = 100, healthMax = 100;
         public float mana = 100, manaMax = 100;
@@ -126,36 +127,43 @@ namespace Overlewd
             if (isOverlord)
             {
                 bm.overlord = this;
-                idleScale = 0.93f;
-                battleScale = 1.4f;
+                idleScale = overIdleScale;
+                battleScale = overBattleScale;
             }
             health = (float)character.health;
             healthMax = health;
             mana = (float)character.mana;
             manaMax = mana;
             if (isBoss) battleScale = 1f;
-            skillStash = character.skills;
+            var skillStash = character.skills;
+            foreach (var sk in skillStash)
+                skillCD.Add(sk, 0);
+            AdminBRO.CharacterSkill tempSK = null;
             if (isOverlord)
             {
-                passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_first_passive_skill"));
-                passiveSkill.Add(skillStash?.Find(f => f.type == "overlord_second_passive_skill"));
-                skill.Add(skillStash?.Find(f => f.type == "overlord_attack"));
-                //skip other skills if MagicGuild is unavailable (chapter 1 & 2)
-                if (bm.MagicGuildChecker() == true)
-                {
-                    skill.Add(skillStash?.Find(f => f.type == "overlord_enhanced_attack"));
-                    skill.Add(skillStash?.Find(f => f.type == "overlord_ultimate_attack"));
-                }
+                tempSK = skillStash?.Find(f => f.type == "overlord_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_enhanced_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_ultimate_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_first_passive_skill");
+                if (tempSK != null) passiveSkill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "overlord_second_passive_skill");
+                if (tempSK != null) passiveSkill.Add(tempSK);
             }
             else
             {
-                passiveSkill.Add(skillStash?.Find(f => f.type == "passive_skill"));
-                skill.Add(skillStash?.Find(f => f.type == "attack"));
-                skill.Add(skillStash?.Find(f => f.type == "enhanced_attack"));
+                tempSK = skillStash?.Find(f => f.type == "attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "enhanced_attack");
+                if (tempSK != null) skill.Add(tempSK);
+                tempSK = skillStash?.Find(f => f.type == "passive_skill");
+                if (tempSK != null) passiveSkill.Add(tempSK);
             }
-            sound[0] = (character.sfxAttack1 != null ? character.sfxAttack1 : skill[0].sfxAttack);
-            if (skill.Count > 1) sound[1] = (character.sfxAttack2 != null ? character.sfxAttack2 : skill[1].sfxAttack);
-            if (skill.Count > 2) sound[2] = (skill[2].sfxAttack);
+            skillSFX[0] = (character.sfxAttack1 != null ? character.sfxAttack1 : skill[0].sfxAttack);
+            if (skill.Count > 1) skillSFX[1] = (character.sfxAttack2 != null ? character.sfxAttack2 : skill[1].sfxAttack);
+            if (skill.Count > 2) skillSFX[2] = (skill[2].sfxAttack);
         }
         private void ShapeInit()
         {
@@ -210,18 +218,18 @@ namespace Overlewd
             observer.cc = this;
 
             popUpPrefab = Resources.Load("Battle/Prefabs/BattlePopup") as GameObject;
-            charStats.InitUI(this);
+            charStats?.InitUI(this);
         }
 
-        public void CharPortraitSet() => charStats.SetUI(this);
+        public void CharPortraitSet() => charStats?.SetUI(this);
         public void UpdateUI() => observer?.UpdateUI();
 
         public void PlayIdle()
         {
             //if (!isDead)
             //{
-                character.sfxIdle?.Play();
-                spineWidget.PlayAnimation(ani_idle_name, true);
+            character.sfxIdle?.Play();
+            spineWidget.PlayAnimation(ani_idle_name, true);
             //}
         }
 
@@ -257,7 +265,7 @@ namespace Overlewd
             damageTotal *= curseDotScale;
             damageTotal = Mathf.Round(damageTotal);
             spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW                      
-            sound[id]?.Play();                                          //SFX
+            skillSFX[id]?.Play();                                          //SFX
             yield return new WaitForSeconds(preAttackDuration);
             if (skillID.vfxSelf != null)                                //VFX Self
             {
@@ -295,8 +303,6 @@ namespace Overlewd
         {
             BattleIn(AOE);
             var attackerSkill = attacker.skill[id];
-            var attackerPassiveSkill = attacker.passiveSkill[0];
-            //var overlordSecondPassiveSkill = attacker.passiveSkill[1];
 
             yield return new WaitForSeconds(zoomSpeed);
             transform.SetParent(battlePos);
@@ -353,8 +359,8 @@ namespace Overlewd
             }
         }
 
-        public void Highlight() => observer.Border(true);
-        public void UnHiglight() => observer.Border(false);
+        public void Highlight() => observer?.Border(true);
+        public void UnHiglight() => observer?.Border(false);
 
         public void BattleIn(bool AOE = false)
         {
@@ -595,12 +601,17 @@ namespace Overlewd
                             log.Add($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}", true);
                             break;
                     }
-                    observer.UpdateStatuses();
+                    observer?.UpdateStatuses();
                 } //else DrawPopup("Effect miss", "red");
         }
 
         void PassiveBuff(AdminBRO.CharacterSkill sk)
         {
+            if (skillCD[sk] > 0) //skip if skill on Cool Down
+                return;
+            else
+                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
+
             bool isCrit = critrate >= Random.value;
             Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb >= Random.value;
@@ -652,11 +663,15 @@ namespace Overlewd
                             log.Add($"Unknow Value or Debuff Effect on Passive Heal AdminBRO.CharacterSkill.effect: {sk.effect}", true);
                             break;
                     }
-                    observer.UpdateStatuses();
+                    observer?.UpdateStatuses();
                 }
         }
         void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
         {
+            if (skillCD[sk] > 0) //skip if skill on Cool Down
+                return;
+            else
+                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
             bool isCrit = critrate >= Random.value;
             targetCC.Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb >= Random.value;
@@ -749,7 +764,7 @@ namespace Overlewd
                             log.Add($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}", true);
                             break;
                     }
-                    observer.UpdateStatuses();
+                    observer?.UpdateStatuses();
                 }
         }
         public void AddEffectManual(string effect)
@@ -778,7 +793,7 @@ namespace Overlewd
             stun = false;
             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
             DrawPopup(msg_dispel, "green", buffDelay);
-            observer.UpdateStatuses();
+            observer?.UpdateStatuses();
         }
         public void Safeguard()
         {
@@ -786,7 +801,7 @@ namespace Overlewd
             {
                 stun = false;
                 DrawPopup("- " + msg_stun, "green", buffDelay);
-                observer.UpdateStatuses();
+                observer?.UpdateStatuses();
                 StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
 
             }
@@ -794,7 +809,7 @@ namespace Overlewd
             {
                 defUp_defDown = 0;
                 DrawPopup("- " + msg_defence_down, "green", buffDelay);
-                observer.UpdateStatuses();
+                observer?.UpdateStatuses();
                 StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
             }
         }
@@ -807,7 +822,11 @@ namespace Overlewd
             if (immunity != 0) immunity--;
             if (silence != 0) silence--;
             if (curse != 0) curse--;
-            observer.UpdateStatuses();
+            foreach (var item in skill) //drop cool down from skills
+                if (skillCD[item] > 0) skillCD[item] -= 1;
+            foreach (var item in passiveSkill) //drop cool down from skills
+                if (skillCD[item] > 0) skillCD[item] -= 1;
+            observer?.UpdateStatuses();
         }
         public void UpadeteDot()
         {
@@ -824,7 +843,7 @@ namespace Overlewd
                 regen_poison -= (int)Mathf.Sign(regen_poison);
                 delay = 0.5f;
             }
-            observer.UpdateStatuses();
+            observer?.UpdateStatuses();
             if (!isDead)
                 StartCoroutine(ChangeState(delay));
         }
@@ -859,8 +878,8 @@ namespace Overlewd
         {
             bm.unselect -= UnHiglight;
             bm.roundEnd -= UpadeteRoundEnd;
-            Destroy(observer.gameObject);
-            if (isEnemy) Destroy(charStats.gameObject);
+            Destroy(observer?.gameObject);
+            //if (isEnemy) Destroy(charStats.gameObject);
         }
     }
 }

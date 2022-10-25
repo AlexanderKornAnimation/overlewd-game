@@ -185,6 +185,9 @@ namespace Overlewd
 
         private async void DoLoading()
         {
+            //wait Nutaku loggedIn
+            await NutakuApi.WaitLoggedIn(this);
+
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
@@ -225,7 +228,9 @@ namespace Overlewd
                 GameData.gacha,
                 GameData.matriarchs,
                 GameData.battlePass,
-                GameData.potions
+                GameData.potions,
+                GameData.nutaku,
+                GameData.alchemy
             };
 
             foreach (var metaSplit in SplitGameMeta(gameMeta, 10))
@@ -300,7 +305,7 @@ namespace Overlewd
         {
             GameData.devMode = false;
             GameData.ftue.activeChapter.SetAsMapChapter();
-            var firstSexStage = GameData.ftue.info.chapter1.GetStageByKey("sex1");
+            var firstSexStage = GameData.ftue.chapter1_stages.sex1;
             if (firstSexStage.isComplete)
             {
                 UIManager.ShowScreen<MapScreen>();

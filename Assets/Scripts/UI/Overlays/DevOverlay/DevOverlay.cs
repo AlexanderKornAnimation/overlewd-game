@@ -96,7 +96,7 @@ namespace Overlewd
             }
             else
             {
-                GameData.ftue.info.chapter1.SetAsMapChapter();
+                GameData.ftue.chapter1.SetAsMapChapter();
                 UIManager.ShowScreen<MapScreen>();
             }
         }

@@ -10,73 +10,44 @@ namespace Overlewd
 {
     public class WeaponScreen : BaseFullScreenParent<WeaponScreenInData>
     {
-        private const int tabAllUnits = 0;
-        private const int tabAssassins = 1;
-        private const int tabCasters = 2;
-        private const int tabHealers = 3;
-        private const int tabBruisers = 4;
-        private const int tabTanks = 5;
-        private const int tabsCount = 6;
+        private const int TabAllUnits = 0;
+        private const int TabAssassins = 1;
+        private const int TabCasters = 2;
+        private const int TabHealers = 3;
+        private const int TabBruisers = 4;
+        private const int TabTanks = 5;
+        private const int TabsCount = 6;
 
         private int activeTabId;
 
-        private Button backButton;
-        private Button portalButton;
-        private Button slotButton;
-
         private string[] tabNames = {"AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks"};
 
-        private int[] tabIds = {tabAllUnits, tabAssassins, tabCasters, tabHealers, tabBruisers, tabTanks};
-        private Button[] tabs = new Button[tabsCount];
-        private GameObject[] pressedTabs = new GameObject[tabsCount];
-        private GameObject[] scrollViews = new GameObject[tabsCount];
-        private Transform[] scrollContents = new Transform[tabsCount];
-
-        private GameObject slotFull;
-        private GameObject slotEmptyHint;
-        private Image weaponIcon;
-        private TextMeshProUGUI speed;
-        private TextMeshProUGUI accuracy;
-        private TextMeshProUGUI power;
-        private TextMeshProUGUI critChance;
-        private TextMeshProUGUI effectDescription;
-        private Image weaponEffectRarity;
+        private int[] tabIds = {TabAllUnits, TabAssassins, TabCasters, TabHealers, TabBruisers, TabTanks};
+        private Button[] tabs = new Button[TabsCount];
+        private GameObject[] pressedTabs = new GameObject[TabsCount];
+        private GameObject[] scrollViews = new GameObject[TabsCount];
+        private Transform[] scrollContents = new Transform[TabsCount];
 
         private List<NSWeaponScreen.Weapon> weapons = new List<NSWeaponScreen.Weapon>();
+        private NSWeaponScreen.Weapon selectedWeapon;
 
+        private Button backButton;
+        private NSWeaponScreen.BaseSlot slotEquipped;
+        private NSWeaponScreen.BaseSlot slotSelected;
+        private Transform canvas;
         private void Awake()
         {
             var screenInst =
                 ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/WeaponScreen/WeaponsScreen", transform);
 
-            var canvas = screenInst.transform.Find("Canvas");
+            canvas = screenInst.transform.Find("Canvas");
             var tabsArea = canvas.Find("TabsArea");
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var weaponsBack = canvas.Find("WeaponsBack");
-            var weaponSlot = canvas.Find("WeaponSlot");
 
-            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            portalButton.onClick.AddListener(PortalButtonClick);
-            
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            slotFull = weaponSlot.Find("SlotFull").gameObject;
-            slotEmptyHint = weaponSlot.Find("SlotEmptyHint").gameObject;
             
-            slotButton = slotFull.GetComponent<Button>();
-            slotButton.onClick.AddListener(SlotButtonClick);
-            
-            weaponIcon = slotFull.transform.Find("WeaponIcon").GetComponent<Image>();
-            weaponEffectRarity = slotFull.transform.Find("WeaponEffect").GetComponent<Image>();
-            effectDescription = weaponEffectRarity.transform.Find("EffectDescription").GetComponent<TextMeshProUGUI>();
-
-            var stats = slotFull.transform.Find("Stats");
-            speed = stats.Find("Speed").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();
-            power = stats.Find("Power").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();
-            accuracy = stats.Find("Accuracy").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();
-            critChance = stats.Find("CritChance").Find("IncreaseValue").GetComponent<TextMeshProUGUI>();            
-
             foreach (var i in tabIds)
             {
                 tabs[i] = tabsArea.Find(tabNames[i]).GetComponent<Button>();
@@ -101,54 +72,7 @@ namespace Overlewd
             Customize();
             await Task.CompletedTask;
         }
-
         
-        private void CustomizeSlot(NSWeaponScreen.Weapon weapon)
-        {
-            if (weapon == null)
-            {
-                slotFull.SetActive(false);
-                slotEmptyHint.SetActive(!slotFull.activeSelf);
-                slotButton.gameObject.SetActive(slotFull.activeSelf); 
-            }
-            else
-            {
-                var weaponData = weapon.weaponData;
-                var isMy = weaponData.IsMy(inputData?.characterId);
-                
-                slotFull.SetActive(isMy);
-                slotEmptyHint.SetActive(!slotFull.activeSelf);
-                slotButton.gameObject.SetActive(slotFull.activeSelf);
-                weaponIcon.sprite = ResourceManager.LoadSprite(weaponData.icon);
-
-                if (isMy)
-                {
-                    speed.text = "+" + weaponData.speed;
-                    power.text = "+" + weaponData.power;
-                    accuracy.text = "+" + weaponData.accuracy + "%";
-                    critChance.text = "+" + weaponData.critrate + "%";
-                }
-            }
-        }
-
-        public override void OnGameDataEvent(GameDataEvent eventData)
-        {
-            switch (eventData.eventId)
-            {
-                case GameDataEvent.EventId.EquipmentEquipped:
-                case GameDataEvent.EventId.EquipmentUnequipped:
-                    foreach (var weapon in weapons)
-                    {
-                        weapon.Customize();
-                    }
-
-                    var equipped = weapons.FirstOrDefault(w => w.weaponData.IsMy(inputData?.characterId));
-                    CustomizeSlot(equipped);
-                    SortWeaponsInTabs();
-                    break;
-            }
-        }
-
         private void Customize()
         {
             foreach (var equip in GameData.equipment.equipment)
@@ -158,36 +82,88 @@ namespace Overlewd
                     
                 var tabId = equip.characterClass switch
                 {
-                    AdminBRO.Equipment.Class_Bruiser => tabBruisers,
-                    AdminBRO.Equipment.Class_Assassin => tabAssassins,
-                    AdminBRO.Equipment.Class_Caster => tabCasters,
-                    AdminBRO.Equipment.Class_Tank => tabTanks,
-                    AdminBRO.Equipment.Class_Healer => tabHealers,
-                    _=> tabAllUnits
+                    AdminBRO.Equipment.Class_Bruiser => TabBruisers,
+                    AdminBRO.Equipment.Class_Assassin => TabAssassins,
+                    AdminBRO.Equipment.Class_Caster => TabCasters,
+                    AdminBRO.Equipment.Class_Tank => TabTanks,
+                    AdminBRO.Equipment.Class_Healer => TabHealers,
+                    _=> TabAllUnits
                 };
                 
-                var weaponAll = NSWeaponScreen.Weapon.GetInstance(scrollContents[tabAllUnits]);
+                var weaponAll = NSWeaponScreen.Weapon.GetInstance(scrollContents[TabAllUnits]);
+                weaponAll.Initialize();
                 weaponAll.characterId = inputData?.characterId;
                 weaponAll.weaponId = equip.id;
+                weaponAll.OnSelect += SelectWeapon;
                 weapons.Add(weaponAll);
 
                 var weaponClass = NSWeaponScreen.Weapon.GetInstance(scrollContents[tabId]);
+                weaponClass.Initialize();
                 weaponClass.characterId = inputData?.characterId;
                 weaponClass.weaponId = equip.id;
+                weaponClass.OnSelect += SelectWeapon;
+                weapons.Add(weaponClass);
+            }
+
+            slotSelected = canvas.Find("SelectedWeaponSlot").gameObject.AddComponent<NSWeaponScreen.SelectedSlot>();
+            slotEquipped = canvas.Find("EquippedWeaponSlot").gameObject.AddComponent<NSWeaponScreen.EquippedSlot>();
+            
+            if (inputData.characterData.hasEquipment)
+            {
+                InitEquippedSlot();
             }
             
-            CustomizeSlot(weapons.FirstOrDefault(w => w.weaponData.IsMy(inputData?.characterId)));
             SortWeaponsInTabs();
         }
 
-        private async void SlotButtonClick()
+        public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            var charData = inputData?.characterData;
-            if (charData != null)
+            switch (eventData.eventId)
             {
-                var weapon = weapons.FirstOrDefault(w => w.weaponData.isEquipped);
-                await weapon?.Unequip(charData.id.Value, charData.characterEquipmentData.id);
+                case GameDataEvent.EventId.EquipmentEquipped:
+                    OnEquipOrUnequip();
+                    InitEquippedSlot();
+                    slotSelected.Hide();
+                    break;
+                case GameDataEvent.EventId.EquipmentUnequipped:
+                    OnEquipOrUnequip();
+                    slotEquipped.Hide();
+                    break;
             }
+            
+            SortWeaponsInTabs();
+        }
+        
+        private void OnEquipOrUnequip()
+        {
+            foreach (var equip in weapons)
+            {
+                equip.Customize(); 
+            }
+        }
+        
+        private void InitEquippedSlot()
+        {
+            slotEquipped.chId = inputData.characterId;
+            slotEquipped.equipId = inputData.characterData?.characterEquipmentData?.id;
+            slotEquipped.Customize();
+            slotEquipped.Show();
+        }
+        
+        private void InitSelectedSlot(int? weaponId)
+        {
+            slotSelected.chId = inputData.characterId;
+            slotSelected.equipId = weaponId;
+            slotSelected.Customize();
+            slotSelected.Show();
+        }
+        
+        private void SelectWeapon(NSWeaponScreen.Weapon weapon)
+        {
+            selectedWeapon?.Deselect();
+            weapon?.Select();
+            selectedWeapon = weapon;
+            InitSelectedSlot(weapon?.weaponId);
         }
         
         private void TabClick(int tabId)
@@ -211,17 +187,11 @@ namespace Overlewd
             pressedTabs[tabId].SetActive(false);
             scrollViews[tabId].SetActive(false);
         }
-
-        private void PortalButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<PortalScreen>();
-        }
         
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
+            if (inputData.prevScreenInData.IsType<BattleGirlListScreenInData>())
             {
                 UIManager.ShowScreen<BattleGirlListScreen>();
             }
@@ -238,7 +208,7 @@ namespace Overlewd
             foreach (var tabId in tabIds)
             {
                 var tabWeapon = scrollContents[tabId].GetComponentsInChildren<NSWeaponScreen.Weapon>().ToList();
-                var tabWeaponSort = tabWeapon.OrderByDescending(w => w.weaponData.rarityLevel + (w.weaponData.isEquipped ? 100 : 0));
+                var tabWeaponSort = tabWeapon.OrderByDescending(w => w.weaponData.raritySortLevel + (w.weaponData.isEquipped ? 100 : 0));
                 var wSiblingIndex = 0;
                 foreach (var weapon in tabWeaponSort)
                 {

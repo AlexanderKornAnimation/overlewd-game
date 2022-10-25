@@ -66,10 +66,10 @@ namespace Overlewd
 
             protected Sprite GetShardSubstrate(string rarity) => rarity switch
             {
-                AdminBRO.Rarity.Basic => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/BasicShardWithSubstrate"),
-                AdminBRO.Rarity.Advanced => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/AdvancedShardWithSubstrate"),
-                AdminBRO.Rarity.Epic => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/EpicShardWithSubstrate"),
-                AdminBRO.Rarity.Heroic => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/HeroicShardWithSubstrate"),
+                AdminBRO.Rarity.Basic => Resources.Load<Sprite>("Common/Images/Shards/BasicShardWithSubstrate"),
+                AdminBRO.Rarity.Advanced => Resources.Load<Sprite>("Common/Images/Shards/AdvancedShardWithSubstrate"),
+                AdminBRO.Rarity.Epic => Resources.Load<Sprite>("Common/Images/Shards/EpicShardWithSubstrate"),
+                AdminBRO.Rarity.Heroic => Resources.Load<Sprite>("Common/Images/Shards/HeroicShardWithSubstrate"),
                 _ => null
             };
 
@@ -84,11 +84,11 @@ namespace Overlewd
 
             protected Sprite GetShardIcon(AdminBRO.MatriarchItem matriarchData) => matriarchData?.key switch
             {
-                AdminBRO.MatriarchItem.Key_Ulvi => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/UlviHeadShards"),
-                AdminBRO.MatriarchItem.Key_Adriel => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/AdrielHeadShards"),
-                AdminBRO.MatriarchItem.Key_Ingie => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/IngieHeadShards"),
-                AdminBRO.MatriarchItem.Key_Faye => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/FayeHeadShards"),
-                AdminBRO.MatriarchItem.Key_Lili => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/LiliHeadShards"),
+                AdminBRO.MatriarchItem.Key_Ulvi => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/UlviHeadShardsForge"),
+                AdminBRO.MatriarchItem.Key_Adriel => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/AdrielHeadShardsForge"),
+                AdminBRO.MatriarchItem.Key_Ingie => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/IngieHeadShardsForge"),
+                AdminBRO.MatriarchItem.Key_Faye => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/FayeHeadShardsForge"),
+                AdminBRO.MatriarchItem.Key_Lili => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/LiliHeadShardsForge"),
                 _ => null
             };
         }

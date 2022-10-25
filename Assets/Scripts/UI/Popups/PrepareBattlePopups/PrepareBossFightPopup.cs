@@ -117,8 +117,8 @@ namespace Overlewd
             buffButton.onClick.AddListener(BuffButtonClick);
             UITools.RightHide(buffRect);
 
-            markers = levelTitle.Find("Markers").GetComponent<TextMeshProUGUI>();
             stageTitle = levelTitle.Find("Title").GetComponent<TextMeshProUGUI>();
+            markers = stageTitle.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
 
             firstTimeReward = rewardsTr.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardCount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
@@ -227,12 +227,12 @@ namespace Overlewd
             battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
             Customize();
 
-            switch (inputData.ftueStageData?.ftueState)
-            {
-                case (_, "chapter1"):
-                    UITools.DisableButton(editTeamButton);
-                    break;
-            }
+            GameData.ftue.DoLern(
+                inputData.ftueStageData,
+                new FTUELernActions
+                {
+                    ch1_any = () => UITools.DisableButton(editTeamButton)
+                });
 
             StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergy));
 
@@ -383,13 +383,12 @@ namespace Overlewd
         {
             await UITools.RightShowAsync(buffRect, 0.2f);
 
-            //ftue part
-            switch (GameData.ftue.stats.lastEndedState)
-            {
-                case ("battle4", "chapter1"):
-                    GameData.ftue.info.chapter1.ShowNotifByKey("potionstutor1");
-                    break;
-            }
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_b4 = () => GameData.ftue.chapter1.ShowNotifByKey("potionstutor1")
+                });
         }
 
         public override async Task BeforeHideAsync()
@@ -420,7 +419,7 @@ namespace Overlewd
             iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
             icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
             title.text = GameData.matriarchs.activeBuff?.name;
-            descr.text = GameData.matriarchs.activeBuff?.description;
+            descr.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, descr.fontSize);
         }
     }
 

@@ -60,14 +60,16 @@ namespace Overlewd
                 base.ButtonClick();
                 var battleData = stageData.battleData;
 
-                var directToBattleScreen = stageData.ftueState switch
-                {
-                    ("battle1", "chapter1") => true,
-                    ("battle2", "chapter1") => true,
-                    ("battle3", "chapter1") => true,
-                    ("battle4", "chapter1") => true,
-                    _ => false
-                };
+                var directToBattleScreen = false;
+                GameData.ftue.DoLern(
+                    stageData,
+                    new FTUELernActions
+                    {
+                        ch1_b1 = () => directToBattleScreen = true,
+                        ch1_b2 = () => directToBattleScreen = true,
+                        ch1_b3 = () => directToBattleScreen = true,
+                        ch1_b4 = () => directToBattleScreen = true
+                    });
 
                 if (battleData.isTypeBattle)
                 {
