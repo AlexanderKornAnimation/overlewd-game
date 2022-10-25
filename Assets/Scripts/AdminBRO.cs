@@ -576,6 +576,8 @@ namespace Overlewd
             public List<int> currencies;
             public string mapBackgroundImage;
             public string mapBannerImage;
+            public string marketBannerImage;
+            public string overlayBannerImage;
             public string eventListBannerImage;
             public string bannerOverlayText;
             public List<int> markets;
