@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -77,7 +78,12 @@ namespace Overlewd
             critRateBack = background.Find("Critrate").gameObject;
             critRateStat = critRateBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
         }
-        
+
+        protected virtual void Start()
+        {
+            Customize();
+        }
+
         protected virtual void Customize()
         {
             if (chData != null)
@@ -113,6 +119,12 @@ namespace Overlewd
                 damageStat.text ="+" + chData.damage;
                 damageBack.SetActive(chData.damage > 0);
             }
+        }
+
+        public static CharacterInfo GetInstance(Transform parent)
+        {
+            return ResourceManager.InstantiateWidgetPrefab<CharacterInfo>(
+                "Prefabs/UI/Widgets/InfoWidgets/CharacterInfo", parent);
         }
     }
 }
