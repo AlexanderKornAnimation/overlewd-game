@@ -436,7 +436,6 @@ namespace Overlewd
         }
 
         //Screen Layer
-        public static GameObject screenLayer => uiScreenLayerGO;
         public static T GetScreen<T>() where T : BaseFullScreen
         {
             return currentScreen as T;
@@ -736,7 +735,6 @@ namespace Overlewd
         }
 
         //Notification Layer
-        public static GameObject notificationLayer => uiNotificationLayerGO;
         public static T GetNotificationMissclick<T>() where T : NotificationMissclick
         {
             return notificationMissclick as T;
