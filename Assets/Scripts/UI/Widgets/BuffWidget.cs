@@ -46,17 +46,24 @@ namespace Overlewd
 
         private void Customize()
         {
-            activeButton.gameObject.SetActive(!GameData.progressFlags.lockBuff);
-
-            if (activeButton.gameObject.activeSelf)
+            var activeBuff = GameData.matriarchs.activeBuff;
+            if (activeBuff != null)
             {
-                icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
-                description.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, description.fontSize);
-                iconUlvi.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isUlvi ?? false);
-                iconAdriel.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isAdriel ?? false);
-                iconIngie.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isIngie ?? false);
-                iconLili.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isLili ?? false);
-                iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
+                activeButton.gameObject.SetActive(true);
+                unactiveButton.gameObject.SetActive(false);
+
+                icon.sprite = ResourceManager.LoadSprite(activeBuff.icon);
+                description.text = UITools.ChangeTextSize(activeBuff.description, description.fontSize);
+                iconUlvi.gameObject.SetActive(activeBuff.matriarch?.isUlvi ?? false);
+                iconAdriel.gameObject.SetActive(activeBuff.matriarch?.isAdriel ?? false);
+                iconIngie.gameObject.SetActive(activeBuff.matriarch?.isIngie ?? false);
+                iconLili.gameObject.SetActive(activeBuff.matriarch?.isLili ?? false);
+                iconFaye.gameObject.SetActive(activeBuff.matriarch?.isFaye ?? false);
+            }
+            else
+            {
+                activeButton.gameObject.SetActive(false);
+                unactiveButton.gameObject.SetActive(true);
             }
 
             UITools.DisableButton(activeButton, GameData.progressFlags.lockBuff);
