@@ -264,7 +264,7 @@ namespace Overlewd
             await GameData.buildings.municipality.GoldCollect();
             CustomizeBanner();
 
-            UIManager.MakeGetResourceNotif().Play("Gold collect",
+            GetResourceNotif.GetInstance(UIManager.notificationLayer.transform).Play("Gold collect",
                 $"+{GameData.buildings.municipality.settings.moneyPerPeriod}" + TMPSprite.Gold);
         }
         

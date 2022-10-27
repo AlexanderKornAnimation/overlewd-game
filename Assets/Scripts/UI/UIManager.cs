@@ -735,6 +735,7 @@ namespace Overlewd
         }
 
         //Notification Layer
+        public static GameObject notificationLayer => uiNotificationLayerGO;
         public static T GetNotificationMissclick<T>() where T : NotificationMissclick
         {
             return notificationMissclick as T;
@@ -817,11 +818,6 @@ namespace Overlewd
         {
             MakeNotification(null);
             HideNotificationProcess();
-        }
-
-        public static GetResourceNotif MakeGetResourceNotif()
-        {
-            return GetResourceNotif.GetInstance(uiNotificationLayerGO.transform);
         }
 
         //Dialog Layer
