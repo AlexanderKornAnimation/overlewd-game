@@ -28,9 +28,9 @@ namespace Overlewd
 
     public class UserInputLocker
     {
-        private MonoBehaviour mbLocker;
-        private ScreenTransition stLocker;
-        private UnityWebRequest uwrLocker;
+        public MonoBehaviour mbLocker { get; private set; }
+        public ScreenTransition stLocker { get; private set; }
+        public UnityWebRequest uwrLocker { get; private set; }
 
         public UserInputLocker(MonoBehaviour mbObj)
         {
@@ -125,6 +125,11 @@ namespace Overlewd
             if (userInputLockers.Count > 0)
             {
                 uiEventSystem.SetActive(false);
+
+                if (userInputLockers.Exists(l => l.uwrLocker != null))
+                {
+                    ShowServerConnectionNotif();
+                }
             }
         }
 
@@ -142,6 +147,11 @@ namespace Overlewd
             if (userInputLockers.Count == 0)
             {
                 uiEventSystem.SetActive(true);
+            }
+
+            if (!userInputLockers.Exists(l => l.uwrLocker != null))
+            {
+                HideServerConnectionNotif();
             }
         }
 
@@ -817,6 +827,24 @@ namespace Overlewd
         {
             MakeNotification(null);
             HideNotificationProcess();
+        }
+
+        public static void ShowServerConnectionNotif()
+        {
+            var notif = uiNotificationLayerGO.GetComponentInChildren<ServerConnectionNotif>();
+            if (notif != null)
+            {
+                notif.Show();
+            }
+            else
+            {
+                ServerConnectionNotif.GetInstance(uiNotificationLayerGO.transform).Show(); ;
+            }
+        }
+
+        public static void HideServerConnectionNotif()
+        {
+            uiNotificationLayerGO.GetComponentInChildren<ServerConnectionNotif>()?.Hide();
         }
 
         //Dialog Layer

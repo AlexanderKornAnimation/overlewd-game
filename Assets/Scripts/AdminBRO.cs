@@ -1194,8 +1194,19 @@ namespace Overlewd
         public class CharacterSkill
         {
             public int id;
+            public int? characterId;
             public string name;
-            public string description;
+            private string _description;
+            public string description
+            {
+                get => _description.
+                    Replace("%amount%", ((int)(amount * 100.0f)).ToString() + "%").
+                    Replace("%effect_amount%", ((int)(effectAmount * 100)).ToString() + "%").
+                    Replace("%effect_prob%", ((int)(effectProb * 100)).ToString()).
+                    Replace("%effect_acting_duration%", ((int)(effectActingDuration)).ToString()).
+                    Replace("%effect_cooldown_duration%", ((int)(effectCooldownDuration)).ToString());
+                set => _description = value;
+            }
             public string icon;
             public string effect;
             public string type;
@@ -1256,6 +1267,16 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public Sound sfxTarget => GameData.sounds.GetById(sfxTargetId);
+
+            [JsonProperty(Required = Required.Default)]
+            public Character characterData => GameData.characters.GetById(characterId);
+
+            public string GetDescription(float amount, float effectAmount) => _description.
+                Replace("%amount%", ((int)(amount)).ToString()).
+                Replace("%effect_amount%", ((int)(effectAmount)).ToString()).
+                Replace("%effect_prob%", ((int)(effectProb * 100)).ToString()).
+                Replace("%effect_acting_duration%", ((int)(effectActingDuration)).ToString()).
+                Replace("%effect_cooldown_duration%", ((int)(effectCooldownDuration)).ToString());
         }
 
         [Serializable]
