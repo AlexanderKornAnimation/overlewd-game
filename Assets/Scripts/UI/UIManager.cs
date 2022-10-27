@@ -436,6 +436,7 @@ namespace Overlewd
         }
 
         //Screen Layer
+        public static GameObject screenLayer => uiScreenLayerGO;
         public static T GetScreen<T>() where T : BaseFullScreen
         {
             return currentScreen as T;
