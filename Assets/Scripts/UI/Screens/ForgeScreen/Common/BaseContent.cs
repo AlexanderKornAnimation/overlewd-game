@@ -14,7 +14,6 @@ namespace Overlewd
             protected Transform buttons;
             protected Button marketButton;
             protected TextMeshProUGUI marketButtonText;
-            protected Button portalButton;
             protected TextMeshProUGUI portalButtonText;
             protected Button mergeButton;
             protected Image[] mergePrice = new Image[2];
@@ -26,10 +25,6 @@ namespace Overlewd
                 marketButton = buttons.Find("MarketButton").GetComponent<Button>();
                 marketButton.onClick.AddListener(MarketButtonClick);
                 marketButtonText = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-
-                portalButton = buttons.Find("PortalButton").GetComponent<Button>();
-                portalButton.onClick.AddListener(PortalButtonClick);
-                portalButtonText = portalButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 mergeButton = buttons.Find("MergeButton").GetComponent<Button>();
                 mergeButton.onClick.AddListener(MergeButtonClick);
@@ -44,11 +39,6 @@ namespace Overlewd
             protected virtual void MergeButtonClick()
             {
 
-            }
-
-            protected virtual void PortalButtonClick()
-            {
-               
             }
 
             protected virtual void MarketButtonClick()

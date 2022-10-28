@@ -12,7 +12,6 @@ namespace Overlewd
     public class BattleGirlScreen : BaseFullScreenParent<BattleGirlScreenInData>
     {
         private Button backButton;
-        private Button laboratoryButton;
         private Button sexSceneButton;
         private Image sexSceneOpen;
         private Image sexSceneClose;
@@ -85,9 +84,6 @@ namespace Overlewd
             levelUpButton = canvas.Find("LevelUpButton");
             levelUpButtonCanLvlUp = levelUpButton.Find("CanLvlUp").GetComponent<Button>();
             levelUpButtonCanLvlUp.onClick.AddListener(LevelUpButtonClick);
-
-            laboratoryButton = canvas.Find("ForgeButton").GetComponent<Button>();
-            laboratoryButton.onClick.AddListener(LaboratoryButtonClick);
 
             var sexSceneButtonTr = canvas.Find("SexSceneButton");
             sexSceneButton = sexSceneButtonTr.Find("IsOpen").GetComponent<Button>();
@@ -195,7 +191,7 @@ namespace Overlewd
                 levelUpButtonCanLvlUp.gameObject.SetActive(!characterData.isLvlMax);
                 sexSceneOpen.sprite = ResourceManager.LoadSprite(characterData.sexSceneOpenedBanner);
                 sexSceneClose.sprite = ResourceManager.LoadSprite(characterData.sexSceneClosedBanner);
-                sexSceneOpen.gameObject.SetActive(characterData.sexSceneId.HasValue);
+                sexSceneOpen.gameObject.SetActive(characterData.isSexSceneOpen);
 
                 var sexSceneRarity = characterData.sexSceneVisibleByRarity ?? "_";
                 sexSceneClosedTitle.text = $"Upgrade {characterData.name} to {sexSceneRarity}\nto unlock sex scene!";
@@ -262,12 +258,6 @@ namespace Overlewd
                     characterId = inputData.characterId
                 }).RunShowScreenProcess();
             }
-        }
-
-        private void LaboratoryButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<LaboratoryScreen>();
         }
 
         public override void OnGameDataEvent(GameDataEvent eventData)
