@@ -109,11 +109,11 @@ RectTransform:
   - {fileID: 2476544886625548295}
   - {fileID: 5936593601336474298}
   m_Father: {fileID: 6949870377832571118}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 225.5, y: -261}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 391, y: -28.5}
   m_SizeDelta: {x: 356, y: 494}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &678000856774513505
@@ -1221,11 +1221,11 @@ RectTransform:
   - {fileID: 7239477357025470564}
   - {fileID: 446795573777694865}
   m_Father: {fileID: 6949870377832571118}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 972, y: -261}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 17, y: -28.5}
   m_SizeDelta: {x: 356, y: 494}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2169622989784417946
@@ -3887,11 +3887,11 @@ RectTransform:
   - {fileID: 1839997761226533567}
   - {fileID: 2420520449729005675}
   m_Father: {fileID: 6949870377832571118}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 598, y: -261}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -355.5, y: -28.5}
   m_SizeDelta: {x: 356, y: 494}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6372032904350725197
@@ -9135,9 +9135,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6949870377094048063}
-  - {fileID: 1555766602353834509}
   - {fileID: 3050650275508715278}
   - {fileID: 4754252691933593204}
+  - {fileID: 1555766602353834509}
   m_Father: {fileID: 6949870377848307997}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12133,7 +12133,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ce29db4a86dda5543bd779cc99123e41, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 29af1c34b216f194f9979f2eae9b6d2c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -78,6 +78,7 @@ namespace Overlewd
         public const string MarkerMonthlyEvent = "<sprite=\"NotificationsNMarkers\" name=\"MarkerMonthlyEvent\">";
         public const string MarkerWeeklyEvent = "<sprite=\"NotificationsNMarkers\" name=\"MarkerWeeklyEvent\">";
         
+        public const string NotificationError = "<sprite=\"NotificationsNMarkers\" name=\"NotificationError\">";
         public const string NotificationSale = "<sprite=\"NotificationsNMarkers\" name=\"NotificationSale\">";
         public const string NotificationNew = "<sprite=\"NotificationsNMarkers\" name=\"NotificationNew\">";
         public const string NotificationTimeLimit = "<sprite=\"NotificationsNMarkers\" name=\"NotificationTimeLimit\">";
