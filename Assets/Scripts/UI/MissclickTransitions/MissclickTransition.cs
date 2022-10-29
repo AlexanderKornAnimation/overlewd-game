@@ -9,12 +9,12 @@ namespace Overlewd
     {
         protected virtual void Awake()
         {
-            UIManager.AddUserInputLocker(new UserInputLocker(this));
+            UIManager.PushUserInputLocker(new UserInputLocker(this));
         }
 
         protected virtual void OnDestroy()
         {
-            UIManager.RemoveUserInputLocker(new UserInputLocker(this));
+            UIManager.PopUserInputLocker(new UserInputLocker(this));
         }
 
         public virtual async Task ProgressAsync()

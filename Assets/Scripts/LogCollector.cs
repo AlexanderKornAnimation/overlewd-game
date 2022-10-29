@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,16 +10,11 @@ namespace Overlewd
     {
         public static void Initialize()
         {
-#if (UNITY_STANDALONE_WIN || UNITY_ANDROID) && !UNITY_EDITOR
             Application.logMessageReceived += Msg;
-#endif
         }
 
         private static void Msg(string condition, string stackTrace, LogType type)
         {
-            if (type != LogType.Exception)
-                return;
-
             var newLog = new AdminBRO.LogData();
             newLog.platform = Application.platform switch
             {
@@ -39,7 +35,32 @@ namespace Overlewd
                 LogType.Warning => "warning",
                 _ => "none"
             };
-            AdminBRO.logAsync(newLog);
+
+            switch (type)
+            {
+                case LogType.Exception:
+                    logException(newLog);
+                    break;
+            }
+        }
+
+        private static async void logException(AdminBRO.LogData logData)
+        {
+#if (UNITY_STANDALONE_WIN || UNITY_ANDROID) && !UNITY_EDITOR
+            AdminBRO.logAsync(logData);
+
+            var errorNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
+            errorNotif.title = "Exception error";
+            errorNotif.message = $"{logData.condition}/n{logData.stackTrace}";
+            var state = await errorNotif.WaitChangeState();
+            await errorNotif.CloseAsync();
+            UIManager.PeakSystemNotif();
+            if (!UIManager.HasSystemNotif<SystemErrorNotif>())
+            {
+                Game.Quit();
+            }
+#endif
+            await Task.CompletedTask;
         }
     }
 

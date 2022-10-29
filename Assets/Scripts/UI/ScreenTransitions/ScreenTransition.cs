@@ -17,12 +17,12 @@ namespace Overlewd
             screenRectTransform = GetComponent<RectTransform>();
             screen = GetComponent<BaseScreen>();
 
-            UIManager.AddUserInputLocker(new UserInputLocker(this));
+            UIManager.PushUserInputLocker(new UserInputLocker(this));
         }
 
         protected virtual void OnDestroy()
         {
-            UIManager.RemoveUserInputLocker(new UserInputLocker(this));
+            UIManager.PopUserInputLocker(new UserInputLocker(this));
         }
 
         public virtual async Task PrepareDataAsync()

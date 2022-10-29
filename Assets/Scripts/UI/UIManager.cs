@@ -85,7 +85,6 @@ namespace Overlewd
         private static GameObject uiSubPopupLayerGO;
         private static GameObject uiOverlayLayerGO;
         private static GameObject uiNotificationLayerGO;
-        private static GameObject uiDialogLayerGO;
 
         private static BaseFullScreen prevScreen;
         private static BaseFullScreen currentScreen;
@@ -97,7 +96,6 @@ namespace Overlewd
         private static BaseOverlay currentOverlay;
         private static BaseNotification prevNotification;
         private static BaseNotification currentNotification;
-        private static GameObject currentDialogBoxGO;
 
         private static BaseMissclick prevOverlayMissclick;
         private static BaseMissclick overlayMissclick;
@@ -108,32 +106,50 @@ namespace Overlewd
         private static BaseMissclick prevNotificationMissclick;
         private static BaseMissclick notificationMissclick;
 
-        private static List<UserInputLocker> userInputLockers = new List<UserInputLocker>();
-
         public static event Action<GameDataEvent> widgetsGameDataListeners;
 
-        public static void AddUserInputLocker(UserInputLocker locker)
+
+        public enum UserInputLockerMode
+        {
+            Manual,
+            Auto
+        }
+        private static UserInputLockerMode userInputLockerMode = UserInputLockerMode.Auto;
+        public static void SetUserInputLockerMode(UserInputLockerMode mode, bool lockUserInput = false)
+        {
+            userInputLockerMode = mode;
+            switch (userInputLockerMode)
+            {
+                case UserInputLockerMode.Manual:
+                    uiEventSystem.SetActive(!lockUserInput);
+                    break;
+                case UserInputLockerMode.Auto:
+                    uiEventSystem.SetActive(userInputLockers.Count == 0);
+                    break;
+            }
+        }
+
+        private static List<UserInputLocker> userInputLockers = new List<UserInputLocker>();
+        public static void PushUserInputLocker(UserInputLocker locker)
         {
             if (!locker.IsNull())
             {
                 if (!userInputLockers.Exists(item => item.Equals(locker)))
                 {
                     userInputLockers.Add(locker);
-                }
-            }
-
-            if (userInputLockers.Count > 0)
-            {
-                uiEventSystem.SetActive(false);
-
-                if (userInputLockers.Exists(l => l.uwrLocker != null))
-                {
-                    ShowServerConnectionNotif();
+                    switch (userInputLockerMode)
+                    {
+                        case UserInputLockerMode.Manual:
+                            break;
+                        case UserInputLockerMode.Auto:
+                            uiEventSystem.SetActive(false);
+                            break;
+                    }
                 }
             }
         }
 
-        public static void RemoveUserInputLocker(UserInputLocker locker)
+        public static void PopUserInputLocker(UserInputLocker locker)
         {
             if (!locker.IsNull())
             {
@@ -141,17 +157,15 @@ namespace Overlewd
                 if (removeItem != null)
                 {
                     userInputLockers.Remove(removeItem);
+                    switch (userInputLockerMode)
+                    {
+                        case UserInputLockerMode.Manual:
+                            break;
+                        case UserInputLockerMode.Auto:
+                            uiEventSystem.SetActive(userInputLockers.Count == 0);
+                            break;
+                    }
                 }
-            }
-
-            if (userInputLockers.Count == 0)
-            {
-                uiEventSystem.SetActive(true);
-            }
-
-            if (!userInputLockers.Exists(l => l.uwrLocker != null))
-            {
-                HideServerConnectionNotif();
             }
         }
 
@@ -312,7 +326,6 @@ namespace Overlewd
             uiSubPopupLayerGO = ConfigureLayer("UISubPopupLayer", 2);
             uiOverlayLayerGO = ConfigureLayer("UIOverlayLayer", 3);
             uiNotificationLayerGO = ConfigureLayer("UINotificationLayer", 4);
-            uiDialogLayerGO = ConfigureLayer("UIDialogLayer", 5);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
@@ -829,6 +842,7 @@ namespace Overlewd
             HideNotificationProcess();
         }
 
+        //System notifications
         public static void ShowServerConnectionNotif()
         {
             var notif = uiNotificationLayerGO.GetComponentInChildren<ServerConnectionNotif>();
@@ -847,42 +861,25 @@ namespace Overlewd
             uiNotificationLayerGO.GetComponentInChildren<ServerConnectionNotif>()?.Hide();
         }
 
-        //Dialog Layer
-        public static void ShowDialogBox(string title, string message, Action yes, Action no = null)
+        public static T MakeSystemNotif<T>() where T : BaseSystemNotif
         {
-            GameObject.Destroy(currentDialogBoxGO);
-            currentDialogBoxGO = new GameObject(typeof(DebugDialogBox).Name);
-            currentDialogBoxGO.layer = 5;
-            var currentDialogBoxGO_rectTransform = currentDialogBoxGO.AddComponent<RectTransform>();
-            currentDialogBoxGO_rectTransform.SetParent(uiDialogLayerGO.transform, false);
-            UITools.SetStretch(currentDialogBoxGO_rectTransform);
-            var dialogBox = currentDialogBoxGO.AddComponent<DebugDialogBox>();
-
-            dialogBox.title = title;
-            dialogBox.message = message;
-
-            dialogBox.yesAction = () =>
+            if (uiNotificationLayerGO.GetComponentsInChildren<T>().Count() > 0)
             {
-                GameObject.Destroy(currentDialogBoxGO);
-                currentDialogBoxGO = null;
-                yes?.Invoke();
-            };
-
-            if (no != null)
-            {
-                dialogBox.noAction = () =>
-                {
-                    GameObject.Destroy(currentDialogBoxGO);
-                    currentDialogBoxGO = null;
-                    no.Invoke();
-                };
+                return BaseSystemNotif.GetInstance<T>(uiNotificationLayerGO.transform);
             }
+            var notif = BaseSystemNotif.GetInstance<T>(uiNotificationLayerGO.transform);
+            notif.Show();
+            return notif;
         }
 
-        public static void HideDialogBox()
+        public static void PeakSystemNotif()
         {
-            GameObject.Destroy(currentDialogBoxGO);
-            currentDialogBoxGO = null;
+            uiNotificationLayerGO.GetComponentsInChildren<BaseSystemNotif>(true).FirstOrDefault()?.Show();
+        }
+
+        public static bool HasSystemNotif<T>() where T : BaseSystemNotif
+        {
+            return uiNotificationLayerGO.GetComponentsInChildren<T>(true).Count() > 0;
         }
     }
 

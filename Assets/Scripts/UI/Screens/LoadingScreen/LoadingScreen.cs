@@ -106,11 +106,12 @@ namespace Overlewd
 
                     if (ResourceManager.GetStorageFreeMB() < downloadSizeMB)
                     {
-                        UIManager.ShowDialogBox("Not enough free space", "", () => Game.Quit());
-                        while (true)
-                        {
-                            await UniTask.Delay(1000);
-                        }
+                        var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
+                        errNotif.title = "Error";
+                        errNotif.message = "Not enough free space";
+                        await errNotif.WaitChangeState();
+                        Game.Quit();
+                        return;
                     }
 
                     SetDownloadBarTitle($"Load resources {currentFilesCount + 1}-{currentFilesCount + split.Count}/{totalFilesCount}");
@@ -174,12 +175,12 @@ namespace Overlewd
             }
             else
             {
-                UIManager.ShowDialogBox("Server error", "No load resources", () => Game.Quit());
-
-                while (true)
-                {
-                    await UniTask.Delay(1000);
-                }
+                var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
+                errNotif.title = "Server error";
+                errNotif.message = "No load resources";
+                await errNotif.WaitChangeState();
+                Game.Quit();
+                return;
             }
         }
 
@@ -195,11 +196,12 @@ namespace Overlewd
             var apiVersion = await AdminBRO.versionAsync();
             if (apiVersion.version.ToString() != HttpCore.ApiVersion)
             {
-                UIManager.ShowDialogBox("Need client update", "", () => Game.Quit());
-                while (true)
-                {
-                    await UniTask.Delay(1000);
-                }
+                var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
+                errNotif.title = "System error";
+                errNotif.message = "Need client update";
+                await errNotif.WaitChangeState();
+                Game.Quit();
+                return;
             }
 #endif
 
@@ -264,16 +266,8 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            if (HttpCore.HasNetworkConection())
-            {
-                DoLoading();
-                UpdateProgressBarPercent();
-            }
-            else
-            {
-                UIManager.ShowDialogBox("No Internet Connection", "", () => Game.Quit());
-            }
-
+            DoLoading();
+            UpdateProgressBarPercent();
             await Task.CompletedTask;
         }
 
