@@ -10,11 +10,15 @@ namespace Overlewd
         Button btn;
         RectTransform rt;
         public CharController cc;
-        
+        Vector2 defaultSize = new Vector2(95, 95);
+        Vector2 scaledSize = new Vector2(115, 115);
+        float maskScale = 1.15f;
+        RectTransform mask;
 
         private void Awake()
         {
-            image = transform.Find("Ico").GetComponent<Image>();
+            mask = transform.Find("mask").GetComponent<RectTransform>();
+            image = transform.Find("mask/Ico").GetComponent<Image>();
             btn = GetComponent<Button>();
             rt = GetComponent<RectTransform>();
         }
@@ -33,13 +37,15 @@ namespace Overlewd
         public void Select()
         {
             transform.SetSiblingIndex(0);
-            rt.localScale *= 1.2f;
+            rt.sizeDelta = scaledSize;
+            mask.localScale *= maskScale;
         }
         public void Deselect()
         {
             var parCount = transform.parent.transform.childCount;
             transform.SetSiblingIndex(parCount);
-            rt.localScale = Vector3.one;
+            rt.sizeDelta = defaultSize;
+            mask.localScale = Vector3.one;
         }
     }
 }

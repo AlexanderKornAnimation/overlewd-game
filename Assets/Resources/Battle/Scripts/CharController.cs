@@ -353,8 +353,7 @@ namespace Overlewd
                     bm.unselect?.Invoke();
                     Highlight();
                 }
-                if (!isEnemy)
-                    CharPortraitSet();
+                //if (!isEnemy) CharPortraitSet();
                 SoundManager.PlayOneShot(FMODEventPath.UI_Battle_SelectPers);
             }
         }
@@ -485,7 +484,7 @@ namespace Overlewd
             if (sk.effect != null)
                 if (hit)
                 {
-                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = healthMax * ea;
                     switch (sk.effect)
@@ -610,7 +609,7 @@ namespace Overlewd
             if (skillCD[sk] > 0) //skip if skill on Cool Down
                 return;
             else
-                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
+                skillCD[sk] = (int)sk.effectCooldownDuration;
 
             bool isCrit = critrate >= Random.value;
             Damage(sk.amount, true, false, isCrit);
@@ -619,7 +618,7 @@ namespace Overlewd
             if (sk.effect != null)
                 if (hitEffect)
                 {
-                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = healthMax * ea;
 
@@ -679,7 +678,7 @@ namespace Overlewd
             if (sk.effect != null)
                 if (hitEffect)
                 {
-                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = targetCC.healthMax * ea;
                     switch (sk.effect)

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Overlewd
         [SerializeField] private float portraitScale = 1.5f;
         [Tooltip("selected as current turn")] public CharController ccOnSelect;
         [Tooltip("selected as target")] public CharController ccTarget = null;
-        public Animator ani;
+        public Animator ani, charAni;
 
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
@@ -40,11 +41,10 @@ namespace Overlewd
         private Transform QueueUIContent;
         public TextMeshProUGUI wavesTMP;
         public TextMeshProUGUI roundTMP;
-        public GameObject EnemyStats;
         public Transform EnemyStatsContent;
         [Tooltip("add this prefab here BattleUICanvas/Character/PlayerStats")]
         public CharacterPortrait PlayerStats;
-        public CharacterPortrait BossStats;
+        public CharacterPortrait EnemyStats;
         Transform bPosPlayer, bPosEnemy;
         int siblingPlayer, siblingEnemy;
 
@@ -98,16 +98,11 @@ namespace Overlewd
             if (roundTMP == null) roundTMP = transform.Find("BattleUICanvas/Background/Round/text").GetComponent<TextMeshProUGUI>();
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
-            PlayerStats.bigPortrait = true;
-            if (bossLevel)
-            {
-                if (BossStats == null) BossStats = transform.Find("BattleUICanvas/Character/BossStats").GetComponent<CharacterPortrait>();
-                BossStats.bigPortrait = true;
-                BossStats.gameObject.SetActive(true);
-                QueueUI.gameObject.SetActive(false);
-            }
+            if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats").GetComponent<CharacterPortrait>();
+            EnemyStats.isBoss = bossLevel;
+
+            if (bossLevel) QueueUI.gameObject.SetActive(false);
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
-            if (EnemyStats == null) EnemyStats = Resources.Load("Battle/Prefabs/Battle/EnemyStats") as GameObject;
 
             bPosPlayer = transform.Find("BattleCanvas/BattleLayer/battlePos1");
             bPosEnemy = transform.Find("BattleCanvas/BattleLayer/battlePos2");
@@ -152,8 +147,7 @@ namespace Overlewd
         {
             yield return new WaitForEndOfFrame();
             SetSkillCtrl(ccOnSelect);
-            if (!ccOnSelect.isEnemy)
-                ccOnSelect.CharPortraitSet();
+            ccOnSelect.CharPortraitSet();
         }
         IEnumerator ShowStartAnimation()
         {
@@ -171,14 +165,17 @@ namespace Overlewd
             if (ccOnSelect.isEnemy)
             {
                 battleState = BattleState.ENEMY;
+                prevState = battleState;
                 if (!ccOnSelect.isBoss)
                     bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
                 StartCoroutine(EnemyAttack());
+                charAni.SetTrigger("startEnemy");
             }
             else
             {
                 battleState = BattleState.PLAYER;
                 bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
+                charAni.SetTrigger("startPlayer");
             }
 
             charControllerList[step].Highlight();
@@ -210,18 +207,8 @@ namespace Overlewd
                 if (isEnemy)
                 {
                     cc.isEnemy = true; //Add Enemy flag
-                    if (bossLevel)
-                    {
-                        cc.isBoss = bossLevel;
-                        cc.charStats = BossStats;
-                    }
-                    else
-                    {
-                        //var pos = EnemyStatsContent.Find($"portrait_pos_{orderCount}"); //Drop portrait on Content Queue and turn on
-                        //pos.gameObject.SetActive(true);
-                        //var eStats = Instantiate(EnemyStats, pos);
-                        //cc.charStats = eStats.GetComponent<CharacterPortrait>();
-                    }
+                    cc.isBoss = bossLevel;
+                    cc.charStats = EnemyStats;
                     enemyAllyList.Add(cc);
                     enemyNum++;
                 }
@@ -276,7 +263,7 @@ namespace Overlewd
                     portraitQ.name = "Portrait_" + cc.Name;
                     portraitQ.SetUp(cc);
                     if (cc.isEnemy)
-                        portraitQ.transform.Find("color").GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
+                        portraitQ.transform.GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
                     QueueElements.Add(portraitQ);
                 }
             else return;
@@ -436,7 +423,7 @@ namespace Overlewd
                 else
                     ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
                 ccTarget?.Highlight();
-                ccTarget?.CharPortraitSet();
+                //ccTarget?.CharPortraitSet();
                 yield return new WaitForSeconds(0.5f);
                 AttackAction(id, isEnemyAttack: true);
             }
@@ -552,6 +539,7 @@ namespace Overlewd
                     hpSpent = usedHP
                 });
         }
+        
         private void Step()
         {
             log.Add("Battle Manager: Step");
@@ -583,7 +571,6 @@ namespace Overlewd
 
             bPosEnemy.SetSiblingIndex(siblingEnemy);
             bPosPlayer.SetSiblingIndex(siblingPlayer);
-
             battleState = BattleState.ANIMATION;
             ccOnSelect.UpadeteDot();
         }
@@ -592,21 +579,27 @@ namespace Overlewd
             if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
             {
                 battleState = ccOnSelect.isEnemy ? BattleState.ENEMY : BattleState.PLAYER;
+                ccOnSelect.CharPortraitSet();
                 if (ccOnSelect.isEnemy)
                 {
                     battleState = BattleState.ENEMY;
                     if (!ccOnSelect.isBoss)
                         bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
                     StartCoroutine(EnemyAttack());
+                    //Do not restart the animation if previous character on the same team
+                    if (battleState != prevState)
+                        charAni.SetTrigger("enemy");
                 }
                 else
                 {
                     battleState = BattleState.PLAYER;
                     SetSkillCtrl(ccOnSelect);
-                    ccOnSelect.CharPortraitSet();
                     bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                     if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
+                    if (battleState != prevState)
+                        charAni.SetTrigger("player");
                 }
+                prevState = battleState; //save prew state for portrait animation
                 ccOnSelect.Highlight();
             }
         }
@@ -724,5 +717,6 @@ namespace Overlewd
 
         public enum BattleState { PLAYER, ENEMY, ANIMATION, INIT, WIN, LOSE, NEXTWAVE }
         public BattleState battleState = BattleState.INIT;
+        private BattleState prevState = BattleState.PLAYER;
     }
 }
