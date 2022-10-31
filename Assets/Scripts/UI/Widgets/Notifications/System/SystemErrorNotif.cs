@@ -9,6 +9,20 @@ using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
+    public class RuntimeExceptionNotif : SystemErrorNotif
+    {
+        void Start()
+        {
+            title = "Runtime exception";
+        }
+
+        public new static RuntimeExceptionNotif GetInstance(Transform parent)
+        {
+            return ResourceManager.InstantiateScreenPrefab<RuntimeExceptionNotif>
+                ("Prefabs/UI/Widgets/Notifications/System/SystemError", parent);
+        }
+    }
+
     public class SystemErrorNotif : BaseSystemNotif
     {
         public enum State
@@ -18,25 +32,25 @@ namespace Overlewd
         }
 
         private Transform notifBack;
-        private TextMeshProUGUI errorName;
-        private TextMeshProUGUI errorMessage;
+        private TextMeshProUGUI _title;
+        private TextMeshProUGUI _message;
 
         public State state = State.Waiting;
 
         public string title
         {
-            get => errorName.text;
+            get => _title.text;
             set
             {
-                errorName.text = value;
+                _title.text = value;
             }
         }
         public string message
         {
-            get => errorMessage.text;
+            get => _message.text;
             set
             {
-                errorMessage.text = value;
+                _message.text = value;
             }
         }
 
@@ -44,8 +58,8 @@ namespace Overlewd
         {
             var canvas = transform.Find("Canvas");
             var notifBack = canvas.Find("NotifBack");
-            errorName = notifBack.Find("ErrorName").GetComponent<TextMeshProUGUI>();
-            errorMessage = notifBack.Find("ErrorMessage").GetComponent<TextMeshProUGUI>();
+            _title = notifBack.Find("Title").GetComponent<TextMeshProUGUI>();
+            _message = notifBack.Find("Message").GetComponent<TextMeshProUGUI>();
             notifBack.Find("OkButton").GetComponent<Button>().onClick.AddListener(OkBtnClick);
 
             gameObject.SetActive(false);

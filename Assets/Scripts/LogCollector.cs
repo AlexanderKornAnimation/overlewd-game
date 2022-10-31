@@ -49,13 +49,12 @@ namespace Overlewd
 #if (UNITY_STANDALONE_WIN || UNITY_ANDROID) && !UNITY_EDITOR
             AdminBRO.logAsync(logData);
 
-            var errorNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-            errorNotif.title = "Exception error";
-            errorNotif.message = $"{logData.condition}/n{logData.stackTrace}";
-            var state = await errorNotif.WaitChangeState();
-            await errorNotif.CloseAsync();
+            var exceptionNotif = UIManager.MakeSystemNotif<RuntimeExceptionNotif>();
+            exceptionNotif.message = $"{logData.condition}/n{logData.stackTrace}";
+            var state = await exceptionNotif.WaitChangeState();
+            await exceptionNotif.CloseAsync();
             UIManager.PeakSystemNotif();
-            if (!UIManager.HasSystemNotif<SystemErrorNotif>())
+            if (!UIManager.HasSystemNotif<RuntimeExceptionNotif>())
             {
                 Game.Quit();
             }

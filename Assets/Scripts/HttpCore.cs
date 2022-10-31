@@ -84,7 +84,6 @@ namespace Overlewd
             Debug.LogError(e.Message);
 
             var errorNotif = UIManager.MakeSystemNotif<ServerErrorNotif>();
-            errorNotif.title = "Server error";
             errorNotif.message = $"{e.UnityWebRequest.url}\n{e.Message}";
             var state = await errorNotif.WaitChangeState();
             await errorNotif.CloseAsync();

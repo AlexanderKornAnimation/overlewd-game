@@ -107,7 +107,6 @@ namespace Overlewd
                     if (ResourceManager.GetStorageFreeMB() < downloadSizeMB)
                     {
                         var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                        errNotif.title = "Error";
                         errNotif.message = "Not enough free space";
                         await errNotif.WaitChangeState();
                         Game.Quit();
@@ -176,7 +175,6 @@ namespace Overlewd
             else
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                errNotif.title = "Server error";
                 errNotif.message = "No load resources";
                 await errNotif.WaitChangeState();
                 Game.Quit();
@@ -197,8 +195,7 @@ namespace Overlewd
             if (apiVersion.version.ToString() != HttpCore.ApiVersion)
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                errNotif.title = "System error";
-                errNotif.message = "Need client update";
+                errNotif.message = $"Need client update to version {apiVersion.version}";
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
