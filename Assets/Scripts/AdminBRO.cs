@@ -13,6 +13,15 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
+#if UNITY_EDITOR || DEV_BUILD
+        public const string ApiVersion = "16";
+        public const string ServerRootURL = "http://dev.api.overlewd.com/";
+#else
+        public const string ApiVersion = "15";
+        public const string ServerRootURL = "http://api.overlewd.com/";
+#endif
+        private static string make_url(string url_part) => $"{ServerRootURL}{url_part}";
+
         public static string GetDeviceId()
         {
             return SystemInfo.deviceUniqueIdentifier;
@@ -86,16 +95,16 @@ namespace Overlewd
         }
 
         // /version
-        public static async Task<ApiVersion> versionAsync()
+        public static async Task<ApiVersionResponse> versionAsync()
         {
-            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/version"))
+            using (var request = await HttpCore.GetAsync(make_url("version")))
             {
-                return JsonHelper.DeserializeObject<ApiVersion>(request?.downloadHandler.text);
+                return JsonHelper.DeserializeObject<ApiVersionResponse>(request?.downloadHandler.text);
             }
         }
 
         [Serializable]
-        public class ApiVersion
+        public class ApiVersionResponse
         {
             public int version;
         }
@@ -103,13 +112,13 @@ namespace Overlewd
         //log
         public static async void logAsync(LogData data)
         {
-            var url = "http://api.overlewd.com/log";
+            var url = make_url("log");
             var postData = new WWWForm();
             postData.AddField("platform", data.platform);
             postData.AddField("condition", data.condition);
             postData.AddField("stackTrace", data.stackTrace);
             postData.AddField("type", data.type);
-            using (var request = await HttpCore.PostAsync(url, postData, tokens?.accessToken, false))
+            using (var request = await HttpCore.PostAsync(url, postData, false))
             {
 
             }
@@ -128,7 +137,7 @@ namespace Overlewd
         {
             var postData = new WWWForm();
             postData.AddField("deviceId", GetDeviceId());
-            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/auth/login", postData))
+            using (var request = await HttpCore.PostAsync(make_url("auth/login"), postData))
             {
                 tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
                 return tokens;
@@ -138,7 +147,7 @@ namespace Overlewd
         public static async Task<Tokens> authRefreshAsync()
         {
             var postData = new WWWForm();
-            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/auth/refresh", postData))
+            using (var request = await HttpCore.PostAsync(make_url("auth/refresh"), postData))
             {
                 tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
                 return tokens;
@@ -152,7 +161,7 @@ namespace Overlewd
             public string refreshToken;
         }
 
-        public static Tokens tokens;
+        public static Tokens tokens { get; private set; }
 
         // GET /me; POST /me
         // /me/init
@@ -161,7 +170,7 @@ namespace Overlewd
         // /me/special-for-vova/{characterId}
         public static async Task<PlayerInfo> meAsync()
         {
-            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/me", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync(make_url("me")))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
             }
@@ -171,26 +180,15 @@ namespace Overlewd
         {
             var form = new WWWForm();
             form.AddField("name", name);
-            form.AddField("currentVersion", HttpCore.ApiVersion);
+            form.AddField("currentVersion", ApiVersion);
             if (NutakuApi.loggedIn)
             {
                 form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApi.userInfo), Encoding.UTF8);
             }
 
-            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me", form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(make_url("me"), form))
             {
                 return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
-            }
-        }
-
-        public static async Task addCharacter(int chId, int level)
-        {
-            var url = $"http://api.overlewd.com/me/special-for-vova/{chId}";
-            var form = new WWWForm();
-            form.AddField("level", level);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
-            {
-
             }
         }
 
@@ -221,9 +219,9 @@ namespace Overlewd
 
         public static async Task initAsync()
         {
-            var url = "http://api.overlewd.com/me/init";
+            var url = make_url("me/init");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -232,9 +230,9 @@ namespace Overlewd
 
         public static async Task resetAsync()
         {
-            var url = "http://api.overlewd.com/me/reset";
+            var url = make_url("me/reset");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -245,7 +243,7 @@ namespace Overlewd
             var form = new WWWForm();
             form.AddField("currencyId", currencyId);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync("http://api.overlewd.com/me/currency", form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(make_url("me/currency"), form))
             {
 
             }
@@ -254,8 +252,8 @@ namespace Overlewd
         // /markets
         public static async Task<List<EventMarketItem>> eventMarketsAsync()
         {
-            var url = "http://api.overlewd.com/markets";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("markets");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<EventMarketItem>>(request?.downloadHandler.text);
             }
@@ -299,7 +297,7 @@ namespace Overlewd
         // /currencies
         public static async Task<List<CurrencyItem>> currenciesAsync()
         {
-            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/currencies", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync(make_url("currencies")))
             {
                 return JsonHelper.DeserializeObject<List<CurrencyItem>>(request?.downloadHandler.text);
             }
@@ -346,8 +344,8 @@ namespace Overlewd
         // /tradable
         public static async Task<List<TradableItem>> tradablesAsync()
         {
-            var url = "http://api.overlewd.com/tradable";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("tradable");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<TradableItem>>(request?.downloadHandler.text);
             }
@@ -422,8 +420,8 @@ namespace Overlewd
         public static async Task<TradableBuyStatus> tradableBuyAsync(int marketId, int tradableId)
         {
             var form = new WWWForm();
-            var url = $"http://api.overlewd.com/markets/{marketId}/tradable/{tradableId}/buy";
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            var url = make_url($"markets/{marketId}/tradable/{tradableId}/buy");
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
             }
@@ -432,8 +430,8 @@ namespace Overlewd
         public static async Task<TradableBuyStatus> tradableBuyAsync(int tradableId)
         {
             var form = new WWWForm();
-            var url = $"http://api.overlewd.com/tradable/{tradableId}/buy";
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            var url = make_url($"tradable/{tradableId}/buy");
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
             }
@@ -450,14 +448,14 @@ namespace Overlewd
         {
             var url = Application.platform switch
             {
-                RuntimePlatform.Android => "http://api.overlewd.com/resources?platform=android",
-                RuntimePlatform.WindowsEditor => "http://api.overlewd.com/resources?platform=windows",
-                RuntimePlatform.WindowsPlayer => "http://api.overlewd.com/resources?platform=windows",
-                RuntimePlatform.WebGLPlayer => "http://api.overlewd.com/resources?platform=webgl",
-                _ => "http://api.overlewd.com/resources"
+                RuntimePlatform.Android => make_url("resources?platform=android"),
+                RuntimePlatform.WindowsEditor => make_url("resources?platform=windows"),
+                RuntimePlatform.WindowsPlayer => make_url("resources?platform=windows"),
+                RuntimePlatform.WebGLPlayer => make_url("resources?platform=webgl"),
+                _ => make_url("resources")
             };
 
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<NetworkResource>>(request?.downloadHandler.text);
             }
@@ -484,7 +482,7 @@ namespace Overlewd
         // /event-chapters
         public static async Task<List<EventChapter>> eventChaptersAsync()
         {
-            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/event-chapters", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync(make_url("event-chapters")))
             {
                 return JsonHelper.DeserializeObject<List<EventChapter>>(request?.downloadHandler.text);
             }
@@ -557,7 +555,7 @@ namespace Overlewd
         // /events
         public static async Task<List<EventItem>> eventsAsync()
         {
-            using (var request = await HttpCore.GetAsync("http://api.overlewd.com/events", tokens?.accessToken))
+            using (var request = await HttpCore.GetAsync(make_url("events")))
             {
                 return JsonHelper.DeserializeObject<List<EventItem>>(request?.downloadHandler.text);
             }
@@ -635,8 +633,8 @@ namespace Overlewd
         // /event-stages
         public static async Task<List<EventStageItem>> eventStagesAsync()
         {
-            var url = "http://api.overlewd.com/event-stages";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("event-stages");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<EventStageItem>>(request?.downloadHandler.text);
             }
@@ -645,9 +643,9 @@ namespace Overlewd
         // /event-stages/{id}/start
         public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
         {
-            var url = $"http://api.overlewd.com/event-stages/{eventStageId}/start";
+            var url = make_url($"event-stages/{eventStageId}/start");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
             }
@@ -656,9 +654,9 @@ namespace Overlewd
         // /event-stages/{id}/end
         public static async Task<EventStageItem> eventStageEndAsync(int eventStageId, EventStageEndData data = null)
         {
-            var url = $"http://api.overlewd.com/event-stages/{eventStageId}/end";
+            var url = make_url($"event-stages/{eventStageId}/end");
             var form = data?.ToWWWForm() ?? new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
             }
@@ -667,10 +665,10 @@ namespace Overlewd
         // /event-stages/{id}/replay
         public static async Task eventStageReplayAsync(int eventStageId, int count)
         {
-            var url = $"http://api.overlewd.com/event-stages/{eventStageId}/replay";
+            var url = make_url($"event-stages/{eventStageId}/replay");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -743,8 +741,8 @@ namespace Overlewd
         // /quests
         public static async Task<List<QuestItem>> questsAsync()
         {
-            var url = "http://api.overlewd.com/quests";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("quests");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<QuestItem>>(request?.downloadHandler.text);
             }
@@ -808,9 +806,9 @@ namespace Overlewd
         // //quests/{id}/claim-reward
         public static async Task questClaimRewardAsync(int id)
         {
-            var url = $"http://api.overlewd.com/quests/{id}/claim-reward";
+            var url = make_url($"quests/{id}/claim-reward");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -819,8 +817,8 @@ namespace Overlewd
         // /i18n
         public static async Task<List<LocalizationItem>> localizationAsync(string locale)
         {
-            var url = String.Format("http://api.overlewd.com/i18n?locale={0}", locale);
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url($"i18n?locale={locale}");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<LocalizationItem>>(request?.downloadHandler.text);
             }
@@ -842,8 +840,8 @@ namespace Overlewd
         // /dialogs
         public static async Task<List<Dialog>> dialogsAsync()
         {
-            var url = "http://api.overlewd.com/dialogs";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("dialogs");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Dialog>>(request?.downloadHandler.text);
             }
@@ -924,8 +922,8 @@ namespace Overlewd
         // /battles
         public static async Task<List<Battle>> battlesAsync()
         {
-            var url = "http://api.overlewd.com/battles";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("battles");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Battle>>(request?.downloadHandler.text);
             }
@@ -967,8 +965,8 @@ namespace Overlewd
         // /battles/pass
         public static async Task<List<Character>> charactersAsync()
         {
-            var url = "http://api.overlewd.com/battles/my/characters";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("battles/my/characters");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
             }
@@ -976,10 +974,10 @@ namespace Overlewd
 
         public static async Task characterToSlotAsync(int characterId, string slotId)
         {
-            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}";
+            var url = make_url($"battles/my/characters/{characterId}");
             var form = new WWWForm();
             form.AddField("teamPosition", slotId);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -987,9 +985,9 @@ namespace Overlewd
 
         public static async Task characterLvlupAsync(int characterId)
         {
-            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/levelup";
+            var url = make_url($"battles/my/characters/{characterId}/levelup");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -997,9 +995,9 @@ namespace Overlewd
 
         public static async Task chracterSkillLvlUp(int characterId, int skillId)
         {
-            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/skills/{skillId}/levelup";
+            var url = make_url($"battles/my/characters/{characterId}/skills/{skillId}/levelup");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1007,9 +1005,9 @@ namespace Overlewd
 
         public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
         {
-            var url = $"http://api.overlewd.com/battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}";
+            var url = make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1017,8 +1015,8 @@ namespace Overlewd
 
         public static async Task<List<SkillEffect>> skillEffectsAsync()
         {
-            var url = "http://api.overlewd.com/battles/skills/effects";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("battles/skills/effects");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<SkillEffect>>(request?.downloadHandler.text);
             }
@@ -1026,8 +1024,8 @@ namespace Overlewd
 
         public static async Task<List<BattlePass>> battlePassesAsync()
         {
-            var url = "http://api.overlewd.com/battles/pass";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("battles/pass");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<BattlePass>>(request?.downloadHandler.text);
             }
@@ -1325,8 +1323,8 @@ namespace Overlewd
         // /battles/my/characters/{id}/equip/{id} - delete
         public static async Task<List<Equipment>> equipmentAsync()
         {
-            var url = "http://api.overlewd.com/battles/my/characters/equipment";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("battles/my/characters/equipment");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
             }
@@ -1334,9 +1332,9 @@ namespace Overlewd
 
         public static async Task equipAsync(int characterId, int equipmentId)
         {
-            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/equip/{equipmentId}";
+            var url = make_url($"battles/my/characters/{characterId}/equip/{equipmentId}");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1344,8 +1342,8 @@ namespace Overlewd
 
         public static async Task unequipAsync(int characterId, int equipmentId)
         {
-            var url = $"http://api.overlewd.com/battles/my/characters/{characterId}/equip/{equipmentId}";
-            using (var request = await HttpCore.DeleteAsync(url, tokens?.accessToken))
+            var url = make_url($"battles/my/characters/{characterId}/equip/{equipmentId}");
+            using (var request = await HttpCore.DeleteAsync(url))
             {
 
             }
@@ -1462,8 +1460,8 @@ namespace Overlewd
         //ftue
         public static async Task<FTUEInfo> ftueAsync()
         {
-            var url = "http://api.overlewd.com/ftue";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("ftue");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<FTUEInfo>(request?.downloadHandler.text);
             }
@@ -1550,8 +1548,8 @@ namespace Overlewd
         // ftue/stats
         public static async Task<FTUEStats> ftueStatsAsync()
         {
-            var url = "http://api.overlewd.com/ftue/stats";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("ftue/stats");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<FTUEStats>(request?.downloadHandler.text);
             }
@@ -1580,8 +1578,8 @@ namespace Overlewd
         // /ftue-stages
         public static async Task<List<FTUEStageItem>> ftueStagesAsync()
         {
-            var url = "http://api.overlewd.com/ftue-stages";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("ftue-stages");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<FTUEStageItem>>(request?.downloadHandler.text);
             }
@@ -1639,8 +1637,8 @@ namespace Overlewd
         public static async Task ftueStageStartAsync(int stageId)
         {
             var form = new WWWForm();
-            var url = $"http://api.overlewd.com/ftue-stages/{stageId}/start";
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            var url = make_url($"ftue-stages/{stageId}/start");
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1649,9 +1647,9 @@ namespace Overlewd
         // /ftue-stages/{id}/end
         public static async Task<List<GenRewardItem>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
         {
-            var url = $"http://api.overlewd.com/ftue-stages/{stageId}/end";
+            var url = make_url($"ftue-stages/{stageId}/end");
             var form = data?.ToWWWForm() ?? new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<List<GenRewardItem>>(request?.downloadHandler.text);
             }
@@ -1660,10 +1658,10 @@ namespace Overlewd
         // /ftue-stages/{id}/replay
         public static async Task ftueStageReplayAsync(int stageId, int count)
         {
-            var url = $"http://api.overlewd.com/ftue-stages/{stageId}/replay";
+            var url = make_url($"ftue-stages/{stageId}/replay");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1688,8 +1686,8 @@ namespace Overlewd
         //animations
         public static async Task<List<Animation>> animationsAsync()
         {
-            var url = "http://api.overlewd.com/animations";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("animations");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
             }
@@ -1713,8 +1711,8 @@ namespace Overlewd
         //sounds
         public static async Task<List<Sound>> soundsAsync()
         {
-            var url = "http://api.overlewd.com/sounds";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("sounds");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Sound>>(request?.downloadHandler.text);
             }
@@ -1739,8 +1737,8 @@ namespace Overlewd
         // /buildings/{id}/build-crystals
         public static async Task<List<Building>> buildingsAsync()
         {
-            var url = "http://api.overlewd.com/buildings";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("buildings");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<Building>>(request?.downloadHandler.text);
             }
@@ -1748,9 +1746,9 @@ namespace Overlewd
 
         public static async Task buildingBuildAsync(int id)
         {
-            var url = $"http://api.overlewd.com/buildings/{id}/build";
+            var url = make_url($"buildings/{id}/build");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1758,9 +1756,9 @@ namespace Overlewd
 
         public static async Task buildingBuildCrystalsAsync(int id)
         {
-            var url = $"http://api.overlewd.com/buildings/{id}/build-crystals";
+            var url = make_url($"buildings/{id}/build-crystals");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1833,8 +1831,8 @@ namespace Overlewd
         // /municipality/settings
         public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
         {
-            var url = "http://api.overlewd.com/municipality/time-left";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("municipality/time-left");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<MunicipalityTimeLeft>(request?.downloadHandler.text);
             }
@@ -1842,9 +1840,9 @@ namespace Overlewd
 
         public static async Task municipalityCollectAsync()
         {
-            var url = $"http://api.overlewd.com/municipality/collect";
+            var url = make_url("municipality/collect");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1852,8 +1850,8 @@ namespace Overlewd
 
         public static async Task<MunicipalitySettings> municipalitySettingsAsync()
         {
-            var url = "http://overlewd-api.herokuapp.com/municipality/settings";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("municipality/settings");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<MunicipalitySettings>(request.downloadHandler.text);
             }
@@ -1879,8 +1877,8 @@ namespace Overlewd
         // /magicguild/{skillType}/levelup
         public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()
         {
-            var url = $"http://api.overlewd.com/magicguild/skills";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("magicguild/skills");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<MagicGuildSkill>>(request?.downloadHandler.text);
             }
@@ -1888,9 +1886,9 @@ namespace Overlewd
 
         public static async Task magicGuildSkillLvlUpAsync(string skillType)
         {
-            var url = $"http://api.overlewd.com/magicguild/{skillType}/levelup";
+            var url = make_url($"magicguild/{skillType}/levelup");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1898,9 +1896,9 @@ namespace Overlewd
 
         public static async Task magicGuildSkillLvlUpCrystalAsync(string skillType)
         {
-            var url = $"http://api.overlewd.com/magicguild/{skillType}/levelup-crystals";
+            var url = make_url($"magicguild/{skillType}/levelup-crystals");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1945,8 +1943,8 @@ namespace Overlewd
         // /forge/merge
         public static async Task<ForgePrice> forgePrices()
         {
-            var url = "http://api.overlewd.com/forge/price";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("forge/price");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<ForgePrice>(request?.downloadHandler.text);
             }
@@ -1954,14 +1952,11 @@ namespace Overlewd
 
         public static async Task forgeMergeEquipment(string mergeType, int[] mergeIds)
         {
-            var url = "http://api.overlewd.com/forge/merge/equipment";
+            var url = make_url("forge/merge/equipment");
             var form = new WWWForm();
             form.AddField("mergeType", mergeType);
-            foreach (var id in mergeIds)
-            {
-                form.AddField("ids[]", id);
-            }
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            form.AddField("ids", JsonHelper.SerializeObject(mergeIds));
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1969,12 +1964,12 @@ namespace Overlewd
 
         public static async Task forgeMergeShard(int matriarchId, string rarity, int amount)
         {
-            var url = "http://api.overlewd.com/forge/merge/shard";
+            var url = make_url("forge/merge/shard");
             var form = new WWWForm();
             form.AddField("matriarchId", matriarchId);
             form.AddField("rarity", rarity);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -1982,13 +1977,13 @@ namespace Overlewd
 
         public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
         {
-            var url = "http://api.overlewd.com/forge/exchange/shard";
+            var url = make_url("forge/exchange/shard");
             var form = new WWWForm();
             form.AddField("matriarchSourceId", matriarchSourceId);
             form.AddField("matriarchTargetId", matriarchTargetId);
             form.AddField("rarity", rarity);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -2070,8 +2065,8 @@ namespace Overlewd
         // gacha
         public static async Task<List<GachaItem>> gachaAsync()
         {
-            var url = "http://api.overlewd.com/gacha";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("gacha");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<GachaItem>>(request?.downloadHandler.text);
             }
@@ -2079,9 +2074,9 @@ namespace Overlewd
 
         public static async Task<List<GachaBuyResult>> gachaBuyAsync(int id)
         {
-            var url = $"http://api.overlewd.com/gacha/{id}/buy";
+            var url = make_url($"gacha/{id}/buy");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
             }
@@ -2089,9 +2084,9 @@ namespace Overlewd
 
         public static async Task<List<GachaBuyResult>> gachaBuyManyAsync(int id)
         {
-            var url = $"http://api.overlewd.com/gacha/{id}/buy-many";
+            var url = make_url($"gacha/{id}/buy-many");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
             }
@@ -2175,8 +2170,8 @@ namespace Overlewd
 
         public static async Task<List<MatriarchItem>> matriarchsAsync()
         {
-            var url = $"http://api.overlewd.com/matriarchs";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("matriarchs");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<MatriarchItem>>(request?.downloadHandler.text);
             }
@@ -2184,8 +2179,8 @@ namespace Overlewd
 
         public static async Task<List<MemoryItem>> memoriesAsync()
         {
-            var url = $"http://api.overlewd.com/matriarchs/memories";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("matriarchs/memories");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<MemoryItem>>(request?.downloadHandler.text);
             }
@@ -2193,8 +2188,8 @@ namespace Overlewd
 
         public static async Task memoryBuyAsync(int id)
         {
-            var url = $"http://api.overlewd.com/matriarchs/memories/{id}/buy";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url($"matriarchs/memories/{id}/buy");
+            using (var request = await HttpCore.GetAsync(url))
             {
 
             }
@@ -2202,9 +2197,9 @@ namespace Overlewd
 
         public static async Task seduceMatriarchAsync(int id)
         {
-            var url = $"http://api.overlewd.com/matriarchs/{id}/seduce";
+            var url = make_url($"matriarchs/{id}/seduce");
             var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -2212,8 +2207,8 @@ namespace Overlewd
 
         public static async Task<List<MemoryShardItem>> memoryShardsAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/matriarchs/shards";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("matriarchs/shards");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<MemoryShardItem>>(request?.downloadHandler.text);
             }
@@ -2221,8 +2216,8 @@ namespace Overlewd
 
         public static async Task<List<BuffItem>> buffsAsync()
         {
-            var url = "https://overlewd-api.herokuapp.com/matriarchs/buffs";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("matriarchs/buffs");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<BuffItem>>(request?.downloadHandler.text);
             }
@@ -2403,8 +2398,8 @@ namespace Overlewd
         // /potions/{type}/buy
         public static async Task<PotionsInfo> potionsAsync()
         {
-            var url = $"http://api.overlewd.com/potions";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("potions");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<PotionsInfo>(request?.downloadHandler.text);
             }
@@ -2412,10 +2407,10 @@ namespace Overlewd
 
         public static async Task potionBuyAsync(string type, int count)
         {
-            var url = $"http://api.overlewd.com/potions/{type}/buy";
+            var url = make_url($"potions/{type}/buy");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -2423,10 +2418,10 @@ namespace Overlewd
 
         public static async Task potionEnergyUseAsync(int count)
         {
-            var url = $"http://api.overlewd.com/potions/energy/use";
+            var url = make_url("potions/energy/use");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
 
             }
@@ -2458,8 +2453,8 @@ namespace Overlewd
         // /nutaku/settings
         public static async Task<NutakuSettings> nutakuSettingsAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/nutaku/settings";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("nutaku/settings");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<NutakuSettings>(request?.downloadHandler.text);
             }
@@ -2479,8 +2474,8 @@ namespace Overlewd
         // /alchemy/brew
         public static async Task<List<AlchemyIngredient>> alchemyIngredientsAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/alchemy/my/ingredients";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("alchemy/my/ingredients");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<AlchemyIngredient>>(request?.downloadHandler.text);
             }
@@ -2488,8 +2483,8 @@ namespace Overlewd
 
         public static async Task<List<AlchemyMixture>> alchemyMixturesAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/alchemy/my/mixtures";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("alchemy/my/mixtures");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<AlchemyMixture>>(request?.downloadHandler.text);
             }
@@ -2497,8 +2492,8 @@ namespace Overlewd
 
         public static async Task<List<AlchemyRecipe>> alchemyRecipesAsync()
         {
-            var url = $"https://overlewd-api.herokuapp.com/alchemy/recipes";
-            using (var request = await HttpCore.GetAsync(url, tokens?.accessToken))
+            var url = make_url("alchemy/recipes");
+            using (var request = await HttpCore.GetAsync(url))
             {
                 return JsonHelper.DeserializeObject<List<AlchemyRecipe>>(request?.downloadHandler.text);
             }
@@ -2506,10 +2501,10 @@ namespace Overlewd
 
         public static async Task<BrewResult> alchemyBrewAsync(int[] ingredientIds)
         {
-            var url = $"http://api.overlewd.com/alchemy/brew";
+            var url = make_url("alchemy/brew");
             var form = new WWWForm();
             form.AddField("ingredientIds", JsonHelper.SerializeObject(ingredientIds));
-            using (var request = await HttpCore.PostAsync(url, form, tokens?.accessToken))
+            using (var request = await HttpCore.PostAsync(url, form))
             {
                 return JsonHelper.DeserializeObject<BrewResult> (request?.downloadHandler.text);
             }

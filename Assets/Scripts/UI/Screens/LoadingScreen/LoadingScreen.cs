@@ -190,9 +190,9 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
-#if !UNITY_EDITOR && !DEV_BUILD
+#if !UNITY_EDITOR
             var apiVersion = await AdminBRO.versionAsync();
-            if (apiVersion.version.ToString() != HttpCore.ApiVersion)
+            if (apiVersion.version.ToString() != AdminBRO.ApiVersion)
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
                 errNotif.message = $"Need client update to version {apiVersion.version}";

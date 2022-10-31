@@ -9,12 +9,6 @@ namespace Overlewd
 {
     public static class HttpCore
     {
-#if !UNITY_EDITOR && !DEV_BUILD
-        public const string ApiVersion = "15"; //active api version
-#else
-        public const string ApiVersion = "16"; //dev api version
-#endif
-
         private static List<UnityWebRequest> activeRequests = new List<UnityWebRequest>();
 
         public static void PushRequest(UnityWebRequest request)
@@ -54,14 +48,11 @@ namespace Overlewd
             return Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork;
         }
 
-        private static async Task<UnityWebRequest> Send(UnityWebRequest request, string token, bool lockUserInput)
+        private static async Task<UnityWebRequest> Send(UnityWebRequest request, bool lockUserInput)
         {
             request.timeout = 20;
-            if (token != null)
-            {
-                request.SetRequestHeader("Authorization", "Bearer " + token);
-            }
-            request.SetRequestHeader("Version", ApiVersion);
+            request.SetRequestHeader("Authorization", $"Bearer {AdminBRO.tokens?.accessToken}");
+            request.SetRequestHeader("Version", AdminBRO.ApiVersion);
 
             PushRequest(request);
             if (lockUserInput)
@@ -91,15 +82,14 @@ namespace Overlewd
             return state;
         }
 
-        public static async Task<UnityWebRequest> GetAsync(string url,
-            string token = null, bool lockUserInput = true)
+        public static async Task<UnityWebRequest> GetAsync(string url, bool lockUserInput = true)
         {
             while (true)
             {
                 try
                 {
                     var request = UnityWebRequest.Get(url);
-                    return await Send(request, token, lockUserInput);
+                    return await Send(request, lockUserInput);
                 }
                 catch (UnityWebRequestException e)
                 {
@@ -114,15 +104,14 @@ namespace Overlewd
         }
 
         
-        public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form,
-            string token = null, bool lockUserInput = true)
+        public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, bool lockUserInput = true)
         {
             while (true)
             {
                 try
                 {
                     var request = UnityWebRequest.Post(url, form);
-                    return await Send(request, token, lockUserInput);
+                    return await Send(request, lockUserInput);
                 }
                 catch (UnityWebRequestException e)
                 {
@@ -136,15 +125,14 @@ namespace Overlewd
             }
         }
 
-        public static async Task<UnityWebRequest> DeleteAsync(string url,
-            string token = null, bool lockUserInput = true)
+        public static async Task<UnityWebRequest> DeleteAsync(string url, bool lockUserInput = true)
         {
             while (true)
             {
                 try
                 {
                     var request = UnityWebRequest.Delete(url);
-                    return await Send(request, token, lockUserInput);
+                    return await Send(request, lockUserInput);
                 }
                 catch (UnityWebRequestException e)
                 {
