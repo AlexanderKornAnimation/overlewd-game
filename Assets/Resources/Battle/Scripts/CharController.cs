@@ -130,6 +130,10 @@ namespace Overlewd
                 idleScale = overIdleScale;
                 battleScale = overBattleScale;
             }
+            if (isBoss)
+            {
+                idleScale = 1f;
+            }
             health = (float)character.health;
             healthMax = health;
             mana = (float)character.mana;

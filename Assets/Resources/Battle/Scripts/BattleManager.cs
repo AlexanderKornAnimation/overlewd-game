@@ -97,8 +97,8 @@ namespace Overlewd
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             if (roundTMP == null) roundTMP = transform.Find("BattleUICanvas/Background/Round/text").GetComponent<TextMeshProUGUI>();
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
-            if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats").GetComponent<CharacterPortrait>();
-            if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats").GetComponent<CharacterPortrait>();
+            if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats")?.GetComponent<CharacterPortrait>();
+            if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats")?.GetComponent<CharacterPortrait>();
             EnemyStats.isBoss = bossLevel;
 
             if (bossLevel) QueueUI.gameObject.SetActive(false);
