@@ -11,6 +11,57 @@ namespace Overlewd
 {
     public abstract class BaseSystemNotif : MonoBehaviour
     {
+        public enum State
+        {
+            Waiting,
+            Ok,
+            Cancel,
+            Retry
+        }
+
+        protected Transform notifBack;
+        private TextMeshProUGUI _title;
+        private TextMeshProUGUI _message;
+
+        public State state { get; protected set; } = State.Waiting;
+        public string title
+        {
+            get => _title.text;
+            set
+            {
+                _title.text = value;
+            }
+        }
+        public string message
+        {
+            get => _message.text;
+            set
+            {
+                _message.text = value;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            var canvas = transform.Find("Canvas");
+            notifBack = canvas.Find("NotifBack");
+            _title = notifBack.Find("Title").GetComponent<TextMeshProUGUI>();
+            _message = notifBack.Find("MessageScrollView/Viewport/Content/Message").GetComponent<TextMeshProUGUI>();
+
+            gameObject.SetActive(false);
+        }
+
+        protected virtual void Start()
+        {
+            message += "\n---"; // for recalc scroll rect params
+        }
+
+        public async Task<State> WaitChangeState()
+        {
+            await UniTask.WaitUntil(() => state != State.Waiting);
+            return state;
+        }
+
         public async void Show()
         {
             await ShowAsync();

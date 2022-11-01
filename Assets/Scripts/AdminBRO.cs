@@ -18,7 +18,7 @@ namespace Overlewd
         public const string ServerRootURL = "http://dev.api.overlewd.com/";
 #else
         public const string ApiVersion = "15";
-        public const string ServerRootURL = "http://api.overlewd.com/";
+        public const string ServerRootURL = "http://prod.api.overlewd.com/";
 #endif
         private static string make_url(string url_part) => $"{ServerRootURL}{url_part}";
 
@@ -1853,7 +1853,7 @@ namespace Overlewd
             var url = make_url("municipality/settings");
             using (var request = await HttpCore.GetAsync(url))
             {
-                return JsonHelper.DeserializeObject<MunicipalitySettings>(request.downloadHandler.text);
+                return JsonHelper.DeserializeObject<MunicipalitySettings>(request?.downloadHandler.text);
             }
         }
 

@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class SystemErrorNotif : BaseSystemNotif
+    public class RuntimeExceptionNotif : BaseSystemNotif
     {
         protected override void Awake()
         {
@@ -22,10 +22,10 @@ namespace Overlewd
             state = State.Ok;
         }
 
-        public static SystemErrorNotif GetInstance(Transform parent)
+        public static RuntimeExceptionNotif GetInstance(Transform parent)
         {
-            return ResourceManager.InstantiateScreenPrefab<SystemErrorNotif>
-                ("Prefabs/UI/Widgets/Notifications/System/SystemError", parent);
+            return ResourceManager.InstantiateScreenPrefab<RuntimeExceptionNotif>
+                ("Prefabs/UI/Widgets/Notifications/System/RuntimeException", parent);
         }
     }
 }
