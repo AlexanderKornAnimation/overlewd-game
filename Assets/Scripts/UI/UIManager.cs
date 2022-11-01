@@ -85,6 +85,7 @@ namespace Overlewd
         private static GameObject uiSubPopupLayerGO;
         private static GameObject uiOverlayLayerGO;
         private static GameObject uiNotificationLayerGO;
+        private static GameObject uiSystemNotifsLayerGO;
 
         private static BaseFullScreen prevScreen;
         private static BaseFullScreen currentScreen;
@@ -326,6 +327,7 @@ namespace Overlewd
             uiSubPopupLayerGO = ConfigureLayer("UISubPopupLayer", 2);
             uiOverlayLayerGO = ConfigureLayer("UIOverlayLayer", 3);
             uiNotificationLayerGO = ConfigureLayer("UINotificationLayer", 4);
+            uiSystemNotifsLayerGO = ConfigureLayer("UISystemNotifsLayer", 5);
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
@@ -842,44 +844,44 @@ namespace Overlewd
             HideNotificationProcess();
         }
 
-        //System notifications
+        //System notifications layer
         public static void ShowServerConnectionNotif()
         {
-            var notif = uiNotificationLayerGO.GetComponentInChildren<ServerConnectionNotif>();
+            var notif = uiSystemNotifsLayerGO.GetComponentInChildren<ServerConnectionNotif>();
             if (notif != null)
             {
                 notif.Show();
             }
             else
             {
-                ServerConnectionNotif.GetInstance(uiNotificationLayerGO.transform).Show(); ;
+                ServerConnectionNotif.GetInstance(uiSystemNotifsLayerGO.transform).Show(); ;
             }
         }
 
         public static void HideServerConnectionNotif()
         {
-            uiNotificationLayerGO.GetComponentInChildren<ServerConnectionNotif>()?.Hide();
+            uiSystemNotifsLayerGO.GetComponentInChildren<ServerConnectionNotif>()?.Hide();
         }
 
         public static T MakeSystemNotif<T>() where T : BaseSystemNotif
         {
-            if (uiNotificationLayerGO.GetComponentsInChildren<T>().Count() > 0)
+            if (uiSystemNotifsLayerGO.GetComponentsInChildren<T>().Count() > 0)
             {
-                return BaseSystemNotif.GetInstance<T>(uiNotificationLayerGO.transform);
+                return BaseSystemNotif.GetInstance<T>(uiSystemNotifsLayerGO.transform);
             }
-            var notif = BaseSystemNotif.GetInstance<T>(uiNotificationLayerGO.transform);
+            var notif = BaseSystemNotif.GetInstance<T>(uiSystemNotifsLayerGO.transform);
             notif.Show();
             return notif;
         }
 
         public static void PeakSystemNotif()
         {
-            uiNotificationLayerGO.GetComponentsInChildren<BaseSystemNotif>(true).FirstOrDefault()?.Show();
+            uiSystemNotifsLayerGO.GetComponentsInChildren<BaseSystemNotif>(true).FirstOrDefault()?.Show();
         }
 
         public static bool HasSystemNotif<T>() where T : BaseSystemNotif
         {
-            return uiNotificationLayerGO.GetComponentsInChildren<T>(true).Count() > 0;
+            return uiSystemNotifsLayerGO.GetComponentsInChildren<T>(true).Count() > 0;
         }
     }
 
