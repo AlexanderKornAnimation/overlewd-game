@@ -15,42 +15,26 @@ namespace Overlewd
 
         private static void Msg(string condition, string stackTrace, LogType type)
         {
-            var newLog = new AdminBRO.LogData();
-            newLog.platform = Application.platform switch
-            {
-                RuntimePlatform.Android => "android",
-                RuntimePlatform.WindowsEditor => "windows_editor",
-                RuntimePlatform.WindowsPlayer => "windows",
-                RuntimePlatform.WebGLPlayer => "webgl",
-                _ => "none"
-            };
-            newLog.condition = condition;
-            newLog.stackTrace = stackTrace;
-            newLog.type = type switch
-            {
-                LogType.Assert => "assert",
-                LogType.Error => "error",
-                LogType.Exception => "exception",
-                LogType.Log => "log",
-                LogType.Warning => "warning",
-                _ => "none"
-            };
-
             switch (type)
             {
                 case LogType.Exception:
-                    logException(newLog);
+                    sendLogData(condition, stackTrace, type);
+                    showExceptionNotif(condition, stackTrace, type);
                     break;
             }
         }
 
-        private static async void logException(AdminBRO.LogData logData)
+        private static void sendLogData(string condition, string stackTrace, LogType type)
         {
 #if (UNITY_STANDALONE_WIN || UNITY_ANDROID) && !UNITY_EDITOR
-            AdminBRO.logAsync(logData);
+            AdminBRO.logAsync(makeLogData(condition, stackTrace, type));
 #endif
+        }
+
+        private static async void showExceptionNotif(string condition, string stackTrace, LogType type)
+        {
             var exceptionNotif = UIManager.MakeSystemNotif<RuntimeExceptionNotif>();
-            exceptionNotif.message = $"{logData.condition}/n{logData.stackTrace}";
+            exceptionNotif.message = $"{condition}\n{stackTrace}";
             var state = await exceptionNotif.WaitChangeState();
             await exceptionNotif.CloseAsync();
             UIManager.PeakSystemNotif();
@@ -61,6 +45,32 @@ namespace Overlewd
                 Game.Quit();
             }
 #endif
+        }
+
+        private static AdminBRO.LogData makeLogData(string condition, string stackTrace, LogType type)
+        {
+            return new AdminBRO.LogData
+            {
+                platform = Application.platform switch
+                {
+                    RuntimePlatform.Android => "android",
+                    RuntimePlatform.WindowsEditor => "windows_editor",
+                    RuntimePlatform.WindowsPlayer => "windows",
+                    RuntimePlatform.WebGLPlayer => "webgl",
+                    _ => "none"
+                },
+                condition = condition,
+                stackTrace = stackTrace,
+                type = type switch
+                {
+                    LogType.Assert => "assert",
+                    LogType.Error => "error",
+                    LogType.Exception => "exception",
+                    LogType.Log => "log",
+                    LogType.Warning => "warning",
+                    _ => "none"
+                }
+            };
         }
     }
 
