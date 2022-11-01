@@ -13,7 +13,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
-    public static class NutakuApi
+    public static class NutakuApiHelper
     {
         public static void Initialize()
         {
@@ -35,7 +35,7 @@ namespace Overlewd
         {
 #if UNITY_EDITOR || UNITY_ANDROID
             await UniTask.WaitUntil(() => loggedIn);
-            userInfo = await NutakuApi.GetMyProfileAsync(myMonoBehaviour);
+            userInfo = await GetMyProfileAsync(myMonoBehaviour);
 #endif
             await Task.CompletedTask;
         }

@@ -181,9 +181,9 @@ namespace Overlewd
             var form = new WWWForm();
             form.AddField("name", name);
             form.AddField("currentVersion", ApiVersion);
-            if (NutakuApi.loggedIn)
+            if (NutakuApiHelper.loggedIn)
             {
-                form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApi.userInfo), Encoding.UTF8);
+                form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApiHelper.userInfo), Encoding.UTF8);
             }
 
             using (var request = await HttpCore.PostAsync(make_url("me"), form))
