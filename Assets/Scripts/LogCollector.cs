@@ -39,7 +39,6 @@ namespace Overlewd
             await exceptionNotif.CloseAsync();
             UIManager.PeakSystemNotif();
 #if !UNITY_EDITOR
-            AdminBRO.logAsync(logData);
             if (!UIManager.HasSystemNotif<RuntimeExceptionNotif>())
             {
                 Game.Quit();
