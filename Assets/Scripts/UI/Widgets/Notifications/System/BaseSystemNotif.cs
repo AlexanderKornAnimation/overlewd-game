@@ -82,7 +82,7 @@ namespace Overlewd
         public async Task HideAsync()
         {
             gameObject.SetActive(false);
-            UIManager.SetUserInputLockerMode(UIManager.UserInputLockerMode.Manual, true);
+            UIManager.SetUserInputLockerMode(UIManager.UserInputLockerMode.Auto);
             await Task.CompletedTask;
         }
 
