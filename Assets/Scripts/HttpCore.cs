@@ -66,7 +66,7 @@ namespace Overlewd
             return request;
         }
 
-        private static async Task<ServerErrorNotif.State> ExceptionHandling(UnityWebRequestException e)
+        private static async Task<BaseSystemNotif.State> ExceptionHandling(UnityWebRequestException e)
         {
             PopRequest(e.UnityWebRequest);
             UIManager.PopUserInputLocker(new UserInputLocker(e.UnityWebRequest));
@@ -96,7 +96,7 @@ namespace Overlewd
                     var errNotifState = await ExceptionHandling(e);
                     switch (errNotifState)
                     {
-                        case ServerErrorNotif.State.Cancel:
+                        case BaseSystemNotif.State.Cancel:
                             return default;
                     }
                 }
@@ -118,7 +118,7 @@ namespace Overlewd
                     var errNotifState = await ExceptionHandling(e);
                     switch (errNotifState)
                     {
-                        case ServerErrorNotif.State.Cancel:
+                        case BaseSystemNotif.State.Cancel:
                             return default;
                     }
                 }
@@ -139,7 +139,7 @@ namespace Overlewd
                     var errNotifState = await ExceptionHandling(e);
                     switch (errNotifState)
                     {
-                        case ServerErrorNotif.State.Cancel:
+                        case BaseSystemNotif.State.Cancel:
                             return default;
                     }
                 }

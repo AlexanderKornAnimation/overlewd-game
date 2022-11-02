@@ -82,7 +82,6 @@ namespace Overlewd
 
         private static GameObject uiScreenLayerGO;
         private static GameObject uiPopupLayerGO;
-        private static GameObject uiSubPopupLayerGO;
         private static GameObject uiOverlayLayerGO;
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiSystemNotifsLayerGO;
@@ -91,8 +90,6 @@ namespace Overlewd
         private static BaseFullScreen currentScreen;
         private static BasePopup prevPopup;
         private static BasePopup currentPopup;
-        private static BaseSubPopup prevSubPopup;
-        private static BaseSubPopup currentSubPopup;
         private static BaseOverlay prevOverlay;
         private static BaseOverlay currentOverlay;
         private static BaseNotification prevNotification;
@@ -102,13 +99,10 @@ namespace Overlewd
         private static BaseMissclick overlayMissclick;
         private static BaseMissclick prevPopupMissclick;
         private static BaseMissclick popupMissclick;
-        private static BaseMissclick prevSubPopupMissclick;
-        private static BaseMissclick subPopupMissclick;
         private static BaseMissclick prevNotificationMissclick;
         private static BaseMissclick notificationMissclick;
 
         public static event Action<GameDataEvent> widgetsGameDataListeners;
-
 
         public enum UserInputLockerMode
         {
@@ -219,16 +213,13 @@ namespace Overlewd
             var uiRootScreenLayerGO_rectMask2D = uiRootScreenLayerGO.AddComponent<RectMask2D>();
         }
 
-        private static GameObject ConfigureLayer(string name, int siblingIndex)
+        private static GameObject ConfigureLayer(string name)
         {
             var layerGO = new GameObject(name);
             layerGO.layer = 5;
             var layerGO_rectTransform = layerGO.AddComponent<RectTransform>();
             layerGO_rectTransform.SetParent(uiRootScreenLayerGO.transform, false);
             UITools.SetStretch(layerGO_rectTransform);
-
-            layerGO.transform.SetSiblingIndex(siblingIndex);
-
             return layerGO;
         }
 
@@ -246,11 +237,6 @@ namespace Overlewd
         public static T GetPopupMissclickInstance<T>() where T : PopupMissclick
         {
             return GetMissclickInstance<T>(uiPopupLayerGO.transform);
-        }
-
-        public static T GetSubPopupMissclickInstance<T>() where T : SubPopupMissclick
-        {
-            return GetMissclickInstance<T>(uiSubPopupLayerGO.transform);
         }
 
         public static T GetOverlayMissclickInstance<T>() where T : OverlayMissclick
@@ -285,11 +271,6 @@ namespace Overlewd
             return GetScreenInstance<T>(uiPopupLayerGO.transform); 
         }
 
-        public static T GetSubPopupInstance<T>() where T : BaseSubPopup
-        {
-            return GetScreenInstance<T>(uiSubPopupLayerGO.transform);
-        }
-
         public static T GetOverlayInstance<T>() where T : BaseOverlay
         {
             return GetScreenInstance<T>(uiOverlayLayerGO.transform);
@@ -322,12 +303,11 @@ namespace Overlewd
 
             ConfigureRootScreenLayer();
 
-            uiScreenLayerGO = ConfigureLayer("UIScreenLayer", 0);
-            uiPopupLayerGO = ConfigureLayer("UIPopupLayer", 1);
-            uiSubPopupLayerGO = ConfigureLayer("UISubPopupLayer", 2);
-            uiOverlayLayerGO = ConfigureLayer("UIOverlayLayer", 3);
-            uiNotificationLayerGO = ConfigureLayer("UINotificationLayer", 4);
-            uiSystemNotifsLayerGO = ConfigureLayer("UISystemNotifsLayer", 5);
+            uiScreenLayerGO = ConfigureLayer("UIScreenLayer");
+            uiPopupLayerGO = ConfigureLayer("UIPopupLayer");
+            uiOverlayLayerGO = ConfigureLayer("UIOverlayLayer");
+            uiNotificationLayerGO = ConfigureLayer("UINotificationLayer");
+            uiSystemNotifsLayerGO = ConfigureLayer("UISystemNotifsLayer");
 
             uiEventSystem = new GameObject("UIManagerEventSystem");
             uiEventSystem_eventSystem = uiEventSystem.AddComponent<EventSystem>();
@@ -339,7 +319,6 @@ namespace Overlewd
         {
             currentScreen?.OnGameDataEvent(eventData);
             currentPopup?.OnGameDataEvent(eventData);
-            currentSubPopup?.OnGameDataEvent(eventData);
             currentOverlay?.OnGameDataEvent(eventData);
 
             widgetsGameDataListeners?.Invoke(eventData);
@@ -349,7 +328,6 @@ namespace Overlewd
         {
             currentScreen?.OnUIEvent(eventData);
             currentPopup?.OnUIEvent(eventData);
-            currentSubPopup?.OnUIEvent(eventData);
             currentOverlay?.OnUIEvent(eventData);
         }
 
@@ -390,21 +368,6 @@ namespace Overlewd
                 if (missclickTr != null) processTasks.Add(missclickTr.ProgressAsync());
             }
             await Task.WhenAll(processTasks);
-        }
-
-        private static void MakeSubPopup(BaseSubPopup subPopup)
-        {
-            prevSubPopup = currentSubPopup;
-            prevSubPopup?.Hide();
-            currentSubPopup = subPopup;
-            currentSubPopup?.Show();
-            currentSubPopup?.MakeMissclick();
-            if (currentSubPopup == null)
-            {
-                prevSubPopupMissclick = subPopupMissclick;
-                prevSubPopupMissclick?.Hide();
-                subPopupMissclick = null;
-            }
         }
 
         private static void MakePopup(BasePopup popup)
@@ -480,14 +443,11 @@ namespace Overlewd
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             { 
-                prevSubPopup,
                 prevPopup,
                 prevOverlay,
                 prevScreen,
                 currentScreen
             });
-            await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
-                                        new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup, prevOverlay, prevScreen },
                                         new List<BaseMissclick> { prevPopupMissclick, prevOverlayMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { currentScreen }, new List<BaseMissclick>());
@@ -497,7 +457,6 @@ namespace Overlewd
         public static T MakeScreen<T>() where T : BaseFullScreen
         {
             MemoryOprimizer.PrepareChangeScreen();
-            MakeSubPopup(null);
             MakePopup(null);
             MakeOverlay(null);
             MakeScreen(GetScreenInstance<T>());
@@ -539,11 +498,6 @@ namespace Overlewd
             return currentPopup as T;
         }
 
-        public static BasePopupInData currentPopupInData =>
-            currentPopup?.baseInputData;
-        public static BasePopupInData prevPopupInData =>
-            prevPopup?.baseInputData;
-
         public static bool HasPopup<T>() where T : BasePopup
         {
             return currentPopup?.GetType() == typeof(T);
@@ -553,12 +507,9 @@ namespace Overlewd
         {
             await WaitScreensPrepare(new List<BaseScreen> 
             {
-                prevSubPopup,
                 prevPopup,
                 currentPopup
             });
-            await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
-                                        new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup }, 
                                         new List<BaseMissclick> { prevPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { currentPopup },
@@ -567,7 +518,6 @@ namespace Overlewd
 
         public static T MakePopup<T>() where T : BasePopup
         {
-            MakeSubPopup(null);
             MakePopup(GetPopupInstance<T>());
             return currentPopup as T;
         }
@@ -589,11 +539,8 @@ namespace Overlewd
 
             await WaitScreensPrepare(new List<BaseScreen> 
             {
-                prevSubPopup,
                 prevPopup
             });
-            await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
-                                        new List<BaseMissclick> { prevSubPopupMissclick });
             await WaitScreenTransitions(new List<BaseScreen> { prevPopup },
                                         new List<BaseMissclick> { prevPopupMissclick });
 
@@ -602,81 +549,8 @@ namespace Overlewd
 
         public static void HidePopup()
         {
-            MakeSubPopup(null);
             MakePopup(null);
             HidePopupProcess();
-        }
-
-        //SubPopup Layer
-        public static T GetSubPopupMissclick<T>() where T : SubPopupMissclick
-        {
-            return subPopupMissclick as T;
-        }
-
-        public static bool HasSubPopupMissclick<T>() where T : SubPopupMissclick
-        {
-            return subPopupMissclick?.GetType() == typeof(T);
-        }
-
-        public static T MakeSubPopupMissclick<T>() where T : SubPopupMissclick
-        {
-            if (!HasSubPopupMissclick<T>())
-            {
-                prevSubPopupMissclick = subPopupMissclick;
-                prevSubPopupMissclick?.Hide();
-                subPopupMissclick = GetSubPopupMissclickInstance<T>();
-                subPopupMissclick.Show();
-            }
-            return subPopupMissclick as T;
-        }
-
-        public static T GetSubPopup<T>() where T : BaseSubPopup
-        {
-            return currentSubPopup as T;
-        }
-
-        public static bool HasSubPopup<T>() where T : BaseSubPopup
-        {
-            return currentSubPopup?.GetType() == typeof(T);
-        }
-
-        public static async void ShowSubPopupProcess()
-        {
-            await WaitScreensPrepare(new List<BaseScreen> 
-            {
-                prevSubPopup,
-                currentSubPopup
-            });
-            await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
-                                        new List<BaseMissclick> { prevSubPopupMissclick });
-            await WaitScreenTransitions(new List<BaseScreen> { currentSubPopup },
-                                        new List<BaseMissclick> { subPopupMissclick });
-        }
-
-        public static T MakeSubPopup<T>() where T : BaseSubPopup
-        {
-            MakeSubPopup(GetSubPopupInstance<T>());
-            return currentSubPopup as T;
-        }
-
-        public static T ShowSubPopup<T>() where T : BaseSubPopup
-        {
-            MakeSubPopup<T>();
-            ShowSubPopupProcess();
-            return currentSubPopup as T;
-        }
-
-        private static async void HideSubPopupProcess()
-        {
-            await WaitScreensPrepare(new List<BaseScreen> { prevSubPopup });
-            await WaitScreenTransitions(new List<BaseScreen> { prevSubPopup },
-                                        new List<BaseMissclick> { prevSubPopupMissclick });
-        }
-
-        public static void HideSubPopup()
-        {
-            MakeSubPopup(null);
-            HideSubPopupProcess();
         }
 
         //Overlay Layer
