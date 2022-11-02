@@ -30,8 +30,8 @@ namespace Overlewd
                 levelBack = canvas.Find("LevelBack").gameObject;
                 level = levelBack.transform.Find("Level").GetComponent<TextMeshProUGUI>();
                 characterClass = canvas.Find("Class").GetComponent<TextMeshProUGUI>();
-                button = canvas.Find("Button").GetComponent<Button>();
-                button.onClick.AddListener(ButtonClick);
+                button = canvas.Find("Button")?.GetComponent<Button>();
+                button?.onClick.AddListener(ButtonClick);
             }
 
             protected virtual void Start()
