@@ -7,8 +7,74 @@ using UnityEngine.Networking;
 
 namespace Overlewd
 {
+    public class HttpCoreResponse
+    {
+        public byte[] data { get; private set; }
+        public string text { get; private set; }
+
+        private void _init(UnityWebRequest request)
+        {
+            data = request.downloadHandler.data;
+            text = request.downloadHandler.text;
+        }
+
+        public virtual void Init(UnityWebRequest request)
+        {
+            _init(request);
+        }
+
+        public void Init(UnityWebRequestException e)
+        {
+            _init(e.UnityWebRequest);
+        }
+    }
+
+    public class HttpCoreResponse<TData> : HttpCoreResponse
+    {
+        public TData dData { get; private set; }
+        public override void Init(UnityWebRequest request)
+        {
+            base.Init(request);
+            dData = JsonHelper.DeserializeObject<TData>(request.downloadHandler.text);
+        }
+
+        public static implicit operator TData(HttpCoreResponse<TData> param)
+        {
+            return param.dData;
+        }
+    }
+
     public static class HttpCore
     {
+        private class RequestParams
+        {
+            private enum Type
+            {
+                GET,
+                POST,
+                DELETE
+            }
+
+            private Type type;
+            private string url;
+            private WWWForm formData;
+
+            public UnityWebRequest Make() => type switch
+            {
+                Type.GET => UnityWebRequest.Get(url),
+                Type.POST => UnityWebRequest.Post(url, formData),
+                Type.DELETE => UnityWebRequest.Delete(url),
+                _ => null
+            };
+
+            public static RequestParams InstGet(string url) =>
+                new RequestParams { url = url, type = Type.GET };
+            public static RequestParams InstPost(string url, WWWForm formData = null) =>
+                new RequestParams { url = url, type = Type.POST, formData = formData ?? new WWWForm() };
+            public static RequestParams InstDelete(string url) =>
+                new RequestParams { url = url, type = Type.DELETE };
+        }
+
         private static List<UnityWebRequest> activeRequests = new List<UnityWebRequest>();
 
         public static void PushRequest(UnityWebRequest request)
@@ -82,14 +148,17 @@ namespace Overlewd
             return state;
         }
 
-        public static async Task<UnityWebRequest> GetAsync(string url, bool lockUserInput = true)
+        private static async Task<T> Send<T>(RequestParams requestParams, bool lockUserInput) where T : HttpCoreResponse, new()
         {
             while (true)
             {
+                using var request = requestParams.Make();
                 try
                 {
-                    var request = UnityWebRequest.Get(url);
-                    return await Send(request, lockUserInput);
+                    await Send(request, lockUserInput);
+                    var response = new T();
+                    response.Init(request);
+                    return response;
                 }
                 catch (UnityWebRequestException e)
                 {
@@ -97,53 +166,25 @@ namespace Overlewd
                     switch (errNotifState)
                     {
                         case BaseSystemNotif.State.Cancel:
-                            return default;
+                            var response = new T();
+                            response.Init(e);
+                            return response;
                     }
                 }
             }
         }
 
-        
-        public static async Task<UnityWebRequest> PostAsync(string url, WWWForm form, bool lockUserInput = true)
-        {
-            while (true)
-            {
-                try
-                {
-                    var request = UnityWebRequest.Post(url, form);
-                    return await Send(request, lockUserInput);
-                }
-                catch (UnityWebRequestException e)
-                {
-                    var errNotifState = await ExceptionHandling(e);
-                    switch (errNotifState)
-                    {
-                        case BaseSystemNotif.State.Cancel:
-                            return default;
-                    }
-                }
-            }
-        }
-
-        public static async Task<UnityWebRequest> DeleteAsync(string url, bool lockUserInput = true)
-        {
-            while (true)
-            {
-                try
-                {
-                    var request = UnityWebRequest.Delete(url);
-                    return await Send(request, lockUserInput);
-                }
-                catch (UnityWebRequestException e)
-                {
-                    var errNotifState = await ExceptionHandling(e);
-                    switch (errNotifState)
-                    {
-                        case BaseSystemNotif.State.Cancel:
-                            return default;
-                    }
-                }
-            }
-        }
+        public static async Task<HttpCoreResponse> GetAsync(string url, bool lockUserInput = true) =>
+            await Send<HttpCoreResponse>(RequestParams.InstGet(url), lockUserInput);
+        public static async Task<HttpCoreResponse<TData>> GetAsync<TData>(string url, bool lockUserInput = true) =>
+            await Send<HttpCoreResponse<TData>>(RequestParams.InstGet(url), lockUserInput);
+        public static async Task<HttpCoreResponse> PostAsync(string url, WWWForm form = null, bool lockUserInput = true) =>
+            await Send<HttpCoreResponse>(RequestParams.InstPost(url, form), lockUserInput);
+        public static async Task<HttpCoreResponse<TData>> PostAsync<TData>(string url, WWWForm form = null, bool lockUserInput = true) =>
+            await Send<HttpCoreResponse<TData>>(RequestParams.InstPost(url, form), lockUserInput);
+        public static async Task<HttpCoreResponse> DeleteAsync(string url, bool lockUserInput = true) =>
+            await Send<HttpCoreResponse>(RequestParams.InstDelete(url), lockUserInput);
+        public static async Task<HttpCoreResponse<TData>> DeleteAsync<TData>(string url, bool lockUserInput = true) =>
+            await Send<HttpCoreResponse<TData>>(RequestParams.InstDelete(url), lockUserInput);
     }
 }

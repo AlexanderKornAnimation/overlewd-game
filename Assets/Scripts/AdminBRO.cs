@@ -95,13 +95,8 @@ namespace Overlewd
         }
 
         // /version
-        public static async Task<ApiVersionResponse> versionAsync()
-        {
-            using (var request = await HttpCore.GetAsync(make_url("version")))
-            {
-                return JsonHelper.DeserializeObject<ApiVersionResponse>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<ApiVersionResponse>> versionAsync() =>
+            await HttpCore.GetAsync<ApiVersionResponse>(make_url("version"));
 
         [Serializable]
         public class ApiVersionResponse
@@ -118,10 +113,7 @@ namespace Overlewd
             postData.AddField("condition", data.condition);
             postData.AddField("stackTrace", data.stackTrace);
             postData.AddField("type", data.type);
-            using (var request = await HttpCore.PostAsync(url, postData, false))
-            {
-
-            }
+            await HttpCore.PostAsync(url, postData, false);
         }
 
         public class LogData
@@ -133,26 +125,17 @@ namespace Overlewd
         }
 
         // auth/login; auth/refresh
-        public static async Task<Tokens> authLoginAsync()
+        public static async Task<HttpCoreResponse<Tokens>> authLoginAsync()
         {
             var postData = new WWWForm();
             postData.AddField("deviceId", GetDeviceId());
-            using (var request = await HttpCore.PostAsync(make_url("auth/login"), postData))
-            {
-                tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
-                return tokens;
-            }
+            var result = await HttpCore.PostAsync<Tokens>(make_url("auth/login"), postData);
+            tokens = result.dData;
+            return result;
         }
 
-        public static async Task<Tokens> authRefreshAsync()
-        {
-            var postData = new WWWForm();
-            using (var request = await HttpCore.PostAsync(make_url("auth/refresh"), postData))
-            {
-                tokens = JsonHelper.DeserializeObject<Tokens>(request?.downloadHandler.text);
-                return tokens;
-            }
-        }
+        public static async Task<HttpCoreResponse<Tokens>> authRefreshAsync() =>
+            await HttpCore.PostAsync<Tokens>(make_url("auth/refresh"));
 
         [Serializable]
         public class Tokens
@@ -167,16 +150,10 @@ namespace Overlewd
         // /me/init
         // /me/reset
         // /me/currency
-        // /me/special-for-vova/{characterId}
-        public static async Task<PlayerInfo> meAsync()
-        {
-            using (var request = await HttpCore.GetAsync(make_url("me")))
-            {
-                return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<PlayerInfo>> meAsync() =>
+            await HttpCore.GetAsync<PlayerInfo>(make_url("me"));
 
-        public static async Task<PlayerInfo> meAsync(string name)
+        public static async Task<HttpCoreResponse<PlayerInfo>> meAsync(string name)
         {
             var form = new WWWForm();
             form.AddField("name", name);
@@ -185,11 +162,7 @@ namespace Overlewd
             {
                 form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApiHelper.userInfo), Encoding.UTF8);
             }
-
-            using (var request = await HttpCore.PostAsync(make_url("me"), form))
-            {
-                return JsonHelper.DeserializeObject<PlayerInfo>(request?.downloadHandler.text);
-            }
+            return await HttpCore.PostAsync<PlayerInfo>(make_url("me"), form);
         }
 
         [Serializable]
@@ -201,6 +174,7 @@ namespace Overlewd
             public List<WalletItem> wallet;
             public Potion potion;
             public int energyPoints;
+            public List<Device> devices;
 
             public class Potion
             {
@@ -215,49 +189,31 @@ namespace Overlewd
                 public int currencyId;
                 public int amount;
             }
-        }
 
-        public static async Task initAsync()
-        {
-            var url = make_url("me/init");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
+            public class Device
             {
-
+                public string id;
+                public int userId;
             }
         }
 
+        public static async Task<HttpCoreResponse> initAsync() =>
+            await HttpCore.PostAsync(make_url("me/init"));
 
-        public static async Task resetAsync()
-        {
-            var url = make_url("me/reset");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> resetAsync() =>
+            await HttpCore.PostAsync(make_url("me/reset"));
 
-            }
-        }
-
-        public static async Task meCurrencyAsync(int currencyId, int amount)
+        public static async Task<HttpCoreResponse> meCurrencyAsync(int currencyId, int amount)
         {
             var form = new WWWForm();
             form.AddField("currencyId", currencyId);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync(make_url("me/currency"), form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url("me/currency"), form);
         }
 
         // /markets
-        public static async Task<List<EventMarketItem>> eventMarketsAsync()
-        {
-            var url = make_url("markets");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<EventMarketItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<EventMarketItem>>> eventMarketsAsync() =>
+            await HttpCore.GetAsync<List<EventMarketItem>>(make_url("markets"));
 
         [Serializable]
         public class EventMarketItem
@@ -295,13 +251,8 @@ namespace Overlewd
         }
 
         // /currencies
-        public static async Task<List<CurrencyItem>> currenciesAsync()
-        {
-            using (var request = await HttpCore.GetAsync(make_url("currencies")))
-            {
-                return JsonHelper.DeserializeObject<List<CurrencyItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<CurrencyItem>>> currenciesAsync() =>
+            await HttpCore.GetAsync<List<CurrencyItem>>(make_url("currencies"));
 
         [Serializable]
         public class CurrencyItem
@@ -342,14 +293,8 @@ namespace Overlewd
         }
 
         // /tradable
-        public static async Task<List<TradableItem>> tradablesAsync()
-        {
-            var url = make_url("tradable");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<TradableItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<TradableItem>>> tradablesAsync() =>
+            await HttpCore.GetAsync<List<TradableItem>>(make_url("tradable"));
 
         [Serializable]
         public class TradableItem
@@ -417,25 +362,11 @@ namespace Overlewd
 
         // /markets/{marketId}/tradable/{tradableId}/buy
         // /tradable/{tradableId}/buy
-        public static async Task<TradableBuyStatus> tradableBuyAsync(int marketId, int tradableId)
-        {
-            var form = new WWWForm();
-            var url = make_url($"markets/{marketId}/tradable/{tradableId}/buy");
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<TradableBuyStatus>> tradableBuyAsync(int marketId, int tradableId) =>
+            await HttpCore.PostAsync<TradableBuyStatus>(make_url($"markets/{marketId}/tradable/{tradableId}/buy"));
 
-        public static async Task<TradableBuyStatus> tradableBuyAsync(int tradableId)
-        {
-            var form = new WWWForm();
-            var url = make_url($"tradable/{tradableId}/buy");
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<TradableBuyStatus>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<TradableBuyStatus>> tradableBuyAsync(int tradableId) =>
+            await HttpCore.PostAsync<TradableBuyStatus>(make_url($"tradable/{tradableId}/buy"));
 
         [Serializable]
         public class TradableBuyStatus
@@ -444,7 +375,7 @@ namespace Overlewd
         }
 
         // /resources
-        public static async Task<List<NetworkResource>> resourcesAsync()
+        public static async Task<HttpCoreResponse<List<NetworkResource>>> resourcesAsync()
         {
             var url = Application.platform switch
             {
@@ -454,11 +385,7 @@ namespace Overlewd
                 RuntimePlatform.WebGLPlayer => make_url("resources?platform=webgl"),
                 _ => make_url("resources")
             };
-
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<NetworkResource>>(request?.downloadHandler.text);
-            }
+            return await HttpCore.GetAsync<List<NetworkResource>>(url);
         }
 
         [Serializable]
@@ -480,13 +407,8 @@ namespace Overlewd
         }
 
         // /event-chapters
-        public static async Task<List<EventChapter>> eventChaptersAsync()
-        {
-            using (var request = await HttpCore.GetAsync(make_url("event-chapters")))
-            {
-                return JsonHelper.DeserializeObject<List<EventChapter>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<EventChapter>>> eventChaptersAsync() =>
+            await HttpCore.GetAsync<List<EventChapter>>(make_url("event-chapters"));
 
         [Serializable]
         public class EventChapter
@@ -553,13 +475,8 @@ namespace Overlewd
         }
 
         // /events
-        public static async Task<List<EventItem>> eventsAsync()
-        {
-            using (var request = await HttpCore.GetAsync(make_url("events")))
-            {
-                return JsonHelper.DeserializeObject<List<EventItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<EventItem>>> eventsAsync() =>
+            await HttpCore.GetAsync<List<EventItem>>(make_url("events"));
 
         [Serializable]
         public class EventItem
@@ -631,47 +548,23 @@ namespace Overlewd
 
 
         // /event-stages
-        public static async Task<List<EventStageItem>> eventStagesAsync()
-        {
-            var url = make_url("event-stages");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<EventStageItem>>(request?.downloadHandler.text);
-            }
-        }
-
         // /event-stages/{id}/start
-        public static async Task<EventStageItem> eventStageStartAsync(int eventStageId)
-        {
-            var url = make_url($"event-stages/{eventStageId}/start");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
-            }
-        }
-
         // /event-stages/{id}/end
-        public static async Task<EventStageItem> eventStageEndAsync(int eventStageId, EventStageEndData data = null)
-        {
-            var url = make_url($"event-stages/{eventStageId}/end");
-            var form = data?.ToWWWForm() ?? new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<EventStageItem>(request?.downloadHandler.text);
-            }
-        }
-
         // /event-stages/{id}/replay
-        public static async Task eventStageReplayAsync(int eventStageId, int count)
+        public static async Task<HttpCoreResponse<List<EventStageItem>>> eventStagesAsync() =>
+            await HttpCore.GetAsync<List<EventStageItem>>(make_url("event-stages"));
+
+        public static async Task<HttpCoreResponse<EventStageItem>> eventStageStartAsync(int eventStageId) =>
+            await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/start"));
+
+        public static async Task<HttpCoreResponse<EventStageItem>> eventStageEndAsync(int eventStageId, EventStageEndData data = null) =>
+            await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/end"), data?.ToWWWForm());
+
+        public static async Task<HttpCoreResponse> eventStageReplayAsync(int eventStageId, int count)
         {
-            var url = make_url($"event-stages/{eventStageId}/replay");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url($"event-stages/{eventStageId}/replay"), form);
         }
 
         public class EventStageEndData
@@ -739,14 +632,8 @@ namespace Overlewd
         }
 
         // /quests
-        public static async Task<List<QuestItem>> questsAsync()
-        {
-            var url = make_url("quests");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<QuestItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<QuestItem>>> questsAsync() =>
+            await HttpCore.GetAsync<List<QuestItem>>(make_url("quests"));
 
         [Serializable]
         public class QuestItem
@@ -804,25 +691,12 @@ namespace Overlewd
         }
 
         // //quests/{id}/claim-reward
-        public static async Task questClaimRewardAsync(int id)
-        {
-            var url = make_url($"quests/{id}/claim-reward");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
-        }
+        public static async Task<HttpCoreResponse> questClaimRewardAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"quests/{id}/claim-reward"));
 
         // /i18n
-        public static async Task<List<LocalizationItem>> localizationAsync(string locale)
-        {
-            var url = make_url($"i18n?locale={locale}");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<LocalizationItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<LocalizationItem>>> localizationAsync(string locale) =>
+            await HttpCore.GetAsync<List<LocalizationItem>>(make_url($"i18n?locale={locale}"));
 
         [Serializable]
         public class LocalizationItem
@@ -838,14 +712,8 @@ namespace Overlewd
         }
 
         // /dialogs
-        public static async Task<List<Dialog>> dialogsAsync()
-        {
-            var url = make_url("dialogs");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Dialog>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Dialog>>> dialogsAsync() =>
+            await HttpCore.GetAsync<List<Dialog>>(make_url("dialogs"));
 
         [Serializable]
         public class DialogReplica
@@ -920,14 +788,8 @@ namespace Overlewd
         }
 
         // /battles
-        public static async Task<List<Battle>> battlesAsync()
-        {
-            var url = make_url("battles");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Battle>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Battle>>> battlesAsync() =>
+            await HttpCore.GetAsync<List<Battle>>(make_url("battles"));
 
         [Serializable]
         public class Battle
@@ -963,73 +825,30 @@ namespace Overlewd
         // /battles/my/characters/{tgtId}/merge/{srcId}
         // /battles/skills/effects
         // /battles/pass
-        public static async Task<List<Character>> charactersAsync()
-        {
-            var url = make_url("battles/my/characters");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Character>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Character>>> charactersAsync() =>
+            await HttpCore.GetAsync<List<Character>>(make_url("battles/my/characters"));
 
-        public static async Task characterToSlotAsync(int characterId, string slotId)
+        public static async Task<HttpCoreResponse> characterToSlotAsync(int characterId, string slotId)
         {
-            var url = make_url($"battles/my/characters/{characterId}");
             var form = new WWWForm();
             form.AddField("teamPosition", slotId);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}"), form);
         }
 
-        public static async Task characterLvlupAsync(int characterId)
-        {
-            var url = make_url($"battles/my/characters/{characterId}/levelup");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> characterLvlupAsync(int characterId) =>
+            await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/levelup"));
 
-            }
-        }
+        public static async Task<HttpCoreResponse> chracterSkillLvlUp(int characterId, int skillId) =>
+            await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/skills/{skillId}/levelup"));
 
-        public static async Task chracterSkillLvlUp(int characterId, int skillId)
-        {
-            var url = make_url($"battles/my/characters/{characterId}/skills/{skillId}/levelup");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> charactersMrgAsync(int srcCharacterId, int trgtCharacterId) =>
+            await HttpCore.PostAsync(make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}"));
 
-            }
-        }
+        public static async Task<HttpCoreResponse<List<SkillEffect>>> skillEffectsAsync() =>
+            await HttpCore.GetAsync<List<SkillEffect>>(make_url("battles/skills/effects"));
 
-        public static async Task charactersMrgAsync(int srcCharacterId, int trgtCharacterId)
-        {
-            var url = make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
-        }
-
-        public static async Task<List<SkillEffect>> skillEffectsAsync()
-        {
-            var url = make_url("battles/skills/effects");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<SkillEffect>>(request?.downloadHandler.text);
-            }
-        }
-
-        public static async Task<List<BattlePass>> battlePassesAsync()
-        {
-            var url = make_url("battles/pass");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<BattlePass>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
+            await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
 
         [Serializable]
         public class Character
@@ -1321,33 +1140,14 @@ namespace Overlewd
         // /my/characters/equipment
         // /battles/my/characters/{id}/equip/{id} - post
         // /battles/my/characters/{id}/equip/{id} - delete
-        public static async Task<List<Equipment>> equipmentAsync()
-        {
-            var url = make_url("battles/my/characters/equipment");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Equipment>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Equipment>>> equipmentAsync() =>
+            await HttpCore.GetAsync<List<Equipment>>(make_url("battles/my/characters/equipment"));
 
-        public static async Task equipAsync(int characterId, int equipmentId)
-        {
-            var url = make_url($"battles/my/characters/{characterId}/equip/{equipmentId}");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> equipAsync(int characterId, int equipmentId) =>
+            await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/equip/{equipmentId}"));
 
-            }
-        }
-
-        public static async Task unequipAsync(int characterId, int equipmentId)
-        {
-            var url = make_url($"battles/my/characters/{characterId}/equip/{equipmentId}");
-            using (var request = await HttpCore.DeleteAsync(url))
-            {
-
-            }
-        }
+        public static async Task<HttpCoreResponse> unequipAsync(int characterId, int equipmentId) =>
+            await HttpCore.DeleteAsync(make_url($"battles/my/characters/{characterId}/equip/{equipmentId}"));
 
         [Serializable]
         public class Equipment
@@ -1458,14 +1258,8 @@ namespace Overlewd
         }
 
         //ftue
-        public static async Task<FTUEInfo> ftueAsync()
-        {
-            var url = make_url("ftue");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<FTUEInfo>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<FTUEInfo>> ftueAsync() =>
+            await HttpCore.GetAsync<FTUEInfo>(make_url("ftue"));
 
         [Serializable]
         public class FTUENotificationItem
@@ -1546,14 +1340,8 @@ namespace Overlewd
         }
 
         // ftue/stats
-        public static async Task<FTUEStats> ftueStatsAsync()
-        {
-            var url = make_url("ftue/stats");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<FTUEStats>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<FTUEStats>> ftueStatsAsync() =>
+            await HttpCore.GetAsync<FTUEStats>(make_url("ftue/stats"));
 
         [Serializable]
         public class FTUEStats
@@ -1576,14 +1364,8 @@ namespace Overlewd
         }
 
         // /ftue-stages
-        public static async Task<List<FTUEStageItem>> ftueStagesAsync()
-        {
-            var url = make_url("ftue-stages");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<FTUEStageItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<FTUEStageItem>>> ftueStagesAsync() =>
+            await HttpCore.GetAsync<List<FTUEStageItem>>(make_url("ftue-stages"));
 
         [Serializable]
         public class FTUEStageItem
@@ -1634,37 +1416,19 @@ namespace Overlewd
         }
 
         // /ftue-stages/{id}/start
-        public static async Task ftueStageStartAsync(int stageId)
-        {
-            var form = new WWWForm();
-            var url = make_url($"ftue-stages/{stageId}/start");
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
-        }
-
         // /ftue-stages/{id}/end
-        public static async Task<List<GenRewardItem>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null)
-        {
-            var url = make_url($"ftue-stages/{stageId}/end");
-            var form = data?.ToWWWForm() ?? new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<List<GenRewardItem>>(request?.downloadHandler.text);
-            }
-        }
-
         // /ftue-stages/{id}/replay
-        public static async Task ftueStageReplayAsync(int stageId, int count)
+        public static async Task<HttpCoreResponse> ftueStageStartAsync(int stageId) =>
+            await HttpCore.PostAsync(make_url($"ftue-stages/{stageId}/start"));
+
+        public static async Task<HttpCoreResponse<List<GenRewardItem>>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"ftue-stages/{stageId}/end"), data?.ToWWWForm());
+
+        public static async Task<HttpCoreResponse> ftueStageReplayAsync(int stageId, int count)
         {
-            var url = make_url($"ftue-stages/{stageId}/replay");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url($"ftue-stages/{stageId}/replay"), form);
         }
 
         public class FTUEStageEndData
@@ -1684,14 +1448,8 @@ namespace Overlewd
         }
 
         //animations
-        public static async Task<List<Animation>> animationsAsync()
-        {
-            var url = make_url("animations");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Animation>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Animation>>> animationsAsync() =>
+            await HttpCore.GetAsync<List<Animation>>(make_url("animations"));
 
         [Serializable]
         public class Animation
@@ -1709,14 +1467,8 @@ namespace Overlewd
         }
 
         //sounds
-        public static async Task<List<Sound>> soundsAsync()
-        {
-            var url = make_url("sounds");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Sound>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Sound>>> soundsAsync() =>
+            await HttpCore.GetAsync<List<Sound>>(make_url("sounds"));
 
         [Serializable]
         public class Sound
@@ -1735,34 +1487,14 @@ namespace Overlewd
         // /buildings
         // /buildings/{id}/build
         // /buildings/{id}/build-crystals
-        public static async Task<List<Building>> buildingsAsync()
-        {
-            var url = make_url("buildings");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<Building>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<Building>>> buildingsAsync() =>
+            await HttpCore.GetAsync<List<Building>>(make_url("buildings"));
 
-        public static async Task buildingBuildAsync(int id)
-        {
-            var url = make_url($"buildings/{id}/build");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> buildingBuildAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"buildings/{id}/build"));
 
-            }
-        }
-
-        public static async Task buildingBuildCrystalsAsync(int id)
-        {
-            var url = make_url($"buildings/{id}/build-crystals");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
-        }
+        public static async Task<HttpCoreResponse> buildingBuildCrystalsAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"buildings/{id}/build-crystals"));
 
         [Serializable]
         public class Building
@@ -1829,33 +1561,14 @@ namespace Overlewd
         // /municipality/time-left
         // /municipality/collect
         // /municipality/settings
-        public static async Task<MunicipalityTimeLeft> municipalityTimeLeftAsync()
-        {
-            var url = make_url("municipality/time-left");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<MunicipalityTimeLeft>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<MunicipalityTimeLeft>> municipalityTimeLeftAsync() =>
+            await HttpCore.GetAsync<MunicipalityTimeLeft>(make_url("municipality/time-left"));
 
-        public static async Task municipalityCollectAsync()
-        {
-            var url = make_url("municipality/collect");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> municipalityCollectAsync() =>
+            await HttpCore.PostAsync(make_url("municipality/collect"));
 
-            }
-        }
-
-        public static async Task<MunicipalitySettings> municipalitySettingsAsync()
-        {
-            var url = make_url("municipality/settings");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<MunicipalitySettings>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<MunicipalitySettings>> municipalitySettingsAsync() =>
+            await HttpCore.GetAsync<MunicipalitySettings>(make_url("municipality/settings"));
 
         [Serializable]
         public class MunicipalityTimeLeft
@@ -1875,34 +1588,14 @@ namespace Overlewd
 
         // /magicguild/skills
         // /magicguild/{skillType}/levelup
-        public static async Task<List<MagicGuildSkill>> magicGuildSkillsAsync()
-        {
-            var url = make_url("magicguild/skills");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<MagicGuildSkill>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<MagicGuildSkill>>> magicGuildSkillsAsync() =>
+            await HttpCore.GetAsync<List<MagicGuildSkill>>(make_url("magicguild/skills"));
 
-        public static async Task magicGuildSkillLvlUpAsync(string skillType)
-        {
-            var url = make_url($"magicguild/{skillType}/levelup");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse> magicGuildSkillLvlUpAsync(string skillType) =>
+            await HttpCore.PostAsync(make_url($"magicguild/{skillType}/levelup"));
 
-            }
-        }
-
-        public static async Task magicGuildSkillLvlUpCrystalAsync(string skillType)
-        {
-            var url = make_url($"magicguild/{skillType}/levelup-crystals");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
-        }
+        public static async Task<HttpCoreResponse> magicGuildSkillLvlUpCrystalAsync(string skillType) =>
+            await HttpCore.PostAsync(make_url($"magicguild/{skillType}/levelup-crystals"));
 
         [Serializable]
         public class MagicGuildSkill
@@ -1941,52 +1634,34 @@ namespace Overlewd
 
         // /forge/price
         // /forge/merge
-        public static async Task<ForgePrice> forgePrices()
-        {
-            var url = make_url("forge/price");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<ForgePrice>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<ForgePrice>> forgePrices() =>
+            await HttpCore.GetAsync<ForgePrice>(make_url("forge/price"));
 
-        public static async Task forgeMergeEquipment(string mergeType, int[] mergeIds)
+        public static async Task<HttpCoreResponse> forgeMergeEquipment(string mergeType, int[] mergeIds)
         {
-            var url = make_url("forge/merge/equipment");
             var form = new WWWForm();
             form.AddField("mergeType", mergeType);
             form.AddField("ids", JsonHelper.SerializeObject(mergeIds));
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url("forge/merge/equipment"), form);
         }
 
-        public static async Task forgeMergeShard(int matriarchId, string rarity, int amount)
+        public static async Task<HttpCoreResponse> forgeMergeShard(int matriarchId, string rarity, int amount)
         {
-            var url = make_url("forge/merge/shard");
             var form = new WWWForm();
             form.AddField("matriarchId", matriarchId);
             form.AddField("rarity", rarity);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url("forge/merge/shard"), form);
         }
 
-        public static async Task forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
+        public static async Task<HttpCoreResponse> forgeExchangeShard(int matriarchSourceId, int matriarchTargetId, string rarity, int amount)
         {
-            var url = make_url("forge/exchange/shard");
             var form = new WWWForm();
             form.AddField("matriarchSourceId", matriarchSourceId);
             form.AddField("matriarchTargetId", matriarchTargetId);
             form.AddField("rarity", rarity);
             form.AddField("amount", amount);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url("forge/exchange/shard"), form);
         }
 
         [Serializable]
@@ -2063,34 +1738,14 @@ namespace Overlewd
         }
 
         // gacha
-        public static async Task<List<GachaItem>> gachaAsync()
-        {
-            var url = make_url("gacha");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<GachaItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<GachaItem>>> gachaAsync() =>
+            await HttpCore.GetAsync<List<GachaItem>>(make_url("gacha"));
 
-        public static async Task<List<GachaBuyResult>> gachaBuyAsync(int id)
-        {
-            var url = make_url($"gacha/{id}/buy");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<GachaBuyResult>>> gachaBuyAsync(int id) =>
+            await HttpCore.PostAsync<List<GachaBuyResult>>(make_url($"gacha/{id}/buy"));
 
-        public static async Task<List<GachaBuyResult>> gachaBuyManyAsync(int id)
-        {
-            var url = make_url($"gacha/{id}/buy-many");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<List<GachaBuyResult>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<GachaBuyResult>>> gachaBuyManyAsync(int id) =>
+            await HttpCore.PostAsync<List<GachaBuyResult>>(make_url($"gacha/{id}/buy-many"));
 
         [Serializable]
         public class GachaBuyResult
@@ -2168,60 +1823,23 @@ namespace Overlewd
         // /matriarchs/shards
         // /matriarchs/buffs
 
-        public static async Task<List<MatriarchItem>> matriarchsAsync()
-        {
-            var url = make_url("matriarchs");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<MatriarchItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<MatriarchItem>>> matriarchsAsync() =>
+            await HttpCore.GetAsync<List<MatriarchItem>>(make_url("matriarchs"));
 
-        public static async Task<List<MemoryItem>> memoriesAsync()
-        {
-            var url = make_url("matriarchs/memories");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<MemoryItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<MemoryItem>>> memoriesAsync() =>
+            await HttpCore.GetAsync<List<MemoryItem>>(make_url("matriarchs/memories"));
 
-        public static async Task memoryBuyAsync(int id)
-        {
-            var url = make_url($"matriarchs/memories/{id}/buy");
-            using (var request = await HttpCore.GetAsync(url))
-            {
+        public static async Task<HttpCoreResponse> memoryBuyAsync(int id) =>
+            await HttpCore.GetAsync(make_url($"matriarchs/memories/{id}/buy"));
 
-            }
-        }
+        public static async Task<HttpCoreResponse> seduceMatriarchAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"matriarchs/{id}/seduce"));
 
-        public static async Task seduceMatriarchAsync(int id)
-        {
-            var url = make_url($"matriarchs/{id}/seduce");
-            var form = new WWWForm();
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
+        public static async Task<HttpCoreResponse<List<MemoryShardItem>>> memoryShardsAsync() =>
+            await HttpCore.GetAsync<List<MemoryShardItem>>(make_url("matriarchs/shards"));
 
-            }
-        }
-
-        public static async Task<List<MemoryShardItem>> memoryShardsAsync()
-        {
-            var url = make_url("matriarchs/shards");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<MemoryShardItem>>(request?.downloadHandler.text);
-            }
-        }
-
-        public static async Task<List<BuffItem>> buffsAsync()
-        {
-            var url = make_url("matriarchs/buffs");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<BuffItem>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<BuffItem>>> buffsAsync() =>
+            await HttpCore.GetAsync<List<BuffItem>>(make_url("matriarchs/buffs"));
 
         [Serializable]
         public class MatriarchItem
@@ -2396,35 +2014,21 @@ namespace Overlewd
 
         // /potions
         // /potions/{type}/buy
-        public static async Task<PotionsInfo> potionsAsync()
-        {
-            var url = make_url("potions");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<PotionsInfo>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<PotionsInfo>> potionsAsync() =>
+            await HttpCore.GetAsync<PotionsInfo>(make_url("potions"));
 
-        public static async Task potionBuyAsync(string type, int count)
+        public static async Task<HttpCoreResponse> potionBuyAsync(string type, int count)
         {
-            var url = make_url($"potions/{type}/buy");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url($"potions/{type}/buy"), form);
         }
 
-        public static async Task potionEnergyUseAsync(int count)
+        public static async Task<HttpCoreResponse> potionEnergyUseAsync(int count)
         {
-            var url = make_url("potions/energy/use");
             var form = new WWWForm();
             form.AddField("count", count);
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-
-            }
+            return await HttpCore.PostAsync(make_url("potions/energy/use"), form);
         }
 
 
@@ -2451,14 +2055,8 @@ namespace Overlewd
 
         // /nutaku
         // /nutaku/settings
-        public static async Task<NutakuSettings> nutakuSettingsAsync()
-        {
-            var url = make_url("nutaku/settings");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<NutakuSettings>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<NutakuSettings>> nutakuSettingsAsync() =>
+            await HttpCore.GetAsync<NutakuSettings>(make_url("nutaku/settings"));
 
         [Serializable]
         public class NutakuSettings
@@ -2472,42 +2070,20 @@ namespace Overlewd
         // /alchemy/my/mixtures
         // /alchemy/recipes
         // /alchemy/brew
-        public static async Task<List<AlchemyIngredient>> alchemyIngredientsAsync()
-        {
-            var url = make_url("alchemy/my/ingredients");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<AlchemyIngredient>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<AlchemyIngredient>>> alchemyIngredientsAsync() =>
+            await HttpCore.GetAsync<List<AlchemyIngredient>>(make_url("alchemy/my/ingredients"));
 
-        public static async Task<List<AlchemyMixture>> alchemyMixturesAsync()
-        {
-            var url = make_url("alchemy/my/mixtures");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<AlchemyMixture>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<AlchemyMixture>>> alchemyMixturesAsync() =>
+            await HttpCore.GetAsync<List<AlchemyMixture>>(make_url("alchemy/my/mixtures"));
 
-        public static async Task<List<AlchemyRecipe>> alchemyRecipesAsync()
-        {
-            var url = make_url("alchemy/recipes");
-            using (var request = await HttpCore.GetAsync(url))
-            {
-                return JsonHelper.DeserializeObject<List<AlchemyRecipe>>(request?.downloadHandler.text);
-            }
-        }
+        public static async Task<HttpCoreResponse<List<AlchemyRecipe>>> alchemyRecipesAsync() =>
+            await HttpCore.GetAsync<List<AlchemyRecipe>>(make_url("alchemy/recipes"));
 
-        public static async Task<BrewResult> alchemyBrewAsync(int[] ingredientIds)
+        public static async Task<HttpCoreResponse<BrewResult>> alchemyBrewAsync(int[] ingredientIds)
         {
-            var url = make_url("alchemy/brew");
             var form = new WWWForm();
             form.AddField("ingredientIds", JsonHelper.SerializeObject(ingredientIds));
-            using (var request = await HttpCore.PostAsync(url, form))
-            {
-                return JsonHelper.DeserializeObject<BrewResult> (request?.downloadHandler.text);
-            }
+            return await HttpCore.PostAsync<BrewResult>(make_url("alchemy/brew"), form);
         }
 
         [Serializable]

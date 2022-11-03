@@ -43,7 +43,7 @@ namespace Overlewd
             var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
 
             SetDownloadBarTitle("Check new resources");
-            var serverResourcesMeta = await AdminBRO.resourcesAsync();
+            var serverResourcesMeta = (await AdminBRO.resourcesAsync()).dData;
 
             if (serverResourcesMeta?.Any() ?? false)
             {
@@ -115,7 +115,7 @@ namespace Overlewd
 
                     SetDownloadBarTitle($"Load resources {currentFilesCount + 1}-{currentFilesCount + split.Count}/{totalFilesCount}");
 
-                    var downloadTasks = new List<Task<UnityWebRequest>>();
+                    var downloadTasks = new List<Task<HttpCoreResponse>>();
                     foreach (var item in split)
                     {
                         downloadTasks.Add(HttpCore.GetAsync(item.resourceMeta.url));
@@ -127,20 +127,11 @@ namespace Overlewd
                     foreach (var downloadTaskResult in downloadTasksResults)
                     {
                         var resourceInfo = split[taskId++];
-                        var fileData = downloadTaskResult.downloadHandler.data;
+                        var fileData = downloadTaskResult.data;
                         var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
                         saveTasks.Add(WriteFile(filePath, fileData));
                     }
                     await Task.WhenAll(saveTasks);
-
-                    //clear requests
-                    foreach (var downloadTaskResult in downloadTasksResults)
-                    {
-                        using (downloadTaskResult)
-                        {
-
-                        }
-                    }
 
                     //update meta data
                     foreach (var resourceInfo in split)

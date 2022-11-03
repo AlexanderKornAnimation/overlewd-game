@@ -40,6 +40,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public static void Logout()
+        {
+            SdkPlugin.logoutAndExit();
+        }
+
         public static async Task<Payment> PostPaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
         {
             if (tradable?.nutakuPriceValid ?? false)

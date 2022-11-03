@@ -506,7 +506,7 @@ namespace Overlewd
             public async Task GetTimeLeft()
             {
                 var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
-                goldAccTimeLeftMs = timeLeft?.timeLeft ?? 0.0f;
+                goldAccTimeLeftMs = timeLeft.dData?.timeLeft ?? 0.0f;
                 lastTimeLeftGoldAccUpd = DateTime.Now;
                 await Task.CompletedTask;
             }
@@ -1025,7 +1025,7 @@ namespace Overlewd
             var result = await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
             await GameData.player.Get();
 
-            if (result.status == true)
+            if (result.dData.status == true)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
@@ -1045,7 +1045,7 @@ namespace Overlewd
             var result = await AdminBRO.tradableBuyAsync(tradableId.Value);
             await GameData.player.Get();
 
-            if (result.status == true)
+            if (result.dData.status == true)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
