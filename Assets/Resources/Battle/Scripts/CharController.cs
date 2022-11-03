@@ -106,11 +106,12 @@ namespace Overlewd
 
             msg_safeguard = "<sprite=\"BuffsNDebuffs\" name=\"BuffSafeguard\"> Safeguard",
             msg_dispel = "<sprite=\"BuffsNDebuffs\" name=\"BuffDispell\"> Dispell";
-        private GameObject vfx_purple => bm.vfx_purple;
-        private GameObject vfx_red => bm.vfx_red;
-        private GameObject vfx_blue => bm.vfx_blue;
-        private GameObject vfx_green => bm.vfx_green;
-        private GameObject vfx_stun => bm.vfx_stun;
+        private GameObject vfx_purple => bm.vfx.purple;
+        private GameObject vfx_red => bm.vfx.red;
+        private GameObject vfx_blue => bm.vfx.blue;
+        private GameObject vfx_green => bm.vfx.green;
+        private GameObject vfx_stun => bm.vfx.stun;
+        private GameObject vfx_blood => bm.vfx.blood;
 
         private void Start()
         {
@@ -330,6 +331,7 @@ namespace Overlewd
                 var vfx = vfxGO.AddComponent<VFXManager>();
                 vfx.Setup(attackerSkill.vfxTarget, selfVFX);
             }
+            if (vfx_blood && !isDodge) Instantiate(vfx_blood, selfVFX);
             foreach (var ps in passiveSkill)
             {
                 if (ps?.trigger == "when_attacked")
@@ -834,16 +836,15 @@ namespace Overlewd
         public void UpadeteDot()
         {
             var delay = 0f;
-            if (stun)
-            {
-                DrawPopup(msg_stun, "red");
-                stun = false;
-                delay = 0.5f;
-            }
             if (regen_poison != 0)
             {
                 Damage(regen_poison_dot, true, false, false, poison: true);
                 regen_poison -= (int)Mathf.Sign(regen_poison);
+                delay = 0.5f;
+            }
+            if (stun && !isDead)
+            {
+                DrawPopup(msg_stun, "red");
                 delay = 0.5f;
             }
             observer?.UpdateStatuses();
@@ -853,7 +854,9 @@ namespace Overlewd
         IEnumerator ChangeState(float delay = 0.5f)
         {
             yield return new WaitForSeconds(delay);
-            bm.StepLate();
+            bm.StepLate(stun);
+            stun = false;
+            observer?.UpdateStatuses();
         }
         private int popUpCounter = 0;
         void DrawPopup(string msg, string color = "white", float delay = 0f, bool fast = false)

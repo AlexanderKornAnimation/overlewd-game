@@ -1,5 +1,4 @@
 using DG.Tweening;
-using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +30,7 @@ namespace Overlewd
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
         public BattleLog log => GetComponent<BattleLog>();
+        public VFXData vfx => GetComponent<VFXData>();
         bool bossLevel => battleData.isTypeBoss;
         private List<AdminBRO.Character> playerTeam => battleScene.GetBattleData().myTeam;
         private List<AdminBRO.Character> enemyTeam;
@@ -54,7 +54,6 @@ namespace Overlewd
         private RectTransform skillPanelWidthScale;
         private int skillOnSelect = -1; //-1 unselect
         private int charOnSelect = -1; // 0 - allay 1 - enemy
-        public GameObject vfx_purple, vfx_red, vfx_blue, vfx_green, vfx_stun;
 
         private int enemyNum = 0, enemyIsDead = 0, charNum = 0, charIsDead = 0;
         private int step = 0; //current characters list step
@@ -138,7 +137,7 @@ namespace Overlewd
             ccOnSelect = charControllerList[step];
 
             aniDropPoint = transform.Find("Animations");
-            
+
             StartCoroutine(LateInit());
             StartCoroutine(ShowStartAnimation());
             StartCoroutine(PreBattlePause());
@@ -181,7 +180,7 @@ namespace Overlewd
             charControllerList[step].Highlight();
             if (battleState == BattleState.PLAYER && !ccOnSelect.skill[0].AOE)
                 ButtonPress(0);
-            
+
             if (!battleStart) //skip button = true; back button = false
             {
                 if (battleScene != null)
@@ -253,7 +252,7 @@ namespace Overlewd
             ccOnSelect.UpadeteDot();
             if (aniWave)
                 Instantiate(aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp($"Wave {wave + 1}");
-        }
+        }        
         private void CreatePortraitQueue()
         {
             if (!bossLevel)
@@ -539,7 +538,7 @@ namespace Overlewd
                     hpSpent = usedHP
                 });
         }
-        
+
         private void Step()
         {
             log.Add("Battle Manager: Step");
@@ -574,33 +573,38 @@ namespace Overlewd
             battleState = BattleState.ANIMATION;
             ccOnSelect.UpadeteDot();
         }
-        public void StepLate()
+        public void StepLate(bool stun = false)
         {
-            if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
+            if (stun)
+                Step();
+            else
             {
-                battleState = ccOnSelect.isEnemy ? BattleState.ENEMY : BattleState.PLAYER;
-                ccOnSelect.CharPortraitSet();
-                if (ccOnSelect.isEnemy)
+                if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
                 {
-                    battleState = BattleState.ENEMY;
-                    if (!ccOnSelect.isBoss)
-                        bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
-                    StartCoroutine(EnemyAttack());
-                    //Do not restart the animation if previous character on the same team
-                    if (battleState != prevState)
-                        charAni.SetTrigger("enemy");
+                    battleState = ccOnSelect.isEnemy ? BattleState.ENEMY : BattleState.PLAYER;
+                    ccOnSelect.CharPortraitSet();
+                    if (ccOnSelect.isEnemy)
+                    {
+                        battleState = BattleState.ENEMY;
+                        if (!ccOnSelect.isBoss)
+                            bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
+                        StartCoroutine(EnemyAttack());
+                        //Do not restart the animation if previous character on the same team
+                        if (battleState != prevState)
+                            charAni.SetTrigger("enemy");
+                    }
+                    else
+                    {
+                        battleState = BattleState.PLAYER;
+                        SetSkillCtrl(ccOnSelect);
+                        bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
+                        if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
+                        if (battleState != prevState)
+                            charAni.SetTrigger("player");
+                    }
+                    prevState = battleState; //save prew state for portrait animation
+                    ccOnSelect.Highlight();
                 }
-                else
-                {
-                    battleState = BattleState.PLAYER;
-                    SetSkillCtrl(ccOnSelect);
-                    bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
-                    if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
-                    if (battleState != prevState)
-                        charAni.SetTrigger("player");
-                }
-                prevState = battleState; //save prew state for portrait animation
-                ccOnSelect.Highlight();
             }
         }
 
