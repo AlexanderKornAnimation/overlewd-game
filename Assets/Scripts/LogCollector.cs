@@ -37,16 +37,20 @@ namespace Overlewd
             exceptionNotif.message = $"{condition}\n{stackTrace}";
             var state = await exceptionNotif.WaitChangeState();
             await exceptionNotif.CloseAsync();
-            UIManager.PeakSystemNotif();
-#if !UNITY_EDITOR
+
             if (!UIManager.HasSystemNotif<RuntimeExceptionNotif>())
             {
+#if !UNITY_EDITOR
                 Game.Quit();
-            }
+#else
+                var epicFailNotif = UIManager.MakeSystemNotif<EpicFailNotif>();
+                await epicFailNotif.WaitChangeState();
+                Game.Quit();
 #endif
+            }
         }
 
-        private static AdminBRO.LogData makeLogData(string condition, string stackTrace, LogType type)
+            private static AdminBRO.LogData makeLogData(string condition, string stackTrace, LogType type)
         {
             return new AdminBRO.LogData
             {

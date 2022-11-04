@@ -125,10 +125,14 @@ namespace Overlewd
         }
 
         // auth/login; auth/refresh
-        public static async Task<HttpCoreResponse<Tokens>> authLoginAsync()
+        public static async Task<HttpCoreResponse> authLoginAsync()
         {
             var postData = new WWWForm();
             postData.AddField("deviceId", GetDeviceId());
+            if (NutakuApiHelper.loggedIn)
+            {
+                postData.AddField("nutakuId", NutakuApiHelper.loginInfo.userId);
+            }
             var result = await HttpCore.PostAsync<Tokens>(make_url("auth/login"), postData);
             tokens = result.dData;
             return result;
@@ -153,14 +157,18 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<PlayerInfo>> meAsync() =>
             await HttpCore.GetAsync<PlayerInfo>(make_url("me"));
 
-        public static async Task<HttpCoreResponse<PlayerInfo>> meAsync(string name)
+        public static async Task<HttpCoreResponse<PlayerInfo>> mePostAsync()
         {
             var form = new WWWForm();
-            form.AddField("name", name);
             form.AddField("currentVersion", ApiVersion);
             if (NutakuApiHelper.loggedIn)
             {
+                form.AddField("name", NutakuApiHelper.userInfo.nickname);
                 form.AddField("nutaku", JsonHelper.SerializeObject(NutakuApiHelper.userInfo), Encoding.UTF8);
+            }
+            else
+            {
+                form.AddField("name", SystemInfo.deviceModel);
             }
             return await HttpCore.PostAsync<PlayerInfo>(make_url("me"), form);
         }

@@ -193,8 +193,17 @@ namespace Overlewd
             }
 #endif
 
-            await AdminBRO.authLoginAsync();
-            await AdminBRO.meAsync(SystemInfo.deviceModel);
+            var rResult = await AdminBRO.authLoginAsync();
+            if (!rResult.isSuccess)
+            {
+                var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
+                errNotif.title = "Login error";
+                errNotif.message = "Too many logins under one account. Log in as a different user.";
+                await errNotif.WaitChangeState();
+                Game.Quit();
+                return;
+            }
+            await AdminBRO.mePostAsync();
             await AdminBRO.initAsync();
 
             //

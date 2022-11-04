@@ -95,6 +95,7 @@ namespace Overlewd
         {
             await HideAsync();
             DestroyImmediate(gameObject);
+            UIManager.PeakSystemNotif();
         }
 
         public static T GetInstance<T>(Transform parent) where T : BaseSystemNotif

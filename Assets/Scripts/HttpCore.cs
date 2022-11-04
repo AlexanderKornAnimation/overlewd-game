@@ -9,11 +9,25 @@ namespace Overlewd
 {
     public class HttpCoreResponse
     {
+        public string method { get; private set; }
+        public UnityWebRequest.Result result { get; private set; }
+        public long responseCode { get; private set; }
+        public string error { get; private set; }
+        public bool isDone { get; private set; }
+
         public byte[] data { get; private set; }
         public string text { get; private set; }
 
+        public bool isSuccess => result == UnityWebRequest.Result.Success;
+
         private void _init(UnityWebRequest request)
         {
+            method = request.method;
+            result = request.result;
+            responseCode = request.responseCode;
+            error = request.error;
+            isDone = request.isDone;
+
             data = request.downloadHandler.data;
             text = request.downloadHandler.text;
         }
@@ -144,7 +158,6 @@ namespace Overlewd
             errorNotif.message = $"{e.UnityWebRequest.url}\n{e.Message}";
             var state = await errorNotif.WaitChangeState();
             await errorNotif.CloseAsync();
-            UIManager.PeakSystemNotif();
             return state;
         }
 
