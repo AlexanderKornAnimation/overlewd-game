@@ -8,6 +8,7 @@ namespace Overlewd
 {
     public static class LogCollector
     {
+        public static bool showSystemNotifs { get; set; } = true;
         public static void Initialize()
         {
             Application.logMessageReceived += Msg;
@@ -33,6 +34,9 @@ namespace Overlewd
 
         private static async void showExceptionNotif(string condition, string stackTrace, LogType type)
         {
+            if (!showSystemNotifs)
+                return;
+
             var exceptionNotif = UIManager.MakeSystemNotif<RuntimeExceptionNotif>();
             exceptionNotif.message = $"{condition}\n{stackTrace}";
             var state = await exceptionNotif.WaitChangeState();

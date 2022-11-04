@@ -21,7 +21,6 @@ namespace Overlewd
             LogCollector.Initialize();
             UIManager.Initialize();
             ResourceManager.Initialize();
-            NutakuApiHelper.Initialize();
         }
 
         IEnumerator Start()

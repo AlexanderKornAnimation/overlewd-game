@@ -175,8 +175,11 @@ namespace Overlewd
 
         private async void DoLoading()
         {
+            LogCollector.showSystemNotifs = false;
+            NutakuApiHelper.Initialize();
             await NutakuApiHelper.WaitLoggedIn(this);
             await PlayFabSDKHelper.WaitLoggedIn();
+            LogCollector.showSystemNotifs = true;
 
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
