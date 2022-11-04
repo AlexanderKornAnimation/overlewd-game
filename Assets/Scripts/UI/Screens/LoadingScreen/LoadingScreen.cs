@@ -196,12 +196,11 @@ namespace Overlewd
             }
 #endif
 
-            var rResult = await AdminBRO.authLoginAsync();
-            if (!rResult.isSuccess)
+            var loginResult = await AdminBRO.authLoginAsync();
+            if (!loginResult.isSuccess)
             {
-                var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                errNotif.title = "Login error";
-                errNotif.message = "Too many logins under one account. Log in as a different user.";
+                var errNotif = UIManager.MakeSystemNotif<ServerErrorNotif>();
+                errNotif.message = loginResult.error;
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
