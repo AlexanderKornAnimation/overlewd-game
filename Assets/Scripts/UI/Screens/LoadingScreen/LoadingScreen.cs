@@ -199,8 +199,8 @@ namespace Overlewd
             var loginResult = await AdminBRO.authLoginAsync();
             if (!loginResult.isSuccess)
             {
-                var errNotif = UIManager.MakeSystemNotif<ServerErrorNotif>();
-                errNotif.message = loginResult.error;
+                var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
+                errNotif.message = $"Login error\n{loginResult.error}";
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
