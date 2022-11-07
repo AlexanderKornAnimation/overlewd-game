@@ -12,6 +12,7 @@ namespace Overlewd
         public bool isOverlord = false;
 
         public BattleManager bm; //init on BattleManager Initialize();
+        public PSR psr;
         public BattleLog log => bm.log;
         public AdminBRO.Character character;
         public CharacterPortrait charStats;
@@ -123,6 +124,7 @@ namespace Overlewd
 
         private void StatInit()
         {
+            psr = gameObject.AddComponent<PSR>();
             //isEnemy and battleOrder assign on battle manager
             isOverlord = character.characterClass == AdminBRO.Character.Class_Overlord;
             if (isOverlord)
@@ -320,11 +322,24 @@ namespace Overlewd
                 spineWidget.PlayAnimation(ani_defence_name, false);
 
             attackerSkill.sfxTarget?.Play();                    //Play on target SFX
-            var isHit = (attacker.focus_blind == 0) ? attacker.accuracy > Random.value
+
+            var isHit = (attacker.focus_blind == 0) ? attacker.accuracy + attacker.psr?.accyracy > Random.value
                 : (attacker.focus_blind > 0) ? true : false;
-            var isDodge = dodge > Random.value;
-            var isCrit = attacker.critrate > Random.value;
-            if (isHit) AddEffect(attackerSkill);                //calculate probability and add effect
+
+            var isDodge = dodge + psr?.dodge > Random.value;
+            var isCrit = attacker.critrate + attacker.psr?.crit > Random.value;
+            if (isDodge) psr?.Dodge();
+            if (isCrit) attacker.psr?.Crit(); else attacker.psr?.CritMiss();
+
+            if (isHit) 
+            {
+                AddEffect(attackerSkill);                       //calculate probability and add effect
+                attacker.psr?.HitEnemy();
+            }
+            else
+            {
+                attacker.psr?.Miss();
+            }
             if (attackerSkill.vfxTarget != null && !isDodge)    //VFX on Self
             {
                 var vfxGO = new GameObject($"vfx_{attackerSkill.vfxTarget.title}");
@@ -366,7 +381,6 @@ namespace Overlewd
 
         public void Highlight() => observer?.Border(true);
         public void UnHiglight() => observer?.Border(false);
-
         public void BattleIn(bool AOE = false)
         {
             UnHiglight();
@@ -409,7 +423,8 @@ namespace Overlewd
                 DrawPopup("Miss!", "blue");
                 return;
             }
-            if (crit) value *= 2;
+            if (crit)
+                value *= 2;
             value = Mathf.Round(value);
             if (value > 0)
             {
@@ -418,6 +433,7 @@ namespace Overlewd
                     DrawPopup("Dodge!", "blue");
                     return;
                 }
+                psr?.TakeDamage();
                 health -= value;
                 health = Mathf.Round(health);
                 health = Mathf.Max(health, 0);
@@ -486,10 +502,11 @@ namespace Overlewd
         void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null, bool addManual = false)
         {
             if (targetCC == null) targetCC = this;
-            bool hit = sk.effectProb >= Random.value;
+            bool hit = sk.effectProb + psr.effectProb >= Random.value;
             if (sk.effect != null)
                 if (hit)
                 {
+                    psr?.EffectHit();
                     var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = healthMax * ea;
@@ -607,7 +624,12 @@ namespace Overlewd
                             break;
                     }
                     observer?.UpdateStatuses();
-                } //else DrawPopup("Effect miss", "red");
+                }
+                else
+                {
+                    //DrawPopup("Effect miss", "red");
+                    psr.EffectMiss();
+                }
         }
 
         void PassiveBuff(AdminBRO.CharacterSkill sk)
@@ -619,7 +641,7 @@ namespace Overlewd
 
             bool isCrit = critrate >= Random.value;
             Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.value;
+            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
 
             if (sk.effect != null)
                 if (hitEffect)
@@ -679,7 +701,7 @@ namespace Overlewd
                 skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
             bool isCrit = critrate >= Random.value;
             targetCC.Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.value;
+            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
 
             if (sk.effect != null)
                 if (hitEffect)
