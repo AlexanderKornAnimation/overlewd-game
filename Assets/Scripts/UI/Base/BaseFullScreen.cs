@@ -6,7 +6,7 @@ namespace Overlewd
 {
     public abstract class BaseFullScreen : BaseScreen
     {
-        public virtual BaseFullScreenInData baseInputData => null;
+        public BaseFullScreenInData baseInputData { get; protected set; }
 
         public void RunShowScreenProcess()
         {
@@ -16,12 +16,16 @@ namespace Overlewd
 
     public abstract class BaseFullScreenParent<T> : BaseFullScreen where T : BaseFullScreenInData, new()
     {
-        public T inputData { get; private set; } = new T();
-        public override BaseFullScreenInData baseInputData => inputData;
+        public BaseFullScreenParent()
+        {
+            baseInputData = new T();
+        }
+
+        public T inputData => (T)baseInputData;
 
         public BaseFullScreen SetData(T data)
         {
-            inputData = data;
+            baseInputData = data;
             return this;
         }
     }
