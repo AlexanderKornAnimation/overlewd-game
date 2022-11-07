@@ -13,14 +13,18 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
-#if UNITY_EDITOR || DEV_BUILD
+#if UNITY_EDITOR
         public const string ApiVersion = "16";
-        public const string ServerRootURL = "http://dev.api.overlewd.com/";
+        public const string ServerDomainURL = "http://dev.api.overlewd.com/";
+#elif DEV_BUILD
+        public const string ApiVersion = "15";
+        public const string ServerDomainURL = "http://dev.api.overlewd.com/";
 #else
         public const string ApiVersion = "15";
-        public const string ServerRootURL = "http://prod.api.overlewd.com/";
+        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #endif
-        private static string make_url(string url_part) => $"{ServerRootURL}{url_part}";
+
+        private static string make_url(string url_part) => $"{ServerDomainURL}{url_part}";
 
         public static string GetDeviceId()
         {
