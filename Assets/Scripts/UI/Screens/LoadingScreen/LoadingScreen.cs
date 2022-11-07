@@ -202,6 +202,7 @@ namespace Overlewd
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
                 errNotif.message = $"Login error\n{loginResult.error}";
                 await errNotif.WaitChangeState();
+                NutakuApiHelper.LogOut();
                 Game.Quit();
                 return;
             }

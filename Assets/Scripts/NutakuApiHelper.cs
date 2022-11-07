@@ -40,9 +40,13 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public static void Logout()
+        public static void LogOut()
         {
+#if !UNITY_EDITOR && UNITY_ANDROID
             SdkPlugin.logoutAndExit();
+#elif UNITY_EDITOR
+            PlayerPrefs.DeleteKey(SandboxLoginView.PrefKeyAutologinToken);
+#endif
         }
 
         public static async Task<Payment> PostPaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
