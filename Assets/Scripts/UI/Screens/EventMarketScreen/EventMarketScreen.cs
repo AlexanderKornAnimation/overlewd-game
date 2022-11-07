@@ -111,7 +111,7 @@ namespace Overlewd
                             {
                                 eventMarketId = _marketData.id,
                                 tradableId = tData.id
-                            }).RunShowNotificationProcess();
+                            }).DoShow();
                     }
                 }
             }

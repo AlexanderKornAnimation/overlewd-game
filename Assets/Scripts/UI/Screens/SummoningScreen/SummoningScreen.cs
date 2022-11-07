@@ -82,7 +82,7 @@ namespace Overlewd
                 {
                     activeGachaId = inputData?.gachaId
                 })
-                .RunShowScreenProcess();
+                .DoShow();
         }
 
         private IEnumerator WaitShardsIsOpened()

@@ -68,8 +68,8 @@ namespace Overlewd
                     SetData(new MemoryScreenInData
                 {
                     girlKey = girlKey,
-                    prevScreenInData = UIManager.prevScreenInData
-                }).RunShowScreenProcess();
+                    prevScreenInData = UIManager.screenInData
+                }).DoShow();
             }
             
             public static MemoryWithShards GetInstance(Transform parent)

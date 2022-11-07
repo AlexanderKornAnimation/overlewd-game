@@ -272,7 +272,7 @@ namespace Overlewd
                     SetData(new BottlesPopupInData
                     {
                         prevPopupInData = inputData,
-                    }).RunShowPopupProcess();
+                    }).DoShow();
             }
         }
         
@@ -315,7 +315,7 @@ namespace Overlewd
                 SetData(new BottlesPopupInData
                 {
                     prevPopupInData = inputData
-                }).RunShowPopupProcess();
+                }).DoShow();
         }
         
         private void PotionBuyButtonClick()
@@ -325,7 +325,7 @@ namespace Overlewd
                 SetData(new BottlesPopupInData
                 {
                     prevPopupInData = inputData
-                }).RunShowPopupProcess();
+                }).DoShow();
         }
         
         private void BuffButtonClick()
@@ -334,10 +334,10 @@ namespace Overlewd
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
                 {
-                    prevScreenInData = UIManager.prevScreenInData,
+                    prevScreenInData = UIManager.screenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
-                }).RunShowScreenProcess();
+                }).DoShow();
         }
 
         private void EditTeamButtonClick()
@@ -346,10 +346,10 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData 
                 {
-                    prevScreenInData = UIManager.prevScreenInData,
+                    prevScreenInData = UIManager.screenInData,
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
-                }).RunShowScreenProcess();
+                }).DoShow();
         }
 
         private void BackButtonClick()
@@ -366,10 +366,10 @@ namespace Overlewd
                 UIManager.MakeScreen<BattleScreen>().
                     SetData(new BaseBattleScreenInData
                     {
-                        prevScreenInData = UIManager.prevScreenInData,
+                        prevScreenInData = UIManager.screenInData,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
             else
             {
@@ -377,7 +377,7 @@ namespace Overlewd
                     SetData(new BottlesPopupInData
                     {
                         prevPopupInData = inputData,
-                    }).RunShowPopupProcess();
+                    }).DoShow();
             }
         }
 

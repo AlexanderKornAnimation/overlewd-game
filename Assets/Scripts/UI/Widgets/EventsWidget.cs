@@ -78,7 +78,7 @@ namespace Overlewd
                 SetData(new EventOverlayInData
                 {
                     activeTabId = EventOverlay.TabWeekly
-                }).RunShowOverlayProcess();
+                }).DoShow();
         }
 
         protected virtual void MonthlyEventClick()
@@ -88,7 +88,7 @@ namespace Overlewd
                 SetData(new EventOverlayInData
                 {
                     activeTabId = EventOverlay.TabMonthly
-                }).RunShowOverlayProcess();
+                }).DoShow();
         }
         
         protected virtual void QuarterlyEventClick()
@@ -98,7 +98,7 @@ namespace Overlewd
                 SetData(new EventOverlayInData
                 {
                     activeTabId = EventOverlay.TabQuarterly
-                }).RunShowOverlayProcess();
+                }).DoShow();
         }
         
         public void Show()

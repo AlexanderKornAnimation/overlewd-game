@@ -27,7 +27,7 @@ namespace Overlewd
                     SetData(new DialogScreenInData
                     {
                         eventStageId = stageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
 
             public static DialogButton GetInstance(Transform parent)

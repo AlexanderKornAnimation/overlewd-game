@@ -79,7 +79,7 @@ namespace Overlewd
                             SetData(new BaseBattleScreenInData
                             {
                                 ftueStageId = stageId
-                            }).RunShowScreenProcess();
+                            }).DoShow();
                     }
                     else
                     {
@@ -87,7 +87,7 @@ namespace Overlewd
                             SetData(new PrepareBattlePopupInData
                             {
                                 ftueStageId = stageId
-                            }).RunShowPopupProcess();
+                            }).DoShow();
                     }
                 }
                 else if (battleData.isTypeBoss)
@@ -98,7 +98,7 @@ namespace Overlewd
                             SetData(new BaseBattleScreenInData
                             {
                                 ftueStageId = stageId
-                            }).RunShowScreenProcess();
+                            }).DoShow();
                     }
                     else
                     {
@@ -106,7 +106,7 @@ namespace Overlewd
                             SetData(new PrepareBossFightPopupInData
                             {
                                 ftueStageId = stageId
-                            }).RunShowPopupProcess();
+                            }).DoShow();
                     }
                 }
             }

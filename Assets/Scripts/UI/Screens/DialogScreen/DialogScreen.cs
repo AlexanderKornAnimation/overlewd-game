@@ -177,7 +177,7 @@ namespace Overlewd
                            SetData(new BaseBattleScreenInData
                            {
                                ftueStageId = GameData.ftue.chapter1_stages.battle1.id
-                           }).RunShowScreenProcess();
+                           }).DoShow();
                     },
                     def = () =>
                     {
@@ -193,7 +193,7 @@ namespace Overlewd
                         {
                             UIManager.MakeScreen<GirlScreen>().
                                 SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                                .RunShowScreenProcess();
+                                .DoShow();
                         }
                     }
                 });

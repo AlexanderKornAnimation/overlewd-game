@@ -170,7 +170,7 @@ namespace Overlewd
                     UIManager.MakeScreen<CastleScreen>().SetData(new CastleScreenInData
                     {
                         buildedBuildingKey = buildingData.key
-                    }).RunShowScreenProcess();
+                    }).DoShow();
                 }
                 else
                 {
@@ -190,7 +190,7 @@ namespace Overlewd
                     UIManager.MakeScreen<CastleScreen>().SetData(new CastleScreenInData
                     {
                         buildedBuildingKey = buildingData.key
-                    }).RunShowScreenProcess();
+                    }).DoShow();
                 }
                 else
                 {

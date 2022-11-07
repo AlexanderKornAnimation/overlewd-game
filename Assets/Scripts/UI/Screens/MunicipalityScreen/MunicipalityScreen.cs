@@ -376,7 +376,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.municipality.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void ForgeButtonClick()
@@ -386,7 +386,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.forge.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void MagicGuildButtonClick()
@@ -396,7 +396,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.magicGuild.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void MarketButtonClick()
@@ -406,7 +406,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.market.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void PortalButtonClick()
@@ -416,7 +416,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.portal.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void CastleButtonClick()
@@ -426,7 +426,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.castle.meta?.id,
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void CathedralButtonClick()
@@ -436,7 +436,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.laboratory.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void AerostatButtonClick()
@@ -446,7 +446,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.aerostat.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void CatacombsButtonClick()
@@ -456,7 +456,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.catacombs.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void HaremButtonClick()
@@ -466,7 +466,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.harem.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void BackButtonClick()

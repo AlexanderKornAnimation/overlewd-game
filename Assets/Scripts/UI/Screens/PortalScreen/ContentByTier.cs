@@ -60,10 +60,10 @@ namespace Overlewd
                     {
                         gachaId = gachaId,
                         tabType = gachaData?.tabType,
-                        prevScreenInData = UIManager.prevScreenInData,
+                        prevScreenInData = UIManager.screenInData,
                         isMany = true,
                         summonData = summonData
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
             
             public static ContentByTier GetInstance(Transform parent)

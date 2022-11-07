@@ -120,7 +120,7 @@ namespace Overlewd
             UIManager.MakeScreen<BaseBattleScreen>().SetData(new BaseBattleScreenInData
             {
                 ftueStageId = 24
-            }).RunShowScreenProcess();
+            }).DoShow();
         }
     }
 

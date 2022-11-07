@@ -313,7 +313,7 @@ namespace Overlewd
                     SetData(new SexScreenInData
                     {
                         ftueStageId = firstSexStage.id,
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
         }
 

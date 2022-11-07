@@ -31,7 +31,7 @@ namespace Overlewd
                     {
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
-                    }).RunShowPopupProcess();
+                    }).DoShow();
             }
             else
             {
@@ -40,7 +40,7 @@ namespace Overlewd
                 {
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
-                }).RunShowPopupProcess();
+                }).DoShow();
             }
         }
 

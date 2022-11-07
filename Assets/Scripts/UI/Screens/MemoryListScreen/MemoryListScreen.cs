@@ -126,8 +126,8 @@ namespace Overlewd
             else
             {
                 UIManager.MakeScreen<GirlScreen>().
-                    SetData(inputData.prevScreenInData as GirlScreenInData).
-                    RunShowScreenProcess();
+                    SetData(inputData.prevScreenInData.As<GirlScreenInData>()).
+                    DoShow();
             }
         }
     }

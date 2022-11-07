@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
@@ -18,9 +19,9 @@ namespace Overlewd
             
         }
         
-        public override void MakeMissclick()
+        public override BaseMissclick MakeMissclick()
         {
-            UIManager.MakeNotificationMissclick<NotificationMissclickColored>();
+            return UIManager.MakeNotificationMissclick<NotificationMissclickColored>();
         }
 
         public override ScreenShow Show()
@@ -33,19 +34,12 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenImmediateHide>();
         }
 
-        public void RunShowNotificationProcess()
-        {
-            UIManager.ShowNotificationProcess();
-        }
+        public void DoShow() => UIManager.ShowNotification(this);
+        public async Task DoShowAsync() => await UIManager.ShowNotificationAsync(this);
     }
 
-    public abstract class BaseNotificationParent<T> : BaseNotification where T : BaseNotificationInData, new()
+    public abstract class BaseNotificationParent<T> : BaseNotification where T : BaseNotificationInData
     {
-        public BaseNotificationParent()
-        {
-            baseInputData = new T();
-        }
-
         public T inputData => (T)baseInputData;
 
         public BaseNotification SetData(T data)

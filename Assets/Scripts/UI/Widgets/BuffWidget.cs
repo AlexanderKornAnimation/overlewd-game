@@ -76,8 +76,8 @@ namespace Overlewd
             UIManager.MakeScreen<HaremScreen>().
                 SetData(new HaremScreenInData
                 {
-                    prevScreenInData = UIManager.prevScreenInData
-                }).RunShowScreenProcess();
+                    prevScreenInData = UIManager.screenInData
+                }).DoShow();
         }
         
         public static BuffWidget GetInstance(Transform parent)

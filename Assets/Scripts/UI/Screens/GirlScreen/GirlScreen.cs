@@ -256,7 +256,7 @@ namespace Overlewd
             {
                 prevScreenInData = inputData,
                 dialogId = inputData.girlData.seduceSexSceneId
-            }).RunShowScreenProcess();
+            }).DoShow();
         }
 
         private void DialogButtonClick()
@@ -265,7 +265,7 @@ namespace Overlewd
             UIManager.MakeScreen<DialogScreen>().SetData(new DialogScreenInData
             {
                 prevScreenInData = inputData
-            }).RunShowScreenProcess();
+            }).DoShow();
         }
         
         private void BannerButtonClick()
@@ -285,7 +285,7 @@ namespace Overlewd
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId,
                         prevScreenInData = inputData
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
         }
         
@@ -296,7 +296,7 @@ namespace Overlewd
                 SetData(new PortalScreenInData
             {
                 activeButtonId = PortalScreen.TabShards
-            }).RunShowScreenProcess();
+            }).DoShow();
         }
         
         private void ChestButtonClick()
@@ -316,8 +316,8 @@ namespace Overlewd
             else
             {
                 UIManager.MakeScreen<HaremScreen>().
-                    SetData(inputData.prevScreenInData as HaremScreenInData).
-                    RunShowScreenProcess();
+                    SetData(inputData.prevScreenInData.As<HaremScreenInData>()).
+                    DoShow();
             }
                 
         }

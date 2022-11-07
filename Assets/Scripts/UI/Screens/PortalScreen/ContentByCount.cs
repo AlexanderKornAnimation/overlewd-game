@@ -61,10 +61,10 @@ namespace Overlewd
                     SetData(new SummoningScreenInData
                     {
                         gachaId = gachaId,
-                        prevScreenInData = UIManager.prevScreenInData,
+                        prevScreenInData = UIManager.screenInData,
                         tabType = gachaData.tabType,
                         summonData = summonData
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
             
             private async void SummonManyButtonClick()
@@ -75,11 +75,11 @@ namespace Overlewd
                     SetData(new SummoningScreenInData
                     {
                         gachaId = gachaId,
-                        prevScreenInData = UIManager.prevScreenInData,
+                        prevScreenInData = UIManager.screenInData,
                         tabType = gachaData.tabType,
                         isMany = true,
                         summonData = summonData
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
 
             public static ContentByCount GetInstance(Transform parent)

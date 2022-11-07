@@ -232,7 +232,7 @@ namespace Overlewd
                 {
                     UIManager.MakeScreen<HaremScreen>().
                         SetData(inputData.prevScreenInData as HaremScreenInData).
-                        RunShowScreenProcess();
+                        DoShow();
                 } 
                 else if (inputData.prevScreenInData.IsType<MapScreenInData>())
                 {
@@ -240,7 +240,7 @@ namespace Overlewd
                         SetData(new MapScreenInData 
                         { 
                             ftueStageId = inputData.ftueStageId 
-                        }).RunShowScreenProcess();
+                        }).DoShow();
                 }
                 else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
                 {
@@ -248,7 +248,7 @@ namespace Overlewd
                         SetData(new EventMapScreenInData
                         {
                             eventStageId = inputData.eventStageId
-                        }).RunShowScreenProcess();
+                        }).DoShow();
                 }
             }
             else
@@ -261,9 +261,9 @@ namespace Overlewd
         {
             UIManager.MakeScreen<OverlordScreen>().
                 SetData(new OverlordScreenInData
-            {
-                prevScreenInData = inputData,
-            }).RunShowScreenProcess();
+                {
+                    prevScreenInData = inputData,
+                }).DoShow();
         }
     }
 

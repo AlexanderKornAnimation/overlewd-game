@@ -73,7 +73,7 @@ namespace Overlewd
                 SetData(new QuestOverlayInData
                 {
                     questId = mainQuest?.id
-                }).RunShowOverlayProcess();
+                }).DoShow();
         }
 
         public void Show()

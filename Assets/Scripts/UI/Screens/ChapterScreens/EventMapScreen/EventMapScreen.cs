@@ -162,7 +162,7 @@ namespace Overlewd
                         SetData(new PrepareBattlePopupInData
                         {
                             eventStageId = inputData.eventStageId
-                        }).RunShowPopupProcess();
+                        }).DoShow();
                 }
                 else if (battleData.isTypeBoss)
                 {
@@ -170,7 +170,7 @@ namespace Overlewd
                         SetData(new PrepareBossFightPopupInData
                         {
                             eventStageId = inputData.eventStageId
-                        }).RunShowPopupProcess();
+                        }).DoShow();
                 }
             }
 

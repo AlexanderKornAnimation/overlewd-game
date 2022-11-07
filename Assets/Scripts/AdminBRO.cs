@@ -1336,7 +1336,7 @@ namespace Overlewd
                     SetData(new DialogNotificationInData
                     {
                         dialogId = GetNotifByKey(key)?.dialogId
-                    }).RunShowNotificationProcess();
+                    }).DoShow();
 
                 if (notifData != null)
                 {

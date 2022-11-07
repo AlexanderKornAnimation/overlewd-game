@@ -41,7 +41,7 @@ namespace Overlewd
                     SetData(new EventMarketScreenInData
                     {
                         eventMarketId = eventMarketId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
 
             public static EventShopButton GetInstance(Transform parent)

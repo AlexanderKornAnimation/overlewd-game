@@ -59,7 +59,7 @@ namespace Overlewd
                     SetData(new SpellPopupInData
                 {
                     spellId = skillData.current.id
-                }).RunShowPopupProcess();
+                }).DoShow();
             }
 
             private void IsOpenButtonClick()
@@ -69,7 +69,7 @@ namespace Overlewd
                     SetData(new SpellPopupInData
                 {
                     spellId = skillData.current.id
-                }).RunShowPopupProcess();
+                }).DoShow();
             }
         }
     }

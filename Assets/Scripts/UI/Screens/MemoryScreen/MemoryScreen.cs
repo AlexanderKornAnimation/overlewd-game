@@ -107,8 +107,8 @@ namespace Overlewd
             else
             {
                 UIManager.MakeScreen<MemoryListScreen>().
-                    SetData(inputData.prevScreenInData as MemoryListScreenInData)
-                    .RunShowScreenProcess();
+                    SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
+                    .DoShow();
             }
         }
 

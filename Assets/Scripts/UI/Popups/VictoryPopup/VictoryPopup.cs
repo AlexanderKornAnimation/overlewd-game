@@ -97,10 +97,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override void MakeMissclick()
+        public override BaseMissclick MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
             missClick.missClickEnabled = false;
+            return missClick;
         }
 
         private void NextButtonClick()
@@ -134,7 +135,7 @@ namespace Overlewd
                 {
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
-                }).RunShowScreenProcess();
+                }).DoShow();
         }
     }
 

@@ -334,7 +334,7 @@ namespace Overlewd
             {
                 UIManager.MakeScreen<TeamEditScreen>()
                     .SetData(inputData.prevScreenInData.As<TeamEditScreenInData>())
-                    .RunShowScreenProcess();
+                    .DoShow();
             }
             else
             {

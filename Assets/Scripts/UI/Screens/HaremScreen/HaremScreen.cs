@@ -201,7 +201,7 @@ namespace Overlewd
                         SetData(new MapScreenInData
                     {
                         ftueStageId = inputData.ftueStageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
                 }
                 else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
                 {
@@ -209,7 +209,7 @@ namespace Overlewd
                         SetData(new EventMapScreenInData
                     {
                         eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
                 }
                 else
                 {
@@ -237,7 +237,7 @@ namespace Overlewd
                         prevScreenInData = inputData,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
         }
 
@@ -281,7 +281,7 @@ namespace Overlewd
                         prevScreenInData = inputData,
                         ftueStageId = inputData?.ftueStageId,
                         eventStageId = inputData?.eventStageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
         }
     }

@@ -282,13 +282,13 @@ namespace Overlewd
             {
                 UIManager.MakePopup<PrepareBattlePopup>().
                     SetData(inputData.prevPopupInData.As<PrepareBattlePopupInData>()).
-                    RunShowPopupProcess();
+                    DoShow();
             }
             else if (inputData.prevPopupInData.IsType<PrepareBossFightPopupInData>())
             {
                 UIManager.MakePopup<PrepareBossFightPopup>().
                     SetData(inputData.prevPopupInData.As<PrepareBossFightPopupInData>()).
-                    RunShowPopupProcess();
+                    DoShow();
             }
         }
     }

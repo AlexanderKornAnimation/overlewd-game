@@ -122,7 +122,7 @@ namespace Overlewd
             {
                 UIManager.MakeScreen<HaremScreen>().
                     SetData(inputData.As<HaremScreenInData>()).
-                    RunShowScreenProcess();
+                    DoShow();
             }
             else
             {

@@ -118,7 +118,7 @@ namespace Overlewd
                         SetData(new DialogScreenInData
                         {
                             ftueStageId = GameData.ftue.chapter1_stages.dialogue1.id
-                        }).RunShowScreenProcess();
+                        }).DoShow();
                     },
                     def = () =>
                     {
@@ -134,19 +134,19 @@ namespace Overlewd
                         {
                             UIManager.MakeScreen<GirlScreen>().
                                 SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                                .RunShowScreenProcess();
+                                .DoShow();
                         }
                         else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
                         {
                             UIManager.MakeScreen<MemoryListScreen>()
                                 .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
-                                .RunShowScreenProcess();
+                                .DoShow();
                         }
                         else
                         {
                             UIManager.MakeScreen<BattleGirlScreen>().
                                 SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>())
-                                .RunShowScreenProcess();
+                                .DoShow();
                         }
                     }
                 });

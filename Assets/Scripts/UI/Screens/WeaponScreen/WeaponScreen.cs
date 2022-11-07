@@ -199,13 +199,13 @@ namespace Overlewd
             {
                 UIManager.MakeScreen<TeamEditScreen>().
                     SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
-                    RunShowScreenProcess();
+                    DoShow();
             }
             else
             {
                 UIManager.MakeScreen<BattleGirlScreen>().
-                    SetData(inputData.prevScreenInData as BattleGirlScreenInData).
-                    RunShowScreenProcess();
+                    SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>()).
+                    DoShow();
             }
         }
 

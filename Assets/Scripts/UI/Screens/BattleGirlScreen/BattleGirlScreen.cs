@@ -236,7 +236,7 @@ namespace Overlewd
             {
                 UIManager.MakeScreen<BattleGirlListScreen>().
                     SetData(inputData.prevScreenInData.As<BattleGirlListScreenInData>())
-                    .RunShowScreenProcess();
+                    .DoShow();
             }
         }
 
@@ -256,7 +256,7 @@ namespace Overlewd
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId,
                     characterId = inputData.characterId
-                }).RunShowScreenProcess();
+                }).DoShow();
             }
         }
 
@@ -303,7 +303,7 @@ namespace Overlewd
                 {
                     dialogId = sexSceneId,
                     prevScreenInData = inputData
-                }).RunShowScreenProcess();
+                }).DoShow();
             }
         }
     }

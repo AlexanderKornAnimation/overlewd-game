@@ -86,10 +86,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override void MakeMissclick()
+        public override BaseMissclick MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
             missClick.missClickEnabled = false;
+            return missClick;
         }
 
         private void EditTeamButtonClick()
@@ -98,9 +99,9 @@ namespace Overlewd
             UIManager.MakeScreen<TeamEditScreen>().
                 SetData(new TeamEditScreenInData
             {
-                prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
-                ftueStageId = UIManager.prevScreenInData.ftueStageId
-            }).RunShowScreenProcess();
+                prevScreenInData = UIManager.screenInData.prevScreenInData,
+                ftueStageId = UIManager.screenInData.ftueStageId
+            }).DoShow();
         }
 
         private void MagicGuildButtonClick()
@@ -129,15 +130,15 @@ namespace Overlewd
                         SetData(new SexScreenInData
                         {
                             ftueStageId = GameData.ftue.chapter1_stages.sex2?.id
-                        }).RunShowScreenProcess();
+                        }).DoShow();
                     },
                     def = () =>
                     {
                         UIManager.MakeScreen<HaremScreen>().
                         SetData(new HaremScreenInData
                         {
-                            prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
-                        }).RunShowScreenProcess();
+                            prevScreenInData = UIManager.screenInData.prevScreenInData,
+                        }).DoShow();
                     }
                 });
         }
@@ -150,7 +151,7 @@ namespace Overlewd
                 {
                     ftueStageId = inputData?.ftueStageId,
                     eventStageId = inputData?.eventStageId
-                }).RunShowScreenProcess();
+                }).DoShow();
         }
 
         private void MapButtonClick()
