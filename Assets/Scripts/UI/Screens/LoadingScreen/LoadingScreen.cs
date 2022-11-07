@@ -185,7 +185,7 @@ namespace Overlewd
             SetDownloadBarTitle("Autorize");
 
 #if !UNITY_EDITOR
-            var apiVersion = await AdminBRO.versionAsync();
+            var apiVersion = (await AdminBRO.versionAsync()).dData;
             if (apiVersion.version.ToString() != AdminBRO.ApiVersion)
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
