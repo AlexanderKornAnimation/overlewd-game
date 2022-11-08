@@ -80,7 +80,7 @@ namespace Overlewd
         public bool showSidebarButton =>
             GameData.devMode ? true : GameData.buildings.castle.meta.isBuilt;
         public bool lockBuff =>
-            GameData.devMode ? false : !GameData.buildings.castle.meta.isBuilt;
+            GameData.devMode ? false : !GameData.buildings.harem.meta.isBuilt;
     }
 
     //ftue
@@ -464,6 +464,7 @@ namespace Overlewd
             await AdminBRO.buildingBuildAsync(buildingId);
             await Get();
             await GameData.player.Get();
+            await GameData.characters.Get();
             municipality.settings = await AdminBRO.municipalitySettingsAsync();
 
             UIManager.ThrowGameDataEvent(
@@ -480,6 +481,7 @@ namespace Overlewd
             await AdminBRO.buildingBuildCrystalsAsync(buildingId);
             await Get();
             await GameData.player.Get();
+            await GameData.characters.Get();
             municipality.settings = await AdminBRO.municipalitySettingsAsync();
 
             UIManager.ThrowGameDataEvent(
@@ -504,7 +506,7 @@ namespace Overlewd
             public async Task GetTimeLeft()
             {
                 var timeLeft = await AdminBRO.municipalityTimeLeftAsync();
-                goldAccTimeLeftMs = timeLeft?.timeLeft ?? 0.0f;
+                goldAccTimeLeftMs = timeLeft.dData?.timeLeft ?? 0.0f;
                 lastTimeLeftGoldAccUpd = DateTime.Now;
                 await Task.CompletedTask;
             }
@@ -555,6 +557,7 @@ namespace Overlewd
             {
                 await AdminBRO.magicGuildSkillLvlUpAsync(skillType);
                 skills = await AdminBRO.magicGuildSkillsAsync();
+                await GameData.characters.Get();
                 await GameData.player.Get();
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
@@ -567,6 +570,7 @@ namespace Overlewd
             {
                 await AdminBRO.magicGuildSkillLvlUpCrystalAsync(skillType);
                 skills = await AdminBRO.magicGuildSkillsAsync();
+                await GameData.characters.Get();
                 await GameData.player.Get();
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
@@ -740,23 +744,6 @@ namespace Overlewd
         {
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
-        }
-
-        public async Task TestInit()
-        {
-            await AdminBRO.addCharacter(19, 10);
-            await AdminBRO.addCharacter(19, 10);
-            await AdminBRO.addCharacter(16, 20);
-            await AdminBRO.addCharacter(16, 20);
-
-            await AdminBRO.addCharacter(15, 20);
-            await AdminBRO.addCharacter(15, 20);
-            await AdminBRO.addCharacter(20, 30);
-            await AdminBRO.addCharacter(20, 30);
-
-            await AdminBRO.addCharacter(13, 40);
-            await AdminBRO.addCharacter(13, 40);
-            await Get();
         }
 
         public AdminBRO.Character GetById(int? id) =>
@@ -1038,7 +1025,7 @@ namespace Overlewd
             var result = await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
             await GameData.player.Get();
 
-            if (result.status == true)
+            if (result.dData.status == true)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
@@ -1058,7 +1045,7 @@ namespace Overlewd
             var result = await AdminBRO.tradableBuyAsync(tradableId.Value);
             await GameData.player.Get();
 
-            if (result.status == true)
+            if (result.dData.status == true)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
@@ -1221,6 +1208,9 @@ namespace Overlewd
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
+            if (price == null)
+                return false;
+        
             foreach (var priceItem in price)
             {
                 var walletCurrency = info.wallet.Find(item => item.currencyId == priceItem.currencyId);

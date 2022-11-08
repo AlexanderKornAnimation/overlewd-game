@@ -76,15 +76,6 @@ namespace Overlewd
                 Merge();
             }
 
-            protected override void PortalButtonClick()
-            {
-                UIManager.MakeScreen<PortalScreen>().
-                SetData(new PortalScreenInData
-                {
-                    activeButtonId = PortalScreen.TabOverlordEquip
-                }).RunShowScreenProcess();
-            }
-
             protected override void MarketButtonClick()
             {
                 UIManager.ShowOverlay<MarketOverlay>();

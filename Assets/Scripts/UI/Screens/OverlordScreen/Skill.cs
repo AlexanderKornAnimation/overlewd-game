@@ -11,14 +11,14 @@ namespace Overlewd
     namespace NSOverlordScreen
     {
         class Skill : MonoBehaviour
-        {        
+        {
             private Button button;
             private Image icon;
             private GameObject notificationLock;
             private GameObject levelBack;
             private TextMeshProUGUI level;
 
-            public Transform infoPopupPos { get; set; }
+            public Transform infoWidgetPos { get; set; }
             public string skillType { get; set; }
             public AdminBRO.MagicGuildSkill skillData => GameData.buildings.magicGuild.GetSkillByType(skillType);
 
@@ -39,21 +39,97 @@ namespace Overlewd
 
             private void Customize()
             {
-                if (level != null)
+                if (!skillData.locked)
                 {
-                    level.text = skillData.currentSkillLevel.ToString();
+                    if (level != null)
+                    {
+                        level.text = skillData.currentSkillLevel?.ToString();
+                    }
+
+                    notificationLock?.SetActive(false);
+                }
+                else
+                {
+                    notificationLock?.SetActive(true);
+                    levelBack.SetActive(false);
                 }
 
-                // levelBack?.SetActive(true);
-                notificationLock?.SetActive(false);
+                icon.sprite = GetIcon();
             }
 
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-                var popup = SkillInfoPopup.GetInstance(infoPopupPos);
+                var popup = OverlordSkillInfo.GetInstance(infoWidgetPos);
                 popup.skillType = skillType;
+            }
+
+            private Sprite GetIcon()
+            {
+                switch (skillType)
+                {
+                    case AdminBRO.MagicGuildSkill.Type_Attack:
+                        return Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/BasicAttack");
+                    case AdminBRO.MagicGuildSkill.Type_ActiveSkill:
+                        if (!skillData.locked)
+                        {
+                            if (skillData.next == null)
+                            {
+                                return Resources.Load<Sprite>(
+                                    "Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep2");
+                            }
+
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1");
+                        }
+                        else
+                        {
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1_Locked");
+                        }
+                    case AdminBRO.MagicGuildSkill.Type_UltimateSkill:
+                        if (!skillData.locked)
+                        {
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/UltimateSpellStep1");
+                        }
+                        else
+                        {
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/UltimateSpellStep1_Locked");
+                        }
+                    case AdminBRO.MagicGuildSkill.Type_PassiveSkill1:
+                        if (!skillData.locked)
+                        {
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill1");
+                        }
+                        else
+                        {
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill1_Locked");
+                        }
+                    case AdminBRO.MagicGuildSkill.Type_PassiveSkill2:
+                        if (!skillData.locked)
+                        {
+                            if (skillData.next == null)
+                            {
+                                return Resources.Load<Sprite>(
+                                    "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2_Upgrade");
+                            }
+
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2");
+                        }
+                        else
+                        {
+                            return Resources.Load<Sprite>(
+                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2_Locked");
+                        }
+                }
+
+                return null;
             }
         }
     }

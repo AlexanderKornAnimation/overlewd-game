@@ -15,6 +15,7 @@ namespace Overlewd
 
         protected override void Awake()
         {
+            UITools.SetStretch(gameObject.GetComponent<RectTransform>());
             canvas = transform.Find("Canvas");
             background = canvas.Find("Background");
             missclickButton = canvas.Find("MissclickButton").GetComponent<Button>();

@@ -14,14 +14,7 @@ namespace Overlewd
         protected TextMeshProUGUI level;
         protected TextMeshProUGUI cooldown;
         protected TextMeshProUGUI description;
-
-        public int? chId { get; set; }
-        protected AdminBRO.Character chData => GameData.characters.GetById(chId);
-        
-        public string skilltype { get; set; }
-
-        protected AdminBRO.CharacterSkill skillData => chId == GameData.characters.overlord.id
-            ? GameData.buildings.magicGuild.GetSkillByType(skilltype).current : chData.GetSkillByType(skilltype);
+        protected GameObject levelBack;
         
         protected override void Awake()
         {
@@ -29,7 +22,8 @@ namespace Overlewd
             skillName = background.Find("SkillName").GetComponent<TextMeshProUGUI>();
             icon = background.Find("Icon").GetComponent<Image>();
             skillEffect = icon.transform.Find("SkillEffect").GetComponent<TextMeshProUGUI>();
-            level = icon.transform.Find("LevelBack/Level").GetComponent<TextMeshProUGUI>();
+            levelBack = icon.transform.Find("LevelBack").gameObject;
+            level = levelBack.transform.Find("Level").GetComponent<TextMeshProUGUI>();
             cooldown = background.Find("CooldownBack/Cooldown").GetComponent<TextMeshProUGUI>();
             description = background.Find("Description").GetComponent<TextMeshProUGUI>();
         }
@@ -41,10 +35,7 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            skillName.text = skillData?.name;
-            skillEffect.text = skillData?.effectSprite;
-            level.text = skillData?.level.ToString();
-            description.text = skillData?.description;
+
         }
     }
 }

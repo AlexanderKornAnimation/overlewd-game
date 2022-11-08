@@ -158,23 +158,23 @@ namespace Overlewd
             var skills = canvas.Find("Skills");
             passiveSkill1 = skills.Find("PassiveSkill1").gameObject.AddComponent<NSOverlordScreen.Skill>();
             passiveSkill1.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill1;
-            passiveSkill1.infoPopupPos = infoPopupPos;
+            passiveSkill1.infoWidgetPos = infoPopupPos;
             
             passiveSkill2 = skills.Find("PassiveSkill2").gameObject.AddComponent<NSOverlordScreen.Skill>();
             passiveSkill2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
-            passiveSkill2.infoPopupPos = infoPopupPos;
+            passiveSkill2.infoWidgetPos = infoPopupPos;
             
             basicAttack = skills.Find("BasicAttack").gameObject.AddComponent<NSOverlordScreen.Skill>();
             basicAttack.skillType = AdminBRO.MagicGuildSkill.Type_Attack;
-            basicAttack.infoPopupPos = infoPopupPos;
+            basicAttack.infoWidgetPos = infoPopupPos;
             
             enhancedAttack = skills.Find("EnhancedSkill").gameObject.AddComponent<NSOverlordScreen.Skill>();
             enhancedAttack.skillType = AdminBRO.MagicGuildSkill.Type_ActiveSkill;
-            enhancedAttack.infoPopupPos = infoPopupPos;
+            enhancedAttack.infoWidgetPos = infoPopupPos;
             
             ultimate = skills.Find("UltimateSkill").gameObject.AddComponent<NSOverlordScreen.Skill>();
             ultimate.skillType = AdminBRO.MagicGuildSkill.Type_UltimateSkill;
-            ultimate.infoPopupPos = infoPopupPos;
+            ultimate.infoWidgetPos = infoPopupPos;
             
             SortEquipInTabs();
         }

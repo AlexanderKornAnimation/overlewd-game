@@ -6,7 +6,7 @@ namespace Overlewd
 {
     public abstract class BasePopup : BaseScreen
     {
-        public virtual BasePopupInData baseInputData => null;
+        public BasePopupInData baseInputData { get; protected set; }
 
         public override void StartShow()
         {
@@ -41,12 +41,16 @@ namespace Overlewd
 
     public abstract class BasePopupParent<T> : BasePopup where T : BasePopupInData, new()
     {
-        public T inputData { get; private set; } = new T();
-        public override BasePopupInData baseInputData => inputData;
+        public BasePopupParent()
+        {
+            baseInputData = new T();
+        }
+
+        public T inputData => (T)baseInputData;
 
         public BasePopup SetData(T data)
         {
-            inputData = data;
+            baseInputData = data;
             return this;
         }
     }

@@ -9,10 +9,6 @@ namespace Overlewd
 {
     public class MemoryScreen : BaseFullScreenParent<MemoryScreenInData>
     {
-        private Button portalButton;
-        private TextMeshProUGUI portalButtonText;
-        private Button forgeButton;
-        private TextMeshProUGUI forgeButtonText;
         private Button marketButton;
         private TextMeshProUGUI marketButtonText;
         private Button backButton;
@@ -54,14 +50,6 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
             
-            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            portalButton.onClick.AddListener(PortalButtonClick);
-            portalButtonText = portalButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            
-            forgeButton = canvas.Find("ForgeButton").GetComponent<Button>();
-            forgeButton.onClick.AddListener(ForgeButtonClick);
-            forgeButtonText = forgeButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            
             marketButton = canvas.Find("MarketButton").GetComponent<Button>();
             marketButton.onClick.AddListener(MarketButtonClick);
             marketButtonText = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
@@ -78,26 +66,6 @@ namespace Overlewd
 
         private void Customize()
         {
-            portalButtonText.text = inputData?.girlKey switch
-            {
-                AdminBRO.MatriarchItem.Key_Ulvi => "Go to portal to summon\nmissing Ulvi`s shards",
-                AdminBRO.MatriarchItem.Key_Adriel => "Go to portal to summon\nmissing Adriel`s shards",
-                AdminBRO.MatriarchItem.Key_Ingie => "Go to portal to summon\nmissing Ingie`s shards",
-                AdminBRO.MatriarchItem.Key_Faye => "Go to portal to summon\nmissing Faye`s shards",
-                AdminBRO.MatriarchItem.Key_Lili => "Go to portal to summon\nmissing Lili`s shards",
-                _ => null
-            };
-            
-            forgeButtonText.text = inputData?.girlKey switch
-            {
-                AdminBRO.MatriarchItem.Key_Ulvi => "Go to forge to merge\nmissing Ulvi`s shards",
-                AdminBRO.MatriarchItem.Key_Adriel => "Go to forge to merge\nmissing Adriel`s shards",
-                AdminBRO.MatriarchItem.Key_Ingie => "Go to forge to merge\nmissing Ingie`s shards",
-                AdminBRO.MatriarchItem.Key_Faye => "Go to forge to merge\nmissing Faye`s shards",
-                AdminBRO.MatriarchItem.Key_Lili => "Go to forge to merge\nmissing Lili`s shards",
-                _ => null
-            };
-            
             marketButtonText.text = inputData?.girlKey switch
             {
                 AdminBRO.MatriarchItem.Key_Ulvi => "Buy Ulvi`s Heirloom\nto get Ulvi`s shards",
@@ -142,25 +110,6 @@ namespace Overlewd
                     SetData(inputData.prevScreenInData as MemoryListScreenInData)
                     .RunShowScreenProcess();
             }
-        }
-
-        private void PortalButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<PortalScreen>().
-                SetData(new PortalScreenInData
-            {
-                activeButtonId = PortalScreen.TabShards
-            }).RunShowScreenProcess();
-        }
-
-        private void ForgeButtonClick()
-        {
-            UIManager.MakeScreen<ForgeScreen>().
-                SetData(new ForgeScreenInData
-            {
-                activeTabId = ForgeScreen.TabShard
-            }).RunShowScreenProcess();
         }
 
         private void MarketButtonClick()

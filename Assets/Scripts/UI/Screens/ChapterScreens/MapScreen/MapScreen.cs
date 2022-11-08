@@ -201,12 +201,15 @@ namespace Overlewd
 
             bool ftue_ch1_b1 = false;
             bool ftue_ch1_s2 = false;
+            bool ftue_ch2_d1 = false;
+
             GameData.ftue.DoLern(
                 GameData.ftue.stats.lastEndedStageData,
                 new FTUELernActions
                 {
                     ch1_b1 = () => ftue_ch1_b1 = true,
-                    ch1_s2 = () => ftue_ch1_s2 = true
+                    ch1_s2 = () => ftue_ch1_s2 = true,
+                    ch2_d1 = () => ftue_ch2_d1 = true,
                 });
             if (ftue_ch1_b1)
             {
@@ -220,16 +223,23 @@ namespace Overlewd
                 await questsPanel.ShowAsync();
                 GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
             }
+            else if (ftue_ch2_d1)
+            {
+                GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                await UIManager.WaitHideNotifications();
+                UIManager.ShowScreen<CastleScreen>();
+                return;
+            }
             else
             {
                 var showPanelTasks = new List<Task>();
                 showPanelTasks.Add(questsPanel.ShowAsync());
                 await Task.WhenAll(showPanelTasks);
             }
-                    
+            
             await Task.CompletedTask;
         }
-
+        
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();

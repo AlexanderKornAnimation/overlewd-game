@@ -43,9 +43,8 @@ namespace Overlewd
             status_bar.cc = cc;
             border = transform.Find("button/border").gameObject;
             border?.SetActive(false);
-            border.GetComponent<RectTransform>().anchoredPosition = (cc.isOverlord) ? new Vector2(0, 0): new Vector2(0, -60);
+            border.GetComponent<RectTransform>().anchoredPosition = (cc.isOverlord) ? new Vector2(0, 0) : new Vector2(0, -60);
             if (sliderHP) sliderHP.maxValue = maxHp;
-            
             if (sliderMP) sliderMP.maxValue = manaMax;
             sliderMP?.gameObject.SetActive(showMP);
             if (charClass && classIcons != null) SetClass();
@@ -166,20 +165,19 @@ namespace Overlewd
                             $"Rarity: {cc.character.rarity}\n" +
                             $"Class: {cc.character.characterClass}\n\n" +
 
-                            $"Speed: {cc.speed}\n" +
-                            $"Power: {cc.power}\n" +
-                            $"Constitution: {cc.constitution}\n" +
-                            $"Agility: {cc.agility}\n\n" +
+                            $"Sp: {cc.speed}  Pw: {cc.power} \nCn: {cc.constitution}  Ag: {cc.agility}\n\n" +
 
-                            $"Accuracy: {cc.accuracy}\n" +
-                            $"Dodge: {cc.dodge}\n" +
-                            $"Critrate: {cc.critrate}\n\n" +
-
-                            $"Max Health: {cc.character.health}\n" +
                             $"Damage: {cc.character.damage}\n" +
                             $"Max Mana: {cc.character.mana}\n" +
-                            $"Key: {cc.character.key}\n" +
-                            $"Damage: {cc.character.damage}\n\n", style);
+                            $"Damage: {cc.character.damage}\n\n" +
+
+                            $"PSR\n"+
+                            $"accyracy: {cc.psr.accyracy}\n" +
+                            $"crit: {cc.psr.crit}\n" +
+                            $"dodge: {cc.psr.dodge}\n" +
+                            $"effectProb: {cc.psr.effectProb}\n",
+                            style);
+
                     }
                 }
                 else if (cc.bm.debug == 2)

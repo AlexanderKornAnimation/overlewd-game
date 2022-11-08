@@ -14,6 +14,7 @@ namespace Overlewd
         private Transform map;
         private Image background;
         private Image banner;
+        private Button bannerButton;
         private TextMeshProUGUI timer;
 
         private Button sidebarButton;
@@ -37,6 +38,8 @@ namespace Overlewd
             map = canvas.Find("Map");
             background = map.Find("Background").GetComponent<Image>();
             banner = canvas.Find("Banner").GetComponent<Image>();
+            bannerButton = banner.GetComponent<Button>();
+            bannerButton.onClick.AddListener(BannerButtonClick);
             timer = banner.transform.Find("TimerBack").Find("Timer").GetComponent<TextMeshProUGUI>();
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
@@ -180,6 +183,11 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        private void BannerButtonClick()
+        {
+            UIManager.ShowOverlay<MarketOverlay>();
+        }
+        
         private void ChapterSelectorButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

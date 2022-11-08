@@ -12,6 +12,7 @@ namespace Overlewd
         public bool isOverlord = false;
 
         public BattleManager bm; //init on BattleManager Initialize();
+        public PSR psr;
         public BattleLog log => bm.log;
         public AdminBRO.Character character;
         public CharacterPortrait charStats;
@@ -106,11 +107,12 @@ namespace Overlewd
 
             msg_safeguard = "<sprite=\"BuffsNDebuffs\" name=\"BuffSafeguard\"> Safeguard",
             msg_dispel = "<sprite=\"BuffsNDebuffs\" name=\"BuffDispell\"> Dispell";
-        private GameObject vfx_purple => bm.vfx_purple;
-        private GameObject vfx_red => bm.vfx_red;
-        private GameObject vfx_blue => bm.vfx_blue;
-        private GameObject vfx_green => bm.vfx_green;
-        private GameObject vfx_stun => bm.vfx_stun;
+        private GameObject vfx_purple => bm.vfx.purple;
+        private GameObject vfx_red => bm.vfx.red;
+        private GameObject vfx_blue => bm.vfx.blue;
+        private GameObject vfx_green => bm.vfx.green;
+        private GameObject vfx_stun => bm.vfx.stun;
+        private GameObject vfx_blood => bm.vfx.blood;
 
         private void Start()
         {
@@ -122,6 +124,7 @@ namespace Overlewd
 
         private void StatInit()
         {
+            psr = gameObject.AddComponent<PSR>();
             //isEnemy and battleOrder assign on battle manager
             isOverlord = character.characterClass == AdminBRO.Character.Class_Overlord;
             if (isOverlord)
@@ -129,6 +132,10 @@ namespace Overlewd
                 bm.overlord = this;
                 idleScale = overIdleScale;
                 battleScale = overBattleScale;
+            }
+            if (isBoss)
+            {
+                idleScale = 1f;
             }
             health = (float)character.health;
             healthMax = health;
@@ -315,17 +322,31 @@ namespace Overlewd
                 spineWidget.PlayAnimation(ani_defence_name, false);
 
             attackerSkill.sfxTarget?.Play();                    //Play on target SFX
-            var isHit = (attacker.focus_blind == 0) ? attacker.accuracy > Random.value
+
+            var isHit = (attacker.focus_blind == 0) ? attacker.accuracy + attacker.psr?.accyracy > Random.value
                 : (attacker.focus_blind > 0) ? true : false;
-            var isDodge = dodge > Random.value;
-            var isCrit = attacker.critrate > Random.value;
-            if (isHit) AddEffect(attackerSkill);                //calculate probability and add effect
+
+            var isDodge = dodge + psr?.dodge > Random.value;
+            var isCrit = attacker.critrate + attacker.psr?.crit > Random.value;
+            if (isDodge) psr?.Dodge();
+            if (isCrit) attacker.psr?.Crit(); else attacker.psr?.CritMiss();
+
+            if (isHit) 
+            {
+                AddEffect(attackerSkill);                       //calculate probability and add effect
+                attacker.psr?.HitEnemy();
+            }
+            else
+            {
+                attacker.psr?.Miss();
+            }
             if (attackerSkill.vfxTarget != null && !isDodge)    //VFX on Self
             {
                 var vfxGO = new GameObject($"vfx_{attackerSkill.vfxTarget.title}");
                 var vfx = vfxGO.AddComponent<VFXManager>();
                 vfx.Setup(attackerSkill.vfxTarget, selfVFX);
             }
+            if (vfx_blood && !isDodge) Instantiate(vfx_blood, selfVFX);
             foreach (var ps in passiveSkill)
             {
                 if (ps?.trigger == "when_attacked")
@@ -353,15 +374,13 @@ namespace Overlewd
                     bm.unselect?.Invoke();
                     Highlight();
                 }
-                if (!isEnemy)
-                    CharPortraitSet();
+                //if (!isEnemy) CharPortraitSet();
                 SoundManager.PlayOneShot(FMODEventPath.UI_Battle_SelectPers);
             }
         }
 
         public void Highlight() => observer?.Border(true);
         public void UnHiglight() => observer?.Border(false);
-
         public void BattleIn(bool AOE = false)
         {
             UnHiglight();
@@ -404,7 +423,8 @@ namespace Overlewd
                 DrawPopup("Miss!", "blue");
                 return;
             }
-            if (crit) value *= 2;
+            if (crit)
+                value *= 2;
             value = Mathf.Round(value);
             if (value > 0)
             {
@@ -413,6 +433,7 @@ namespace Overlewd
                     DrawPopup("Dodge!", "blue");
                     return;
                 }
+                psr?.TakeDamage();
                 health -= value;
                 health = Mathf.Round(health);
                 health = Mathf.Max(health, 0);
@@ -481,11 +502,12 @@ namespace Overlewd
         void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null, bool addManual = false)
         {
             if (targetCC == null) targetCC = this;
-            bool hit = sk.effectProb >= Random.value;
+            bool hit = sk.effectProb + psr.effectProb >= Random.value;
             if (sk.effect != null)
                 if (hit)
                 {
-                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    psr?.EffectHit();
+                    var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = healthMax * ea;
                     switch (sk.effect)
@@ -602,7 +624,12 @@ namespace Overlewd
                             break;
                     }
                     observer?.UpdateStatuses();
-                } //else DrawPopup("Effect miss", "red");
+                }
+                else
+                {
+                    //DrawPopup("Effect miss", "red");
+                    psr.EffectMiss();
+                }
         }
 
         void PassiveBuff(AdminBRO.CharacterSkill sk)
@@ -610,16 +637,16 @@ namespace Overlewd
             if (skillCD[sk] > 0) //skip if skill on Cool Down
                 return;
             else
-                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
+                skillCD[sk] = (int)sk.effectCooldownDuration;
 
             bool isCrit = critrate >= Random.value;
             Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.value;
+            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
 
             if (sk.effect != null)
                 if (hitEffect)
                 {
-                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = healthMax * ea;
 
@@ -674,12 +701,12 @@ namespace Overlewd
                 skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
             bool isCrit = critrate >= Random.value;
             targetCC.Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb >= Random.value;
+            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
 
             if (sk.effect != null)
                 if (hitEffect)
                 {
-                    var duration = Mathf.RoundToInt(sk.effectActingDuration);
+                    var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = targetCC.healthMax * ea;
                     switch (sk.effect)
@@ -831,16 +858,15 @@ namespace Overlewd
         public void UpadeteDot()
         {
             var delay = 0f;
-            if (stun)
-            {
-                DrawPopup(msg_stun, "red");
-                stun = false;
-                delay = 0.5f;
-            }
             if (regen_poison != 0)
             {
                 Damage(regen_poison_dot, true, false, false, poison: true);
                 regen_poison -= (int)Mathf.Sign(regen_poison);
+                delay = 0.5f;
+            }
+            if (stun && !isDead)
+            {
+                DrawPopup(msg_stun, "red");
                 delay = 0.5f;
             }
             observer?.UpdateStatuses();
@@ -850,7 +876,9 @@ namespace Overlewd
         IEnumerator ChangeState(float delay = 0.5f)
         {
             yield return new WaitForSeconds(delay);
-            bm.StepLate();
+            bm.StepLate(stun);
+            stun = false;
+            observer?.UpdateStatuses();
         }
         private int popUpCounter = 0;
         void DrawPopup(string msg, string color = "white", float delay = 0f, bool fast = false)

@@ -6,7 +6,7 @@ namespace Overlewd
 {
     public abstract class BaseNotification : BaseScreen
     {
-        public virtual BaseNotificationInData baseInputData => null;
+        public BaseNotificationInData baseInputData { get; protected set; }
 
         public override void StartShow()
         {
@@ -41,12 +41,16 @@ namespace Overlewd
 
     public abstract class BaseNotificationParent<T> : BaseNotification where T : BaseNotificationInData, new()
     {
-        public T inputData { get; private set; } = new T();
-        public override BaseNotificationInData baseInputData => inputData;
+        public BaseNotificationParent()
+        {
+            baseInputData = new T();
+        }
+
+        public T inputData => (T)baseInputData;
 
         public BaseNotification SetData(T data)
         {
-            inputData = data;
+            baseInputData = data;
             return this;
         }
     }

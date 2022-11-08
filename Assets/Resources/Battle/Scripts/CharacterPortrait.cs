@@ -1,16 +1,15 @@
+using DG.Tweening;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
-using System.Collections;
 
 namespace Overlewd
 {
     public class CharacterPortrait : MonoBehaviour
     {
         public CharController cc;
-        public Button button;
-        [HideInInspector] public bool bigPortrait = false;
+        public bool isBoss = false; //activate mask
         private TextMeshProUGUI textHP;
         private TextMeshProUGUI textMP;
         private Slider sliderHP;
@@ -19,7 +18,7 @@ namespace Overlewd
         private Image icon;
         private Image BattlePortraitIco;
 
-        private StatusEffects status_bar;
+        private StatusEffects status_bar => transform.Find("status_bar")?.GetComponent<StatusEffects>();
 
         private int level => cc.level;
         private string rarity => cc.rarity;
@@ -28,17 +27,9 @@ namespace Overlewd
         private float mp => cc.mana;
         private float maxMp => cc.manaMax;
 
-        private void Awake()
-        {
-            status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
-            button = GetComponent<Button>();
-        }
-
         public void InitUI(CharController charC)
         {
             cc = charC;
-            //BattleBackgroundIco = GetComponent<Image>();
-            //icon = GetComponent<Image>();
             BattlePortraitIco = transform.Find("Portrait")?.GetComponent<Image>();
             sliderHP = transform.Find("sliderHP")?.GetComponent<Slider>();
             sliderMP = transform.Find("sliderMP")?.GetComponent<Slider>();
@@ -54,23 +45,11 @@ namespace Overlewd
                 status_bar.cc = cc;
                 status_bar.UpdateStatuses();
             }
-            if (cc != null && button != null)
-                button.onClick.AddListener(cc.Select);
 
-            if (bigPortrait)
-            {
-                BattlePortraitIco.sprite = cc.bigIcon;
-                BattlePortraitIco.SetNativeSize();
-                transform.SetSiblingIndex(0);
-            }
-            else
-            {
-                BattlePortraitIco.sprite = cc.icon;
-                if (transform.GetSiblingIndex() > cc.battleOrder)
-                {
-                    transform.SetSiblingIndex(5);
-                }
-            }
+            BattlePortraitIco.sprite = cc.bigIcon;
+            BattlePortraitIco.SetNativeSize();
+            transform.SetSiblingIndex(0);
+
             UpdateUI();
         }
 
@@ -79,7 +58,7 @@ namespace Overlewd
             if (replaceCharacter)
                 cc = replaceCharacter;
             if (cc.bigIcon != null) BattlePortraitIco.sprite = cc.bigIcon;
-            if (bigPortrait) BattlePortraitIco.SetNativeSize();
+            BattlePortraitIco.SetNativeSize();
             if (sliderHP) sliderHP.maxValue = maxHp;
             status_bar.cc = cc;
             UpdateUI();

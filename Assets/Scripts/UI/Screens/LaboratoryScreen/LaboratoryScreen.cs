@@ -29,7 +29,6 @@ namespace Overlewd
         private Transform[] scrollContents = new Transform[tabsCount];
 
         private Button marketButton;
-        private Button portalButton;
         private Button backButton;
         
         private Button mergeButton;
@@ -67,9 +66,6 @@ namespace Overlewd
             
             marketButton = canvas.Find("MarketButton").GetComponent<Button>();
             marketButton.onClick.AddListener(MarketButtonClick);
-            
-            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            portalButton.onClick.AddListener(PortalButtonClick);
             
             mergeButton = canvas.Find("MergeButton").Find("Button").GetComponent<Button>();
             mergeButton.onClick.AddListener(MergeButtonClick);
@@ -365,11 +361,6 @@ namespace Overlewd
                     chSiblingIndex++;
                 }
             }
-        }
-
-        private void PortalButtonClick()
-        {
-            UIManager.ShowScreen<PortalScreen>();
         }
 
         private void MarketButtonClick()

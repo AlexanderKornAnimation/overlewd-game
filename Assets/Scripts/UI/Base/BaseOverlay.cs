@@ -6,7 +6,7 @@ namespace Overlewd
 {
     public abstract class BaseOverlay : BaseScreen
     {
-        public virtual BaseOverlayInData baseInputData => null;
+        public BaseOverlayInData baseInputData { get; protected set; }
 
         public override void StartShow()
         {
@@ -39,14 +39,18 @@ namespace Overlewd
         }
     }
 
-    public abstract class BaseOverlayParent<T> : BaseOverlay where T : BaseOverlayInData
+    public abstract class BaseOverlayParent<T> : BaseOverlay where T : BaseOverlayInData, new()
     {
-        public T inputData { get; private set; }
-        public override BaseOverlayInData baseInputData => inputData;
+        public BaseOverlayParent()
+        {
+            baseInputData = new T();
+        }
+
+        public T inputData => (T)baseInputData;
 
         public BaseOverlay SetData(T data)
         {
-            inputData = data;
+            baseInputData = data;
             return this;
         }
     }
