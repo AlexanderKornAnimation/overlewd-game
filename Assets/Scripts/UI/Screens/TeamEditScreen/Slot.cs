@@ -94,10 +94,10 @@ namespace Overlewd
                     slotEmptyHint.gameObject.SetActive(false);
                     slotFull.gameObject.SetActive(true);
                     characterIcon.sprite = ResourceManager.LoadSprite(characterData.teamEditSlotPersIcon);
-                    background.sprite = SlotBackgroundByRarity(characterData.rarity);
                     characterClass.text = characterData.classMarker;
                     level.text = characterData.level.ToString();
                     potencyValue.text = characterData.potency.ToString();
+                    background.sprite = SlotBackgroundByRarity(characterData.rarity);
                 
                     weaponIcon.sprite = ResourceManager.LoadSprite(characterData.characterEquipmentData?.icon);
                     weaponPotency.text = characterData.potency.ToString();
@@ -113,6 +113,7 @@ namespace Overlewd
                     slotFull.gameObject.SetActive(false);
                 }
                 
+
                 basicSkillLevel.text = characterData?.basicSkill?.level.ToString();
                 basicSkillEffect.text = characterData?.basicSkill?.effectSprite;
 
@@ -133,7 +134,7 @@ namespace Overlewd
             {
                 var skillInfo = CharacterSkillInfo.GetInstance(transform.parent);
                 skillInfo.chId = characterData?.id;
-                skillInfo.skilltype = type;
+                skillInfo.skillType = type;
             }
             
             private void SlotClick()
@@ -144,11 +145,12 @@ namespace Overlewd
             private void SwapWeaponButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                var currentScreenInData = UIManager.currentScreenInData;
                 UIManager.MakeScreen<WeaponScreen>().
                     SetData(new WeaponScreenInData
                     {
                         characterId = characterData.id,
-                        prevScreenInData = UIManager.prevScreenInData.prevScreenInData
+                        prevScreenInData = currentScreenInData
                     }).RunShowScreenProcess();
             }
             

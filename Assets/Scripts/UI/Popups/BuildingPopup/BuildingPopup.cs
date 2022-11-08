@@ -112,6 +112,25 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            GameData.ftue.DoLern(
+                GameData.ftue.stats.lastEndedStageData,
+                new FTUELernActions
+                {
+                    ch1_b4 = () =>
+                    {
+                        if (inputData?.buildingData?.key == AdminBRO.Building.Key_Castle && 
+                            !GameData.buildings.castle.meta.isBuilt)
+                        {
+                            GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
+                        }
+                    }
+                });
+
+            await Task.CompletedTask;
+        }
+
         protected virtual void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

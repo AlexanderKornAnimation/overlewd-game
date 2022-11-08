@@ -80,7 +80,7 @@ namespace Overlewd
         public bool showSidebarButton =>
             GameData.devMode ? true : GameData.buildings.castle.meta.isBuilt;
         public bool lockBuff =>
-            GameData.devMode ? false : !GameData.buildings.castle.meta.isBuilt;
+            GameData.devMode ? false : !GameData.buildings.harem.meta.isBuilt;
     }
 
     //ftue
@@ -1208,6 +1208,9 @@ namespace Overlewd
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
+            if (price == null)
+                return false;
+        
             foreach (var priceItem in price)
             {
                 var walletCurrency = info.wallet.Find(item => item.currencyId == priceItem.currencyId);

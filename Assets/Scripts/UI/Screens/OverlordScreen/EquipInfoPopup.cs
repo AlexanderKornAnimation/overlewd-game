@@ -9,7 +9,7 @@ namespace Overlewd
 {
     namespace NSOverlordScreen
     {
-        public class EquipInfoPopup : BaseInfoPopup
+        public class EquipInfoPopup : MonoBehaviour
         {
             private Image equippedItemIcon;
             private TextMeshProUGUI equippedItemName;
@@ -83,9 +83,14 @@ namespace Overlewd
 
             public event Action<int, int> OnEquip;
 
-            protected override void Awake()
+            private Button missClickButton;
+ 
+            
+            private void Awake()
             {
-                base.Awake();
+                UITools.SetStretch(gameObject.GetComponent<RectTransform>());
+                missClickButton = transform.Find("MissClickButton").GetComponent<Button>();
+                missClickButton.onClick.AddListener(MissClickButtonClick);
                 var equippedItem = transform.Find("Equips/EquippedItem");
                 equippedItemIcon = equippedItem.Find("EquipIcon").GetComponent<Image>();
                 equippedItemName = equippedItem.Find("EquipName").GetComponent<TextMeshProUGUI>();
@@ -250,6 +255,11 @@ namespace Overlewd
                 return equippedItemStat < selectedItemStat ? TMPSprite.IconArrowUp : TMPSprite.IconArrowDown;
             }
 
+            protected virtual void MissClickButtonClick()
+            {
+                Destroy(gameObject);
+            }
+            
             private async void EquipButtonClick()
             {
                 var overlordData = GameData.characters.overlord;

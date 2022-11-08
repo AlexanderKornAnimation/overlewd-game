@@ -241,24 +241,6 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override async Task AfterShowAsync()
-        {
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b4 = () =>
-                    {
-                        if (!GameData.buildings.castle.meta.isBuilt)
-                        {
-                            GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
-                        }
-                    }
-                });
-
-            await Task.CompletedTask;
-        }
-
         private async void CollectButtonClick()
         {
             await GameData.buildings.municipality.GoldCollect();

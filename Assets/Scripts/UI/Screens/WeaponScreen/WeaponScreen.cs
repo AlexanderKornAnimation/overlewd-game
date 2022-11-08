@@ -195,6 +195,12 @@ namespace Overlewd
             {
                 UIManager.ShowScreen<BattleGirlListScreen>();
             }
+            else if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
+            {
+                UIManager.MakeScreen<TeamEditScreen>().
+                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
+                    RunShowScreenProcess();
+            }
             else
             {
                 UIManager.MakeScreen<BattleGirlScreen>().
