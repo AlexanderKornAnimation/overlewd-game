@@ -18,7 +18,7 @@ namespace Overlewd
         public const string ServerDomainURL = "http://dev.api.overlewd.com/";
 #elif DEV_BUILD
         public const string ApiVersion = "15";
-        public const string ServerDomainURL = "http://dev.api.overlewd.com/";
+        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #else
         public const string ApiVersion = "15";
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
