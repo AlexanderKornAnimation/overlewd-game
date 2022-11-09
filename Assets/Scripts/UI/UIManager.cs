@@ -13,14 +13,14 @@ namespace Overlewd
 {
     public class UIEvent
     {
-        public Type type = Type.None;
-
-        public BaseScreen uiSender;
-        public System.Type uiSenderType;
+        public Type type { get; set; } = Type.None;
+        public BaseScreen uiSender { get; set; }
+        public System.Type uiSenderType { get; set; }
 
         public enum Type
         {
             None,
+            AfterChangeScreen,
             RestoreScreenFocusAfterPopup,
             RestoreScreenFocusAfterOverlay
         }
@@ -407,6 +407,14 @@ namespace Overlewd
                                         new List<BaseMissclick>());
 
             MemoryOprimizer.ChangeScreen();
+
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.AfterChangeScreen,
+                uiSender = screen,
+                uiSenderType = screen.GetType()
+            };
+            ThrowUIEvent(uiEventData);
         }
 
         //Popup Layer
