@@ -196,7 +196,8 @@ namespace Overlewd
             if (apiVersion.version.ToString() != AdminBRO.ApiVersion)
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                errNotif.message = $"Need client update to version {apiVersion.version}";
+                errNotif.message = $"Invalid client API version. Server API version is {apiVersion.version}. " +
+                    $"Client API version is {AdminBRO.ApiVersion}";
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
