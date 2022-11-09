@@ -60,6 +60,7 @@ namespace Overlewd
 
     public static class HttpCore
     {
+        public const int defaultTimeoutSec = 30;
         private class RequestParams
         {
             private enum Type
@@ -90,6 +91,12 @@ namespace Overlewd
         }
 
         private static List<UnityWebRequest> activeRequests = new List<UnityWebRequest>();
+
+        public static int timeoutSec { get; set; } = defaultTimeoutSec;
+        public static void RestoreDefaultTimeout()
+        {
+            timeoutSec = defaultTimeoutSec;
+        }
 
         public static void PushRequest(UnityWebRequest request)
         {
@@ -130,7 +137,7 @@ namespace Overlewd
 
         private static async Task<UnityWebRequest> Send(UnityWebRequest request, bool lockUserInput)
         {
-            //request.timeout = 20;
+            request.timeout = timeoutSec;
             request.SetRequestHeader("Authorization", $"Bearer {AdminBRO.tokens?.accessToken}");
             request.SetRequestHeader("Version", AdminBRO.ApiVersion);
 

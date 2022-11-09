@@ -115,46 +115,53 @@ namespace Overlewd
 
                     SetDownloadBarTitle($"Load resources {currentFilesCount + 1}-{currentFilesCount + split.Count}/{totalFilesCount}");
 
+                    HttpCore.timeoutSec = 120;
                     var downloadTasks = new List<Task<HttpCoreResponse>>();
                     foreach (var item in split)
                     {
                         downloadTasks.Add(HttpCore.GetAsync(item.resourceMeta.url));
                     }
                     var downloadTasksResults = await Task.WhenAll(downloadTasks);
+                    HttpCore.RestoreDefaultTimeout();
 
                     var saveTasks = new List<Task>();
                     var taskId = 0;
                     foreach (var downloadTaskResult in downloadTasksResults)
                     {
-                        var resourceInfo = split[taskId++];
-                        var fileData = downloadTaskResult.data;
-                        var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
-                        saveTasks.Add(WriteFile(filePath, fileData));
+                        if (downloadTaskResult.isSuccess)
+                        {
+                            var resourceInfo = split[taskId++];
+                            var fileData = downloadTaskResult.data;
+                            var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
+                            saveTasks.Add(WriteFile(filePath, fileData));
+                        }
                     }
                     await Task.WhenAll(saveTasks);
 
                     //update meta data
+                    var downloadTaskId = 0;
                     foreach (var resourceInfo in split)
                     {
-                        switch (resourceInfo.state)
+                        if (downloadTasksResults[downloadTaskId++].isSuccess)
                         {
-                            case DownloadResourceInfo.State.Add:
-                                localResourcesMeta.Add(new AdminBRO.NetworkResourceShort
-                                {
-                                    id = resourceInfo.resourceMeta.id,
-                                    hash = resourceInfo.resourceMeta.hash
-                                });
-                                break;
-                            case DownloadResourceInfo.State.Update:
-                                var updateId = localResourcesMeta.FindIndex(0, localItem =>
-                                    localItem.id == resourceInfo.resourceMeta.id);
-                                localResourcesMeta[updateId] = 
-                                    new AdminBRO.NetworkResourceShort 
+                            switch (resourceInfo.state)
+                            {
+                                case DownloadResourceInfo.State.Add:
+                                    localResourcesMeta.Add(new AdminBRO.NetworkResourceShort
                                     {
                                         id = resourceInfo.resourceMeta.id,
                                         hash = resourceInfo.resourceMeta.hash
-                                    };
-                                break;
+                                    });
+                                    break;
+                                case DownloadResourceInfo.State.Update:
+                                    var updRes = localResourcesMeta.Find(localItem =>
+                                        localItem.id == resourceInfo.resourceMeta.id);
+                                    if (updRes != null)
+                                    {
+                                        updRes.hash = resourceInfo.resourceMeta.hash;
+                                    }
+                                    break;
+                            }
                         }
                     }
                     ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
