@@ -130,7 +130,7 @@ namespace Overlewd
 
         private static async Task<UnityWebRequest> Send(UnityWebRequest request, bool lockUserInput)
         {
-            request.timeout = 20;
+            //request.timeout = 20;
             request.SetRequestHeader("Authorization", $"Bearer {AdminBRO.tokens?.accessToken}");
             request.SetRequestHeader("Version", AdminBRO.ApiVersion);
 
