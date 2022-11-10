@@ -47,7 +47,7 @@ namespace Overlewd
         private void Customize()
         {
             var activeBuff = GameData.matriarchs.activeBuff;
-            if (activeBuff != null && GameData.ftue.chapter1_stages.sex2.isComplete)
+            if (activeBuff != null && GameData.ftue.chapter1_sex2.isComplete)
             {
                 activeButton.gameObject.SetActive(true);
                 unactiveButton.gameObject.SetActive(false);

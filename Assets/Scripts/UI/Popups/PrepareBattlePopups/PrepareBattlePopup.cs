@@ -234,12 +234,12 @@ namespace Overlewd
             battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
             Customize();
 
-            GameData.ftue.DoLern(
-                inputData?.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_any = () => UITools.DisableButton(editTeamButton)
-                });
+            switch (inputData?.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, _):
+                    UITools.DisableButton(editTeamButton);
+                    break;
+            }
 
             StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergy));
 

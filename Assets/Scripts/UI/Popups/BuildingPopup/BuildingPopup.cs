@@ -114,19 +114,16 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b4 = () =>
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
+                    if (inputData?.buildingData?.key == AdminBRO.Building.Key_Castle &&
+                        !GameData.buildings.castle.meta.isBuilt)
                     {
-                        if (inputData?.buildingData?.key == AdminBRO.Building.Key_Castle && 
-                            !GameData.buildings.castle.meta.isBuilt)
-                        {
-                            GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
-                        }
+                        GameData.ftue.chapter1.ShowNotifByKey("quickbuildtutor");
                     }
-                });
+                    break;
+            }
 
             await Task.CompletedTask;
         }

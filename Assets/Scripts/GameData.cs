@@ -84,287 +84,73 @@ namespace Overlewd
     }
 
     //ftue
-    public class FTUEChapter1Stages
-    {
-        public AdminBRO.FTUEChapter meta => GameData.ftue.chapter1;
-        public AdminBRO.FTUEStageItem battle1 => meta.GetStageByKey("battle1");
-        public AdminBRO.FTUEStageItem battle2 => meta.GetStageByKey("battle2");
-        public AdminBRO.FTUEStageItem battle3 => meta.GetStageByKey("battle3");
-        public AdminBRO.FTUEStageItem battle4 => meta.GetStageByKey("battle4");
-        public AdminBRO.FTUEStageItem battle5 => meta.GetStageByKey("battle5");
-        public AdminBRO.FTUEStageItem dialogue1 => meta.GetStageByKey("dialogue1");
-        public AdminBRO.FTUEStageItem dialogue2 => meta.GetStageByKey("dialogue2");
-        public AdminBRO.FTUEStageItem dialogue3 => meta.GetStageByKey("dialogue3");
-        public AdminBRO.FTUEStageItem dialogue4 => meta.GetStageByKey("dialogue4");
-        public AdminBRO.FTUEStageItem sex1 => meta.GetStageByKey("sex1");
-        public AdminBRO.FTUEStageItem sex2 => meta.GetStageByKey("sex2");
-        public AdminBRO.FTUEStageItem sex3 => meta.GetStageByKey("sex3");
-    }
-
-    public class FTUEChapter2Stages
-    {
-        public AdminBRO.FTUEChapter meta => GameData.ftue.chapter2;
-        public AdminBRO.FTUEStageItem battle1 => meta.GetStageByKey("battle1");
-        public AdminBRO.FTUEStageItem battle2 => meta.GetStageByKey("battle2");
-        public AdminBRO.FTUEStageItem battle3 => meta.GetStageByKey("battle3");
-        public AdminBRO.FTUEStageItem battle4 => meta.GetStageByKey("battle4");
-        public AdminBRO.FTUEStageItem battle5 => meta.GetStageByKey("battle5");
-        public AdminBRO.FTUEStageItem dialogue1 => meta.GetStageByKey("dialogue1");
-        public AdminBRO.FTUEStageItem dialogue2 => meta.GetStageByKey("dialogue2");
-        public AdminBRO.FTUEStageItem dialogue3 => meta.GetStageByKey("dialogue3");
-        public AdminBRO.FTUEStageItem dialogue4 => meta.GetStageByKey("dialogue4");
-        public AdminBRO.FTUEStageItem dialogue5 => meta.GetStageByKey("dialogue5");
-        public AdminBRO.FTUEStageItem sex2 => meta.GetStageByKey("sex2");
-    }
-
-    public class FTUEChapter3Stages
-    {
-        public AdminBRO.FTUEChapter meta => GameData.ftue.chapter3;
-        public AdminBRO.FTUEStageItem battle1 => meta.GetStageByKey("battle1");
-        public AdminBRO.FTUEStageItem battle2 => meta.GetStageByKey("battle2");
-        public AdminBRO.FTUEStageItem battle3 => meta.GetStageByKey("battle3");
-        public AdminBRO.FTUEStageItem battle4 => meta.GetStageByKey("battle4");
-        public AdminBRO.FTUEStageItem dialogue1 => meta.GetStageByKey("dialogue1");
-        public AdminBRO.FTUEStageItem dialogue2 => meta.GetStageByKey("dialogue2");
-        public AdminBRO.FTUEStageItem dialogue3 => meta.GetStageByKey("dialogue3");
-        public AdminBRO.FTUEStageItem dialogue4 => meta.GetStageByKey("dialogue4");
-        public AdminBRO.FTUEStageItem dialogue5 => meta.GetStageByKey("dialogue5");
-        public AdminBRO.FTUEStageItem sex1 => meta.GetStageByKey("sex1");
-        public AdminBRO.FTUEStageItem sex2 => meta.GetStageByKey("sex2");
-        public AdminBRO.FTUEStageItem sex3 => meta.GetStageByKey("sex3");
-    }
-
-    public class FTUELernActions
-    {
-        private const string CH1 = "chapter1";
-        private const string CH2 = "chapter2";
-        private const string CH3 = "chapter3";
-        private const string B1 = "battle1";
-        private const string B2 = "battle2";
-        private const string B3 = "battle3";
-        private const string B4 = "battle4";
-        private const string B5 = "battle5";
-        private const string D1 = "dialogue1";
-        private const string D2 = "dialogue2";
-        private const string D3 = "dialogue3";
-        private const string D4 = "dialogue4";
-        private const string D5 = "dialogue5";
-        private const string S1 = "sex1";
-        private const string S2 = "sex2";
-        private const string S3 = "sex3";
-
-        public Action ch1_b1;
-        public Action ch1_b2;
-        public Action ch1_b3;
-        public Action ch1_b4;
-        public Action ch1_b5;
-        public Action ch1_d1;
-        public Action ch1_d2;
-        public Action ch1_d3;
-        public Action ch1_d4;
-        public Action ch1_s1;
-        public Action ch1_s2;
-        public Action ch1_s3;
-
-        public Action ch2_b1;
-        public Action ch2_b2;
-        public Action ch2_b3;
-        public Action ch2_b4;
-        public Action ch2_b5;
-        public Action ch2_d1;
-        public Action ch2_d2;
-        public Action ch2_d3;
-        public Action ch2_d4;
-        public Action ch2_d5;
-        public Action ch2_s2;
-
-        public Action ch3_b1;
-        public Action ch3_b2;
-        public Action ch3_b3;
-        public Action ch3_b4;
-        public Action ch3_d1;
-        public Action ch3_d2;
-        public Action ch3_d3;
-        public Action ch3_d4;
-        public Action ch3_d5;
-        public Action ch3_s1;
-        public Action ch3_s2;
-        public Action ch3_s3;
-
-        public Action ch1_any;
-        public Action ch2_any;
-        public Action ch3_any;
-
-        public Action any_any;
-
-        public Action def;
-
-        private bool action_is_call = false;
-        private void call_action(Action action)
-        {
-            if (action != null && !action_is_call)
-            {
-                action.Invoke();
-                action_is_call = true;
-            }
-        }
-
-        public void Invoke((string chKey, string sKey)? stageKey)
-        {
-            //ch_s
-            switch (stageKey)
-            {
-                //ch1
-                case (CH1, B1):
-                    call_action(ch1_b1);
-                    break;
-                case (CH1, B2):
-                    call_action(ch1_b2);
-                    break;
-                case (CH1, B3):
-                    call_action(ch1_b3);
-                    break;
-                case (CH1, B4):
-                    call_action(ch1_b4);
-                    break;
-                case (CH1, B5):
-                    call_action(ch1_b5);
-                    break;
-                case (CH1, D1):
-                    call_action(ch1_d1);
-                    break;
-                case (CH1, D2):
-                    call_action(ch1_d2);
-                    break;
-                case (CH1, D3):
-                    call_action(ch1_d3);
-                    break;
-                case (CH1, D4):
-                    call_action(ch1_d4);
-                    break;
-                case (CH1, S1):
-                    call_action(ch1_s1);
-                    break;
-                case (CH1, S2):
-                    call_action(ch1_s2);
-                    break;
-                case (CH1, S3):
-                    call_action(ch1_s3);
-                    break;
-
-                //ch2
-                case (CH2, B1):
-                    call_action(ch2_b1);
-                    break;
-                case (CH2, B2):
-                    call_action(ch2_b2);
-                    break;
-                case (CH2, B3):
-                    call_action(ch2_b3);
-                    break;
-                case (CH2, B4):
-                    call_action(ch2_b4);
-                    break;
-                case (CH2, B5):
-                    call_action(ch2_b5);
-                    break;
-                case (CH2, D1):
-                    call_action(ch2_d1);
-                    break;
-                case (CH2, D2):
-                    call_action(ch2_d2);
-                    break;
-                case (CH2, D3):
-                    call_action(ch2_d3);
-                    break;
-                case (CH2, D4):
-                    call_action(ch2_d4);
-                    break;
-                case (CH2, D5):
-                    call_action(ch2_d5);
-                    break;
-                case (CH2, S2):
-                    call_action(ch2_s2);
-                    break;
-
-                //ch3
-                case (CH3, B1):
-                    call_action(ch3_b1);
-                    break;
-                case (CH3, B2):
-                    call_action(ch3_b2);
-                    break;
-                case (CH3, B3):
-                    call_action(ch3_b3);
-                    break;
-                case (CH3, B4):
-                    call_action(ch3_b4);
-                    break;
-                case (CH3, D1):
-                    call_action(ch3_d1);
-                    break;
-                case (CH3, D2):
-                    call_action(ch3_d2);
-                    break;
-                case (CH3, D3):
-                    call_action(ch3_d3);
-                    break;
-                case (CH3, D4):
-                    call_action(ch3_d4);
-                    break;
-                case (CH3, D5):
-                    call_action(ch3_d5);
-                    break;
-                case (CH3, S1):
-                    call_action(ch3_s1);
-                    break;
-                case (CH3, S2):
-                    call_action(ch3_s2);
-                    break;
-                case (CH3, S3):
-                    call_action(ch3_s3);
-                    break;
-            }
-
-            //ch_any
-            switch (stageKey)
-            {
-                case (CH1, _):
-                    call_action(ch1_any);
-                    break;
-                case (CH2, _):
-                    call_action(ch2_any);
-                    break;
-                case (CH3, _):
-                    call_action(ch3_any);
-                    break;
-            }
-
-            //any_any
-            switch (stageKey)
-            {
-                case (_, _):
-                    call_action(any_any);
-                    break;
-            }
-
-            //def
-            call_action(def);
-        }
-    }
-
     public class FTUE : BaseGameMeta
     {
+        public const string CHAPTER_1 = "chapter1";
+        public const string CHAPTER_2 = "chapter2";
+        public const string CHAPTER_3 = "chapter3";
+        public const string BATTLE_1 = "battle1";
+        public const string BATTLE_2 = "battle2";
+        public const string BATTLE_3 = "battle3";
+        public const string BATTLE_4 = "battle4";
+        public const string BATTLE_5 = "battle5";
+        public const string DIALOGUE_1 = "dialogue1";
+        public const string DIALOGUE_2 = "dialogue2";
+        public const string DIALOGUE_3 = "dialogue3";
+        public const string DIALOGUE_4 = "dialogue4";
+        public const string DIALOGUE_5 = "dialogue5";
+        public const string SEX_1 = "sex1";
+        public const string SEX_2 = "sex2";
+        public const string SEX_3 = "sex3";
+
         public AdminBRO.FTUEInfo info { get; private set; }
         public List<AdminBRO.FTUEStageItem> stages { get; private set; }
         public AdminBRO.FTUEStats stats { get; private set; }
 
-        public AdminBRO.FTUEChapter chapter1 => GetChapterByKey("chapter1");
-        public AdminBRO.FTUEChapter chapter2 => GetChapterByKey("chapter2");
-        public AdminBRO.FTUEChapter chapter3 => GetChapterByKey("chapter3");
-        public FTUEChapter1Stages chapter1_stages { get; private set; } = new FTUEChapter1Stages();
-        public FTUEChapter2Stages chapter2_stages { get; private set; } = new FTUEChapter2Stages();
-        public FTUEChapter3Stages chapter3_stages { get; private set; } = new FTUEChapter3Stages();
+        //chapter_1
+        public AdminBRO.FTUEChapter chapter1 => GetChapterByKey(CHAPTER_1);
+        public AdminBRO.FTUEStageItem chapter1_battle1 => chapter1.GetStageByKey(BATTLE_1);
+        public AdminBRO.FTUEStageItem chapter1_battle2 => chapter1.GetStageByKey(BATTLE_2);
+        public AdminBRO.FTUEStageItem chapter1_battle3 => chapter1.GetStageByKey(BATTLE_3);
+        public AdminBRO.FTUEStageItem chapter1_battle4 => chapter1.GetStageByKey(BATTLE_4);
+        public AdminBRO.FTUEStageItem chapter1_battle5 => chapter1.GetStageByKey(BATTLE_5);
+        public AdminBRO.FTUEStageItem chapter1_dialogue1 => chapter1.GetStageByKey(DIALOGUE_1);
+        public AdminBRO.FTUEStageItem chapter1_dialogue2 => chapter1.GetStageByKey(DIALOGUE_2);
+        public AdminBRO.FTUEStageItem chapter1_dialogue3 => chapter1.GetStageByKey(DIALOGUE_3);
+        public AdminBRO.FTUEStageItem chapter1_dialogue4 => chapter1.GetStageByKey(DIALOGUE_4);
+        public AdminBRO.FTUEStageItem chapter1_sex1 => chapter1.GetStageByKey(SEX_1);
+        public AdminBRO.FTUEStageItem chapter1_sex2 => chapter1.GetStageByKey(SEX_2);
+        public AdminBRO.FTUEStageItem chapter1_sex3 => chapter1.GetStageByKey(SEX_3);
+
+        //chapter_2
+        public AdminBRO.FTUEChapter chapter2 => GetChapterByKey(CHAPTER_2);
+        public AdminBRO.FTUEStageItem chapter2_battle1 => chapter2.GetStageByKey(BATTLE_1);
+        public AdminBRO.FTUEStageItem chapter2_battle2 => chapter2.GetStageByKey(BATTLE_2);
+        public AdminBRO.FTUEStageItem chapter2_battle3 => chapter2.GetStageByKey(BATTLE_3);
+        public AdminBRO.FTUEStageItem chapter2_battle4 => chapter2.GetStageByKey(BATTLE_4);
+        public AdminBRO.FTUEStageItem chapter2_battle5 => chapter2.GetStageByKey(BATTLE_5);
+        public AdminBRO.FTUEStageItem chapter2_dialogue1 => chapter2.GetStageByKey(DIALOGUE_1);
+        public AdminBRO.FTUEStageItem chapter2_dialogue2 => chapter2.GetStageByKey(DIALOGUE_2);
+        public AdminBRO.FTUEStageItem chapter2_dialogue3 => chapter2.GetStageByKey(DIALOGUE_3);
+        public AdminBRO.FTUEStageItem chapter2_dialogue4 => chapter2.GetStageByKey(DIALOGUE_4);
+        public AdminBRO.FTUEStageItem chapter2_dialogue5 => chapter2.GetStageByKey(DIALOGUE_5);
+        public AdminBRO.FTUEStageItem chapter2_sex2 => chapter2.GetStageByKey(SEX_2);
+
+        //chapter_3
+        public AdminBRO.FTUEChapter chapter3 => GetChapterByKey(CHAPTER_3);
+        public AdminBRO.FTUEStageItem chapter3_battle1 => chapter3.GetStageByKey(BATTLE_1);
+        public AdminBRO.FTUEStageItem chapter3_battle2 => chapter3.GetStageByKey(BATTLE_2);
+        public AdminBRO.FTUEStageItem chapter3_battle3 => chapter3.GetStageByKey(BATTLE_3);
+        public AdminBRO.FTUEStageItem chapter3_battle4 => chapter3.GetStageByKey(BATTLE_4);
+        public AdminBRO.FTUEStageItem chapter3_dialogue1 => chapter3.GetStageByKey(DIALOGUE_1);
+        public AdminBRO.FTUEStageItem chapter3_dialogue2 => chapter3.GetStageByKey(DIALOGUE_2);
+        public AdminBRO.FTUEStageItem chapter3_dialogue3 => chapter3.GetStageByKey(DIALOGUE_3);
+        public AdminBRO.FTUEStageItem chapter3_dialogue4 => chapter3.GetStageByKey(DIALOGUE_4);
+        public AdminBRO.FTUEStageItem chapter3_dialogue5 => chapter3.GetStageByKey(DIALOGUE_5);
+        public AdminBRO.FTUEStageItem chapter3_sex1 => chapter3.GetStageByKey(SEX_1);
+        public AdminBRO.FTUEStageItem chapter3_sex2 => chapter3.GetStageByKey(SEX_2);
+        public AdminBRO.FTUEStageItem chapter3_sex3 => chapter3.GetStageByKey(SEX_3);
+
         public AdminBRO.FTUEChapter GetChapterByKey(string key) => info.chapters.Find(ch => ch.key == key);
         public AdminBRO.FTUEChapter GetChapterById(int? id) => info.chapters.Find(ch => ch.id == id);
         public AdminBRO.FTUEStageItem GetStageById(int? id) => stages.Find(s => s.id == id);
@@ -424,11 +210,6 @@ namespace Overlewd
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
-        }
-
-        public void DoLern(AdminBRO.FTUEStageItem stageData, FTUELernActions actions)
-        {
-            actions.Invoke(GameData.devMode ? ((string, string)?)null : (stageData?.ftueChapterData.key, stageData?.key));
         }
     }
 

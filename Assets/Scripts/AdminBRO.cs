@@ -1425,6 +1425,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isClosed => status == Status_Closed;
+
+            [JsonProperty(Required = Required.Default)]
+            public (string chKey, string sKey)? lerningKey =>
+                GameData.devMode ? ((string, string)?)null : (ftueChapterData.key, key);
         }
 
         // /ftue-stages/{id}/start
@@ -1918,8 +1922,8 @@ namespace Overlewd
                 name switch
                 {
                     Key_Ulvi => true,
-                    Key_Adriel => GameData.ftue.chapter1_stages.dialogue3.isComplete,
-                    Key_Ingie => GameData.ftue.chapter2_stages.dialogue4.isComplete,
+                    Key_Adriel => GameData.ftue.chapter1_dialogue3.isComplete,
+                    Key_Ingie => GameData.ftue.chapter2_dialogue4.isComplete,
                     Key_Faye => false,
                     Key_Lili => false,
                     _ => false

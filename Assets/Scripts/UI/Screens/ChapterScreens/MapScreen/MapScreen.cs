@@ -170,12 +170,12 @@ namespace Overlewd
             switch (eventData?.type)
             {
                 case UIEvent.Type.AfterChangeScreen:
-                    GameData.ftue.DoLern(
-                        GameData.ftue.stats.lastEndedStageData,
-                        new FTUELernActions
-                        {
-                            ch2_d1 = () => UIManager.ShowScreen<CastleScreen>(),
-                        });
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                            UIManager.ShowScreen<CastleScreen>();
+                            break;
+                    }
                     break;
             }
         }
@@ -214,43 +214,33 @@ namespace Overlewd
                 }
             }
 
-            bool ftue_ch1_b1 = false;
-            bool ftue_ch1_s2 = false;
-            bool ftue_ch2_d1 = false;
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b1 = () => ftue_ch1_b1 = true,
-                    ch1_s2 = () => ftue_ch1_s2 = true,
-                    ch2_d1 = () => ftue_ch2_d1 = true,
-                });
-
-            if (ftue_ch1_b1)
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                GameData.ftue.chapter1.ShowNotifByKey("maptutor");
-                await UIManager.WaitHideNotifications();
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_1):
+                    GameData.ftue.chapter1.ShowNotifByKey("maptutor");
+                    await UIManager.WaitHideNotifications();
+                    break;
             }
 
             var showPanelTasks = new List<Task>();
-            if (GameData.ftue.chapter1_stages.battle1.isComplete)
+            if (GameData.ftue.chapter1_battle1.isComplete)
             {
                 showPanelTasks.Add(questsPanel.ShowAsync());
             }
             await Task.WhenAll(showPanelTasks);
 
-            if (ftue_ch1_b1)
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
-            }
-            else if (ftue_ch1_s2)
-            {
-                GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
-            }
-            else if (ftue_ch2_d1)
-            {
-                GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
-                await UIManager.WaitHideNotifications();
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_1):
+                    GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
+                    break;
+                case (FTUE.CHAPTER_1, FTUE.SEX_2):
+                    GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                    await UIManager.WaitHideNotifications();
+                    break;
             }
 
             await Task.CompletedTask;

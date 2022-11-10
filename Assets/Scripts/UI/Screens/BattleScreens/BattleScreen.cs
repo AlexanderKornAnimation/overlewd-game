@@ -17,12 +17,12 @@ namespace Overlewd
         {
             base.EndBattle(data);
 
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_b2 = () => endBattleData.battleWin = GameData.ftue.chapter1_stages.sex2.isComplete
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+                    endBattleData.battleWin = GameData.ftue.chapter1_sex2.isComplete;
+                    break;
+            }
 
             if (endBattleData.battleWin)
             {

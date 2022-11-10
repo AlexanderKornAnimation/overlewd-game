@@ -141,35 +141,31 @@ namespace Overlewd
             UITools.DisableButton(castleButton, UIManager.HasScreen<CastleScreen>());
             UITools.DisableButton(globalMapButton, UIManager.HasScreen<MapScreen>());
 
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b4 = () =>
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
+                    if (GameData.buildings.castle.meta.isBuilt)
                     {
-                        if (GameData.buildings.castle.meta.isBuilt)
-                        {
-                            UITools.DisableButton(castleButton);
-                            UITools.DisableButton(portalButton);
-                            //UITools.DisableButton(globalMapButton);
-                            UITools.DisableButton(overlordButton);
-                            UITools.DisableButton(haremButton);
-                            UITools.DisableButton(municipalityButton);
-                            UITools.DisableButton(magicGuildButton);
-                            UITools.DisableButton(marketButton);
-                            UITools.DisableButton(forgeButton);
-                        }
-                    },
-                    def = () =>
-                    {
-                        UITools.DisableButton(portalButton, !GameData.buildings.portal.meta.isBuilt);
-                        UITools.DisableButton(haremButton, !GameData.buildings.harem.meta.isBuilt);
-                        UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.meta.isBuilt);
-                        UITools.DisableButton(laboratoryButton, !GameData.buildings.laboratory.meta.isBuilt);
-                        UITools.DisableButton(forgeButton, !GameData.buildings.forge.meta.isBuilt);
-                        // UITools.DisableButton(overlordButton);
+                        UITools.DisableButton(castleButton);
+                        UITools.DisableButton(portalButton);
+                        //UITools.DisableButton(globalMapButton);
+                        UITools.DisableButton(overlordButton);
+                        UITools.DisableButton(haremButton);
+                        UITools.DisableButton(municipalityButton);
+                        UITools.DisableButton(magicGuildButton);
+                        UITools.DisableButton(marketButton);
+                        UITools.DisableButton(forgeButton);
                     }
-                });
+                    break;
+                default:
+                    UITools.DisableButton(portalButton, !GameData.buildings.portal.meta.isBuilt);
+                    UITools.DisableButton(haremButton, !GameData.buildings.harem.meta.isBuilt);
+                    UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.meta.isBuilt);
+                    UITools.DisableButton(laboratoryButton, !GameData.buildings.laboratory.meta.isBuilt);
+                    UITools.DisableButton(forgeButton, !GameData.buildings.forge.meta.isBuilt);
+                    // UITools.DisableButton(overlordButton);
+                    break;
+            }
 
             for (int i = 0; i < 11; i++)
             {
