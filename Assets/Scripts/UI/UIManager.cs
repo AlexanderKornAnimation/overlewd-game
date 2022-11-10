@@ -20,7 +20,6 @@ namespace Overlewd
         public enum Type
         {
             None,
-            AfterChangeScreen,
             RestoreScreenFocusAfterPopup,
             RestoreScreenFocusAfterOverlay
         }
@@ -242,36 +241,36 @@ namespace Overlewd
         }
 
         //Screen Instantiate
-        private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen
+        private static Component GetScreenInstance(Type type, Transform parent)
         {
-            var screenGO = new GameObject(typeof(T).Name);
+            var screenGO = new GameObject(type.Name);
             screenGO.layer = 5;
             var screenGO_rectTransform = screenGO.AddComponent<RectTransform>();
             var screenGO_rectMask2D = screenGO.AddComponent<RectMask2D>();
             screenGO_rectTransform.SetParent(parent, false);
             UITools.SetStretch(screenGO_rectTransform);
-            return screenGO.AddComponent<T>();
+            return screenGO.AddComponent(type);
         }
+        private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen =>
+            GetScreenInstance(typeof(T), parent) as T;
 
-        public static T GetScreenInstance<T>() where T : BaseFullScreen
-        {
-            return GetScreenInstance<T>(uiScreenLayerGO.transform);
-        }
+        public static BaseFullScreen GetScreenInstance(Type type) =>
+            GetScreenInstance(type, uiScreenLayerGO.transform) as BaseFullScreen;
+        public static T GetScreenInstance<T>() where T : BaseFullScreen =>
+            GetScreenInstance<T>(uiScreenLayerGO.transform);
 
-        public static T GetPopupInstance<T>() where T : BasePopup
-        {
-            return GetScreenInstance<T>(uiPopupLayerGO.transform);
-        }
+        public static BasePopup GetPopupInstance(Type type) =>
+            GetScreenInstance(type, uiPopupLayerGO.transform) as BasePopup;
+        public static T GetPopupInstance<T>() where T : BasePopup =>
+            GetScreenInstance<T>(uiPopupLayerGO.transform);
 
-        public static T GetOverlayInstance<T>() where T : BaseOverlay
-        {
-            return GetScreenInstance<T>(uiOverlayLayerGO.transform);
-        }
+        public static BaseOverlay GetOverlayInstance(Type type) =>
+            GetScreenInstance(type, uiOverlayLayerGO.transform) as BaseOverlay;
+        public static T GetOverlayInstance<T>() where T : BaseOverlay =>
+            GetScreenInstance<T>(uiOverlayLayerGO.transform);
 
-        public static T GetNotificationInstance<T>() where T : BaseNotification
-        {
-            return GetScreenInstance<T>(uiNotificationLayerGO.transform);
-        }
+        public static T GetNotificationInstance<T>() where T : BaseNotification =>
+            GetScreenInstance<T>(uiNotificationLayerGO.transform);
 
         public static void Initialize()
         {
@@ -362,17 +361,119 @@ namespace Overlewd
             await Task.WhenAll(processTasks);
         }
 
+        //UI states
+        private const int PrevStatesStackCapacity = 20;
+        public class State
+        {
+            public Type screenType { get; set; }
+            public BaseFullScreenInData screenInData { get; set; }
+            public bool ScreenTypeIs<T>() where T : BaseFullScreen =>
+                screenType == typeof(T);
+
+            public bool showPopup { get; set; } = true;
+            public Type popupType { get; set; }
+            public BasePopupInData popupInData { get; set; }
+            public bool PopupTypeIs<T>() where T : BasePopup =>
+                popupType == typeof(T);
+
+            public bool showOverlay { get; set; } = true;
+            public Type overlayType { get; set; }
+            public BaseOverlayInData overlayInData { get; set; }
+            public bool OverlayTypeIs<T>() where T : BaseOverlay =>
+                overlayType == typeof(T);
+
+            public State prevState { get; set; }
+        }
+
+        private static LinkedList<State> prevStatesStack = new LinkedList<State>();
+        private static void PushPrevState(State state)
+        {
+            if (state == null)
+                return;
+
+            prevStatesStack.AddFirst(state);
+            while (prevStatesStack.Count > PrevStatesStackCapacity)
+            {
+                prevStatesStack.Last.Previous.Value.prevState = null;
+                prevStatesStack.RemoveLast();
+            }
+        }
+        private static State PopPrevState()
+        {
+            var popState = PeakPrevState();
+            prevStatesStack.RemoveFirst();
+            return popState;
+        }
+        private static State PeakPrevState() =>
+            prevStatesStack.First?.Value;
+
+        public static State currentState => screen != null ?
+            new State
+            {
+                screenType = screen.GetType(),
+                screenInData = screen.baseInputData,
+                popupType = popup?.GetType(),
+                popupInData = popup?.baseInputData,
+                overlayType = overlay?.GetType(),
+                overlayInData = overlay?.baseInputData,
+                prevState = PeakPrevState()
+            } : null;
+        public static bool pushPrevState { get; set; } = true;
+        public static async void ToState(State state)
+        {
+            if (state == null)
+                return;
+
+            var screen = MakeScreen(state.screenType);
+            screen.baseInputData = state.screenInData;
+            await ShowScreenAsync(screen);
+
+            if (state.popupType != null && state.showPopup)
+            {
+                var popup = MakePopup(state.popupType);
+                popup.baseInputData = state.popupInData;
+                await ShowPopupAsync(popup);
+            }
+
+            if (state.overlayType != null && state.showOverlay)
+            {
+                var overlay = MakeOverlay(state.overlayType);
+                overlay.baseInputData = state.overlayInData;
+                await ShowOverlayAsync(overlay);
+            }
+        }
+        public static void ToPrevState()
+        {
+            var prevState = PopPrevState();
+            pushPrevState = false;
+            ToState(prevState);
+        }
+        public static void RemakeState()
+        {
+            var curState = currentState;
+            pushPrevState = false;
+            ToState(curState);
+        }
+
         //Screen Layer
         public static T GetScreen<T>() where T : BaseFullScreen => screen as T;
         public static bool HasScreen<T>() where T : BaseFullScreen => screen?.GetType() == typeof(T);
         public static BaseFullScreenInData screenInData => screen?.baseInputData;
+        private static BaseFullScreen MakeScreen(Type type) => GetScreenInstance(type);
         public static T MakeScreen<T>() where T : BaseFullScreen => GetScreenInstance<T>();
-        public static void ShowScreen<T>() where T : BaseFullScreen => MakeScreen<T>().DoShow();
+        public static void ShowScreen<T>() where T : BaseFullScreen => ShowScreen(MakeScreen<T>());
         public static async void ShowScreen(BaseFullScreen _screen) => await ShowScreenAsync(_screen);
-        public static async Task ShowScreenAsync(BaseFullScreen _screen)
+        private static async Task ShowScreenAsync(BaseFullScreen _screen)
         {
             if (_screen == null)
                 return;
+
+            if (pushPrevState)
+            {
+                PushPrevState(currentState);
+            }
+            //restore push prev UI states to stack
+            pushPrevState = true;
 
             MemoryOprimizer.PrepareChangeScreen();
 
@@ -407,14 +508,6 @@ namespace Overlewd
                                         new List<BaseMissclick>());
 
             MemoryOprimizer.ChangeScreen();
-
-            var uiEventData = new UIEvent
-            {
-                type = UIEvent.Type.AfterChangeScreen,
-                uiSender = screen,
-                uiSenderType = screen.GetType()
-            };
-            ThrowUIEvent(uiEventData);
         }
 
         //Popup Layer
@@ -428,8 +521,9 @@ namespace Overlewd
         }
         public static T GetPopup<T>() where T : BasePopup => popup as T;
         public static bool HasPopup<T>() where T : BasePopup => popup?.GetType() == typeof(T);
+        private static BasePopup MakePopup(Type type) => GetPopupInstance(type);
         public static T MakePopup<T>() where T : BasePopup => GetPopupInstance<T>();
-        public static void ShowPopup<T>() where T : BasePopup => MakePopup<T>().DoShow();
+        public static void ShowPopup<T>() where T : BasePopup => ShowPopup(MakePopup<T>());
         public static async void ShowPopup(BasePopup _popup) => await ShowPopupAsync(_popup);
         public static async Task ShowPopupAsync(BasePopup _popup)
         {
@@ -498,8 +592,9 @@ namespace Overlewd
         }
         public static T GetOverlay<T>() where T : BaseOverlay => overlay as T;
         public static bool HasOverlay<T>() where T : BaseOverlay => overlay?.GetType() == typeof(T);
+        private static BaseOverlay MakeOverlay(Type type) => GetOverlayInstance(type);
         public static T MakeOverlay<T>() where T : BaseOverlay => GetOverlayInstance<T>();
-        public static void ShowOverlay<T>() where T : BaseOverlay => MakeOverlay<T>().DoShow();
+        public static void ShowOverlay<T>() where T : BaseOverlay => ShowOverlay(MakeOverlay<T>());
         public static async void ShowOverlay(BaseOverlay _overlay) => await ShowOverlayAsync(_overlay);
         public static async Task ShowOverlayAsync(BaseOverlay _overlay)
         {

@@ -165,21 +165,6 @@ namespace Overlewd
             SoundManager.PlayBGMusic(FMODEventPath.Music_MapScreen);
         }
 
-        public override void OnUIEvent(UIEvent eventData)
-        {
-            switch (eventData?.type)
-            {
-                case UIEvent.Type.AfterChangeScreen:
-                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
-                    {
-                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
-                            UIManager.ShowScreen<CastleScreen>();
-                            break;
-                    }
-                    break;
-            }
-        }
-
         public override async Task AfterShowAsync()
         {
             //animate opened stages
@@ -240,7 +225,8 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
                     GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
                     await UIManager.WaitHideNotifications();
-                    break;
+                    UIManager.ShowScreen<CastleScreen>();
+                    return;
             }
 
             await Task.CompletedTask;

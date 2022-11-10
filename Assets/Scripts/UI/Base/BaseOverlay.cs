@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public abstract class BaseOverlay : BaseScreen
     {
-        public BaseOverlayInData baseInputData { get; protected set; }
+        public BaseOverlayInData baseInputData { get; set; }
 
         public override void StartShow()
         {

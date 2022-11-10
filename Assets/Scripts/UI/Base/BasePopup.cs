@@ -7,7 +7,7 @@ namespace Overlewd
 {
     public abstract class BasePopup : BaseScreen
     {
-        public BasePopupInData baseInputData { get; protected set; }
+        public BasePopupInData baseInputData { get; set; }
 
         public override void StartShow()
         {

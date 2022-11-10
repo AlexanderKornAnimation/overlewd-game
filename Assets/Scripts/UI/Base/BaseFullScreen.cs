@@ -7,9 +7,8 @@ namespace Overlewd
 {
     public abstract class BaseFullScreen : BaseScreen
     {
-        public BaseFullScreenInData baseInputData { get; protected set; }
+        public BaseFullScreenInData baseInputData { get; set; }
         public void DoShow() => UIManager.ShowScreen(this);
-        public async Task DoShowAsync() => await UIManager.ShowScreenAsync(this);
     }
 
     public abstract class BaseFullScreenParent<T> : BaseFullScreen where T : BaseFullScreenInData
