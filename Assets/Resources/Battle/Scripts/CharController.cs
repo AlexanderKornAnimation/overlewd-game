@@ -126,7 +126,7 @@ namespace Overlewd
         {
             psr = gameObject.AddComponent<PSR>();
             //isEnemy and battleOrder assign on battle manager
-            isOverlord = character.characterClass == AdminBRO.Character.Class_Overlord;
+            isOverlord = character.characterClass == AdminBRO.CharacterClass.Overlord;
             if (isOverlord)
             {
                 bm.overlord = this;

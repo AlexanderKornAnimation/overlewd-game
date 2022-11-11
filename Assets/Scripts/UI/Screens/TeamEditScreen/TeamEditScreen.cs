@@ -162,16 +162,16 @@ namespace Overlewd
             var orderedCharacters = GameData.characters.orderByLevel;
             foreach (var ch in orderedCharacters)
             {
-                if (ch.characterClass == AdminBRO.Character.Class_Overlord)
+                if (ch.characterClass == AdminBRO.CharacterClass.Overlord)
                     continue;
 
                 var tabId = ch.characterClass switch
                 {
-                    AdminBRO.Character.Class_Assassin => TabAssassins,
-                    AdminBRO.Character.Class_Bruiser => TabBruisers,
-                    AdminBRO.Character.Class_Caster => TabCasters,
-                    AdminBRO.Character.Class_Healer => TabHealers,
-                    AdminBRO.Character.Class_Tank => TabTanks,
+                    AdminBRO.CharacterClass.Assassin => TabAssassins,
+                    AdminBRO.CharacterClass.Bruiser => TabBruisers,
+                    AdminBRO.CharacterClass.Caster => TabCasters,
+                    AdminBRO.CharacterClass.Healer => TabHealers,
+                    AdminBRO.CharacterClass.Tank => TabTanks,
                     _ => TabAllUnits
                 };
 

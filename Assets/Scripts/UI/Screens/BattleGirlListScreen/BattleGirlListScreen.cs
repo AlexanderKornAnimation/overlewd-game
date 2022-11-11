@@ -70,11 +70,11 @@ namespace Overlewd
             {
                 var tabId = chData.characterClass switch
                 {
-                    AdminBRO.Character.Class_Assassin => TabAssassins,
-                    AdminBRO.Character.Class_Bruiser => TabBruisers,
-                    AdminBRO.Character.Class_Caster => TabCasters,
-                    AdminBRO.Character.Class_Healer => TabHealers,
-                    AdminBRO.Character.Class_Tank => TabTanks,
+                    AdminBRO.CharacterClass.Assassin => TabAssassins,
+                    AdminBRO.CharacterClass.Bruiser => TabBruisers,
+                    AdminBRO.CharacterClass.Caster => TabCasters,
+                    AdminBRO.CharacterClass.Healer => TabHealers,
+                    AdminBRO.CharacterClass.Tank => TabTanks,
                     _ => TabAllUnits
                 };
 
@@ -92,7 +92,7 @@ namespace Overlewd
         
         private List<AdminBRO.Character> SortCharacters(List<AdminBRO.Character> characters)
         {
-            return characters.Where(ch => ch.characterClass != AdminBRO.Character.Class_Overlord).ToList();
+            return characters.Where(ch => ch.characterClass != AdminBRO.CharacterClass.Overlord).ToList();
         }
         
         private void TabClick(int tabId)

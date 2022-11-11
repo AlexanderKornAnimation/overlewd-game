@@ -100,18 +100,18 @@ namespace Overlewd
 
         private List<AdminBRO.Character> SortCharacters(List<AdminBRO.Character> characters)
         {
-            return characters.Where(ch => ch.characterClass != AdminBRO.Character.Class_Overlord).ToList();
+            return characters.Where(ch => ch.characterClass != AdminBRO.CharacterClass.Overlord).ToList();
         }
 
         private void AddChToTab(AdminBRO.Character ch)
         {
             var tabId = ch.characterClass switch
             {
-                AdminBRO.Character.Class_Assassin => tabAssassins,
-                AdminBRO.Character.Class_Bruiser => tabBruisers,
-                AdminBRO.Character.Class_Caster => tabCasters,
-                AdminBRO.Character.Class_Healer => tabHealers,
-                AdminBRO.Character.Class_Tank => tabTanks,
+                AdminBRO.CharacterClass.Assassin => tabAssassins,
+                AdminBRO.CharacterClass.Bruiser => tabBruisers,
+                AdminBRO.CharacterClass.Caster => tabCasters,
+                AdminBRO.CharacterClass.Healer => tabHealers,
+                AdminBRO.CharacterClass.Tank => tabTanks,
                 _ => tabAllUnits
             };
 
@@ -357,7 +357,8 @@ namespace Overlewd
             foreach (var tabId in tabIds)
             {
                 var tabChars = scrollContents[tabId].GetComponentsInChildren<NSLaboratoryScreen.Character>().ToList();
-                var tabCharsSort = tabChars.OrderByDescending(ch => ch.characterData.level + (IsInFlask(ch) ? 100 : 0));
+                var tabCharsSort = tabChars.OrderByDescending(ch =>
+                    ch.characterData.raritySortLevelDesc * 100 + ch.characterData.level + (IsInFlask(ch) ? 1000 : 0));
                 var chSiblingIndex = 0;
                 foreach (var character in tabCharsSort)
                 {

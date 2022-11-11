@@ -592,7 +592,7 @@ namespace Overlewd
         public List<AdminBRO.Character> myTeamCharacters =>
             characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
         public AdminBRO.Character overlord =>
-            GetByClass(AdminBRO.Character.Class_Overlord);
+            GetByClass(AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Character> orderByLevel =>
             characters.OrderBy(ch => ch.level).ToList();
         public AdminBRO.Character slot1Ch =>
@@ -632,45 +632,45 @@ namespace Overlewd
             equipment.Find(eq => eq.id == id);
 
         public List<AdminBRO.Equipment> chAll =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon &&
-                !String.IsNullOrEmpty(e.characterClass) && e.characterClass != AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.CharacterWeapon &&
+                !String.IsNullOrEmpty(e.characterClass) && e.characterClass != AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Equipment> chAssassins =>
-            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Assassin &&
-                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+            equipment.FindAll(e => e.characterClass == AdminBRO.CharacterClass.Assassin &&
+                e.equipmentType == AdminBRO.EquipmentType.CharacterWeapon);
         public List<AdminBRO.Equipment> chBruisers =>
-            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Bruiser &&
-                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+            equipment.FindAll(e => e.characterClass == AdminBRO.CharacterClass.Bruiser &&
+                e.equipmentType == AdminBRO.EquipmentType.CharacterWeapon);
         public List<AdminBRO.Equipment> chTanks =>
-            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Tank &&
-                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+            equipment.FindAll(e => e.characterClass == AdminBRO.CharacterClass.Tank &&
+                e.equipmentType == AdminBRO.EquipmentType.CharacterWeapon);
         public List<AdminBRO.Equipment> chCasters =>
-            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Caster &&
-                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+            equipment.FindAll(e => e.characterClass == AdminBRO.CharacterClass.Caster &&
+                e.equipmentType == AdminBRO.EquipmentType.CharacterWeapon);
         public List<AdminBRO.Equipment> chHealers =>
-            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Healer &&
-                e.equipmentType == AdminBRO.Equipment.Type_CharacterWeapon);
+            equipment.FindAll(e => e.characterClass == AdminBRO.CharacterClass.Healer &&
+                e.equipmentType == AdminBRO.EquipmentType.CharacterWeapon);
 
         public List<AdminBRO.Equipment> ovAll =>
-            equipment.FindAll(e => e.characterClass == AdminBRO.Equipment.Class_Overlord &&
-                !String.IsNullOrEmpty(e.equipmentType) && e.equipmentType != AdminBRO.Equipment.Type_CharacterWeapon);
+            equipment.FindAll(e => e.characterClass == AdminBRO.CharacterClass.Overlord &&
+                !String.IsNullOrEmpty(e.equipmentType) && e.equipmentType != AdminBRO.EquipmentType.CharacterWeapon);
         public List<AdminBRO.Equipment> ovThighs =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordThighs &&
-                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.OverlordThighs &&
+                e.characterClass == AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Equipment> ovHelmets =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordHelmet &&
-                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.OverlordHelmet &&
+                e.characterClass == AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Equipment> ovBoots =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordHarness &&
-                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.OverlordHarness &&
+                e.characterClass == AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Equipment> ovWeapons =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordWeapon &&
-                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.OverlordWeapon &&
+                e.characterClass == AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Equipment> ovGloves =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordGloves &&
-                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.OverlordGloves &&
+                e.characterClass == AdminBRO.CharacterClass.Overlord);
         public List<AdminBRO.Equipment> ovHarness =>
-            equipment.FindAll(e => e.equipmentType == AdminBRO.Equipment.Type_OverlordHarness &&
-                e.characterClass == AdminBRO.Equipment.Class_Overlord);
+            equipment.FindAll(e => e.equipmentType == AdminBRO.EquipmentType.OverlordHarness &&
+                e.characterClass == AdminBRO.CharacterClass.Overlord);
 
         public async Task Equip(int chId, int eqId)
         {

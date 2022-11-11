@@ -77,16 +77,16 @@ namespace Overlewd
         {
             foreach (var equip in GameData.equipment.equipment)
             {
-                if (equip.characterClass == AdminBRO.Character.Class_Overlord)
+                if (equip.characterClass == AdminBRO.CharacterClass.Overlord)
                     continue;
                     
                 var tabId = equip.characterClass switch
                 {
-                    AdminBRO.Equipment.Class_Bruiser => TabBruisers,
-                    AdminBRO.Equipment.Class_Assassin => TabAssassins,
-                    AdminBRO.Equipment.Class_Caster => TabCasters,
-                    AdminBRO.Equipment.Class_Tank => TabTanks,
-                    AdminBRO.Equipment.Class_Healer => TabHealers,
+                    AdminBRO.CharacterClass.Bruiser => TabBruisers,
+                    AdminBRO.CharacterClass.Assassin => TabAssassins,
+                    AdminBRO.CharacterClass.Caster => TabCasters,
+                    AdminBRO.CharacterClass.Tank => TabTanks,
+                    AdminBRO.CharacterClass.Healer => TabHealers,
                     _=> TabAllUnits
                 };
                 

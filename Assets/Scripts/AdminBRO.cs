@@ -96,6 +96,31 @@ namespace Overlewd
             public const string Advanced = "advanced";
             public const string Epic = "epic";
             public const string Heroic = "heroic";
+
+            public static int SortValue(string rarity) => rarity switch
+            {
+                Basic => 1,
+                Advanced => 2,
+                Epic => 3,
+                Heroic => 4,
+                _ => 0
+            };
+            public static int DescSortValue(string rarity) => rarity switch
+            {
+                Basic => 4,
+                Advanced => 3,
+                Epic => 2,
+                Heroic => 1,
+                _ => 0
+            };
+            public static int MaxLvl(string rarity) => rarity switch
+            {
+                Basic => 10,
+                Advanced => 20,
+                Epic => 30,
+                Heroic => 40,
+                _ => 0
+            };
         }
 
         // /version
@@ -862,6 +887,37 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
             await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
 
+        public class CharacterClass
+        {
+            public const string Assassin = "Assassin";
+            public const string Bruiser = "Bruiser";
+            public const string Tank = "Tank";
+            public const string Caster = "Caster";
+            public const string Healer = "Healer";
+            public const string Overlord = "Overlord";
+
+            public static int SortValue(string chClass) => chClass switch
+            {
+                Assassin => 1,
+                Bruiser => 2,
+                Tank => 3,
+                Caster => 4,
+                Healer => 5,
+                Overlord => 6,
+                _ => 0
+            };
+            public static string Marker(string chClass) => chClass switch
+            {
+                Assassin => TMPSprite.ClassAssassin,
+                Bruiser => TMPSprite.ClassBruiser,
+                Caster => TMPSprite.ClassCaster,
+                Healer => TMPSprite.ClassHealer,
+                Overlord => TMPSprite.ClassOverlord,
+                Tank => TMPSprite.ClassTank,
+                _ => ""
+            };
+        }
+
         [Serializable]
         public class Character
         {
@@ -909,12 +965,14 @@ namespace Overlewd
             public const string TeamPosition_Slot2 = "slot2";
             public const string TeamPosition_None = "none";
 
-            public const string Class_Assassin = "Assassin";
-            public const string Class_Bruiser = "Bruiser";
-            public const string Class_Caster = "Caster";
-            public const string Class_Healer = "Healer";
-            public const string Class_Overlord = "Overlord";
-            public const string Class_Tank = "Tank";
+            [JsonProperty(Required = Required.Default)]
+            public int raritySortLevel => Rarity.SortValue(rarity);
+
+            [JsonProperty(Required = Required.Default)]
+            public int raritySortLevelDesc => Rarity.DescSortValue(rarity);
+
+            [JsonProperty(Required = Required.Default)]
+            public int classSortLevel => CharacterClass.SortValue(characterClass);
 
             public string GetIconByRarity(string rarity) => rarity switch
             {
@@ -932,16 +990,7 @@ namespace Overlewd
             public string iconUrl => GetIconByRarity(rarity);
 
             [JsonProperty(Required = Required.Default)]
-            public string classMarker => characterClass switch
-            {
-                Class_Assassin => TMPSprite.ClassAssassin,
-                Class_Bruiser => TMPSprite.ClassBruiser,
-                Class_Caster => TMPSprite.ClassCaster,
-                Class_Healer => TMPSprite.ClassHealer,
-                Class_Overlord => TMPSprite.ClassOverlord,
-                Class_Tank => TMPSprite.ClassTank,
-                _ => ""
-            };
+            public string classMarker => CharacterClass.Marker(characterClass);
 
             [JsonProperty(Required = Required.Default)]
             public bool isBasic => rarity == Rarity.Basic;
@@ -967,14 +1016,7 @@ namespace Overlewd
             public bool CanSkillLvlUpByLevel(CharacterSkill skill) => level > skill.level;
 
             [JsonProperty(Required = Required.Default)]
-            public int maxLvl => rarity switch
-            {
-                Rarity.Basic => 10,
-                Rarity.Advanced => 20,
-                Rarity.Epic => 30,
-                Rarity.Heroic => 40,
-                _ => 10
-            };
+            public int maxLvl => Rarity.MaxLvl(rarity);
 
             [JsonProperty(Required = Required.Default)]
             public bool isSexSceneOpen => sexSceneId.HasValue;
@@ -1161,6 +1203,29 @@ namespace Overlewd
         public static async Task<HttpCoreResponse> unequipAsync(int characterId, int equipmentId) =>
             await HttpCore.DeleteAsync(make_url($"battles/my/characters/{characterId}/equip/{equipmentId}"));
 
+        public class EquipmentType
+        {
+            public const string CharacterWeapon = "battle_character_weapon";
+            public const string OverlordThighs = "overlord_thighs";
+            public const string OverlordHelmet = "overlord_helmet";
+            public const string OverlordBoots = "overlord_boots";
+            public const string OverlordHarness = "overlord_harness";
+            public const string OverlordWeapon = "overlord_weapon";
+            public const string OverlordGloves = "overlord_gloves";
+
+            public static int SortValue(string eqType) => eqType switch
+            {
+                OverlordThighs => 1,
+                OverlordHelmet => 2,
+                OverlordBoots => 3,
+                OverlordHarness => 4,
+                OverlordWeapon => 5,
+                OverlordGloves => 6,
+                CharacterWeapon => 7,
+                _ => 0
+            };
+        }
+
         [Serializable]
         public class Equipment
         {
@@ -1187,70 +1252,23 @@ namespace Overlewd
             public string heroicIcon;
             public string rarity;
 
-            public const string Class_Assassin = "Assassin";
-            public const string Class_Bruiser = "Bruiser";
-            public const string Class_Tank = "Tank";
-            public const string Class_Caster = "Caster";
-            public const string Class_Healer = "Healer";
-            public const string Class_Overlord = "Overlord";
-
-            public const string Type_CharacterWeapon = "battle_character_weapon";
-            public const string Type_OverlordThighs = "overlord_thighs";
-            public const string Type_OverlordHelmet = "overlord_helmet";
-            public const string Type_OverlordBoots = "overlord_boots";
-            public const string Type_OverlordHarness = "overlord_harness";
-            public const string Type_OverlordWeapon = "overlord_weapon";
-            public const string Type_OverlordGloves = "overlord_gloves";
-
             [JsonProperty(Required = Required.Default)]
             public bool isEquipped => characterId.HasValue;
 
             [JsonProperty(Required = Required.Default)]
-            public int raritySortLevel => rarity switch
-            {
-                Rarity.Basic => 1,
-                Rarity.Advanced => 2,
-                Rarity.Epic => 3,
-                Rarity.Heroic => 4,
-                _ => 0
-            };
+            public int raritySortLevel => Rarity.SortValue(rarity);
 
             [JsonProperty(Required = Required.Default)]
-            public int classSortLevel => characterClass switch
-            {
-                Class_Assassin => 1,
-                Class_Bruiser => 2,
-                Class_Tank => 3,
-                Class_Caster => 4,
-                Class_Healer => 5,
-                Class_Overlord => 6,
-                _ => 0
-            };
+            public int raritySortLevelDesc => Rarity.DescSortValue(rarity);
 
             [JsonProperty(Required = Required.Default)]
-            public int typeSortLevel => equipmentType switch
-            {
-                Type_OverlordThighs => 1,
-                Type_OverlordHelmet => 2,
-                Type_OverlordBoots => 3,
-                Type_OverlordHarness => 4,
-                Type_OverlordWeapon => 5,
-                Type_OverlordGloves => 6,
-                Type_CharacterWeapon => 7,
-                _ => 0
-            };
-            
+            public int classSortLevel => CharacterClass.SortValue(characterClass);
+
             [JsonProperty(Required = Required.Default)]
-            public string classMarker => characterClass switch
-            {
-                Class_Assassin => TMPSprite.ClassAssassin,
-                Class_Bruiser => TMPSprite.ClassBruiser,
-                Class_Caster => TMPSprite.ClassCaster,
-                Class_Healer => TMPSprite.ClassHealer,
-                Class_Overlord => TMPSprite.ClassOverlord,
-                Class_Tank => TMPSprite.ClassTank,
-                _ => ""
-            };
+            public int typeSortLevel => EquipmentType.SortValue(equipmentType);
+
+            [JsonProperty(Required = Required.Default)]
+            public string classMarker => CharacterClass.Marker(characterClass);
             
             [JsonProperty(Required = Required.Default)]
             public string icon => GetIconByRarity(rarity);
