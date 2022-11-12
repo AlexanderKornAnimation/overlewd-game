@@ -391,14 +391,25 @@ namespace Overlewd
 
         private const int PrevStatesStackCapacity = 100;
         private static LinkedList<State> prevStatesStack = new LinkedList<State>();
-        private static void PushState()
+        private static void PushState(bool? push = null)
         {
-            prevStatesStack.AddFirst(currentState);
-            while (prevStatesStack.Count > PrevStatesStackCapacity)
+            if (push ?? true)
             {
-                prevStatesStack.Last.Previous.Value.prevState = null;
-                prevStatesStack.RemoveLast();
+                prevStatesStack.AddFirst(currentState);
+                while (prevStatesStack.Count > PrevStatesStackCapacity)
+                {
+                    prevStatesStack.Last.Previous.Value.prevState = null;
+                    prevStatesStack.RemoveLast();
+                }
             }
+        }
+        private static bool CanPush(BaseScreen stateItem)
+        {
+            var type = stateItem?.GetType();
+            if (type == typeof(DevOverlay) ||
+                type == typeof(SidebarMenuOverlay))
+                return false;
+            return true;
         }
         private static State PopState()
         {
@@ -489,8 +500,8 @@ namespace Overlewd
             screenInData = screen?.baseInputData,
             popupType = popup?.GetType(),
             popupInData = popup?.baseInputData,
-            overlayType = overlay?.GetType(),
-            overlayInData = overlay?.baseInputData,
+            overlayType = CanPush(overlay) ? overlay?.GetType() : null,
+            overlayInData = CanPush(overlay) ? overlay?.baseInputData : null,
             prevState = PeakState()
         };
         public static void ToPrevState(StateParams sParams = null)
@@ -586,7 +597,7 @@ namespace Overlewd
             if (_popup == null)
                 return;
             await WaitRestoreStateModeDisabled();
-            PushState();
+            PushState(CanPush(_popup));
             await _showPopupAsync(_popup);
         }
         public static async Task _showPopupAsync(BasePopup _popup)
@@ -623,7 +634,7 @@ namespace Overlewd
             if (popup == null)
                 return;
             await WaitRestoreStateModeDisabled();
-            PushState();
+            PushState(CanPush(popup));
             await _hidePopupAsync();
         }
         public static async Task _hidePopupAsync()
@@ -673,7 +684,7 @@ namespace Overlewd
             if (_overlay == null)
                 return;
             await WaitRestoreStateModeDisabled();
-            PushState();
+            PushState(CanPush(_overlay));
             await _showOverlayAsync(_overlay);
         }
         public static async Task _showOverlayAsync(BaseOverlay _overlay)
@@ -710,7 +721,7 @@ namespace Overlewd
             if (overlay == null)
                 return;
             await WaitRestoreStateModeDisabled();
-            PushState();
+            PushState(CanPush(overlay));
             await _hideOverlayAsync();
         }
         private static async Task _hideOverlayAsync()
