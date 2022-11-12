@@ -55,7 +55,6 @@ namespace Overlewd
                     SetData(new BattleGirlScreenInData
                     {
                         characterId = characterId,
-                        prevScreenInData = inputData
                     }).DoShow();
             }
             

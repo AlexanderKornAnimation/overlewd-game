@@ -79,7 +79,7 @@ namespace Overlewd
             healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             scrollBuyButton = bottlePanel.Find("Scroll").Find("BuyButton").GetComponent<Button>();
-            scrollBuyButton.onClick.AddListener(ScrollBuyButtonClick);
+            scrollBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             bossPos = charactersBack.Find("BossPos");
             allyContent = charactersBack.Find("AllyCharacters");
@@ -263,11 +263,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.MakePopup<BottlesPopup>().
-                    SetData(new BottlesPopupInData
-                    {
-                        prevPopupInData = inputData,
-                    }).DoShow();
+                UIManager.ShowPopup<BottlesPopup>();
             }
         }
         
@@ -302,48 +298,23 @@ namespace Overlewd
             buttonPlus.gameObject.SetActive(battlesCount < 5);
             buttonMinus.gameObject.SetActive(battlesCount > 1);
         }
-        private void ScrollBuyButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BottlesPopup>().
-                SetData(new BottlesPopupInData
-                {
-                    prevPopupInData = inputData
-                }).DoShow();
-        }
 
         private void PotionBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BottlesPopup>().
-                SetData(new BottlesPopupInData
-                {
-                    prevPopupInData = inputData
-                }).DoShow();
+            UIManager.ShowPopup<BottlesPopup>();
         }
         
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData 
-                {
-                    prevScreenInData = UIManager.screenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).DoShow();
+            UIManager.ShowScreen<TeamEditScreen>();
         }
 
         private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<HaremScreen>().
-                SetData(new HaremScreenInData
-                {
-                    prevScreenInData = UIManager.screenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).DoShow();
+            UIManager.ShowScreen<HaremScreen>();
         }
 
         private void BackButtonClick()
@@ -360,7 +331,6 @@ namespace Overlewd
                 UIManager.MakeScreen<BossFightScreen>().
                     SetData(new BaseBattleScreenInData
                     {
-                        prevScreenInData = UIManager.screenInData,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
                     }).DoShow();

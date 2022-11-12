@@ -325,20 +325,21 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData.prevScreenInData == null)
+            
+            if (UIManager.currentState.prevScreenState.ScreenTypeIs<BaseBattleScreen>())
             {
-                UIManager.ShowScreen<CastleScreen>();
-            }
-            else if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
-            {
-                UIManager.MakeScreen<TeamEditScreen>()
-                    .SetData(inputData.prevScreenInData.As<TeamEditScreenInData>())
-                    .DoShow();
+                if (UIManager.currentState.prevScreenState.prevScreenState.ScreenTypeIs<MapScreen>())
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
+                else
+                { 
+                    UIManager.ShowScreen<EventMapScreen>();
+                }
             }
             else
             {
-                UIManager.ShowScreen<CastleScreen>();
+                UIManager.ToPrevScreen();
             }
         }
 

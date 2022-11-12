@@ -73,11 +73,7 @@ namespace Overlewd
         protected virtual void ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<HaremScreen>().
-                SetData(new HaremScreenInData
-                {
-                    prevScreenInData = UIManager.screenInData
-                }).DoShow();
+            UIManager.ShowScreen<HaremScreen>();
         }
         
         public static BuffWidget GetInstance(Transform parent)

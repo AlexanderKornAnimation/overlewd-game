@@ -10,8 +10,6 @@ namespace Overlewd
     public class EventMarketScreen : BaseFullScreenParent<EventMarketScreenInData>
     {
         private Button backButton;
-        private Button portalButton;
-        private Button marketButton;
 
         private Button moneyBackButton;
         private TextMeshProUGUI moneyBackValue;
@@ -26,12 +24,6 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            portalButton.onClick.AddListener(PortalButtonClick);
-
-            marketButton = canvas.Find("MarketButton").GetComponent<Button>();
-            marketButton.onClick.AddListener(MarketButtonClick);
 
             moneyBackButton = canvas.Find("MoneyBack").GetComponent<Button>();
             moneyBackButton.onClick.AddListener(MoneyBackButtonClick);
@@ -79,18 +71,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<EventMapScreen>();
-        }
-
-        private void PortalButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<PortalScreen>();
-        }
-
-        private void MarketButtonClick()
-        {
-            // UIManager.ShowScreen<MarketScreen>();
+            UIManager.ToPrevScreen();
         }
 
         private void MoneyBackButtonClick()

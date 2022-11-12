@@ -51,8 +51,6 @@ namespace Overlewd
 
     public abstract class BasePopupInData : BaseScreenInData
     {
-        public BasePopupInData prevPopupInData { get; set; }
-
         public new bool IsType<T>() where T : BasePopupInData =>
             base.IsType<T>();
         public new T As<T>() where T : BasePopupInData =>

@@ -221,11 +221,7 @@ namespace Overlewd
         private void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<HaremScreen>().
-                SetData(new HaremScreenInData
-            {
-                prevScreenInData = UIManager.screenInData
-            }).DoShow();
+            UIManager.ShowScreen<HaremScreen>();
         }
 
         private void MunicipalityButtonClick()

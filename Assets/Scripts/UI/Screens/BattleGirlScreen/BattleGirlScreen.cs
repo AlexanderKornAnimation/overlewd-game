@@ -232,36 +232,18 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<BattleGirlListScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<BattleGirlListScreen>().
-                    SetData(inputData.prevScreenInData.As<BattleGirlListScreenInData>())
-                    .DoShow();
-            }
+            UIManager.ToPrevScreen();
         }
 
         private void WeaponScreenButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<WeaponScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<WeaponScreen>().
-                    SetData(new WeaponScreenInData
+           
+            UIManager.MakeScreen<WeaponScreen>().
+                SetData(new WeaponScreenInData 
                 {
-                    prevScreenInData = inputData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId,
-                    characterId = inputData.characterId
+                    characterId = inputData?.characterId
                 }).DoShow();
-            }
         }
 
         public override void OnGameDataEvent(GameDataEvent eventData)
@@ -306,7 +288,6 @@ namespace Overlewd
                     SetData(new SexScreenInData
                 {
                     dialogId = sexSceneId,
-                    prevScreenInData = inputData
                 }).DoShow();
             }
         }

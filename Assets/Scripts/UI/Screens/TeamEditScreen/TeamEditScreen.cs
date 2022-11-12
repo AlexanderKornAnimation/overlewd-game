@@ -225,45 +225,26 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData?.prevScreenInData != null)
+            if (UIManager.currentState.prevScreenState.ScreenTypeIs<BaseBattleScreen>())
             {
-                if (inputData.prevScreenInData.IsType<HaremScreenInData>())
+                if (UIManager.currentState.prevScreenState.prevScreenState.ScreenTypeIs<MapScreen>())
                 {
-                    UIManager.MakeScreen<HaremScreen>().
-                        SetData(inputData.prevScreenInData as HaremScreenInData).
-                        DoShow();
-                } 
-                else if (inputData.prevScreenInData.IsType<MapScreenInData>())
-                {
-                    UIManager.MakeScreen<MapScreen>().
-                        SetData(new MapScreenInData 
-                        { 
-                            ftueStageId = inputData.ftueStageId 
-                        }).DoShow();
+                    UIManager.ShowScreen<MapScreen>();
                 }
-                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
-                {
-                    UIManager.MakeScreen<EventMapScreen>().
-                        SetData(new EventMapScreenInData
-                        {
-                            eventStageId = inputData.eventStageId
-                        }).DoShow();
+                else
+                { 
+                    UIManager.ShowScreen<EventMapScreen>();
                 }
             }
             else
             {
-                UIManager.ShowScreen<HaremScreen>();
+                UIManager.ToPrevScreen();
             }
         }
 
         private void OverlordButtonClick()
         {
-            UIManager.MakeScreen<OverlordScreen>().
-                SetData(new OverlordScreenInData
-                {
-                    prevScreenInData = inputData,
-                }).DoShow();
+            UIManager.ShowScreen<OverlordScreen>();
         }
     }
 

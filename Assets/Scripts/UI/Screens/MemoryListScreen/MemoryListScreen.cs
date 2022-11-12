@@ -119,16 +119,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<GirlScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<GirlScreen>().
-                    SetData(inputData.prevScreenInData.As<GirlScreenInData>()).
-                    DoShow();
-            }
+            UIManager.ToPrevScreen();
         }
     }
 

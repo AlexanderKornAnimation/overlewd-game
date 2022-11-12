@@ -182,8 +182,6 @@ namespace Overlewd
                 eventQuest.questId = questId;
                 eventQuest.SetCanvasActive(false);
             }
-            var descr = NSEventOverlay.EventDescription.GetInstance(tabScrollViewContent);
-            descr.eventId = eventData.id;
         }
 
         private void InitComingEventTab(AdminBRO.EventItem eventData, int tabId)

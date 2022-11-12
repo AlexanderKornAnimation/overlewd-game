@@ -32,11 +32,11 @@ namespace Overlewd
         private TextMeshProUGUI currentProgressLevel;
         private TextMeshProUGUI nextProgressLevel;        
         private Image rewardTier1;
-        private TextMeshProUGUI receivedTier1;
+        private GameObject receivedTier1;
         private Image rewardTier2;
-        private TextMeshProUGUI receivedTier2;
+        private GameObject receivedTier2;
         private Image rewardTier3;
-        private TextMeshProUGUI receivedTier3;
+        private GameObject receivedTier3;
 
         
         private Transform buffInfo;
@@ -55,8 +55,6 @@ namespace Overlewd
 
         private Button sexButton;
         private Button dialogButton;
-        private Button portalButton;
-        private Button chestButton;
         private Button backButton;
 
         private Transform sexCooldown;
@@ -95,11 +93,11 @@ namespace Overlewd
             currentProgressLevel = progressBar.Find("CurrentLvl").GetComponent<TextMeshProUGUI>();
             nextProgressLevel = progressBar.Find("NextLvl").GetComponent<TextMeshProUGUI>();
             rewardTier1 = progressBar.Find("RewardTier1").GetComponent<Image>();
-            receivedTier1 = rewardTier1.transform.Find("Received").GetComponent<TextMeshProUGUI>();
+            receivedTier1 = rewardTier1.transform.Find("Received").gameObject;
             rewardTier2 = progressBar.Find("RewardTier2").GetComponent<Image>();
-            receivedTier2 = rewardTier2.transform.Find("Received").GetComponent<TextMeshProUGUI>();
+            receivedTier2 = rewardTier2.transform.Find("Received").gameObject;
             rewardTier3 = progressBar.Find("RewardTier3").GetComponent<Image>();
-            receivedTier3 = rewardTier3.transform.Find("Received").GetComponent<TextMeshProUGUI>();
+            receivedTier3 = rewardTier3.transform.Find("Received").gameObject;
 
            
             buffInfo = progressBar.Find("BuffInfo");
@@ -124,12 +122,8 @@ namespace Overlewd
 
             sexButton = canvas.Find("SexButton").GetComponent<Button>();
             dialogButton = canvas.Find("DialogButton").GetComponent<Button>();
-            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
-            chestButton = canvas.Find("ChestButton").GetComponent<Button>();
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             
-            portalButton.onClick.AddListener(PortalButtonClick);
-            chestButton.onClick.AddListener(ChestButtonClick);
             backButton.onClick.AddListener(BackButtonClick);
             sexButton.onClick.AddListener(SexButtonClick);
             dialogButton.onClick.AddListener(DialogButtonClick);
@@ -205,6 +199,10 @@ namespace Overlewd
                     break;
             }
 
+            receivedTier1.SetActive(lvlProgressStep1.gameObject.activeSelf);
+            receivedTier2.SetActive(lvlProgressStep2.gameObject.activeSelf);
+            receivedTier3.SetActive(lvlProgressStep3.gameObject.activeSelf);
+            
             if (!String.IsNullOrEmpty(girlData.seduceAvailableAt))
             {
                 UITools.DisableButton(sexButton);
@@ -254,7 +252,6 @@ namespace Overlewd
             UIManager.MakeScreen<SexScreen>().
                 SetData(new SexScreenInData
             {
-                prevScreenInData = inputData,
                 dialogId = inputData.girlData.seduceSexSceneId
             }).DoShow();
         }
@@ -262,10 +259,12 @@ namespace Overlewd
         private void DialogButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<DialogScreen>().SetData(new DialogScreenInData
-            {
-                prevScreenInData = inputData
-            }).DoShow();
+            UIManager.MakeScreen<DialogScreen>().
+                SetData(new DialogScreenInData
+                {
+                    dialogId = inputData?.girlData?.dailyQuestGiverDialogId,
+                }).DoShow();
+
         }
         
         private void BannerButtonClick()
@@ -284,42 +283,14 @@ namespace Overlewd
                         girlKey = inputData.girlKey,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId,
-                        prevScreenInData = inputData
                     }).DoShow();
             }
-        }
-        
-        private void PortalButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<PortalScreen>().
-                SetData(new PortalScreenInData
-            {
-                activeButtonId = PortalScreen.TabShards
-            }).DoShow();
-        }
-        
-        private void ChestButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowPopup<ChestPopup>();
         }
         
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<HaremScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<HaremScreen>().
-                    SetData(inputData.prevScreenInData.As<HaremScreenInData>()).
-                    DoShow();
-            }
-                
+            UIManager.ToPrevScreen();
         }
 
         private IEnumerator SexCooldownUpd()

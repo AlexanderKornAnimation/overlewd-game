@@ -61,7 +61,6 @@ namespace Overlewd
                     SetData(new SummoningScreenInData
                     {
                         gachaId = gachaId,
-                        prevScreenInData = UIManager.screenInData,
                         tabType = gachaData.tabType,
                         summonData = summonData
                     }).DoShow();
@@ -75,7 +74,6 @@ namespace Overlewd
                     SetData(new SummoningScreenInData
                     {
                         gachaId = gachaId,
-                        prevScreenInData = UIManager.screenInData,
                         tabType = gachaData.tabType,
                         isMany = true,
                         summonData = summonData

@@ -153,7 +153,7 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-
+        
         private void SidebarButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -231,7 +231,7 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-        
+
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();

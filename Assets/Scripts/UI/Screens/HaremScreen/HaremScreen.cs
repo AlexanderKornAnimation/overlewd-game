@@ -152,9 +152,9 @@ namespace Overlewd
             liliBuffDescription.text =
                 UITools.ChangeTextSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
 
-            if (inputData?.prevScreenInData != null)
+            if (UIManager.currentState.prevState != null)
             {
-                if (inputData.prevScreenInData.IsType<MapScreenInData>() || inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                if (UIManager.currentState.prevState.ScreenTypeIs<MapScreen>() || UIManager.currentState.prevState.ScreenTypeIs<EventMapScreen>())
                 {
                     backButtonText.text = "Back to\nthe Map";
                 }
@@ -196,53 +196,34 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData?.prevScreenInData != null)
+            if (UIManager.currentState.prevScreenState.ScreenTypeIs<BaseBattleScreen>())
             {
-                if (inputData.prevScreenInData.IsType<MapScreenInData>())
+                if (UIManager.currentState.prevScreenState.prevScreenState.ScreenTypeIs<MapScreen>())
                 {
-                    UIManager.MakeScreen<MapScreen>().
-                        SetData(new MapScreenInData
-                    {
-                        ftueStageId = inputData.ftueStageId
-                    }).DoShow();
-                }
-                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
-                {
-                    UIManager.MakeScreen<EventMapScreen>().
-                        SetData(new EventMapScreenInData
-                    {
-                        eventStageId = inputData.eventStageId
-                    }).DoShow();
+                    UIManager.ShowScreen<MapScreen>();
                 }
                 else
-                {
-                    UIManager.ShowScreen<CastleScreen>();
+                { 
+                    UIManager.ShowScreen<EventMapScreen>();
                 }
             }
             else
             {
-                UIManager.ShowScreen<CastleScreen>();
+                UIManager.ToPrevScreen(new UIManager.StateParams
+                {
+                    showOverlay = false,
+                });
             }
         }
 
         private void GirlButtonClick(string girlKey)
         {
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<GirlScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<GirlScreen>().
-                    SetData(new GirlScreenInData
-                    {
-                        girlKey = girlKey,
-                        prevScreenInData = inputData,
-                        ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
-                    }).DoShow();
-            }
+            UIManager.MakeScreen<GirlScreen>().
+                SetData(new GirlScreenInData
+                {
+                    girlKey = girlKey,
+                }).DoShow();
+           
         }
 
         private void UlviButtonClick()
@@ -273,19 +254,13 @@ namespace Overlewd
         private void BattleGirlsButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
+            if (inputData != null)
             {
                 UIManager.ShowScreen<BattleGirlListScreen>();
             }
             else
             {
-                UIManager.MakeScreen<BattleGirlListScreen>().
-                    SetData(new BattleGirlListScreenInData
-                    {
-                        prevScreenInData = inputData,
-                        ftueStageId = inputData?.ftueStageId,
-                        eventStageId = inputData?.eventStageId
-                    }).DoShow();
+                UIManager.ShowScreen<BattleGirlListScreen>();
             }
         }
     }

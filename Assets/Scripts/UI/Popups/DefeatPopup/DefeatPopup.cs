@@ -95,12 +95,7 @@ namespace Overlewd
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData
-            {
-                prevScreenInData = UIManager.screenInData.prevScreenInData,
-                ftueStageId = UIManager.screenInData.ftueStageId
-            }).DoShow();
+            UIManager.ShowScreen<TeamEditScreen>();
         }
 
         private void MagicGuildButtonClick()
@@ -129,11 +124,7 @@ namespace Overlewd
                         }).DoShow();
                     break;
                 default:
-                    UIManager.MakeScreen<HaremScreen>().
-                       SetData(new HaremScreenInData
-                       {
-                           prevScreenInData = UIManager.screenInData.prevScreenInData,
-                       }).DoShow();
+                    UIManager.ShowScreen<HaremScreen>();
                     break;
             }
         }

@@ -539,7 +539,6 @@ namespace Overlewd
         //Screen Layer
         public static T GetScreen<T>() where T : BaseFullScreen => screen as T;
         public static bool HasScreen<T>() where T : BaseFullScreen => screen?.GetType() == typeof(T);
-        public static BaseFullScreenInData screenInData => screen?.baseInputData;
         private static BaseFullScreen MakeScreen(Type type) => GetScreenInstance(type);
         public static T MakeScreen<T>() where T : BaseFullScreen => GetScreenInstance<T>();
         public static void ShowScreen<T>() where T : BaseFullScreen => ShowScreen(MakeScreen<T>());

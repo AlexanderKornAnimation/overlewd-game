@@ -118,16 +118,7 @@ namespace Overlewd
         
         private void BackButtonClick()
         {
-            if (inputData != null)
-            {
-                UIManager.MakeScreen<HaremScreen>().
-                    SetData(inputData.As<HaremScreenInData>()).
-                    DoShow();
-            }
-            else
-            {
-                UIManager.ShowScreen<HaremScreen>();
-            }
+            UIManager.ToPrevScreen();
         }
         
         private void SortCharactersInTabs()

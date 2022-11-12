@@ -191,22 +191,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData.prevScreenInData.IsType<BattleGirlListScreenInData>())
-            {
-                UIManager.ShowScreen<BattleGirlListScreen>();
-            }
-            else if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
-            {
-                UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
-                    DoShow();
-            }
-            else
-            {
-                UIManager.MakeScreen<BattleGirlScreen>().
-                    SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>()).
-                    DoShow();
-            }
+            UIManager.ToPrevScreen();
         }
 
         private void SortWeaponsInTabs()

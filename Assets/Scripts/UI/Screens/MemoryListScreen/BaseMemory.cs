@@ -43,7 +43,6 @@ namespace Overlewd
                     SetData(new SexScreenInData
                     {
                         dialogId = memoryData?.sexSceneId,
-                        prevScreenInData = UIManager.screenInData
                     }).DoShow();
             }
         }

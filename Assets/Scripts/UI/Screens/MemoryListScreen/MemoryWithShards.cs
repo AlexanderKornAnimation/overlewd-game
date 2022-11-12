@@ -68,7 +68,6 @@ namespace Overlewd
                     SetData(new MemoryScreenInData
                 {
                     girlKey = girlKey,
-                    prevScreenInData = UIManager.screenInData
                 }).DoShow();
             }
             

@@ -141,7 +141,7 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
+            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData ?? inputData?.dialogData;
 
             if (inputData.eventStageId.HasValue)
             {
@@ -177,20 +177,7 @@ namespace Overlewd
                            }).DoShow();
                     break;
                 default:
-                    if (inputData.eventStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<EventMapScreen>();
-                    }
-                    else if (inputData.ftueStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<MapScreen>();
-                    }
-                    else
-                    {
-                        UIManager.MakeScreen<GirlScreen>().
-                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                            .DoShow();
-                    }
+                    UIManager.ToPrevScreen();
                     break;
             }
         }
@@ -567,6 +554,7 @@ namespace Overlewd
 
     public class DialogScreenInData : BaseFullScreenInData
     {
-        
+        public int? dialogId;
+        public AdminBRO.Dialog dialogData => GameData.dialogs.GetById(dialogId);
     }
 }

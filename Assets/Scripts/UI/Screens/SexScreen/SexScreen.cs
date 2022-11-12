@@ -118,32 +118,7 @@ namespace Overlewd
                         }).DoShow();
                     break;
                 default:
-                    if (inputData.ftueStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<MapScreen>();
-                    }
-                    else if (inputData.eventStageId.HasValue)
-                    {
-                        UIManager.ShowScreen<EventMapScreen>();
-                    }
-                    else if (inputData.prevScreenInData.IsType<GirlScreenInData>())
-                    {
-                        UIManager.MakeScreen<GirlScreen>().
-                            SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                            .DoShow();
-                    }
-                    else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
-                    {
-                        UIManager.MakeScreen<MemoryListScreen>()
-                            .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
-                            .DoShow();
-                    }
-                    else
-                    {
-                        UIManager.MakeScreen<BattleGirlScreen>().
-                            SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>())
-                            .DoShow();
-                    }
+                   UIManager.ToPrevScreen();
                     break;
             }
         }

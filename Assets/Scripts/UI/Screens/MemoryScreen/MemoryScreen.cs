@@ -100,15 +100,13 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
+            if (UIManager.currentState.prevState != null)
             {
-                UIManager.ShowScreen<MemoryListScreen>();
+                UIManager.ToPrevScreen();
             }
             else
             {
-                UIManager.MakeScreen<MemoryListScreen>().
-                    SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
-                    .DoShow();
+                UIManager.ShowScreen<CastleScreen>();
             }
         }
 

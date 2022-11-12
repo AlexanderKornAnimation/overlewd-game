@@ -149,7 +149,6 @@ namespace Overlewd
                     SetData(new WeaponScreenInData
                     {
                         characterId = characterData.id,
-                        prevScreenInData = UIManager.screenInData
                     }).DoShow();
             }
             

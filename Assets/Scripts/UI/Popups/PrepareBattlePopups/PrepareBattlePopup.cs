@@ -81,7 +81,7 @@ namespace Overlewd
             healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
 
             scrollBuyButton = bottlePanel.Find("Scroll").Find("BuyButton").GetComponent<Button>();
-            scrollBuyButton.onClick.AddListener(ScrollBuyButtonClick);
+            scrollBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             enemyContent = enemiesBack.Find("Viewport").Find("Content");
             allyContent = canvas.Find("CharactersBackground").Find("Allies");
@@ -252,7 +252,7 @@ namespace Overlewd
 
             bool canPlayFastBattle = GameData.player.energyPoints >= fastBattleCost.energyCost &&
                 GameData.player.replayAmount >= fastBattleCost.scrollCost;
-            Debug.Log(canPlayFastBattle);
+            
             if (canPlayFastBattle)
             {
                 if (inputData.ftueStageId.HasValue)
@@ -268,11 +268,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.MakePopup<BottlesPopup>().
-                    SetData(new BottlesPopupInData
-                    {
-                        prevPopupInData = inputData,
-                    }).DoShow();
+                UIManager.ShowPopup<BottlesPopup>();
             }
         }
         
@@ -308,48 +304,24 @@ namespace Overlewd
             buttonMinus.gameObject.SetActive(battlesCount > 1);
         }
         
-        private void ScrollBuyButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BottlesPopup>().
-                SetData(new BottlesPopupInData
-                {
-                    prevPopupInData = inputData
-                }).DoShow();
-        }
+
         
         private void PotionBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BottlesPopup>().
-                SetData(new BottlesPopupInData
-                {
-                    prevPopupInData = inputData
-                }).DoShow();
+            UIManager.ShowPopup<BottlesPopup>();
         }
         
         private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<HaremScreen>().
-                SetData(new HaremScreenInData
-                {
-                    prevScreenInData = UIManager.screenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).DoShow();
+            UIManager.ShowScreen<HaremScreen>();
         }
 
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData 
-                {
-                    prevScreenInData = UIManager.screenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).DoShow();
+            UIManager.ShowScreen<TeamEditScreen>();
         }
 
         private void BackButtonClick()
@@ -366,18 +338,13 @@ namespace Overlewd
                 UIManager.MakeScreen<BattleScreen>().
                     SetData(new BaseBattleScreenInData
                     {
-                        prevScreenInData = UIManager.screenInData,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
                     }).DoShow();
             }
             else
             {
-                UIManager.MakePopup<BottlesPopup>().
-                    SetData(new BottlesPopupInData
-                    {
-                        prevPopupInData = inputData,
-                    }).DoShow();
+                UIManager.ShowPopup<BottlesPopup>();
             }
         }
 

@@ -383,6 +383,7 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<CastleScreen>();
         }
         
