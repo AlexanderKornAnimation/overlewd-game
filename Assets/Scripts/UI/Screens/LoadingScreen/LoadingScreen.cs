@@ -306,9 +306,8 @@ namespace Overlewd
             return (progressBarPercent - loadingProgress.fillAmount) < 0.001f;
         }
 
-        public static void RunFTUE()
+        private void RunFTUE()
         {
-            GameData.devMode = false;
             GameData.ftue.activeChapter.SetAsMapChapter();
             var firstSexStage = GameData.ftue.chapter1_sex1;
             if (firstSexStage.isComplete)
