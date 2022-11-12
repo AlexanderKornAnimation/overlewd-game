@@ -249,6 +249,7 @@ namespace Overlewd
             var screenGO_rectMask2D = screenGO.AddComponent<RectMask2D>();
             screenGO_rectTransform.SetParent(parent, false);
             UITools.SetStretch(screenGO_rectTransform);
+            UITools.TopHide(screenGO_rectTransform);
             return screenGO.AddComponent(type);
         }
         private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen =>
@@ -362,7 +363,12 @@ namespace Overlewd
         }
 
         //UI states
-        private const int PrevStatesStackCapacity = 20;
+        public class StateParams
+        {
+            public bool showPopup { get; set; } = true;
+            public bool showOverlay { get; set; } = true;
+            public bool forceRestore { get; set; } = false;
+        }
         public class State
         {
             public Type screenType { get; set; }
@@ -370,13 +376,11 @@ namespace Overlewd
             public bool ScreenTypeIs<T>() where T : BaseFullScreen =>
                 screenType == typeof(T);
 
-            public bool showPopup { get; set; } = true;
             public Type popupType { get; set; }
             public BasePopupInData popupInData { get; set; }
             public bool PopupTypeIs<T>() where T : BasePopup =>
                 popupType == typeof(T);
 
-            public bool showOverlay { get; set; } = true;
             public Type overlayType { get; set; }
             public BaseOverlayInData overlayInData { get; set; }
             public bool OverlayTypeIs<T>() where T : BaseOverlay =>
@@ -385,74 +389,125 @@ namespace Overlewd
             public State prevState { get; set; }
         }
 
+        private const int PrevStatesStackCapacity = 100;
         private static LinkedList<State> prevStatesStack = new LinkedList<State>();
-        private static void PushPrevState(State state)
+        private static void PushState()
         {
-            if (state == null)
-                return;
-
-            prevStatesStack.AddFirst(state);
+            prevStatesStack.AddFirst(currentState);
             while (prevStatesStack.Count > PrevStatesStackCapacity)
             {
                 prevStatesStack.Last.Previous.Value.prevState = null;
                 prevStatesStack.RemoveLast();
             }
         }
-        private static State PopPrevState()
+        private static State PopState()
         {
-            var popState = PeakPrevState();
+            var popState = PeakState();
             prevStatesStack.RemoveFirst();
             return popState;
         }
-        private static State PeakPrevState() =>
+        private static State PopScreenState()
+        {
+            var popScreenType = currentState.screenType;
+            while ((prevStatesStack.Count > 0) &&
+                (prevStatesStack.First.Value.screenType == popScreenType))
+            {
+                prevStatesStack.RemoveFirst();
+            }
+            return PopState();
+        }
+        private static State PeakState() =>
             prevStatesStack.First?.Value;
 
-        public static State currentState => screen != null ?
-            new State
+        private static bool restoreStateModeEnabled { get; set; } = false;
+        private static async UniTask WaitRestoreStateModeDisabled()
+        {
+            while (restoreStateModeEnabled)
             {
-                screenType = screen.GetType(),
-                screenInData = screen.baseInputData,
-                popupType = popup?.GetType(),
-                popupInData = popup?.baseInputData,
-                overlayType = overlay?.GetType(),
-                overlayInData = overlay?.baseInputData,
-                prevState = PeakPrevState()
-            } : null;
-        public static bool pushPrevState { get; set; } = true;
-        public static async void ToState(State state)
+                await UniTask.NextFrame();
+            }
+        }
+        private static async void RestoreState(State state, StateParams sParams = null)
         {
             if (state == null)
                 return;
 
-            var screen = MakeScreen(state.screenType);
-            screen.baseInputData = state.screenInData;
-            await ShowScreenAsync(screen);
+            restoreStateModeEnabled = true;
 
-            if (state.popupType != null && state.showPopup)
+            bool forceReopen = sParams?.forceRestore ?? false;
+
+            if (state.screenType != null)
             {
-                var popup = MakePopup(state.popupType);
-                popup.baseInputData = state.popupInData;
-                await ShowPopupAsync(popup);
+                if (state.screenType != screen?.GetType() || forceReopen)
+                {
+                    var _screen = MakeScreen(state.screenType);
+                    _screen.baseInputData = state.screenInData;
+                    await _showScreenAsync(_screen);
+                }
+            }
+            else
+            {
+                //TODO: hide screen
             }
 
-            if (state.overlayType != null && state.showOverlay)
+            var showPopup = sParams?.showPopup ?? true;
+            if (state.popupType != null && showPopup)
             {
-                var overlay = MakeOverlay(state.overlayType);
-                overlay.baseInputData = state.overlayInData;
-                await ShowOverlayAsync(overlay);
+                if (state.popupType != popup?.GetType() || forceReopen)
+                {
+                    var _popup = MakePopup(state.popupType);
+                    _popup.baseInputData = state.popupInData;
+                    await _showPopupAsync(_popup);
+                }
             }
+            else
+            {
+                await _hidePopupAsync();
+            }
+
+            var showOverlay = sParams?.showOverlay ?? true;
+            if (state.overlayType != null && showOverlay)
+            {
+                if (state.overlayType != overlay?.GetType() || forceReopen)
+                {
+                    var _overlay = MakeOverlay(state.overlayType);
+                    _overlay.baseInputData = state.overlayInData;
+                    await _showOverlayAsync(_overlay);
+                }
+            }
+            else
+            {
+                await _hideOverlayAsync();
+            }
+
+            restoreStateModeEnabled = false;
         }
-        public static void ToPrevState()
+
+        public static State currentState => new State
         {
-            var prevState = PopPrevState();
-            pushPrevState = false;
-            ToState(prevState);
+            screenType = screen?.GetType(),
+            screenInData = screen?.baseInputData,
+            popupType = popup?.GetType(),
+            popupInData = popup?.baseInputData,
+            overlayType = overlay?.GetType(),
+            overlayInData = overlay?.baseInputData,
+            prevState = PeakState()
+        };
+        public static void ToPrevState(StateParams sParams = null)
+        {
+            RestoreState(PopState(), sParams);
+        }
+        public static void ToPrevScreen(StateParams sParams = null)
+        {
+            RestoreState(PopScreenState(), sParams);
         }
         public static void RemakeState()
         {
-            var curState = currentState;
-            pushPrevState = false;
-            ToState(curState);
+            RestoreState(currentState,
+                new StateParams
+                {
+                    forceRestore = true
+                });
         }
 
         //Screen Layer
@@ -467,13 +522,14 @@ namespace Overlewd
         {
             if (_screen == null)
                 return;
-
-            if (pushPrevState)
-            {
-                PushPrevState(currentState);
-            }
-            //restore push prev UI states to stack
-            pushPrevState = true;
+            await WaitRestoreStateModeDisabled();
+            PushState();
+            await _showScreenAsync(_screen);
+        }
+        private static async Task _showScreenAsync(BaseFullScreen _screen)
+        {
+            if (_screen == null)
+                return;
 
             MemoryOprimizer.PrepareChangeScreen();
 
@@ -529,6 +585,14 @@ namespace Overlewd
         {
             if (_popup == null)
                 return;
+            await WaitRestoreStateModeDisabled();
+            PushState();
+            await _showPopupAsync(_popup);
+        }
+        public static async Task _showPopupAsync(BasePopup _popup)
+        {
+            if (_popup == null)
+                return;
 
             var popupPrev = popup;
             popup = _popup;
@@ -555,6 +619,14 @@ namespace Overlewd
         }
         public static async void HidePopup() => await HidePopupAsync();
         public static async Task HidePopupAsync()
+        {
+            if (popup == null)
+                return;
+            await WaitRestoreStateModeDisabled();
+            PushState();
+            await _hidePopupAsync();
+        }
+        public static async Task _hidePopupAsync()
         {
             if (popup == null)
                 return;
@@ -600,6 +672,14 @@ namespace Overlewd
         {
             if (_overlay == null)
                 return;
+            await WaitRestoreStateModeDisabled();
+            PushState();
+            await _showOverlayAsync(_overlay);
+        }
+        public static async Task _showOverlayAsync(BaseOverlay _overlay)
+        {
+            if (_overlay == null)
+                return;
 
             var overlayPrev = overlay;
             overlay = _overlay;
@@ -626,6 +706,14 @@ namespace Overlewd
         }
         public static async void HideOverlay() => await HideOverlayAsync();
         private static async Task HideOverlayAsync()
+        {
+            if (overlay == null)
+                return;
+            await WaitRestoreStateModeDisabled();
+            PushState();
+            await _hideOverlayAsync();
+        }
+        private static async Task _hideOverlayAsync()
         {
             if (overlay == null)
                 return;

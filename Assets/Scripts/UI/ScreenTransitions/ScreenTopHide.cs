@@ -11,8 +11,8 @@ namespace Overlewd
         {
             base.Awake();
 
-            screenRectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top,
-                0.0f, screenRectTransform.rect.height);
+            UITools.SetStretch(screenRectTransform);
+            UITools.TopShow(screenRectTransform);
         }
 
         public override async Task ProgressAsync()
