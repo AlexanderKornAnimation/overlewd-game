@@ -1053,8 +1053,6 @@ namespace Overlewd
 
         public AdminBRO.Animation this[int id] => GetById(id);
         public AdminBRO.Animation this[string title] => GetByTitle(title);
-        public SpineWidget this[string title, Transform parent] =>
-            SpineWidget.GetInstance(GetByTitle(title), parent);
     }
 
     //sounds
