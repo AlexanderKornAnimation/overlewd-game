@@ -387,6 +387,19 @@ namespace Overlewd
                 overlayType == typeof(T);
 
             public State prevState { get; set; }
+            public State prevScreenState
+            {
+                get
+                {
+                    var resultPrev = prevState;
+                    while (screenType == resultPrev?.screenType &&
+                        resultPrev != null)
+                    {
+                        resultPrev = resultPrev?.prevState;
+                    }
+                    return resultPrev;
+                }
+            }
         }
 
         private const int PrevStatesStackCapacity = 100;
