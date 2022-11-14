@@ -456,6 +456,8 @@ namespace Overlewd
             if (state == null)
                 return;
 
+            await WaitRestoreStateModeDisabled();
+
             restoreStateModeEnabled = true;
 
             bool forceReopen = sParams?.forceRestore ?? false;
@@ -661,20 +663,22 @@ namespace Overlewd
                 uiSenderType = popup?.GetType()
             };
 
-            popup?.Hide();
-            popupMiss?.Hide();
+            var popupPrev = popup;
+            popup = null;
+            var popupMissPrev = popupMiss;
+            popupMiss = null;
+
+            popupPrev?.Hide();
+            popupMissPrev?.Hide();
 
             await WaitScreensPrepare(new List<BaseScreen>
             {
-                popup
+                popupPrev
             });
-            await WaitScreenTransitions(new List<BaseScreen> { popup },
-                                        new List<BaseMissclick> { popupMiss });
+            await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
+                                        new List<BaseMissclick> { popupMissPrev });
 
             ThrowUIEvent(uiEventData);
-
-            popup = null;
-            popupMiss = null;
         }
 
         //Overlay Layer
@@ -748,17 +752,22 @@ namespace Overlewd
                 uiSenderType = overlay.GetType()
             };
 
-            overlay?.Hide();
-            overlayMiss?.Hide();
+            var overlayPrev = overlay;
+            overlay = null;
+            var overlayMissPrev = overlayMiss;
+            overlayMiss = null;
 
-            await WaitScreensPrepare(new List<BaseScreen> { overlay });
-            await WaitScreenTransitions(new List<BaseScreen> { overlay },
-                                        new List<BaseMissclick> { overlayMiss });
+            overlayPrev?.Hide();
+            overlayMissPrev?.Hide();
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                overlayPrev
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
+                                        new List<BaseMissclick> { overlayMissPrev });
 
             ThrowUIEvent(uiEventData);
-
-            overlay = null;
-            overlayMiss = null;
         }
 
         //Notification Layer
@@ -814,15 +823,20 @@ namespace Overlewd
             if (notif == null)
                 return;
 
-            notif?.Hide();
-            notifMiss?.Hide();
-
-            await WaitScreensPrepare(new List<BaseScreen> { notif });
-            await WaitScreenTransitions(new List<BaseScreen> { notif },
-                                        new List<BaseMissclick> { notifMiss });
-
+            var notifPrev = notif;
             notif = null;
+            var notifMissPrev = notifMiss;
             notifMiss = null;
+
+            notifPrev?.Hide();
+            notifMissPrev?.Hide();
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                notifPrev
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { notifPrev },
+                                        new List<BaseMissclick> { notifMissPrev });
         }
 
         //System notifications layer
