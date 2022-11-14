@@ -8,7 +8,7 @@ using DG.Tweening;
 
 namespace Overlewd
 {
-    public class GetResourceNotif : BaseWidget
+    public class PopupNotifWidget : BaseWidget
     {
         private RectTransform canvasRT;
         private Transform back;
@@ -48,10 +48,10 @@ namespace Overlewd
             seq.Play();
         }
 
-        public static GetResourceNotif GetInstance(Transform parent)
+        public static PopupNotifWidget GetInstance(Transform parent)
         {
-            return ResourceManager.InstantiateScreenPrefab<GetResourceNotif>
-                ("Prefabs/UI/Widgets/Notifications/GetResourceNotif", parent);
+            return ResourceManager.InstantiateScreenPrefab<PopupNotifWidget>
+                ("Prefabs/UI/Widgets/Notifications/PopupNotifWidget", parent);
         }
     }
 }
