@@ -14,6 +14,10 @@ namespace Overlewd
         public CharController cc;
         public Transform persPos => cc.persPos;
         public CharacterPortrait charStats => cc.charStats;
+        private int defUp_defDown => cc.defUp_defDown;
+        private int regen_poison => cc.regen_poison;
+        private int focus_blind => cc.focus_blind;
+        private bool stun => cc.stun;
 
         //Char UI
         public Image charClass;
@@ -25,7 +29,10 @@ namespace Overlewd
         public TextMeshProUGUI mpTMP;
         public StatusEffects status_bar;
         public GameObject border;
+        [SerializeField] private List<Sprite> classIcons;
         private CharDescription charDescription => FindObjectOfType<CharDescription>();
+        GameObject vfxDefUp, vfxDefDown, vfxStun, vfxRegen, vfxPoison, vfxFocus, vfxBlind;
+        GameObject vfxDefUpGO, vfxDefDownGO, vfxStunGO, vfxRegenGO, vfxPoisonGO, vfxFocusGO, vfxBlindGO;
 
         public float hp => cc.health;
         public float maxHp => cc.healthMax;
@@ -35,10 +42,74 @@ namespace Overlewd
         public bool isOverlord => cc.isOverlord;
 
 
-        [SerializeField]
-        private List<Sprite> classIcons;
+        private void VfxInit()
+        {
+            var path = "Battle/Prefabs/VFX/Skill/StatusEffects/";
+            vfxDefUp = Resources.Load(path + "aniDefUp.part") as GameObject;
+            vfxDefDown = Resources.Load(path + "aniDefDown.part") as GameObject;
+            vfxStun = Resources.Load(path + "Stun.part") as GameObject;
+            vfxRegen = Resources.Load(path + "HealContinue.part") as GameObject;
+            vfxPoison = Resources.Load(path + "PoisonContinue.part") as GameObject;
+            vfxFocus = vfxDefUp;
+            vfxBlind = vfxDefDown;
+        }
+
+        void ApplyVFX()
+        {
+            CheckVFX(defUp_defDown, ref vfxDefUpGO, ref vfxDefDownGO, vfxDefUp, vfxDefDown);
+            CheckVFX(regen_poison, ref vfxRegenGO, ref vfxPoisonGO, vfxRegen, vfxPoison);
+            //CheckVFX(focus_blind, ref vfxFocusGO, ref vfxBlindGO, vfxFocus, vfxBlind);
+
+            if (stun && vfxStunGO == null)
+                vfxStunGO = Instantiate(vfxStun, transform);
+            else if (vfxStunGO != null)
+                DisableVFX(ref vfxStunGO);
+        }
+
+        void CheckVFX(int stat, ref GameObject buffGO, ref GameObject debuffGO, GameObject buffVFX, GameObject debuffVFX)
+        {
+            if (stat != 0)
+            {
+                if (stat > 0)
+                {
+                    if (debuffGO != null)
+                        DisableVFX(ref debuffGO);
+                    if (buffGO == null)
+                        buffGO = Instantiate(buffVFX, transform);
+                }
+                else
+                {
+                    if (buffGO != null)
+                        DisableVFX(ref buffGO);
+                    if (debuffGO == null)
+                        debuffGO = Instantiate(debuffVFX, transform);
+                }
+            }
+            else
+            {
+                if (buffGO != null)
+                    DisableVFX(ref buffGO);
+                if (debuffGO != null)
+                    DisableVFX(ref debuffGO);
+            }
+        }
+
+        void DisableVFX(ref GameObject go)
+        {
+            var fadeTime = 1f;
+            CanvasGroup cg;
+            if (go.TryGetComponent<CanvasGroup>(out cg))
+                cg?.DOFade(0, fadeTime);
+            else
+                go.AddComponent<CanvasGroup>().DOFade(0, fadeTime);
+            Destroy(go, fadeTime);
+            go = null;
+        }
+
+
         private void Start()
         {
+            VfxInit();
             status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
             status_bar.cc = cc;
             border = transform.Find("button/border").gameObject;
@@ -78,7 +149,12 @@ namespace Overlewd
             whiteSlider.fillRect.GetComponent<Image>().enabled = false;
         }
 
-        public void UpdateStatuses() => status_bar?.UpdateStatuses();
+        public void UpdateStatuses()
+        {
+            status_bar?.UpdateStatuses();
+            //AddVFXOnScene();
+            ApplyVFX();
+        }
         public void Border(bool brd) => border?.SetActive(brd);
         void SetClass()
         {
@@ -171,7 +247,7 @@ namespace Overlewd
                             $"Max Mana: {cc.character.mana}\n" +
                             $"Damage: {cc.character.damage}\n\n" +
 
-                            $"PSR\n"+
+                            $"PSR\n" +
                             $"accyracy: {cc.psr.accyracy}\n" +
                             $"crit: {cc.psr.crit}\n" +
                             $"dodge: {cc.psr.dodge}\n" +

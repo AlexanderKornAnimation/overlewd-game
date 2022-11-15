@@ -210,6 +210,8 @@ namespace Overlewd
                 spineWidget = SpineWidget.GetInstance(character.animationData, transform);
             else
                 log.Add($"{name} animationData is null", error: true);
+            //fix out of bounds issues and animator's prefab mistakes
+            spineWidget.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 700);
             defenceDuration = spineWidget.GetAnimationDuaration(ani_defence_name);
         }
         private void UIInit()
@@ -405,7 +407,7 @@ namespace Overlewd
             if (isOverlord)
             {
                 spineWidget.PlayAnimation("defeat1", false);
-                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(ani_defeat_name));
+                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration("defeat1"));
                 spineWidget.PlayAnimation("defeat2", true); //!êîñòûëü
             }
             else
@@ -453,6 +455,30 @@ namespace Overlewd
             }
             else if (value < 0)
                 Heal(-value);
+        }
+        public enum BattleCry { OneSpellKill, HalfKill, BossOneShot, MaxHP, OneShoot }
+        public void CallBattleCry(BattleCry bc)
+        {
+            switch (bc)
+            {
+                case BattleCry.OneSpellKill:
+                    Debug.Log("OneSpellKill: If all enemies are defeated with one spell");
+                    break;
+                case BattleCry.HalfKill:
+                    Debug.Log("HalfKill: If one hit takes more than 50% of enemy health");
+                    break;
+                case BattleCry.BossOneShot:
+                    Debug.Log("BossOneShot: If a boss kills Overlord’s team in one shot (not Overlord)");
+                    break;
+                case BattleCry.MaxHP:
+                    Debug.Log("MaxHP: If a healer heals one teammate to full health");
+                    break;
+                case BattleCry.OneShoot:
+                    Debug.Log("OneShoot: One hit kill of a single character (either side)");
+                    break;
+                default:
+                    break;
+            }
         }
         IEnumerator UIDelay(float delay)
         {
@@ -572,7 +598,7 @@ namespace Overlewd
                             {
                                 bless_healBlock = addManual ? bless_healBlock - duration : -duration;//-duration;
                                 StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_blind, "red", buffDelay);
+                                DrawPopup(msg_healblock, "red", buffDelay);
                             }
                             else
                                 DrawPopup(msg_immunity, "green", buffDelay);
@@ -907,7 +933,6 @@ namespace Overlewd
             bm.unselect -= UnHiglight;
             bm.roundEnd -= UpadeteRoundEnd;
             Destroy(observer?.gameObject);
-            //if (isEnemy) Destroy(charStats.gameObject);
         }
     }
 }

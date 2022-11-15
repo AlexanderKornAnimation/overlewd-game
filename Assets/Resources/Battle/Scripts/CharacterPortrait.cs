@@ -18,7 +18,7 @@ namespace Overlewd
         private Image icon;
         private Image BattlePortraitIco;
 
-        private StatusEffects status_bar => transform.Find("status_bar")?.GetComponent<StatusEffects>();
+        private StatusEffects status_bar;
 
         private int level => cc.level;
         private string rarity => cc.rarity;
@@ -26,6 +26,8 @@ namespace Overlewd
         private float maxHp => cc.healthMax;
         private float mp => cc.mana;
         private float maxMp => cc.manaMax;
+
+        private void Awake() => status_bar = transform.Find("status_bar")?.GetComponent<StatusEffects>();
 
         public void InitUI(CharController charC)
         {

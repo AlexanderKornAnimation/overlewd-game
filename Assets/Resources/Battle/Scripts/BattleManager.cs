@@ -100,7 +100,7 @@ namespace Overlewd
             if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats")?.GetComponent<CharacterPortrait>();
             EnemyStats.isBoss = bossLevel;
 
-            if (bossLevel) QueueUI.gameObject.SetActive(false);
+            //if (bossLevel) QueueUI.gameObject.SetActive(false);
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
 
             bPosPlayer = transform.Find("BattleCanvas/BattleLayer/battlePos1");
@@ -252,20 +252,18 @@ namespace Overlewd
             ccOnSelect.UpadeteDot();
             if (aniWave)
                 Instantiate(aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp($"Wave {wave + 1}");
-        }        
+        }
         private void CreatePortraitQueue()
         {
-            if (!bossLevel)
-                foreach (var cc in charControllerList) //Fill QueueUI characters icons
-                {
-                    var portraitQ = Instantiate(portraitPrefab, QueueUIContent).GetComponent<QueuePortraitController>();
-                    portraitQ.name = "Portrait_" + cc.Name;
-                    portraitQ.SetUp(cc);
-                    if (cc.isEnemy)
-                        portraitQ.transform.GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
-                    QueueElements.Add(portraitQ);
-                }
-            else return;
+            foreach (var cc in charControllerList) //Fill QueueUI characters icons
+            {
+                var portraitQ = Instantiate(portraitPrefab, QueueUIContent).GetComponent<QueuePortraitController>();
+                portraitQ.name = "Portrait_" + cc.Name;
+                portraitQ.SetUp(cc);
+                if (cc.isEnemy)
+                    portraitQ.transform.GetComponent<Image>().color = redColor;  //Switch color on portrait indicator from blue to red
+                QueueElements.Add(portraitQ);
+            }
         }
         private void Update()
         {
@@ -690,19 +688,10 @@ namespace Overlewd
             else
                 log.Add("Please select character");
         }
-        private void OnGUI()
-        {
-            if (GUI.Button(new Rect(Screen.width / 2, Screen.height - 64, 72, 32), "Debug"))
-                if (debug < 3) debug++; else debug = 0;
-            if (debug > 0)
-            {
-                GUIStyle style = new GUIStyle();
-                style.normal.textColor = Color.white;
-                style.fontSize = 22;
 
-                GUI.Label(new Rect(Screen.width / 2 - 80, 64, 300, 500), $"Battle ID: {battleData.id}\n" +
-                    $"is BossLevel {battleData.isTypeBoss}", style);
-            }
+        public void PressDebug()
+        {
+            if (debug < 3) debug++; else debug = 0;
             debugObj?.SetActive(debug > 0);
         }
 
