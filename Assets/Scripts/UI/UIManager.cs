@@ -856,10 +856,8 @@ namespace Overlewd
                                         new List<BaseMissclick> { notifMissPrev });
         }
 
-        //Game notifications
-        //public static PopupNotifWidget MakePopupNotif(string title, string me)
-
         //System notifications layer
+        public static Transform systemNotifRoot => uiSystemNotifsLayerGO.transform;
         public static void ShowServerConnectionNotif()
         {
             var notif = uiSystemNotifsLayerGO.GetComponentInChildren<ServerConnectionNotif>();

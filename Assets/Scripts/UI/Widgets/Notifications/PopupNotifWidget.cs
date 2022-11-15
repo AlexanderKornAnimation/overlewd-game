@@ -26,10 +26,10 @@ namespace Overlewd
             entityTitle = back.Find("EntityTitle").GetComponent<TextMeshProUGUI>();
         }
 
-        public void Play(string sTitle, string sEntityTitle)
+        public void Play(string sTitle, string sMessage)
         {
             title.text = sTitle;
-            entityTitle.text = sEntityTitle;
+            entityTitle.text = sMessage;
 
             backCG.alpha = 0.0f;
             var backEndPosY = back.position.y + canvasRT.rect.height * 0.3f;

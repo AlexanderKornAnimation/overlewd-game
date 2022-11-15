@@ -80,6 +80,7 @@ namespace Overlewd
             private async void ClaimButtonClick()
             {
                 await GameData.quests.ClaimReward(questId);
+                UITools.ClaimRewards(questData?.rewards);
                 Customize();
             }
 
