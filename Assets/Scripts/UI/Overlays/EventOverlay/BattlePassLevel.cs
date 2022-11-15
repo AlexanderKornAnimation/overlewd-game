@@ -15,6 +15,8 @@ namespace Overlewd
             public AdminBRO.BattlePass passData =>
                 GameData.battlePass.GetById(battlePassId);
             public AdminBRO.BattlePass.Level levelData { get; set; }
+            public bool reached =>
+                levelData.pointsThreshold <= passData.currentPointsCount;
 
             private TextMeshProUGUI level;
             private GameObject levelReached;
@@ -31,7 +33,7 @@ namespace Overlewd
             private Button upgradeButton;
 
             private Transform canvas;
-            
+
             private void Awake()
             {
                 canvas = transform.Find("Canvas");
@@ -68,7 +70,7 @@ namespace Overlewd
                 var battlePassData = passData;
 
                 level.text = levelData.pointsThreshold.ToString();
-                levelReached.SetActive(levelData.pointsThreshold <= battlePassData.currentPointsCount);
+                levelReached.SetActive(reached);
 
                 for (int i = 0; i < 2; i++)
                 {
