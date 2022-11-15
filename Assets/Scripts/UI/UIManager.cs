@@ -413,8 +413,8 @@ namespace Overlewd
         private static bool CanPush(BaseScreen stateItem)
         {
             var type = stateItem?.GetType();
-            if (type == typeof(DevOverlay) ||
-                type == typeof(SidebarMenuOverlay))
+            if (type == typeof(DevOverlay)/* ||
+                type == typeof(SidebarMenuOverlay)*/)
                 return false;
             return true;
         }
@@ -855,6 +855,9 @@ namespace Overlewd
             await WaitScreenTransitions(new List<BaseScreen> { notifPrev },
                                         new List<BaseMissclick> { notifMissPrev });
         }
+
+        //Game notifications
+        //public static PopupNotifWidget MakePopupNotif(string title, string me)
 
         //System notifications layer
         public static void ShowServerConnectionNotif()
