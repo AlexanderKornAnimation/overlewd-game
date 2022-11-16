@@ -71,13 +71,11 @@ namespace Overlewd
 
             private IEnumerator CalcProgressBarWidth()
             {
-                for (int i = 0; i < 2; i++)
-                {
-                    yield return new WaitForEndOfFrame();
-                }
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
 
                 var levels = content.GetComponentsInChildren<BattlePassLevel>();
-                var scrollContentRT = content.GetComponent<RectTransform>();
+                var scrollContentWorldRT = content.GetComponent<RectTransform>().WorldRect();
                 var progressBarWidth = 0.0f;
                 for (int levelId = 0; levelId < levels.Length; levelId++)
                 {
@@ -86,15 +84,14 @@ namespace Overlewd
                     {
                         if (levelId == (levels.Length - 1))
                         {
-                            progressBarWidth = scrollContentRT.rect.width + scrollContentRT.sizeDelta.x;
+                            progressBarWidth = 50.0f + scrollContentWorldRT.width + 50.0f;
                         }
                         else
                         {
-                            progressBarWidth = 40.0f //offset left
-                                + (404.0f + 25.0f) * levelId // (itemWidth + spacing)
-                                + 191.0f; // half itemWidth to center of levelBack pivot
+                            var reachedImgWorldRect = level.levelReached.WorldRect();
+                            progressBarWidth = 50.0f + (reachedImgWorldRect.center.x - scrollContentWorldRT.xMin);
                         }
-                        
+
                     }
                 }
                 progressBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, progressBarWidth);
