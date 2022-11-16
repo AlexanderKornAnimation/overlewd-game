@@ -697,6 +697,9 @@ namespace Overlewd
             public const string QuestType_Matriarch = "matriarch";
 
             [JsonProperty(Required = Required.Default)]
+            public bool isNew { get; set; } = false;
+
+            [JsonProperty(Required = Required.Default)]
             public bool isFTUE => ftueChapterId.HasValue;
 
             [JsonProperty(Required = Required.Default)]

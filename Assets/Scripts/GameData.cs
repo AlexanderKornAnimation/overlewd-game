@@ -846,12 +846,34 @@ namespace Overlewd
 
         public override async Task Get()
         {
-            quests = await AdminBRO.questsAsync();
+            if (quests.Count > 0)
+            {
+                var prevQuests = quests;
+                quests = await AdminBRO.questsAsync();
+                foreach (var q in quests)
+                {
+                    var prevQuest = prevQuests.Find(pq => pq.id == q.id);
+                    if (prevQuest != null)
+                    {
+                        q.isNew = prevQuest.isNew;
+                    }
+                    else
+                    {
+                        q.isNew = true;
+                    }
+                }
+            }
+            else
+            {
+                quests = await AdminBRO.questsAsync();
+            }
         }
 
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
 
+        public List<AdminBRO.QuestItem> newQuests =>
+            quests.FindAll(q => q.isNew);
         public List<AdminBRO.QuestItem> ftueQuests =>
             quests.FindAll(q => q.isFTUE);
         public AdminBRO.QuestItem ftueMainQuest =>

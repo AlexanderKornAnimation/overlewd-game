@@ -39,10 +39,12 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            var questNum = 0;
             var quests =
-                GameData.quests.quests.Where(q => q.ftueChapterId == GameData.ftue.mapChapter.id);
-            
+                GameData.quests.quests.
+                Where(q => q.ftueChapterId == GameData.ftue.mapChapter.id).
+                OrderByDescending(q => q.isFTUEMain ? 100 : q.isNew ? 10 : 1);
+
+            var questNum = 0;
             foreach (var questData in quests)
             {
                 if (questData.isFTUEMain)
@@ -58,9 +60,13 @@ namespace Overlewd
                         _ => null
                     };
                     questButton.questId = questData.id;
-                }
+                    if (questButton.questData.isNew)
+                    {
+                        questButton.SetHide();
+                    }
 
-                questNum++;
+                    questNum++;
+                }
             }
         }
 
@@ -89,6 +95,14 @@ namespace Overlewd
         public async Task ShowAsync()
         {
             await UITools.RightShowAsync(backRect);
+
+            var newQuests = content.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().
+                Where(q => q.questData.isNew).
+                Reverse();
+            foreach (var quest in newQuests)
+            {
+                await quest.WaitShowAsNew();
+            }
         }
 
         public async Task HideAsync()
