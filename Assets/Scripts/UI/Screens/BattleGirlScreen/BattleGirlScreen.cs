@@ -144,6 +144,9 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls);
                     break;
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor2");
+                    break;
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_battle_girls);
                     break;
@@ -232,7 +235,15 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ToPrevScreen();
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ToPrevScreen();
+                    break;
+            }
         }
 
         private void WeaponScreenButtonClick()

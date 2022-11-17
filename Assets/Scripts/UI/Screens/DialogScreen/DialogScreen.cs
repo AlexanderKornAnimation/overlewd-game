@@ -167,6 +167,13 @@ namespace Overlewd
 
         private void LeaveScreen()
         {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UIManager.ShowScreen<MapScreen>();
+                    return;
+            }
+            
             switch (inputData.ftueStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_1, FTUE.DIALOGUE_1):
@@ -176,6 +183,16 @@ namespace Overlewd
                                ftueStageId = GameData.ftue.chapter1_battle1.id
                            }).DoShow();
                     break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                        UIManager.ShowScreen<CastleScreen>();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.MakeScreen<PortalScreen>().
+                        SetData(new PortalScreenInData
+                        {
+                            activeButtonId = PortalScreen.TabShards,
+                        }).DoShow();
+                    return;
                 default:
                     UIManager.ToPrevScreen();
                     break;

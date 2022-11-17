@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using TMPro;
 
 namespace Overlewd
@@ -61,6 +62,17 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    UITools.DisableButton(tabs[TabBattleGirlsEquip]);
+                    UITools.DisableButton(tabs[TabOverlordEquip]);
+                    UITools.DisableButton(tabs[TabShards]);
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UITools.DisableButton(tabs[TabOverlordEquip]);
+                    break;
+            }
             Customize();
             ShowStartingGacha(inputData?.activeButtonId, inputData?.activeGachaId);
 
@@ -74,13 +86,21 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_portal);
                     break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor1");
+                    await UIManager.WaitHideNotifications();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor3");
+                    await UIManager.WaitHideNotifications();
+                    break;
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_portal);
                     break;
                 case (FTUE.CHAPTER_3, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_portal);
                     break;
-            }
+            }            
 
             await Task.CompletedTask;
         }
@@ -202,7 +222,22 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.MakeScreen<MemoryScreen>().
+                        SetData(new MemoryScreenInData
+                        {
+                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
+                        }).DoShow();
+                    break;
+                default:
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
         }
 
         private void CustomizeByGachaData(AdminBRO.GachaItem gachaData)

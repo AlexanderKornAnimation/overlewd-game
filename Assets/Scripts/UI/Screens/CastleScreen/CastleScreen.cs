@@ -183,6 +183,36 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
                     UITools.DisableButton(sidebarButton);
                     break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    UITools.DisableButton(sidebarButton);
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    if (GameData.buildings.portal.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UITools.DisableButton(sidebarButton);
+                    portalButton?.DisableButton();
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    if (GameData.buildings.harem.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    UITools.DisableButton(sidebarButton);
+                    portalButton?.DisableButton();
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    haremButton?.DisableButton();
+                    if (GameData.buildings.laboratory.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
@@ -220,6 +250,18 @@ namespace Overlewd
                         {
                             GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
                         }
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    if (GameData.buildings.portal.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor2");
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    if (!GameData.buildings.laboratory.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2labtutor1");
                     }
                     break;
                 default:

@@ -200,6 +200,18 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2teamtutor1");
+                    await UIManager.WaitHideNotifications();
+                    break;
+            }
+            await Task.CompletedTask;
+        }
+
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -225,20 +237,17 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (UIManager.currentState.prevScreenState.ScreenTypeIs<BaseBattleScreen>())
+            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
             {
-                if (UIManager.currentState.prevScreenState.prevScreenState.ScreenTypeIs<MapScreen>())
-                {
-                    UIManager.ShowScreen<MapScreen>();
-                }
-                else
-                { 
-                    UIManager.ShowScreen<EventMapScreen>();
-                }
+                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
             }
             else
             {
-                UIManager.ToPrevScreen();
+                
+                UIManager.ToPrevScreen(new UIManager.StateParams
+                {
+                    showOverlay = false,
+                });
             }
         }
 

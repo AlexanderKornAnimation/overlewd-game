@@ -134,11 +134,22 @@ namespace Overlewd
             SortWeaponsInTabs();
         }
         
-        private void OnEquipOrUnequip()
+        private async void OnEquipOrUnequip()
         {
             foreach (var equip in weapons)
             {
                 equip.Customize(); 
+            }
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
+                    if (inputData.characterData.hasEquipment)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor3");
+                        await UIManager.WaitHideNotifications();
+                    }
+                    break;
             }
         }
         
@@ -191,7 +202,17 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ToPrevScreen();
+            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
+            {
+                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState, new UIManager.StateParams
+                {
+                    showPopup = false,
+                });
+            }
+            else
+            {
+                UIManager.ToPrevScreen();
+            }
         }
 
         private void SortWeaponsInTabs()

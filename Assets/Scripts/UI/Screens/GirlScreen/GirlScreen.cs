@@ -215,11 +215,31 @@ namespace Overlewd
 
             CustomizeBuffInfo();
 
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UITools.DisableButton(bannerUlviButton);
+                    UITools.DisableButton(bannerAdrielButton);
+                    UITools.DisableButton(bannerIngieButton);
+                    UITools.DisableButton(bannerFayeButton);
+                    UITools.DisableButton(bannerLiliButton);
+                    
+                    UITools.DisableButton(sexButton);
+                    break;
+            }
+            
             await Task.CompletedTask;
         }
 
         public override async Task AfterShowAsync()
         {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2empathytutor1");
+                    break;
+            }
+            
             switch (inputData?.girlKey)
             {
                 case AdminBRO.MatriarchItem.Key_Ulvi:

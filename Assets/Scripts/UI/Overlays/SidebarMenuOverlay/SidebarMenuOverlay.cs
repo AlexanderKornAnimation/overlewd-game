@@ -148,13 +148,13 @@ namespace Overlewd
                     {
                         UITools.DisableButton(castleButton);
                         UITools.DisableButton(portalButton);
-                        //UITools.DisableButton(globalMapButton);
                         UITools.DisableButton(overlordButton);
                         UITools.DisableButton(haremButton);
                         UITools.DisableButton(municipalityButton);
                         UITools.DisableButton(magicGuildButton);
                         UITools.DisableButton(marketButton);
                         UITools.DisableButton(forgeButton);
+                        UITools.DisableButton(laboratoryButton);
                     }
                     break;
                 default:

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -109,7 +110,19 @@ namespace Overlewd
                 _ => null,
             };
         }
-        
+
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2empathytutor2");
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         private void SelectQuest(NSQuestOverlay.QuestButton quest)
         {
             selectedQuest?.Deselect();

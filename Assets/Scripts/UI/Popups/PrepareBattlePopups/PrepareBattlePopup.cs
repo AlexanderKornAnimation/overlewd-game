@@ -220,6 +220,16 @@ namespace Overlewd
             CheckButtonState();
 
             CustomizeBuff();
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                    {
+                        UITools.DisableButton(battleButton, GameData.characters.myTeamCharacters.Count < 2);
+                    }
+                    break;
+            }
         }
 
         public override async Task BeforeShowDataAsync()

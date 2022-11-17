@@ -159,6 +159,9 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_laboratory);
                     break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2mergetutor1");
+                    break;
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_laboratory);
                     break;
@@ -210,6 +213,13 @@ namespace Overlewd
                 case GameDataEvent.EventId.CharacterMerge:
                     walletWidget.Customize();
                     EraseAllFromFlusk();
+                    
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                            GameData.ftue.chapter2.ShowNotifByKey("ch2mergetutor3");
+                            break;
+                    }
                     break;
             }
         }
@@ -384,9 +394,16 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
         }
-        
     }
 
     public class LaboratoryScreenInData : BaseFullScreenInData

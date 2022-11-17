@@ -117,8 +117,18 @@ namespace Overlewd
                             ftueStageId = GameData.ftue.chapter1_dialogue1.id
                         }).DoShow();
                     break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
                 default:
-                   UIManager.ToPrevScreen();
+                    if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
+                    {
+                        UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
                     break;
             }
         }

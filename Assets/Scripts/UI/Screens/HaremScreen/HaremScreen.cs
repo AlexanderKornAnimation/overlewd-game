@@ -159,6 +159,14 @@ namespace Overlewd
                     backButtonText.text = "Back to\nthe Map";
                 }
             }
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UITools.DisableButton(adrielButton);
+                    UITools.DisableButton(battleGirlsButton);
+                    break;
+            }
             
             await Task.CompletedTask;
         }

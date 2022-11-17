@@ -222,10 +222,22 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, FTUE.SEX_2):
                     GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
                     break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    if (GameData.buildings.harem.meta.isBuilt)
+                    {
+                        UIManager.ShowOverlay<QuestOverlay>();
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2shardstutor1");
+                    break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
-                    GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
-                    await UIManager.WaitHideNotifications();
-                    UIManager.ShowScreen<CastleScreen>();
+                    if (!GameData.buildings.portal.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                        await UIManager.WaitHideNotifications();
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
                     return;
             }
 

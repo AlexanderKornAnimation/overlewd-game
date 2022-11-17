@@ -13,7 +13,7 @@ namespace Overlewd
             base.StartBattle();
         }
 
-        public override void EndBattle(BattleManagerOutData data)
+        public override async void EndBattle(BattleManagerOutData data)
         {
             base.EndBattle(data);
 
@@ -41,6 +41,20 @@ namespace Overlewd
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
                 }).DoShow();
+            }
+            
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor1");
+                    await UIManager.WaitHideNotifications();
+                    UIManager.MakeScreen<BattleGirlScreen>().
+                        SetData(new BattleGirlScreenInData
+                        {
+                            characterId = GameData.characters.slot1Ch.id,
+                        }).DoShow();
+                    SoundManager.StopAll();
+                    break;
             }
         }
 

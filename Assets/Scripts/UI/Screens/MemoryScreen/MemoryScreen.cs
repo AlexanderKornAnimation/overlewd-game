@@ -96,17 +96,37 @@ namespace Overlewd
                 _ => null
             };
         }
-        
+
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor4");
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (UIManager.currentState.prevState != null)
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                UIManager.ToPrevScreen();
-            }
-            else
-            {
-                UIManager.ShowScreen<CastleScreen>();
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    if (UIManager.currentState.prevState != null)
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    else
+                    {
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
+                    break;
             }
         }
 
