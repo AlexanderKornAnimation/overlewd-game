@@ -17,6 +17,12 @@ namespace Overlewd
         protected Transform content;
         protected GameObject scrollMarker;
 
+        protected List<AdminBRO.QuestItem> actualChapterQuests =>
+            GameData.quests.quests.
+            Where(q => q.ftueChapterId == GameData.ftue.mapChapter.id).
+            Where(q => !q.isClaimed).
+            OrderByDescending(q => q.isFTUEMain ? 1000 : q.isNew ? 100 : q.isCompleted ? 10 : 1).ToList();
+
         protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
@@ -39,13 +45,9 @@ namespace Overlewd
 
         protected virtual void Customize()
         {
-            var quests =
-                GameData.quests.quests.
-                Where(q => q.ftueChapterId == GameData.ftue.mapChapter.id).
-                Where(q => !q.isClaimed).
-                OrderByDescending(q => q.isFTUEMain ? 1000 : q.isNew ? 100 : q.isCompleted ? 10 : 1);
+            var quests = actualChapterQuests;
 
-            var questNum = 0;
+            var questSkinId = 0;
             foreach (var questData in quests)
             {
                 if (questData.isFTUEMain)
@@ -54,7 +56,7 @@ namespace Overlewd
                 }
                 else
                 {
-                    NSQuestWidget.BaseQuestButton questButton = (questNum % 2) switch
+                    NSQuestWidget.BaseQuestButton questButton = questSkinId switch
                     {
                         0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
                         1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
@@ -67,7 +69,7 @@ namespace Overlewd
                         questButton.SetHide();
                     }
 
-                    questNum++;
+                    questSkinId = ++questSkinId % 2;
                 }
             }
         }
@@ -119,6 +121,43 @@ namespace Overlewd
         public async Task HideAsync()
         {
             await UITools.RightHideAsync(backRect);
+        }
+
+        public async void Refresh()
+        {
+            var actualQuestsData = actualChapterQuests.Where(q => !q.isFTUEMain).ToList();
+            var curWidgetQuests = content.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().ToList();
+
+            var newQuests = actualQuestsData.Where(q => !curWidgetQuests.Exists(wq => wq.questData.id == q.id));
+            var eraseQuests = curWidgetQuests.Where(wq => !actualQuestsData.Exists(q => q.id == wq.questData.id));
+            var markCompleted = curWidgetQuests.Where(wq => wq.questData.isCompleted && !wq.markAsCompleted);
+
+            foreach (var q in eraseQuests)
+            {
+                await q.WaitErase();
+            }
+
+            var questSkinId = 0;
+            foreach (var qData in newQuests)
+            {
+                NSQuestWidget.BaseQuestButton questButton = questSkinId switch
+                {
+                    0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
+                    1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
+                    _ => null
+                };
+                questButton.questId = qData.id;
+                questButton.SetHide();
+                questButton.transform.SetAsFirstSibling();
+                await questButton.WaitShowAsNew();
+
+                questSkinId = ++questSkinId % 2;
+            }
+
+            foreach (var q in markCompleted)
+            {
+                await q.WaitMarkAsComplete();
+            }
         }
 
         public static QuestsWidget GetInstance(Transform parent)

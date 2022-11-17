@@ -23,6 +23,8 @@ namespace Overlewd
             private Vector2 baseSizeDelta;
             private float basePosX;
 
+            public bool markAsCompleted { get; set; } = false;
+
             private void Awake()
             {
                 root = transform as RectTransform;
@@ -109,6 +111,10 @@ namespace Overlewd
 
             public async Task WaitMarkAsComplete()
             {
+                if (markAsCompleted)
+                    return;
+                markAsCompleted = true;
+
                 var seq = DOTween.Sequence();
                 seq.AppendCallback(() =>
                 {
