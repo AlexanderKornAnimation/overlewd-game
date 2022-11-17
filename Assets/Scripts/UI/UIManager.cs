@@ -13,16 +13,15 @@ namespace Overlewd
 {
     public class UIEvent
     {
-        public Type type { get; set; } = Type.None;
-        public BaseScreen uiSender { get; set; }
-        public System.Type uiSenderType { get; set; }
-
         public enum Type
         {
             None,
-            RestoreScreenFocusAfterPopup,
-            RestoreScreenFocusAfterOverlay
+            HidePopup,
+            HideOverlay
         }
+
+        public Type type { get; set; } = Type.None;
+        public System.Type uiSenderType { get; set; }
     }
 
     public class UserInputLocker
@@ -665,20 +664,23 @@ namespace Overlewd
         {
             if (popup == null)
                 return;
+
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.HidePopup,
+                uiSenderType = popup?.GetType()
+            };
+
             await _waitRestoreStateModeDisabled();
             PushState(CanPush(popup));
             await _hidePopupAsync();
+
+            ThrowUIEvent(uiEventData);
         }
         public static async Task _hidePopupAsync()
         {
             if (popup == null)
                 return;
-
-            var uiEventData = new UIEvent
-            {
-                type = UIEvent.Type.RestoreScreenFocusAfterPopup,
-                uiSenderType = popup?.GetType()
-            };
 
             var popupPrev = popup;
             popup = null;
@@ -694,8 +696,6 @@ namespace Overlewd
             });
             await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
                                         new List<BaseMissclick> { popupMissPrev });
-
-            ThrowUIEvent(uiEventData);
         }
 
         //Overlay Layer
@@ -754,20 +754,23 @@ namespace Overlewd
         {
             if (overlay == null)
                 return;
+
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.HideOverlay,
+                uiSenderType = overlay.GetType()
+            };
+
             await _waitRestoreStateModeDisabled();
             PushState(CanPush(overlay));
             await _hideOverlayAsync();
+
+            ThrowUIEvent(uiEventData);
         }
         private static async Task _hideOverlayAsync()
         {
             if (overlay == null)
                 return;
-
-            var uiEventData = new UIEvent
-            {
-                type = UIEvent.Type.RestoreScreenFocusAfterOverlay,
-                uiSenderType = overlay.GetType()
-            };
 
             var overlayPrev = overlay;
             overlay = null;
@@ -783,8 +786,6 @@ namespace Overlewd
             });
             await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
                                         new List<BaseMissclick> { overlayMissPrev });
-
-            ThrowUIEvent(uiEventData);
         }
 
         //Notification Layer

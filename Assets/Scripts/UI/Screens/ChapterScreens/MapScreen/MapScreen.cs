@@ -265,7 +265,7 @@ namespace Overlewd
         {
             switch (eventData?.type)
             {
-                case UIEvent.Type.RestoreScreenFocusAfterOverlay:
+                case UIEvent.Type.HideOverlay:
                     questsPanel?.Refresh();
                     break;
             }
