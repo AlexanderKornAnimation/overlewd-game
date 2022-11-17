@@ -111,7 +111,8 @@ namespace Overlewd
                 Reverse();
             foreach (var quest in completeQuests)
             {
-                await quest.WaitShowAsComplete();
+                await quest.WaitShow();
+                await quest.WaitMarkAsComplete();
             }
         }
 

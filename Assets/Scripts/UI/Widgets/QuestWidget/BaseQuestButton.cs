@@ -63,21 +63,30 @@ namespace Overlewd
                 questBack.anchoredPosition += new Vector2(500.0f, 0.0f);
             }
 
-            public async Task WaitShowAsNew()
+            public async Task WaitShow()
             {
                 var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
-
-                title.gameObject.SetActive(false);
-                mark.gameObject.SetActive(false);
 
                 var seq = DOTween.Sequence();
                 seq.Append(root.DOSizeDelta(baseSizeDelta, 0.2f));
                 seq.Append(questBack.DOAnchorPosX(basePosX, 0.3f));
-                seq.onUpdate = () => 
+                seq.onUpdate = () =>
                 {
                     scrollContent_vlg.enabled = false;
                     scrollContent_vlg.enabled = true;
                 };
+                seq.Play();
+                await seq.AsyncWaitForCompletion();
+            }
+
+            public async Task WaitShowAsNew()
+            {
+                title.gameObject.SetActive(false);
+                mark.gameObject.SetActive(false);
+
+                await WaitShow();
+
+                var seq = DOTween.Sequence();
                 seq.AppendCallback(() => 
                 {
                     var effect = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_quest_book01"], questBack);
@@ -98,21 +107,9 @@ namespace Overlewd
                 await seq.AsyncWaitForCompletion();
             }
 
-            public async Task WaitShowAsComplete()
+            public async Task WaitMarkAsComplete()
             {
-                var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
-
-                mark.gameObject.SetActive(false);
-
                 var seq = DOTween.Sequence();
-                seq.Append(root.DOSizeDelta(baseSizeDelta, 0.2f));
-                seq.Append(questBack.DOAnchorPosX(basePosX, 0.3f));
-                seq.onUpdate = () =>
-                {
-                    scrollContent_vlg.enabled = false;
-                    scrollContent_vlg.enabled = true;
-                };
-                seq.AppendInterval(0.4f);
                 seq.AppendCallback(() =>
                 {
                     var effect = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_quest_book01"], questBack);
@@ -127,7 +124,31 @@ namespace Overlewd
                 seq.AppendInterval(0.3f);
                 seq.onComplete = () =>
                 {
-                    
+
+                };
+                seq.Play();
+                await seq.AsyncWaitForCompletion();
+            }
+
+            public async Task WaitErase()
+            {
+                var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
+
+                var hidePosX = questBack.anchoredPosition.x + 500.0f;
+                var hideSizeDelta = root.sizeDelta;
+                hideSizeDelta.y = 0.0f;
+
+                var seq = DOTween.Sequence();
+                seq.Append(questBack.DOAnchorPosX(hidePosX, 0.3f));
+                seq.Append(root.DOSizeDelta(hideSizeDelta, 0.2f));
+                seq.onUpdate = () =>
+                {
+                    scrollContent_vlg.enabled = false;
+                    scrollContent_vlg.enabled = true;
+                };
+                seq.onComplete = () =>
+                {
+                    Destroy(gameObject);
                 };
                 seq.Play();
                 await seq.AsyncWaitForCompletion();
