@@ -61,13 +61,14 @@ namespace Overlewd
             {
                 root.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0.0f);
                 questBack.anchoredPosition += new Vector2(500.0f, 0.0f);
-                title.gameObject.SetActive(false);
-                mark.gameObject.SetActive(false);
             }
 
             public async Task WaitShowAsNew()
             {
                 var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
+
+                title.gameObject.SetActive(false);
+                mark.gameObject.SetActive(false);
 
                 var seq = DOTween.Sequence();
                 seq.Append(root.DOSizeDelta(baseSizeDelta, 0.2f));
@@ -92,6 +93,41 @@ namespace Overlewd
                 seq.onComplete = () =>
                 {
                     questData.isNew = false;
+                };
+                seq.Play();
+                await seq.AsyncWaitForCompletion();
+            }
+
+            public async Task WaitShowAsComplete()
+            {
+                var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
+
+                mark.gameObject.SetActive(false);
+
+                var seq = DOTween.Sequence();
+                seq.Append(root.DOSizeDelta(baseSizeDelta, 0.2f));
+                seq.Append(questBack.DOAnchorPosX(basePosX, 0.3f));
+                seq.onUpdate = () =>
+                {
+                    scrollContent_vlg.enabled = false;
+                    scrollContent_vlg.enabled = true;
+                };
+                seq.AppendInterval(0.4f);
+                seq.AppendCallback(() =>
+                {
+                    var effect = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_quest_book01"], questBack);
+                    effect.transform.localPosition += new Vector3(-210.0f, 0.0f, 0.0f);
+                });
+                seq.AppendInterval(0.2f);
+                seq.AppendCallback(() =>
+                {
+                    title.text = "Claim rewards";
+                    mark.gameObject.SetActive(true);
+                });
+                seq.AppendInterval(0.3f);
+                seq.onComplete = () =>
+                {
+                    
                 };
                 seq.Play();
                 await seq.AsyncWaitForCompletion();

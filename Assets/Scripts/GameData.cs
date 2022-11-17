@@ -872,8 +872,6 @@ namespace Overlewd
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
 
-        public List<AdminBRO.QuestItem> newQuests =>
-            quests.FindAll(q => q.isNew);
         public List<AdminBRO.QuestItem> ftueQuests =>
             quests.FindAll(q => q.isFTUE);
         public AdminBRO.QuestItem ftueMainQuest =>
