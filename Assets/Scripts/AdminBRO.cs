@@ -710,6 +710,10 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
+            public bool isLastAdded =>
+                GameData.quests.lastAddedQuests.Exists(q => q.id == id);
+
+            [JsonProperty(Required = Required.Default)]
             public bool isFTUE => ftueChapterId.HasValue;
 
             [JsonProperty(Required = Required.Default)]
