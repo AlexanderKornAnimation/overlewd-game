@@ -845,8 +845,8 @@ namespace Overlewd
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
         
         //local marks
-        public List<AdminBRO.QuestItem> newQuests { get; private set; } = new List<AdminBRO.QuestItem>();
-        public List<AdminBRO.QuestItem> lastAddedQuests { get; private set; } = new List<AdminBRO.QuestItem>();
+        private List<AdminBRO.QuestItem> _newQuests { get; set; } = new List<AdminBRO.QuestItem>();
+        private List<AdminBRO.QuestItem> _lastAddedQuests { get; set; } = new List<AdminBRO.QuestItem>();
 
 
         public override async Task Get()
@@ -855,8 +855,8 @@ namespace Overlewd
             {
                 var prevQuests = quests;
                 quests = await AdminBRO.questsAsync();
-                lastAddedQuests = quests.FindAll(q => !prevQuests.Exists(pq => pq.id == q.id));
-                newQuests.AddRange(lastAddedQuests);
+                _lastAddedQuests = quests.FindAll(q => !prevQuests.Exists(pq => pq.id == q.id));
+                _newQuests.AddRange(_lastAddedQuests);
             }
             else
             {
@@ -867,6 +867,8 @@ namespace Overlewd
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
 
+        public List<AdminBRO.QuestItem> newQuests => _newQuests;
+        public List<AdminBRO.QuestItem> lastAddedQuests => _lastAddedQuests;
         public List<AdminBRO.QuestItem> ftueQuests =>
             quests.FindAll(q => q.isFTUE);
         public AdminBRO.QuestItem ftueMainQuest =>
