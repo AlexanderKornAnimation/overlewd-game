@@ -843,6 +843,7 @@ namespace Overlewd
     public class Quests : BaseGameMeta
     {
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
+        public List<AdminBRO.QuestItem> newQuests { get; private set; } = new List<AdminBRO.QuestItem>();
 
         public override async Task Get()
         {
@@ -850,18 +851,8 @@ namespace Overlewd
             {
                 var prevQuests = quests;
                 quests = await AdminBRO.questsAsync();
-                foreach (var q in quests)
-                {
-                    var prevQuest = prevQuests.Find(pq => pq.id == q.id);
-                    if (prevQuest != null)
-                    {
-                        q.isNew = prevQuest.isNew;
-                    }
-                    else
-                    {
-                        q.isNew = true;
-                    }
-                }
+                var _newQuests = quests.FindAll(q => !prevQuests.Exists(pq => pq.id == q.id));
+                newQuests.AddRange(_newQuests);
             }
             else
             {
