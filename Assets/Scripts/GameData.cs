@@ -843,20 +843,25 @@ namespace Overlewd
     public class Quests : BaseGameMeta
     {
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
-        
-        //local marks
-        private List<AdminBRO.QuestItem> _newQuests { get; set; } = new List<AdminBRO.QuestItem>();
-        private List<AdminBRO.QuestItem> _lastAddedQuests { get; set; } = new List<AdminBRO.QuestItem>();
 
+        //local marks (runtime only)
+        public List<int> newIds { get; private set; } = new List<int>();
+        public List<int> lastAddedIds { get; private set; } = new List<int>();
+        public List<int> markCompletedIds { get; private set; } = new List<int>();
 
         public override async Task Get()
         {
             if (quests.Count > 0)
             {
-                var prevQuests = quests;
+                var prevQuestsIds = quests.Select(q => q.id).ToList();
                 quests = await AdminBRO.questsAsync();
-                _lastAddedQuests = quests.FindAll(q => !prevQuests.Exists(pq => pq.id == q.id));
-                _newQuests.AddRange(_lastAddedQuests);
+                lastAddedIds = quests.Select(q => q.id).
+                    Where(qId => !prevQuestsIds.Exists(pqId => pqId == qId)).ToList();
+                newIds.AddRange(lastAddedIds);
+
+                //clear trash from marks
+                newIds.RemoveAll(qId => !quests.Exists(q => qId == q.id));
+                markCompletedIds.RemoveAll(qId => !quests.Exists(q => qId == q.id));
             }
             else
             {
@@ -867,8 +872,10 @@ namespace Overlewd
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
 
-        public List<AdminBRO.QuestItem> newQuests => _newQuests;
-        public List<AdminBRO.QuestItem> lastAddedQuests => _lastAddedQuests;
+        public List<AdminBRO.QuestItem> newQuests =>
+            newIds.Select(qId => GetById(qId)).ToList();
+        public List<AdminBRO.QuestItem> lastAddedQuests =>
+            lastAddedIds.Select(qId => GetById(qId)).ToList();
         public List<AdminBRO.QuestItem> ftueQuests =>
             quests.FindAll(q => q.isFTUE);
         public AdminBRO.QuestItem ftueMainQuest =>

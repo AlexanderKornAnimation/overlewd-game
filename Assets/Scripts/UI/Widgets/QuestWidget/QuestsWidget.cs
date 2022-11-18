@@ -130,7 +130,7 @@ namespace Overlewd
 
             var newQuests = actualQuestsData.Where(q => !curWidgetQuests.Exists(wq => wq.questData.id == q.id));
             var eraseQuests = curWidgetQuests.Where(wq => !actualQuestsData.Exists(q => q.id == wq.questData.id));
-            var markCompleted = curWidgetQuests.Where(wq => wq.questData.isCompleted && !wq.markAsCompleted);
+            var markCompleted = curWidgetQuests.Where(wq => wq.questData.isCompleted && !wq.questData.markCompleted);
 
             foreach (var q in eraseQuests)
             {

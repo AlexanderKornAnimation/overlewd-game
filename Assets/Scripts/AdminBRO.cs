@@ -699,19 +699,32 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool isNew
             {
-                get => GameData.quests.newQuests.Exists(q => q.id == id);
+                get => GameData.quests.newIds.Exists(qId => qId == id);
                 set
                 {
                     if (!value)
                     {
-                        GameData.quests.newQuests.RemoveAll(q => q.id == id);
+                        GameData.quests.newIds.RemoveAll(qId => qId == id);
                     }
                 }
             }
 
             [JsonProperty(Required = Required.Default)]
             public bool isLastAdded =>
-                GameData.quests.lastAddedQuests.Exists(q => q.id == id);
+                GameData.quests.lastAddedIds.Exists(qId => qId == id);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool markCompleted
+            {
+                get => GameData.quests.markCompletedIds.Exists(qId => qId == id);
+                set
+                {
+                    if (value && !markCompleted)
+                    {
+                        GameData.quests.markCompletedIds.Add(id);
+                    }
+                }
+            }
 
             [JsonProperty(Required = Required.Default)]
             public bool isFTUE => ftueChapterId.HasValue;
