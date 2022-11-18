@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 5172918998523937033}
   - component: {fileID: 5172918998523937032}
   - component: {fileID: 5172918998523937031}
+  - component: {fileID: 7514093178524844867}
   m_Layer: 0
   m_Name: QuestContentScrollView
   m_TagString: Untagged
@@ -274,3 +275,15 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &7514093178524844867
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5172918998523937029}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

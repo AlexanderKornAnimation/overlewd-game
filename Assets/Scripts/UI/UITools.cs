@@ -13,7 +13,9 @@ namespace Overlewd
 {
     public static class UITools
     {
-        public static async void ClaimRewards(List<AdminBRO.RewardItem> rewards)
+        public static async void ClaimRewardsAsync(List<AdminBRO.RewardItem> rewards) =>
+            await WaitClaimRewardsAsync(rewards);
+        public static async Task WaitClaimRewardsAsync(List<AdminBRO.RewardItem> rewards)
         {
             if (rewards == null)
                 return;

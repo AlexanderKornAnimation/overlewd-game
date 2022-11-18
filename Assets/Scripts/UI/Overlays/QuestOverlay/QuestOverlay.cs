@@ -28,8 +28,15 @@ namespace Overlewd
 
         private Transform questContentScrollViewPos;
 
-        private NSQuestOverlay.QuestButton selectedQuest;
-        private List<NSQuestOverlay.QuestButton> quests = new List<NSQuestOverlay.QuestButton>();
+        public List<NSQuestOverlay.QuestButton> questButtons =>
+            questScrollView.GetComponentsInChildren<NSQuestOverlay.QuestButton>(true).ToList();
+        public NSQuestOverlay.QuestButton selectedQuest =>
+            questButtons.Find(qb => qb.isSelected);
+
+        public List<AdminBRO.QuestItem> actualQuests =>
+            GameData.quests.ftueQuests.
+            Where(q => GameData.ftue.mapChapter.id == q.ftueChapterId).
+            Where(q => !q.isClaimed).ToList();
 
         void Awake()
         {
@@ -78,26 +85,22 @@ namespace Overlewd
 
         private void Customize()
         {
-            foreach (var questItem in GameData.quests.ftueQuests)
+            foreach (var questItem in actualQuests)
             {
-                if (GameData.ftue.mapChapter.id == questItem.ftueChapterId)
-                {
-                    var grid = GetQuestGridByType(questItem.ftueQuestType);
+                var grid = GetQuestGridByType(questItem.ftueQuestType);
 
-                    if (grid != null)
-                    {
-                        var quest = NSQuestOverlay.QuestButton.GetInstance(grid);
-                        quest.questId = questItem.id;
-                        quest.questContentPos = questContentScrollViewPos;
-                        quest.buttonPressed += SelectQuest;
-                        quest.Customize();
-                        quests.Add(quest);
-                    }
+                if (grid != null)
+                {
+                    var quest = NSQuestOverlay.QuestButton.GetInstance(grid);
+                    quest.questId = questItem.id;
+                    quest.questContentPos = questContentScrollViewPos;
+                    quest.questOverlay = this;
+                    quest.Customize();
                 }
             }
 
-            var selectedQuest = quests?.FirstOrDefault(q => q.questId == inputData?.questId);
-            SelectQuest(selectedQuest != null ? selectedQuest : quests?.FirstOrDefault());
+            var questForSelect = questButtons.Find(qb => qb.questId == inputData?.questId) ?? questButtons.FirstOrDefault();
+            questForSelect?.Select();
         }
 
         private Transform GetQuestGridByType(string type)
@@ -123,12 +126,9 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        private void SelectQuest(NSQuestOverlay.QuestButton quest)
+        public void SelectQuest(NSQuestOverlay.QuestButton quest)
         {
-            selectedQuest?.Deselect();
-            quest?.Select();
-            selectedQuest = quest;
-            headlineTitle.text = selectedQuest?.questData?.name;
+            headlineTitle.text = quest?.questData?.name;
         }
 
         private void BackButtonClick()

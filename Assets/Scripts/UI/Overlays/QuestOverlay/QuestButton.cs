@@ -1,6 +1,8 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +13,10 @@ namespace Overlewd
     {
         public class QuestButton : MonoBehaviour
         {
-            private QuestContentScrollView contentScrollView;
+            public QuestOverlay questOverlay { get; set; }
             public Transform questContentPos { get; set; }
-            public event Action<QuestButton> buttonPressed;
+
+            private QuestContentScrollView contentScrollView;
 
             private Button button;
             private GameObject pressedButton;
@@ -22,6 +25,8 @@ namespace Overlewd
 
             public int? questId { get; set; }
             public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
+
+            public bool isSelected { get; private set; } = false;
             
             private void Awake()
             {
@@ -41,25 +46,69 @@ namespace Overlewd
                 title.text = questData?.name;
                 notification.gameObject.SetActive(questData.isClaimed);
                 contentScrollView = QuestContentScrollView.GetInstance(questContentPos);
-                contentScrollView.questId = questId;
+                contentScrollView.questButton = this;
             }
             
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                buttonPressed?.Invoke(this);
+                Select();
             }
 
             public void Select()
             {
-                pressedButton.SetActive(true);
-                contentScrollView?.Show();
+                if (!isSelected)
+                {
+                    questOverlay.selectedQuest?.Deselect();
+
+                    isSelected = true;
+                    pressedButton.SetActive(true);
+                    contentScrollView?.Show();
+                    questOverlay.SelectQuest(this);
+                }
             }
 
             public void Deselect()
             {
+                isSelected = false;
                 pressedButton.SetActive(false);
                 contentScrollView?.Hide();
+            }
+
+            public async void Remove()
+            {
+                var grid_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
+                var buttonCG = gameObject.GetComponent<CanvasGroup>();
+                var buttonRT = transform as RectTransform;
+                var buttonRT_sizeDeltaEnd = buttonRT.sizeDelta;
+                buttonRT_sizeDeltaEnd.y = 0.0f;
+                var contentCG = contentScrollView.GetComponent<CanvasGroup>();
+
+                var seq = DOTween.Sequence();
+                seq.AppendCallback(() =>
+                {
+                    var effect = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_quest_book01"], buttonRT);
+                    effect.transform.localPosition += new Vector3(-190.0f, 0.0f, 0.0f);
+                });
+                seq.AppendInterval(0.2f);
+                seq.Append(buttonCG.DOFade(0.0f, 0.3f));
+                seq.Join(contentCG.DOFade(0.0f, 0.3f));
+                seq.Append(buttonRT.DOSizeDelta(buttonRT_sizeDeltaEnd, 0.4f));
+                seq.onUpdate = () =>
+                {
+                    grid_vlg.enabled = false;
+                    grid_vlg.enabled = true;
+                };
+                seq.Play();
+                await seq.AsyncWaitForCompletion();
+
+                DestroyImmediate(gameObject);
+                DestroyImmediate(contentScrollView.gameObject);
+
+                if (questOverlay.selectedQuest == null)
+                {
+                    questOverlay.questButtons.FirstOrDefault()?.Select();
+                }
             }
 
             public static QuestButton GetInstance(Transform parent)

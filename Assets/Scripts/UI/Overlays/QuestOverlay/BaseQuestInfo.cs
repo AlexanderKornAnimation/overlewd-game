@@ -8,8 +8,10 @@ namespace Overlewd
     {
         public abstract class BaseQuestInfo : MonoBehaviour
         {
-            public int? questId { get; set; }
-            public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
+            public QuestContentScrollView questContentScrollView { get; set; }
+
+            public AdminBRO.QuestItem questData =>
+                questContentScrollView.questButton.questData;
         }
     }
 }

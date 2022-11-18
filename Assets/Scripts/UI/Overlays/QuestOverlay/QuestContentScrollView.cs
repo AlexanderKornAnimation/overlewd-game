@@ -11,10 +11,9 @@ namespace Overlewd
     {
         public class QuestContentScrollView : MonoBehaviour
         {
+            public QuestButton questButton { get; set; }
+
             private Transform content;
-            
-            public int? questId { get; set; }
-            public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
 
             private void Awake()
             {
@@ -29,21 +28,21 @@ namespace Overlewd
 
             private void Customize()
             {
-                if (questData.isFTUEMain)
+                if (questButton.questData.isFTUEMain)
                 {
                     var questInfo = MainQuestInfo.GetInstance(content);
-                    questInfo.questId = questId;
+                    questInfo.questContentScrollView = this;
                 }
                 else
                 {
                     var questInfo = SideQuestInfo.GetInstance(content);
-                    questInfo.questId = questId;
+                    questInfo.questContentScrollView = this;
                 }
 
-                if (questData.hasDescription)
+                if (questButton.questData.hasDescription)
                 {
                     var questDescription = QuestDescription.GetInstance(content);
-                    questDescription.questId = questId;
+                    questDescription.questContentScrollView = this;
                 }
             }
 
