@@ -120,6 +120,8 @@ namespace Overlewd
 
         public async void Refresh()
         {
+            mainQuestButtonTitle.text = mainQuest?.name;
+
             var actualQuestsData = quests;
             var curWidgetQuests = content.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().ToList();
 
