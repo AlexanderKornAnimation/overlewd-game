@@ -876,15 +876,6 @@ namespace Overlewd
             newIds.Select(qId => GetById(qId)).ToList();
         public List<AdminBRO.QuestItem> lastAddedQuests =>
             lastAddedIds.Select(qId => GetById(qId)).ToList();
-        public List<AdminBRO.QuestItem> ftueQuests =>
-            quests.FindAll(q => q.isFTUE);
-        public AdminBRO.QuestItem ftueMainQuest =>
-            quests.Find(q => q.isFTUEMain);
-        public List<AdminBRO.QuestItem> ftueMatriarchQuests =>
-            quests.FindAll(q => q.isFTUEMatriarch);
-        public List<AdminBRO.QuestItem> ftueSideQuests =>
-            quests.FindAll(q => q.isFTUESide);
-
 
         public async Task ClaimReward(int? id)
         {

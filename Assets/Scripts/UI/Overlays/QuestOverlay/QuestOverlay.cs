@@ -33,10 +33,8 @@ namespace Overlewd
         public NSQuestOverlay.QuestButton selectedQuest =>
             questButtons.Find(qb => qb.isSelected);
 
-        public List<AdminBRO.QuestItem> actualQuests =>
-            GameData.quests.ftueQuests.
-            Where(q => GameData.ftue.mapChapter.id == q.ftueChapterId).
-            Where(q => !q.isClaimed).ToList();
+        public List<AdminBRO.QuestItem> ftueQuests =>
+            GameData.quests.quests.FindAll(q => q.isFTUE && !q.isClaimed);
 
         void Awake()
         {
@@ -85,7 +83,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            foreach (var questItem in actualQuests)
+            foreach (var questItem in ftueQuests)
             {
                 var grid = GetQuestGridByType(questItem.ftueQuestType);
 
