@@ -457,7 +457,7 @@ namespace Overlewd
                         if (value >= healthMax)
                             attacker?.battleCry.CallBattleCry(BattleCry.CryEvent.OneShoot);
                         var targets = attacker.isEnemy ? bm.enemyTargetList.Count : bm.enemyAllyList.Count;
-                        if (attacker.isBoss) targets -= 1;
+                        if (attacker.isBoss && isOverlord) targets -= 1;
                         if (aSkill.AOE && targets > 1)
                             attacker?.battleCry.AddKill(targets, attacker.isBoss);
                     }

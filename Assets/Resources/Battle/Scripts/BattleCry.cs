@@ -61,6 +61,7 @@ namespace Overlewd
         {
             if (allEvents.Count > 0)
                 StartCoroutine(SortAndSelect());
+            killCount = 0;
         }
 
         IEnumerator SortAndSelect()
@@ -95,7 +96,6 @@ namespace Overlewd
                     Debug.Log($"{gameObject.name}: one hit kill of a single character");
                     break;
             }
-            killCount = 0;
             allEvents.Clear();
         }
 

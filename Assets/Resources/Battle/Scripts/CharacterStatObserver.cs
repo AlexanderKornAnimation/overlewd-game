@@ -194,12 +194,16 @@ namespace Overlewd
                 }
                 else
                 {
-                    Debug.Log("Descr is open");
-                    charDescription.Open(cc);
-                    pressTime = 0f;
-                    pressed = false;
+                    //Debug.Log("Descr is open");
+                    OpenDescription();
                 }
             }
+        }
+        public void OpenDescription()
+        {
+            charDescription.Open(cc);
+            pressTime = 0f;
+            pressed = false;
         }
         public void OnPointerDown(PointerEventData eventData)
         {
