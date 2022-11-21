@@ -11,15 +11,11 @@ namespace Overlewd
     {
         public class CurrencyPack : MonoBehaviour
         {
-            private TextMeshProUGUI buyingValue;
+            private Image icon;
+            private TextMeshProUGUI description;
             private TextMeshProUGUI price;
-            private Transform discountBack;
             private TextMeshProUGUI discount;
-            private GameObject iconCrystalSmall;
-            private GameObject iconCrystalMedium;
-            private GameObject iconCrystalLarge;
-            private GameObject iconCurrency;
-
+            private GameObject specialOffer;
             private Button button;
             private void Awake()
             {
@@ -27,14 +23,14 @@ namespace Overlewd
 
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
-                buyingValue = button.transform.Find("BuyingValue").GetComponent<TextMeshProUGUI>();
+                icon = button.transform.Find("Icon").GetComponent<Image>();
+                description = button.transform.Find("DescriptionBack/Description").GetComponent<TextMeshProUGUI>();
                 price = button.transform.Find("Price").GetComponent<TextMeshProUGUI>();
-                discountBack = button.transform.Find("DiscountBack");
-                discount = discountBack.Find("Discount").GetComponent<TextMeshProUGUI>();
-                iconCrystalSmall = button.transform.Find("IconCrystalSmall").gameObject;
-                iconCrystalMedium = button.transform.Find("IconCrystalMedium").gameObject;
-                iconCrystalLarge = button.transform.Find("IconCrystalLarge").gameObject;
-                iconCurrency = button.transform.Find("IconCurrency").gameObject;
+                
+                var markerBack = button.transform.Find("MarkerBack");
+                specialOffer = markerBack.Find("SpecialOffer").gameObject;
+                discount = markerBack.Find("Discount/Amount").GetComponent<TextMeshProUGUI>();
+                
             }
 
             private void Start()
