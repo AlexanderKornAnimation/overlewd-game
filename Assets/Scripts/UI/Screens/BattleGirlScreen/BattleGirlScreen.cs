@@ -18,6 +18,7 @@ namespace Overlewd
         private TextMeshProUGUI sexSceneClosedTitle;
 
         private Transform levelUpButton;
+        private Transform levelBack;
         private Button levelUpButtonCanLvlUp;
         private Image[] levelPriceIcons = new Image[2];
         private TextMeshProUGUI[] levelPriceAmounts = new TextMeshProUGUI[2];
@@ -68,7 +69,6 @@ namespace Overlewd
             var info = canvas.Find("Info");
             var mainStats = info.Find("StatsBack").Find("MainStats");
             var secondaryStats = info.Find("StatsBack").Find("SecondaryStats");
-            var levelBack = canvas.Find("LevelBack");
             var skills = canvas.Find("Skills");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
@@ -81,6 +81,7 @@ namespace Overlewd
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
             cellBackground = weaponCell.Find("Background").gameObject;
 
+            levelBack = canvas.Find("LevelBack");
             levelUpButton = canvas.Find("LevelUpButton");
             levelUpButtonCanLvlUp = levelUpButton.Find("CanLvlUp").GetComponent<Button>();
             levelUpButtonCanLvlUp.onClick.AddListener(LevelUpButtonClick);
@@ -262,13 +263,7 @@ namespace Overlewd
             switch (eventData?.eventId)
             {
                 case GameDataEvent.EventId.CharacterLvlUp:
-                    Customize();
-                    walletWidget.Customize();
-                    break;
                 case GameDataEvent.EventId.CharacterSkillLvlUp:
-                    basicSkill.Customize();
-                    ultimateSkill.Customize();
-                    passiveSkill.Customize();
                     walletWidget.Customize();
                     break;
             }
@@ -282,6 +277,8 @@ namespace Overlewd
                 if (characterData.canLvlUp)
                 {
                     await GameData.characters.LvlUp(inputData.characterId.Value);
+                    SpineWidget.GetInstanceDisposable(GameData.animations["uifx_lvlup02"], levelBack);
+                    Customize();
                 }
                 else
                 {
