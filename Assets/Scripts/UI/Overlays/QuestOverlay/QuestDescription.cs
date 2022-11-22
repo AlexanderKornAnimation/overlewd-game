@@ -11,11 +11,12 @@ namespace Overlewd
     {
         public class QuestDescription : MonoBehaviour
         {
+            public QuestContentScrollView questContentScrollView { get; set; }
+            public AdminBRO.QuestItem questData =>
+                questContentScrollView.questButton.questData;
+
             private TextMeshProUGUI text;
             private Image girlEmotion;
-            
-            public int? questId { get; set; }
-            public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
 
             private void Awake()
             {

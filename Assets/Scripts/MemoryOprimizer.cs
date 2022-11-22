@@ -34,8 +34,6 @@ namespace Overlewd
                 numChangeScreen = 0;
                 ForceGC();
             }
-
-            DOTween.Clear(true);
         }
     }
 

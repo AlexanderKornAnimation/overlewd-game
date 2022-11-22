@@ -100,18 +100,18 @@ namespace Overlewd
 
         private List<AdminBRO.Character> SortCharacters(List<AdminBRO.Character> characters)
         {
-            return characters.Where(ch => ch.characterClass != AdminBRO.Character.Class_Overlord).ToList();
+            return characters.Where(ch => ch.characterClass != AdminBRO.CharacterClass.Overlord).ToList();
         }
 
         private void AddChToTab(AdminBRO.Character ch)
         {
             var tabId = ch.characterClass switch
             {
-                AdminBRO.Character.Class_Assassin => tabAssassins,
-                AdminBRO.Character.Class_Bruiser => tabBruisers,
-                AdminBRO.Character.Class_Caster => tabCasters,
-                AdminBRO.Character.Class_Healer => tabHealers,
-                AdminBRO.Character.Class_Tank => tabTanks,
+                AdminBRO.CharacterClass.Assassin => tabAssassins,
+                AdminBRO.CharacterClass.Bruiser => tabBruisers,
+                AdminBRO.CharacterClass.Caster => tabCasters,
+                AdminBRO.CharacterClass.Healer => tabHealers,
+                AdminBRO.CharacterClass.Tank => tabTanks,
                 _ => tabAllUnits
             };
 
@@ -154,14 +154,21 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_laboratory),
-                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_laboratory),
-                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_laboratory)
-                });
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_laboratory);
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2mergetutor1");
+                    break;
+                case (FTUE.CHAPTER_2, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_laboratory);
+                    break;
+                case (FTUE.CHAPTER_3, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_laboratory);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -206,6 +213,13 @@ namespace Overlewd
                 case GameDataEvent.EventId.CharacterMerge:
                     walletWidget.Customize();
                     EraseAllFromFlusk();
+                    
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                            GameData.ftue.chapter2.ShowNotifByKey("ch2mergetutor3");
+                            break;
+                    }
                     break;
             }
         }
@@ -353,7 +367,8 @@ namespace Overlewd
             foreach (var tabId in tabIds)
             {
                 var tabChars = scrollContents[tabId].GetComponentsInChildren<NSLaboratoryScreen.Character>().ToList();
-                var tabCharsSort = tabChars.OrderByDescending(ch => ch.characterData.level + (IsInFlask(ch) ? 100 : 0));
+                var tabCharsSort = tabChars.OrderByDescending(ch =>
+                    ch.characterData.raritySortLevelDesc * 100 + ch.characterData.level + (IsInFlask(ch) ? 1000 : 0));
                 var chSiblingIndex = 0;
                 foreach (var character in tabCharsSort)
                 {
@@ -378,9 +393,17 @@ namespace Overlewd
 
         private void BackButtonClick()
         {
-            UIManager.ShowScreen<CastleScreen>();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
         }
-        
     }
 
     public class LaboratoryScreenInData : BaseFullScreenInData

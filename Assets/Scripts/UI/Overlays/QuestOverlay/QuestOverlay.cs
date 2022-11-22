@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +28,13 @@ namespace Overlewd
 
         private Transform questContentScrollViewPos;
 
-        private NSQuestOverlay.QuestButton selectedQuest;
-        private List<NSQuestOverlay.QuestButton> quests = new List<NSQuestOverlay.QuestButton>();
+        public List<NSQuestOverlay.QuestButton> questButtons =>
+            questScrollView.GetComponentsInChildren<NSQuestOverlay.QuestButton>(true).ToList();
+        public NSQuestOverlay.QuestButton selectedQuest =>
+            questButtons.Find(qb => qb.isSelected);
+
+        public List<AdminBRO.QuestItem> ftueQuests =>
+            GameData.quests.quests.FindAll(q => q.isFTUE && !q.isClaimed);
 
         void Awake()
         {
@@ -77,26 +83,22 @@ namespace Overlewd
 
         private void Customize()
         {
-            foreach (var questItem in GameData.quests.ftueQuests)
+            foreach (var questItem in ftueQuests)
             {
-                if (GameData.ftue.mapChapter.id == questItem.ftueChapterId)
-                {
-                    var grid = GetQuestGridByType(questItem.ftueQuestType);
+                var grid = GetQuestGridByType(questItem.ftueQuestType);
 
-                    if (grid != null)
-                    {
-                        var quest = NSQuestOverlay.QuestButton.GetInstance(grid);
-                        quest.questId = questItem.id;
-                        quest.questContentPos = questContentScrollViewPos;
-                        quest.buttonPressed += SelectQuest;
-                        quest.Customize();
-                        quests.Add(quest);
-                    }
+                if (grid != null)
+                {
+                    var quest = NSQuestOverlay.QuestButton.GetInstance(grid);
+                    quest.questId = questItem.id;
+                    quest.questContentPos = questContentScrollViewPos;
+                    quest.questOverlay = this;
+                    quest.Customize();
                 }
             }
 
-            var selectedQuest = quests?.FirstOrDefault(q => q.questId == inputData?.questId);
-            SelectQuest(selectedQuest != null ? selectedQuest : quests?.FirstOrDefault());
+            var questForSelect = questButtons.Find(qb => qb.questId == inputData?.questId) ?? questButtons.FirstOrDefault();
+            questForSelect?.Select();
         }
 
         private Transform GetQuestGridByType(string type)
@@ -109,13 +111,22 @@ namespace Overlewd
                 _ => null,
             };
         }
-        
-        private void SelectQuest(NSQuestOverlay.QuestButton quest)
+
+        public override async Task AfterShowAsync()
         {
-            selectedQuest?.Deselect();
-            quest?.Select();
-            selectedQuest = quest;
-            headlineTitle.text = selectedQuest?.questData?.name;
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2empathytutor2");
+                    break;
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public void SelectQuest(NSQuestOverlay.QuestButton quest)
+        {
+            headlineTitle.text = quest?.questData?.name;
         }
 
         private void BackButtonClick()

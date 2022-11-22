@@ -115,46 +115,53 @@ namespace Overlewd
 
                     SetDownloadBarTitle($"Load resources {currentFilesCount + 1}-{currentFilesCount + split.Count}/{totalFilesCount}");
 
+                    HttpCore.timeoutSec = 120;
                     var downloadTasks = new List<Task<HttpCoreResponse>>();
                     foreach (var item in split)
                     {
                         downloadTasks.Add(HttpCore.GetAsync(item.resourceMeta.url));
                     }
                     var downloadTasksResults = await Task.WhenAll(downloadTasks);
+                    HttpCore.RestoreDefaultTimeout();
 
                     var saveTasks = new List<Task>();
                     var taskId = 0;
                     foreach (var downloadTaskResult in downloadTasksResults)
                     {
-                        var resourceInfo = split[taskId++];
-                        var fileData = downloadTaskResult.data;
-                        var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
-                        saveTasks.Add(WriteFile(filePath, fileData));
+                        if (downloadTaskResult.isSuccess)
+                        {
+                            var resourceInfo = split[taskId++];
+                            var fileData = downloadTaskResult.data;
+                            var filePath = ResourceManager.GetResourcesFilePath(resourceInfo.resourceMeta.id);
+                            saveTasks.Add(WriteFile(filePath, fileData));
+                        }
                     }
                     await Task.WhenAll(saveTasks);
 
                     //update meta data
+                    var downloadTaskId = 0;
                     foreach (var resourceInfo in split)
                     {
-                        switch (resourceInfo.state)
+                        if (downloadTasksResults[downloadTaskId++].isSuccess)
                         {
-                            case DownloadResourceInfo.State.Add:
-                                localResourcesMeta.Add(new AdminBRO.NetworkResourceShort
-                                {
-                                    id = resourceInfo.resourceMeta.id,
-                                    hash = resourceInfo.resourceMeta.hash
-                                });
-                                break;
-                            case DownloadResourceInfo.State.Update:
-                                var updateId = localResourcesMeta.FindIndex(0, localItem =>
-                                    localItem.id == resourceInfo.resourceMeta.id);
-                                localResourcesMeta[updateId] = 
-                                    new AdminBRO.NetworkResourceShort 
+                            switch (resourceInfo.state)
+                            {
+                                case DownloadResourceInfo.State.Add:
+                                    localResourcesMeta.Add(new AdminBRO.NetworkResourceShort
                                     {
                                         id = resourceInfo.resourceMeta.id,
                                         hash = resourceInfo.resourceMeta.hash
-                                    };
-                                break;
+                                    });
+                                    break;
+                                case DownloadResourceInfo.State.Update:
+                                    var updRes = localResourcesMeta.Find(localItem =>
+                                        localItem.id == resourceInfo.resourceMeta.id);
+                                    if (updRes != null)
+                                    {
+                                        updRes.hash = resourceInfo.resourceMeta.hash;
+                                    }
+                                    break;
+                            }
                         }
                     }
                     ResourceManager.SaveLocalResourcesMeta(localResourcesMeta);
@@ -189,7 +196,8 @@ namespace Overlewd
             if (apiVersion.version.ToString() != AdminBRO.ApiVersion)
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                errNotif.message = $"Need client update to version {apiVersion.version}";
+                errNotif.message = $"Invalid client API version. Server API version is {apiVersion.version}. " +
+                    $"Client API version is {AdminBRO.ApiVersion}";
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
@@ -298,11 +306,10 @@ namespace Overlewd
             return (progressBarPercent - loadingProgress.fillAmount) < 0.001f;
         }
 
-        public static void RunFTUE()
+        private void RunFTUE()
         {
-            GameData.devMode = false;
             GameData.ftue.activeChapter.SetAsMapChapter();
-            var firstSexStage = GameData.ftue.chapter1_stages.sex1;
+            var firstSexStage = GameData.ftue.chapter1_sex1;
             if (firstSexStage.isComplete)
             {
                 UIManager.ShowScreen<MapScreen>();
@@ -313,7 +320,7 @@ namespace Overlewd
                     SetData(new SexScreenInData
                     {
                         ftueStageId = firstSexStage.id,
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
         }
 

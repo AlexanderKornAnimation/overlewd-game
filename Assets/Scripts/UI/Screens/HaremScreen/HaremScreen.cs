@@ -152,12 +152,20 @@ namespace Overlewd
             liliBuffDescription.text =
                 UITools.ChangeTextSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
 
-            if (inputData?.prevScreenInData != null)
+            if (UIManager.currentState.prevState != null)
             {
-                if (inputData.prevScreenInData.IsType<MapScreenInData>() || inputData.prevScreenInData.IsType<EventMapScreenInData>())
+                if (UIManager.currentState.prevState.ScreenTypeIs<MapScreen>() || UIManager.currentState.prevState.ScreenTypeIs<EventMapScreen>())
                 {
                     backButtonText.text = "Back to\nthe Map";
                 }
+            }
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UITools.DisableButton(adrielButton);
+                    UITools.DisableButton(battleGirlsButton);
+                    break;
             }
             
             await Task.CompletedTask;
@@ -165,14 +173,18 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_harem),
-                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_harem),
-                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_harem)
-                });
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_harem);
+                    break;
+                case (FTUE.CHAPTER_2, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_harem);
+                    break;
+                case (FTUE.CHAPTER_3, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_harem);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -192,53 +204,34 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData?.prevScreenInData != null)
+            if (UIManager.currentState.prevScreenState.ScreenTypeIs<BaseBattleScreen>())
             {
-                if (inputData.prevScreenInData.IsType<MapScreenInData>())
+                if (UIManager.currentState.prevScreenState.prevScreenState.ScreenTypeIs<MapScreen>())
                 {
-                    UIManager.MakeScreen<MapScreen>().
-                        SetData(new MapScreenInData
-                    {
-                        ftueStageId = inputData.ftueStageId
-                    }).RunShowScreenProcess();
-                }
-                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
-                {
-                    UIManager.MakeScreen<EventMapScreen>().
-                        SetData(new EventMapScreenInData
-                    {
-                        eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
+                    UIManager.ShowScreen<MapScreen>();
                 }
                 else
-                {
-                    UIManager.ShowScreen<CastleScreen>();
+                { 
+                    UIManager.ShowScreen<EventMapScreen>();
                 }
             }
             else
             {
-                UIManager.ShowScreen<CastleScreen>();
+                UIManager.ToPrevScreen(new UIManager.StateParams
+                {
+                    showOverlay = false,
+                });
             }
         }
 
         private void GirlButtonClick(string girlKey)
         {
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<GirlScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<GirlScreen>().
-                    SetData(new GirlScreenInData
-                    {
-                        girlKey = girlKey,
-                        prevScreenInData = inputData,
-                        ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
-            }
+            UIManager.MakeScreen<GirlScreen>().
+                SetData(new GirlScreenInData
+                {
+                    girlKey = girlKey,
+                }).DoShow();
+           
         }
 
         private void UlviButtonClick()
@@ -269,19 +262,13 @@ namespace Overlewd
         private void BattleGirlsButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
+            if (inputData != null)
             {
                 UIManager.ShowScreen<BattleGirlListScreen>();
             }
             else
             {
-                UIManager.MakeScreen<BattleGirlListScreen>().
-                    SetData(new BattleGirlListScreenInData
-                    {
-                        prevScreenInData = inputData,
-                        ftueStageId = inputData?.ftueStageId,
-                        eventStageId = inputData?.eventStageId
-                    }).RunShowScreenProcess();
+                UIManager.ShowScreen<BattleGirlListScreen>();
             }
         }
     }

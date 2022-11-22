@@ -20,6 +20,7 @@ namespace Overlewd
             protected async void ClaimClick()
             {
                 await GameData.quests.ClaimReward(questId);
+                UITools.ClaimRewardsAsync(questData?.rewards);
                 Customize();
             }
 

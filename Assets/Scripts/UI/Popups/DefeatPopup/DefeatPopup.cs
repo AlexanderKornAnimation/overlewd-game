@@ -44,63 +44,58 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_b2 = () =>
-                    {
-                        UITools.DisableButton(editTeamButton);
-                        UITools.DisableButton(magicGuildButton);
-                        UITools.DisableButton(overlordButton);
-                        UITools.DisableButton(repeatButton);
-                        UITools.DisableButton(mapButton);
-                    },
-                    ch1_any = () => 
-                    {
-                        UITools.DisableButton(editTeamButton);
-                        UITools.DisableButton(magicGuildButton);
-                        UITools.DisableButton(overlordButton);
-                    }
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+                    UITools.DisableButton(editTeamButton);
+                    UITools.DisableButton(magicGuildButton);
+                    UITools.DisableButton(overlordButton);
+                    UITools.DisableButton(repeatButton);
+                    UITools.DisableButton(mapButton);
+                    break;
+                case (FTUE.CHAPTER_1, _):
+                    UITools.DisableButton(editTeamButton);
+                    UITools.DisableButton(magicGuildButton);
+                    UITools.DisableButton(overlordButton);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
 
         public override async Task AfterShowAsync()
         {
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_b2 = () =>
-                    {
-                        SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
-                        GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1", false);
-                    },
-                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle),
-                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Losing_a_battle),
-                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Losing_a_battle)
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
+                    GameData.ftue.mapChapter.ShowNotifByKey("bufftutor1", false);
+                    break;
+                case (FTUE.CHAPTER_1, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Losing_a_battle);
+                    break;
+                case (FTUE.CHAPTER_2, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Losing_a_battle);
+                    break;
+                case (FTUE.CHAPTER_3, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Inge_Losing_a_battle);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
 
-        public override void MakeMissclick()
+        public override BaseMissclick MakeMissclick()
         {
             var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
             missClick.missClickEnabled = false;
+            return missClick;
         }
 
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData
-            {
-                prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
-                ftueStageId = UIManager.prevScreenInData.ftueStageId
-            }).RunShowScreenProcess();
+            UIManager.ShowScreen<TeamEditScreen>();
         }
 
         private void MagicGuildButtonClick()
@@ -119,27 +114,19 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DefeatPopupHaremButtonClick);
 
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_b2 = () =>
-                    {
-                        UIManager.MakeScreen<SexScreen>().
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+                    UIManager.MakeScreen<SexScreen>().
                         SetData(new SexScreenInData
                         {
-                            ftueStageId = GameData.ftue.chapter1_stages.sex2?.id
-                        }).RunShowScreenProcess();
-                    },
-                    def = () =>
-                    {
-                        UIManager.MakeScreen<HaremScreen>().
-                        SetData(new HaremScreenInData
-                        {
-                            prevScreenInData = UIManager.prevScreenInData.prevScreenInData,
-                        }).RunShowScreenProcess();
-                    }
-                });
+                            ftueStageId = GameData.ftue.chapter1_sex2?.id
+                        }).DoShow();
+                    break;
+                default:
+                    UIManager.ShowScreen<HaremScreen>();
+                    break;
+            }
         }
 
         private void RepeatButtonClick()
@@ -150,7 +137,7 @@ namespace Overlewd
                 {
                     ftueStageId = inputData?.ftueStageId,
                     eventStageId = inputData?.eventStageId
-                }).RunShowScreenProcess();
+                }).DoShow();
         }
 
         private void MapButtonClick()

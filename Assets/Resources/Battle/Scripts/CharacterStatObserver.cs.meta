@@ -3,7 +3,22 @@ guid: 1becedf4317d1be4d934eac0c34a95df
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cc: {instanceID: 0}
+  - charClass: {instanceID: 0}
+  - sliderHP: {instanceID: 0}
+  - sliderMP: {instanceID: 0}
+  - whiteSlider: {instanceID: 0}
+  - hpTMP: {instanceID: 0}
+  - mpTMP: {instanceID: 0}
+  - status_bar: {instanceID: 0}
+  - border: {instanceID: 0}
+  - vfxDefUp: {fileID: 7974213421750889534, guid: a8d64a7100bf1224480e4315375a5d46, type: 3}
+  - vfxDefDown: {instanceID: 0}
+  - vfxStun: {fileID: 533456829570146293, guid: fc32ea8745fd12341ae0a8e6f9e289d6, type: 3}
+  - vfxHeal: {fileID: 7669968948893313113, guid: 0878582601fcd91459a311dd9bf0da67, type: 3}
+  - vfxPoison: {fileID: 4217021999194240919, guid: 09f140d9e480e1a47a3e69915137c226, type: 3}
+  - vfxBlind: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

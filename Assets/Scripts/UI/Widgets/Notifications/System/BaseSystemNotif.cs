@@ -22,6 +22,8 @@ namespace Overlewd
         protected Transform notifBack;
         private TextMeshProUGUI _title;
         private TextMeshProUGUI _message;
+        private VerticalLayoutGroup scrollContent_vlg;
+        private ContentSizeFitter scrollContent_sf;
 
         public State state { get; protected set; } = State.Waiting;
         public string title
@@ -48,12 +50,19 @@ namespace Overlewd
             _title = notifBack.Find("Title").GetComponent<TextMeshProUGUI>();
             _message = notifBack.Find("MessageScrollView/Viewport/Content/Message").GetComponent<TextMeshProUGUI>();
 
+            scrollContent_sf = notifBack.Find("MessageScrollView/Viewport/Content").GetComponent<ContentSizeFitter>();
+            scrollContent_vlg = notifBack.Find("MessageScrollView/Viewport/Content").GetComponent<VerticalLayoutGroup>();
+
             gameObject.SetActive(false);
         }
 
         protected virtual void Start()
         {
-            message += "\n---"; // for recalc scroll rect params
+            // for recalc scroll rect params
+            scrollContent_sf.enabled = false;
+            scrollContent_vlg.enabled = false;
+            scrollContent_sf.enabled = true;
+            scrollContent_vlg.enabled = true;
         }
 
         public async Task<State> WaitChangeState()

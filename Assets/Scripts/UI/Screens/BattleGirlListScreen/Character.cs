@@ -55,8 +55,7 @@ namespace Overlewd
                     SetData(new BattleGirlScreenInData
                     {
                         characterId = characterId,
-                        prevScreenInData = inputData
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
             
             public static Character GetInstance(Transform parent)

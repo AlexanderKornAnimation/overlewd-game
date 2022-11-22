@@ -15,9 +15,11 @@ namespace Overlewd
             public AdminBRO.BattlePass passData =>
                 GameData.battlePass.GetById(battlePassId);
             public AdminBRO.BattlePass.Level levelData { get; set; }
+            public bool reached =>
+                levelData.pointsThreshold <= passData.currentPointsCount;
 
             private TextMeshProUGUI level;
-            private GameObject levelReached;
+            public RectTransform levelReached { get; private set; }
 
             private Image[] freeRewards = new Image[2];
             private TextMeshProUGUI[] freeRewardsAmounts = new TextMeshProUGUI[2];
@@ -31,7 +33,7 @@ namespace Overlewd
             private Button upgradeButton;
 
             private Transform canvas;
-            
+
             private void Awake()
             {
                 canvas = transform.Find("Canvas");
@@ -40,7 +42,7 @@ namespace Overlewd
                 var premiumRewardsTr = canvas.Find("PremiumRewards");
                 
                 level = levelBackground.Find("Level").GetComponent<TextMeshProUGUI>();
-                levelReached = levelBackground.Find("LevelReached").gameObject;
+                levelReached = levelBackground.Find("LevelReached") as RectTransform;
                 freeClaimButton = freeRewardsTr.Find("ClaimButton").GetComponent<Button>();
                 premClaimButton = premiumRewardsTr.Find("ClaimButton").GetComponent<Button>();
                 claimAllButton = canvas.Find("ClaimAllButton").GetComponent<Button>();
@@ -68,7 +70,7 @@ namespace Overlewd
                 var battlePassData = passData;
 
                 level.text = levelData.pointsThreshold.ToString();
-                levelReached.SetActive(levelData.pointsThreshold <= battlePassData.currentPointsCount);
+                levelReached.gameObject.SetActive(reached);
 
                 for (int i = 0; i < 2; i++)
                 {

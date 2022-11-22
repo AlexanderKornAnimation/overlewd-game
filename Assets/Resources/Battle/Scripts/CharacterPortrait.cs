@@ -12,20 +12,25 @@ namespace Overlewd
         public bool isBoss = false; //activate mask
         private TextMeshProUGUI textHP;
         private TextMeshProUGUI textMP;
+        [SerializeField]
+        private TextMeshProUGUI textNameTag;
         private Slider sliderHP;
         private Slider sliderMP;
         private Slider whiteSlider;
         private Image icon;
         private Image BattlePortraitIco;
 
-        private StatusEffects status_bar => transform.Find("status_bar")?.GetComponent<StatusEffects>();
+        private StatusEffects status_bar;
 
+        private string nameTag => cc.Name;
         private int level => cc.level;
         private string rarity => cc.rarity;
         private float hp => cc.health;
         private float maxHp => cc.healthMax;
         private float mp => cc.mana;
         private float maxMp => cc.manaMax;
+
+        private void Awake() => status_bar = transform.Find("status_bar")?.GetComponent<StatusEffects>();
 
         public void InitUI(CharController charC)
         {
@@ -36,6 +41,8 @@ namespace Overlewd
             whiteSlider = sliderHP.transform.Find("WhiteSlider")?.GetComponent<Slider>();
             textHP = transform.Find("sliderHP/Text")?.GetComponent<TextMeshProUGUI>();
             textMP = transform.Find("sliderMP/Text")?.GetComponent<TextMeshProUGUI>();
+            if (textNameTag == null)
+                textNameTag = transform.Find("Nametag/Text")?.GetComponent<TextMeshProUGUI>();
 
             if (sliderHP) sliderHP.maxValue = maxHp;
             if (sliderMP) sliderMP.maxValue = maxMp;
@@ -63,6 +70,8 @@ namespace Overlewd
             status_bar.cc = cc;
             UpdateUI();
         }
+        public void OpenDescription()
+        => cc.observer.OpenDescription();
 
         public void UpdateUI()
         {
@@ -73,6 +82,7 @@ namespace Overlewd
             if (sliderMP) sliderMP.value = mp;
             status_bar?.UpdateStatuses();
             if (whiteSlider) StartCoroutine(HPChangePause());
+            if (textNameTag) textNameTag.text = $"{nameTag} turns";
         }
         IEnumerator HPChangePause()
         {

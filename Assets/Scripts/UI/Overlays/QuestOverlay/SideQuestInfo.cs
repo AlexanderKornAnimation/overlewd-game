@@ -79,8 +79,10 @@ namespace Overlewd
             
             private async void ClaimButtonClick()
             {
-                await GameData.quests.ClaimReward(questId);
+                await GameData.quests.ClaimReward(questData?.id);
                 Customize();
+                await UITools.WaitClaimRewardsAsync(questData?.rewards);
+                questContentScrollView.questButton.Remove();
             }
 
             public static SideQuestInfo GetInstance(Transform parent)

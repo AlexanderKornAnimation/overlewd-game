@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
 {
     public abstract class BasePopup : BaseScreen
     {
-        public BasePopupInData baseInputData { get; protected set; }
+        public BasePopupInData baseInputData { get; set; }
 
         public override void StartShow()
         {
@@ -18,9 +19,9 @@ namespace Overlewd
             
         }
 
-        public override void MakeMissclick()
+        public override BaseMissclick MakeMissclick()
         {
-            UIManager.MakePopupMissclick<PopupMissclickColored>();
+            return UIManager.MakePopupMissclick<PopupMissclickColored>();
         }
 
         public override ScreenShow Show()
@@ -33,19 +34,12 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenBottomHide>();
         }
 
-        public void RunShowPopupProcess()
-        {
-            UIManager.ShowPopupProcess();
-        }
+        public void DoShow() => UIManager.ShowPopup(this);
+        public async Task DoShowAsync() => await UIManager.ShowPopupAsync(this);
     }
 
-    public abstract class BasePopupParent<T> : BasePopup where T : BasePopupInData, new()
+    public abstract class BasePopupParent<T> : BasePopup where T : BasePopupInData
     {
-        public BasePopupParent()
-        {
-            baseInputData = new T();
-        }
-
         public T inputData => (T)baseInputData;
 
         public BasePopup SetData(T data)
@@ -57,8 +51,6 @@ namespace Overlewd
 
     public abstract class BasePopupInData : BaseScreenInData
     {
-        public BasePopupInData prevPopupInData { get; set; }
-
         public new bool IsType<T>() where T : BasePopupInData =>
             base.IsType<T>();
         public new T As<T>() where T : BasePopupInData =>

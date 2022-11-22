@@ -26,7 +26,7 @@ namespace Overlewd
                     SetData(new SexScreenInData
                     {
                         eventStageId = stageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
 
             public static SexButton GetInstance(Transform parent)

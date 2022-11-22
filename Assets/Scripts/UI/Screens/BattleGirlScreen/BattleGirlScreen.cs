@@ -18,6 +18,7 @@ namespace Overlewd
         private TextMeshProUGUI sexSceneClosedTitle;
 
         private Transform levelUpButton;
+        private Transform levelBack;
         private Button levelUpButtonCanLvlUp;
         private Image[] levelPriceIcons = new Image[2];
         private TextMeshProUGUI[] levelPriceAmounts = new TextMeshProUGUI[2];
@@ -68,7 +69,6 @@ namespace Overlewd
             var info = canvas.Find("Info");
             var mainStats = info.Find("StatsBack").Find("MainStats");
             var secondaryStats = info.Find("StatsBack").Find("SecondaryStats");
-            var levelBack = canvas.Find("LevelBack");
             var skills = canvas.Find("Skills");
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
@@ -81,6 +81,7 @@ namespace Overlewd
             weaponScreenButton.onClick.AddListener(WeaponScreenButtonClick);
             cellBackground = weaponCell.Find("Background").gameObject;
 
+            levelBack = canvas.Find("LevelBack");
             levelUpButton = canvas.Find("LevelUpButton");
             levelUpButtonCanLvlUp = levelUpButton.Find("CanLvlUp").GetComponent<Button>();
             levelUpButtonCanLvlUp.onClick.AddListener(LevelUpButtonClick);
@@ -139,14 +140,21 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastStartedStageData,
-                new FTUELernActions
-                {
-                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls),
-                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_battle_girls),
-                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_battle_girls)
-                });
+            switch (GameData.ftue.stats.lastStartedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls);
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor2");
+                    break;
+                case (FTUE.CHAPTER_2, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_battle_girls);
+                    break;
+                case (FTUE.CHAPTER_3, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_battle_girls);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -228,36 +236,26 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                UIManager.ShowScreen<BattleGirlListScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<BattleGirlListScreen>().
-                    SetData(inputData.prevScreenInData.As<BattleGirlListScreenInData>())
-                    .RunShowScreenProcess();
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ToPrevScreen();
+                    break;
             }
         }
 
         private void WeaponScreenButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData == null)
-            {
-                UIManager.ShowScreen<WeaponScreen>();
-            }
-            else
-            {
-                UIManager.MakeScreen<WeaponScreen>().
-                    SetData(new WeaponScreenInData
+           
+            UIManager.MakeScreen<WeaponScreen>().
+                SetData(new WeaponScreenInData 
                 {
-                    prevScreenInData = inputData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId,
-                    characterId = inputData.characterId
-                }).RunShowScreenProcess();
-            }
+                    characterId = inputData?.characterId
+                }).DoShow();
         }
 
         public override void OnGameDataEvent(GameDataEvent eventData)
@@ -265,13 +263,7 @@ namespace Overlewd
             switch (eventData?.eventId)
             {
                 case GameDataEvent.EventId.CharacterLvlUp:
-                    Customize();
-                    walletWidget.Customize();
-                    break;
                 case GameDataEvent.EventId.CharacterSkillLvlUp:
-                    basicSkill.Customize();
-                    ultimateSkill.Customize();
-                    passiveSkill.Customize();
                     walletWidget.Customize();
                     break;
             }
@@ -285,6 +277,8 @@ namespace Overlewd
                 if (characterData.canLvlUp)
                 {
                     await GameData.characters.LvlUp(inputData.characterId.Value);
+                    UIfx.Inst(UIfx.UIFX_LVLUP02, levelBack);
+                    Customize();
                 }
                 else
                 {
@@ -302,8 +296,7 @@ namespace Overlewd
                     SetData(new SexScreenInData
                 {
                     dialogId = sexSceneId,
-                    prevScreenInData = inputData
-                }).RunShowScreenProcess();
+                }).DoShow();
             }
         }
     }

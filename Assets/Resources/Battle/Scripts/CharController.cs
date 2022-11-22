@@ -13,6 +13,7 @@ namespace Overlewd
 
         public BattleManager bm; //init on BattleManager Initialize();
         public PSR psr;
+        public BattleCry battleCry;
         public BattleLog log => bm.log;
         public AdminBRO.Character character;
         public CharacterPortrait charStats;
@@ -124,9 +125,11 @@ namespace Overlewd
 
         private void StatInit()
         {
-            psr = gameObject.AddComponent<PSR>();
             //isEnemy and battleOrder assign on battle manager
-            isOverlord = character.characterClass == AdminBRO.Character.Class_Overlord;
+            psr = gameObject.AddComponent<PSR>();
+            battleCry = gameObject.AddComponent<BattleCry>();
+            isOverlord = character.characterClass == AdminBRO.CharacterClass.Overlord;
+            battleCry?.SetUp(isEnemy && !isBoss, isBoss, isOverlord ? 100 : 0);
             if (isOverlord)
             {
                 bm.overlord = this;
@@ -210,6 +213,8 @@ namespace Overlewd
                 spineWidget = SpineWidget.GetInstance(character.animationData, transform);
             else
                 log.Add($"{name} animationData is null", error: true);
+            //fix out of bounds issues and animator's prefab mistakes
+            spineWidget.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 700);
             defenceDuration = spineWidget.GetAnimationDuaration(ani_defence_name);
         }
         private void UIInit()
@@ -272,7 +277,7 @@ namespace Overlewd
             damageTotal *= curseDotScale;
             damageTotal = Mathf.Round(damageTotal);
             spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW                      
-            skillSFX[id]?.Play();                                          //SFX
+            skillSFX[id]?.Play();                                       //SFX
             yield return new WaitForSeconds(preAttackDuration);
             if (skillID.vfxSelf != null)                                //VFX Self
             {
@@ -331,7 +336,7 @@ namespace Overlewd
             if (isDodge) psr?.Dodge();
             if (isCrit) attacker.psr?.Crit(); else attacker.psr?.CritMiss();
 
-            if (isHit) 
+            if (isHit)
             {
                 AddEffect(attackerSkill);                       //calculate probability and add effect
                 attacker.psr?.HitEnemy();
@@ -356,7 +361,7 @@ namespace Overlewd
                         PassiveDeBuff(ps, attacker);
             }
             float defScale = defUp_defDown != 0 ? attacker.damageTotal * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
-            Damage(attacker.damageTotal + defScale, isHit, isDodge, isCrit, uiDelay: 1.5f);
+            Damage(attacker.damageTotal + defScale, isHit, isDodge, isCrit, uiDelay: 1.5f, attacker: attacker, aSkill: attackerSkill);
 
             yield return new WaitForSeconds(defenceDuration); // (/2)
 
@@ -392,6 +397,7 @@ namespace Overlewd
 
         public void BattleOut(bool AOE = false)
         {
+            battleCry.ShowBattleCry(); //show battle cry if one of them will be added
             transform.SetParent(persPos);
             transform.SetSiblingIndex(0);
             if (AOE) return;
@@ -405,7 +411,7 @@ namespace Overlewd
             if (isOverlord)
             {
                 spineWidget.PlayAnimation("defeat1", false);
-                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(ani_defeat_name));
+                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration("defeat1"));
                 spineWidget.PlayAnimation("defeat2", true); //!костыль
             }
             else
@@ -416,7 +422,7 @@ namespace Overlewd
             }
         }
 
-        public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f)
+        public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f, CharController attacker = null, AdminBRO.CharacterSkill aSkill = null)
         {
             if (hit == false)
             {
@@ -443,23 +449,36 @@ namespace Overlewd
                     DrawPopup($"-{value}HP", "purple", fast: true);
                 else
                     DrawPopup($"{value}", "white", fast: true);
+
                 if (health <= 0)
                 {
+                    if (attacker != null)
+                    {
+                        if (value >= healthMax)
+                            attacker?.battleCry.CallBattleCry(BattleCry.CryEvent.OneShoot);
+                        var targets = attacker.isEnemy ? bm.enemyTargetList.Count : bm.enemyAllyList.Count;
+                        if (attacker.isBoss && isOverlord) targets -= 1;
+                        if (aSkill.AOE && targets > 1)
+                            attacker?.battleCry.AddKill(targets, attacker.isBoss);
+                    }
                     isDead = true;
                     StartCoroutine(PlayDead(uiDelay));
                     bm.DeadStatesUpdate(this, poison);
                 }
+                if (value >= healthMax / 2 && !isDead)
+                    attacker.battleCry.CallBattleCry(BattleCry.CryEvent.HalfKill);
                 StartCoroutine(UIDelay(uiDelay));
             }
             else if (value < 0)
                 Heal(-value);
         }
+
         IEnumerator UIDelay(float delay)
         {
             yield return new WaitForSeconds(delay);
             UpdateUI();
         }
-        public void Heal(float value)
+        public void Heal(float value, CharController healer = null)
         {
             value = Mathf.Round(value);
             if (bless_healBlock < 0)
@@ -475,6 +494,8 @@ namespace Overlewd
                 health = Mathf.Round(health);
                 health = Mathf.Min(health, healthMax);
                 DrawPopup($"+{value}HP", "green");
+                if (health >= healthMax)
+                    healer.battleCry.CallBattleCry(BattleCry.CryEvent.MaxHP);
                 UpdateUI();
             }
         }
@@ -572,7 +593,7 @@ namespace Overlewd
                             {
                                 bless_healBlock = addManual ? bless_healBlock - duration : -duration;//-duration;
                                 StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_blind, "red", buffDelay);
+                                DrawPopup(msg_healblock, "red", buffDelay);
                             }
                             else
                                 DrawPopup(msg_immunity, "green", buffDelay);
@@ -907,7 +928,6 @@ namespace Overlewd
             bm.unselect -= UnHiglight;
             bm.roundEnd -= UpadeteRoundEnd;
             Destroy(observer?.gameObject);
-            //if (isEnemy) Destroy(charStats.gameObject);
         }
     }
 }

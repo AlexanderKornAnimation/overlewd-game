@@ -110,7 +110,7 @@ namespace Overlewd
                             {
                                 eventMarketId = eventMarketId,
                                 tradableId = tradableId
-                            }).RunShowNotificationProcess();
+                            }).DoShow();
                     }
                 }
             }
@@ -130,12 +130,12 @@ namespace Overlewd
                     }
                     else
                     {
-                        UIManager.ShowNotification<BannerNotification>().
+                        UIManager.MakeNotification<BannerNotification>().
                             SetData(new BannerNotificationInData
                             {
                                 eventMarketId = eventMarketId,
                                 tradableId = tradableId
-                            }).RunShowNotificationProcess();
+                            }).DoShow();
                     }
                 }
             }

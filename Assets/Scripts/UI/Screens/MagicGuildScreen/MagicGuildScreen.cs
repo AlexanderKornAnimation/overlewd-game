@@ -9,10 +9,7 @@ namespace Overlewd
 {
     public class MagicGuildScreen : BaseFullScreenParent<MagicGuildScreenInData>
     {
-        private GameObject activeSpell_GO;
-        private GameObject ultimateSpell_GO;
-        private GameObject passiveSpell1_GO;
-        private GameObject passiveSpell2_GO;
+        private Transform canvas;
 
         private NSMagicGuildScreen.Spell activeSpell;
         private NSMagicGuildScreen.Spell ultimateSpell;
@@ -28,12 +25,7 @@ namespace Overlewd
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild", transform);
 
-            var canvas = screenInst.transform.Find("Canvas");
-
-            activeSpell_GO = canvas.Find("ActiveSpell").gameObject;
-            ultimateSpell_GO = canvas.Find("UltimateSpell").gameObject;
-            passiveSpell1_GO = canvas.Find("PassiveSpell1").gameObject;
-            passiveSpell2_GO = canvas.Find("PassiveSpell2").gameObject;
+            canvas = screenInst.transform.Find("Canvas");
             
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             buildingLevel = canvas.Find("Window").Find("BuildingLevel").GetComponent<TextMeshProUGUI>();
@@ -43,24 +35,17 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            activeSpell = activeSpell_GO.AddComponent<NSMagicGuildScreen.Spell>();
+            activeSpell = canvas.Find("ActiveSpell").gameObject.AddComponent<NSMagicGuildScreen.Spell>();
             activeSpell.skillType = AdminBRO.MagicGuildSkill.Type_ActiveSkill;
 
-            if (buildingData.currentLevel.HasValue)
-            {
-                if (buildingData.currentLevel.Value >= 1)
-                {
-                    ultimateSpell = ultimateSpell_GO.AddComponent<NSMagicGuildScreen.Spell>();
-                    ultimateSpell.skillType = AdminBRO.MagicGuildSkill.Type_UltimateSkill;
-                }
-                if (buildingData.currentLevel.Value >= 2)
-                {
-                    passiveSpell1 = passiveSpell1_GO.AddComponent<NSMagicGuildScreen.Spell>();
-                    passiveSpell1.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill1;
-                    passiveSpell2 = passiveSpell2_GO.AddComponent<NSMagicGuildScreen.Spell>();
-                    passiveSpell2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
-                }
-            }
+            ultimateSpell = canvas.Find("UltimateSpell").gameObject.AddComponent<NSMagicGuildScreen.Spell>();
+            ultimateSpell.skillType = AdminBRO.MagicGuildSkill.Type_UltimateSkill;
+            
+            passiveSpell1 = canvas.Find("PassiveSpell1").gameObject.AddComponent<NSMagicGuildScreen.Spell>();
+            passiveSpell1.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill1;
+            
+            passiveSpell2 = canvas.Find("PassiveSpell2").gameObject.AddComponent<NSMagicGuildScreen.Spell>();
+            passiveSpell2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
 
             buildingLevel.text = (buildingData.currentLevel + 1).ToString();
 
@@ -69,14 +54,18 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_mages_guild),
-                    ch2_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_mages_guild),
-                    ch3_any = () => SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_mages_guild)
-                });
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_mages_guild);
+                    break;
+                case (FTUE.CHAPTER_2, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_mages_guild);
+                    break;
+                case (FTUE.CHAPTER_3, _):
+                    SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_mages_guild);
+                    break;
+            }
 
             await Task.CompletedTask;
         }

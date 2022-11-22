@@ -153,7 +153,7 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-
+        
         private void SidebarButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -187,7 +187,7 @@ namespace Overlewd
                         SetData(new PrepareBattlePopupInData
                         {
                             ftueStageId = inputData.ftueStageId
-                        }).RunShowPopupProcess();
+                        }).DoShow();
                 }
                 else if (battleData.isTypeBoss)
                 {
@@ -195,51 +195,55 @@ namespace Overlewd
                         SetData(new PrepareBossFightPopupInData
                         {
                             ftueStageId = inputData.ftueStageId
-                        }).RunShowPopupProcess();
+                        }).DoShow();
                 }
             }
 
-            bool ftue_ch1_b1 = false;
-            bool ftue_ch1_s2 = false;
-            bool ftue_ch2_d1 = false;
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_1):
+                    GameData.ftue.chapter1.ShowNotifByKey("maptutor");
+                    await UIManager.WaitHideNotifications();
+                    break;
+            }
 
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b1 = () => ftue_ch1_b1 = true,
-                    ch1_s2 = () => ftue_ch1_s2 = true,
-                    ch2_d1 = () => ftue_ch2_d1 = true,
-                });
-            if (ftue_ch1_b1)
+            var showPanelTasks = new List<Task>();
+            if (GameData.ftue.chapter1_battle1.isComplete)
             {
-                GameData.ftue.chapter1.ShowNotifByKey("maptutor");
-                await UIManager.WaitHideNotifications();
-                await questsPanel.ShowAsync();
-                GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
-            }
-            else if (ftue_ch1_s2)
-            {
-                await questsPanel.ShowAsync();
-                GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
-            }
-            else if (ftue_ch2_d1)
-            {
-                GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
-                await UIManager.WaitHideNotifications();
-                UIManager.ShowScreen<CastleScreen>();
-                return;
-            }
-            else
-            {
-                var showPanelTasks = new List<Task>();
                 showPanelTasks.Add(questsPanel.ShowAsync());
-                await Task.WhenAll(showPanelTasks);
             }
-            
+            await Task.WhenAll(showPanelTasks);
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_1):
+                    GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
+                    break;
+                case (FTUE.CHAPTER_1, FTUE.SEX_2):
+                    GameData.ftue.chapter1.ShowNotifByKey("bufftutor2");
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    if (GameData.buildings.harem.meta.isBuilt)
+                    {
+                        UIManager.ShowOverlay<QuestOverlay>();
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2shardstutor1");
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    if (!GameData.buildings.portal.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                        await UIManager.WaitHideNotifications();
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
+                    return;
+            }
+
             await Task.CompletedTask;
         }
-        
+
         public override async Task BeforeHideAsync()
         {
             SoundManager.StopAll();
@@ -255,6 +259,16 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             chapterSelector.Show();
+        }
+
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData?.type)
+            {
+                case UIEvent.Type.HideOverlay:
+                    questsPanel?.Refresh();
+                    break;
+            }
         }
     }
 

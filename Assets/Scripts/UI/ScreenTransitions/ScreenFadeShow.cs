@@ -10,6 +10,9 @@ namespace Overlewd
         protected override void Awake()
         {
             base.Awake();
+
+            UITools.SetStretch(screenRectTransform);
+            UITools.FadeHide(gameObject);
         }
 
         protected override void OnDestroy()

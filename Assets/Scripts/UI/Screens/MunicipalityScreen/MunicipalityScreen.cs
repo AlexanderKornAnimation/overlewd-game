@@ -246,7 +246,7 @@ namespace Overlewd
             await GameData.buildings.municipality.GoldCollect();
             CustomizeBanner();
 
-            GetResourceNotif.GetInstance(transform).Play("Gold collect",
+            PopupNotifWidget.GetInstance(transform).Play("Gold collect",
                 $"+{GameData.buildings.municipality.settings.moneyPerPeriod}" + TMPSprite.Gold);
         }
         
@@ -269,19 +269,6 @@ namespace Overlewd
                 case GameDataEvent.EventId.BuildingBuild:
                 case GameDataEvent.EventId.BuildingBuildCrystal:
                     Customize();
-                    break;
-            }
-        }
-
-        public override void OnUIEvent(UIEvent eventData)
-        {
-            switch (eventData?.type)
-            {
-                case UIEvent.Type.RestoreScreenFocusAfterPopup:
-                    if (eventData.uiSenderType == typeof(BuildingPopup))
-                    {
-                    }
-
                     break;
             }
         }
@@ -376,7 +363,7 @@ namespace Overlewd
             UIManager.MakePopup<BuildingPopup>().SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.municipality.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void ForgeButtonClick()
@@ -386,7 +373,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.forge.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void MagicGuildButtonClick()
@@ -396,7 +383,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.magicGuild.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void MarketButtonClick()
@@ -406,7 +393,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.market.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void PortalButtonClick()
@@ -416,7 +403,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.portal.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void CastleButtonClick()
@@ -426,7 +413,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.castle.meta?.id,
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void CathedralButtonClick()
@@ -436,7 +423,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.laboratory.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void AerostatButtonClick()
@@ -446,7 +433,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.aerostat.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void CatacombsButtonClick()
@@ -456,7 +443,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.catacombs.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void HaremButtonClick()
@@ -466,7 +453,7 @@ namespace Overlewd
                 SetData(new BuildingPopupInData
             {
                 buildingId = GameData.buildings.harem.meta?.id
-            }).RunShowPopupProcess();
+            }).DoShow();
         }
 
         private void BackButtonClick()

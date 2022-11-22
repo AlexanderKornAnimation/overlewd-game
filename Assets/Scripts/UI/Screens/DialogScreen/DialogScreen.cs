@@ -104,12 +104,12 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    any_any = () => skipButton.gameObject.SetActive(GameData.ftue.chapter1_stages.battle3.isComplete)
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (_, _):
+                    skipButton.gameObject.SetActive(GameData.ftue.chapter1_battle3.isComplete);
+                break;
+            }
 
             await Task.CompletedTask;
         }
@@ -141,7 +141,7 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData;
+            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData ?? inputData?.dialogData;
 
             if (inputData.eventStageId.HasValue)
             {
@@ -167,36 +167,36 @@ namespace Overlewd
 
         private void LeaveScreen()
         {
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_d1 = () =>
-                    {
-                        UIManager.MakeScreen<BattleScreen>().
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UIManager.ShowScreen<MapScreen>();
+                    return;
+            }
+            
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.DIALOGUE_1):
+                    UIManager.MakeScreen<BattleScreen>().
                            SetData(new BaseBattleScreenInData
                            {
-                               ftueStageId = GameData.ftue.chapter1_stages.battle1.id
-                           }).RunShowScreenProcess();
-                    },
-                    def = () =>
-                    {
-                        if (inputData.eventStageId.HasValue)
+                               ftueStageId = GameData.ftue.chapter1_battle1.id
+                           }).DoShow();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                        UIManager.ShowScreen<CastleScreen>();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.MakeScreen<PortalScreen>().
+                        SetData(new PortalScreenInData
                         {
-                            UIManager.ShowScreen<EventMapScreen>();
-                        }
-                        else if (inputData.ftueStageId.HasValue)
-                        {
-                            UIManager.ShowScreen<MapScreen>();
-                        }
-                        else
-                        {
-                            UIManager.MakeScreen<GirlScreen>().
-                                SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                                .RunShowScreenProcess();
-                        }
-                    }
-                });
+                            activeButtonId = PortalScreen.TabShards,
+                        }).DoShow();
+                    return;
+                default:
+                    UIManager.ToPrevScreen();
+                    break;
+            }
         }
 
         private void HideCharacterByName(string keyName)
@@ -571,6 +571,7 @@ namespace Overlewd
 
     public class DialogScreenInData : BaseFullScreenInData
     {
-        
+        public int? dialogId;
+        public AdminBRO.Dialog dialogData => GameData.dialogs.GetById(dialogId);
     }
 }

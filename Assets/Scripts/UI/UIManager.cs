@@ -13,17 +13,15 @@ namespace Overlewd
 {
     public class UIEvent
     {
-        public Type type = Type.None;
-
-        public BaseScreen uiSender;
-        public System.Type uiSenderType;
-
         public enum Type
         {
             None,
-            RestoreScreenFocusAfterPopup,
-            RestoreScreenFocusAfterOverlay
+            HidePopup,
+            HideOverlay
         }
+
+        public Type type { get; set; } = Type.None;
+        public System.Type uiSenderType { get; set; }
     }
 
     public class UserInputLocker
@@ -86,21 +84,13 @@ namespace Overlewd
         private static GameObject uiNotificationLayerGO;
         private static GameObject uiSystemNotifsLayerGO;
 
-        private static BaseFullScreen prevScreen;
-        private static BaseFullScreen currentScreen;
-        private static BasePopup prevPopup;
-        private static BasePopup currentPopup;
-        private static BaseOverlay prevOverlay;
-        private static BaseOverlay currentOverlay;
-        private static BaseNotification prevNotification;
-        private static BaseNotification currentNotification;
-
-        private static BaseMissclick prevOverlayMissclick;
-        private static BaseMissclick overlayMissclick;
-        private static BaseMissclick prevPopupMissclick;
-        private static BaseMissclick popupMissclick;
-        private static BaseMissclick prevNotificationMissclick;
-        private static BaseMissclick notificationMissclick;
+        private static BaseFullScreen screen;
+        private static BasePopup popup;
+        private static BaseMissclick popupMiss;
+        private static BaseOverlay overlay;
+        private static BaseMissclick overlayMiss;
+        private static BaseNotification notif;
+        private static BaseMissclick notifMiss;
 
         public static event Action<GameDataEvent> widgetsGameDataListeners;
 
@@ -250,36 +240,37 @@ namespace Overlewd
         }
 
         //Screen Instantiate
-        private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen
+        private static Component GetScreenInstance(Type type, Transform parent)
         {
-            var screenGO = new GameObject(typeof(T).Name);
+            var screenGO = new GameObject(type.Name);
             screenGO.layer = 5;
             var screenGO_rectTransform = screenGO.AddComponent<RectTransform>();
             var screenGO_rectMask2D = screenGO.AddComponent<RectMask2D>();
             screenGO_rectTransform.SetParent(parent, false);
             UITools.SetStretch(screenGO_rectTransform);
-            return screenGO.AddComponent<T>();
+            UITools.TopHide(screenGO_rectTransform);
+            return screenGO.AddComponent(type);
         }
+        private static T GetScreenInstance<T>(Transform parent) where T : BaseScreen =>
+            GetScreenInstance(typeof(T), parent) as T;
 
-        public static T GetScreenInstance<T>() where T : BaseFullScreen
-        {
-            return GetScreenInstance<T>(uiScreenLayerGO.transform);
-        }
+        public static BaseFullScreen GetScreenInstance(Type type) =>
+            GetScreenInstance(type, uiScreenLayerGO.transform) as BaseFullScreen;
+        public static T GetScreenInstance<T>() where T : BaseFullScreen =>
+            GetScreenInstance<T>(uiScreenLayerGO.transform);
 
-        public static T GetPopupInstance<T>() where T : BasePopup
-        {
-            return GetScreenInstance<T>(uiPopupLayerGO.transform); 
-        }
+        public static BasePopup GetPopupInstance(Type type) =>
+            GetScreenInstance(type, uiPopupLayerGO.transform) as BasePopup;
+        public static T GetPopupInstance<T>() where T : BasePopup =>
+            GetScreenInstance<T>(uiPopupLayerGO.transform);
 
-        public static T GetOverlayInstance<T>() where T : BaseOverlay
-        {
-            return GetScreenInstance<T>(uiOverlayLayerGO.transform);
-        }
+        public static BaseOverlay GetOverlayInstance(Type type) =>
+            GetScreenInstance(type, uiOverlayLayerGO.transform) as BaseOverlay;
+        public static T GetOverlayInstance<T>() where T : BaseOverlay =>
+            GetScreenInstance<T>(uiOverlayLayerGO.transform);
 
-        public static T GetNotificationInstance<T>() where T : BaseNotification
-        {
-            return GetScreenInstance<T>(uiNotificationLayerGO.transform);
-        }
+        public static T GetNotificationInstance<T>() where T : BaseNotification =>
+            GetScreenInstance<T>(uiNotificationLayerGO.transform);
 
         public static void Initialize()
         {
@@ -317,18 +308,18 @@ namespace Overlewd
 
         public static void ThrowGameDataEvent(GameDataEvent eventData)
         {
-            currentScreen?.OnGameDataEvent(eventData);
-            currentPopup?.OnGameDataEvent(eventData);
-            currentOverlay?.OnGameDataEvent(eventData);
+            screen?.OnGameDataEvent(eventData);
+            popup?.OnGameDataEvent(eventData);
+            overlay?.OnGameDataEvent(eventData);
 
             widgetsGameDataListeners?.Invoke(eventData);
         }
 
         public static void ThrowUIEvent(UIEvent eventData)
         {
-            currentScreen?.OnUIEvent(eventData);
-            currentPopup?.OnUIEvent(eventData);
-            currentOverlay?.OnUIEvent(eventData);
+            screen?.OnUIEvent(eventData);
+            popup?.OnUIEvent(eventData);
+            overlay?.OnUIEvent(eventData);
         }
 
         //transition tools
@@ -370,355 +361,504 @@ namespace Overlewd
             await Task.WhenAll(processTasks);
         }
 
-        private static void MakePopup(BasePopup popup)
+        //UI states
+        public class StateParams
         {
-            prevPopup = currentPopup;
-            prevPopup?.Hide();
-            currentPopup = popup;
-            currentPopup?.Show();
-            currentPopup?.MakeMissclick();
-            if (currentPopup == null)
+            public BaseFullScreenInData screenInData { get; set; } = null;
+
+            public BasePopupInData popupInData { get; set; } = null;
+            public bool showPopup { get; set; } = true;
+
+            public BaseOverlayInData overlayInData { get; set; } = null;
+            public bool showOverlay { get; set; } = true;
+
+            public bool forceRestore { get; set; } = false;
+        }
+        public class State
+        {
+            public Type screenType { get; set; }
+            public BaseFullScreenInData screenInData { get; set; }
+            public bool ScreenTypeIs<T>() where T : BaseFullScreen =>
+                screenType == typeof(T);
+
+            public Type popupType { get; set; }
+            public BasePopupInData popupInData { get; set; }
+            public bool PopupTypeIs<T>() where T : BasePopup =>
+                popupType == typeof(T);
+
+            public Type overlayType { get; set; }
+            public BaseOverlayInData overlayInData { get; set; }
+            public bool OverlayTypeIs<T>() where T : BaseOverlay =>
+                overlayType == typeof(T);
+
+            public State prevState { get; set; }
+            public State prevScreenState
             {
-                prevPopupMissclick = popupMissclick;
-                prevPopupMissclick?.Hide();
-                popupMissclick = null;
+                get
+                {
+                    var resultPrev = prevState;
+                    while (screenType == resultPrev?.screenType &&
+                        resultPrev != null)
+                    {
+                        resultPrev = resultPrev?.prevState;
+                    }
+                    return resultPrev;
+                }
             }
         }
 
-        private static void MakeOverlay(BaseOverlay overlay)
+        private const int PrevStatesStackCapacity = 100;
+        private static LinkedList<State> prevStatesStack = new LinkedList<State>();
+        private static bool CanPush(BaseScreen stateItem)
         {
-            prevOverlay = currentOverlay;
-            prevOverlay?.Hide();
-            currentOverlay = overlay;
-            currentOverlay?.Show();
-            currentOverlay?.MakeMissclick();
-            if (currentOverlay == null)
+            var type = stateItem?.GetType();
+            if (type == typeof(DevOverlay)/* ||
+                type == typeof(SidebarMenuOverlay)*/)
+                return false;
+            return true;
+        }
+        private static void PushState(bool? filterValue = null)
+        {
+            if (filterValue ?? true)
             {
-                prevOverlayMissclick = overlayMissclick;
-                prevOverlayMissclick?.Hide();
-                overlayMissclick = null;
+                prevStatesStack.AddFirst(currentState);
+                while (prevStatesStack.Count > PrevStatesStackCapacity)
+                {
+                    prevStatesStack.Last.Previous.Value.prevState = null;
+                    prevStatesStack.RemoveLast();
+                }
             }
         }
-
-        private static void MakeNotification(BaseNotification notification)
+        private static State PopState()
         {
-            prevNotification = currentNotification;
-            prevNotification?.Hide();
-            currentNotification = notification;
-            currentNotification?.Show();
-            currentNotification?.MakeMissclick();
-            if (currentNotification == null)
-            {
-                prevNotificationMissclick = notificationMissclick;
-                prevNotificationMissclick?.Hide();
-                notificationMissclick = null;
-            }
+            var popState = PeakState();
+            prevStatesStack.RemoveFirst();
+            return popState;
         }
+        private static State PeakState() =>
+            prevStatesStack.First?.Value;
 
-        private static void MakeScreen(BaseFullScreen screen)
+        private static bool restoreStateModeEnabled { get; set; } = false;
+        private static async UniTask _waitRestoreStateModeDisabled()
         {
-            prevScreen = currentScreen;
-            prevScreen?.Hide();
-            currentScreen = screen;
-            currentScreen.Show();
-        }
-
-        //Screen Layer
-        public static T GetScreen<T>() where T : BaseFullScreen
-        {
-            return currentScreen as T;
-        }
-
-        public static BaseFullScreenInData currentScreenInData =>
-            currentScreen?.baseInputData;
-        public static BaseFullScreenInData prevScreenInData =>
-            prevScreen?.baseInputData;
-
-        public static bool HasScreen<T>() where T : BaseFullScreen
-        {
-            return currentScreen?.GetType() == typeof(T);
-        }
-
-        public static async void ShowScreenProcess()
-        {
-            await WaitScreensPrepare(new List<BaseScreen> 
-            { 
-                prevPopup,
-                prevOverlay,
-                prevScreen,
-                currentScreen
-            });
-            await WaitScreenTransitions(new List<BaseScreen> { prevPopup, prevOverlay, prevScreen },
-                                        new List<BaseMissclick> { prevPopupMissclick, prevOverlayMissclick });
-            await WaitScreenTransitions(new List<BaseScreen> { currentScreen }, new List<BaseMissclick>());
-            MemoryOprimizer.ChangeScreen();
-        }
-
-        public static T MakeScreen<T>() where T : BaseFullScreen
-        {
-            MemoryOprimizer.PrepareChangeScreen();
-            MakePopup(null);
-            MakeOverlay(null);
-            MakeScreen(GetScreenInstance<T>());
-            return currentScreen as T;
-        }
-
-        public static T ShowScreen<T>() where T : BaseFullScreen
-        {
-            MakeScreen<T>();
-            ShowScreenProcess();
-            return currentScreen as T;
-        }
-
-        //Popup Layer
-        public static T GetPopupMissclick<T>() where T : PopupMissclick
-        {
-            return popupMissclick as T;
-        }
-
-        public static bool HasPopupMissclick<T>() where T : PopupMissclick
-        {
-            return popupMissclick?.GetType() == typeof(T);
-        }
-
-        public static T MakePopupMissclick<T>() where T : PopupMissclick
-        {
-            if (!HasPopupMissclick<T>())
-            {
-                prevPopupMissclick = popupMissclick;
-                prevPopupMissclick?.Hide();
-                popupMissclick = GetPopupMissclickInstance<T>();
-                popupMissclick.Show();
-            }
-            return popupMissclick as T;
-        }
-
-        public static T GetPopup<T>() where T : BasePopup
-        {
-            return currentPopup as T;
-        }
-
-        public static bool HasPopup<T>() where T : BasePopup
-        {
-            return currentPopup?.GetType() == typeof(T);
-        }
-
-        public static async void ShowPopupProcess()
-        {
-            await WaitScreensPrepare(new List<BaseScreen> 
-            {
-                prevPopup,
-                currentPopup
-            });
-            await WaitScreenTransitions(new List<BaseScreen> { prevPopup }, 
-                                        new List<BaseMissclick> { prevPopupMissclick });
-            await WaitScreenTransitions(new List<BaseScreen> { currentPopup },
-                                        new List<BaseMissclick> { popupMissclick });
-        }
-
-        public static T MakePopup<T>() where T : BasePopup
-        {
-            MakePopup(GetPopupInstance<T>());
-            return currentPopup as T;
-        }
-
-        public static T ShowPopup<T>() where T : BasePopup
-        {
-            MakePopup<T>();
-            ShowPopupProcess();
-            return currentPopup as T;
-        }
-
-        private static async void HidePopupProcess()
-        {
-            var uiEventData = new UIEvent
-            {
-                type = UIEvent.Type.RestoreScreenFocusAfterPopup,
-                uiSenderType = prevPopup.GetType()
-            };
-
-            await WaitScreensPrepare(new List<BaseScreen> 
-            {
-                prevPopup
-            });
-            await WaitScreenTransitions(new List<BaseScreen> { prevPopup },
-                                        new List<BaseMissclick> { prevPopupMissclick });
-
-            ThrowUIEvent(uiEventData);
-        }
-
-        public static void HidePopup()
-        {
-            MakePopup(null);
-            HidePopupProcess();
-        }
-
-        //Overlay Layer
-        public static T GetOverlayMissclick<T>() where T : OverlayMissclick
-        {
-            return overlayMissclick as T;
-        }
-
-        public static bool HasOverlayMissclick<T>() where T : OverlayMissclick
-        {
-            return overlayMissclick?.GetType() == typeof(T);
-        }
-
-        public static T MakeOverlayMissclick<T>() where T : OverlayMissclick
-        {
-            if (!HasOverlayMissclick<T>())
-            {
-                prevOverlayMissclick = overlayMissclick;
-                prevOverlayMissclick?.Hide();
-                overlayMissclick = GetOverlayMissclickInstance<T>();
-                overlayMissclick.Show();
-            }
-            return overlayMissclick as T;
-        }
-
-        public static T GetOverlay<T>() where T : BaseOverlay
-        {
-            return currentOverlay as T;
-        }
-
-        public static bool HasOverlay<T>() where T : BaseOverlay
-        {
-            return currentOverlay?.GetType() == typeof(T);
-        }
-
-        public static async void ShowOverlayProcess()
-        {
-            await WaitScreensPrepare(new List<BaseScreen> 
-            {
-                prevOverlay,
-                currentOverlay
-            });
-            await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
-                                        new List<BaseMissclick> { prevOverlayMissclick });
-            await WaitScreenTransitions(new List<BaseScreen> { currentOverlay },
-                                        new List<BaseMissclick> { overlayMissclick });
-        }
-
-        public static T MakeOverlay<T>() where T : BaseOverlay
-        {
-            MakeOverlay(GetOverlayInstance<T>());
-            return currentOverlay as T;
-        }
-
-        public static T ShowOverlay<T>() where T : BaseOverlay
-        {
-            MakeOverlay<T>();
-            ShowOverlayProcess();
-            return currentOverlay as T;
-        }
-
-        private static async void HideOverlayProcess()
-        {
-            var uiEventData = new UIEvent
-            {
-                type = UIEvent.Type.RestoreScreenFocusAfterOverlay,
-                uiSenderType = prevOverlay.GetType()
-            };
-
-            await WaitScreensPrepare(new List<BaseScreen> { prevOverlay });
-            await WaitScreenTransitions(new List<BaseScreen> { prevOverlay },
-                                        new List<BaseMissclick> { prevOverlayMissclick });
-
-            ThrowUIEvent(uiEventData);
-        }
-
-        public static void HideOverlay()
-        {
-            MakeOverlay(null);
-            HideOverlayProcess();
-        }
-
-        //Notification Layer
-        public static T GetNotificationMissclick<T>() where T : NotificationMissclick
-        {
-            return notificationMissclick as T;
-        }
-        public static bool HasNotificationMissclick<T>() where T : NotificationMissclick
-        {
-            return notificationMissclick?.GetType() == typeof(T);
-        }
-
-        public static T MakeNotificationMissclick<T>() where T : NotificationMissclick
-        {
-            if (!HasNotificationMissclick<T>())
-            {
-                prevNotificationMissclick = notificationMissclick;
-                prevNotificationMissclick?.Hide();
-                notificationMissclick = GetNotificationMissclickInstance<T>();
-                notificationMissclick.Show();
-            }
-            return notificationMissclick as T;
-        }
-
-        public static T GetNotification<T>() where T : BaseNotification
-        {
-            return currentNotification as T;
-        }
-
-        public static bool HasNotification<T>() where T : BaseNotification
-        {
-            return currentNotification?.GetType() == typeof(T);
-        }
-
-        public static bool HasAnyNotification()
-        {
-            return currentNotification != null;
-        }
-
-        public static async Task WaitHideNotifications()
-        {
-            while (currentNotification != null ||
-                   prevNotification != null)
+            while (restoreStateModeEnabled)
             {
                 await UniTask.NextFrame();
             }
         }
-
-        public static async void ShowNotificationProcess()
+        private static async Task _restoreState(State state, StateParams sParams = null)
         {
+            if (state == null)
+                return;
+
+            bool forceReopen = sParams?.forceRestore ?? false;
+
+            var screenInData = sParams?.screenInData ?? state.screenInData;
+            if (state.screenType != null)
+            {
+                if (state.screenType != screen?.GetType() || forceReopen)
+                {
+                    var _screen = MakeScreen(state.screenType);
+                    _screen.baseInputData = screenInData;
+                    await _showScreenAsync(_screen);
+                }
+            }
+            else
+            {
+                //TODO: hide screen
+            }
+
+            var showPopup = sParams?.showPopup ?? true;
+            var popupInData = sParams?.popupInData ?? state.popupInData;
+            if (state.popupType != null && showPopup)
+            {
+                if (state.popupType != popup?.GetType() || forceReopen)
+                {
+                    var _popup = MakePopup(state.popupType);
+                    _popup.baseInputData = popupInData;
+                    await _showPopupAsync(_popup);
+                }
+            }
+            else
+            {
+                await _hidePopupAsync();
+            }
+
+            var showOverlay = sParams?.showOverlay ?? true;
+            var overlayInData = sParams?.overlayInData ?? state.overlayInData;
+            if (state.overlayType != null && showOverlay)
+            {
+                if (state.overlayType != overlay?.GetType() || forceReopen)
+                {
+                    var _overlay = MakeOverlay(state.overlayType);
+                    _overlay.baseInputData = overlayInData;
+                    await _showOverlayAsync(_overlay);
+                }
+            }
+            else
+            {
+                await _hideOverlayAsync();
+            }
+        }
+
+        public static State currentState => new State
+        {
+            screenType = screen?.GetType(),
+            screenInData = screen?.baseInputData,
+            popupType = popup?.GetType(),
+            popupInData = popup?.baseInputData,
+            overlayType = CanPush(overlay) ? overlay?.GetType() : null,
+            overlayInData = CanPush(overlay) ? overlay?.baseInputData : null,
+            prevState = PeakState()
+        };
+        public static async void ToPrevState(StateParams sParams = null)
+        {
+            await _waitRestoreStateModeDisabled();
+            restoreStateModeEnabled = true;
+            await _restoreState(PopState(), sParams);
+            restoreStateModeEnabled = false;
+        }
+        public static async void ToPrevState(State state, StateParams sParams = null)
+        {
+            await _waitRestoreStateModeDisabled();
+            if (prevStatesStack.Contains(state))
+            {
+                restoreStateModeEnabled = true;
+                while (PopState() != state) { }
+                await _restoreState(state, sParams);
+                restoreStateModeEnabled = false;
+            }
+        }
+        public static void ToPrevScreen(StateParams sParams = null)
+        {
+            ToPrevState(currentState?.prevScreenState, sParams);
+        }
+        public static async void ToState(State state, StateParams sParams = null)
+        {
+            await _waitRestoreStateModeDisabled();
+            restoreStateModeEnabled = true;
+            PushState();
+            await _restoreState(state, sParams);
+            restoreStateModeEnabled = false;
+        }
+        public static async void RemakeState()
+        {
+            await _waitRestoreStateModeDisabled();
+            restoreStateModeEnabled = true;
+            await _restoreState(currentState,
+                new StateParams
+                {
+                    forceRestore = true
+                });
+            restoreStateModeEnabled = false;
+        }
+
+        //Screen Layer
+        public static T GetScreen<T>() where T : BaseFullScreen => screen as T;
+        public static bool HasScreen<T>() where T : BaseFullScreen => screen?.GetType() == typeof(T);
+        private static BaseFullScreen MakeScreen(Type type) => GetScreenInstance(type);
+        public static T MakeScreen<T>() where T : BaseFullScreen => GetScreenInstance<T>();
+        public static void ShowScreen<T>() where T : BaseFullScreen => ShowScreen(MakeScreen<T>());
+        public static async void ShowScreen(BaseFullScreen _screen) => await ShowScreenAsync(_screen);
+        private static async Task ShowScreenAsync(BaseFullScreen _screen)
+        {
+            if (_screen == null)
+                return;
+            await _waitRestoreStateModeDisabled();
+            PushState();
+            await _showScreenAsync(_screen);
+        }
+        private static async Task _showScreenAsync(BaseFullScreen _screen)
+        {
+            if (_screen == null)
+                return;
+
+            MemoryOprimizer.PrepareChangeScreen();
+
+            var screenPrev = screen;
+            screen = _screen;
+            var popupPrev = popup;
+            var popupMissPrev = popupMiss;
+            popup = null;
+            popupMiss = null;
+            var overlayPrev = overlay;
+            var overlayMissPrev = overlayMiss;
+            overlay = null;
+            overlayMiss = null;
+
+            screenPrev?.Hide();
+            popupPrev?.Hide();
+            popupMissPrev?.Hide();
+            overlayPrev?.Hide();
+            overlayMissPrev?.Hide();
+            screen?.Show();
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                popupPrev,
+                overlayPrev,
+                screenPrev,
+                screen
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { popupPrev, overlayPrev, screenPrev },
+                                        new List<BaseMissclick> { popupMissPrev, overlayMissPrev });
+            await WaitScreenTransitions(new List<BaseScreen> { screen },
+                                        new List<BaseMissclick>());
+
+            MemoryOprimizer.ChangeScreen();
+        }
+
+        //Popup Layer
+        public static T GetPopupMissclick<T>() where T : PopupMissclick => popupMiss as T;
+        public static bool HasPopupMissclick<T>() where T : PopupMissclick => popupMiss?.GetType() == typeof(T);
+        public static T MakePopupMissclick<T>() where T : PopupMissclick
+        {
+            var miss = HasPopupMissclick<T>() ? popupMiss : GetPopupMissclickInstance<T>();
+            miss.transform.SetAsFirstSibling();
+            return miss as T;
+        }
+        public static T GetPopup<T>() where T : BasePopup => popup as T;
+        public static bool HasPopup<T>() where T : BasePopup => popup?.GetType() == typeof(T);
+        private static BasePopup MakePopup(Type type) => GetPopupInstance(type);
+        public static T MakePopup<T>() where T : BasePopup => GetPopupInstance<T>();
+        public static void ShowPopup<T>() where T : BasePopup => ShowPopup(MakePopup<T>());
+        public static async void ShowPopup(BasePopup _popup) => await ShowPopupAsync(_popup);
+        public static async Task ShowPopupAsync(BasePopup _popup)
+        {
+            if (_popup == null)
+                return;
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(_popup));
+            await _showPopupAsync(_popup);
+        }
+        public static async Task _showPopupAsync(BasePopup _popup)
+        {
+            if (_popup == null)
+                return;
+
+            var popupPrev = popup;
+            popup = _popup;
+            var popupMissPrev = popupMiss;
+            popupMiss = popup?.MakeMissclick();
+
+            popupPrev?.Hide();
+            popup?.Show();
+            if (popupMiss != popupMissPrev)
+            {
+                popupMissPrev?.Hide();
+                popupMiss?.Show();
+            }
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                popupPrev,
+                popup
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
+                                        new List<BaseMissclick> { popupMissPrev });
+            await WaitScreenTransitions(new List<BaseScreen> { popup },
+                                        new List<BaseMissclick> { popupMiss });
+        }
+        public static async void HidePopup() => await HidePopupAsync();
+        public static async Task HidePopupAsync()
+        {
+            if (popup == null)
+                return;
+
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.HidePopup,
+                uiSenderType = popup?.GetType()
+            };
+
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(popup));
+            await _hidePopupAsync();
+
+            ThrowUIEvent(uiEventData);
+        }
+        public static async Task _hidePopupAsync()
+        {
+            if (popup == null)
+                return;
+
+            var popupPrev = popup;
+            popup = null;
+            var popupMissPrev = popupMiss;
+            popupMiss = null;
+
+            popupPrev?.Hide();
+            popupMissPrev?.Hide();
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                popupPrev
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
+                                        new List<BaseMissclick> { popupMissPrev });
+        }
+
+        //Overlay Layer
+        public static T GetOverlayMissclick<T>() where T : OverlayMissclick => overlayMiss as T;
+        public static bool HasOverlayMissclick<T>() where T : OverlayMissclick => overlayMiss?.GetType() == typeof(T);
+        public static T MakeOverlayMissclick<T>() where T : OverlayMissclick
+        {
+            var miss = HasOverlayMissclick<T>() ? overlayMiss : GetOverlayMissclickInstance<T>();
+            miss.transform.SetAsFirstSibling();
+            return miss as T;
+        }
+        public static T GetOverlay<T>() where T : BaseOverlay => overlay as T;
+        public static bool HasOverlay<T>() where T : BaseOverlay => overlay?.GetType() == typeof(T);
+        private static BaseOverlay MakeOverlay(Type type) => GetOverlayInstance(type);
+        public static T MakeOverlay<T>() where T : BaseOverlay => GetOverlayInstance<T>();
+        public static void ShowOverlay<T>() where T : BaseOverlay => ShowOverlay(MakeOverlay<T>());
+        public static async void ShowOverlay(BaseOverlay _overlay) => await ShowOverlayAsync(_overlay);
+        public static async Task ShowOverlayAsync(BaseOverlay _overlay)
+        {
+            if (_overlay == null)
+                return;
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(_overlay));
+            await _showOverlayAsync(_overlay);
+        }
+        public static async Task _showOverlayAsync(BaseOverlay _overlay)
+        {
+            if (_overlay == null)
+                return;
+
+            var overlayPrev = overlay;
+            overlay = _overlay;
+            var overlayMissPrev = overlayMiss;
+            overlayMiss = overlay?.MakeMissclick();
+
+            overlayPrev?.Hide();
+            overlay?.Show();
+            if (overlayMiss != overlayMissPrev)
+            {
+                overlayMissPrev?.Hide();
+                overlayMiss?.Show();
+            }
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                overlayPrev,
+                overlay
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
+                                        new List<BaseMissclick> { overlayMissPrev });
+            await WaitScreenTransitions(new List<BaseScreen> { overlay },
+                                        new List<BaseMissclick> { overlayMiss });
+        }
+        public static async void HideOverlay() => await HideOverlayAsync();
+        private static async Task HideOverlayAsync()
+        {
+            if (overlay == null)
+                return;
+
+            var uiEventData = new UIEvent
+            {
+                type = UIEvent.Type.HideOverlay,
+                uiSenderType = overlay.GetType()
+            };
+
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(overlay));
+            await _hideOverlayAsync();
+
+            ThrowUIEvent(uiEventData);
+        }
+        private static async Task _hideOverlayAsync()
+        {
+            if (overlay == null)
+                return;
+
+            var overlayPrev = overlay;
+            overlay = null;
+            var overlayMissPrev = overlayMiss;
+            overlayMiss = null;
+
+            overlayPrev?.Hide();
+            overlayMissPrev?.Hide();
+
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                overlayPrev
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
+                                        new List<BaseMissclick> { overlayMissPrev });
+        }
+
+        //Notification Layer
+        public static T GetNotificationMissclick<T>() where T : NotificationMissclick => notifMiss as T;
+        public static bool HasNotificationMissclick<T>() where T : NotificationMissclick => notifMiss?.GetType() == typeof(T);
+        public static T MakeNotificationMissclick<T>() where T : NotificationMissclick
+        {
+            var miss = HasNotificationMissclick<T>() ? notifMiss : GetNotificationMissclickInstance<T>();
+            miss.transform.SetAsFirstSibling();
+            return miss as T;
+        }
+        public static T GetNotification<T>() where T : BaseNotification => notif as T;
+        public static bool HasNotification<T>() where T : BaseNotification => notif?.GetType() == typeof(T);
+        public static async Task WaitHideNotifications()
+        {
+            while (notif != null)
+                await UniTask.NextFrame();
+        }
+        public static T MakeNotification<T>() where T : BaseNotification => GetNotificationInstance<T>();
+        public static void ShowNotification<T>() where T : BaseNotification => MakeNotification<T>().DoShow();
+        public static async void ShowNotification(BaseNotification _notif) => await ShowNotificationAsync(_notif);
+        public static async Task ShowNotificationAsync(BaseNotification _notif)
+        {
+            if (_notif == null)
+                return;
+
+            var notifPrev = notif;
+            notif = _notif;
+            var notifMissPrev = notifMiss;
+            notifMiss = notif?.MakeMissclick();
+
+            notifPrev?.Hide();
+            notif?.Show();
+            if (notifMiss != notifMissPrev)
+            {
+                notifMissPrev?.Hide();
+                notifMiss?.Show();
+            }
+
             await WaitScreensPrepare(new List<BaseScreen> 
             {
-                prevNotification,
-                currentNotification
+                notifPrev,
+                notif
             });
-            await WaitScreenTransitions(new List<BaseScreen> { prevNotification },
-                                        new List<BaseMissclick> { prevNotificationMissclick });
-            await WaitScreenTransitions(new List<BaseScreen> { currentNotification },
-                                        new List<BaseMissclick> { notificationMissclick });
+            await WaitScreenTransitions(new List<BaseScreen> { notifPrev },
+                                        new List<BaseMissclick> { notifMissPrev });
+            await WaitScreenTransitions(new List<BaseScreen> { notif },
+                                        new List<BaseMissclick> { notifMiss });
         }
-
-        public static T MakeNotification<T>() where T : BaseNotification
+        public static async void HideNotification() => await HideNotificationAsync();
+        private static async Task HideNotificationAsync()
         {
-            MakeNotification(GetNotificationInstance<T>());
-            return currentNotification as T;
-        }
+            if (notif == null)
+                return;
 
-        public static T ShowNotification<T>() where T : BaseNotification
-        {
-            MakeNotification<T>();
-            ShowNotificationProcess();
-            return currentNotification as T;
-        }
+            var notifPrev = notif;
+            notif = null;
+            var notifMissPrev = notifMiss;
+            notifMiss = null;
 
-        private static async void HideNotificationProcess()
-        {
-            await WaitScreensPrepare(new List<BaseScreen> { prevNotification });
-            await WaitScreenTransitions(new List<BaseScreen> { prevNotification },
-                                        new List<BaseMissclick> { prevNotificationMissclick });
-        }
+            notifPrev?.Hide();
+            notifMissPrev?.Hide();
 
-        public static void HideNotification()
-        {
-            MakeNotification(null);
-            HideNotificationProcess();
+            await WaitScreensPrepare(new List<BaseScreen>
+            {
+                notifPrev
+            });
+            await WaitScreenTransitions(new List<BaseScreen> { notifPrev },
+                                        new List<BaseMissclick> { notifMissPrev });
         }
 
         //System notifications layer
+        public static Transform systemNotifRoot => uiSystemNotifsLayerGO.transform;
         public static void ShowServerConnectionNotif()
         {
             var notif = uiSystemNotifsLayerGO.GetComponentInChildren<ServerConnectionNotif>();

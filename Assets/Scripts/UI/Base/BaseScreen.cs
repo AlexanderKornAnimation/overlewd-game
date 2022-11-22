@@ -18,8 +18,9 @@ namespace Overlewd
 
         }
 
-        public virtual void MakeMissclick()
+        public virtual BaseMissclick MakeMissclick()
         {
+            return null;
         }
 
         public virtual ScreenShow Show()

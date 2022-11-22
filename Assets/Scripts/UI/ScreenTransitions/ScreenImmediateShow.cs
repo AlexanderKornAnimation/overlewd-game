@@ -10,6 +10,8 @@ namespace Overlewd
         protected override void Awake()
         {
             base.Awake();
+
+            UITools.SetStretch(screenRectTransform);
         }
 
         public override async Task ProgressAsync()

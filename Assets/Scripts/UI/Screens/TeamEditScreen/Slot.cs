@@ -145,13 +145,11 @@ namespace Overlewd
             private void SwapWeaponButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                var currentScreenInData = UIManager.currentScreenInData;
                 UIManager.MakeScreen<WeaponScreen>().
                     SetData(new WeaponScreenInData
                     {
                         characterId = characterData.id,
-                        prevScreenInData = currentScreenInData
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
             
             private Sprite SlotBackgroundByRarity(string rarity)

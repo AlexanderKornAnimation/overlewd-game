@@ -72,61 +72,21 @@ namespace Overlewd
                     case AdminBRO.MagicGuildSkill.Type_Attack:
                         return Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/BasicAttack");
                     case AdminBRO.MagicGuildSkill.Type_ActiveSkill:
-                        if (!skillData.locked)
-                        {
-                            if (skillData.next == null)
-                            {
-                                return Resources.Load<Sprite>(
-                                    "Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep2");
-                            }
-
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1");
-                        }
-                        else
-                        {
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1_Locked");
-                        }
+                        return skillData.locked
+                            ? Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1_Locked")
+                            : Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1");
                     case AdminBRO.MagicGuildSkill.Type_UltimateSkill:
-                        if (!skillData.locked)
-                        {
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/UltimateSpellStep1");
-                        }
-                        else
-                        {
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/UltimateSpellStep1_Locked");
-                        }
+                        return skillData.locked
+                            ? Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/UltimateSpellStep1_Locked")
+                            : Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/UltimateSpellStep1");
                     case AdminBRO.MagicGuildSkill.Type_PassiveSkill1:
-                        if (!skillData.locked)
-                        {
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill1");
-                        }
-                        else
-                        {
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill1_Locked");
-                        }
+                        return skillData.locked
+                            ? Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill1_Locked")
+                            : Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill1");
                     case AdminBRO.MagicGuildSkill.Type_PassiveSkill2:
-                        if (!skillData.locked)
-                        {
-                            if (skillData.next == null)
-                            {
-                                return Resources.Load<Sprite>(
-                                    "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2_Upgrade");
-                            }
-
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2");
-                        }
-                        else
-                        {
-                            return Resources.Load<Sprite>(
-                                "Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2_Locked");
-                        }
+                        return skillData.locked
+                            ? Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2_Locked")
+                            : Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/PassiveSkill2");
                 }
 
                 return null;

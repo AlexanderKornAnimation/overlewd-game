@@ -47,7 +47,7 @@ namespace Overlewd
         private void Customize()
         {
             var activeBuff = GameData.matriarchs.activeBuff;
-            if (activeBuff != null && GameData.ftue.chapter1_stages.sex2.isComplete)
+            if (activeBuff != null && GameData.ftue.chapter1_sex2.isComplete)
             {
                 activeButton.gameObject.SetActive(true);
                 unactiveButton.gameObject.SetActive(false);
@@ -73,11 +73,7 @@ namespace Overlewd
         protected virtual void ButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<HaremScreen>().
-                SetData(new HaremScreenInData
-                {
-                    prevScreenInData = UIManager.prevScreenInData
-                }).RunShowScreenProcess();
+            UIManager.ShowScreen<HaremScreen>();
         }
         
         public static BuffWidget GetInstance(Transform parent)

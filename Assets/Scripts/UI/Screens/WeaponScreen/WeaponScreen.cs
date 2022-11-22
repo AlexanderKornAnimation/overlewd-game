@@ -77,16 +77,16 @@ namespace Overlewd
         {
             foreach (var equip in GameData.equipment.equipment)
             {
-                if (equip.characterClass == AdminBRO.Character.Class_Overlord)
+                if (equip.characterClass == AdminBRO.CharacterClass.Overlord)
                     continue;
                     
                 var tabId = equip.characterClass switch
                 {
-                    AdminBRO.Equipment.Class_Bruiser => TabBruisers,
-                    AdminBRO.Equipment.Class_Assassin => TabAssassins,
-                    AdminBRO.Equipment.Class_Caster => TabCasters,
-                    AdminBRO.Equipment.Class_Tank => TabTanks,
-                    AdminBRO.Equipment.Class_Healer => TabHealers,
+                    AdminBRO.CharacterClass.Bruiser => TabBruisers,
+                    AdminBRO.CharacterClass.Assassin => TabAssassins,
+                    AdminBRO.CharacterClass.Caster => TabCasters,
+                    AdminBRO.CharacterClass.Tank => TabTanks,
+                    AdminBRO.CharacterClass.Healer => TabHealers,
                     _=> TabAllUnits
                 };
                 
@@ -134,11 +134,22 @@ namespace Overlewd
             SortWeaponsInTabs();
         }
         
-        private void OnEquipOrUnequip()
+        private async void OnEquipOrUnequip()
         {
             foreach (var equip in weapons)
             {
                 equip.Customize(); 
+            }
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
+                    if (inputData.characterData.hasEquipment)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor3");
+                        await UIManager.WaitHideNotifications();
+                    }
+                    break;
             }
         }
         
@@ -191,21 +202,16 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (inputData.prevScreenInData.IsType<BattleGirlListScreenInData>())
+            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
             {
-                UIManager.ShowScreen<BattleGirlListScreen>();
-            }
-            else if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
-            {
-                UIManager.MakeScreen<TeamEditScreen>().
-                    SetData(inputData.prevScreenInData.As<TeamEditScreenInData>()).
-                    RunShowScreenProcess();
+                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState, new UIManager.StateParams
+                {
+                    showPopup = false,
+                });
             }
             else
             {
-                UIManager.MakeScreen<BattleGirlScreen>().
-                    SetData(inputData.prevScreenInData as BattleGirlScreenInData).
-                    RunShowScreenProcess();
+                UIManager.ToPrevScreen();
             }
         }
 

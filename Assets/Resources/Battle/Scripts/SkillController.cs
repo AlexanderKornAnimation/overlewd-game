@@ -19,10 +19,10 @@ namespace Overlewd
         public Image image;
         public Image effectSlot;
         private List<Sprite> effectIcons;
-        private GameObject selectBorder;
+        private GameObject selectBorder, goManaCost;
         public bool select;
         private Slider slider;
-        private TextMeshProUGUI textCount;
+        private TextMeshProUGUI textCount, textManaCost;
         public UnityEvent OnClickAction = new UnityEvent();
 
         public Sprite standartIco, overlordIco;
@@ -38,7 +38,7 @@ namespace Overlewd
         //public int amount => skill.amount; //for info maybe
         public int manaCost => skill.manaCost;
         public string Name => skill.name;
-        public string description => skill.description;
+        public string description => skill.GetDescription(skill.amount, skill.effectAmount);
         public int level => skill.level;
 
         public bool selectable = true;
@@ -56,8 +56,11 @@ namespace Overlewd
             if (!potion && effectSlot == null) effectSlot = transform.Find("status").GetComponent<Image>();
             image = GetComponent<Image>();
             slider = GetComponentInChildren<Slider>();
-            textCount = GetComponentInChildren<TextMeshProUGUI>();
+            textManaCost = GetComponent<TextMeshProUGUI>();
             selectBorder = transform.Find("select")?.gameObject;
+            goManaCost = transform.Find("manaCost")?.gameObject;
+            if (goManaCost != null)
+                textManaCost = goManaCost.transform.Find("text").GetComponent<TextMeshProUGUI>();
         }
         private void Start() => StatInit();
         
@@ -69,6 +72,12 @@ namespace Overlewd
                 slider.maxValue = cooldown;
                 slider.value = cooldownCount;
             }
+            if (goManaCost != null)
+            {
+                goManaCost.SetActive(manaCost > 0);
+                if (textManaCost != null)
+                    textManaCost.text = manaCost.ToString();
+            }
             if (textCount != null)
                 if (potion)
                     textCount.text = $"{potionAmount}";
@@ -78,7 +87,7 @@ namespace Overlewd
 
         public void ReplaceSkill(AdminBRO.CharacterSkill sk, Dictionary<AdminBRO.CharacterSkill, int> cd, bool isOverlord = false)
         {
-            if (sk != null) { 
+            if (sk != null) {
                 if (!cd.TryGetValue(sk, out cooldownCount))
                     cooldownCount = 0;
             }

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Overlewd
 {
     public abstract class BaseOverlay : BaseScreen
     {
-        public BaseOverlayInData baseInputData { get; protected set; }
+        public BaseOverlayInData baseInputData { get; set; }
 
         public override void StartShow()
         {
@@ -18,9 +19,9 @@ namespace Overlewd
             
         }
         
-        public override void MakeMissclick()
+        public override BaseMissclick MakeMissclick()
         {
-            UIManager.MakeOverlayMissclick<OverlayMissclickColored>();
+            return UIManager.MakeOverlayMissclick<OverlayMissclickColored>();
         }
 
         public override ScreenShow Show()
@@ -33,19 +34,12 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenRightHide>();
         }
 
-        public void RunShowOverlayProcess()
-        {
-            UIManager.ShowOverlayProcess();
-        }
+        public void DoShow() => UIManager.ShowOverlay(this);
+        public async Task DoShowAsync() => await UIManager.ShowOverlayAsync(this);
     }
 
-    public abstract class BaseOverlayParent<T> : BaseOverlay where T : BaseOverlayInData, new()
+    public abstract class BaseOverlayParent<T> : BaseOverlay where T : BaseOverlayInData
     {
-        public BaseOverlayParent()
-        {
-            baseInputData = new T();
-        }
-
         public T inputData => (T)baseInputData;
 
         public BaseOverlay SetData(T data)

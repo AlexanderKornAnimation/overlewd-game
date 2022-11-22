@@ -42,14 +42,12 @@ namespace Overlewd
 
             public void Customize()
             {
-                var _skillData = skillData;
-
-                isLocked.SetActive(false);
-                level.text = _skillData.isLvlMax ? "MAX" : "Lvl " + _skillData.currentSkillLevel;
-                title.text = _skillData.current.name;
-                icon.sprite = ResourceManager.LoadSprite(_skillData.current.icon);
-                isMax.gameObject.SetActive(_skillData.isLvlMax);
-                UITools.DisableButton(isMax, !_skillData.canUpgrade);
+                isLocked.SetActive(skillData.locked);
+                level.text = skillData.isLvlMax ? "MAX" : "Lvl " + skillData.currentSkillLevel;
+                title.text = skillData.current.name;
+                icon.sprite = ResourceManager.LoadSprite(skillData.current.icon);
+                isMax.gameObject.SetActive(skillData.isLvlMax);
+                UITools.DisableButton(isMax, !skillData.canUpgrade);
             }
 
             private void IsMaxButtonClick()
@@ -59,7 +57,7 @@ namespace Overlewd
                     SetData(new SpellPopupInData
                 {
                     spellId = skillData.current.id
-                }).RunShowPopupProcess();
+                }).DoShow();
             }
 
             private void IsOpenButtonClick()
@@ -69,7 +67,7 @@ namespace Overlewd
                     SetData(new SpellPopupInData
                 {
                     spellId = skillData.current.id
-                }).RunShowPopupProcess();
+                }).DoShow();
             }
         }
     }

@@ -37,7 +37,7 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             portalFullScreenAnim.Play();
-            await UniTask.WaitUntil(() => portalFullScreenAnim.IsComplete);
+            await UniTask.WaitUntil(() => portalFullScreenAnim.isComplete);
             Destroy(portalFullScreenAnim.gameObject);
 
             MakeShardsAnimCtrl(inputData.isMany, inputData.tabType, inputData.summonData);
@@ -82,7 +82,7 @@ namespace Overlewd
                 {
                     activeGachaId = inputData?.gachaId
                 })
-                .RunShowScreenProcess();
+                .DoShow();
         }
 
         private IEnumerator WaitShardsIsOpened()

@@ -7,6 +7,7 @@ public class DamagePopup : MonoBehaviour
 {
     private TextMeshProUGUI text;
     private RectTransform rt;
+    private RectTransform backRt;
 
     private string color = "",
         white = "<color=#FFFFFF>",
@@ -24,10 +25,11 @@ public class DamagePopup : MonoBehaviour
         text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         rt = GetComponent<RectTransform>();
         ani = GetComponent<Animator>();
+        backRt = transform.Find("Back")?.GetComponent<RectTransform>();
     }
 
-    public void Setup(string msg, bool invertXScale, float delay = 0f, 
-        string textColor = null, int yOffset = 0, float scale = 1f, bool fast = false)
+    public void Setup(string msg, bool invertXScale, float delay = 0f,
+        string textColor = null, int yOffset = 0, float scale = 1f, bool fast = false, bool boss = false)
     {
         if (text)
         {
@@ -44,6 +46,8 @@ public class DamagePopup : MonoBehaviour
         }
         if (invertXScale)
             rt.localScale = new Vector3(-1, 1, 1) * scale;
+        if (boss && backRt != null)
+            backRt.localScale = new Vector3(-1,1,1) * scale;
         rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.anchoredPosition.y + yOffset);
         StartCoroutine(RunAnimation(delay, yOffset, fast));
     }

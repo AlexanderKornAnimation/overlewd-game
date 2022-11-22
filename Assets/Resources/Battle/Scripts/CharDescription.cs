@@ -76,19 +76,19 @@ namespace Overlewd
         {
             switch (cc.character.characterClass)
             {
-                case AdminBRO.Character.Class_Assassin:
+                case AdminBRO.CharacterClass.Assassin:
                     classIco.sprite = classIcons[1];
                     break;
-                case AdminBRO.Character.Class_Bruiser:
+                case AdminBRO.CharacterClass.Bruiser:
                     classIco.sprite = classIcons[2];
                     break;
-                case AdminBRO.Character.Class_Caster:
+                case AdminBRO.CharacterClass.Caster:
                     classIco.sprite = classIcons[3];
                     break;
-                case AdminBRO.Character.Class_Healer:
+                case AdminBRO.CharacterClass.Healer:
                     classIco.sprite = classIcons[4];
                     break;
-                case AdminBRO.Character.Class_Tank:
+                case AdminBRO.CharacterClass.Tank:
                     classIco.sprite = classIcons[5];
                     break;
                 default:

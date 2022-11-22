@@ -261,12 +261,12 @@ namespace Overlewd
         {
             return type switch
             {
-                AdminBRO.Equipment.Type_OverlordWeapon => TabWeapon,
-                AdminBRO.Equipment.Type_OverlordGloves => TabGloves,
-                AdminBRO.Equipment.Type_OverlordHelmet => TabHelmet,
-                AdminBRO.Equipment.Type_OverlordHarness => TabHarness,
-                AdminBRO.Equipment.Type_OverlordThighs => TabThigh,
-                AdminBRO.Equipment.Type_OverlordBoots => TabBoots,
+                AdminBRO.EquipmentType.OverlordWeapon => TabWeapon,
+                AdminBRO.EquipmentType.OverlordGloves => TabGloves,
+                AdminBRO.EquipmentType.OverlordHelmet => TabHelmet,
+                AdminBRO.EquipmentType.OverlordHarness => TabHarness,
+                AdminBRO.EquipmentType.OverlordThighs => TabThigh,
+                AdminBRO.EquipmentType.OverlordBoots => TabBoots,
                 _ => TabWeapon
             };
         }
@@ -275,12 +275,12 @@ namespace Overlewd
         {
             return type switch
             {
-                AdminBRO.Equipment.Type_OverlordWeapon => scrollContents[TabWeapon],
-                AdminBRO.Equipment.Type_OverlordGloves => scrollContents[TabGloves],
-                AdminBRO.Equipment.Type_OverlordHelmet => scrollContents[TabHelmet],
-                AdminBRO.Equipment.Type_OverlordHarness => scrollContents[TabHarness],
-                AdminBRO.Equipment.Type_OverlordThighs => scrollContents[TabThigh],
-                AdminBRO.Equipment.Type_OverlordBoots => scrollContents[TabBoots],
+                AdminBRO.EquipmentType.OverlordWeapon => scrollContents[TabWeapon],
+                AdminBRO.EquipmentType.OverlordGloves => scrollContents[TabGloves],
+                AdminBRO.EquipmentType.OverlordHelmet => scrollContents[TabHelmet],
+                AdminBRO.EquipmentType.OverlordHarness => scrollContents[TabHarness],
+                AdminBRO.EquipmentType.OverlordThighs => scrollContents[TabThigh],
+                AdminBRO.EquipmentType.OverlordBoots => scrollContents[TabBoots],
                 _ => null
             };
         }
@@ -289,12 +289,12 @@ namespace Overlewd
         {
             return type switch
             {
-                AdminBRO.Equipment.Type_OverlordWeapon => cellWeapon.transform,
-                AdminBRO.Equipment.Type_OverlordGloves => cellGloves.transform,
-                AdminBRO.Equipment.Type_OverlordHelmet => cellHelmet.transform,
-                AdminBRO.Equipment.Type_OverlordHarness => cellHarness.transform,
-                AdminBRO.Equipment.Type_OverlordThighs => cellThigh.transform,
-                AdminBRO.Equipment.Type_OverlordBoots => cellBoots.transform,
+                AdminBRO.EquipmentType.OverlordWeapon => cellWeapon.transform,
+                AdminBRO.EquipmentType.OverlordGloves => cellGloves.transform,
+                AdminBRO.EquipmentType.OverlordHelmet => cellHelmet.transform,
+                AdminBRO.EquipmentType.OverlordHarness => cellHarness.transform,
+                AdminBRO.EquipmentType.OverlordThighs => cellThigh.transform,
+                AdminBRO.EquipmentType.OverlordBoots => cellBoots.transform,
                 _ => null
             };
         }
@@ -325,20 +325,13 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData.prevScreenInData == null)
+            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
             {
-                UIManager.ShowScreen<CastleScreen>();
-            }
-            else if (inputData.prevScreenInData.IsType<TeamEditScreenInData>())
-            {
-                UIManager.MakeScreen<TeamEditScreen>()
-                    .SetData(inputData.prevScreenInData.As<TeamEditScreenInData>())
-                    .RunShowScreenProcess();
+                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
             }
             else
             {
-                UIManager.ShowScreen<CastleScreen>();
+                UIManager.ToPrevScreen();
             }
         }
 

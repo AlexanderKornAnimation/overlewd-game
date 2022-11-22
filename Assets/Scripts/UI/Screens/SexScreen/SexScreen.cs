@@ -71,12 +71,12 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    any_any = () => skipButton.gameObject.SetActive(GameData.ftue.chapter1_stages.battle3.isComplete)
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (_, _):
+                    skipButton.gameObject.SetActive(GameData.ftue.chapter1_battle3.isComplete);
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -108,48 +108,29 @@ namespace Overlewd
         
         private void LeaveScreen()
         {
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_s1 = () =>
-                    {
-                        UIManager.MakeScreen<DialogScreen>().
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.SEX_1):
+                    UIManager.MakeScreen<DialogScreen>().
                         SetData(new DialogScreenInData
                         {
-                            ftueStageId = GameData.ftue.chapter1_stages.dialogue1.id
-                        }).RunShowScreenProcess();
-                    },
-                    def = () =>
+                            ftueStageId = GameData.ftue.chapter1_dialogue1.id
+                        }).DoShow();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+                default:
+                    if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
                     {
-                        if (inputData.ftueStageId.HasValue)
-                        {
-                            UIManager.ShowScreen<MapScreen>();
-                        }
-                        else if (inputData.eventStageId.HasValue)
-                        {
-                            UIManager.ShowScreen<EventMapScreen>();
-                        }
-                        else if (inputData.prevScreenInData.IsType<GirlScreenInData>())
-                        {
-                            UIManager.MakeScreen<GirlScreen>().
-                                SetData(inputData.prevScreenInData.As<GirlScreenInData>())
-                                .RunShowScreenProcess();
-                        }
-                        else if (inputData.prevScreenInData.IsType<MemoryListScreenInData>())
-                        {
-                            UIManager.MakeScreen<MemoryListScreen>()
-                                .SetData(inputData.prevScreenInData.As<MemoryListScreenInData>())
-                                .RunShowScreenProcess();
-                        }
-                        else
-                        {
-                            UIManager.MakeScreen<BattleGirlScreen>().
-                                SetData(inputData.prevScreenInData.As<BattleGirlScreenInData>())
-                                .RunShowScreenProcess();
-                        }
+                        UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
                     }
-                });
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    break;
+            }
         }
 
         public override async Task BeforeShowDataAsync()

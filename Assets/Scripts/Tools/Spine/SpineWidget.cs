@@ -13,8 +13,8 @@ namespace Overlewd
     {
         public event Action startListeners;
         public event Action completeListeners;
-
-        private bool isComplete = false;
+        public bool destroyAfterComplete { get; set; } = false;
+        public bool isComplete { get; private set; } = false;
         private bool loopMode = true;
 
         private class SpineEventInfo
@@ -57,6 +57,11 @@ namespace Overlewd
         {
             isComplete = loopMode ? false : true;
             completeListeners?.Invoke();
+
+            if (isComplete && destroyAfterComplete)
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void AddEventListener(string eventName, Action listener)
@@ -125,8 +130,6 @@ namespace Overlewd
             skeletonGraphic.freeze = false;
         }
 
-        public bool IsComplete => loopMode ? false : isComplete;
-
         public void FlipX()
         {
             transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
@@ -193,6 +196,14 @@ namespace Overlewd
         {
             var layerFirst = animationData?.layouts?.First();
             return GetInstance(layerFirst, parent, true);
+        }
+
+        public static SpineWidget GetInstanceDisposable(AdminBRO.Animation animationData, Transform parent)
+        {
+            var layerFirst = animationData?.layouts?.First();
+            var inst = GetInstance(layerFirst, parent, false);
+            inst.destroyAfterComplete = true;
+            return inst;
         }
     }
 }

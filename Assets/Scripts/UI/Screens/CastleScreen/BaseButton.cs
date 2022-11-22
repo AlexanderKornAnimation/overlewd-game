@@ -30,6 +30,11 @@ namespace Overlewd
                 Customize();
             }
 
+            public void DisableButton()
+            {
+                UITools.DisableButton(button);
+            }
+            
             public async Task ShowAsync()
             {
                 await UITools.FadeShowAsync(gameObject, 0.7f);

@@ -21,7 +21,7 @@ namespace Overlewd
             private TextMeshProUGUI titleFinalReward;
 
             private Transform content;
-            private Image progressBar;
+            private RectTransform progressBarRect;
 
             private Transform canvas;
 
@@ -35,7 +35,7 @@ namespace Overlewd
                 titleFinalReward = finalRewards.Find("Title").GetComponent<TextMeshProUGUI>();
 
                 content = canvas.Find("ScrollView").Find("Viewport").Find("Content");
-                progressBar = content.Find("ProgressBar").GetComponent<Image>();
+                progressBarRect = content.Find("ProgressBar").GetComponent<RectTransform>();
             }
 
             private void Start()
@@ -57,6 +57,8 @@ namespace Overlewd
                 freeFinalReward.sprite = ResourceManager.LoadSprite(finalLevel?.defaultReward?.First()?.icon);
                 premiumFinalReward.sprite = ResourceManager.LoadSprite(finalLevel?.premiumReward?.First()?.icon);
                 titleFinalReward.text = $"Reach {finalLevel?.pointsThreshold} points to get final reward!";
+
+                StartCoroutine(CalcProgressBarWidth());
             }
 
             public void SetCanvasActive(bool value)
@@ -65,6 +67,34 @@ namespace Overlewd
                 {
                     canvas.gameObject.SetActive(value);
                 }
+            }
+
+            private IEnumerator CalcProgressBarWidth()
+            {
+                yield return new WaitForEndOfFrame();
+                yield return new WaitForEndOfFrame();
+
+                var levels = content.GetComponentsInChildren<BattlePassLevel>();
+                var scrollContentWorldRT = content.GetComponent<RectTransform>().WorldRect();
+                var progressBarWidth = 0.0f;
+                for (int levelId = 0; levelId < levels.Length; levelId++)
+                {
+                    var level = levels[levelId];
+                    if (level.reached)
+                    {
+                        if (levelId == (levels.Length - 1))
+                        {
+                            progressBarWidth = 50.0f + scrollContentWorldRT.width + 50.0f;
+                        }
+                        else
+                        {
+                            var reachedImgWorldRect = level.levelReached.WorldRect();
+                            progressBarWidth = 50.0f + (reachedImgWorldRect.center.x - scrollContentWorldRT.xMin);
+                        }
+
+                    }
+                }
+                progressBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, progressBarWidth);
             }
 
             public static BattlePass GetInstance(Transform parent)

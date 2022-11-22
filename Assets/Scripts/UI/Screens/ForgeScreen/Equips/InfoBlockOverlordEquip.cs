@@ -31,17 +31,17 @@ namespace Overlewd
             public override AdminBRO.ForgePrice.MergeEquipmentSettings mergeSettings =>
                 consumeEquipData?.equipmentType switch
                 {
-                    AdminBRO.Equipment.Type_OverlordBoots =>
+                    AdminBRO.EquipmentType.OverlordBoots =>
                         GameData.buildings.forge.prices.mergeEquipmentOverlordBootsSettings,
-                    AdminBRO.Equipment.Type_OverlordGloves =>
+                    AdminBRO.EquipmentType.OverlordGloves =>
                         GameData.buildings.forge.prices.mergeEquipmentOverlordGlovesSettings,
-                    AdminBRO.Equipment.Type_OverlordHarness =>
+                    AdminBRO.EquipmentType.OverlordHarness =>
                         GameData.buildings.forge.prices.mergeEquipmentOverlordHarnessSettings,
-                    AdminBRO.Equipment.Type_OverlordHelmet =>
+                    AdminBRO.EquipmentType.OverlordHelmet =>
                         GameData.buildings.forge.prices.mergeEquipmentOverlordHelmetSettings,
-                    AdminBRO.Equipment.Type_OverlordThighs =>
+                    AdminBRO.EquipmentType.OverlordThighs =>
                         GameData.buildings.forge.prices.mergeEquipmentOverlordThighsSettings,
-                    AdminBRO.Equipment.Type_OverlordWeapon =>
+                    AdminBRO.EquipmentType.OverlordWeapon =>
                         GameData.buildings.forge.prices.mergeEquipmentOverlordWeaponSettings,
                     _ => null
                 };

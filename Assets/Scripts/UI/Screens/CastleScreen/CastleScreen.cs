@@ -178,12 +178,42 @@ namespace Overlewd
             buffPanel = BuffWidget.GetInstance(transform);
             DevWidget.GetInstance(transform);
 
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b4 = () => UITools.DisableButton(sidebarButton)
-                });
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
+                    UITools.DisableButton(sidebarButton);
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    UITools.DisableButton(sidebarButton);
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    if (GameData.buildings.portal.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    UITools.DisableButton(sidebarButton);
+                    portalButton?.DisableButton();
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    if (GameData.buildings.harem.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    UITools.DisableButton(sidebarButton);
+                    portalButton?.DisableButton();
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    haremButton?.DisableButton();
+                    if (GameData.buildings.laboratory.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
+            }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
 
@@ -203,36 +233,45 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            var ftue_ch1_b4 = false;
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b4 = () => ftue_ch1_b4 = true
-                });
-
-            if (ftue_ch1_b4)
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                var showPanelTasks = new List<Task>();
-                showPanelTasks.Add(questsPanel.ShowAsync());
-                await Task.WhenAll(showPanelTasks);
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
+                    {
+                        var showPanelTasks = new List<Task>();
+                        showPanelTasks.Add(questsPanel.ShowAsync());
+                        await Task.WhenAll(showPanelTasks);
 
-                if (GameData.buildings.castle.meta.isBuilt)
-                {
-                    await castleButton.ShowAsync();
-                    GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");
-                }
-                else
-                {
-                    GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
-                }
-            }
-            else
-            {
-                var showPanelTasks = new List<Task>();
-                showPanelTasks.Add(questsPanel.ShowAsync());
-                showPanelTasks.Add(eventsPanel.ShowAsync());
-                await Task.WhenAll(showPanelTasks);
+                        if (GameData.buildings.castle.meta.isBuilt)
+                        {
+                            await castleButton.ShowAsync();
+                            GameData.ftue.chapter1.ShowNotifByKey("barrackstutor2");
+                        }
+                        else
+                        {
+                            GameData.ftue.chapter1.ShowNotifByKey("barrackstutor1");
+                        }
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    if (GameData.buildings.portal.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor2");
+                    }
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.SEX_2):
+                    if (!GameData.buildings.laboratory.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2labtutor1");
+                    }
+                    break;
+                default:
+                    {
+                        var showPanelTasks = new List<Task>();
+                        showPanelTasks.Add(questsPanel.ShowAsync());
+                        showPanelTasks.Add(eventsPanel.ShowAsync());
+                        await Task.WhenAll(showPanelTasks);
+                    }
+                    break;
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);

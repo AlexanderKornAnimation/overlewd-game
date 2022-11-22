@@ -12,7 +12,7 @@ namespace Overlewd
             protected override void Customize()
             {
                 base.Customize();
-                levelBack.SetActive(characterData.characterClass != AdminBRO.Character.Class_Overlord);
+                levelBack.SetActive(characterData.characterClass != AdminBRO.CharacterClass.Overlord);
             }
 
             public static AllyCharacter GetInstance(Transform parent)

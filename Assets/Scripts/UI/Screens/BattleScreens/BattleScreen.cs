@@ -13,16 +13,16 @@ namespace Overlewd
             base.StartBattle();
         }
 
-        public override void EndBattle(BattleManagerOutData data)
+        public override async void EndBattle(BattleManagerOutData data)
         {
             base.EndBattle(data);
 
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_b2 = () => endBattleData.battleWin = GameData.ftue.chapter1_stages.sex2.isComplete
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+                    endBattleData.battleWin = GameData.ftue.chapter1_sex2.isComplete;
+                    break;
+            }
 
             if (endBattleData.battleWin)
             {
@@ -31,7 +31,7 @@ namespace Overlewd
                     {
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
-                    }).RunShowPopupProcess();
+                    }).DoShow();
             }
             else
             {
@@ -40,7 +40,21 @@ namespace Overlewd
                 {
                     ftueStageId = inputData.ftueStageId,
                     eventStageId = inputData.eventStageId
-                }).RunShowPopupProcess();
+                }).DoShow();
+            }
+            
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor1");
+                    await UIManager.WaitHideNotifications();
+                    UIManager.MakeScreen<BattleGirlScreen>().
+                        SetData(new BattleGirlScreenInData
+                        {
+                            characterId = GameData.characters.slot1Ch.id,
+                        }).DoShow();
+                    SoundManager.StopAll();
+                    break;
             }
         }
 

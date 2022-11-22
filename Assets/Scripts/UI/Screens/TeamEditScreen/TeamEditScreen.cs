@@ -162,16 +162,16 @@ namespace Overlewd
             var orderedCharacters = GameData.characters.orderByLevel;
             foreach (var ch in orderedCharacters)
             {
-                if (ch.characterClass == AdminBRO.Character.Class_Overlord)
+                if (ch.characterClass == AdminBRO.CharacterClass.Overlord)
                     continue;
 
                 var tabId = ch.characterClass switch
                 {
-                    AdminBRO.Character.Class_Assassin => TabAssassins,
-                    AdminBRO.Character.Class_Bruiser => TabBruisers,
-                    AdminBRO.Character.Class_Caster => TabCasters,
-                    AdminBRO.Character.Class_Healer => TabHealers,
-                    AdminBRO.Character.Class_Tank => TabTanks,
+                    AdminBRO.CharacterClass.Assassin => TabAssassins,
+                    AdminBRO.CharacterClass.Bruiser => TabBruisers,
+                    AdminBRO.CharacterClass.Caster => TabCasters,
+                    AdminBRO.CharacterClass.Healer => TabHealers,
+                    AdminBRO.CharacterClass.Tank => TabTanks,
                     _ => TabAllUnits
                 };
 
@@ -200,6 +200,18 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2teamtutor1");
+                    await UIManager.WaitHideNotifications();
+                    break;
+            }
+            await Task.CompletedTask;
+        }
+
         private void TabClick(int tabId)
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -225,45 +237,23 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
-            if (inputData?.prevScreenInData != null)
+            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
             {
-                if (inputData.prevScreenInData.IsType<HaremScreenInData>())
-                {
-                    UIManager.MakeScreen<HaremScreen>().
-                        SetData(inputData.prevScreenInData as HaremScreenInData).
-                        RunShowScreenProcess();
-                } 
-                else if (inputData.prevScreenInData.IsType<MapScreenInData>())
-                {
-                    UIManager.MakeScreen<MapScreen>().
-                        SetData(new MapScreenInData 
-                        { 
-                            ftueStageId = inputData.ftueStageId 
-                        }).RunShowScreenProcess();
-                }
-                else if (inputData.prevScreenInData.IsType<EventMapScreenInData>())
-                {
-                    UIManager.MakeScreen<EventMapScreen>().
-                        SetData(new EventMapScreenInData
-                        {
-                            eventStageId = inputData.eventStageId
-                        }).RunShowScreenProcess();
-                }
+                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
             }
             else
             {
-                UIManager.ShowScreen<HaremScreen>();
+                
+                UIManager.ToPrevScreen(new UIManager.StateParams
+                {
+                    showOverlay = false,
+                });
             }
         }
 
         private void OverlordButtonClick()
         {
-            UIManager.MakeScreen<OverlordScreen>().
-                SetData(new OverlordScreenInData
-            {
-                prevScreenInData = inputData,
-            }).RunShowScreenProcess();
+            UIManager.ShowScreen<OverlordScreen>();
         }
     }
 

@@ -33,7 +33,7 @@ namespace Overlewd
 
             public void Customize()
             {
-                offer = ResourceBundle.GetInstance(offerPos);
+                offer = CurrencyPacksOffer.GetInstance(offerPos);
                 Deselect();
             }
 
@@ -46,13 +46,13 @@ namespace Overlewd
             public void Select()
             {
                 buttonSelected?.SetActive(true);
-                offer?.gameObject.SetActive(true);
+                offer?.Show();
             }
             
             public void Deselect()
             {
                 buttonSelected?.SetActive(false);
-                offer?.gameObject.SetActive(false);
+                offer?.Hide();
             }
 
             public static OfferButton GetInstance(Transform parent)

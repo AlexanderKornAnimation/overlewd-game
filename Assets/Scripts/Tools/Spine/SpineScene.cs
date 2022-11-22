@@ -48,7 +48,7 @@ namespace Overlewd
             }
         }
 
-        public bool IsComplete => !layers.Exists(l => !l.IsComplete);
+        public bool isComplete => !layers.Exists(l => !l.isComplete);
 
         public static SpineScene GetInstance(AdminBRO.Animation animationData, Transform parent, bool loop = true)
         {

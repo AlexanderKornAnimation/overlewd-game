@@ -79,7 +79,7 @@ namespace Overlewd
             healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             scrollBuyButton = bottlePanel.Find("Scroll").Find("BuyButton").GetComponent<Button>();
-            scrollBuyButton.onClick.AddListener(ScrollBuyButtonClick);
+            scrollBuyButton.onClick.AddListener(PotionBuyButtonClick);
             
             bossPos = charactersBack.Find("BossPos");
             allyContent = charactersBack.Find("AllyCharacters");
@@ -229,12 +229,12 @@ namespace Overlewd
             battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
             Customize();
 
-            GameData.ftue.DoLern(
-                inputData.ftueStageData,
-                new FTUELernActions
-                {
-                    ch1_any = () => UITools.DisableButton(editTeamButton)
-                });
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, _):
+                    UITools.DisableButton(editTeamButton);
+                    break;
+            }
 
             StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergy));
 
@@ -263,11 +263,7 @@ namespace Overlewd
             }
             else
             {
-                UIManager.MakePopup<BottlesPopup>().
-                    SetData(new BottlesPopupInData
-                    {
-                        prevPopupInData = inputData,
-                    }).RunShowPopupProcess();
+                UIManager.ShowPopup<BottlesPopup>();
             }
         }
         
@@ -302,48 +298,23 @@ namespace Overlewd
             buttonPlus.gameObject.SetActive(battlesCount < 5);
             buttonMinus.gameObject.SetActive(battlesCount > 1);
         }
-        private void ScrollBuyButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BottlesPopup>().
-                SetData(new BottlesPopupInData
-                {
-                    prevPopupInData = inputData
-                }).RunShowPopupProcess();
-        }
 
         private void PotionBuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakePopup<BottlesPopup>().
-                SetData(new BottlesPopupInData
-                {
-                    prevPopupInData = inputData
-                }).RunShowPopupProcess();
+            UIManager.ShowPopup<BottlesPopup>();
         }
         
         private void EditTeamButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<TeamEditScreen>().
-                SetData(new TeamEditScreenInData 
-                {
-                    prevScreenInData = UIManager.prevScreenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).RunShowScreenProcess();
+            UIManager.ShowScreen<TeamEditScreen>();
         }
 
         private void BuffButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<HaremScreen>().
-                SetData(new HaremScreenInData
-                {
-                    prevScreenInData = UIManager.prevScreenInData,
-                    ftueStageId = inputData.ftueStageId,
-                    eventStageId = inputData.eventStageId
-                }).RunShowScreenProcess();
+            UIManager.ShowScreen<HaremScreen>();
         }
 
         private void BackButtonClick()
@@ -360,10 +331,9 @@ namespace Overlewd
                 UIManager.MakeScreen<BossFightScreen>().
                     SetData(new BaseBattleScreenInData
                     {
-                        prevScreenInData = UIManager.prevScreenInData,
                         ftueStageId = inputData.ftueStageId,
                         eventStageId = inputData.eventStageId
-                    }).RunShowScreenProcess();
+                    }).DoShow();
             }
             else
             {
@@ -385,12 +355,12 @@ namespace Overlewd
         {
             await UITools.RightShowAsync(buffRect, 0.2f);
 
-            GameData.ftue.DoLern(
-                GameData.ftue.stats.lastEndedStageData,
-                new FTUELernActions
-                {
-                    ch1_b4 = () => GameData.ftue.chapter1.ShowNotifByKey("potionstutor1")
-                });
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
+                    GameData.ftue.chapter1.ShowNotifByKey("potionstutor1");
+                    break;
+            }
         }
 
         public override async Task BeforeHideAsync()
