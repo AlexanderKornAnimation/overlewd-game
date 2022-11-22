@@ -87,8 +87,7 @@ namespace Overlewd
                 var seq = DOTween.Sequence();
                 seq.AppendCallback(() =>
                 {
-                    var effect = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_quest_book01"], buttonRT);
-                    effect.transform.localPosition += new Vector3(-190.0f, 0.0f, 0.0f);
+                    UIfx.Inst(UIfx.UIFX_QUEST_BOOK01, buttonRT, new Vector2(-190.0f, 0.0f));
                 });
                 seq.AppendInterval(0.2f);
                 seq.Append(buttonCG.DOFade(0.0f, 0.3f));
