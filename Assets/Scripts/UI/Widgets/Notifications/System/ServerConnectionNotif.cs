@@ -45,7 +45,7 @@ namespace Overlewd
         {
             while (true)
             {
-                backCG.alpha = (0.7f + 0.3f * Mathf.Sin((backAlphaTime / 0.9f) * Mathf.PI * 2.0f)) * backMasterAlpha;
+                backCG.alpha = backMasterAlpha;
                 progress.transform.localEulerAngles = new Vector3(0.0f, 0.0f, progressAngle);
                 yield return new WaitForSeconds(0.01f);
                 backAlphaTime += 0.01f;

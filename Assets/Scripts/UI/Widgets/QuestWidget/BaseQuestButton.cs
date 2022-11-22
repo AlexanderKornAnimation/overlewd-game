@@ -109,8 +109,6 @@ namespace Overlewd
 
             public async Task WaitMarkAsComplete()
             {
-                if (questData.markCompleted)
-                    return;
                 questData.markCompleted = true;
 
                 var seq = DOTween.Sequence();

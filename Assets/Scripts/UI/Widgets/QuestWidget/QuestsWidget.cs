@@ -25,6 +25,9 @@ namespace Overlewd
             ftueQuests.FindAll(q => !q.isFTUEMain).
             OrderByDescending(q => q.isNew ? 100 : q.isCompleted ? 10 : 1).ToList();
 
+        private List<NSQuestWidget.BaseQuestButton> markNewQuests = new List<NSQuestWidget.BaseQuestButton>();
+        private List<NSQuestWidget.BaseQuestButton> markCompleteQuests = new List<NSQuestWidget.BaseQuestButton>();
+
         protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
@@ -60,9 +63,15 @@ namespace Overlewd
                 };
                 questButton.questId = questData.id;
 
-                if (questButton.questData.isNew ||
-                    questButton.questData.isCompleted)
+                if (questButton.questData.isNew)
                 {
+                    markNewQuests.Add(questButton);
+                    questButton.SetHide();
+                }
+
+                if (questButton.questData.isCompleted)
+                {
+                    markCompleteQuests.Add(questButton);
                     questButton.SetHide();
                 }
 
@@ -95,18 +104,14 @@ namespace Overlewd
         {
             await UITools.RightShowAsync(backRect);
 
-            var newQuests = content.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().
-                Where(q => q.questData.isNew).
-                Reverse();
-            foreach (var quest in newQuests)
+            markNewQuests.Reverse();
+            foreach (var quest in markNewQuests)
             {
                 await quest.WaitShowAsNew();
             }
 
-            var completeQuests = content.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().
-                Where(q => q.questData.isCompleted).
-                Reverse();
-            foreach (var quest in completeQuests)
+            markCompleteQuests.Reverse();
+            foreach (var quest in markCompleteQuests)
             {
                 await quest.WaitShow();
                 await quest.WaitMarkAsComplete();
