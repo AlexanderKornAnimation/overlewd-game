@@ -260,16 +260,6 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             chapterSelector.Show();
         }
-
-        public override void OnUIEvent(UIEvent eventData)
-        {
-            switch (eventData?.type)
-            {
-                case UIEvent.Type.HideOverlay:
-                    questsPanel?.Refresh();
-                    break;
-            }
-        }
     }
 
     public class MapScreenInData : BaseFullScreenInData

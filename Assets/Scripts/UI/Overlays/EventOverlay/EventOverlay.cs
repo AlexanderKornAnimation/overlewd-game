@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using DG.Tweening;
 
 namespace Overlewd
 {
@@ -26,6 +27,7 @@ namespace Overlewd
         private GameObject[] eventButtonPressed = new GameObject[TabsCount];
         private Image[] eventButtonPressedBanner = new Image[TabsCount];
         private TextMeshProUGUI[] eventButtonPressedTitle = new TextMeshProUGUI[TabsCount];
+        private AdminBRO.EventItem[] tabEventData;
 
         private Button backButton;
         private Transform tabArea;
@@ -70,15 +72,9 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            activeTabId = inputData != null ? inputData.activeTabId : activeTabId;
             InitTabs();
-            
-            foreach (var scroll in scrollView)
-            {
-                scroll.gameObject.SetActive(false);
-            }
-            
-            EnterTab(activeTabId);
+
+            SelectTabByOpen();
 
             foreach (var tabId in tabIds)
             {
@@ -90,8 +86,53 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        private void SelectTabByOpen()
+        {
+            var qData = inputData?.questData;
+            if (qData != null)
+            {
+                foreach (var tabId in tabIds)
+                {
+                    var eData = tabEventData[tabId];
+                    if (qData.eventId == eData?.id)
+                    {
+                        activeTabId = tabId;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                activeTabId = inputData?.activeTabId ?? activeTabId;
+            }
+            EnterTab(activeTabId);
+        }
+
+        private async Task AutoScrollByOpen()
+        {
+            var questId = inputData?.questId;
+            if (questId.HasValue)
+            {
+                var qInfo = scrollViewContent[activeTabId].GetComponentsInChildren<NSEventOverlay.BaseQuest>().
+                    Where(qInfo => qInfo.questId == questId).FirstOrDefault();
+                if (qInfo != null)
+                {
+                    var qSibligIndex = qInfo.transform.GetSiblingIndex() + 1;
+                    var tabChildsCount = scrollViewContent[activeTabId].childCount;
+                    var targetNormalizedVPos = 1.0f - qSibligIndex / (float)tabChildsCount;
+
+                    var sr = scrollView[activeTabId].GetComponent<ScrollRect>();
+                    var tween = sr.DOVerticalNormalizedPos(targetNormalizedVPos, 1.0f);
+                    tween.Play();
+                    await tween.AsyncWaitForCompletion();
+                }
+            }
+        }
+
         public override async Task AfterShowAsync()
         {
+            await AutoScrollByOpen();
+
             switch (GameData.ftue.stats.lastStartedStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_1, _):
@@ -196,7 +237,7 @@ namespace Overlewd
 
         private void InitTabs()
         {
-            var eventsData = new [] {
+            tabEventData = new [] {
                 GameData.events.activeQuarterly,
                 GameData.events.activeMonthly,
                 GameData.events.activeWeekly,
@@ -206,15 +247,15 @@ namespace Overlewd
 
             foreach (var tabId in tabIds)
             {
-                if (eventsData[tabId] != null)
+                if (tabEventData[tabId] != null)
                 {
                     switch (tabId)
                     {
                         case TabComingMonthly:
-                            InitComingEventTab(eventsData[tabId], tabId);
+                            InitComingEventTab(tabEventData[tabId], tabId);
                             break;
                         default:
-                            InitEventTab(eventsData[tabId], tabId);
+                            InitEventTab(tabEventData[tabId], tabId);
                             break;
                     }
                 }
@@ -222,6 +263,10 @@ namespace Overlewd
                 {
                     tabArea.Find("EventButton_" + tabNames[tabId]).gameObject.SetActive(false);
                 }
+            }
+            foreach (var scroll in scrollView)
+            {
+                scroll.gameObject.SetActive(false);
             }
         }
 
@@ -253,6 +298,10 @@ namespace Overlewd
 
     public class EventOverlayInData : BaseOverlayInData
     {
-        public int activeTabId = EventOverlay.TabQuarterly;
+        public int activeTabId { get; set; } = EventOverlay.TabQuarterly;
+        public int? questId { get; set; }
+
+        public AdminBRO.QuestItem questData =>
+            GameData.quests.GetById(questId);
     }
 }

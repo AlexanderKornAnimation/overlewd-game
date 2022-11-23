@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Overlewd
         private Button backButton;
 
         private Transform questScrollView;
+        private Transform questScrollView_content;
 
         private Transform mainQuestGrid;
         private GameObject mainQuestGridMark;
@@ -46,7 +48,7 @@ namespace Overlewd
             backButton.onClick.AddListener(BackButtonClick);
 
             questScrollView = canvas.Find("QuestScrollView");
-            var questScrollView_content = questScrollView.Find("Viewport").Find("Content");
+            questScrollView_content = questScrollView.Find("Viewport").Find("Content");
 
             mainQuestGrid = questScrollView_content.Find("MainQuestGrid");
             mainQuestGridMark = mainQuestGrid.Find("QuestHead").Find("QuestMark").gameObject;
@@ -76,12 +78,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_QuestOverlayHide);
         }
 
-        private void Start()
-        {
-            Customize();
-        }
-
-        private void Customize()
+        public async override Task BeforeShowMakeAsync()
         {
             foreach (var questItem in ftueQuests)
             {
@@ -99,6 +96,32 @@ namespace Overlewd
 
             var questForSelect = questButtons.Find(qb => qb.questId == inputData?.questId) ?? questButtons.FirstOrDefault();
             questForSelect?.Select();
+
+            await Task.CompletedTask;
+        }
+
+        private async Task AutoScrollAsync(NSQuestOverlay.QuestButton questButton)
+        {
+            if (questButton == null)
+                return;
+            
+            var buttonContentIndex = questButton.transform.GetSiblingIndex() + 1;
+            var headSiblingIndex = questButton.transform.parent.GetSiblingIndex();
+            while (--headSiblingIndex >= 0)
+            {
+                buttonContentIndex += questScrollView_content.GetChild(headSiblingIndex).childCount;
+            }
+            var contentChildsCount = 0;
+            foreach (Transform head in questScrollView_content)
+            {
+                contentChildsCount += head.childCount;
+            }
+            var targetNormalizedVPos = 1.0f - buttonContentIndex / (float)contentChildsCount;
+
+            var sr = questScrollView.GetComponent<ScrollRect>();
+            var tween = sr.DOVerticalNormalizedPos(targetNormalizedVPos, 0.5f);
+            tween.Play();
+            await tween.AsyncWaitForCompletion();
         }
 
         private Transform GetQuestGridByType(string type)
@@ -108,7 +131,7 @@ namespace Overlewd
                 AdminBRO.QuestItem.QuestType_Main => mainQuestGrid,
                 AdminBRO.QuestItem.QuestType_Matriarch => matriarchQuestGrid,
                 AdminBRO.QuestItem.QuestType_Side => sideQuestGrid,
-                _ => null,
+                _ => sideQuestGrid,
             };
         }
 
@@ -120,6 +143,8 @@ namespace Overlewd
                     GameData.ftue.chapter2.ShowNotifByKey("ch2empathytutor2");
                     break;
             }
+
+            await AutoScrollAsync(selectedQuest);
 
             await Task.CompletedTask;
         }
@@ -138,7 +163,7 @@ namespace Overlewd
 
     public class QuestOverlayInData : BaseOverlayInData
     {
-        public int? questId;
+        public int? questId { get; set; }
         public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
     }
 }

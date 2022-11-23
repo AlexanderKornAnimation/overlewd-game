@@ -490,7 +490,7 @@ namespace Overlewd
             public AdminBRO.EventItem eventData => GameData.events.GetEventById(eventId);
 
             [JsonProperty(Required = Required.Default)]
-            public bool isActive => GameData.events.activeChapter == this;
+            public bool isActive => eventData?.activeChapter?.id == id;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => GameData.devMode ? true : (isActive || isComplete);
@@ -552,6 +552,25 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public EventChapter firstChapter =>
                 chaptersData.FirstOrDefault();
+
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.EventChapter activeChapter
+            {
+                get
+                {
+                    var chapterData = firstChapter;
+                    while (chapterData?.isComplete ?? false)
+                    {
+                        if (chapterData.nextChapterId.HasValue)
+                        {
+                            chapterData = chapterData.nextChapterData;
+                            continue;
+                        }
+                        break;
+                    }
+                    return chapterData;
+                }
+            }
 
             public EventChapter GetChapterById(int? id) =>
                 GameData.events.GetChapterById(id);
@@ -1360,7 +1379,7 @@ namespace Overlewd
             public bool isComplete => !stagesData.Exists(s => !s.isComplete);
 
             [JsonProperty(Required = Required.Default)]
-            public bool isActive => GameData.ftue.activeChapter == this;
+            public bool isActive => GameData.ftue.activeChapter?.id == id;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => GameData.devMode ? true : (isComplete || isActive);

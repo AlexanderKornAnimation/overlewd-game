@@ -81,7 +81,7 @@ namespace Overlewd
             {
                 await GameData.quests.ClaimReward(questData?.id);
                 Customize();
-                await UITools.WaitClaimRewardsAsync(questData?.rewards);
+                UITools.ClaimRewardsAsync(questData?.rewards);
                 questContentScrollView.questButton.Remove();
             }
 

@@ -40,11 +40,22 @@ namespace Overlewd
             protected virtual void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakeOverlay<QuestOverlay>().
-                    SetData(new QuestOverlayInData 
-                    {
-                        questId = questId
-                    }).DoShow();
+                if (questData.isFTUE)
+                {
+                    UIManager.MakeOverlay<QuestOverlay>().
+                        SetData(new QuestOverlayInData
+                        {
+                            questId = questId
+                        }).DoShow();
+                }
+                else if (questData.isEvent)
+                {
+                    UIManager.MakeOverlay<EventOverlay>().
+                        SetData(new EventOverlayInData
+                        {
+                            questId = questId
+                        }).DoShow();
+                }
             }
 
             private void Start()

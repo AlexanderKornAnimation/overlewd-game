@@ -31,7 +31,8 @@ namespace Overlewd
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/ChapterScreens/EventMapScreen/EventMap", transform);
 
             EventsWidget.GetInstance(transform);
-            QuestsWidget.GetInstance(transform);
+            var questPanel = QuestsWidget.GetInstance(transform);
+            questPanel.SwitchToEventMode();
             buffPanel = BuffWidget.GetInstance(transform);
 
             var canvas = screenInst.transform.Find("Canvas");
@@ -59,7 +60,7 @@ namespace Overlewd
                 if (GameData.devMode)
                     eventData.firstChapter.SetAsMapChapter();
                 else
-                    GameData.events.activeChapter.SetAsMapChapter();
+                    eventData.activeChapter.SetAsMapChapter();
             }
 
             var eventChapterData = GameData.events.mapChapter;
