@@ -14,8 +14,8 @@ public class DamagePopup : MonoBehaviour
         red = "<color=#FD4D4B>",
         blue = "<color=#5C9BCC>",
         yellow = "<color=#FFBA53>",
-        green = "<color=#83FAB4>",
-        purple = "<color=#7D35FF>";
+        green = "<color=#81E41E>",
+        purple = "<color=#FF00E6>";
     private Animator ani;
 
     public float lifetime = .75f;

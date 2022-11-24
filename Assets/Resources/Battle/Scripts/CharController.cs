@@ -199,13 +199,13 @@ namespace Overlewd
                 else
                 {
                     battlePos = battleLayer.Find("battlePos2").transform;
-                    persPos = battleLayer.Find("enemy" + battleOrder.ToString()).transform;
+                    persPos = battleLayer.Find("Enemy/enemy" + battleOrder.ToString()).transform;
                 }
             }
             else
             {
                 battlePos = battleLayer.Find("battlePos1").transform;
-                persPos = battleLayer.Find("pers" + battleOrder.ToString()).transform;
+                persPos = battleLayer.Find("Player/pers" + battleOrder.ToString()).transform;
             }
             transform.SetParent(persPos, false);
             transform.SetSiblingIndex(0);
@@ -386,6 +386,11 @@ namespace Overlewd
 
         public void Highlight() => observer?.Border(true);
         public void UnHiglight() => observer?.Border(false);
+        public void HighlightForTurn() => observer.Select(0);
+        public void HighlightForHit() => observer.Select(1);
+        public void HighlightForHeal() => observer.Select(2);
+        public void HighlightDeselect() => observer.Select(-1);
+
         public void BattleIn(bool AOE = false)
         {
             UnHiglight();
@@ -446,7 +451,7 @@ namespace Overlewd
                 if (crit)
                     DrawPopup($"Crit!\n{value}", "yellow", fast: true);
                 else if (poison)
-                    DrawPopup($"-{value}HP", "purple", fast: true);
+                    DrawPopup($"-{value}HP", "green", fast: false);
                 else
                     DrawPopup($"{value}", "white", fast: true);
 
@@ -470,7 +475,7 @@ namespace Overlewd
                 StartCoroutine(UIDelay(uiDelay));
             }
             else if (value < 0)
-                Heal(-value);
+                Heal(-value, healer: attacker);
         }
 
         IEnumerator UIDelay(float delay)
@@ -493,8 +498,8 @@ namespace Overlewd
                 health += value;
                 health = Mathf.Round(health);
                 health = Mathf.Min(health, healthMax);
-                DrawPopup($"+{value}HP", "green");
-                if (health >= healthMax)
+                DrawPopup($"+{value}HP", "purple");
+                if (health >= healthMax && healer != null)
                     healer.battleCry.CallBattleCry(BattleCry.CryEvent.MaxHP);
                 UpdateUI();
             }
@@ -563,13 +568,13 @@ namespace Overlewd
                                 DrawPopup(msg_blind, "red", buffDelay);
                             }
                             else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                                DrawPopup(msg_immunity, "yellow", buffDelay);
                             break;
                         case "regeneration":
                             regen_poison = addManual ? regen_poison + duration : duration;
                             regen_poison_dot = -effectAmount;
                             StartCoroutine(InstVFXDelay(vfx_green, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_regen, "blue", buffDelay);
+                            DrawPopup(msg_regen, "purple", buffDelay);
                             break;
                         case "poison":
                             if (immunity == 0)
@@ -577,7 +582,7 @@ namespace Overlewd
                                 regen_poison = addManual ? regen_poison - duration : -duration; //-duration;
                                 regen_poison_dot = effectAmount;
                                 StartCoroutine(InstVFXDelay(vfx_purple, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_poison, "purple", buffDelay);
+                                DrawPopup(msg_poison, "green", buffDelay);
                             }
                             else
                                 DrawPopup(msg_immunity, "green", buffDelay);
@@ -688,7 +693,7 @@ namespace Overlewd
                             regen_poison = duration;
                             regen_poison_dot = -effectAmount;
                             StartCoroutine(InstVFXDelay(vfx_green, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_regen, "blue", buffDelay);
+                            DrawPopup(msg_regen, "purple", buffDelay);
                             break;
                         case "bless":
                             bless_healBlock = duration;
@@ -759,7 +764,7 @@ namespace Overlewd
                                 targetCC.regen_poison = -duration;
                                 targetCC.regen_poison_dot = effectAmount;
                                 StartCoroutine(InstVFXDelay(vfx_purple, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_poison, "purple", buffDelay);
+                                DrawPopup(msg_poison, "green", buffDelay);
                             }
                             else
                                 DrawPopup(msg_immunity, "green", buffDelay);
@@ -928,6 +933,7 @@ namespace Overlewd
             bm.unselect -= UnHiglight;
             bm.roundEnd -= UpadeteRoundEnd;
             Destroy(observer?.gameObject);
+            Destroy(observer?.selector.gameObject);
         }
     }
 }

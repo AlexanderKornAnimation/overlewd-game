@@ -41,7 +41,7 @@ namespace Overlewd
 
 		public virtual void StartBattle()
         {
-			skipButton.gameObject.SetActive(true);
+			skipButton.gameObject.SetActive(false);
 		}
 
 		public virtual void EndBattle(BattleManagerOutData data)

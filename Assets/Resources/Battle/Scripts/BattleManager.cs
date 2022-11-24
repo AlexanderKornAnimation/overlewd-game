@@ -178,6 +178,7 @@ namespace Overlewd
             }
 
             charControllerList[step].Highlight();
+            charControllerList[step].HighlightForTurn();
             if (battleState == BattleState.PLAYER && !ccOnSelect.skill[0].AOE)
                 ButtonPress(0);
 
@@ -339,6 +340,19 @@ namespace Overlewd
                     if (skillOnSelect > -1 && skillOnSelect != id)
                         skillControllers[skillOnSelect]?.Unselect();
                     skillOnSelect = sc.Press() ? id : -1;
+
+                    if (!ccOnSelect.isEnemy && skillOnSelect != -1)
+                        if (sc.isHeal)
+                        foreach (var cc in enemyTargetList)
+                            cc?.HighlightForHeal();
+                        else
+                        foreach (var cc in enemyAllyList)
+                            cc?.HighlightForHit();
+                    else
+                        foreach (var cc in charControllerList)
+                            if (cc != ccOnSelect)
+                                cc?.HighlightDeselect();
+
                     AttackCheck();
                 }
                 else if (sc.silence)
@@ -369,6 +383,8 @@ namespace Overlewd
             {
                 if (id > ccOnSelect.skill.Count) id = 0;
                 unselect?.Invoke();
+                foreach (var cc in charControllerList)
+                    cc.HighlightDeselect();
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
                 ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
@@ -481,7 +497,10 @@ namespace Overlewd
             charControllerList.Remove(invoker);
 
             if (invoker.isEnemy)
+            { 
                 enemyIsDead++;
+                enemyAllyList.Remove(invoker);
+            }
             else
             {
                 charIsDead++;
@@ -602,6 +621,7 @@ namespace Overlewd
                     }
                     prevState = battleState; //save prew state for portrait animation
                     ccOnSelect.Highlight();
+                    ccOnSelect.HighlightForTurn();
                 }
             }
         }
