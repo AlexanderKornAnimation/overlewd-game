@@ -23,6 +23,9 @@ namespace Overlewd
             private Transform content;
             private RectTransform progressBarRect;
 
+            private Button claimAllButton;
+            private Button upgradeButton;
+
             private Transform canvas;
 
             private void Awake()
@@ -36,6 +39,10 @@ namespace Overlewd
 
                 content = canvas.Find("ScrollView").Find("Viewport").Find("Content");
                 progressBarRect = content.Find("ProgressBar").GetComponent<RectTransform>();
+                claimAllButton = canvas.Find("ClaimAllButton").GetComponent<Button>();
+                claimAllButton.onClick.AddListener(ClaimAllButtonClick);
+                upgradeButton = canvas.Find("UpgradeButton").GetComponent<Button>();
+                upgradeButton.onClick.AddListener(UpgradeButtonClick);
             }
 
             private void Start()
@@ -95,6 +102,16 @@ namespace Overlewd
                     }
                 }
                 progressBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, progressBarWidth);
+            }
+
+            private void ClaimAllButtonClick()
+            {
+
+            }
+
+            private void UpgradeButtonClick()
+            {
+
             }
 
             public static BattlePass GetInstance(Transform parent)

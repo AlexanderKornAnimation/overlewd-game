@@ -23,14 +23,8 @@ namespace Overlewd
 
             private Image[] freeRewards = new Image[2];
             private TextMeshProUGUI[] freeRewardsAmounts = new TextMeshProUGUI[2];
-            private Button freeClaimButton;
-
             private Image[] premRewards = new Image[2];
             private TextMeshProUGUI[] premRewardsAmounts = new TextMeshProUGUI[2];
-            private Button premClaimButton;
-
-            private Button claimAllButton;
-            private Button upgradeButton;
 
             private Transform canvas;
 
@@ -43,10 +37,6 @@ namespace Overlewd
                 
                 level = levelBackground.Find("Level").GetComponent<TextMeshProUGUI>();
                 levelReached = levelBackground.Find("LevelReached") as RectTransform;
-                freeClaimButton = freeRewardsTr.Find("ClaimButton").GetComponent<Button>();
-                premClaimButton = premiumRewardsTr.Find("ClaimButton").GetComponent<Button>();
-                claimAllButton = canvas.Find("ClaimAllButton").GetComponent<Button>();
-                upgradeButton = canvas.Find("UpgradeButton").GetComponent<Button>();
 
                 for (int i = 0; i < freeRewards.Length; i++)
                 {
@@ -88,26 +78,6 @@ namespace Overlewd
                         premRewardsAmounts[i].text = levelData.premiumReward[i].amount?.ToString();
                     }
                 }
-            }
-            
-            private void FreeClaimButtonClick()
-            {
-                
-            }
-
-            private void PremClaimButtonClick()
-            {
-                
-            }
-
-            private void ClaimAllButtonClick()
-            {
-                
-            }
-
-            private void UpgradeButtonClick()
-            {
-                
             }
             
             public static BattlePassLevel GetInstance(Transform parent)
