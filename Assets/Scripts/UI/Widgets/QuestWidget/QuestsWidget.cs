@@ -45,7 +45,10 @@ namespace Overlewd
         private List<AdminBRO.QuestItem> quests => isEventMode ?
             eventQuests :
             ftueQuests.FindAll(q => !q.isFTUEMain).
-            OrderByDescending(q => q.isNew ? 100 : q.isCompleted ? 10 : 1).ToList();
+            OrderByDescending(q =>
+                q.isNew ? 100 : 
+                q.isCompleted && !q.markCompleted ? 20 :
+                q.isCompleted ? 10 : 1).ToList();
 
         private List<NSQuestWidget.BaseQuestButton> markNewQuests = new List<NSQuestWidget.BaseQuestButton>();
         private List<NSQuestWidget.BaseQuestButton> markCompleteQuests = new List<NSQuestWidget.BaseQuestButton>();
@@ -114,7 +117,8 @@ namespace Overlewd
                     questButton.SetHide();
                 }
 
-                if (questButton.questData.isCompleted)
+                if (questButton.questData.isCompleted &&
+                    !questButton.questData.markCompleted)
                 {
                     markCompleteQuests.Add(questButton);
                     questButton.SetHide();
@@ -145,10 +149,8 @@ namespace Overlewd
             UITools.RightHide(backRect);
         }
 
-        public async Task ShowAsync()
+        private async void FirstShowMarkedQuests()
         {
-            await UITools.RightShowAsync(backRect);
-
             markNewQuests.Reverse();
             foreach (var quest in markNewQuests)
             {
@@ -161,6 +163,13 @@ namespace Overlewd
                 await quest.WaitShow();
                 await quest.WaitMarkAsComplete();
             }
+        }
+
+        public async Task ShowAsync()
+        {
+            await UITools.RightShowAsync(backRect);
+
+            FirstShowMarkedQuests();
         }
 
         public async Task HideAsync()
