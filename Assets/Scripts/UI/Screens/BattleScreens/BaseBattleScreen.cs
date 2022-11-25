@@ -22,10 +22,14 @@ namespace Overlewd
 
 			skipButton = canvas.Find("SkipButton").GetComponent<Button>();
 			skipButton.onClick.AddListener(SkipButtonClick);
+#if UNITY_EDITOR
+			skipButton.gameObject.SetActive(true);
+#else
 			skipButton.gameObject.SetActive(false);
+#endif
 		}
 
-        public override void StartShow()
+		public override void StartShow()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_BattleScreenShow);
         }
@@ -81,6 +85,13 @@ namespace Overlewd
 
 	public class BattleManagerInData
     {
+		public enum BattleFlow
+        {
+			Normal,
+			Win,
+			Defeat
+        }
+
 		public List<AdminBRO.Character> myTeam { get; private set; } = new List<AdminBRO.Character>();
 		public List<EnemyWave> enemyWaves { get; private set; } = new List<EnemyWave>();
 		public string ftueChapterKey { get; private set; }
@@ -90,7 +101,7 @@ namespace Overlewd
 		public int hp { get; private set; }
 		public float manaMagnitude { get; private set; }
 		public float hpMagnitude { get; private set; }
-		
+		public BattleFlow battleFlow { get; private set; } = BattleFlow.Normal;
 
 		public class EnemyWave
         {
@@ -104,6 +115,15 @@ namespace Overlewd
             {
 				inst.ftueChapterKey = stage.ftueChapterData?.key;
 				inst.ftueStageKey = stage?.key;
+
+				switch (stage?.lerningKey)
+				{
+					case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+						inst.battleFlow = GameData.ftue.chapter1_sex2.isComplete ?
+							BattleFlow.Win : BattleFlow.Defeat;
+						break;
+				}
+
 				return inst;
             }
 			return null;
