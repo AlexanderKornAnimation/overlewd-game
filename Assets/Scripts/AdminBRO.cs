@@ -705,6 +705,7 @@ namespace Overlewd
             public int? eventId;
             public int? ftueChapterId;
             public string ftueQuestType;
+            public string screenTarget;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
@@ -714,6 +715,16 @@ namespace Overlewd
             public const string QuestType_Main = "main";
             public const string QuestType_Side = "side";
             public const string QuestType_Matriarch = "matriarch";
+
+            public const string ScreenTarget_Harem = "harem";
+            public const string ScreenTarget_BattleGirls = "battle_girls";
+            public const string ScreenTarget_GuestRoom = "guest_room";
+            public const string ScreenTarget_MagicGuild = "magic_guild";
+            public const string ScreenTarget_Municipality = "municipality";
+            public const string ScreenTarget_Forge = "forge";
+            public const string ScreenTarget_Laboratory = "laboratory";
+            public const string ScreenTarget_Map = "map";
+            public const string ScreenTarget_Portal = "portal";
 
             [JsonProperty(Required = Required.Default)]
             public bool isNew

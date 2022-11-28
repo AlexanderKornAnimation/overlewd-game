@@ -10,6 +10,8 @@ namespace Overlewd
         {
             public QuestContentScrollView questContentScrollView { get; set; }
 
+            public int? questId =>
+                questContentScrollView.questButton.questId;
             public AdminBRO.QuestItem questData =>
                 questContentScrollView.questButton.questData;
         }
