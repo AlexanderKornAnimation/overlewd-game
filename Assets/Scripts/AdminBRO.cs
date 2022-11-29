@@ -1158,6 +1158,8 @@ namespace Overlewd
             public int? sfxTargetId;
             public bool shakeScreen;
 
+            public const string Type_OverlordAttack = "overlord_attack";
+
             public const string Type_Passive = "passive_skill";
             public const string Type_Attack = "attack";
             public const string Type_Enhanced = "enhanced_attack";
@@ -1732,7 +1734,6 @@ namespace Overlewd
                 GameData.buildings.magicGuild.meta.currentLevel >=
                 requiredBuildingLevel && next != null;
 
-            public const string Type_Attack = "overlord_attack";
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";

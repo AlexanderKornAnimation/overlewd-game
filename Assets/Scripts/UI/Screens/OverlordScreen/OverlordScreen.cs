@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,9 +56,9 @@ namespace Overlewd
         private Transform infoPopupPos;
         private NSOverlordScreen.EquipInfoPopup equipPopup;
 
+        private Button basicAttack;
         private NSOverlordScreen.Skill passiveSkill1;
         private NSOverlordScreen.Skill passiveSkill2;
-        private NSOverlordScreen.Skill basicAttack;
         private NSOverlordScreen.Skill enhancedAttack;
         private NSOverlordScreen.Skill ultimate;
 
@@ -163,10 +162,9 @@ namespace Overlewd
             passiveSkill2 = skills.Find("PassiveSkill2").gameObject.AddComponent<NSOverlordScreen.Skill>();
             passiveSkill2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
             passiveSkill2.infoWidgetPos = infoPopupPos;
-            
-            basicAttack = skills.Find("BasicAttack").gameObject.AddComponent<NSOverlordScreen.Skill>();
-            basicAttack.skillType = AdminBRO.MagicGuildSkill.Type_Attack;
-            basicAttack.infoWidgetPos = infoPopupPos;
+
+            basicAttack = skills.Find("BasicAttack").GetComponent<Button>();
+            basicAttack.onClick.AddListener(BasicAttackClick);
             
             enhancedAttack = skills.Find("EnhancedSkill").gameObject.AddComponent<NSOverlordScreen.Skill>();
             enhancedAttack.skillType = AdminBRO.MagicGuildSkill.Type_ActiveSkill;
@@ -209,6 +207,12 @@ namespace Overlewd
             dodgeChance.text = overlordData.dodge * 100 + "%";
             damage.text = overlordData.damage.ToString();
             potency.text = overlordData.potency.ToString();
+        }
+
+        private void BasicAttackClick()
+        {
+            var skillInfo = NSOverlordScreen.BasicAttackInfo.GetInstance(transform);
+            skillInfo.skillType = AdminBRO.CharacterSkill.Type_OverlordAttack;
         }
         
         private void CustomizeCell(NSOverlordScreen.Equipment equip)

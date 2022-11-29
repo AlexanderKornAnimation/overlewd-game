@@ -27,7 +27,7 @@ namespace Overlewd
                 level.text = skillData.currentSkillLevel.ToString();
                 description.text = skillData.current.description;
                 notificationLock.SetActive(skillData.locked);
-                levelBack.SetActive(!skillData.locked && skillType != AdminBRO.MagicGuildSkill.Type_Attack);
+                levelBack.SetActive(!skillData.locked);
 
                 icon.sprite = GetIcon();
             }
@@ -37,8 +37,6 @@ namespace Overlewd
         {
             switch (skillType)
             {
-                case AdminBRO.MagicGuildSkill.Type_Attack:
-                    return Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/BasicAttack");
                 case AdminBRO.MagicGuildSkill.Type_ActiveSkill:
                     return skillData.locked
                         ? Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1_Locked")
