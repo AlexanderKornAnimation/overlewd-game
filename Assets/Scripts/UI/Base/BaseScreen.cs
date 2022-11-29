@@ -118,12 +118,14 @@ namespace Overlewd
         public AdminBRO.QuestItem questData =>
             GameData.quests.GetById(questId);
 
+        public int? dialogId;
+        public AdminBRO.Dialog dialogData =>
+            eventStageData?.dialogData ?? ftueStageData?.dialogData ?? GameData.dialogs.GetById(dialogId);
+
         public bool hasEventStage => eventStageId.HasValue;
         public bool hasFTUEStage => ftueStageId.HasValue;
         public AdminBRO.Battle battleData =>
             eventStageData?.battleData ?? ftueStageData?.battleData;
-        public AdminBRO.Dialog dialogData =>
-            eventStageData?.dialogData ?? ftueStageData?.dialogData;
 
         protected bool IsType<T>() where T : BaseScreenInData =>
             this.GetType() == typeof(T);

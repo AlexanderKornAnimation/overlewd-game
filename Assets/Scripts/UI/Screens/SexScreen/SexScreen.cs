@@ -135,7 +135,7 @@ namespace Overlewd
 
         public override async Task BeforeShowDataAsync()
         {
-            dialogData = inputData.eventStageData?.dialogData ?? inputData.ftueStageData?.dialogData ?? inputData.dialogData;
+            dialogData = inputData.dialogData;
 
             if (inputData.eventStageId.HasValue)
             {
@@ -156,6 +156,13 @@ namespace Overlewd
             else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageId.Value);
+            }
+            else if (inputData.dialogId.HasValue)
+            {
+                if (dialogData.postAction == AdminBRO.Dialog.PostAction_Seduce)
+                {
+                    await GameData.matriarchs.matriarchSeduce(dialogData.matriarchId);
+                }
             }
         }
         
@@ -396,8 +403,6 @@ namespace Overlewd
 
     public class SexScreenInData : BaseFullScreenInData
     {
-        public int? dialogId;
-        public AdminBRO.Dialog dialogData =>
-            GameData.dialogs.GetById(dialogId);
+
     }
 }
