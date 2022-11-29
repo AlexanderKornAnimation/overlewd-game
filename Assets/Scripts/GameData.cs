@@ -1133,6 +1133,7 @@ namespace Overlewd
                 await AdminBRO.seduceMatriarchAsync(id.Value);
                 matriarchs = await AdminBRO.matriarchsAsync();
                 buffs = await AdminBRO.buffsAsync();
+                await GameData.characters.Get();
             }
         }
     }
