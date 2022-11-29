@@ -472,6 +472,7 @@ namespace Overlewd
             await Get();
             await GameData.player.Get();
             await GameData.characters.Get();
+            await GameData.equipment.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -496,6 +497,7 @@ namespace Overlewd
             await Get();
             await GameData.player.Get();
             await GameData.characters.Get();
+            await GameData.equipment.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
