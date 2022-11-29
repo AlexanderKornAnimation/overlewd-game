@@ -15,27 +15,23 @@ namespace Overlewd
         private Transform iconLili;
         private Transform iconFaye;
         private TextMeshProUGUI description;
-        private Button activeButton;
-        private Button unactiveButton;
+        private Button button;
 
         protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
-
-            unactiveButton = backRect.Find("UnactiveButton").GetComponent<Button>();
-            unactiveButton.onClick.AddListener(ButtonClick);
             
-            activeButton = backRect.Find("ActiveButton").GetComponent<Button>();
-            activeButton.onClick.AddListener(ButtonClick);
+            button = backRect.Find("Button").GetComponent<Button>();
+            button.onClick.AddListener(ButtonClick);
             
-            icon = activeButton.transform.Find("Icon").GetComponent<Image>();
-            iconUlvi = activeButton.transform.Find("IconUlvi");
-            iconAdriel = activeButton.transform.Find("IconAdriel");
-            iconIngie = activeButton.transform.Find("IconIngie");
-            iconLili = activeButton.transform.Find("IconLili");
-            iconFaye = activeButton.transform.Find("IconFaye");
-            description = activeButton.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+            icon = button.transform.Find("Icon").GetComponent<Image>();
+            iconUlvi = button.transform.Find("IconUlvi");
+            iconAdriel = button.transform.Find("IconAdriel");
+            iconIngie = button.transform.Find("IconIngie");
+            iconLili = button.transform.Find("IconLili");
+            iconFaye = button.transform.Find("IconFaye");
+            description = button.transform.Find("Description").GetComponent<TextMeshProUGUI>();
             
         }
 
@@ -47,10 +43,9 @@ namespace Overlewd
         private void Customize()
         {
             var activeBuff = GameData.matriarchs.activeBuff;
-            if (activeBuff != null && GameData.ftue.chapter1_sex2.isComplete)
+            if (activeBuff != null)
             {
-                activeButton.gameObject.SetActive(true);
-                unactiveButton.gameObject.SetActive(false);
+                Show();
 
                 icon.sprite = ResourceManager.LoadSprite(activeBuff.icon);
                 description.text = UITools.ChangeTextSize(activeBuff.description, description.fontSize);
@@ -62,12 +57,11 @@ namespace Overlewd
             }
             else
             {
-                activeButton.gameObject.SetActive(false);
-                unactiveButton.gameObject.SetActive(true);
+                Hide();
             }
 
-            UITools.DisableButton(activeButton, GameData.progressFlags.lockBuff);
-            UITools.DisableButton(unactiveButton, GameData.progressFlags.lockBuff);
+            //button.interactable = !GameData.progressFlags.lockBuff;
+            button.interactable = false;
         }
 
         protected virtual void ButtonClick()
@@ -75,7 +69,17 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<HaremScreen>();
         }
-        
+
+        public void Show()
+        {
+            UITools.RightShow(backRect);
+        }
+
+        public void Hide()
+        {
+            UITools.RightHide(backRect);
+        }
+
         public static BuffWidget GetInstance(Transform parent)
         {
             return ResourceManager.InstantiateScreenPrefab<BuffWidget>
