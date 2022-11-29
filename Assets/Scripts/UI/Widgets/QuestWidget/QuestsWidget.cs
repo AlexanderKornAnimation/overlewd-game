@@ -149,7 +149,7 @@ namespace Overlewd
             UITools.RightHide(backRect);
         }
 
-        private async void FirstShowMarkedQuests()
+        private async Task FirstShowMarkedQuests()
         {
             markNewQuests.Reverse();
             foreach (var quest in markNewQuests)
@@ -169,7 +169,7 @@ namespace Overlewd
         {
             await UITools.RightShowAsync(backRect);
 
-            FirstShowMarkedQuests();
+            await FirstShowMarkedQuests();
         }
 
         public async Task HideAsync()
