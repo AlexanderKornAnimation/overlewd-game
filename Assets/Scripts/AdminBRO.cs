@@ -921,7 +921,6 @@ namespace Overlewd
         // /battles/my/characters/{characterId}/skills/{skillId}/levelup
         // /battles/my/characters/{tgtId}/merge/{srcId}
         // /battles/skills/effects
-        // /battles/pass
         public static async Task<HttpCoreResponse<List<Character>>> charactersAsync() =>
             await HttpCore.GetAsync<List<Character>>(make_url("battles/my/characters"));
 
@@ -943,9 +942,6 @@ namespace Overlewd
 
         public static async Task<HttpCoreResponse<List<SkillEffect>>> skillEffectsAsync() =>
             await HttpCore.GetAsync<List<SkillEffect>>(make_url("battles/skills/effects"));
-
-        public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
-            await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
 
         public class CharacterClass
         {
@@ -1234,6 +1230,17 @@ namespace Overlewd
             
         }
 
+        // /battles/pass
+        // /battles/pass/{id}/buy-premium
+        // /battles/pass/{id}/claim
+        public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
+            await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
+        public static async Task<HttpCoreResponse> battlePassBuyPremiumAsync(int battlePassId) =>
+            await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/buy-premium"));
+        public static async Task<HttpCoreResponse> battlePassClaimAsync(int battlePassId) =>
+            await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/claim"));
+
+
         [Serializable]
         public class BattlePass
         {
@@ -1242,12 +1249,15 @@ namespace Overlewd
             public List<Level> levels;
             public List<PriceItem> premiumPrice;
             public int currentPointsCount;
+            public bool isPremium;
 
             public class Level
             {
                 public int pointsThreshold;
                 public List<RewardItem> defaultReward;
                 public List<RewardItem> premiumReward;
+                public bool isDefaultRewardClaimed;
+                public bool isPremiumRewardClaimed;
             }
         }
 

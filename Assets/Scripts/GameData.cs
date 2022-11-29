@@ -1149,6 +1149,18 @@ namespace Overlewd
             passes.Find(p => p.eventId == eventId);
         public AdminBRO.BattlePass GetById(int id) =>
             passes.Find(p => p.id == id);
+
+        public async Task BuyPremium(int battlePassId)
+        {
+            await AdminBRO.battlePassBuyPremiumAsync(battlePassId);
+            await Get();
+        }
+
+        public async Task ClaimRewards(int battlePassId)
+        {
+            await AdminBRO.battlePassClaimAsync(battlePassId);
+            await Get();
+        }
     }
 
     //potions
