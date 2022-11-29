@@ -11,8 +11,7 @@ namespace Overlewd
     {
         public abstract class BaseCharacter : MonoBehaviour
         {
-            public int? characterId { get; set; }
-            public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
+            public AdminBRO.Character characterData { get; set; }
 
             protected Transform canvas;
             public Transform widgetPos { get; set; }
@@ -44,7 +43,7 @@ namespace Overlewd
                 if (characterData == null)
                     return;
                 
-                button.gameObject.SetActive(characterId != GameData.characters.overlord.id);
+                button?.gameObject.SetActive(characterData.id != GameData.characters.overlord.id);
                 level.text = characterData.level.ToString();
                 icon.sprite = ResourceManager.LoadSprite(characterData.iconUrl);
                 characterClass.text = characterData.classMarker;
@@ -53,7 +52,7 @@ namespace Overlewd
             protected void ButtonClick()
             {
                 var charInfo = CharacterInfo.GetInstance(widgetPos);
-                charInfo.chId = characterId;
+                charInfo.chData = characterData;
             }
         }
     }

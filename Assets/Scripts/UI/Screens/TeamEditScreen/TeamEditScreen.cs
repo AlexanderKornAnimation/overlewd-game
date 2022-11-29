@@ -237,17 +237,14 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
+            var prevState = UIManager.currentState.prevState;
+            if (prevState.ScreenTypeIs<BattleScreen>() || prevState.ScreenTypeIs<BossFightScreen>())
             {
-                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
+                UIManager.ToPrevState(prevState.prevScreenState);
             }
             else
             {
-                
-                UIManager.ToPrevScreen(new UIManager.StateParams
-                {
-                    showOverlay = false,
-                });
+                UIManager.ToPrevScreen();
             }
         }
 

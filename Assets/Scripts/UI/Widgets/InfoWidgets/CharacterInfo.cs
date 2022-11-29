@@ -40,8 +40,7 @@ namespace Overlewd
         private GameObject agilityBack;
         private TextMeshProUGUI agilityStat;
         
-        public int? chId { get; set; }
-        private AdminBRO.Character chData => GameData.characters.GetById(chId);
+        public AdminBRO.Character chData { get; set; }
 
         protected override void Awake()
         {

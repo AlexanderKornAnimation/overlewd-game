@@ -27,6 +27,11 @@ namespace Overlewd
 
         public static string ChangeTextSize(string text, float fontSize)
         {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return null;
+            }
+            
             var result = "";
 
             foreach (var ch in text)

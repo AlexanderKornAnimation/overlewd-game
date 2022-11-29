@@ -270,6 +270,8 @@ namespace Overlewd
                     await GameData.equipment.Equip(overlordData.id.Value, selectedEquipId.Value);
                     OnEquip?.Invoke(equipId, selectedEquipId.Value);
                 }
+                
+                Destroy(gameObject);
             }
 
             public static EquipInfoPopup GetInstance(Transform parent)
