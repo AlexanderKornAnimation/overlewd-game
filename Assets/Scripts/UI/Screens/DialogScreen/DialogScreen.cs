@@ -163,12 +163,10 @@ namespace Overlewd
             {
                 await GameData.ftue.EndStage(inputData.ftueStageData.id);
             }
-            else if (inputData.dialogId.HasValue)
+
+            if (dialogData.postAction == AdminBRO.Dialog.PostAction_Seduce)
             {
-                if (dialogData.postAction == AdminBRO.Dialog.PostAction_Seduce)
-                {
-                    await GameData.matriarchs.matriarchSeduce(dialogData.matriarchId);
-                }
+                await GameData.matriarchs.matriarchSeduce(dialogData.matriarchId);
             }
         }
 
