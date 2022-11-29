@@ -384,7 +384,7 @@ namespace Overlewd
                 if (id > ccOnSelect.skill.Count) id = 0;
                 unselect?.Invoke();
                 foreach (var cc in charControllerList)
-                    cc.HighlightDeselect();
+                    cc?.HighlightDeselect();
                 bool AOE = ccOnSelect.skill[id].AOE;
                 bool HEAL = ccOnSelect.skill[id].actionType == "heal";
                 ccOnSelect.ManaReduce(ccOnSelect.skill[id].manaCost);
@@ -415,6 +415,7 @@ namespace Overlewd
                     ccOnSelect.Attack(id, AOE: HEAL, ccTarget);
                     ccTarget.Defence(ccOnSelect, id, aoe: HEAL);
                 }
+                charAni.SetTrigger("fadeOut");
                 ccOnSelect.skillCD[ccOnSelect.skill[id]] = Mathf.RoundToInt(ccOnSelect.skill[id].effectCooldownDuration);
                 battleState = BattleState.ANIMATION;
             }
@@ -491,7 +492,7 @@ namespace Overlewd
             if (!bossLevel)
             { //Destroy queue portrait
                 var qe = QueueElements.Find(f => f.cc == invoker);
-                Destroy(qe.gameObject);
+                qe.DestroyPortrait();
                 QueueElements.Remove(qe);
             }
             charControllerList.Remove(invoker);
@@ -607,7 +608,7 @@ namespace Overlewd
                             bPosEnemy.SetSiblingIndex(siblingEnemy + 1);
                         StartCoroutine(EnemyAttack());
                         //Do not restart the animation if previous character on the same team
-                        if (battleState != prevState)
+                        //if (battleState != prevState)
                             charAni.SetTrigger("enemy");
                     }
                     else
@@ -616,7 +617,7 @@ namespace Overlewd
                         SetSkillCtrl(ccOnSelect);
                         bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                         if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
-                        if (battleState != prevState)
+                        //if (battleState != prevState)
                             charAni.SetTrigger("player");
                     }
                     prevState = battleState; //save prew state for portrait animation

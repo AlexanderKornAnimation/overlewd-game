@@ -103,7 +103,7 @@ RectTransform:
   m_GameObject: {fileID: 974198585634674306}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.1, z: 1}
   m_Children: []
   m_Father: {fileID: 6678419723597720860}
   m_RootOrder: 0
@@ -982,7 +982,7 @@ MonoBehaviour:
   hpTMP: {fileID: 3195375934345233360}
   mpTMP: {fileID: 0}
   status_bar: {fileID: 0}
-  parent: {fileID: 0}
+  bPos: {fileID: 0}
   border: {fileID: 4339809555954287685}
   selector: {fileID: 0}
   selectorPalette:

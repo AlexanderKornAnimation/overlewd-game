@@ -922,7 +922,7 @@ MonoBehaviour:
   hpTMP: {fileID: 3195375934345233360}
   mpTMP: {fileID: 0}
   status_bar: {fileID: 0}
-  parent: {fileID: 0}
+  bPos: {fileID: 0}
   border: {fileID: 3060523769113286268}
   selector: {fileID: 0}
   selectorPalette:
@@ -1792,14 +1792,14 @@ RectTransform:
   m_GameObject: {fileID: 4464168577152101372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 1.1, z: 1}
   m_Children: []
   m_Father: {fileID: 6678419723597720860}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 84.08}
+  m_AnchoredPosition: {x: -18, y: 74}
   m_SizeDelta: {x: 282, y: 408}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6071555265786215783

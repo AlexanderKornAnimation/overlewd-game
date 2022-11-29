@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using UnityEditor.SceneManagement;
 
 namespace Overlewd
 {
@@ -29,6 +30,7 @@ namespace Overlewd
         public Slider whiteSlider;
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
+        private CanvasGroup cg;
 
         public StatusEffects status_bar;
 
@@ -53,6 +55,8 @@ namespace Overlewd
 
         private void Awake()
         {
+            cg = gameObject.AddComponent<CanvasGroup>();
+
             charDescription = FindObjectOfType<CharDescription>();
 
             selector = transform.Find("selector").gameObject;
@@ -97,6 +101,10 @@ namespace Overlewd
             else
                 selector.SetActive(false);
         }
+
+        public void FadeOut(float fade) 
+            => cg?.DOFade(0, fade).SetEase(Ease.InOutQuad);
+        
 
         public void UpdateUI()
         {

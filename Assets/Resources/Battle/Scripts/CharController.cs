@@ -147,7 +147,7 @@ namespace Overlewd
             if (isBoss) battleScale = 1f;
             var skillStash = character.skills;
             foreach (var sk in skillStash)
-                skillCD.Add(sk, 0);
+                skillCD.Add(sk, (int)sk.effectCooldownDuration);
             AdminBRO.CharacterSkill tempSK = null;
             if (isOverlord)
             {
@@ -314,6 +314,7 @@ namespace Overlewd
         IEnumerator PlayDefence(CharController attacker, int id, bool AOE = false)
         {
             BattleIn(AOE);
+            if (stun) PlayIdle();
             var attackerSkill = attacker.skill[id];
 
             yield return new WaitForSeconds(zoomSpeed);
@@ -365,7 +366,7 @@ namespace Overlewd
 
             yield return new WaitForSeconds(defenceDuration); // (/2)
 
-            if (attackerSkill.actionType != "heal") //skip play idle to avoid strange loop transitions
+            if (attackerSkill.actionType != "heal" && !stun) //skip play idle to avoid strange loop transitions
                 PlayIdle();
             BattleOut(AOE);
         }
@@ -386,10 +387,10 @@ namespace Overlewd
 
         public void Highlight() => observer?.Border(true);
         public void UnHiglight() => observer?.Border(false);
-        public void HighlightForTurn() => observer.Select(0);
-        public void HighlightForHit() => observer.Select(1);
-        public void HighlightForHeal() => observer.Select(2);
-        public void HighlightDeselect() => observer.Select(-1);
+        public void HighlightForTurn() => observer?.Select(0);
+        public void HighlightForHit() => observer?.Select(1);
+        public void HighlightForHeal() => observer?.Select(2);
+        public void HighlightDeselect() => observer?.Select(-1);
 
         public void BattleIn(bool AOE = false)
         {
@@ -413,6 +414,7 @@ namespace Overlewd
         {
             yield return new WaitForSeconds(0.5f + delay); //need for avoid idle animation state if isDead
             character.sfxDefeat?.Play();
+            float duration = 0;
             if (isOverlord)
             {
                 spineWidget.PlayAnimation("defeat1", false);
@@ -421,10 +423,15 @@ namespace Overlewd
             }
             else
             {
+                var fadeTime = 0.2f;
                 spineWidget.PlayAnimation(ani_defeat_name, false);
-                yield return new WaitForSeconds(spineWidget.GetAnimationDuaration(ani_defeat_name));
+                duration = spineWidget.GetAnimationDuaration(ani_defeat_name);
+                yield return new WaitForSeconds(duration - fadeTime);
+                observer?.FadeOut(fadeTime);
+                yield return new WaitForSeconds(fadeTime);
                 Destroy(gameObject);
             }
+            
         }
 
         public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f, CharController attacker = null, AdminBRO.CharacterSkill aSkill = null)
@@ -724,7 +731,7 @@ namespace Overlewd
             if (skillCD[sk] > 0) //skip if skill on Cool Down
                 return;
             else
-                skillCD[sk] = Mathf.RoundToInt(sk.effectCooldownDuration);
+                skillCD[sk] = (int)sk.effectCooldownDuration;
             bool isCrit = critrate >= Random.value;
             targetCC.Damage(sk.amount, true, false, isCrit);
             bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
@@ -904,6 +911,7 @@ namespace Overlewd
             yield return new WaitForSeconds(delay);
             bm.StepLate(stun);
             stun = false;
+            PlayIdle();
             observer?.UpdateStatuses();
         }
         private int popUpCounter = 0;

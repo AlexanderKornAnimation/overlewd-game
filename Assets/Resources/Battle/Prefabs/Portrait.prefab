@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4505431608063395600}
   - component: {fileID: 8026419671516246427}
   - component: {fileID: 2499506844735859947}
+  - component: {fileID: 2643171537078771911}
   m_Layer: 0
   m_Name: mask
   m_TagString: Untagged
@@ -90,6 +91,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &2643171537078771911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970339168857742086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 1
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &3973865592179083814
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,6 +199,7 @@ GameObject:
   - component: {fileID: 1388870830393740496}
   - component: {fileID: 596765233754045144}
   - component: {fileID: 232178444406814573}
+  - component: {fileID: 4978482449051453768}
   m_Layer: 0
   m_Name: Portrait
   m_TagString: Untagged
@@ -300,3 +322,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &4978482449051453768
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7345502320004135042}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

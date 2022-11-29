@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,11 @@ namespace Overlewd
         Vector2 scaledSize = new Vector2(115, 115);
         float maskScale = 1.15f;
         RectTransform mask;
+
+        /// <summary>
+        /// при уничтожении запустить фейд в 0 затем сужение preferredWidth до 0
+        /// после чего можно уничтожать (делать быстро)
+        /// </summary>
 
         private void Awake()
         {
@@ -46,6 +52,17 @@ namespace Overlewd
             transform.SetSiblingIndex(parCount);
             rt.sizeDelta = defaultSize;
             mask.localScale = Vector3.one;
+        }
+        public void DestroyPortrait() => StartCoroutine(DestroyP());
+
+        IEnumerator DestroyP()
+        {
+            yield return new WaitForSeconds(2f);
+            var s = DOTween.Sequence();
+            s.Append(transform.GetComponent<CanvasGroup>().DOFade(0, 0.15f));
+            s.Append(transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 0), 0.15f));
+            yield return new WaitForSeconds(.3f);
+            Destroy(gameObject);
         }
     }
 }
