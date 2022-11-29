@@ -78,10 +78,12 @@ namespace Overlewd
             {
                 root.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0.0f);
                 questBack.anchoredPosition += new Vector2(500.0f, 0.0f);
+                root.gameObject.SetActive(false);
             }
 
             public async Task WaitShow()
             {
+                root.gameObject.SetActive(true);
                 var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
 
                 var seq = DOTween.Sequence();
