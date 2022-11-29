@@ -59,6 +59,8 @@ namespace Overlewd
             textManaCost = GetComponent<TextMeshProUGUI>();
             selectBorder = transform.Find("select")?.gameObject;
             goManaCost = transform.Find("manaCost")?.gameObject;
+            if (potion && textCount == null)
+                textCount = transform.Find("text").GetComponent<TextMeshProUGUI>();
             if (goManaCost != null)
                 textManaCost = goManaCost.transform.Find("text").GetComponent<TextMeshProUGUI>();
         }

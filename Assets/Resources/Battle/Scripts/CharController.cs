@@ -214,7 +214,8 @@ namespace Overlewd
             else
                 log.Add($"{name} animationData is null", error: true);
             //fix out of bounds issues and animator's prefab mistakes
-            spineWidget.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 700);
+            if (spineWidget != null)
+                spineWidget.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 700);
             defenceDuration = spineWidget.GetAnimationDuaration(ani_defence_name);
         }
         private void UIInit()
