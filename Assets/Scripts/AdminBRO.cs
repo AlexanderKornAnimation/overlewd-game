@@ -869,10 +869,13 @@ namespace Overlewd
             public List<DialogReplica> replicas;
             public int? matriarchId;
             public int? matriarchEmpathyPointsReward;
+            public string postAction;
 
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";
             public const string Type_Notification = "notification";
+
+            public const string PostAction_Seduce = "seduce";
 
             [JsonProperty(Required = Required.Default)]
             public bool isTypeDialog => type == Type_Dialog;

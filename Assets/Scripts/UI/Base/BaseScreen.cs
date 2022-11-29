@@ -122,7 +122,7 @@ namespace Overlewd
         public bool hasFTUEStage => ftueStageId.HasValue;
         public AdminBRO.Battle battleData =>
             eventStageData?.battleData ?? ftueStageData?.battleData;
-        public AdminBRO.Dialog bialogData =>
+        public AdminBRO.Dialog dialogData =>
             eventStageData?.dialogData ?? ftueStageData?.dialogData;
 
         protected bool IsType<T>() where T : BaseScreenInData =>

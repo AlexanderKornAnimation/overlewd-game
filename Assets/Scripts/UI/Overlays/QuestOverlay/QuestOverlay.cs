@@ -163,7 +163,6 @@ namespace Overlewd
 
     public class QuestOverlayInData : BaseOverlayInData
     {
-        public int? questId { get; set; }
-        public AdminBRO.QuestItem questData => GameData.quests.GetById(questId);
+
     }
 }

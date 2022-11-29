@@ -299,9 +299,5 @@ namespace Overlewd
     public class EventOverlayInData : BaseOverlayInData
     {
         public int activeTabId { get; set; } = EventOverlay.TabQuarterly;
-        public int? questId { get; set; }
-
-        public AdminBRO.QuestItem questData =>
-            GameData.quests.GetById(questId);
     }
 }
