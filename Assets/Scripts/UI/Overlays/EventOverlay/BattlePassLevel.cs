@@ -23,8 +23,11 @@ namespace Overlewd
 
             private Image[] freeRewards = new Image[2];
             private TextMeshProUGUI[] freeRewardsAmounts = new TextMeshProUGUI[2];
+            private Transform[] freeRewardsMarkDone = new Transform[2];
             private Image[] premRewards = new Image[2];
             private TextMeshProUGUI[] premRewardsAmounts = new TextMeshProUGUI[2];
+            private Transform[] premRewardsMarkDone = new Transform[2];
+            private Transform[] premRewardsMarkLock = new Transform[2];
 
             private Transform canvas;
 
@@ -42,10 +45,13 @@ namespace Overlewd
                 {
                     freeRewards[i] = freeRewardsTr.Find($"Reward{i + 1}").GetComponent<Image>();
                     freeRewardsAmounts[i] = freeRewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                    freeRewardsMarkDone[i] = freeRewards[i].transform.Find("MarkDone");
                     freeRewards[i].gameObject.SetActive(false);
 
                     premRewards[i] = premiumRewardsTr.Find($"Reward{i + 1}").GetComponent<Image>();
                     premRewardsAmounts[i] = premRewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                    premRewardsMarkDone[i] = premRewards[i].transform.Find("MarkDone");
+                    premRewardsMarkLock[i] = premRewards[i].transform.Find("MarkLock");
                     premRewards[i].gameObject.SetActive(false);
                 }
             }
