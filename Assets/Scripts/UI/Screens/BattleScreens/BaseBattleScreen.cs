@@ -45,13 +45,12 @@ namespace Overlewd
 
 		public virtual void StartBattle()
         {
-			skipButton.gameObject.SetActive(false);
+
 		}
 
 		public virtual void EndBattle(BattleManagerOutData data)
         {
 			endBattleData = data;
-			skipButton.gameObject.SetActive(false);
 		}
 
 		public virtual void OnBattleEvent(BattleEvent battleEvent)
