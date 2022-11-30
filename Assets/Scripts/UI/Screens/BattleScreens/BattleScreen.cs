@@ -17,6 +17,13 @@ namespace Overlewd
         {
             base.EndBattle(data);
 
+            switch (inputData.ftueStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
+                    endBattleData.battleWin = GameData.ftue.chapter1_sex2.isComplete;
+                    break;
+            }
+
             if (endBattleData.battleWin)
             {
                 UIManager.MakePopup<VictoryPopup>().
