@@ -991,6 +991,7 @@ namespace Overlewd
             public string battlePortraitIcon;
             public string name;
             public string characterClass;
+            public int characterClassId;
             public int? animationId;
             public int? level;
             public string rarity;
