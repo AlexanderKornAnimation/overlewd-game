@@ -73,8 +73,21 @@ namespace Overlewd
             
             if (buildingData != null)
             {
-                var building =
-                    ResourceManager.InstantiateWidgetPrefab($"Prefabs/UI/Popups/BuildingPopup/{buildingData.name}",
+                var picPrefabName = buildingData.key switch
+                {
+                    AdminBRO.Building.Key_Castle => "Castle",
+                    AdminBRO.Building.Key_Catacombs => "Catacombs",
+                    AdminBRO.Building.Key_Laboratory => "Laboratory",
+                    AdminBRO.Building.Key_Aerostat => "Aerostat",
+                    AdminBRO.Building.Key_Forge => "Forge",
+                    AdminBRO.Building.Key_Harem => "Harem",
+                    AdminBRO.Building.Key_MagicGuild => "MagicGuild",
+                    AdminBRO.Building.Key_Market => "Market",
+                    AdminBRO.Building.Key_Municipality => "Municipality",
+                    AdminBRO.Building.Key_Portal => "Portal",
+                    _ => "Castle"
+                };
+                var building = ResourceManager.InstantiateWidgetPrefab($"Prefabs/UI/Popups/BuildingPopup/{picPrefabName}",
                         imageSpawnPoint);
 
                 for (int i = 1; i <= buildingData.levels.Count; i++)
