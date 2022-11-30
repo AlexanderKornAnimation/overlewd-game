@@ -109,6 +109,13 @@ namespace Overlewd
                 walletWidget = WalletWidget.GetInstance(walletWidgetPos);
             }
 
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (_, _):
+                    UITools.DisableButton(buildButton);
+                break;
+            }
+
             await Task.CompletedTask;
         }
 
