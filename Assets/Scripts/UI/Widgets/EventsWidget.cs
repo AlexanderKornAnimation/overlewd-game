@@ -7,7 +7,6 @@ namespace Overlewd
 {
     public class EventsWidget : BaseWidget
     {
-        protected Transform background;
         protected RectTransform backRect;
         
         protected Button weeklyEventButton;
@@ -22,24 +21,21 @@ namespace Overlewd
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
-            background = backRect.Find("Background");
 
-            weeklyEventButton = background.Find("WeeklyEvent").GetComponent<Button>();
+            weeklyEventButton = backRect.Find("WeeklyEvent").GetComponent<Button>();
             weeklyEventTitle = weeklyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             weeklyEventButton.onClick.AddListener(WeeklyEventClick);
             weeklyEventButton.gameObject.SetActive(false);
 
-            monthlyEventButton = background.Find("MonthlyEvent").GetComponent<Button>();
+            monthlyEventButton = backRect.Find("MonthlyEvent").GetComponent<Button>();
             monthlyEventTitle = monthlyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             monthlyEventButton.onClick.AddListener(MonthlyEventClick);
             monthlyEventButton.gameObject.SetActive(false);
 
-            quarterlyEventButton = background.Find("QuarterlyEvent").GetComponent<Button>();
+            quarterlyEventButton = backRect.Find("QuarterlyEvent").GetComponent<Button>();
             quarterlyEventTitle = quarterlyEventButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             quarterlyEventButton.onClick.AddListener(QuarterlyEventClick);
             quarterlyEventButton.gameObject.SetActive(false);
-
-            gameObject.AddComponent<BlendPulseSelector>();
         }
 
         void Start()

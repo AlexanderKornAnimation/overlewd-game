@@ -21,6 +21,8 @@ namespace Overlewd
         private bool isEventMode => mode == Mode.Event;
 
         private RectTransform backRect;
+        private Transform topFTUE;
+        private Transform topEvents;
         private Button mainQuestButton;
         private TextMeshProUGUI mainQuestButtonTitle;
         private Transform ftueQuestsSR;
@@ -57,14 +59,15 @@ namespace Overlewd
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
-            var background = backRect.Find("Background");
-            var sideQuests = background.Find("SideQuests");
+            topFTUE = backRect.Find("TopFTUE");
+            topEvents = backRect.Find("TopEvents");
 
-            mainQuestButton = background.Find("FTUEMainQuest").GetComponent<Button>();
+            mainQuestButton = backRect.Find("FTUEMainQuest").GetComponent<Button>();
             mainQuestButtonTitle = mainQuestButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            ftueQuestsSR = background.Find("FTUEQuests");
+
+            ftueQuestsSR = backRect.Find("FTUEQuests");
             ftueSRContent = ftueQuestsSR.Find("Viewport").Find("Content");
-            eventQuestsSR = background.Find("EventQuests");
+            eventQuestsSR = backRect.Find("EventQuests");
             eventSRContent = eventQuestsSR.Find("Viewport").Find("Content");
 
             mainQuestButton.onClick.AddListener(MainQuestButtonClick);
@@ -85,6 +88,8 @@ namespace Overlewd
 
         private void MakeByMode()
         {
+            topFTUE.gameObject.SetActive(isFTUEMode);
+            topEvents.gameObject.SetActive(isEventMode);
             mainQuestButton.gameObject.SetActive(isFTUEMode);
             ftueQuestsSR.gameObject.SetActive(isFTUEMode);
             eventQuestsSR.gameObject.SetActive(isEventMode);

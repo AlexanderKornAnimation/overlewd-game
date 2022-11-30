@@ -204,7 +204,5 @@ namespace Overlewd
             await Send<HttpCoreResponse<TData>>(RequestParams.InstPost(url, form), lockUserInput);
         public static async Task<HttpCoreResponse> DeleteAsync(string url, bool lockUserInput = true) =>
             await Send<HttpCoreResponse>(RequestParams.InstDelete(url), lockUserInput);
-        public static async Task<HttpCoreResponse<TData>> DeleteAsync<TData>(string url, bool lockUserInput = true) =>
-            await Send<HttpCoreResponse<TData>>(RequestParams.InstDelete(url), lockUserInput);
     }
 }
