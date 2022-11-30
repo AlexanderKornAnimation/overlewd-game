@@ -28,8 +28,8 @@ namespace Overlewd
             error = request.error;
             isDone = request.isDone;
 
-            data = request.downloadHandler.data;
-            text = request.downloadHandler.text;
+            data = request.downloadHandler?.data;
+            text = request.downloadHandler?.text;
         }
 
         public virtual void Init(UnityWebRequest request)
