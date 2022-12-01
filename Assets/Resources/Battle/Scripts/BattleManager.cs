@@ -16,7 +16,7 @@ namespace Overlewd
 
     public class BattleManager : MonoBehaviour
     {
-        private BaseBattleScreen battleScene; //In Out of Stage
+        public BaseBattleScreen battleScene; //In Out of Stage
         [HideInInspector] public CharController overlord;
         [HideInInspector] public List<CharController> charControllerList;
         [HideInInspector] public List<CharController> enemyTargetList;
