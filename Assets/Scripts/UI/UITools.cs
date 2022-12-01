@@ -27,18 +27,14 @@ namespace Overlewd
 
         public static string ChangeTextSize(string text, float fontSize)
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
+            if (String.IsNullOrEmpty(text))
                 return null;
-            }
             
             var result = "";
-
             foreach (var ch in text)
             {
                 result += char.IsNumber(ch) || ch == '%' || ch == '+' ? $"<size={fontSize + 8}>{ch}</size>" : ch.ToString();
             }
-
             return result;
         }
         
