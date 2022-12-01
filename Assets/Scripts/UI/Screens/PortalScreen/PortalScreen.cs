@@ -79,6 +79,16 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData?.type)
+            {
+                case UIEvent.Type.ChangeScreenComplete:
+                    
+                    break;
+            }
+        }
+
         public override async Task AfterShowAsync()
         {
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
@@ -100,7 +110,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_3, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_portal);
                     break;
-            }            
+            }
 
             await Task.CompletedTask;
         }

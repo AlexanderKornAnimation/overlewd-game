@@ -22,7 +22,7 @@ namespace Overlewd
             await UITools.BottomShowAsync(screenRectTransform);
             UITools.SetStretch(screenRectTransform);
             await screen.AfterShowAsync();
-            Destroy(this);
+            DestroyImmediate(this);
         }
     }
 }

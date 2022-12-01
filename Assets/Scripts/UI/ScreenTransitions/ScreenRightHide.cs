@@ -20,7 +20,7 @@ namespace Overlewd
             screen.StartHide();
             await UITools.RightHideAsync(screenRectTransform);
             await screen.AfterHideAsync();
-            Destroy(gameObject);
+            DestroyImmediate(gameObject);
         }
     }
 }

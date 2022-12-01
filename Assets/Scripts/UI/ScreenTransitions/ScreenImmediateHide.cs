@@ -16,7 +16,7 @@ namespace Overlewd
         {
             screen.StartHide();
             await screen.AfterHideAsync();
-            Destroy(gameObject);
+            DestroyImmediate(gameObject);
         }
     }
 }

@@ -17,7 +17,8 @@ namespace Overlewd
         {
             None,
             HidePopup,
-            HideOverlay
+            HideOverlay,
+            ChangeScreenComplete,
         }
 
         public Type type { get; set; } = Type.None;
@@ -611,6 +612,12 @@ namespace Overlewd
                                         new List<BaseMissclick>());
 
             MemoryOprimizer.ChangeScreen();
+
+            ThrowUIEvent(new UIEvent
+            {
+                type = UIEvent.Type.ChangeScreenComplete,
+                uiSenderType = screen?.GetType()
+            });
         }
 
         //Popup Layer

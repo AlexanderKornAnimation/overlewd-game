@@ -25,7 +25,7 @@ namespace Overlewd
             screen.StartShow();
             await UITools.FadeShowAsync(gameObject);
             await screen.AfterShowAsync();
-            Destroy(this);
+            DestroyImmediate(this);
         }
     }
 }
