@@ -94,7 +94,7 @@ namespace Overlewd
             if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageId.Value,
-                    new AdminBRO.FTUEStageEndData
+                    new AdminBRO.BattleEndData
                     {
                         win = endBattleData.battleWin,
                         mana = endBattleData.manaSpent,
@@ -104,7 +104,7 @@ namespace Overlewd
             else
             {
                 await GameData.events.StageEnd(inputData.eventStageId.Value,
-                    new AdminBRO.EventStageEndData
+                    new AdminBRO.BattleEndData
                     {
                         win = endBattleData.battleWin,
                         mana = endBattleData.manaSpent,

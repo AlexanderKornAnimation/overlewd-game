@@ -145,6 +145,10 @@ namespace Overlewd
             {
                 await GameData.ftue.StartStage(inputData.ftueStageId.Value);
             }
+            else if (inputData.dialogId.HasValue)
+            {
+                await GameData.dialogs.Start(inputData.dialogId.Value);
+            }
         }
 
         public override async Task BeforeHideDataAsync()
@@ -156,6 +160,10 @@ namespace Overlewd
             else if (inputData.ftueStageId.HasValue)
             {
                 await GameData.ftue.EndStage(inputData.ftueStageId.Value);
+            }
+            else if (inputData.dialogId.HasValue)
+            {
+                await GameData.dialogs.End(inputData.dialogId.Value);
             }
 
             if (dialogData.postAction == AdminBRO.Dialog.PostAction_Seduce)

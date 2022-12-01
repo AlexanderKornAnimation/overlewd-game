@@ -175,6 +175,7 @@ namespace Overlewd
         {
             public string accessToken;
             public string refreshToken;
+            public string userId;
         }
 
         public static Tokens tokens { get; private set; }
@@ -233,9 +234,6 @@ namespace Overlewd
                 public int userId;
             }
         }
-
-        public static async Task<HttpCoreResponse> initAsync() =>
-            await HttpCore.PostAsync(make_url("me/init"));
 
         public static async Task<HttpCoreResponse> resetAsync() =>
             await HttpCore.PostAsync(make_url("me/reset"));
@@ -613,8 +611,8 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<EventStageItem>> eventStageStartAsync(int eventStageId) =>
             await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/start"));
 
-        public static async Task<HttpCoreResponse<EventStageItem>> eventStageEndAsync(int eventStageId, EventStageEndData data = null) =>
-            await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/end"), data?.ToWWWForm());
+        public static async Task<HttpCoreResponse<EventStageItem>> eventStageEndAsync(int eventStageId, BattleEndData battleEndData = null) =>
+            await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/end"), battleEndData?.ToWWWForm());
 
         public static async Task<HttpCoreResponse> eventStageReplayAsync(int eventStageId, int count)
         {
@@ -622,23 +620,6 @@ namespace Overlewd
             form.AddField("count", count);
             return await HttpCore.PostAsync(make_url($"event-stages/{eventStageId}/replay"), form);
         }
-
-        public class EventStageEndData
-        {
-            public bool win { get; set; } = true;
-            public int mana { get; set; } = 0;
-            public int hp { get; set; } = 0;
-
-            public WWWForm ToWWWForm()
-            {
-                var form = new WWWForm();
-                form.AddField("result", win ? "win" : "lose");
-                form.AddField("mana", -mana);
-                form.AddField("hp", -hp);
-                return form;
-            }
-        }
-
 
         [Serializable]
         public class EventStageItem
@@ -809,8 +790,15 @@ namespace Overlewd
         }
 
         // /dialogs
+        // /dialogs/{id}/start
+        // /dialogs/{id}/end
         public static async Task<HttpCoreResponse<List<Dialog>>> dialogsAsync() =>
             await HttpCore.GetAsync<List<Dialog>>(make_url("dialogs"));
+        public static async Task<HttpCoreResponse> dialogStartAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"dialogs/{id}/start"));
+        public static async Task<HttpCoreResponse> dialogEndAsync(int id) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"dialogs/{id}/end"));
+
 
         [Serializable]
         public class DialogReplica
@@ -888,8 +876,30 @@ namespace Overlewd
         }
 
         // /battles
+        // /battles/{id}/start
+        // /battles/{id}/end
         public static async Task<HttpCoreResponse<List<Battle>>> battlesAsync() =>
             await HttpCore.GetAsync<List<Battle>>(make_url("battles"));
+        public static async Task<HttpCoreResponse> battleStartAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"battles/{id}/start"));
+        public static async Task<HttpCoreResponse<List<GenRewardItem>>> battleEndAsync(int id, BattleEndData battleEndData = null) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"battles/{id}/end"), battleEndData?.ToWWWForm());
+
+        public class BattleEndData
+        {
+            public bool win { get; set; } = true;
+            public int mana { get; set; } = 0;
+            public int hp { get; set; } = 0;
+
+            public WWWForm ToWWWForm()
+            {
+                var form = new WWWForm();
+                form.AddField("result", win ? "win" : "lose");
+                form.AddField("mana", -mana);
+                form.AddField("hp", -hp);
+                return form;
+            }
+        }
 
         [Serializable]
         public class Battle
@@ -1531,30 +1541,14 @@ namespace Overlewd
         public static async Task<HttpCoreResponse> ftueStageStartAsync(int stageId) =>
             await HttpCore.PostAsync(make_url($"ftue-stages/{stageId}/start"));
 
-        public static async Task<HttpCoreResponse<List<GenRewardItem>>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null) =>
-            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"ftue-stages/{stageId}/end"), data?.ToWWWForm());
+        public static async Task<HttpCoreResponse<List<GenRewardItem>>> ftueStageEndAsync(int stageId, BattleEndData battleEndData = null) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"ftue-stages/{stageId}/end"), battleEndData?.ToWWWForm());
 
         public static async Task<HttpCoreResponse> ftueStageReplayAsync(int stageId, int count)
         {
             var form = new WWWForm();
             form.AddField("count", count);
             return await HttpCore.PostAsync(make_url($"ftue-stages/{stageId}/replay"), form);
-        }
-
-        public class FTUEStageEndData
-        {
-            public bool win { get; set; } = true;
-            public int mana { get; set; } = 0;
-            public int hp { get; set; } = 0;
-
-            public WWWForm ToWWWForm()
-            {
-                var form = new WWWForm();
-                form.AddField("result", win ? "win" : "lose");
-                form.AddField("mana", -mana);
-                form.AddField("hp", -hp);
-                return form;
-            }
         }
 
         //animations
