@@ -41,7 +41,7 @@ namespace Overlewd
             Name.text = sc.Name;
             level.text = sc.level.ToString();
             description.text = sc.description;
-            counterTurnsGO.SetActive(sc.cooldown > 1);
+            counterTurnsGO.SetActive(sc.cooldown > 0);
             coolDown.text = $"{sc.cooldown} turns";
             if (!isOpen)
                 ani.SetTrigger("Open");

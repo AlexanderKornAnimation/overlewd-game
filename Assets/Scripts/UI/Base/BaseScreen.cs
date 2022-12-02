@@ -106,20 +106,28 @@ namespace Overlewd
 
     public abstract class BaseScreenInData
     {
-        public int? eventStageId;
+        public int? eventStageId { get; set; }
         public AdminBRO.EventStageItem eventStageData => 
             GameData.events.GetStageById(eventStageId);
 
-        public int? ftueStageId;
+        public int? ftueStageId { get; set; }
         public AdminBRO.FTUEStageItem ftueStageData =>
             GameData.ftue.GetStageById(ftueStageId);
 
+        public int? questId { get; set; }
+        public AdminBRO.QuestItem questData =>
+            GameData.quests.GetById(questId);
+
+        public int? dialogId { get; set; }
+        public AdminBRO.Dialog dialogData =>
+            eventStageData?.dialogData ?? ftueStageData?.dialogData ?? GameData.dialogs.GetById(dialogId);
+
+        public int? battleId { get; set; }
+        public AdminBRO.Battle battleData =>
+            eventStageData?.battleData ?? ftueStageData?.battleData ?? GameData.battles.GetById(battleId);
+
         public bool hasEventStage => eventStageId.HasValue;
         public bool hasFTUEStage => ftueStageId.HasValue;
-        public AdminBRO.Battle battleData =>
-            eventStageData?.battleData ?? ftueStageData?.battleData;
-        public AdminBRO.Dialog bialogData =>
-            eventStageData?.dialogData ?? ftueStageData?.dialogData;
 
         protected bool IsType<T>() where T : BaseScreenInData =>
             this.GetType() == typeof(T);

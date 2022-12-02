@@ -11,7 +11,49 @@ namespace Overlewd
         public float effectProb { get; private set; } = 0f;
 
         public float scaler_big = 0.125f, scaler_small = 0.06f;
-        
+        public float defaultStat = 0f;
+
+        public void SetupPSR(BattleManagerInData.BattleFlow flow, bool isEnemy)
+        {
+            switch (flow)
+            {
+                case BattleManagerInData.BattleFlow.Win:
+                    if (isEnemy)
+                    {
+                        scaler_big = 0f;
+                        scaler_small = 0f;
+                        defaultStat = -0.05f;
+                    }
+                    else 
+                    {
+                        scaler_big *= 2;
+                        scaler_small *= 2;
+                        accyracy += scaler_big;
+                        crit += scaler_small;
+                        defaultStat = 0.2f;
+                    }
+                    break;
+                case BattleManagerInData.BattleFlow.Defeat:
+                    if (isEnemy)
+                    {
+                        scaler_big *= 2;
+                        scaler_small *= 2;
+                        accyracy += scaler_big;
+                        crit += scaler_small;
+                        defaultStat = 0.2f;
+                    }
+                    else
+                    {
+                        scaler_big = 0f;
+                        scaler_small = 0f;
+                        defaultStat = -0.05f;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void Miss()
         {
             accyracy += scaler_big;
@@ -19,15 +61,15 @@ namespace Overlewd
         }
         public void HitEnemy()
         {
-            accyracy = 0f;
+            accyracy = defaultStat;
         }
         public void Dodge()
         {
-            dodge = 0f;
+            dodge = defaultStat * 2;
         }
         public void Crit()
         {
-            crit = 0f;
+            crit = defaultStat;
         }
         public void CritMiss()
         {
@@ -35,7 +77,7 @@ namespace Overlewd
         }
         public void EffectHit()
         {
-            effectProb = 0f;
+            effectProb = defaultStat;
         }
         public void EffectMiss()
         {

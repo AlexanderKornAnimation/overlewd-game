@@ -231,14 +231,14 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                         GameData.ftue.chapter2.ShowNotifByKey("ch2shardstutor1");
                     break;
-                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                /*case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
                     if (!GameData.buildings.portal.meta.isBuilt)
                     {
                         GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
                         await UIManager.WaitHideNotifications();
                         UIManager.ShowScreen<CastleScreen>();
                     }
-                    return;
+                    return;*/ //to OnUIEvent method
             }
 
             await Task.CompletedTask;
@@ -261,12 +261,22 @@ namespace Overlewd
             chapterSelector.Show();
         }
 
-        public override void OnUIEvent(UIEvent eventData)
+        public override async void OnUIEvent(UIEvent eventData)
         {
             switch (eventData?.type)
             {
-                case UIEvent.Type.HideOverlay:
-                    questsPanel?.Refresh();
+                case UIEvent.Type.ChangeScreenComplete:
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                            if (!GameData.buildings.portal.meta.isBuilt)
+                            {
+                                GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                                await UIManager.WaitHideNotifications();
+                                UIManager.ShowScreen<CastleScreen>();
+                            }
+                            break;
+                    }
                     break;
             }
         }

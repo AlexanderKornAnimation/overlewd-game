@@ -28,8 +28,8 @@ namespace Overlewd
             error = request.error;
             isDone = request.isDone;
 
-            data = request.downloadHandler.data;
-            text = request.downloadHandler.text;
+            data = request.downloadHandler?.data;
+            text = request.downloadHandler?.text;
         }
 
         public virtual void Init(UnityWebRequest request)
@@ -204,7 +204,5 @@ namespace Overlewd
             await Send<HttpCoreResponse<TData>>(RequestParams.InstPost(url, form), lockUserInput);
         public static async Task<HttpCoreResponse> DeleteAsync(string url, bool lockUserInput = true) =>
             await Send<HttpCoreResponse>(RequestParams.InstDelete(url), lockUserInput);
-        public static async Task<HttpCoreResponse<TData>> DeleteAsync<TData>(string url, bool lockUserInput = true) =>
-            await Send<HttpCoreResponse<TData>>(RequestParams.InstDelete(url), lockUserInput);
     }
 }

@@ -18,7 +18,7 @@ namespace Overlewd
         {
             screen.StartShow();
             await screen.AfterShowAsync();
-            Destroy(this);
+            DestroyImmediate(this);
         }
     }
 }

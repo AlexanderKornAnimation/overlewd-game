@@ -175,6 +175,7 @@ namespace Overlewd
         {
             public string accessToken;
             public string refreshToken;
+            public string userId;
         }
 
         public static Tokens tokens { get; private set; }
@@ -233,9 +234,6 @@ namespace Overlewd
                 public int userId;
             }
         }
-
-        public static async Task<HttpCoreResponse> initAsync() =>
-            await HttpCore.PostAsync(make_url("me/init"));
 
         public static async Task<HttpCoreResponse> resetAsync() =>
             await HttpCore.PostAsync(make_url("me/reset"));
@@ -490,7 +488,7 @@ namespace Overlewd
             public AdminBRO.EventItem eventData => GameData.events.GetEventById(eventId);
 
             [JsonProperty(Required = Required.Default)]
-            public bool isActive => GameData.events.activeChapter == this;
+            public bool isActive => eventData?.activeChapter?.id == id;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => GameData.devMode ? true : (isActive || isComplete);
@@ -553,6 +551,25 @@ namespace Overlewd
             public EventChapter firstChapter =>
                 chaptersData.FirstOrDefault();
 
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.EventChapter activeChapter
+            {
+                get
+                {
+                    var chapterData = firstChapter;
+                    while (chapterData?.isComplete ?? false)
+                    {
+                        if (chapterData.nextChapterId.HasValue)
+                        {
+                            chapterData = chapterData.nextChapterData;
+                            continue;
+                        }
+                        break;
+                    }
+                    return chapterData;
+                }
+            }
+
             public EventChapter GetChapterById(int? id) =>
                 GameData.events.GetChapterById(id);
 
@@ -594,8 +611,8 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<EventStageItem>> eventStageStartAsync(int eventStageId) =>
             await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/start"));
 
-        public static async Task<HttpCoreResponse<EventStageItem>> eventStageEndAsync(int eventStageId, EventStageEndData data = null) =>
-            await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/end"), data?.ToWWWForm());
+        public static async Task<HttpCoreResponse<EventStageItem>> eventStageEndAsync(int eventStageId, BattleEndData battleEndData = null) =>
+            await HttpCore.PostAsync<EventStageItem>(make_url($"event-stages/{eventStageId}/end"), battleEndData?.ToWWWForm());
 
         public static async Task<HttpCoreResponse> eventStageReplayAsync(int eventStageId, int count)
         {
@@ -603,23 +620,6 @@ namespace Overlewd
             form.AddField("count", count);
             return await HttpCore.PostAsync(make_url($"event-stages/{eventStageId}/replay"), form);
         }
-
-        public class EventStageEndData
-        {
-            public bool win { get; set; } = true;
-            public int mana { get; set; } = 0;
-            public int hp { get; set; } = 0;
-
-            public WWWForm ToWWWForm()
-            {
-                var form = new WWWForm();
-                form.AddField("result", win ? "win" : "lose");
-                form.AddField("mana", -mana);
-                form.AddField("hp", -hp);
-                return form;
-            }
-        }
-
 
         [Serializable]
         public class EventStageItem
@@ -686,6 +686,7 @@ namespace Overlewd
             public int? eventId;
             public int? ftueChapterId;
             public string ftueQuestType;
+            public string screenTarget;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
@@ -695,6 +696,16 @@ namespace Overlewd
             public const string QuestType_Main = "main";
             public const string QuestType_Side = "side";
             public const string QuestType_Matriarch = "matriarch";
+
+            public const string ScreenTarget_Harem = "harem";
+            public const string ScreenTarget_BattleGirls = "battle_girls";
+            public const string ScreenTarget_GuestRoom = "guest_room";
+            public const string ScreenTarget_MagicGuild = "magic_guild";
+            public const string ScreenTarget_Municipality = "municipality";
+            public const string ScreenTarget_Forge = "forge";
+            public const string ScreenTarget_Laboratory = "laboratory";
+            public const string ScreenTarget_Map = "map";
+            public const string ScreenTarget_Portal = "portal";
 
             [JsonProperty(Required = Required.Default)]
             public bool isNew
@@ -779,8 +790,15 @@ namespace Overlewd
         }
 
         // /dialogs
+        // /dialogs/{id}/start
+        // /dialogs/{id}/end
         public static async Task<HttpCoreResponse<List<Dialog>>> dialogsAsync() =>
             await HttpCore.GetAsync<List<Dialog>>(make_url("dialogs"));
+        public static async Task<HttpCoreResponse> dialogStartAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"dialogs/{id}/start"));
+        public static async Task<HttpCoreResponse> dialogEndAsync(int id) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"dialogs/{id}/end"));
+
 
         [Serializable]
         public class DialogReplica
@@ -839,10 +857,13 @@ namespace Overlewd
             public List<DialogReplica> replicas;
             public int? matriarchId;
             public int? matriarchEmpathyPointsReward;
+            public string postAction;
 
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";
             public const string Type_Notification = "notification";
+
+            public const string PostAction_Seduce = "seduce";
 
             [JsonProperty(Required = Required.Default)]
             public bool isTypeDialog => type == Type_Dialog;
@@ -855,8 +876,30 @@ namespace Overlewd
         }
 
         // /battles
+        // /battles/{id}/start
+        // /battles/{id}/end
         public static async Task<HttpCoreResponse<List<Battle>>> battlesAsync() =>
             await HttpCore.GetAsync<List<Battle>>(make_url("battles"));
+        public static async Task<HttpCoreResponse> battleStartAsync(int id) =>
+            await HttpCore.PostAsync(make_url($"battles/{id}/start"));
+        public static async Task<HttpCoreResponse<List<GenRewardItem>>> battleEndAsync(int id, BattleEndData battleEndData = null) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"battles/{id}/end"), battleEndData?.ToWWWForm());
+
+        public class BattleEndData
+        {
+            public bool win { get; set; } = true;
+            public int mana { get; set; } = 0;
+            public int hp { get; set; } = 0;
+
+            public WWWForm ToWWWForm()
+            {
+                var form = new WWWForm();
+                form.AddField("result", win ? "win" : "lose");
+                form.AddField("mana", -mana);
+                form.AddField("hp", -hp);
+                return form;
+            }
+        }
 
         [Serializable]
         public class Battle
@@ -891,7 +934,6 @@ namespace Overlewd
         // /battles/my/characters/{characterId}/skills/{skillId}/levelup
         // /battles/my/characters/{tgtId}/merge/{srcId}
         // /battles/skills/effects
-        // /battles/pass
         public static async Task<HttpCoreResponse<List<Character>>> charactersAsync() =>
             await HttpCore.GetAsync<List<Character>>(make_url("battles/my/characters"));
 
@@ -913,9 +955,6 @@ namespace Overlewd
 
         public static async Task<HttpCoreResponse<List<SkillEffect>>> skillEffectsAsync() =>
             await HttpCore.GetAsync<List<SkillEffect>>(make_url("battles/skills/effects"));
-
-        public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
-            await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
 
         public class CharacterClass
         {
@@ -962,6 +1001,7 @@ namespace Overlewd
             public string battlePortraitIcon;
             public string name;
             public string characterClass;
+            public int characterClassId;
             public int? animationId;
             public int? level;
             public string rarity;
@@ -1129,6 +1169,8 @@ namespace Overlewd
             public int? sfxTargetId;
             public bool shakeScreen;
 
+            public const string Type_OverlordAttack = "overlord_attack";
+
             public const string Type_Passive = "passive_skill";
             public const string Type_Attack = "attack";
             public const string Type_Enhanced = "enhanced_attack";
@@ -1204,6 +1246,17 @@ namespace Overlewd
             
         }
 
+        // /battles/pass
+        // /battles/pass/{id}/buy-premium
+        // /battles/pass/{id}/claim
+        public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
+            await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
+        public static async Task<HttpCoreResponse> battlePassBuyPremiumAsync(int battlePassId) =>
+            await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/buy-premium"));
+        public static async Task<HttpCoreResponse> battlePassClaimAsync(int battlePassId) =>
+            await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/claim"));
+
+
         [Serializable]
         public class BattlePass
         {
@@ -1212,12 +1265,15 @@ namespace Overlewd
             public List<Level> levels;
             public List<PriceItem> premiumPrice;
             public int currentPointsCount;
+            public bool isPremium;
 
             public class Level
             {
                 public int pointsThreshold;
                 public List<RewardItem> defaultReward;
                 public List<RewardItem> premiumReward;
+                public bool isDefaultRewardClaimed;
+                public bool isPremiumRewardClaimed;
             }
         }
 
@@ -1360,7 +1416,7 @@ namespace Overlewd
             public bool isComplete => !stagesData.Exists(s => !s.isComplete);
 
             [JsonProperty(Required = Required.Default)]
-            public bool isActive => GameData.ftue.activeChapter == this;
+            public bool isActive => GameData.ftue.activeChapter?.id == id;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => GameData.devMode ? true : (isComplete || isActive);
@@ -1485,30 +1541,14 @@ namespace Overlewd
         public static async Task<HttpCoreResponse> ftueStageStartAsync(int stageId) =>
             await HttpCore.PostAsync(make_url($"ftue-stages/{stageId}/start"));
 
-        public static async Task<HttpCoreResponse<List<GenRewardItem>>> ftueStageEndAsync(int stageId, FTUEStageEndData data = null) =>
-            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"ftue-stages/{stageId}/end"), data?.ToWWWForm());
+        public static async Task<HttpCoreResponse<List<GenRewardItem>>> ftueStageEndAsync(int stageId, BattleEndData battleEndData = null) =>
+            await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"ftue-stages/{stageId}/end"), battleEndData?.ToWWWForm());
 
         public static async Task<HttpCoreResponse> ftueStageReplayAsync(int stageId, int count)
         {
             var form = new WWWForm();
             form.AddField("count", count);
             return await HttpCore.PostAsync(make_url($"ftue-stages/{stageId}/replay"), form);
-        }
-
-        public class FTUEStageEndData
-        {
-            public bool win { get; set; } = true;
-            public int mana { get; set; } = 0;
-            public int hp { get; set; } = 0;
-
-            public WWWForm ToWWWForm()
-            {
-                var form = new WWWForm();
-                form.AddField("result", win ? "win" : "lose");
-                form.AddField("mana", -mana);
-                form.AddField("hp", -hp);
-                return form;
-            }
         }
 
         //animations
@@ -1689,7 +1729,6 @@ namespace Overlewd
                 GameData.buildings.magicGuild.meta.currentLevel >=
                 requiredBuildingLevel && next != null;
 
-            public const string Type_Attack = "overlord_attack";
             public const string Type_ActiveSkill = "overlord_enhanced_attack";
             public const string Type_UltimateSkill = "overlord_ultimate_attack";
             public const string Type_PassiveSkill1 = "overlord_first_passive_skill";

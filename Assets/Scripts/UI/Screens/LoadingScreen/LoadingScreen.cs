@@ -218,7 +218,6 @@ namespace Overlewd
                 return;
             }
             await AdminBRO.mePostAsync();
-            await AdminBRO.initAsync();
 
             //
             SetDownloadBarProgress(0.1f);

@@ -13,9 +13,7 @@ namespace Overlewd
 {
     public static class UITools
     {
-        public static async void ClaimRewardsAsync(List<AdminBRO.RewardItem> rewards) =>
-            await WaitClaimRewardsAsync(rewards);
-        public static async Task WaitClaimRewardsAsync(List<AdminBRO.RewardItem> rewards)
+        public static async void ClaimRewardsAsync(List<AdminBRO.RewardItem> rewards)
         {
             if (rewards == null)
                 return;
@@ -29,13 +27,14 @@ namespace Overlewd
 
         public static string ChangeTextSize(string text, float fontSize)
         {
+            if (String.IsNullOrEmpty(text))
+                return null;
+            
             var result = "";
-
             foreach (var ch in text)
             {
                 result += char.IsNumber(ch) || ch == '%' || ch == '+' ? $"<size={fontSize + 8}>{ch}</size>" : ch.ToString();
             }
-
             return result;
         }
         

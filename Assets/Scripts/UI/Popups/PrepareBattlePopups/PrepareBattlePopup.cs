@@ -151,7 +151,7 @@ namespace Overlewd
                 foreach (var enemy in phase.enemyCharacters)
                 {
                     var enemyChar = NSPrepareBattlePopup.EnemyCharacter.GetInstance(enemyContent);
-                    enemyChar.characterId = enemy.id;
+                    enemyChar.characterData = enemy;
                     enemyChar.widgetPos = transform;
                     
                     if (enemy != null)
@@ -167,12 +167,12 @@ namespace Overlewd
             var overlordData = GameData.characters.overlord;
 
             var overlordInst = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
-            overlordInst.characterId = overlordData.id;
+            overlordInst.characterData = overlordData;
 
             foreach (var ally in characters)
             {
                 var allyChar = NSPrepareBattlePopup.AllyCharacter.GetInstance(allyContent);
-                allyChar.characterId = ally.id;
+                allyChar.characterData = ally;
                 allyChar.widgetPos = transform;
             }
 

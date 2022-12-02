@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -75,7 +76,7 @@ namespace Overlewd
                 contentScrollView?.Hide();
             }
 
-            public async void Remove()
+            public void Remove()
             {
                 var grid_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
                 var buttonCG = gameObject.GetComponent<CanvasGroup>();
@@ -98,16 +99,18 @@ namespace Overlewd
                     grid_vlg.enabled = false;
                     grid_vlg.enabled = true;
                 };
-                seq.Play();
-                await seq.AsyncWaitForCompletion();
-
-                DestroyImmediate(gameObject);
-                DestroyImmediate(contentScrollView.gameObject);
-
-                if (questOverlay.selectedQuest == null)
+                seq.onComplete = () =>
                 {
-                    questOverlay.questButtons.FirstOrDefault()?.Select();
-                }
+                    DestroyImmediate(contentScrollView.gameObject);
+                    DestroyImmediate(gameObject);
+
+                    if (questOverlay.selectedQuest == null)
+                    {
+                        questOverlay.questButtons.FirstOrDefault()?.Select();
+                    }
+                };
+                seq.Play();
+                seq.SetLink(gameObject);
             }
 
             public static QuestButton GetInstance(Transform parent)

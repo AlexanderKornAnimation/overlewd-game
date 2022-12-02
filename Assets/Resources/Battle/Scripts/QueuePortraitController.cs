@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,12 @@ namespace Overlewd
         Vector2 scaledSize = new Vector2(115, 115);
         float maskScale = 1.15f;
         RectTransform mask;
+        Animator ani;
+
+        /// <summary>
+        /// при уничтожении запустить фейд в 0 затем сужение preferredWidth до 0
+        /// после чего можно уничтожать (делать быстро)
+        /// </summary>
 
         private void Awake()
         {
@@ -21,6 +28,7 @@ namespace Overlewd
             image = transform.Find("mask/Ico").GetComponent<Image>();
             btn = GetComponent<Button>();
             rt = GetComponent<RectTransform>();
+            ani = GetComponent<Animator>();
         }
 
         public void SetUp(CharController cc)
@@ -39,6 +47,7 @@ namespace Overlewd
             transform.SetSiblingIndex(0);
             rt.sizeDelta = scaledSize;
             mask.localScale *= maskScale;
+            ani?.Play("Base Layer.Select");
         }
         public void Deselect()
         {
@@ -46,6 +55,17 @@ namespace Overlewd
             transform.SetSiblingIndex(parCount);
             rt.sizeDelta = defaultSize;
             mask.localScale = Vector3.one;
+        }
+        public void DestroyPortrait() => StartCoroutine(DestroyP());
+
+        IEnumerator DestroyP()
+        {
+            yield return new WaitForSeconds(2f);
+            ani?.Play("Base Layer.Hide");
+            yield return new WaitForSeconds(0.25f);
+            transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 0), 0.2f);
+            yield return new WaitForSeconds(0.25f);
+            Destroy(gameObject);
         }
     }
 }

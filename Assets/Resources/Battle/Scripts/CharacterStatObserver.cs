@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
 
 namespace Overlewd
 {
@@ -18,19 +20,28 @@ namespace Overlewd
         private int regen_poison => cc.regen_poison;
         private int focus_blind => cc.focus_blind;
         private bool stun => cc.stun;
+        public bool showMP => cc.isOverlord;
 
         //Char UI
         public Image charClass;
         public Slider sliderHP;
         public Slider sliderMP;
         public Slider whiteSlider;
-        public bool showMP => cc.isOverlord;
         public TextMeshProUGUI hpTMP;
         public TextMeshProUGUI mpTMP;
+        private CanvasGroup cg;
+
         public StatusEffects status_bar;
+
+        public Transform bPos;
         public GameObject border;
+        public GameObject selector;
+        private Image selectorImage;
+        [SerializeField]
+        Color[] selectorPalette = new Color[2];// { Color.yellow, Color.red, Color.blue };
+
         [SerializeField] private List<Sprite> classIcons;
-        private CharDescription charDescription => FindObjectOfType<CharDescription>();
+        private CharDescription charDescription;
         GameObject vfxDefUp, vfxDefDown, vfxStun, vfxRegen, vfxPoison, vfxFocus, vfxBlind;
         GameObject vfxDefUpGO, vfxDefDownGO, vfxStunGO, vfxRegenGO, vfxPoisonGO, vfxFocusGO, vfxBlindGO;
 
@@ -41,74 +52,27 @@ namespace Overlewd
         public bool isEnemy => cc.isEnemy;
         public bool isOverlord => cc.isOverlord;
 
-
-        private void VfxInit()
+        private void Awake()
         {
-            var path = "Battle/Prefabs/VFX/Skill/StatusEffects/";
-            vfxDefUp = Resources.Load(path + "aniDefUp.part") as GameObject;
-            vfxDefDown = Resources.Load(path + "aniDefDown.part") as GameObject;
-            vfxStun = Resources.Load(path + "Stun.part") as GameObject;
-            vfxRegen = Resources.Load(path + "HealContinue.part") as GameObject;
-            vfxPoison = Resources.Load(path + "PoisonContinue.part") as GameObject;
-            vfxFocus = vfxDefUp;
-            vfxBlind = vfxDefDown;
+            cg = gameObject.AddComponent<CanvasGroup>();
+
+            charDescription = FindObjectOfType<CharDescription>();
+
+            selector = transform.Find("selector").gameObject;
+            selectorImage = selector.GetComponent<Image>();
+
+            ColorUtility.TryParseHtmlString("#FFBA53", out selectorPalette[0]);
+            ColorUtility.TryParseHtmlString("#FD4D4B", out selectorPalette[1]);
+            ColorUtility.TryParseHtmlString("#5C9BCC", out selectorPalette[2]);
         }
-
-        void ApplyVFX()
-        {
-            CheckVFX(defUp_defDown, ref vfxDefUpGO, ref vfxDefDownGO, vfxDefUp, vfxDefDown);
-            CheckVFX(regen_poison, ref vfxRegenGO, ref vfxPoisonGO, vfxRegen, vfxPoison);
-            //CheckVFX(focus_blind, ref vfxFocusGO, ref vfxBlindGO, vfxFocus, vfxBlind);
-
-            if (stun && vfxStunGO == null)
-                vfxStunGO = Instantiate(vfxStun, transform);
-            else if (vfxStunGO != null)
-                DisableVFX(ref vfxStunGO);
-        }
-
-        void CheckVFX(int stat, ref GameObject buffGO, ref GameObject debuffGO, GameObject buffVFX, GameObject debuffVFX)
-        {
-            if (stat != 0)
-            {
-                if (stat > 0)
-                {
-                    if (debuffGO != null)
-                        DisableVFX(ref debuffGO);
-                    if (buffGO == null)
-                        buffGO = Instantiate(buffVFX, transform);
-                }
-                else
-                {
-                    if (buffGO != null)
-                        DisableVFX(ref buffGO);
-                    if (debuffGO == null)
-                        debuffGO = Instantiate(debuffVFX, transform);
-                }
-            }
-            else
-            {
-                if (buffGO != null)
-                    DisableVFX(ref buffGO);
-                if (debuffGO != null)
-                    DisableVFX(ref debuffGO);
-            }
-        }
-
-        void DisableVFX(ref GameObject go)
-        {
-            var fadeTime = 1f;
-            CanvasGroup cg;
-            if (go.TryGetComponent<CanvasGroup>(out cg))
-                cg?.DOFade(0, fadeTime);
-            else
-                go.AddComponent<CanvasGroup>().DOFade(0, fadeTime);
-            Destroy(go, fadeTime);
-            go = null;
-        }
-
 
         private void Start()
         {
+            bPos = cc.persPos;
+            selector.transform.SetParent(bPos);
+            selector.transform.SetAsFirstSibling();
+            selector.SetActive(false);
+
             VfxInit();
             status_bar = transform.Find("status_bar").GetComponent<StatusEffects>();
             status_bar.cc = cc;
@@ -123,6 +87,23 @@ namespace Overlewd
             UpdateStatuses();
             //sliderHP.onValueChanged.AddListener(delegate { ChangeHP(); });
         }
+        /// <summary>
+        /// Select color and functional for selector: 0 - yellow as turner; 1 - red as target; 2 - blue as target for heal; -1 or other - Deselect
+        /// </summary>
+        public void Select(int c = 0)
+        {
+            if (c >= 0 && c < 3) { 
+                selector.SetActive(true);
+                selector.transform.SetAsFirstSibling();
+                selectorImage.color = selectorPalette[c];
+            }
+            else
+                selector.SetActive(false);
+        }
+
+        public void FadeOut(float fade) 
+            => cg?.DOFade(0, fade).SetEase(Ease.InOutQuad);
+        
 
         public void UpdateUI()
         {
@@ -138,6 +119,7 @@ namespace Overlewd
             if (whiteSlider)
                 StartCoroutine(HPChangePause());
             charStats?.UpdateUI();
+            selector.transform.SetSiblingIndex(0);
         }
         IEnumerator HPChangePause()
         {
@@ -220,6 +202,68 @@ namespace Overlewd
             pressTime = 0f;
             pressed = false;
         }
+
+        private void VfxInit()
+        {
+            var path = "Battle/Prefabs/VFX/Skill/StatusEffects/";
+            vfxDefUp = Resources.Load(path + "aniDefUp.part") as GameObject;
+            vfxDefDown = Resources.Load(path + "aniDefDown.part") as GameObject;
+            vfxStun = Resources.Load(path + "Stun.part") as GameObject;
+            vfxRegen = Resources.Load(path + "HealContinue.part") as GameObject;
+            vfxPoison = Resources.Load(path + "PoisonContinue.part") as GameObject;
+            vfxFocus = vfxDefUp;
+            vfxBlind = vfxDefDown;
+        }
+        void ApplyVFX()
+        {
+            CheckVFX(defUp_defDown, ref vfxDefUpGO, ref vfxDefDownGO, vfxDefUp, vfxDefDown);
+            CheckVFX(regen_poison, ref vfxRegenGO, ref vfxPoisonGO, vfxRegen, vfxPoison);
+            //CheckVFX(focus_blind, ref vfxFocusGO, ref vfxBlindGO, vfxFocus, vfxBlind);
+
+            if (stun && vfxStunGO == null)
+                vfxStunGO = Instantiate(vfxStun, transform);
+            else if (vfxStunGO != null)
+                DisableVFX(ref vfxStunGO);
+        }
+        void CheckVFX(int stat, ref GameObject buffGO, ref GameObject debuffGO, GameObject buffVFX, GameObject debuffVFX)
+        {
+            if (stat != 0)
+            {
+                if (stat > 0)
+                {
+                    if (debuffGO != null)
+                        DisableVFX(ref debuffGO);
+                    if (buffGO == null)
+                        buffGO = Instantiate(buffVFX, transform);
+                }
+                else
+                {
+                    if (buffGO != null)
+                        DisableVFX(ref buffGO);
+                    if (debuffGO == null)
+                        debuffGO = Instantiate(debuffVFX, transform);
+                }
+            }
+            else
+            {
+                if (buffGO != null)
+                    DisableVFX(ref buffGO);
+                if (debuffGO != null)
+                    DisableVFX(ref debuffGO);
+            }
+        }
+        void DisableVFX(ref GameObject go)
+        {
+            var fadeTime = 1f;
+            CanvasGroup cg;
+            if (go.TryGetComponent<CanvasGroup>(out cg))
+                cg?.DOFade(0, fadeTime);
+            else
+                go.AddComponent<CanvasGroup>().DOFade(0, fadeTime);
+            Destroy(go, fadeTime);
+            go = null;
+        }
+
         private void OnGUI()
         {
             if (cc.bm.debug > 0)

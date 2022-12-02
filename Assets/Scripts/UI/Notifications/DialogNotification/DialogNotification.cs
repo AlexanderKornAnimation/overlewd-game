@@ -128,8 +128,6 @@ namespace Overlewd
 
     public class DialogNotificationInData : BaseNotificationInData
     {
-        public int? dialogId;
-        public AdminBRO.Dialog dialogData =>
-            GameData.dialogs.GetById(dialogId);
+
     }
 }

@@ -23,14 +23,11 @@ namespace Overlewd
 
             private Image[] freeRewards = new Image[2];
             private TextMeshProUGUI[] freeRewardsAmounts = new TextMeshProUGUI[2];
-            private Button freeClaimButton;
-
+            private Transform[] freeRewardsMarkDone = new Transform[2];
             private Image[] premRewards = new Image[2];
             private TextMeshProUGUI[] premRewardsAmounts = new TextMeshProUGUI[2];
-            private Button premClaimButton;
-
-            private Button claimAllButton;
-            private Button upgradeButton;
+            private Transform[] premRewardsMarkDone = new Transform[2];
+            private Transform[] premRewardsMarkLock = new Transform[2];
 
             private Transform canvas;
 
@@ -43,19 +40,18 @@ namespace Overlewd
                 
                 level = levelBackground.Find("Level").GetComponent<TextMeshProUGUI>();
                 levelReached = levelBackground.Find("LevelReached") as RectTransform;
-                freeClaimButton = freeRewardsTr.Find("ClaimButton").GetComponent<Button>();
-                premClaimButton = premiumRewardsTr.Find("ClaimButton").GetComponent<Button>();
-                claimAllButton = canvas.Find("ClaimAllButton").GetComponent<Button>();
-                upgradeButton = canvas.Find("UpgradeButton").GetComponent<Button>();
 
                 for (int i = 0; i < freeRewards.Length; i++)
                 {
                     freeRewards[i] = freeRewardsTr.Find($"Reward{i + 1}").GetComponent<Image>();
                     freeRewardsAmounts[i] = freeRewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                    freeRewardsMarkDone[i] = freeRewards[i].transform.Find("MarkDone");
                     freeRewards[i].gameObject.SetActive(false);
 
                     premRewards[i] = premiumRewardsTr.Find($"Reward{i + 1}").GetComponent<Image>();
                     premRewardsAmounts[i] = premRewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
+                    premRewardsMarkDone[i] = premRewards[i].transform.Find("MarkDone");
+                    premRewardsMarkLock[i] = premRewards[i].transform.Find("MarkLock");
                     premRewards[i].gameObject.SetActive(false);
                 }
             }
@@ -88,26 +84,6 @@ namespace Overlewd
                         premRewardsAmounts[i].text = levelData.premiumReward[i].amount?.ToString();
                     }
                 }
-            }
-            
-            private void FreeClaimButtonClick()
-            {
-                
-            }
-
-            private void PremClaimButtonClick()
-            {
-                
-            }
-
-            private void ClaimAllButtonClick()
-            {
-                
-            }
-
-            private void UpgradeButtonClick()
-            {
-                
             }
             
             public static BattlePassLevel GetInstance(Transform parent)

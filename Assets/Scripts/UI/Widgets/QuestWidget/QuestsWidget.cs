@@ -11,19 +11,44 @@ namespace Overlewd
 {
     public class QuestsWidget : BaseWidget
     {
-        protected RectTransform backRect;
-        protected Button mainQuestButton;
-        protected TextMeshProUGUI mainQuestButtonTitle;
-        protected Transform content;
-        protected GameObject scrollMarker;
+        enum Mode
+        {
+            FTUE,
+            Event
+        }
+        private Mode mode { get; set; } = Mode.FTUE;
+        private bool isFTUEMode => mode == Mode.FTUE;
+        private bool isEventMode => mode == Mode.Event;
 
-        protected List<AdminBRO.QuestItem> ftueQuests =>
+        private RectTransform backRect;
+        private Button mainQuestButton;
+        private TextMeshProUGUI mainQuestButtonTitle;
+        private Transform ftueQuestsSR;
+        private Transform ftueSRContent;
+        private Transform eventQuestsSR;
+        private Transform eventSRContent;
+
+        private Transform questsScrollContenet => mode switch
+        {
+            Mode.Event => eventSRContent,
+            _ => ftueSRContent
+        };
+
+        private List<AdminBRO.QuestItem> eventQuests =>
+            GameData.quests.quests.FindAll(q => q.isEvent &&
+                q.eventId == GameData.events.mapEventData?.id &&
+                !q.isClaimed);
+        private List<AdminBRO.QuestItem> ftueQuests =>
             GameData.quests.quests.FindAll(q => q.isFTUE && !q.isClaimed);
-        protected AdminBRO.QuestItem mainQuest =>
+        private AdminBRO.QuestItem mainQuest =>
             ftueQuests.Find(q => q.isFTUEMain);
-        protected List<AdminBRO.QuestItem> quests =>
+        private List<AdminBRO.QuestItem> quests => isEventMode ?
+            eventQuests :
             ftueQuests.FindAll(q => !q.isFTUEMain).
-            OrderByDescending(q => q.isNew ? 100 : q.isCompleted ? 10 : 1).ToList();
+            OrderByDescending(q =>
+                q.isNew ? 100 : 
+                q.isCompleted && !q.markCompleted ? 20 :
+                q.isCompleted ? 10 : 1).ToList();
 
         private List<NSQuestWidget.BaseQuestButton> markNewQuests = new List<NSQuestWidget.BaseQuestButton>();
         private List<NSQuestWidget.BaseQuestButton> markCompleteQuests = new List<NSQuestWidget.BaseQuestButton>();
@@ -32,20 +57,48 @@ namespace Overlewd
         {
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
-            var background = backRect.Find("Background");
-            var sideQuests = background.Find("SideQuests");
 
-            mainQuestButton = background.Find("MainQuest").GetComponent<Button>();
+            mainQuestButton = backRect.Find("FTUEMainQuest").GetComponent<Button>();
             mainQuestButtonTitle = mainQuestButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            scrollMarker = background.Find("ScrollMarker").gameObject;
-            content = sideQuests.Find("ScrollView").Find("Viewport").Find("Content");
+
+            ftueQuestsSR = backRect.Find("FTUEQuests");
+            ftueSRContent = ftueQuestsSR.Find("Viewport").Find("Content");
+            eventQuestsSR = backRect.Find("EventQuests");
+            eventSRContent = eventQuestsSR.Find("Viewport").Find("Content");
 
             mainQuestButton.onClick.AddListener(MainQuestButtonClick);
+
+            MakeByMode();
         }
 
         private void Start()
         {
             Customize();
+        }
+
+        public void SwitchToEventMode()
+        {
+            mode = Mode.Event;
+            MakeByMode();
+        }
+
+        private void MakeByMode()
+        {
+            mainQuestButton.gameObject.SetActive(isFTUEMode);
+            ftueQuestsSR.gameObject.SetActive(isFTUEMode);
+            eventQuestsSR.gameObject.SetActive(isEventMode);
+        }
+
+        private NSQuestWidget.BaseQuestButton InstQuestButton(AdminBRO.QuestItem questData, int skinId)
+        {
+            NSQuestWidget.BaseQuestButton questButton = skinId switch
+            {
+                0 => NSQuestWidget.SideQuestButton1.GetInstance(questsScrollContenet),
+                1 => NSQuestWidget.SideQuestButton2.GetInstance(questsScrollContenet),
+                _ => null
+            };
+            questButton.questId = questData.id;
+            return questButton;
         }
 
         protected virtual void Customize()
@@ -55,13 +108,7 @@ namespace Overlewd
             var questSkinId = 0;
             foreach (var questData in quests)
             {
-                NSQuestWidget.BaseQuestButton questButton = questSkinId switch
-                {
-                    0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
-                    1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
-                    _ => null
-                };
-                questButton.questId = questData.id;
+                var questButton = InstQuestButton(questData, questSkinId);
 
                 if (questButton.questData.isNew)
                 {
@@ -69,7 +116,8 @@ namespace Overlewd
                     questButton.SetHide();
                 }
 
-                if (questButton.questData.isCompleted)
+                if (questButton.questData.isCompleted &&
+                    !questButton.questData.markCompleted)
                 {
                     markCompleteQuests.Add(questButton);
                     questButton.SetHide();
@@ -100,10 +148,8 @@ namespace Overlewd
             UITools.RightHide(backRect);
         }
 
-        public async Task ShowAsync()
+        private async Task FirstShowMarkedQuests()
         {
-            await UITools.RightShowAsync(backRect);
-
             markNewQuests.Reverse();
             foreach (var quest in markNewQuests)
             {
@@ -118,6 +164,13 @@ namespace Overlewd
             }
         }
 
+        public async Task ShowAsync()
+        {
+            await UITools.RightShowAsync(backRect);
+
+            await FirstShowMarkedQuests();
+        }
+
         public async Task HideAsync()
         {
             await UITools.RightHideAsync(backRect);
@@ -128,7 +181,7 @@ namespace Overlewd
             mainQuestButtonTitle.text = mainQuest?.name;
 
             var actualQuestsData = quests;
-            var curWidgetQuests = content.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().ToList();
+            var curWidgetQuests = questsScrollContenet.GetComponentsInChildren<NSQuestWidget.BaseQuestButton>().ToList();
 
             var newQuests = actualQuestsData.Where(q => !curWidgetQuests.Exists(wq => wq.questData.id == q.id));
             var eraseQuests = curWidgetQuests.Where(wq => !actualQuestsData.Exists(q => q.id == wq.questData.id));
@@ -142,13 +195,7 @@ namespace Overlewd
             var questSkinId = 0;
             foreach (var qData in newQuests)
             {
-                NSQuestWidget.BaseQuestButton questButton = questSkinId switch
-                {
-                    0 => NSQuestWidget.SideQuestButton1.GetInstance(content),
-                    1 => NSQuestWidget.SideQuestButton2.GetInstance(content),
-                    _ => null
-                };
-                questButton.questId = qData.id;
+                var questButton = InstQuestButton(qData, questSkinId);
                 questButton.SetHide();
                 questButton.transform.SetAsFirstSibling();
                 await questButton.WaitShowAsNew();
@@ -159,6 +206,20 @@ namespace Overlewd
             foreach (var q in markCompleted)
             {
                 await q.WaitMarkAsComplete();
+            }
+        }
+
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData?.type)
+            {
+                case UIEvent.Type.HideOverlay:
+                    if (eventData.SenderTypeIs<QuestOverlay>() ||
+                        eventData.SenderTypeIs<EventOverlay>())
+                    {
+                        Refresh();
+                    }
+                    break;
             }
         }
 

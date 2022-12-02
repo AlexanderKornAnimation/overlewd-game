@@ -69,8 +69,6 @@ namespace Overlewd
             {
                 switch (skillType)
                 {
-                    case AdminBRO.MagicGuildSkill.Type_Attack:
-                        return Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/BasicAttack");
                     case AdminBRO.MagicGuildSkill.Type_ActiveSkill:
                         return skillData.locked
                             ? Resources.Load<Sprite>("Prefabs/UI/Screens/OverlordScreen/Images/Skills/ActiveSpellStep1_Locked")

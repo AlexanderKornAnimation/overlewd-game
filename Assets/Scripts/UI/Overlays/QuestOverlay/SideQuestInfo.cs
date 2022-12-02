@@ -20,6 +20,7 @@ namespace Overlewd
             private Button claimButton;
             private GameObject inProgress;
             private GameObject completed;
+            private Button advanceButton;
 
             private void Awake()
             {
@@ -44,6 +45,9 @@ namespace Overlewd
 
                 inProgress = rewardWindow.Find("InProgress").gameObject;
                 completed = rewardWindow.Find("Completed").gameObject;
+
+                advanceButton = rewardWindow.Find("AdvanceButton").GetComponent<Button>();
+                advanceButton.onClick.AddListener(AdvanceButtonClick);
             }
 
             private void Start()
@@ -71,7 +75,8 @@ namespace Overlewd
                         rewardAmount.text = questItem.amount.ToString();
                     }
                     
-                    inProgress.SetActive(questData.inProgress);
+                    inProgress.SetActive(false);
+                    advanceButton.gameObject.SetActive(questData.isOpen || questData.inProgress);
                     claimButton.gameObject.SetActive(questData.isCompleted);
                     completed.SetActive(questData.isClaimed);
                 }
@@ -81,8 +86,58 @@ namespace Overlewd
             {
                 await GameData.quests.ClaimReward(questData?.id);
                 Customize();
-                await UITools.WaitClaimRewardsAsync(questData?.rewards);
+                UITools.ClaimRewardsAsync(questData?.rewards);
                 questContentScrollView.questButton.Remove();
+            }
+
+            private void AdvanceToScreen<T, TData>() where T : BaseFullScreenParent<TData>
+                                                     where TData : BaseFullScreenInData, new()
+            {
+                if (UIManager.HasScreen<T>())
+                {
+                    UIManager.HideOverlay();
+                    return;
+                }
+
+                UIManager.MakeScreen<T>().
+                    SetData(new TData
+                    {
+                        questId = questId
+                    }).DoShow();
+            }
+
+            private void AdvanceButtonClick()
+            {
+                switch (questData.screenTarget)
+                {
+                    case AdminBRO.QuestItem.ScreenTarget_BattleGirls:
+                        AdvanceToScreen<BattleGirlScreen, BattleGirlScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_Forge:
+                        AdvanceToScreen<ForgeScreen, ForgeScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_GuestRoom:
+                       
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_Harem:
+                        AdvanceToScreen<HaremScreen, HaremScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_Laboratory:
+                        AdvanceToScreen<LaboratoryScreen, LaboratoryScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_MagicGuild:
+                        AdvanceToScreen<MagicGuildScreen, MagicGuildScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_Map:
+                        AdvanceToScreen<MapScreen, MapScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_Municipality:
+                        AdvanceToScreen<MunicipalityScreen, MunicipalityScreenInData>();
+                        break;
+                    case AdminBRO.QuestItem.ScreenTarget_Portal:
+                        AdvanceToScreen<PortalScreen, PortalScreenInData>();
+                        break;
+                }
             }
 
             public static SideQuestInfo GetInstance(Transform parent)

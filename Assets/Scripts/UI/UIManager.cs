@@ -17,11 +17,14 @@ namespace Overlewd
         {
             None,
             HidePopup,
-            HideOverlay
+            HideOverlay,
+            ChangeScreenComplete,
         }
 
         public Type type { get; set; } = Type.None;
         public System.Type uiSenderType { get; set; }
+
+        public bool SenderTypeIs<T>() => uiSenderType == typeof(T);
     }
 
     public class UserInputLocker
@@ -93,6 +96,7 @@ namespace Overlewd
         private static BaseMissclick notifMiss;
 
         public static event Action<GameDataEvent> widgetsGameDataListeners;
+        public static event Action<UIEvent> widgetsUIEventListeners;
 
         public enum UserInputLockerMode
         {
@@ -320,6 +324,8 @@ namespace Overlewd
             screen?.OnUIEvent(eventData);
             popup?.OnUIEvent(eventData);
             overlay?.OnUIEvent(eventData);
+
+            widgetsUIEventListeners?.Invoke(eventData);
         }
 
         //transition tools
@@ -606,6 +612,12 @@ namespace Overlewd
                                         new List<BaseMissclick>());
 
             MemoryOprimizer.ChangeScreen();
+
+            ThrowUIEvent(new UIEvent
+            {
+                type = UIEvent.Type.ChangeScreenComplete,
+                uiSenderType = screen?.GetType()
+            });
         }
 
         //Popup Layer

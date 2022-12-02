@@ -9,14 +9,21 @@ namespace Overlewd
         protected virtual void Awake()
         {
             UIManager.widgetsGameDataListeners += OnGameDataEvent;
+            UIManager.widgetsUIEventListeners += OnUIEvent;
         }
         
         protected virtual void OnDestroy()
         {
             UIManager.widgetsGameDataListeners -= OnGameDataEvent;
+            UIManager.widgetsUIEventListeners -= OnUIEvent;
         }
 
         public virtual void OnGameDataEvent(GameDataEvent eventData)
+        {
+
+        }
+
+        public virtual void OnUIEvent(UIEvent eventData)
         {
 
         }

@@ -15,7 +15,7 @@ namespace Overlewd
         public override async Task ProgressAsync()
         {
             await UITools.FadeHideAsync(gameObject);
-            Destroy(gameObject);
+            DestroyImmediate(gameObject);
         }
     }
 }

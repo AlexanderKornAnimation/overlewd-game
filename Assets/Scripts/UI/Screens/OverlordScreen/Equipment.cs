@@ -14,7 +14,7 @@ namespace Overlewd
             private Image icon;
             private GameObject equipStatus;
             private GameObject notification;
-            private Button equipButton;
+            private Button button;
             public event Action<Equipment> OnClick;
 
             public int equipId { get; set; }
@@ -29,8 +29,8 @@ namespace Overlewd
                 icon = canvas.Find("Icon").GetComponent<Image>();
                 equipStatus = canvas.Find("EquipStatus").gameObject;
                 notification = canvas.Find("Notification").gameObject;
-                equipButton = canvas.Find("Button").GetComponent<Button>();
-                equipButton.onClick.AddListener(EquipButtonClick);
+                button = canvas.Find("Button").GetComponent<Button>();
+                button.onClick.AddListener(ButtonClick);
             }
 
             private void Start()
@@ -42,23 +42,23 @@ namespace Overlewd
             {
                 icon.sprite = ResourceManager.LoadSprite(equipData?.icon);
                 equipStatus.SetActive(equipData.isEquipped);
-                equipButton.gameObject.SetActive(!equipStatus.activeSelf);
+                button.gameObject.SetActive(!equipStatus.activeSelf);
             }
 
             public void Select()
             {
                 equipStatus.SetActive(true);
-                equipButton.gameObject.SetActive(false);
+                button.gameObject.SetActive(false);
                 transform.SetAsFirstSibling();
             }
 
             public void Deselect()
             {
                 equipStatus.SetActive(false);
-                equipButton.gameObject.SetActive(true);
+                button.gameObject.SetActive(true);
             }
 
-            private void EquipButtonClick()
+            private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 

@@ -40,11 +40,22 @@ namespace Overlewd
             protected virtual void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakeOverlay<QuestOverlay>().
-                    SetData(new QuestOverlayInData 
-                    {
-                        questId = questId
-                    }).DoShow();
+                if (questData.isFTUE)
+                {
+                    UIManager.MakeOverlay<QuestOverlay>().
+                        SetData(new QuestOverlayInData
+                        {
+                            questId = questId
+                        }).DoShow();
+                }
+                else if (questData.isEvent)
+                {
+                    UIManager.MakeOverlay<EventOverlay>().
+                        SetData(new EventOverlayInData
+                        {
+                            questId = questId
+                        }).DoShow();
+                }
             }
 
             private void Start()
@@ -55,16 +66,24 @@ namespace Overlewd
             protected virtual void Customize()
             {
                 title.text = questData?.name;
+
+                if (questData.isCompleted && questData.markCompleted)
+                {
+                    title.text = "Claim rewards";
+                    mark.gameObject.SetActive(true);
+                }
             }
 
             public void SetHide()
             {
                 root.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0.0f);
                 questBack.anchoredPosition += new Vector2(500.0f, 0.0f);
+                root.gameObject.SetActive(false);
             }
 
             public async Task WaitShow()
             {
+                root.gameObject.SetActive(true);
                 var scrollContent_vlg = transform.parent.GetComponent<VerticalLayoutGroup>();
 
                 var seq = DOTween.Sequence();
@@ -76,6 +95,7 @@ namespace Overlewd
                     scrollContent_vlg.enabled = true;
                 };
                 seq.Play();
+                seq.SetLink(gameObject);
                 await seq.AsyncWaitForCompletion();
             }
 
@@ -103,6 +123,7 @@ namespace Overlewd
                     questData.isNew = false;
                 };
                 seq.Play();
+                seq.SetLink(gameObject);
                 await seq.AsyncWaitForCompletion();
             }
 
@@ -118,15 +139,11 @@ namespace Overlewd
                 seq.AppendInterval(0.2f);
                 seq.AppendCallback(() =>
                 {
-                    title.text = "Claim rewards";
-                    mark.gameObject.SetActive(true);
+                    Customize();
                 });
                 seq.AppendInterval(0.3f);
-                seq.onComplete = () =>
-                {
-
-                };
                 seq.Play();
+                seq.SetLink(gameObject);
                 await seq.AsyncWaitForCompletion();
             }
 
@@ -151,6 +168,7 @@ namespace Overlewd
                     Destroy(gameObject);
                 };
                 seq.Play();
+                seq.SetLink(gameObject);
                 await seq.AsyncWaitForCompletion();
             }
         }

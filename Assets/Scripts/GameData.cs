@@ -186,9 +186,9 @@ namespace Overlewd
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
         }
-        public async Task<List<AdminBRO.GenRewardItem>> EndStage(int stageId, AdminBRO.FTUEStageEndData data = null)
+        public async Task<List<AdminBRO.GenRewardItem>> EndStage(int stageId, AdminBRO.BattleEndData battleEndData = null)
         {
-            var genRewards = await AdminBRO.ftueStageEndAsync(stageId, data);
+            var genRewards = await AdminBRO.ftueStageEndAsync(stageId, battleEndData);
             stages = await AdminBRO.ftueStagesAsync();
             stats = await AdminBRO.ftueStatsAsync();
 
@@ -472,6 +472,7 @@ namespace Overlewd
             await Get();
             await GameData.player.Get();
             await GameData.characters.Get();
+            await GameData.equipment.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -496,6 +497,7 @@ namespace Overlewd
             await Get();
             await GameData.player.Get();
             await GameData.characters.Get();
+            await GameData.equipment.Get();
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
@@ -724,9 +726,9 @@ namespace Overlewd
             var newEventStageData = await AdminBRO.eventStageStartAsync(stageId);
             stages = await AdminBRO.eventStagesAsync();
         }
-        public async Task StageEnd(int stageId, AdminBRO.EventStageEndData data = null)
+        public async Task StageEnd(int stageId, AdminBRO.BattleEndData battleEndData = null)
         {
-            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, data);
+            var newEventStageData = await AdminBRO.eventStageEndAsync(stageId, battleEndData);
             stages = await AdminBRO.eventStagesAsync();
 
             await GameData.characters.Get();
@@ -744,24 +746,6 @@ namespace Overlewd
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
-        }
-
-        public AdminBRO.EventChapter activeChapter
-        {
-            get
-            {
-                var chapterData = mapEventData?.firstChapter;
-                while (chapterData?.isComplete ?? false)
-                {
-                    if (chapterData.nextChapterId.HasValue)
-                    {
-                        chapterData = chapterData.nextChapterData;
-                        continue;
-                    }
-                    break;
-                }
-                return chapterData;
-            }
         }
 
         public AdminBRO.EventChapter mapChapter { get; set; }
@@ -1035,6 +1019,21 @@ namespace Overlewd
 
         public AdminBRO.Dialog GetById(int? id) =>
             dialogs.Find(d => d.id == id);
+
+        public async Task Start(int id)
+        {
+            await AdminBRO.dialogStartAsync(id);
+        }
+
+        public async Task End(int id)
+        {
+            await AdminBRO.dialogEndAsync(id);
+
+            await GameData.characters.Get();
+            await GameData.quests.Get();
+            await GameData.battlePass.Get();
+            await GameData.player.Get();
+        }
     }
 
     //battles
@@ -1049,6 +1048,23 @@ namespace Overlewd
 
         public AdminBRO.Battle GetById(int? id) =>
             battles.Find(d => d.id == id);
+
+        public async Task Start(int id)
+        {
+            await AdminBRO.battleStartAsync(id);
+        }
+
+        public async Task<List<AdminBRO.GenRewardItem>> End(int id, AdminBRO.BattleEndData battleEndData = null)
+        {
+            var genRewards = await AdminBRO.battleEndAsync(id, battleEndData);
+
+            await GameData.characters.Get();
+            await GameData.quests.Get();
+            await GameData.battlePass.Get();
+            await GameData.player.Get();
+
+            return genRewards;
+        }
     }
 
     //animations
@@ -1149,6 +1165,7 @@ namespace Overlewd
                 await AdminBRO.seduceMatriarchAsync(id.Value);
                 matriarchs = await AdminBRO.matriarchsAsync();
                 buffs = await AdminBRO.buffsAsync();
+                await GameData.characters.Get();
             }
         }
     }
@@ -1167,6 +1184,18 @@ namespace Overlewd
             passes.Find(p => p.eventId == eventId);
         public AdminBRO.BattlePass GetById(int id) =>
             passes.Find(p => p.id == id);
+
+        public async Task BuyPremium(int battlePassId)
+        {
+            await AdminBRO.battlePassBuyPremiumAsync(battlePassId);
+            await Get();
+        }
+
+        public async Task ClaimRewards(int battlePassId)
+        {
+            await AdminBRO.battlePassClaimAsync(battlePassId);
+            await Get();
+        }
     }
 
     //potions
