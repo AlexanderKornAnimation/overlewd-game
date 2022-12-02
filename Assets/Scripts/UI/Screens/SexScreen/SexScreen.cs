@@ -18,7 +18,8 @@ namespace Overlewd
         private TextMeshProUGUI text;
         private GameObject nameBackground;
 
-        private Button textContainer;
+        private Transform textContainer;
+        private Button screenButton;
         private Button skipButton;
         private Button autoplayButton;
         private TextMeshProUGUI autoplayStatus;
@@ -48,12 +49,13 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            textContainer = canvas.Find("TextContainer").GetComponent<Button>();
-            textContainer.onClick.AddListener(TextContainerButtonClick);
-            
+            textContainer = canvas.Find("TextContainer");            
             nameBackground = canvas.Find("SubstrateName").gameObject;
             personageName = nameBackground.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            text = textContainer.Find("Text").GetComponent<TextMeshProUGUI>();
+
+            screenButton = canvas.Find("ScreenTap").GetComponent<Button>();
+            screenButton.onClick.AddListener(ScreenTapButtonClick);
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
@@ -214,7 +216,7 @@ namespace Overlewd
             LeaveScreen();
         }
 
-        private void TextContainerButtonClick()
+        private void ScreenTapButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             if (dialogData == null)

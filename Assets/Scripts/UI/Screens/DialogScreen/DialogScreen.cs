@@ -23,7 +23,7 @@ namespace Overlewd
         private Transform midCharacterPos;
         private Transform rightCharacterPos;
 
-        private Button textContainer;
+        private Transform textContainer;
         private TextMeshProUGUI personageName;
         private GameObject nameBackground;
 
@@ -31,6 +31,7 @@ namespace Overlewd
         private Transform emotionPos;
         private TextMeshProUGUI text;
 
+        private Button screenButton;
         private Button skipButton;
         private Button autoplayButton;
         private Image autoplayButtonPressed;
@@ -79,14 +80,15 @@ namespace Overlewd
             midCharacterPos = charactersPos.Find("MiddlePos");
             rightCharacterPos = charactersPos.Find("RightPos");
 
-            textContainer = canvas.Find("TextContainer").GetComponent<Button>();
-            textContainer.onClick.AddListener(TextContainerButtonClick);
-            
+            textContainer = canvas.Find("TextContainer");
             nameBackground = canvas.Find("SubstrateName").gameObject;
             personageName = nameBackground.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            emotionBack = textContainer.transform.Find("EmotionBack");
+            emotionBack = textContainer.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-            text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            text = textContainer.Find("Text").GetComponent<TextMeshProUGUI>();
+
+            screenButton = canvas.Find("ScreenTap").GetComponent<Button>();
+            screenButton.onClick.AddListener(ScreenTapButtonClick);
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
@@ -446,7 +448,7 @@ namespace Overlewd
             LeaveScreen();
         }
 
-        private void TextContainerButtonClick()
+        private void ScreenTapButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             if (dialogData == null)
