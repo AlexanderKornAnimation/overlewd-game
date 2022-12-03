@@ -95,6 +95,23 @@ namespace Overlewd
             portalButton.gameObject.SetActive(true);
             summonButton.gameObject.SetActive(true);
             PortalScreenHelper.MakeSummonButton(inputData.gachaData, inputData.isMany, summonButton, summonButtonText);
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor2");
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.MakeScreen<MemoryScreen>().
+                        SetData(new MemoryScreenInData
+                        {
+                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
+                        }).DoShow();
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.SEX_1):
+                    UIManager.ShowScreen<OverlordScreen>();
+                    break;
+            }
         }
 
         private void MakeShardsAnimCtrl(bool many, string gachaTabType, List<AdminBRO.GachaBuyResult> summonData)

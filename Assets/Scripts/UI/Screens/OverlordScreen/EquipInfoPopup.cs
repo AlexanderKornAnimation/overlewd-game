@@ -272,6 +272,13 @@ namespace Overlewd
                 }
                 
                 Destroy(gameObject);
+
+                switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                {
+                    case (FTUE.CHAPTER_3,FTUE.SEX_1):
+                        GameData.ftue.chapter3.ShowNotifByKey("ch3overequiptutor5");
+                        break;
+                }
             }
 
             public static EquipInfoPopup GetInstance(Transform parent)

@@ -68,9 +68,11 @@ namespace Overlewd
                     UITools.DisableButton(tabs[TabBattleGirlsEquip]);
                     UITools.DisableButton(tabs[TabOverlordEquip]);
                     UITools.DisableButton(tabs[TabShards]);
+                    UITools.DisableButton(backButton,!UIManager.currentState.prevState.ScreenTypeIs<SummoningScreen>());
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                     UITools.DisableButton(tabs[TabOverlordEquip]);
+                    UITools.DisableButton(backButton,!UIManager.currentState.prevState.ScreenTypeIs<SummoningScreen>());
                     break;
             }
             Customize();
@@ -84,13 +86,28 @@ namespace Overlewd
             switch (eventData?.type)
             {
                 case UIEvent.Type.ChangeScreenComplete:
-                    
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                            if (!UIManager.currentState.prevState.ScreenTypeIs<MemoryScreen>())
+                            {
+                                GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor3");
+                                await UIManager.WaitHideNotifications();
+                                UIManager.MakeScreen<MemoryScreen>().
+                                    SetData(new MemoryScreenInData
+                                    {
+                                        girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
+                                    }).DoShow();
+                            }
+                            break;
+                    }
                     break;
             }
         }
 
         public override async Task AfterShowAsync()
         {
+
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_1, _):
@@ -100,17 +117,13 @@ namespace Overlewd
                     GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor1");
                     await UIManager.WaitHideNotifications();
                     break;
-                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor3");
-                    await UIManager.WaitHideNotifications();
-                    break;
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_portal);
                     break;
                 case (FTUE.CHAPTER_3, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_portal);
                     break;
-            }
+            }            
 
             await Task.CompletedTask;
         }
@@ -235,14 +248,8 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
-                    UIManager.ShowScreen<MapScreen>();
-                    break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    UIManager.MakeScreen<MemoryScreen>().
-                        SetData(new MemoryScreenInData
-                        {
-                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
-                        }).DoShow();
+                    UIManager.ShowScreen<MapScreen>();
                     break;
                 default:
                     UIManager.ShowScreen<CastleScreen>();

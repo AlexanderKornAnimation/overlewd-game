@@ -35,6 +35,14 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            
+            Customize();
+            
+            await Task.CompletedTask;
+        }
+
+        private void Customize()
+        {
             activeSpell = canvas.Find("ActiveSpell").gameObject.AddComponent<NSMagicGuildScreen.Spell>();
             activeSpell.skillType = AdminBRO.MagicGuildSkill.Type_ActiveSkill;
 
@@ -47,11 +55,9 @@ namespace Overlewd
             passiveSpell2 = canvas.Find("PassiveSpell2").gameObject.AddComponent<NSMagicGuildScreen.Spell>();
             passiveSpell2.skillType = AdminBRO.MagicGuildSkill.Type_PassiveSkill2;
 
-            buildingLevel.text = (buildingData.currentLevel + 1).ToString();
-
-            await Task.CompletedTask;
+            buildingLevel.text = (buildingData.currentLevel + 1).ToString(); 
         }
-
+        
         public override async Task AfterShowAsync()
         {
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
@@ -61,6 +67,9 @@ namespace Overlewd
                     break;
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_mages_guild);
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_1):
+                    GameData.ftue.chapter3.ShowNotifByKey("ch3guildtutor3");
                     break;
                 case (FTUE.CHAPTER_3, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_mages_guild);
@@ -98,7 +107,15 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_1):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
         }
     }
 

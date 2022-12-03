@@ -90,18 +90,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Winning_a_battle);
                     break;
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
-                    if (!GameData.ftue.chapter2_battle1.isComplete)
-                    {
-                        GameData.ftue.chapter2.ShowNotifByKey("ch2teamequiptutor1");
-                        await UIManager.WaitHideNotifications();
-                        UIManager.MakeScreen<WeaponScreen>().
-                            SetData(new WeaponScreenInData
-                            {
-                                characterId = GameData.characters.slot1Ch.id,
-                            }).DoShow();
-                    }
-                    return;
+                
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Winning_a_battle);
                     break;

@@ -199,7 +199,14 @@ namespace Overlewd
                            }).DoShow();
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    if (!GameData.buildings.harem.meta.isBuilt)
+                    {
                         UIManager.ShowScreen<CastleScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                     UIManager.MakeScreen<PortalScreen>().
@@ -207,8 +214,28 @@ namespace Overlewd
                         {
                             activeButtonId = PortalScreen.TabShards,
                         }).DoShow();
-                    return;
-                default:
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
+                    if (!GameData.buildings.forge.meta.isBuilt)
+                    {
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_1):
+                    if (!GameData.buildings.magicGuild.meta.isBuilt)
+                    {
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    break;
+                    default:
                     UIManager.ToPrevScreen();
                     break;
             }

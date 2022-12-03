@@ -129,6 +129,40 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+
+            await Task.CompletedTask;
+        }
+
+        public override async void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData.type)
+            {
+                case UIEvent.Type.ChangeScreenComplete:
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_3, FTUE.SEX_1):
+                            if (UIManager.currentState.prevState.ScreenTypeIs<SummoningScreen>())
+                            {
+                                GameData.ftue.chapter3.ShowNotifByKey("ch3overequiptutor4");
+                            }
+                            else
+                            {
+                                GameData.ftue.chapter3.ShowNotifByKey("ch3overequiptutor3");
+                                await UIManager.WaitHideNotifications();
+                                UIManager.MakeScreen<PortalScreen>().
+                                    SetData(new PortalScreenInData
+                                    {
+                                        activeButtonId = PortalScreen.TabOverlordEquip
+                                    }).DoShow();
+                            }
+                            return;
+                    }
+                    break;
+            }
+        }
+
         private void Customize()
         {
             UITools.DisableButton(collectiblesButton);
@@ -329,13 +363,22 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState);
-            }
-            else
-            {
-                UIManager.ToPrevScreen();
+                case (FTUE.CHAPTER_3, FTUE.SEX_1):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    var prevState = UIManager.currentState.prevState;
+                    if (prevState.ScreenTypeIs<BattleScreen>() || prevState.ScreenTypeIs<BossFightScreen>())
+                    {
+                        UIManager.ToPrevState(prevState.prevScreenState);
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    break;
             }
         }
 

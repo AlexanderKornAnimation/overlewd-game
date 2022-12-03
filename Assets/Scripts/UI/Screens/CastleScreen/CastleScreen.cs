@@ -213,6 +213,31 @@ namespace Overlewd
                         municipalityButton?.DisableButton();
                     }
                     break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_1):
+                    UITools.DisableButton(sidebarButton);
+                    portalButton?.DisableButton();
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    haremButton?.DisableButton();
+                    laboratoryButton?.DisableButton();
+                    if (GameData.buildings.magicGuild.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
+                    UITools.DisableButton(sidebarButton);
+                    portalButton?.DisableButton();
+                    castleButton?.DisableButton();
+                    marketButton?.DisableButton();
+                    haremButton?.DisableButton();
+                    laboratoryButton?.DisableButton();
+                    magicGuildButton?.DisableButton();
+                    if (GameData.buildings.forge.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
+                    break;
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
@@ -264,6 +289,22 @@ namespace Overlewd
                         GameData.ftue.chapter2.ShowNotifByKey("ch2labtutor1");
                     }
                     break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_1):
+                    if (!GameData.buildings.magicGuild.meta.isBuilt)
+                    {
+                        GameData.ftue.chapter3.ShowNotifByKey("ch3guildtutor1");
+                    }
+                    else
+                    {
+                        GameData.ftue.chapter3.ShowNotifByKey("ch3guildtutor2");
+                    }
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                    if (GameData.buildings.aerostat.meta.isBuilt)
+                    {
+                        UIManager.ShowOverlay<EventOverlay>();
+                    }
+                    break;
                 default:
                     {
                         var showPanelTasks = new List<Task>();
@@ -291,6 +332,28 @@ namespace Overlewd
             }
             
             await Task.CompletedTask;
+        }
+
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData.type)
+            {
+                case UIEvent.Type.ChangeScreenComplete:
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
+                            if (GameData.buildings.forge.meta.isBuilt)
+                            {
+                                UIManager.MakeScreen<ForgeScreen>().
+                                    SetData(new ForgeScreenInData
+                                    {
+                                        activeTabId = ForgeScreen.TabBattleGirlsEquip
+                                    }).DoShow();
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
 
         private (NSCastleScreen.BaseBuilding building, NSCastleScreen.BaseButton button) GetBuildingByKey(string key)

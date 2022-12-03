@@ -231,14 +231,10 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                         GameData.ftue.chapter2.ShowNotifByKey("ch2shardstutor1");
                     break;
-                /*case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
-                    if (!GameData.buildings.portal.meta.isBuilt)
-                    {
-                        GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
-                        await UIManager.WaitHideNotifications();
-                        UIManager.ShowScreen<CastleScreen>();
-                    }
-                    return;*/ //to OnUIEvent method
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                    GameData.ftue.chapter3.ShowNotifByKey("ch3aerotutor1");
+                    break;
+
             }
 
             await Task.CompletedTask;
