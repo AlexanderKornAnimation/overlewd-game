@@ -53,6 +53,13 @@ namespace Overlewd
                     UITools.DisableButton(repeatButton);
                     UITools.DisableButton(mapButton);
                     break;
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    UITools.DisableButton(magicGuildButton);
+                    UITools.DisableButton(overlordButton);
+                    UITools.DisableButton(haremButton);
+                    UITools.DisableButton(repeatButton);
+                    UITools.DisableButton(mapButton);
+                    break;
                 case (FTUE.CHAPTER_1, _):
                     UITools.DisableButton(editTeamButton);
                     UITools.DisableButton(magicGuildButton);
