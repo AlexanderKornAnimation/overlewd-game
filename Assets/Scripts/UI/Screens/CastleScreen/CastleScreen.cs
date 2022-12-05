@@ -309,7 +309,10 @@ namespace Overlewd
                     {
                         var showPanelTasks = new List<Task>();
                         showPanelTasks.Add(questsPanel.ShowAsync());
-                        showPanelTasks.Add(eventsPanel.ShowAsync());
+                        if (GameData.progressFlags.eventsWidgetEnabled)
+                        {
+                            showPanelTasks.Add(eventsPanel.ShowAsync());
+                        }
                         await Task.WhenAll(showPanelTasks);
                     }
                     break;

@@ -211,6 +211,11 @@ namespace Overlewd
             if (GameData.ftue.chapter1_battle1.isComplete)
             {
                 showPanelTasks.Add(questsPanel.ShowAsync());
+
+                if (GameData.progressFlags.eventsWidgetEnabled)
+                {
+                    showPanelTasks.Add(eventsPanel.ShowAsync());
+                }
             }
             await Task.WhenAll(showPanelTasks);
 
