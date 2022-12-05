@@ -11,9 +11,9 @@ namespace Overlewd
         Button btn;
         RectTransform rt;
         public CharController cc;
-        Vector2 defaultSize = new Vector2(95, 95);
-        Vector2 scaledSize = new Vector2(115, 115);
-        float maskScale = 1.15f;
+        Vector2 defaultSize = new Vector2(70, 70);
+        Vector2 scaledSize = new Vector2(90, 90);
+        float maskScale = 1.3f;
         RectTransform mask;
         Animator ani;
 

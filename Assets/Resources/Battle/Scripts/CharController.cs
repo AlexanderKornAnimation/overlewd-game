@@ -280,6 +280,7 @@ namespace Overlewd
             damageTotal = Mathf.Round(damageTotal);
             spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW                      
             skillSFX[id]?.Play();                                       //SFX
+
             yield return new WaitForSeconds(preAttackDuration);
             if (skillID.vfxSelf != null)                                //VFX Self
             {
@@ -318,7 +319,7 @@ namespace Overlewd
             BattleIn(AOE);
             if (stun) PlayIdle();
             var attackerSkill = attacker.skill[id];
-
+            bool HEAL = attackerSkill.actionType == "heal";
             yield return new WaitForSeconds(zoomSpeed);
             transform.SetParent(battlePos);
             UnHiglight();
@@ -326,7 +327,7 @@ namespace Overlewd
             yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             character.sfxDefense?.Play();
 
-            if (attackerSkill.actionType != "heal")
+            if (!HEAL)
                 spineWidget.PlayAnimation(ani_defence_name, false);
 
             attackerSkill.sfxTarget?.Play();                    //Play on target SFX
@@ -354,7 +355,8 @@ namespace Overlewd
                 var vfx = vfxGO.AddComponent<VFXManager>();
                 vfx.Setup(attackerSkill.vfxTarget, selfVFX);
             }
-            if (vfx_blood && !isDodge) Instantiate(vfx_blood, selfVFX);
+            if (vfx_blood && !isDodge && !HEAL)
+                Instantiate(vfx_blood, selfVFX);
             foreach (var ps in passiveSkill)
             {
                 if (ps?.trigger == "when_attacked")
@@ -363,12 +365,14 @@ namespace Overlewd
                     else
                         PassiveDeBuff(ps, attacker);
             }
-            float defScale = defUp_defDown != 0 ? attacker.damageTotal * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
-            Damage(attacker.damageTotal + defScale, isHit, isDodge, isCrit, uiDelay: 1.5f, attacker: attacker, aSkill: attackerSkill);
+            var aDamage = attacker.damageTotal;
+            float defScale = defUp_defDown != 0 ? aDamage * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
+            if (HEAL) aDamage = aDamage > 0 ? aDamage *= -1 : aDamage;
+            Damage(aDamage + defScale, isHit, isDodge, isCrit, uiDelay: 1.5f, attacker: attacker, aSkill: attackerSkill);
 
-            yield return new WaitForSeconds(defenceDuration); // (/2)
+            yield return new WaitForSeconds(defenceDuration);
 
-            if (attackerSkill.actionType != "heal" && !stun) //skip play idle to avoid strange loop transitions
+            if (!HEAL && !stun) //skip play idle to avoid strange loop transitions
                 PlayIdle();
             BattleOut(AOE);
         }
@@ -446,7 +450,7 @@ namespace Overlewd
             if (crit)
                 value *= 2;
             value = Mathf.Round(value);
-            if (value > 0)
+            if (value >= 0)
             {
                 if (dodge)
                 {
@@ -484,7 +488,7 @@ namespace Overlewd
                 StartCoroutine(UIDelay(uiDelay));
             }
             else if (value < 0)
-                Heal(-value, healer: attacker);
+                Heal(value, healer: attacker);
         }
 
         IEnumerator UIDelay(float delay)
@@ -494,7 +498,7 @@ namespace Overlewd
         }
         public void Heal(float value, CharController healer = null)
         {
-            value = Mathf.Round(value);
+            value = Mathf.Abs(Mathf.Round(value));
             if (bless_healBlock < 0)
             {
                 DrawPopup($"Heal blocked!", "red");
@@ -865,7 +869,6 @@ namespace Overlewd
                 DrawPopup("- " + msg_stun, "green", buffDelay);
                 observer?.UpdateStatuses();
                 StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
-
             }
             if (defUp_defDown < 0)
             {
