@@ -28,6 +28,7 @@ namespace Overlewd
             private string[] tabNames = {"AllUnits", "Assassins", "Casters", "Healers", "Bruisers", "Tanks"};
 
             private InfoBlockBattleGirlEquip infoBlock;
+            private GameObject hint;
 
             protected override void Awake()
             {
@@ -48,6 +49,7 @@ namespace Overlewd
 
                 infoBlock = transform.Find("InfoBlock").GetComponent<InfoBlockBattleGirlEquip>();
                 infoBlock.equipCtrl = this;
+                hint = bottomSubstrate.Find("Hint").gameObject;
             }
 
             private void Start()
@@ -55,6 +57,8 @@ namespace Overlewd
                 ActualizeTabsContent();
                 RefreshState();
                 TabClick(TabAll, false);
+
+                hint.SetActive(contents[TabAll].childCount == 0);
             }
 
             private void TabClick(int tabId, bool playSound = true)

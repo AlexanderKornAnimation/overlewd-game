@@ -32,9 +32,22 @@ namespace Overlewd
         private NSWeaponScreen.Weapon selectedWeapon;
 
         private Button backButton;
+        private Transform canvas;
+        private Image girlImage;
+        private TextMeshProUGUI girlClassIcon;
+        private TextMeshProUGUI girlClassName;
+        private TextMeshProUGUI girlName;
+        private TextMeshProUGUI girlPotency;
+
+        private GameObject girlRarityBasic;
+        private GameObject girlRarityAdvanced;
+        private GameObject girlRarityEpic;
+        private GameObject girlRarityHeroic;
+
         private NSWeaponScreen.BaseSlot slotEquipped;
         private NSWeaponScreen.BaseSlot slotSelected;
-        private Transform canvas;
+        
+
         private void Awake()
         {
             var screenInst =
@@ -44,6 +57,19 @@ namespace Overlewd
             var tabsArea = canvas.Find("TabsArea");
             var pressedTabsArea = canvas.Find("PressedTabsArea");
             var weaponsBack = canvas.Find("WeaponsBack");
+            
+            var girlInfo = canvas.Find("GirlInfo");
+            var classInfo = girlInfo.Find("ClassInfo");
+            girlImage = canvas.Find("GirlImage").GetComponent<Image>();
+            girlClassIcon = classInfo.transform.Find("Icon").GetComponent<TextMeshProUGUI>();
+            girlClassName = classInfo.transform.Find("ClassName").GetComponent<TextMeshProUGUI>();
+            girlName = girlInfo.Find("NameBack").Find("Name").GetComponent<TextMeshProUGUI>();
+            girlPotency = girlInfo.Find("PotencyBack").Find("Value").GetComponent<TextMeshProUGUI>();
+
+            girlRarityBasic = classInfo.Find("RarityBasic").gameObject;
+            girlRarityAdvanced = classInfo.Find("RarityAdvanced").gameObject;
+            girlRarityEpic = classInfo.Find("RarityEpic").gameObject;
+            girlRarityHeroic = classInfo.Find("RarityHeroic").gameObject;
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -72,9 +98,23 @@ namespace Overlewd
             Customize();
             await Task.CompletedTask;
         }
+
+        private void CustomizeGirlInfo()
+        {
+            var characterData = inputData?.characterData;
+            girlImage.sprite = ResourceManager.LoadSprite(characterData?.fullScreenPersIcon);
+            girlName.text = characterData?.name;
+            girlPotency.text = characterData?.potency.ToString();
+            girlRarityBasic.SetActive(characterData?.isBasic ?? false);
+            girlRarityAdvanced.SetActive(characterData?.isAdvanced ?? false);
+            girlRarityEpic.SetActive(characterData?.isEpic ?? false);
+            girlRarityHeroic.SetActive(characterData?.isHeroic ?? false);
+        }
         
         private void Customize()
         {
+            CustomizeGirlInfo();
+            
             foreach (var equip in GameData.equipment.equipment)
             {
                 if (equip.characterClass == AdminBRO.CharacterClass.Overlord)
