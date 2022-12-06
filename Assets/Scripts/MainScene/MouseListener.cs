@@ -18,12 +18,15 @@ namespace Overlewd
             if (Input.GetMouseButton(0) && !mousePressed)
             {
                 mousePressed = true;
-                //Debug.Log($"Down {Input.mousePosition}");
+
+                var rootCenterGlobal = (UIManager.systemNotifRoot as RectTransform).WorldRect().center;
+                Vector2  mousePosGlobal = Input.mousePosition;
+                var vfxOffset = mousePosGlobal - rootCenterGlobal;
+                //UIfx.Inst("uifx_overlord_spells", UIManager.systemNotifRoot, vfxOffset);
             }
             else if (!Input.GetMouseButton(0) && mousePressed)
             {
                 mousePressed = false;
-                //Debug.Log($"Up {Input.mousePosition}");
             }
         }
     }
