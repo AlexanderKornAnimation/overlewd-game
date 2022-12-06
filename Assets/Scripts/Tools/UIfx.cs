@@ -10,7 +10,7 @@ namespace Overlewd
         public const string UIFX_QUEST_BOOK01 = "uifx_quest_book01";
         public const string UIFX_LVLUP01 = "uifx_lvlup01";
         public const string UIFX_LVLUP02 = "uifx_lvlup02";
-        public const string UIFX_MAGIC_GUILD = "uifx_overlord_spells";
+        public const string UIFX_OVERLORD_SPELLS = "uifx_overlord_spells";
 
         public const string UIFX_L_CLICK = "";
 

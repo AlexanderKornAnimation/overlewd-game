@@ -53,7 +53,7 @@ namespace Overlewd
 
             private void PlayAnimation()
             {
-                UIfx.Inst(UIfx.UIFX_MAGIC_GUILD, transform);
+                UIfx.Inst(UIfx.UIFX_OVERLORD_SPELLS, transform);
             }
 
             private void OnLvlUp()
