@@ -53,10 +53,21 @@ namespace Overlewd
                     UITools.DisableButton(repeatButton);
                     UITools.DisableButton(mapButton);
                     break;
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    UITools.DisableButton(magicGuildButton);
+                    UITools.DisableButton(overlordButton);
+                    UITools.DisableButton(haremButton);
+                    UITools.DisableButton(repeatButton);
+                    UITools.DisableButton(mapButton);
+                    break;
                 case (FTUE.CHAPTER_1, _):
                     UITools.DisableButton(editTeamButton);
                     UITools.DisableButton(magicGuildButton);
                     UITools.DisableButton(overlordButton);
+                    break;
+                default:
+                    UITools.DisableButton(haremButton, GameData.buildings.harem.meta.isBuilt);
+                    UITools.DisableButton(magicGuildButton, GameData.buildings.magicGuild.meta.isBuilt);
                     break;
             }
 

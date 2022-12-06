@@ -81,6 +81,8 @@ namespace Overlewd
             GameData.devMode ? true : GameData.buildings.castle.meta.isBuilt;
         public bool lockBuff =>
             GameData.devMode ? false : !GameData.buildings.harem.meta.isBuilt;
+        public bool eventsWidgetEnabled =>
+            GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
     }
 
     //ftue

@@ -105,7 +105,7 @@ namespace Overlewd
             buffDescription = buffInfo.Find("Description").GetComponent<TextMeshProUGUI>();
             buffHint = buffInfo.Find("Hint").Find("Text").GetComponent<TextMeshProUGUI>();
             buffActive = buffInfo.Find("BuffActive").gameObject;
-            buffIcon = buffInfo.Find("Icon").GetComponent<Image>();
+            buffIcon = buffInfo.Find("BuffBack/Icon").GetComponent<Image>();
             
 
             bannerUlviButton = canvas.Find("Banner").Find("BannerButtonUlvi").GetComponent<Button>();
@@ -339,7 +339,7 @@ namespace Overlewd
 
             var buffIsActive = girlData?.buff?.active ?? false;
             buffTitle.gameObject.SetActive(buffIsActive);
-            buffDescription.text = girlData?.buff?.description;
+            buffDescription.text = UITools.ChangeTextSize(girlData?.buff?.description, buffDescription.fontSize);
             buffHint.text = girlData?.buff?.postDescription;
             buffActive.SetActive(buffIsActive);
             buffIcon.sprite = ResourceManager.LoadSprite(girlData?.buff?.icon);

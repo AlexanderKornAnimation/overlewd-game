@@ -14,6 +14,11 @@ namespace Overlewd
         public event Action startListeners;
         public event Action completeListeners;
         public bool destroyAfterComplete { get; set; } = false;
+        public bool raycastTarget
+        {
+            get => skeletonGraphic.raycastTarget;
+            set => skeletonGraphic.raycastTarget = value;
+        }
         public bool isComplete { get; private set; } = false;
         private bool loopMode = true;
 
@@ -203,6 +208,15 @@ namespace Overlewd
             var layerFirst = animationData?.layouts?.First();
             var inst = GetInstance(layerFirst, parent, false);
             inst.destroyAfterComplete = true;
+            inst.raycastTarget = false;
+            return inst;
+        }
+
+        public static SpineWidget GetInstanceDisposable(string prefabPath, Transform parent)
+        {
+            var inst = GetInstance(prefabPath, parent);
+            inst.destroyAfterComplete = true;
+            inst.raycastTarget = false;
             return inst;
         }
     }

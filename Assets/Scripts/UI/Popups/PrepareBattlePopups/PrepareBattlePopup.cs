@@ -373,6 +373,28 @@ namespace Overlewd
             await UITools.RightShowAsync(buffRect, 0.2f);
         }
 
+        public override async void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData.type)
+            {
+                case UIEvent.Type.ChangeScreenComplete:
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_3, FTUE.SEX_1):
+                            if (!UIManager.currentState.prevState.ScreenTypeIs<OverlordScreen>())
+                            {   
+                                GameData.ftue.chapter3.ShowNotifByKey("ch3overequiptutor1");
+                                await UIManager.WaitHideNotifications();
+                                GameData.ftue.chapter3.ShowNotifByKey("ch3overequiptutor1");
+                                await UIManager.WaitHideNotifications();
+                                UIManager.ShowScreen<OverlordScreen>();
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+
         public override async Task BeforeHideAsync()
         {
             await UITools.RightHideAsync(buffRect, 0.2f);

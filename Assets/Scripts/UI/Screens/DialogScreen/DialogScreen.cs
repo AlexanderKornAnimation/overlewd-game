@@ -23,7 +23,7 @@ namespace Overlewd
         private Transform midCharacterPos;
         private Transform rightCharacterPos;
 
-        private Button textContainer;
+        private Transform textContainer;
         private TextMeshProUGUI personageName;
         private GameObject nameBackground;
 
@@ -31,6 +31,7 @@ namespace Overlewd
         private Transform emotionPos;
         private TextMeshProUGUI text;
 
+        private Button screenButton;
         private Button skipButton;
         private Button autoplayButton;
         private Image autoplayButtonPressed;
@@ -79,14 +80,15 @@ namespace Overlewd
             midCharacterPos = charactersPos.Find("MiddlePos");
             rightCharacterPos = charactersPos.Find("RightPos");
 
-            textContainer = canvas.Find("TextContainer").GetComponent<Button>();
-            textContainer.onClick.AddListener(TextContainerButtonClick);
-            
+            textContainer = canvas.Find("TextContainer");
             nameBackground = canvas.Find("SubstrateName").gameObject;
             personageName = nameBackground.transform.Find("PersonageName").GetComponent<TextMeshProUGUI>();
-            emotionBack = textContainer.transform.Find("EmotionBack");
+            emotionBack = textContainer.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-            text = textContainer.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            text = textContainer.Find("Text").GetComponent<TextMeshProUGUI>();
+
+            screenButton = canvas.Find("ScreenTap").GetComponent<Button>();
+            screenButton.onClick.AddListener(ScreenTapButtonClick);
 
             skipButton = canvas.Find("SkipButton").GetComponent<Button>();
             skipButton.onClick.AddListener(SkipButtonClick);
@@ -197,7 +199,14 @@ namespace Overlewd
                            }).DoShow();
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
+                    if (!GameData.buildings.harem.meta.isBuilt)
+                    {
                         UIManager.ShowScreen<CastleScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                     UIManager.MakeScreen<PortalScreen>().
@@ -205,8 +214,28 @@ namespace Overlewd
                         {
                             activeButtonId = PortalScreen.TabShards,
                         }).DoShow();
-                    return;
-                default:
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
+                    if (!GameData.buildings.forge.meta.isBuilt)
+                    {
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_1):
+                    if (!GameData.buildings.magicGuild.meta.isBuilt)
+                    {
+                        UIManager.ShowScreen<CastleScreen>();
+                    }
+                    else
+                    {
+                        UIManager.ToPrevScreen();
+                    }
+                    break;
+                    default:
                     UIManager.ToPrevScreen();
                     break;
             }
@@ -446,7 +475,7 @@ namespace Overlewd
             LeaveScreen();
         }
 
-        private void TextContainerButtonClick()
+        private void ScreenTapButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_DialogNextButtonClick);
             if (dialogData == null)

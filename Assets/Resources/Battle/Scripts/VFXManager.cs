@@ -1,6 +1,8 @@
+using Spine.Unity;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Spine;
 
 
 namespace Overlewd
@@ -22,9 +24,12 @@ namespace Overlewd
         {
             delay = preDelay;
             spineWidget = SpineWidget.GetInstance(sw, spawnPoint);
-            duration = spineWidget.GetAnimationDuaration(animationName);
-            spineWidget.PlayAnimation(animationName, false);
-            spineWidget.Pause();
+            if (spineWidget != null)
+                duration = spineWidget.GetAnimationDuaration(animationName);
+            else
+                FindObjectOfType<BattleManager>().log.Add(sw.title + ": Data Corrupted", true);
+            spineWidget?.PlayAnimation(animationName, false);
+            spineWidget?.Pause();
             StartCoroutine(StartAfterDelay());
             return duration;
         }
@@ -32,17 +37,17 @@ namespace Overlewd
         {
             spineWidget = SpineWidget.GetInstance(sw, transform);
             duration = spineWidget.GetAnimationDuaration(animationName);
-            spineWidget.PlayAnimation(animationName, false);
-            spineWidget.Pause();
+            spineWidget?.PlayAnimation(animationName, false);
+            spineWidget?.Pause();
             StartCoroutine(StartAfterDelay());
         }
 
         IEnumerator StartAfterDelay()
         {
             yield return new WaitForSeconds(delay);
-            spineWidget.Play();
+            spineWidget?.Play();
             yield return new WaitForSeconds(duration);
-            Destroy(spineWidget.gameObject);
+            Destroy(spineWidget?.gameObject);
             Destroy(this.gameObject);
         }
     }

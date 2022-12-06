@@ -14,23 +14,32 @@ namespace Overlewd
                 GameData.events.GetEventById(eventId);
 
             private Image banner;
+            private Button marketButton;
             private Button buyButton;
 
-            void Awake()
+            private void Awake()
             {
                 var canvas = transform.Find("Canvas");
                 banner = canvas.Find("Banner").GetComponent<Image>();
                 buyButton = canvas.Find("BuyButton").GetComponent<Button>();
                 buyButton.onClick.AddListener(BuyButtonClick);
+                marketButton = canvas.Find("MarketButton").GetComponent<Button>();
+                marketButton.onClick.AddListener(MarketButtonClick);
             }
 
-            void Start()
+            private void Start()
             {
                 var eData = eventData;
 
                 banner.sprite = ResourceManager.LoadSprite(eData?.mapBannerImage);
             }
 
+            private void MarketButtonClick()
+            {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                UIManager.ShowOverlay<MarketOverlay>();
+            }
+            
             private void BuyButtonClick()
             {
 

@@ -141,6 +141,9 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_eventbook);
                     break;
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                    GameData.ftue.chapter3.ShowNotifByKey("ch3aerotutor2");
+                    break;
                 case (FTUE.CHAPTER_3, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_eventbook);
                     break;

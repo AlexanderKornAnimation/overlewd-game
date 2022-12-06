@@ -103,10 +103,33 @@ namespace Overlewd
             {
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                     GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor4");
+                    await UIManager.WaitHideNotifications();
                     break;
             }
 
             await Task.CompletedTask;
+        }
+
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData.type)
+            {
+                case UIEvent.Type.ChangeScreenComplete:
+                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+                    {
+                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                            if (UIManager.currentState.prevState.ScreenTypeIs<PortalScreen>())
+                            {
+                                UIManager.MakeScreen<PortalScreen>().
+                                    SetData(new PortalScreenInData
+                                    {
+                                        activeButtonId = PortalScreen.TabShards,
+                                    }).DoShow();
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
 
         private void BackButtonClick()
@@ -118,14 +141,7 @@ namespace Overlewd
                     UIManager.ShowScreen<MapScreen>();
                     break;
                 default:
-                    if (UIManager.currentState.prevState != null)
-                    {
-                        UIManager.ToPrevScreen();
-                    }
-                    else
-                    {
-                        UIManager.ShowScreen<CastleScreen>();
-                    }
+                    UIManager.ToPrevScreen();
                     break;
             }
         }

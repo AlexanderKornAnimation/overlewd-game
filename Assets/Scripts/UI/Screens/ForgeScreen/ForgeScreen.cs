@@ -76,6 +76,25 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
+        public override async Task AfterShowAsync()
+        {
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
+                    GameData.ftue.chapter3.ShowNotifByKey("ch3forgetutor1");
+                    await UIManager.WaitHideNotifications();
+                    OverlordTabClick();
+                    GameData.ftue.chapter3.ShowNotifByKey("ch3forgetutor2");
+                    await UIManager.WaitHideNotifications();
+                    ShardsTabClick();
+                    GameData.ftue.chapter3.ShowNotifByKey("ch3forgetutor3");
+                    await UIManager.WaitHideNotifications();
+                    break;
+            }
+            
+            await Task.CompletedTask;
+        }
+
         public override async Task BeforeShowAsync()
         {
             SoundManager.GetEventInstance(FMODEventPath.Castle_Screen_BGM_Attn);
@@ -162,7 +181,15 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<CastleScreen>();
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
         }
     }
 

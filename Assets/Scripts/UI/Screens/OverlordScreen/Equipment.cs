@@ -58,11 +58,13 @@ namespace Overlewd
                 button.gameObject.SetActive(true);
             }
 
-            private void ButtonClick()
+            private async void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 
                 OnClick?.Invoke(this);
+
+
             }
 
             public static Equipment GetInstance(Transform parent)

@@ -81,7 +81,15 @@ namespace Overlewd
 
         private void CloseButtonClick()
         {
-            UIManager.HideOverlay();
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            if (UIManager.currentState.prevState.OverlayTypeIs<EventOverlay>())
+            {
+                UIManager.ToPrevState();
+            }
+            else
+            {
+                UIManager.HideOverlay();
+            }
         }
     }
 
