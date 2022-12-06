@@ -345,7 +345,7 @@ namespace Overlewd
             public List<PriceItem> price;
             public string discount;
             public string specialOfferLabel;
-            public List<int> itemPack;
+            public List<TradablePack> itemPack;
             public int? currencyId;
             public int? currencyAmount;
             public int? limit;
@@ -371,6 +371,12 @@ namespace Overlewd
             public const string Type_MatriarchShard = "matriarch_shard";
             public const string Type_ManaPotion = "mana_potion";
             public const string Type_HpPotion = "hp_potion";
+
+            public class TradablePack
+            {
+                public int tradableId;
+                public int count;
+            }
 
             [JsonProperty(Required = Required.Default)]
             public bool canBuy => GameData.player.CanBuy(price);
