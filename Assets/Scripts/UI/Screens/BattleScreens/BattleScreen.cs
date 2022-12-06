@@ -50,8 +50,8 @@ namespace Overlewd
                     {
                         GameData.ftue.chapter2.ShowNotifByKey("ch2teamequiptutor1");
                         await UIManager.WaitHideNotifications();
-                        UIManager.MakeScreen<WeaponScreen>().
-                            SetData(new WeaponScreenInData
+                        UIManager.MakeScreen<BattleGirlScreen>().
+                            SetData(new BattleGirlScreenInData
                             {
                                 characterId = GameData.characters.slot1Ch.id,
                             }).DoShow();
@@ -60,10 +60,10 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
                     if (!GameData.ftue.chapter2_battle4.isComplete)
                     {
-                        GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor1");
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2teamequiptutor1");
                         await UIManager.WaitHideNotifications();
-                        UIManager.MakeScreen<BattleGirlScreen>().
-                            SetData(new BattleGirlScreenInData
+                        UIManager.MakeScreen<WeaponScreen>().
+                            SetData(new WeaponScreenInData
                             {
                                 characterId = GameData.characters.slot1Ch.id,
                             }).DoShow();

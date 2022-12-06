@@ -242,16 +242,14 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            if (UIManager.currentState.prevState.ScreenTypeIs<BattleScreen>())
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                UIManager.ToPrevState(UIManager.currentState.prevState.prevScreenState, new UIManager.StateParams
-                {
-                    showPopup = false,
-                });
-            }
-            else
-            {
-                UIManager.ToPrevScreen();
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                    UIManager.ShowScreen<MapScreen>();
+                    break;
+                default:
+                    UIManager.ToPrevScreen();
+                    break;
             }
         }
 

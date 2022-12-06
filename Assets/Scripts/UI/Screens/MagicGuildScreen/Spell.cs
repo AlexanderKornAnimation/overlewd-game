@@ -21,8 +21,9 @@ namespace Overlewd
             public string skillType { get; set; }
             public AdminBRO.MagicGuildSkill skillData =>
                 GameData.buildings.magicGuild.GetSkillByType(skillType);
+
             
-            void Awake()
+            private void Awake()
             {
                 isLocked = transform.Find("IsLocked").gameObject;
                 level = transform.Find("Level").GetComponent<TextMeshProUGUI>();
@@ -30,17 +31,17 @@ namespace Overlewd
                 icon = transform.Find("SpellImage").GetComponent<Image>();
                 
                 isMax = transform.Find("IsMax").GetComponent<Button>();
-                isMax.onClick.AddListener(IsMaxButtonClick);
+                isMax.onClick.AddListener(ButtonClick);
                 isOpen = transform.Find("IsOpen").GetComponent<Button>();
-                isOpen.onClick.AddListener(IsOpenButtonClick);
+                isOpen.onClick.AddListener(ButtonClick);
             }
 
-            void Start()
+            private void Start()
             {
                 Customize();
             }
 
-            public void Customize()
+            private void Customize()
             {
                 isLocked.SetActive(skillData.locked);
                 level.text = skillData.isLvlMax ? "MAX" : "Lvl " + skillData.currentSkillLevel;
@@ -50,17 +51,18 @@ namespace Overlewd
                 UITools.DisableButton(isMax, !skillData.canUpgrade);
             }
 
-            private void IsMaxButtonClick()
+            private void PlayAnimation()
             {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.MakePopup<SpellPopup>().
-                    SetData(new SpellPopupInData
-                {
-                    spellId = skillData.current.id
-                }).DoShow();
+                UIfx.Inst(UIfx.UIFX_MAGIC_GUILD, transform);
             }
 
-            private void IsOpenButtonClick()
+            private void OnLvlUp()
+            {
+                Customize();
+                PlayAnimation();
+            }
+
+            private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 UIManager.MakePopup<SpellPopup>().
@@ -68,6 +70,8 @@ namespace Overlewd
                 {
                     spellId = skillData.current.id
                 }).DoShow();
+
+                UIManager.GetPopup<SpellPopup>().OnLvlUp += OnLvlUp;
             }
         }
     }

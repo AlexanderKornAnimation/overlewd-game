@@ -57,7 +57,7 @@ namespace Overlewd
 
             buildingLevel.text = (buildingData.currentLevel + 1).ToString(); 
         }
-        
+
         public override async Task AfterShowAsync()
         {
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
@@ -89,19 +89,6 @@ namespace Overlewd
         {
             SoundManager.StopAll();
             await Task.CompletedTask;
-        }
-
-        public override void OnGameDataEvent(GameDataEvent eventData)
-        {
-            switch (eventData.eventId)
-            {
-                case GameDataEvent.EventId.MagicGuildSpellLvlUp:
-                    activeSpell?.Customize();
-                    ultimateSpell?.Customize();
-                    passiveSpell1?.Customize();
-                    passiveSpell2?.Customize();
-                    break;
-            }
         }
 
         private void BackButtonClick()

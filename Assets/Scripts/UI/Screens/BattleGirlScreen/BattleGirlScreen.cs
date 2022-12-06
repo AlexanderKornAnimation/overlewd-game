@@ -238,7 +238,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
                     UIManager.ShowScreen<MapScreen>();
                     break;
                 default:
