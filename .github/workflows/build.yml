@@ -1,9 +1,10 @@
 name: Deploy
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - test_github_build_action
+      - master
 
 jobs:
   push:
