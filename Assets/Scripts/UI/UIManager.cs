@@ -11,22 +11,6 @@ using System.Linq;
 
 namespace Overlewd
 {
-    public class UIEvent
-    {
-        public enum EventId
-        {
-            None,
-            HidePopup,
-            HideOverlay,
-            ChangeScreenComplete,
-        }
-
-        public EventId eventId { get; set; } = EventId.None;
-        public Type uiSenderType { get; set; }
-
-        public bool SenderTypeIs<T>() => uiSenderType == typeof(T);
-    }
-
     public class UserInputLocker
     {
         public MonoBehaviour mbLocker { get; private set; }
@@ -615,8 +599,8 @@ namespace Overlewd
 
             ThrowUIEvent(new UIEvent
             {
-                eventId = UIEvent.EventId.ChangeScreenComplete,
-                uiSenderType = screen?.GetType()
+                id = UIEventId.ChangeScreenComplete,
+                senderType = screen?.GetType()
             });
         }
 
@@ -679,8 +663,8 @@ namespace Overlewd
 
             var uiEventData = new UIEvent
             {
-                eventId = UIEvent.EventId.HidePopup,
-                uiSenderType = popup?.GetType()
+                id = UIEventId.HidePopup,
+                senderType = popup?.GetType()
             };
 
             await _waitRestoreStateModeDisabled();
@@ -769,8 +753,8 @@ namespace Overlewd
 
             var uiEventData = new UIEvent
             {
-                eventId = UIEvent.EventId.HideOverlay,
-                uiSenderType = overlay.GetType()
+                id = UIEventId.HideOverlay,
+                senderType = overlay.GetType()
             };
 
             await _waitRestoreStateModeDisabled();
