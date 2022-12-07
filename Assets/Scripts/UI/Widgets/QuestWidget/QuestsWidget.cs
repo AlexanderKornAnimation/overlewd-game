@@ -211,9 +211,9 @@ namespace Overlewd
 
         public override void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData?.type)
+            switch (eventData?.eventId)
             {
-                case UIEvent.Type.HideOverlay:
+                case UIEvent.EventId.HideOverlay:
                     if (eventData.SenderTypeIs<QuestOverlay>() ||
                         eventData.SenderTypeIs<EventOverlay>())
                     {

@@ -117,9 +117,9 @@ namespace Overlewd
 
         public override void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData?.type)
+            switch (eventData?.eventId)
             {
-                case UIEvent.Type.HidePopup:
+                case UIEvent.EventId.HidePopup:
                     if (eventData.SenderTypeIs<SpellPopup>())
                     {
 

@@ -339,9 +339,9 @@ namespace Overlewd
 
         public override void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.eventId)
             {
-                case UIEvent.Type.ChangeScreenComplete:
+                case UIEvent.EventId.ChangeScreenComplete:
                     switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
                     {
                         case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):

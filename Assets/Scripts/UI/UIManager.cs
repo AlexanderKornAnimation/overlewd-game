@@ -13,7 +13,7 @@ namespace Overlewd
 {
     public class UIEvent
     {
-        public enum Type
+        public enum EventId
         {
             None,
             HidePopup,
@@ -21,8 +21,8 @@ namespace Overlewd
             ChangeScreenComplete,
         }
 
-        public Type type { get; set; } = Type.None;
-        public System.Type uiSenderType { get; set; }
+        public EventId eventId { get; set; } = EventId.None;
+        public Type uiSenderType { get; set; }
 
         public bool SenderTypeIs<T>() => uiSenderType == typeof(T);
     }
@@ -615,7 +615,7 @@ namespace Overlewd
 
             ThrowUIEvent(new UIEvent
             {
-                type = UIEvent.Type.ChangeScreenComplete,
+                eventId = UIEvent.EventId.ChangeScreenComplete,
                 uiSenderType = screen?.GetType()
             });
         }
@@ -679,7 +679,7 @@ namespace Overlewd
 
             var uiEventData = new UIEvent
             {
-                type = UIEvent.Type.HidePopup,
+                eventId = UIEvent.EventId.HidePopup,
                 uiSenderType = popup?.GetType()
             };
 
@@ -769,7 +769,7 @@ namespace Overlewd
 
             var uiEventData = new UIEvent
             {
-                type = UIEvent.Type.HideOverlay,
+                eventId = UIEvent.EventId.HideOverlay,
                 uiSenderType = overlay.GetType()
             };
 
