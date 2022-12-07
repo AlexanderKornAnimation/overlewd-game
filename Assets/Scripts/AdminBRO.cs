@@ -689,6 +689,7 @@ namespace Overlewd
             public List<RewardItem> rewards;
             public string status;
             public int progressCount;
+            public string type;
             public int? eventId;
             public int? ftueChapterId;
             public string ftueQuestType;
@@ -699,9 +700,13 @@ namespace Overlewd
             public const string Status_Complete = "complete";
             public const string Status_Rewards_Claimed = "rewards_claimed";
 
+            public const string Type_Ftue = "ftue";
+            public const string Type_Event = "event";
+
             public const string QuestType_Main = "main";
             public const string QuestType_Side = "side";
             public const string QuestType_Matriarch = "matriarch";
+            public const string QuestType_MatriarchDaily = "matriarch_daily";
 
             public const string ScreenTarget_Harem = "harem";
             public const string ScreenTarget_BattleGirls = "battle_girls";
@@ -744,10 +749,10 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isFTUE => ftueChapterId.HasValue;
+            public bool isFTUE => type == Type_Ftue;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isEvent => eventId.HasValue;
+            public bool isEvent => type == Type_Event;
 
             [JsonProperty(Required = Required.Default)]
             public bool isFTUEMain => ftueQuestType == QuestType_Main;
