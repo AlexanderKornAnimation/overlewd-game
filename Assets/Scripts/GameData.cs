@@ -7,40 +7,6 @@ using System.Linq;
 
 namespace Overlewd
 {
-    public class GameDataEvent
-    {
-        public EventId eventId = EventId.None;
-        public Data data;
-
-        public enum EventId
-        {
-            None,
-            BuyTradable,
-            BuildingBuild,
-            BuildingBuildCrystal,
-            CharacterLvlUp,
-            CharacterSkillLvlUp,
-            CharacterMerge,
-            MagicGuildSpellLvlUp,
-            EquipmentEquipped,
-            EquipmentUnequipped,
-            BuyPotions,
-            UsePotions,
-            GachaBuy,
-
-            ForgeMergeShards,
-            ForgeExchangeShards,
-            ForgeMergeEquip,
-
-        }
-
-        public abstract class Data
-        {
-            public T As<T>() where T : Data =>
-                this as T;
-        }
-    }
-
     public static class GameData
     {
         public static bool devMode { get; set; } = false;
@@ -253,7 +219,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.BuildingBuild
+                    id = GameDataEventId.BuildingBuild
                 });
 
             await GameData.quests.Get();
@@ -270,7 +236,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.BuildingBuildCrystal
+                    id = GameDataEventId.BuildingBuildCrystal
                 });
 
             await GameData.quests.Get();
@@ -343,13 +309,10 @@ namespace Overlewd
                 await GameData.characters.Get();
                 await GameData.player.Get();
 
-                UIManager.ThrowGameDataEvent(new GameDataEvent
+                UIManager.ThrowGameDataEvent(new MagicGuildDataEvent
                 {
-                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp,
-                    data = new EventData
-                    {
-                        skillType = skillType
-                    }
+                    id = GameDataEventId.MagicGuildSpellLvlUp,
+                    skillType = skillType
                 });
             }
 
@@ -360,19 +323,11 @@ namespace Overlewd
                 await GameData.characters.Get();
                 await GameData.player.Get();
 
-                UIManager.ThrowGameDataEvent(new GameDataEvent
+                UIManager.ThrowGameDataEvent(new MagicGuildDataEvent
                 {
-                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp,
-                    data = new EventData
-                    {
-                        skillType = skillType
-                    }
+                    id = GameDataEventId.MagicGuildSpellLvlUp,
+                    skillType = skillType
                 });
-            }
-
-            public class EventData : GameDataEvent.Data
-            {
-                public string skillType { get; set; }
             }
         }
 
@@ -391,7 +346,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.ForgeMergeEquip
+                    id = GameDataEventId.ForgeMergeEquip
                 });
             }
 
@@ -403,7 +358,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.ForgeMergeShards
+                    id = GameDataEventId.ForgeMergeShards
                 });
             }
 
@@ -415,7 +370,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.ForgeExchangeShards
+                    id = GameDataEventId.ForgeExchangeShards
                 });
             }
         }
@@ -489,13 +444,10 @@ namespace Overlewd
             await GameData.characters.Get();
             await GameData.equipment.Get();
 
-            UIManager.ThrowGameDataEvent(new GameDataEvent
+            UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
-                eventId = GameDataEvent.EventId.GachaBuy,
-                data = new EventData
-                {
-                    buyResult = result
-                }
+                id = GameDataEventId.GachaBuy,
+                buyResult = result
             });
 
             return result;
@@ -514,21 +466,13 @@ namespace Overlewd
             await GameData.characters.Get();
             await GameData.equipment.Get();
 
-            UIManager.ThrowGameDataEvent(new GameDataEvent
+            UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
-                eventId = GameDataEvent.EventId.GachaBuy,
-                data = new EventData
-                {
-                    buyResult = result
-                }
+                id = GameDataEventId.GachaBuy,
+                buyResult = result
             });
 
             return result;
-        }
-
-        public class EventData : GameDataEvent.Data
-        {
-            public List<AdminBRO.GachaBuyResult> buyResult { get; set; }
         }
     }
 
@@ -559,7 +503,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.CharacterLvlUp
+                id = GameDataEventId.CharacterLvlUp
             });
         }
 
@@ -570,7 +514,7 @@ namespace Overlewd
             await GameData.player.Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.CharacterSkillLvlUp
+                id = GameDataEventId.CharacterSkillLvlUp
             });
         }
 
@@ -584,7 +528,7 @@ namespace Overlewd
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.CharacterMerge
+                id = GameDataEventId.CharacterMerge
             });
         }
 
@@ -696,7 +640,7 @@ namespace Overlewd
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.EquipmentEquipped
+                id = GameDataEventId.EquipmentEquipped
             });
         }
 
@@ -708,7 +652,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.EquipmentUnequipped
+                id = GameDataEventId.EquipmentUnequipped
             });
         }
     }
@@ -810,7 +754,7 @@ namespace Overlewd
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
                     {
-                        eventId = GameDataEvent.EventId.BuyTradable
+                        id = GameDataEventId.BuyTradable
                     });
             }
 
@@ -830,7 +774,7 @@ namespace Overlewd
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
                     {
-                        eventId = GameDataEvent.EventId.BuyTradable
+                        id = GameDataEventId.BuyTradable
                     });
             }
 
@@ -1244,7 +1188,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.BuyPotions
+                    id = GameDataEventId.BuyPotions
                 });
         }
 
@@ -1256,7 +1200,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.UsePotions
+                    id = GameDataEventId.UsePotions
                 });
         }
 

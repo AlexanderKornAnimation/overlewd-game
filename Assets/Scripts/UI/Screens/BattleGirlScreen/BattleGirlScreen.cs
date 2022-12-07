@@ -260,10 +260,10 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData?.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.CharacterLvlUp:
-                case GameDataEvent.EventId.CharacterSkillLvlUp:
+                case GameDataEventId.CharacterLvlUp:
+                case GameDataEventId.CharacterSkillLvlUp:
                     walletWidget.Customize();
                     break;
             }

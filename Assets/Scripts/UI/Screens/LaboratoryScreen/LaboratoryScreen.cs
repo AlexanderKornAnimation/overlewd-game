@@ -208,9 +208,9 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.CharacterMerge:
+                case GameDataEventId.CharacterMerge:
                     walletWidget.Customize();
                     EraseAllFromFlusk();
                     

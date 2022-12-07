@@ -108,10 +108,10 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData?.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.MagicGuildSpellLvlUp:
-                    var eData = eventData.data.As<Buildings.MagicGuild.EventData>();
+                case GameDataEventId.MagicGuildSpellLvlUp:
+                    var eData = eventData.As<MagicGuildDataEvent>();
                     lvlUpSkillType = eData.skillType;
                     break;
             }

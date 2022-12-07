@@ -158,14 +158,14 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.EquipmentEquipped:
+                case GameDataEventId.EquipmentEquipped:
                     OnEquipOrUnequip();
                     InitEquippedSlot();
                     slotSelected.Hide();
                     break;
-                case GameDataEvent.EventId.EquipmentUnequipped:
+                case GameDataEventId.EquipmentUnequipped:
                     OnEquipOrUnequip();
                     slotEquipped.Hide();
                     break;
