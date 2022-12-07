@@ -450,7 +450,7 @@ namespace Overlewd
             if (crit)
                 value *= 2;
             value = Mathf.Round(value);
-            if (value >= 0)
+            if (value > 0)
             {
                 if (dodge)
                 {
