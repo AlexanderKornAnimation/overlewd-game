@@ -21,6 +21,8 @@ namespace Overlewd
         private TextMeshProUGUI buildingLevel;
         private AdminBRO.Building buildingData => GameData.buildings.magicGuild.meta;
 
+        private string lvlUpSkillType;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild", transform);
@@ -110,7 +112,7 @@ namespace Overlewd
             {
                 case GameDataEvent.EventId.MagicGuildSpellLvlUp:
                     var eData = eventData.data.As<Buildings.MagicGuild.EventData>();
-                    var lvlUpSkillType = eData.skillType;
+                    lvlUpSkillType = eData.skillType;
                     break;
             }
         }
@@ -122,7 +124,21 @@ namespace Overlewd
                 case UIEvent.EventId.HidePopup:
                     if (eventData.SenderTypeIs<SpellPopup>())
                     {
-
+                        switch (lvlUpSkillType)
+                        {
+                            case AdminBRO.MagicGuildSkill.Type_ActiveSkill:
+                                activeSpell?.OnLvlUp();
+                                break;
+                            case AdminBRO.MagicGuildSkill.Type_UltimateSkill:
+                                ultimateSpell?.OnLvlUp();
+                                break;
+                            case AdminBRO.MagicGuildSkill.Type_PassiveSkill1:
+                                passiveSpell1?.OnLvlUp();
+                                break;
+                            case AdminBRO.MagicGuildSkill.Type_PassiveSkill2:
+                                passiveSpell2?.OnLvlUp();
+                                break;
+                        }
                     }
                     break;
             }

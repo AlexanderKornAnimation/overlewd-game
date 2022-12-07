@@ -27,8 +27,6 @@ namespace Overlewd
         private Button buildButton;
         private Button closeButton;
 
-        public event Action OnLvlUp;
-
         private void Awake()
         {
             var screenInst =
@@ -104,7 +102,6 @@ namespace Overlewd
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
                     await GameData.buildings.magicGuild.SkillLvlUpCrystal(spellData.type);
                     UIManager.HidePopup();
-                    OnLvlUp?.Invoke();
                 }
                 else
                 {
@@ -124,7 +121,6 @@ namespace Overlewd
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
                     await GameData.buildings.magicGuild.SkillLvlUp(spellData.type);
                     UIManager.HidePopup();
-                    OnLvlUp?.Invoke();
                 }
                 else
                 {

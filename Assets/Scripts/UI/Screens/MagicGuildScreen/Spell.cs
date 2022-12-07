@@ -56,7 +56,7 @@ namespace Overlewd
                 UIfx.Inst(UIfx.UIFX_OVERLORD_SPELLS, transform);
             }
 
-            private void OnLvlUp()
+            public void OnLvlUp()
             {
                 Customize();
                 PlayAnimation();
@@ -70,8 +70,6 @@ namespace Overlewd
                 {
                     spellId = skillData.current.id
                 }).DoShow();
-
-                UIManager.GetPopup<SpellPopup>().OnLvlUp += OnLvlUp;
             }
         }
     }
