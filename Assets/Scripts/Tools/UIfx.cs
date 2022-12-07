@@ -12,7 +12,7 @@ namespace Overlewd
         public const string UIFX_LVLUP02 = "uifx_lvlup02";
         public const string UIFX_OVERLORD_SPELLS = "uifx_overlord_spells";
 
-        public const string UIFX_L_CLICK = "";
+        public const string LOCAL_UIFX_SCREEN_TAP = "Prefabs/FX/uifx_tap/uifx_tap";
 
         public static void Inst(string animDataTitle, Transform parent, Vector2 offset = default(Vector2))
         {
