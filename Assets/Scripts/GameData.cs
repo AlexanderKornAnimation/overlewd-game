@@ -345,7 +345,11 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp
+                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp,
+                    data = new EventData
+                    {
+                        skillType = skillType
+                    }
                 });
             }
 
@@ -358,8 +362,17 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp
+                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp,
+                    data = new EventData
+                    {
+                        skillType = skillType
+                    }
                 });
+            }
+
+            public class EventData : GameDataEvent.Data
+            {
+                public string skillType { get; set; }
             }
         }
 
@@ -515,7 +528,7 @@ namespace Overlewd
 
         public class EventData : GameDataEvent.Data
         {
-            public List<AdminBRO.GachaBuyResult> buyResult;
+            public List<AdminBRO.GachaBuyResult> buyResult { get; set; }
         }
     }
 

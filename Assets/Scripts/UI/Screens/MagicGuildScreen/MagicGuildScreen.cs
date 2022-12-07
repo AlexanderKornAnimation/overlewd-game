@@ -35,7 +35,6 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            
             Customize();
             
             await Task.CompletedTask;
@@ -101,6 +100,30 @@ namespace Overlewd
                     break;
                 default:
                     UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
+        }
+
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData?.eventId)
+            {
+                case GameDataEvent.EventId.MagicGuildSpellLvlUp:
+                    var eData = eventData.data.As<Buildings.MagicGuild.EventData>();
+                    var lvlUpSkillType = eData.skillType;
+                    break;
+            }
+        }
+
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData?.type)
+            {
+                case UIEvent.Type.HidePopup:
+                    if (eventData.SenderTypeIs<SpellPopup>())
+                    {
+
+                    }
                     break;
             }
         }
