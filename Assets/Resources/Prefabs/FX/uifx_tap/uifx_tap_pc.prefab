@@ -107,5 +107,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: uifx_tap_pc
       objectReference: {fileID: 0}
+    - target: {fileID: 8157859089827056348, guid: e6e4154f9cce351409ce3d6d57cee6aa, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8157859089827056348, guid: e6e4154f9cce351409ce3d6d57cee6aa, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8157859089827056348, guid: e6e4154f9cce351409ce3d6d57cee6aa, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8157859089827056349, guid: e6e4154f9cce351409ce3d6d57cee6aa, type: 3}
+      propertyPath: m_Name
+      value: uifx_tap_pc
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6e4154f9cce351409ce3d6d57cee6aa, type: 3}
