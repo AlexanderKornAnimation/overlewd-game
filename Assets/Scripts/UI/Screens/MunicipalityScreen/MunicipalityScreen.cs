@@ -217,7 +217,7 @@ namespace Overlewd
             timerProgress.gameObject.SetActive(!canCollect);
             
             var timeStr = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
-            timer.text = UITools.ChangeTextSize(timeStr, timer.fontSize);
+            timer.text = UITools.IncNumberSize(timeStr, timer.fontSize);
             timerProgress.fillAmount = timeLeftMs / (GameData.buildings.municipality.settings.periodInSeconds * 1000.0f);
             activeBannerImage.gameObject.SetActive(canCollect);
             collectButton.interactable = canCollect;

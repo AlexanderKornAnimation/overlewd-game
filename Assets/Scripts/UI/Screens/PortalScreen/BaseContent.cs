@@ -56,7 +56,7 @@ namespace Overlewd
 
             private IEnumerator TimerUpd()
             {
-                timerTitle.text = UITools.ChangeTextSize(gachaData?.timePeriodLeft, timerTitle.fontSize);
+                timerTitle.text = UITools.IncNumberSize(gachaData?.timePeriodLeft, timerTitle.fontSize);
                 yield return new WaitForSeconds(1.0f);
             }
         }

@@ -25,15 +25,24 @@ namespace Overlewd
             }
         }
 
-        public static string ChangeTextSize(string text, float fontSize)
+        
+        public static string IncNumberSizeTo(string text, float size) => _incNumberSize(text, 0, size);
+
+        public static string IncNumberSize(string text, float fontSize) => _incNumberSize(text, fontSize);
+       
+        private static string _incNumberSize(string text, float fontSize, float? size = null)
         {
             if (String.IsNullOrEmpty(text))
                 return null;
             
             var result = "";
+            
+            if (!size.HasValue)
+                size = fontSize + 8;
+            
             foreach (var ch in text)
             {
-                result += char.IsNumber(ch) || ch == '%' || ch == '+' ? $"<size={fontSize + 8}>{ch}</size>" : ch.ToString();
+                result += char.IsNumber(ch) || char.IsSymbol(ch) ? $"<size={size}>{ch}</size>" : ch.ToString();
             }
             return result;
         }

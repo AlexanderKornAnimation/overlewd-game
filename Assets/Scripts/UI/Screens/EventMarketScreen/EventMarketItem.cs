@@ -18,7 +18,9 @@ namespace Overlewd
                 GameData.markets.GetTradableById(tradableId);
 
             private Image item;
+            private TextMeshProUGUI itemAmount;
             private TextMeshProUGUI description;
+            private TextMeshProUGUI discount;
 
             private Button buyButton;
             private TextMeshProUGUI buyPrice;
@@ -34,7 +36,9 @@ namespace Overlewd
                 var canvas = transform.Find("Canvas");
 
                 item = canvas.Find("Item").GetComponent<Image>();
+                itemAmount = item.transform.Find("Amount").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
+                discount = canvas.Find("DiscountBack/Discount").GetComponent<TextMeshProUGUI>();
 
                 buyButton = canvas.Find("Buy").GetComponent<Button>();
                 buyButton.onClick.AddListener(BuyButtonClick);
@@ -84,7 +88,7 @@ namespace Overlewd
                     buyPrice.text = _tradableData.price[0].amount.ToString();
                 }
 
-                item.gameObject.SetActive(true);
+                itemAmount.gameObject.SetActive(false);
                 item.sprite = ResourceManager.LoadSprite(_tradableData.imageUrl);
                 description.text = _tradableData.description;
             }

@@ -48,7 +48,7 @@ namespace Overlewd
                 Show();
 
                 icon.sprite = ResourceManager.LoadSprite(activeBuff.icon);
-                description.text = UITools.ChangeTextSize(activeBuff.description, description.fontSize);
+                description.text = UITools.IncNumberSize(activeBuff.description, description.fontSize);
                 iconUlvi.gameObject.SetActive(activeBuff.matriarch?.isUlvi ?? false);
                 iconAdriel.gameObject.SetActive(activeBuff.matriarch?.isAdriel ?? false);
                 iconIngie.gameObject.SetActive(activeBuff.matriarch?.isIngie ?? false);
