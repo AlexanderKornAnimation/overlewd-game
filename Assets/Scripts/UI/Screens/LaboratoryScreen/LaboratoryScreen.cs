@@ -32,8 +32,6 @@ namespace Overlewd
         private Button backButton;
         
         private Button mergeButton;
-        private Image[] mergePriceImage = new Image[2];
-        private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
         private GameObject slotFull;
         private GameObject slotEmpty;
@@ -74,12 +72,6 @@ namespace Overlewd
             slotAdvanced = slot.Find("SlotAdvanced").gameObject;
             slotEpic = slot.Find("SlotEpic").gameObject;
             slotHeroic = slot.Find("SlotHeroic").gameObject;
-
-            for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
-            {
-                mergePriceImage[i] = mergeButton.transform.Find($"Resource{i + 1}").GetComponent<Image>();
-                mergePriceAmount[i] = mergePriceImage[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            }
             
             slotFull = slot.Find("SlotFull").gameObject;
             girlImage = slotFull.transform.Find("Girl").GetComponent<Image>();
@@ -284,7 +276,6 @@ namespace Overlewd
                 slotEpic.SetActive(false);
                 slotHeroic.SetActive(false);
                 slotFull.SetActive(false);
-                mergeButton.gameObject.SetActive(false);
             }
             else
             {
@@ -318,8 +309,9 @@ namespace Overlewd
                 slotFull.SetActive(true);
                 girlImage.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
                 girlName.text = chData.name;
-                mergeButton.gameObject.SetActive(flaskCharacters.Count > 1);
             }
+
+            CustomizeMergeButton();
         }
 
         public void EraseFromFlask(NSLaboratoryScreen.Character ch)
@@ -391,6 +383,35 @@ namespace Overlewd
             await GameData.characters.Mrg(ch1.characterId, ch2.characterId);
         }
 
+        private void CustomizeMergeButton()
+        {
+            var mergeChData = flaskCharacters.FirstOrDefault()?.characterData;
+            if (mergeChData == null)
+            {
+                mergeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            var bPrice = mergeButton.transform.Find("Price").GetComponentsInChildren<Image>(true);
+            foreach (var bp in bPrice)
+            {
+                bp.gameObject.SetActive(false);
+            }
+
+            var bPriceId = 0;
+            foreach (var chPrice in mergeChData.mergePrice)
+            {
+                var bPriceImg = bPrice[bPriceId];
+                var bPriceCount = bPriceImg.GetComponentInChildren<TextMeshProUGUI>();
+                bPriceImg.sprite = ResourceManager.LoadSprite(chPrice.icon);
+                bPriceCount.text = chPrice.amount.ToString();
+                bPriceId++;
+            }
+
+            mergeButton.gameObject.SetActive(flaskCharacters.Count > 1);
+            UITools.DisableButton(mergeButton, !GameData.player.CanBuy(mergeChData.mergePrice));
+        }
+
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
@@ -408,7 +429,6 @@ namespace Overlewd
 
     public class LaboratoryScreenInData : BaseFullScreenInData
     {
-        public int? characterId;
-        public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
+
     }
 }
