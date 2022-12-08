@@ -21,6 +21,8 @@ namespace Overlewd
             public int maxGrade = 0;
             public bool canClick = false;
             public int shape = 0;
+            private Image white;
+            public Sprite[] whiteSprites;
             private SpineWidget spineWiget;
             public float delay = 0f;
             public DropEvent parentDE;
@@ -33,6 +35,7 @@ namespace Overlewd
                 ani = GetComponent<Animator>();
                 anchor = transform.Find("anchor");
                 button = GetComponent<Button>();
+                white = anchor.Find("white").GetComponent<Image>();
             }
 
             private void Start() => button?.onClick.AddListener(Play);
@@ -53,7 +56,7 @@ namespace Overlewd
                 persIcon.SetNativeSize();
 
                 spineWiget?.PlayAnimation("cr_grey", true);
-                spineWiget?.transform.SetSiblingIndex(0);
+                spineWiget?.transform.SetAsFirstSibling();
                 if (delay > 0) StartCoroutine(SpineDelay());
                 maskObj = spineWiget?.transform.Find("Mask").GetComponent<Image>();
                 maskObj.color = new Color(1, 1, 1, 0);
@@ -68,10 +71,13 @@ namespace Overlewd
             {
                 if (canClick)
                 {
-                    if (shape == 0)
+                    white.sprite = whiteSprites[shape];
+                    //if (shape == 0)
                         ani?.Play("Base Layer.SwitchShard");
-                    else
-                        ani?.Play("Base Layer.SwitchEquip");
+                    //else if (shape == 1)
+                    //    ani?.Play("Base Layer.SwitchEquip");
+                    //else
+                    //    ani?.Play("Base Layer.SwitchGirls");
                     canClick = false;
                 }
             }

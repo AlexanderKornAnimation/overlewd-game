@@ -60,6 +60,10 @@ MonoBehaviour:
   maxGrade: 0
   canClick: 1
   shape: 0
+  whiteSprites:
+  - {fileID: 21300000, guid: b35fecd71fe316c4b970a113f569c2fb, type: 3}
+  - {fileID: 21300000, guid: e290dfcf54293d549b4b3358ee1a7a64, type: 3}
+  - {fileID: 21300000, guid: 0174f828cfa6d9f4fb1a5b6c6a5d4afa, type: 3}
   delay: 0
   parentDE: {fileID: 1729646149}
   partMat: {fileID: 6930682011802622871}

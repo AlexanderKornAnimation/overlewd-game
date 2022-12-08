@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Overlewd
@@ -69,7 +68,7 @@ namespace Overlewd
             yield return new WaitForSeconds(0.1f);
             if (allEvents.Count > 0)
             {
-                allEvents = allEvents.Distinct().ToList();
+                //allEvents = allEvents.Distinct().ToList();
                 allEvents.Sort();
 
                 var randomPhrase = Random.Range(0, 3);
