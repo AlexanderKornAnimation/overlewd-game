@@ -255,6 +255,8 @@ namespace Overlewd
                 await Task.WhenAll(metaTasks);
             }
 
+            BuildInfoWidget.GetInstance(UIManager.systemNotifRoot);
+
             SetDownloadBarProgress(0.3f);
 
             await ParallelLoadResourcesAsync();

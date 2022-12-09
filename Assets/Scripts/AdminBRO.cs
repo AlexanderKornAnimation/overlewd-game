@@ -13,14 +13,16 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
+        public const string DevApiVersion = "16";
+        public const string StableApiVersion = "15";
 #if UNITY_EDITOR
-        public const string ApiVersion = "16";
+        public const string ApiVersion = DevApiVersion;
         public const string ServerDomainURL = "http://dev.api.overlewd.com/";
 #elif DEV_BUILD
-        public const string ApiVersion = "15";
+        public const string ApiVersion = StableApiVersion;
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #else
-        public const string ApiVersion = "15";
+        public const string ApiVersion = StableApiVersion;
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #endif
 
