@@ -23,12 +23,13 @@ namespace Overlewd
         }
 
         public static bool loggedIn =>
+            !String.IsNullOrEmpty(loginInfo?.userId);
+        public static LoginInfo loginInfo =>
 #if UNITY_EDITOR || UNITY_ANDROID
-            !String.IsNullOrEmpty(SdkPlugin.loginInfo?.userId);
+            SdkPlugin.loginInfo;
 #else
-            false;
+            null;
 #endif
-        public static LoginInfo loginInfo => SdkPlugin.loginInfo;
         public static Person userInfo { get; private set; }
 
         public static async Task WaitLoggedIn(MonoBehaviour myMonoBehaviour)
@@ -36,8 +37,9 @@ namespace Overlewd
 #if UNITY_EDITOR || UNITY_ANDROID
             await UniTask.WaitUntil(() => loggedIn);
             userInfo = await GetMyProfileAsync(myMonoBehaviour);
-#endif
+#else
             await Task.CompletedTask;
+#endif
         }
 
         public static void LogOut()

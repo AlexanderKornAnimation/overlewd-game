@@ -16,7 +16,7 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
         // For example, specific configuration/app options enabled
 
         //change Nutaku app params
-        RewriteNutakuParams();
+        RewriteNutakuParams(basePath);
 
         //second way
         //var androidManifest = new AndroidManifest(GetManifestPath(basePath));
@@ -42,7 +42,7 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
         return _manifestFilePath;
     }
 
-    public void RewriteNutakuParams()
+    public void RewriteNutakuParams(string basePath)
     {
 #if !UNITY_EDITOR && !DEV_BUILD
         XDocument doc = XDocument.Load(GetManifestPath(basePath));
