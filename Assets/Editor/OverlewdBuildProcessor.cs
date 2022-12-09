@@ -7,6 +7,12 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 
+/*
+autoinc build version
+https://github.com/PimDeWitte/UnityAutoIncrementBuildVersion
+*/
+
+
 public class OverlewdBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
 {
     public const string MajorBuildVersion = "1";
