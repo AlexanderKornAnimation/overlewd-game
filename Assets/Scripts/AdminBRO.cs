@@ -16,9 +16,13 @@ namespace Overlewd
         public const string ApiVersion = "16";
 #if UNITY_EDITOR
         public const string ServerDomainURL = "http://dev.api.overlewd.com/";
-#elif DEV_BUILD
+#elif DEV_BRANCH
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
-#else
+#elif TEST_BRANCH
+        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
+#elif RC_BRANCH
+        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
+#elif MASTER_BRANCH
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #endif
 
@@ -129,6 +133,10 @@ namespace Overlewd
         public class ApiVersionResponse
         {
             public int version;
+            public List<string> availableVersions;
+
+            public bool VersionAvailable(string ver) =>
+                availableVersions.Exists(v => v == ver);
         }
 
         //log
