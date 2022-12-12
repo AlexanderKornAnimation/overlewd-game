@@ -726,18 +726,18 @@ namespace Overlewd
     //markets
     public class Markets : BaseGameMeta
     {
-        public List<AdminBRO.EventMarketItem> eventMarkets { get; private set; } = new List<AdminBRO.EventMarketItem>();
+        public List<AdminBRO.MarketItem> markets { get; private set; } = new List<AdminBRO.MarketItem>();
 
         public List<AdminBRO.TradableItem> tradables { get; private set; } = new List<AdminBRO.TradableItem>();
 
         public override async Task Get()
         {
-            eventMarkets = await AdminBRO.eventMarketsAsync();
+            markets = await AdminBRO.marketsAsync();
             tradables = await AdminBRO.tradablesAsync();
         }
 
-        public AdminBRO.EventMarketItem GetEventMarketById(int? id) =>
-            eventMarkets.Find(m => m.id == id);
+        public AdminBRO.MarketItem GetById(int? id) =>
+            markets.Find(m => m.id == id);
         public AdminBRO.TradableItem GetTradableById(int? id) =>
             tradables.Find(t => t.id == id);
 

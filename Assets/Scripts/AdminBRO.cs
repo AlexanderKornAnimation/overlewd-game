@@ -253,11 +253,11 @@ namespace Overlewd
         }
 
         // /markets
-        public static async Task<HttpCoreResponse<List<EventMarketItem>>> eventMarketsAsync() =>
-            await HttpCore.GetAsync<List<EventMarketItem>>(make_url("markets"));
+        public static async Task<HttpCoreResponse<List<MarketItem>>> marketsAsync() =>
+            await HttpCore.GetAsync<List<MarketItem>>(make_url("markets"));
 
         [Serializable]
-        public class EventMarketItem
+        public class MarketItem
         {
             public int id;
             public string name;
@@ -270,6 +270,7 @@ namespace Overlewd
             public List<int> tradables;
             public List<int> currencies;
             public List<Tab> tabs;
+            public int? eventId;
 
             public class Tab
             {
@@ -289,6 +290,12 @@ namespace Overlewd
             public List<TradableItem> tradablesData =>
                 tradables.Select(id => GameData.markets.GetTradableById(id)).
                 Where(data => data != null).OrderByDescending(item => item.promo).ToList();
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isEventMarket => eventId.HasValue;
+
+            [JsonProperty(Required = Required.Default)]
+            public EventItem eventData => GameData.events.GetEventById(eventId);
         }
 
         // /currencies
@@ -564,7 +571,7 @@ namespace Overlewd
                 chaptersData.FirstOrDefault();
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.EventChapter activeChapter
+            public EventChapter activeChapter
             {
                 get
                 {
@@ -589,8 +596,8 @@ namespace Overlewd
                 GameData.events.mapEventData = this;
 
             [JsonProperty(Required = Required.Default)]
-            public List<EventMarketItem> marketsData =>
-                markets.Select(id => GameData.markets.GetEventMarketById(id)).Where(data => data != null).ToList();
+            public List<MarketItem> marketsData =>
+                markets.Select(id => GameData.markets.GetById(id)).Where(data => data != null).ToList();
 
             [JsonProperty(Required = Required.Default)]
             public bool isWeekly => type == Type_Weekly;

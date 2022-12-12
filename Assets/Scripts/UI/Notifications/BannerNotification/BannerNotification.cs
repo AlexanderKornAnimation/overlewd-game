@@ -79,16 +79,16 @@ namespace Overlewd
         private async void BuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            await GameData.markets.BuyTradable(inputData.eventMarketId, inputData.tradableId);
+            await GameData.markets.BuyTradable(inputData.marketId, inputData.tradableId);
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }
     }
 
     public class BannerNotificationInData : BaseNotificationInData
     {
-        public int? eventMarketId { get; set; }
-        public AdminBRO.EventMarketItem eventMarketData =>
-            GameData.markets.GetEventMarketById(eventMarketId.Value);
+        public int? marketId { get; set; }
+        public AdminBRO.MarketItem marketData =>
+            GameData.markets.GetById(marketId);
         public int? tradableId { get; set; }
         public AdminBRO.TradableItem tradableData =>
             GameData.markets.GetTradableById(tradableId.Value);

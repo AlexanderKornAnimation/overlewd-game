@@ -10,9 +10,9 @@ namespace Overlewd
     {
         public class EventMarketItem : MonoBehaviour
         {
-            public int? eventMarketId { get; set; }
-            public AdminBRO.EventMarketItem eventMarketData =>
-                GameData.markets.GetEventMarketById(eventMarketId.Value);
+            public int? marketId { get; set; }
+            public AdminBRO.MarketItem marketData =>
+                GameData.markets.GetById(marketId.Value);
             public int? tradableId { get; set; }
             public AdminBRO.TradableItem tradableData =>
                 GameData.markets.GetTradableById(tradableId);
@@ -104,7 +104,7 @@ namespace Overlewd
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.markets.BuyTradable(eventMarketId, tradableId);
+                        await GameData.markets.BuyTradable(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
@@ -112,7 +112,7 @@ namespace Overlewd
                         UIManager.MakeNotification<BannerNotification>().
                             SetData(new BannerNotificationInData
                             {
-                                eventMarketId = eventMarketId,
+                                marketId = marketId,
                                 tradableId = tradableId
                             }).DoShow();
                     }
@@ -129,7 +129,7 @@ namespace Overlewd
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.markets.BuyTradable(eventMarketId, tradableId);
+                        await GameData.markets.BuyTradable(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
@@ -137,7 +137,7 @@ namespace Overlewd
                         UIManager.MakeNotification<BannerNotification>().
                             SetData(new BannerNotificationInData
                             {
-                                eventMarketId = eventMarketId,
+                                marketId = marketId,
                                 tradableId = tradableId
                             }).DoShow();
                     }
