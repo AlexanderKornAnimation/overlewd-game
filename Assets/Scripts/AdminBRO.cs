@@ -270,7 +270,10 @@ namespace Overlewd
             public List<int> tradables;
             public List<int> currencies;
             public List<Tab> tabs;
-            public int? eventId;
+            public string type;
+
+            public const string Type_Main = "main";
+            public const string Type_Event = "event";
 
             public class Tab
             {
@@ -292,10 +295,10 @@ namespace Overlewd
                 Where(data => data != null).OrderByDescending(item => item.promo).ToList();
 
             [JsonProperty(Required = Required.Default)]
-            public bool isEventMarket => eventId.HasValue;
+            public bool isMain => type == Type_Main;
 
             [JsonProperty(Required = Required.Default)]
-            public EventItem eventData => GameData.events.GetEventById(eventId);
+            public bool isEvent => type == Type_Event;
         }
 
         // /currencies
@@ -597,7 +600,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public List<MarketItem> marketsData =>
-                markets.Select(id => GameData.markets.GetById(id)).Where(data => data != null).ToList();
+                markets.Select(id => GameData.markets.GetMarketById(id)).Where(data => data != null).ToList();
 
             [JsonProperty(Required = Required.Default)]
             public bool isWeekly => type == Type_Weekly;

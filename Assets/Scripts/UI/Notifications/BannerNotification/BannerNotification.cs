@@ -88,7 +88,7 @@ namespace Overlewd
     {
         public int? marketId { get; set; }
         public AdminBRO.MarketItem marketData =>
-            GameData.markets.GetById(marketId);
+            GameData.markets.GetMarketById(marketId);
         public int? tradableId { get; set; }
         public AdminBRO.TradableItem tradableData =>
             GameData.markets.GetTradableById(tradableId.Value);

@@ -103,6 +103,6 @@ namespace Overlewd
     {
         public int? marketId;
         public AdminBRO.MarketItem marketData =>
-            GameData.markets.GetById(marketId);
+            GameData.markets.GetMarketById(marketId);
     }
 }

@@ -736,10 +736,15 @@ namespace Overlewd
             tradables = await AdminBRO.tradablesAsync();
         }
 
-        public AdminBRO.MarketItem GetById(int? id) =>
+        public AdminBRO.MarketItem GetMarketById(int? id) =>
             markets.Find(m => m.id == id);
         public AdminBRO.TradableItem GetTradableById(int? id) =>
             tradables.Find(t => t.id == id);
+
+        public AdminBRO.MarketItem mainMarket =>
+            markets.Find(m => m.isMain);
+        public List<AdminBRO.MarketItem> eventMarkets =>
+            markets.FindAll(m => m.isEvent);
 
         public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? marketId, int? tradableId)
         {
