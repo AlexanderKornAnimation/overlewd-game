@@ -16,7 +16,7 @@ https://github.com/PimDeWitte/UnityAutoIncrementBuildVersion
 public class OverlewdBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
 {
     public const string MajorBuildVersion = "1";
-    public const string MinorBuildVersion = Overlewd.AdminBRO.StableApiVersion;
+    public const string MinorBuildVersion = Overlewd.AdminBRO.ApiVersion;
 
     public int callbackOrder { get { return 0; } }
 
@@ -35,11 +35,8 @@ public class OverlewdBuildProcessor : IPreprocessBuildWithReport, IPostprocessBu
     [MenuItem("SupaDogeTools/Inc Build Version")]
     static void IncBuildVersion()
     {
-        PlayerSettings.bundleVersion = $"{MajorBuildVersion}.{MinorBuildVersion}.{UTCToBuildVersion()}";
         PlayerSettings.Android.bundleVersionCode++;
+        PlayerSettings.bundleVersion = $"{MajorBuildVersion}.{MinorBuildVersion}.{PlayerSettings.Android.bundleVersionCode}";
         AssetDatabase.SaveAssets();
     }
-
-    private static string UTCToBuildVersion() =>
-        DateTime.UtcNow.ToString().Replace('.', '/').Replace(' ', '|');
 }

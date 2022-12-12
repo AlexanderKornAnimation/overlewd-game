@@ -45,6 +45,7 @@ namespace Overlewd
                 $"device: {SystemInfo.deviceModel}\n" +
                 $"platform: {Application.platform}\n" +
                 $"buildVersion: {Application.version}\n" +
+                $"cloudBuildTime: {buildManifest?.buildStartTime}\n" +
                 $"cloudBuildVersion: {buildManifest?.cloudBuildTargetName}-{buildManifest?.buildNumber}";
         }
 
