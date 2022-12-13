@@ -24,6 +24,8 @@ namespace Overlewd
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #elif MASTER_BRANCH
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
+#else
+        public const string ServerDomainURL = "http://dev.api.overlewd.com/";
 #endif
 
         private static string make_url(string url_part) => $"{ServerDomainURL}{url_part}";

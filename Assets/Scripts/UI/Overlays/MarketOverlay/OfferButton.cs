@@ -12,14 +12,16 @@ namespace Overlewd
     {
         public class OfferButton : MonoBehaviour
         {
+            public MarketOverlay marketOverlay { get; set; }
+
             private TextMeshProUGUI title;
             private TextMeshProUGUI notification;
             private Button button;
             private GameObject buttonSelected;
+
             private BaseOffer offer;
-            public Transform offerPos;
-            
-            public event Action<OfferButton> selectButton;
+
+            public bool isSelected => buttonSelected.activeSelf;
 
             void Awake()
             {
@@ -31,20 +33,28 @@ namespace Overlewd
                 notification = button.transform.Find("Notification").GetComponent<TextMeshProUGUI>();
             }
 
-            public void Customize()
+            void Start()
             {
-                offer = CurrencyPacksOffer.GetInstance(offerPos);
-                Deselect();
+                if (transform.GetSiblingIndex() % 2 == 0)
+                    offer = CurrencyPacksOffer.GetInstance(marketOverlay.offerContentPos);
+                else
+                    offer = Bundle.GetInstance(marketOverlay.offerContentPos);
+
+                if (!isSelected)
+                {
+                    offer?.Hide();
+                }
             }
 
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                selectButton?.Invoke(this);
+                Select();
             }
 
             public void Select()
             {
+                marketOverlay?.selectedOffer?.Deselect();
                 buttonSelected?.SetActive(true);
                 offer?.Show();
             }
