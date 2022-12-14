@@ -266,16 +266,6 @@ namespace Overlewd
                 QueueElements.Add(portraitQ);
             }
         }
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-                foreach (var cc in charControllerList)
-                    if (cc.isEnemy == true && !cc.isDead)
-                    {
-                        cc.health = cc.healthMax;
-                        cc.UpdateUI();
-                    }
-        }
 
         public bool CharPress(CharController ccOnPress)
         {
