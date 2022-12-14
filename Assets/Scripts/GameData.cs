@@ -1113,16 +1113,16 @@ namespace Overlewd
         public AdminBRO.BuffItem activeBuff =>
             buffs.Find(b => b.active);
 
-        public async Task memoryBuy(int? id)
+        public async Task MemoryPieceOfGlassBuy(int? memoryId, string shardKey)
         {
-            if (id.HasValue)
+            if (memoryId.HasValue)
             {
-                await AdminBRO.memoryBuyAsync(id.Value);
+                await AdminBRO.memoryPieceOfGlassBuyAsync(memoryId.Value, shardKey);
                 memories = await AdminBRO.memoriesAsync();
             }
         }
 
-        public async Task matriarchSeduce(int? id)
+        public async Task MatriarchSeduce(int? id)
         {
             if (id.HasValue)
             {

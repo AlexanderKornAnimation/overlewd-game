@@ -13,7 +13,7 @@ namespace Overlewd
 {
     public static class AdminBRO
     {
-        public const string ApiVersion = "16";
+        public const string ApiVersion = "17";
 #if UNITY_EDITOR
         public const string ServerDomainURL = "http://dev.api.overlewd.com/";
 #elif DEV_BRANCH
@@ -1950,7 +1950,7 @@ namespace Overlewd
 
         // /matriarchs
         // /matriarchs/memories
-        // /matriarchs/memories/{id}/buy
+        // /matriarchs/memories/{memoryId}/piece-of-glass/{shardKey}/buy
         // /matriarchs/{id}/seduce
         // /matriarchs/shards
         // /matriarchs/buffs
@@ -1961,8 +1961,8 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<List<MemoryItem>>> memoriesAsync() =>
             await HttpCore.GetAsync<List<MemoryItem>>(make_url("matriarchs/memories"));
 
-        public static async Task<HttpCoreResponse> memoryBuyAsync(int id) =>
-            await HttpCore.GetAsync(make_url($"matriarchs/memories/{id}/buy"));
+        public static async Task<HttpCoreResponse> memoryPieceOfGlassBuyAsync(int memoryId, string shardKey) =>
+            await HttpCore.PostAsync(make_url($"matriarchs/memories/{memoryId}/piece-of-glass/{shardKey}/buy"));
 
         public static async Task<HttpCoreResponse> seduceMatriarchAsync(int id) =>
             await HttpCore.PostAsync(make_url($"matriarchs/{id}/seduce"));
@@ -1991,6 +1991,7 @@ namespace Overlewd
             public int? nextEmpathyLevel;
             public string rewardsClaimed;
             public string seduceAvailableAt;
+            public string matriarchType;
 
             [JsonProperty(Required = Required.Default)]
             public MemoryShardItem basicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Basic);
@@ -2014,6 +2015,9 @@ namespace Overlewd
             public const string RewardsClaimed_TwentFive = "twenty_five";
             public const string RewardsClaimed_Fifty = "fifty";
             public const string RewardsClaimed_All = "all";
+
+            public const string MatriarchType_Main = "main";
+            public const string MatriarchType_Guest = "guest";
 
             [JsonProperty(Required = Required.Default)]
             public string key => name;
@@ -2054,43 +2058,27 @@ namespace Overlewd
         {
             public int id;
             public int userId;
-            public int? matriarchMemoryId;
             public string status;
             public int? matriarchId;
             public string title;
             public string label;
             public int? sexSceneId;
-            public List<OpenShard> shardsToOpen;
-            public int? visibleByEmpathyLevel;
-            public int? visibleByEventStartId;
-            public int? visibleByEventStageCompleteId;
+            public List<Piece> pieces;
+            public string memoryType;
 
-            public class OpenShard
+            public class Piece
             {
+                public string shardName;
+                public bool isPurchased;
                 public int shardId;
-                public int amount;
-                public string shardRarity;
+                public string rarity;
             }
-
-            [JsonProperty(Required = Required.Default)]
-            public OpenShard basicShard =>
-                shardsToOpen?.Find(r => r.shardRarity == Rarity.Basic);
-
-            [JsonProperty(Required = Required.Default)]
-            public OpenShard advancedShard =>
-                shardsToOpen.Find(r => r.shardRarity == Rarity.Advanced);
-
-            [JsonProperty(Required = Required.Default)]
-            public OpenShard epicShard =>
-                shardsToOpen?.Find(r => r.shardRarity == Rarity.Epic);
-
-            [JsonProperty(Required = Required.Default)]
-            public OpenShard heroicShard =>
-                shardsToOpen?.Find(r => r.shardRarity == Rarity.Heroic);
-
 
             public const string Status_Visible = "visible";
             public const string Status_Open = "open";
+
+            public const string MemoryType_Main = "main";
+            public const string MemoryType_Guest = "guest";
 
             [JsonProperty(Required = Required.Default)]
             public bool isVisible => status == Status_Visible;
@@ -2098,6 +2086,17 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
 
+            [JsonProperty(Required = Required.Default)]
+            public List<Piece> basicPieces => pieces.FindAll(p => p.rarity == Rarity.Basic);
+
+            [JsonProperty(Required = Required.Default)]
+            public List<Piece> advancedPieces => pieces.FindAll(p => p.rarity == Rarity.Advanced);
+
+            [JsonProperty(Required = Required.Default)]
+            public List<Piece> epicPieces => pieces.FindAll(p => p.rarity == Rarity.Epic);
+
+            [JsonProperty(Required = Required.Default)]
+            public List<Piece> heroicPieces => pieces.FindAll(p => p.rarity == Rarity.Heroic);
         }
 
         [Serializable]
@@ -2108,6 +2107,10 @@ namespace Overlewd
             public string rarity;
             public string icon;
             public int amount;
+            public string shardType;
+
+            public const string ShardType_Main = "main";
+            public const string ShardType_Guest = "guest";
         }
 
         [Serializable]

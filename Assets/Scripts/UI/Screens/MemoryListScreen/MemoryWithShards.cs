@@ -54,10 +54,19 @@ namespace Overlewd
                 base.Customize();
                 if (memoryData != null)
                 {
-                    heroicShardAmount.text = $"{girlData?.heroicShard?.amount}/{memoryData?.heroicShard?.amount}";
-                    epicShardAmount.text = $"{girlData?.epicShard?.amount}/{memoryData?.epicShard?.amount}";
-                    advancedShardAmount.text = $"{girlData?.advancedShard?.amount}/{memoryData?.advancedShard?.amount}";
-                    basicShardAmount.text = $"{girlData?.basicShard?.amount}/{memoryData?.basicShard?.amount}";
+                    var basicPieces = memoryData?.basicPieces.Count;
+                    var basicPiecesPurchased = memoryData?.basicPieces.FindAll(p => p.isPurchased).Count;
+                    var advancedPieces = memoryData?.advancedPieces.Count;
+                    var advancedPiecesPurchased = memoryData?.advancedPieces.FindAll(p => p.isPurchased).Count;
+                    var epicPieces = memoryData?.epicPieces.Count;
+                    var epicPiecesPurchased = memoryData?.epicPieces.FindAll(p => p.isPurchased).Count;
+                    var heroicPieces = memoryData?.heroicPieces.Count;
+                    var heroicPiecesPurchased = memoryData?.heroicPieces.FindAll(p => p.isPurchased).Count;
+
+                    heroicShardAmount.text = $"{heroicPiecesPurchased}/{heroicPieces}";
+                    epicShardAmount.text = $"{epicPiecesPurchased}/{epicPieces}";
+                    advancedShardAmount.text = $"{advancedPiecesPurchased}/{advancedPieces}";
+                    basicShardAmount.text = $"{basicPiecesPurchased}/{basicPieces}";
                     closed.gameObject.SetActive(!memoryData.isOpen);
                 }
             }

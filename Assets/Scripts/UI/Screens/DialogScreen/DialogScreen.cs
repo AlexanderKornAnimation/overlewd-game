@@ -176,7 +176,7 @@ namespace Overlewd
 
             if (dialogData.postAction == AdminBRO.Dialog.PostAction_Seduce)
             {
-                await GameData.matriarchs.matriarchSeduce(dialogData.matriarchId);
+                await GameData.matriarchs.MatriarchSeduce(dialogData.matriarchId);
             }
         }
 

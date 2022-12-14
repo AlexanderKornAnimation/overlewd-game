@@ -260,7 +260,7 @@ namespace Overlewd
         {
             if (seduceSex)
             {
-                await GameData.matriarchs.matriarchSeduce(inputData.girlData.id);
+                await GameData.matriarchs.MatriarchSeduce(inputData.girlData.id);
             }
             await Task.CompletedTask;
         }
