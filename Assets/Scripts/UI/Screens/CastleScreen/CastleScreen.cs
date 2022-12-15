@@ -192,6 +192,7 @@ namespace Overlewd
             {
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
                     UITools.DisableButton(sidebarButton);
+                    marketButton?.DisableButton();
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
                     UITools.DisableButton(sidebarButton);
