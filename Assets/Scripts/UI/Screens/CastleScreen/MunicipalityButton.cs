@@ -29,6 +29,8 @@ namespace Overlewd
 
             protected override void Customize()
             {
+                base.Customize();
+
                 NotifTitleCustomize();
             }
 

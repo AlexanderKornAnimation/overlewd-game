@@ -12,6 +12,9 @@ namespace Overlewd
     {
         public abstract class BaseButton : MonoBehaviour
         {
+            public int? buildingId { get; set; }
+            protected AdminBRO.Building buildingData => GameData.buildings.GetBuildingMetaById(buildingId);
+
             protected Button button;
             protected TextMeshProUGUI title;
 
@@ -47,7 +50,7 @@ namespace Overlewd
             
             protected virtual void Customize()
             {
-   
+                title.text = buildingData?.name;
             }
 
             protected virtual void ButtonClick()

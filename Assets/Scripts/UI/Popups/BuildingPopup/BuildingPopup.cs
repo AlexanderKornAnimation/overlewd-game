@@ -214,9 +214,8 @@ namespace Overlewd
 
     public class BuildingPopupInData : BasePopupInData
     {
-        public int? buildingId;
-
+        public int? buildingId { get; set; }
         public AdminBRO.Building buildingData =>
-            GameData.buildings.GetBuildingById(buildingId);
+            GameData.buildings.GetBuildingMetaById(buildingId);
     }
 }

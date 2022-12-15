@@ -184,7 +184,20 @@ namespace Overlewd
     //buildings
     public class Buildings : BaseGameMeta
     {
-        public List<AdminBRO.Building> buildings { get; private set; }
+        public List<AdminBRO.Building> buildingsMeta { get; private set; }
+        public List<Building> buildings => new List<Building>
+        {
+            municipality,
+            magicGuild,
+            forge,
+            castle,
+            catacombs,
+            laboratory,
+            aerostat,
+            harem,
+            market,
+            portal
+        };
         public Municipality municipality { get; private set; } = new Municipality();
         public MagicGuild magicGuild { get; private set; } = new MagicGuild();
         public Forge forge { get; private set; } = new Forge();
@@ -198,15 +211,20 @@ namespace Overlewd
 
         public override async Task Get()
         {
-            buildings = await AdminBRO.buildingsAsync();
+            buildingsMeta = await AdminBRO.buildingsAsync();
             magicGuild.skills = await AdminBRO.magicGuildSkillsAsync();
             forge.prices = await AdminBRO.forgePrices();
             municipality.settings = await AdminBRO.municipalitySettingsAsync();
         }
-        public AdminBRO.Building GetBuildingById(int? id) =>
-            buildings.Find(b => b.id == id);
-        public AdminBRO.Building GetBuildingByKey(string key) =>
-            buildings.Find(b => b.key == key);
+
+        public AdminBRO.Building GetBuildingMetaById(int? id) =>
+            buildingsMeta.Find(b => b.id == id);
+        public AdminBRO.Building GetBuildingMetaByKey(string key) =>
+            buildingsMeta.Find(b => b.key == key);
+        public Building GetBuildingById(int? id) =>
+            buildings.Find(b => b.meta?.id == id);
+        public Building GetBuildingByKey(string key) =>
+            buildings.Find(b => b.meta?.key == key);
 
         public async Task Build(int buildingId)
         {
@@ -242,15 +260,23 @@ namespace Overlewd
             await GameData.quests.Get();
         }
 
-        public class Municipality
+        public abstract class Building
         {
+            public virtual AdminBRO.Building meta => null;
+            public T As<T>() where T : Building =>
+                this as T;
+            public bool Is<T>() where T : Building =>
+                this.GetType() == typeof(T);
+        }
+
+        public class Municipality : Building
+        {
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Municipality);
             public AdminBRO.MunicipalitySettings settings { get; set; }
 
             private DateTime lastTimeLeftGoldAccUpd;
             public float goldAccTimeLeftMs { get; set; }
-
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Municipality);
 
             public async Task GetTimeLeft()
             {
@@ -284,11 +310,12 @@ namespace Overlewd
             }
         }
 
-        public class MagicGuild
+        public class MagicGuild : Building
         {
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_MagicGuild);
             public List<AdminBRO.MagicGuildSkill> skills { get; set; }
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_MagicGuild);
+
             public AdminBRO.MagicGuildSkill GetSkillByType(string type) =>
                 skills.Find(s => s.type == type);
             public AdminBRO.MagicGuildSkill GetSkillById(int id) =>
@@ -331,11 +358,11 @@ namespace Overlewd
             }
         }
 
-        public class Forge
+        public class Forge : Building
         {
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Forge);
             public AdminBRO.ForgePrice prices { get; set; }
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Forge);
 
             public async Task MergeEquipment(string mergeType, int[] mergeIds)
             {
@@ -375,46 +402,46 @@ namespace Overlewd
             }
         }
 
-        public class Castle
+        public class Castle : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Castle);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Castle);
         }
 
-        public class Catacombs
+        public class Catacombs : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Catacombs);
         }
 
-        public class Laboratory
+        public class Laboratory : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Laboratory);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Laboratory);
         }
 
-        public class Aerostat
+        public class Aerostat : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Aerostat);
         }
 
-        public class Harem
+        public class Harem : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Harem);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Harem);
         }
 
-        public class Market
+        public class Market : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Market);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Market);
         }
 
-        public class Portal
+        public class Portal : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Portal);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Portal);
         }
     }
 

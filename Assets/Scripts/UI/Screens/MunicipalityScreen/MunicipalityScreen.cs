@@ -137,7 +137,7 @@ namespace Overlewd
             haremMaxLevel = harem.Find("MaxLevel").gameObject;
             haremName = harem.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            foreach (var buildingData in GameData.buildings.buildings)
+            foreach (var buildingData in GameData.buildings.buildingsMeta)
             {
                 var levels = LevelsByKey(buildingData.key);
                 var buildingTransform = BuildingTransformByKey(buildingData.key);
@@ -180,7 +180,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            foreach (var buildingData in GameData.buildings.buildings)
+            foreach (var buildingData in GameData.buildings.buildingsMeta)
             {
                 var isAvailable = !buildingData.isMax;
                 var isNameFormat = buildingData.isBuilt && !buildingData.isMax && buildingData.levels.Count >= 0;

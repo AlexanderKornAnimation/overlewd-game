@@ -29,11 +29,6 @@ namespace Overlewd
                 UIManager.ShowScreen<MagicGuildScreen>();
             }
 
-            protected override void Customize()
-            {
-                title.name = "Magic guild";
-            }
-
             public static MagicGuildButton GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<MagicGuildButton>
