@@ -403,6 +403,8 @@ namespace Overlewd
             {
                 var bPriceImg = bPrice[bPriceId];
                 var bPriceCount = bPriceImg.GetComponentInChildren<TextMeshProUGUI>();
+                bPriceImg.gameObject.SetActive(true);
+
                 bPriceImg.sprite = ResourceManager.LoadSprite(chPrice.icon);
                 bPriceCount.text = chPrice.amount.ToString();
                 bPriceId++;
