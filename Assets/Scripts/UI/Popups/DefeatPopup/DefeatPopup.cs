@@ -64,10 +64,11 @@ namespace Overlewd
                     UITools.DisableButton(editTeamButton);
                     UITools.DisableButton(magicGuildButton);
                     UITools.DisableButton(overlordButton);
+                    UITools.DisableButton(haremButton, !GameData.buildings.harem.meta.isBuilt);
                     break;
                 default:
-                    UITools.DisableButton(haremButton, GameData.buildings.harem.meta.isBuilt);
-                    UITools.DisableButton(magicGuildButton, GameData.buildings.magicGuild.meta.isBuilt);
+                    UITools.DisableButton(haremButton, !GameData.buildings.harem.meta.isBuilt);
+                    UITools.DisableButton(magicGuildButton, !GameData.buildings.magicGuild.meta.isBuilt);
                     break;
             }
 
