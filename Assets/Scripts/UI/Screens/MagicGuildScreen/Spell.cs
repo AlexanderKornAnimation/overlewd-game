@@ -46,7 +46,6 @@ namespace Overlewd
                 isLocked.SetActive(skillData.locked);
                 level.text = skillData.isLvlMax ? "MAX" : "Lvl " + skillData.currentSkillLevel;
                 title.text = skillData.current.name;
-                icon.sprite = ResourceManager.LoadSprite(skillData.current.icon);
                 isMax.gameObject.SetActive(skillData.isLvlMax);
                 UITools.DisableButton(isMax, !skillData.canUpgrade);
             }
