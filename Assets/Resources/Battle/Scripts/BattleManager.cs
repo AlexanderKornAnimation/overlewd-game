@@ -45,7 +45,7 @@ namespace Overlewd
         [Tooltip("add this prefab here BattleUICanvas/Character/PlayerStats")]
         public CharacterPortrait PlayerStats;
         public CharacterPortrait EnemyStats;
-        Transform bPosPlayer, bPosEnemy;
+        public Transform bPosPlayer, bPosEnemy;
         int siblingPlayer, siblingEnemy;
 
         private SkillController[] skillControllers = new SkillController[3];
