@@ -161,6 +161,7 @@ namespace Overlewd
             stats = await AdminBRO.ftueStatsAsync();
 
             await GameData.characters.Get();
+            await GameData.equipment.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -718,6 +719,7 @@ namespace Overlewd
             stages = await AdminBRO.eventStagesAsync();
 
             await GameData.characters.Get();
+            await GameData.equipment.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
