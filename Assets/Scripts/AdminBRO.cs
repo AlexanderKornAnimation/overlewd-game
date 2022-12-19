@@ -267,9 +267,9 @@ namespace Overlewd
             public string bannerImage;
             public MapPosition mapPos;
             public List<int> tradables;
-            public List<int> currencies;
             public List<Tab> tabs;
             public string type;
+            public int? eventId;
 
             public const string Type_Main = "main";
             public const string Type_Event = "event";
@@ -710,6 +710,7 @@ namespace Overlewd
             public int? ftueChapterId;
             public string ftueQuestType;
             public string screenTarget;
+            public int? matriarchEmpathyPointsReward;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
