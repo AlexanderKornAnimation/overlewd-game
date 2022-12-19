@@ -610,13 +610,17 @@ namespace Overlewd
     //equipment
     public class Equipment : BaseGameMeta
     {
+        public List<AdminBRO.EquipmentBase> equipmentBase { get; private set; } = new List<AdminBRO.EquipmentBase>();
         public List<AdminBRO.Equipment> equipment { get; private set; } = new List<AdminBRO.Equipment>();
 
         public override async Task Get()
         {
+            equipmentBase = await AdminBRO.equipmentBaseAsync();
             equipment = await AdminBRO.equipmentAsync();
         }
 
+        public AdminBRO.EquipmentBase GetBaseById(int? id) =>
+            equipmentBase.Find(e => e.id == id);
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
 

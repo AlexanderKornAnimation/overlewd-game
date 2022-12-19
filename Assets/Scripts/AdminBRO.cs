@@ -265,10 +265,7 @@ namespace Overlewd
             public string name;
             public string description;
             public string bannerImage;
-            public string eventMapNodeName;
             public MapPosition mapPos;
-            public string createdAt;
-            public string updatedAt;
             public List<int> tradables;
             public List<int> currencies;
             public List<Tab> tabs;
@@ -368,7 +365,7 @@ namespace Overlewd
             public int? currencyAmount;
             public int? limit;
             public int? characterId;
-            public int? equipmentId;
+            public int? baseEquipmentId;
             public int? potionCount;
             public string dateStart;
             public string dateEnd;
@@ -407,7 +404,9 @@ namespace Overlewd
             {
                 Type_Currency => GameData.currencies.GetById(entityId.HasValue ? entityId : currencyId)?.iconUrl,
                 Type_BattleCharacter => GameData.characters.GetById(entityId.HasValue ? entityId : characterId)?.GetIconByRarity(rarity),
-                Type_BattleCharacterEquipment => GameData.equipment.GetById(entityId.HasValue ? entityId : equipmentId)?.GetIconByRarity(rarity),
+                Type_BattleCharacterEquipment => entityId.HasValue ?
+                    GameData.equipment.GetById(entityId)?.GetIconByRarity(rarity) :
+                    GameData.equipment.GetBaseById(baseEquipmentId)?.GetIconByRarity(rarity),
                 Type_MatriarchShard => GameData.matriarchs.GetShardById(entityId.HasValue ? entityId : matriarchShardId, rarity).icon,
                 _ => imageUrl
             };
@@ -653,7 +652,6 @@ namespace Overlewd
             public string title;
             public int? dialogId;
             public int? battleId;
-            public string mapNodeName;
             public MapPosition mapPos;
             public List<int> nextStages;
             public string status;
@@ -885,7 +883,6 @@ namespace Overlewd
             public string type;
             public List<DialogReplica> replicas;
             public int? matriarchId;
-            public int? matriarchEmpathyPointsReward;
             public string postAction;
 
             public const string Type_Dialog = "dialog";
@@ -1306,15 +1303,16 @@ namespace Overlewd
             }
         }
 
+        // /characters/equipment
         // /my/characters/equipment
         // /battles/my/characters/{id}/equip/{id} - post
         // /battles/my/characters/{id}/equip/{id} - delete
+        public static async Task<HttpCoreResponse<List<EquipmentBase>>> equipmentBaseAsync() =>
+            await HttpCore.GetAsync<List<EquipmentBase>>(make_url("battles/characters/equipment"));
         public static async Task<HttpCoreResponse<List<Equipment>>> equipmentAsync() =>
             await HttpCore.GetAsync<List<Equipment>>(make_url("battles/my/characters/equipment"));
-
         public static async Task<HttpCoreResponse> equipAsync(int characterId, int equipmentId) =>
             await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/equip/{equipmentId}"));
-
         public static async Task<HttpCoreResponse> unequipAsync(int characterId, int equipmentId) =>
             await HttpCore.DeleteAsync(make_url($"battles/my/characters/{characterId}/equip/{equipmentId}"));
 
@@ -1342,10 +1340,53 @@ namespace Overlewd
         }
 
         [Serializable]
+        public class EquipmentBase
+        {
+            public int id;
+            public string name;
+            public string key;
+            public string type;
+            public string basicIcon;
+            public string advancedIcon;
+            public string epicIcon;
+            public string heroicIcon;
+            public float speed;
+            public float power;
+            public int characterClassId;
+            public float constitution;
+            public float agility;
+            public float accuracy;
+            public float dodge;
+            public float critrate;
+            public float health;
+            public float damage;
+            public float mana;
+            public float speedBoost;
+            public float powerBoost;
+            public float constitutionBoost;
+            public float agilityBoost;
+            public float accuracyBoost;
+            public float dodgeBoost;
+            public float critrateBoost;
+            public float healthBoost;
+            public float damageBoost;
+            public float manaBoost;
+
+            public string GetIconByRarity(string rarity) => rarity switch
+            {
+                Rarity.Basic => basicIcon,
+                Rarity.Advanced => advancedIcon,
+                Rarity.Epic => epicIcon,
+                Rarity.Heroic => heroicIcon,
+                _ => null
+            };
+        }
+
+        [Serializable]
         public class Equipment
         {
             public int id;
-            public int? equipmentId;
+            public int? baseEquipmentId;
             public int? characterId;
             public string characterClass;
             public string name;
@@ -1366,6 +1407,10 @@ namespace Overlewd
             public string epicIcon;
             public string heroicIcon;
             public string rarity;
+
+            [JsonProperty(Required = Required.Default)]
+            public EquipmentBase baseEquipmentData =>
+                GameData.equipment.GetBaseById(baseEquipmentId);
 
             [JsonProperty(Required = Required.Default)]
             public bool isEquipped => characterId.HasValue;
@@ -1520,7 +1565,6 @@ namespace Overlewd
             public int? ftueChapterId;
             public int? dialogId;
             public int? battleId;
-            public string mapNodeName;
             public MapPosition mapPos;
             public string status;
             public string type;
@@ -1983,7 +2027,6 @@ namespace Overlewd
             public int? seduceSexSceneId;
             public int? dailyQuestGiverDialogId;
             public int seduceCooldown;
-            public int? seduceBuffSkillId;
             public string status;
             public int? currentEmpathyPoints;
             public int? empathyLevelTargetPoints;
