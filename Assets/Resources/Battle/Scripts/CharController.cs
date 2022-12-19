@@ -58,16 +58,23 @@ namespace Overlewd
         public float mana = 100, manaMax = 100;
 
         public bool isDead = false;
+        public bool iHit = false; //check if a character hit any target, then add hitDelay to BattleOut action
 
         private Transform battleLayer;
         public Transform persPos;
         private Transform battlePos;
         private SpineWidget spineWidget;
         private float defenceDuration = 1f;
-        public float
-            preAttackDuration = 1f,
-            attackDuration = 1f,
-            vfxDuration = 0f;
+        public float preAttackDuration = 1f;
+        public float attackDuration = 1f;
+        public float vfxDuration = 0f;
+        
+        private float hitDelay = 1f; //BattleOut step delay
+        float defBuffDelay = 1.2f;
+        float defVfxDelay = 1.2f;
+        float buffDelay = 1.2f;
+        float buffVFXDelay = 1.2f;
+
         private RectTransform rt;
 
         public int
@@ -75,8 +82,6 @@ namespace Overlewd
             regen_poison, bless_healBlock,
             immunity, silence, curse;
         public bool stun;
-        float defBuffDelay = 1.2f, defVfxDelay = 1.2f;
-        float buffDelay = 1.2f, buffVFXDelay = 1.2f;
 
         [Tooltip("Reduce or add total damage in percentage up to 100")]
         public float defUp_defDown_dot = 0f;
@@ -309,7 +314,8 @@ namespace Overlewd
             yield return new WaitForSeconds(attackDuration);
             PlayIdle();
             BattleOut(AOE);
-            bm.BattleOut();
+            bm.BattleOut(iHit ? hitDelay : 0f);
+            iHit = false;
         }
 
         public void Defence(CharController attacker, int id, bool aoe = false) => StartCoroutine(PlayDefence(attacker, id, aoe));
@@ -344,6 +350,7 @@ namespace Overlewd
             {
                 AddEffect(attackerSkill);                       //calculate probability and add effect
                 attacker.psr?.HitEnemy();
+                attacker.iHit = true;
             }
             else
             {
@@ -737,7 +744,7 @@ namespace Overlewd
             {
                 Damage(regen_poison_dot, true, false, false, poison: true);
                 regen_poison -= (int)Mathf.Sign(regen_poison);
-                delay = 0.5f;
+                delay = 0.75f;
             }
             if (stun && !isDead)
             {
