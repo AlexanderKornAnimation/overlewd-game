@@ -209,10 +209,10 @@ namespace Overlewd
                     }
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    UIManager.MakeScreen<PortalScreen>().
-                        SetData(new PortalScreenInData
+                    UIManager.MakeScreen<MemoryScreen>().
+                        SetData(new MemoryScreenInData
                         {
-                            activeButtonId = PortalScreen.TabShards,
+                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
                         }).DoShow();
                     break;
                 case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):

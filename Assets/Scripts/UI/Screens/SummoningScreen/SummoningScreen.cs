@@ -77,12 +77,24 @@ namespace Overlewd
         private void PortalButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.MakeScreen<PortalScreen>().
-                SetData(new PortalScreenInData
-                {
-                    activeGachaId = inputData?.gachaId
-                })
-                .DoShow();
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.MakeScreen<MemoryScreen>().
+                        SetData(new MemoryScreenInData
+                        {
+                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
+                        }).DoShow();
+                    break;
+                default:
+                    UIManager.MakeScreen<PortalScreen>().
+                        SetData(new PortalScreenInData
+                        {
+                            activeGachaId = inputData?.gachaId
+                        })
+                        .DoShow();
+                    break;
+            }
         }
 
         private IEnumerator WaitShardsIsOpened()
@@ -102,11 +114,7 @@ namespace Overlewd
                     GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor2");
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    UIManager.MakeScreen<MemoryScreen>().
-                        SetData(new MemoryScreenInData
-                        {
-                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
-                        }).DoShow();
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor5");
                     break;
                 case (FTUE.CHAPTER_3, FTUE.SEX_1):
                     UIManager.ShowScreen<OverlordScreen>();

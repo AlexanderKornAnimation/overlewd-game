@@ -145,7 +145,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls);
                     break;
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_4):
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
                     GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor2");
                     break;
                 case (FTUE.CHAPTER_2, _):

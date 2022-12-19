@@ -48,7 +48,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
                     if (!GameData.ftue.chapter2_battle1.isComplete)
                     {
-                        GameData.ftue.chapter2.ShowNotifByKey("ch2teamequiptutor1");
+                        GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor1");
                         await UIManager.WaitHideNotifications();
                         UIManager.MakeScreen<BattleGirlScreen>().
                             SetData(new BattleGirlScreenInData
