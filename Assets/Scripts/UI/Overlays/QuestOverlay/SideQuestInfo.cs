@@ -13,6 +13,8 @@ namespace Overlewd
         {
             private TextMeshProUGUI title;
             private TextMeshProUGUI progress;
+            private GameObject trustRewardBack;
+            private TextMeshProUGUI trustPoints;
 
             private Image[] rewards = new Image[6];
             private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[6];
@@ -30,6 +32,8 @@ namespace Overlewd
 
                 title = rewardWindow.Find("Title").GetComponent<TextMeshProUGUI>();
                 progress = rewardWindow.Find("Progress").GetComponent<TextMeshProUGUI>();
+                trustRewardBack = rewardWindow.Find("TrustRewardBack").gameObject;
+                trustPoints = trustRewardBack.transform.Find("Trust").GetComponent<TextMeshProUGUI>();
 
                 var rewardGrid = rewardWindow.Find("RewardGrid");
 
@@ -60,7 +64,6 @@ namespace Overlewd
                 if (questData != null)
                 {
                     title.text = questData.name;
-                    
                     progress.text = questData.goalCount.HasValue
                         ? $"{questData?.progressCount}/{questData?.goalCount}" : "";
                     
@@ -75,6 +78,9 @@ namespace Overlewd
                         rewardAmount.text = questItem.amount.ToString();
                     }
                     
+                    trustRewardBack.SetActive(questData.matriarchEmpathyPointsReward.HasValue);
+                    trustPoints.text = UITools.IncNumberSize("Trust +" + questData.matriarchEmpathyPointsReward, 
+                        trustPoints.fontSize);
                     inProgress.SetActive(false);
                     advanceButton.gameObject.SetActive(questData.isOpen || questData.inProgress);
                     claimButton.gameObject.SetActive(questData.isCompleted);

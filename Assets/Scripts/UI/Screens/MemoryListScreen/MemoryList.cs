@@ -47,7 +47,7 @@ namespace Overlewd
                  {
                      if (memoryData.matriarchId == girlData.id && memoryData.isVisible)
                      {
-                         if (memoryData.shardsToOpen == null)
+                         if (memoryData.pieces == null)
                          {
                              memory = Memory.GetInstance(content);
                          }

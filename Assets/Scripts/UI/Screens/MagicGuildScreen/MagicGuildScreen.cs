@@ -21,6 +21,8 @@ namespace Overlewd
         private TextMeshProUGUI buildingLevel;
         private AdminBRO.Building buildingData => GameData.buildings.magicGuild.meta;
 
+        private string lvlUpSkillType;
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/MagicGuildScreen/MagicGuild", transform);
@@ -35,7 +37,6 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            
             Customize();
             
             await Task.CompletedTask;
@@ -101,6 +102,44 @@ namespace Overlewd
                     break;
                 default:
                     UIManager.ShowScreen<CastleScreen>();
+                    break;
+            }
+        }
+
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case GameDataEventId.MagicGuildSpellLvlUp:
+                    var eData = eventData.As<MagicGuildDataEvent>();
+                    lvlUpSkillType = eData.skillType;
+                    break;
+            }
+        }
+
+        public override void OnUIEvent(UIEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case UIEventId.HidePopup:
+                    if (eventData.SenderTypeIs<SpellPopup>())
+                    {
+                        switch (lvlUpSkillType)
+                        {
+                            case AdminBRO.MagicGuildSkill.Type_ActiveSkill:
+                                activeSpell?.OnLvlUp();
+                                break;
+                            case AdminBRO.MagicGuildSkill.Type_UltimateSkill:
+                                ultimateSpell?.OnLvlUp();
+                                break;
+                            case AdminBRO.MagicGuildSkill.Type_PassiveSkill1:
+                                passiveSpell1?.OnLvlUp();
+                                break;
+                            case AdminBRO.MagicGuildSkill.Type_PassiveSkill2:
+                                passiveSpell2?.OnLvlUp();
+                                break;
+                        }
+                    }
                     break;
             }
         }

@@ -83,24 +83,9 @@ namespace Overlewd
 
         public override async void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData?.type)
+            switch (eventData.id)
             {
-                case UIEvent.Type.ChangeScreenComplete:
-                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
-                    {
-                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                            if (!UIManager.currentState.prevState.ScreenTypeIs<MemoryScreen>())
-                            {
-                                GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor3");
-                                await UIManager.WaitHideNotifications();
-                                UIManager.MakeScreen<MemoryScreen>().
-                                    SetData(new MemoryScreenInData
-                                    {
-                                        girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
-                                    }).DoShow();
-                            }
-                            break;
-                    }
+                case UIEventId.ChangeScreenComplete:
                     break;
             }
         }
@@ -115,7 +100,9 @@ namespace Overlewd
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
                     GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor1");
-                    await UIManager.WaitHideNotifications();
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor3");
                     break;
                 case (FTUE.CHAPTER_2, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_portal);

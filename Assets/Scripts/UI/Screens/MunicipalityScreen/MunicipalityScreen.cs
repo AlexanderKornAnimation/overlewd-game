@@ -137,7 +137,7 @@ namespace Overlewd
             haremMaxLevel = harem.Find("MaxLevel").gameObject;
             haremName = harem.Find("Name").GetComponent<TextMeshProUGUI>();
 
-            foreach (var buildingData in GameData.buildings.buildings)
+            foreach (var buildingData in GameData.buildings.buildingsMeta)
             {
                 var levels = LevelsByKey(buildingData.key);
                 var buildingTransform = BuildingTransformByKey(buildingData.key);
@@ -180,7 +180,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            foreach (var buildingData in GameData.buildings.buildings)
+            foreach (var buildingData in GameData.buildings.buildingsMeta)
             {
                 var isAvailable = !buildingData.isMax;
                 var isNameFormat = buildingData.isBuilt && !buildingData.isMax && buildingData.levels.Count >= 0;
@@ -217,7 +217,7 @@ namespace Overlewd
             timerProgress.gameObject.SetActive(!canCollect);
             
             var timeStr = TimeTools.TimeToString(TimeSpan.FromMilliseconds(timeLeftMs));
-            timer.text = UITools.ChangeTextSize(timeStr, timer.fontSize);
+            timer.text = UITools.IncNumberSize(timeStr, timer.fontSize);
             timerProgress.fillAmount = timeLeftMs / (GameData.buildings.municipality.settings.periodInSeconds * 1000.0f);
             activeBannerImage.gameObject.SetActive(canCollect);
             collectButton.interactable = canCollect;
@@ -264,10 +264,10 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData?.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.BuildingBuild:
-                case GameDataEvent.EventId.BuildingBuildCrystal:
+                case GameDataEventId.BuildingBuild:
+                case GameDataEventId.BuildingBuildCrystal:
                     Customize();
                     break;
             }

@@ -7,40 +7,6 @@ using System.Linq;
 
 namespace Overlewd
 {
-    public class GameDataEvent
-    {
-        public EventId eventId = EventId.None;
-        public Data data;
-
-        public enum EventId
-        {
-            None,
-            BuyTradable,
-            BuildingBuild,
-            BuildingBuildCrystal,
-            CharacterLvlUp,
-            CharacterSkillLvlUp,
-            CharacterMerge,
-            MagicGuildSpellLvlUp,
-            EquipmentEquipped,
-            EquipmentUnequipped,
-            BuyPotions,
-            UsePotions,
-            GachaBuy,
-
-            ForgeMergeShards,
-            ForgeExchangeShards,
-            ForgeMergeEquip,
-
-        }
-
-        public abstract class Data
-        {
-            public T As<T>() where T : Data =>
-                this as T;
-        }
-    }
-
     public static class GameData
     {
         public static bool devMode { get; set; } = false;
@@ -195,6 +161,7 @@ namespace Overlewd
             stats = await AdminBRO.ftueStatsAsync();
 
             await GameData.characters.Get();
+            await GameData.equipment.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -218,7 +185,20 @@ namespace Overlewd
     //buildings
     public class Buildings : BaseGameMeta
     {
-        public List<AdminBRO.Building> buildings { get; private set; }
+        public List<AdminBRO.Building> buildingsMeta { get; private set; }
+        public List<Building> buildings => new List<Building>
+        {
+            municipality,
+            magicGuild,
+            forge,
+            castle,
+            catacombs,
+            laboratory,
+            aerostat,
+            harem,
+            market,
+            portal
+        };
         public Municipality municipality { get; private set; } = new Municipality();
         public MagicGuild magicGuild { get; private set; } = new MagicGuild();
         public Forge forge { get; private set; } = new Forge();
@@ -232,15 +212,20 @@ namespace Overlewd
 
         public override async Task Get()
         {
-            buildings = await AdminBRO.buildingsAsync();
+            buildingsMeta = await AdminBRO.buildingsAsync();
             magicGuild.skills = await AdminBRO.magicGuildSkillsAsync();
             forge.prices = await AdminBRO.forgePrices();
             municipality.settings = await AdminBRO.municipalitySettingsAsync();
         }
-        public AdminBRO.Building GetBuildingById(int? id) =>
-            buildings.Find(b => b.id == id);
-        public AdminBRO.Building GetBuildingByKey(string key) =>
-            buildings.Find(b => b.key == key);
+
+        public AdminBRO.Building GetBuildingMetaById(int? id) =>
+            buildingsMeta.Find(b => b.id == id);
+        public AdminBRO.Building GetBuildingMetaByKey(string key) =>
+            buildingsMeta.Find(b => b.key == key);
+        public Building GetBuildingById(int? id) =>
+            buildings.Find(b => b.meta?.id == id);
+        public Building GetBuildingByKey(string key) =>
+            buildings.Find(b => b.meta?.key == key);
 
         public async Task Build(int buildingId)
         {
@@ -253,7 +238,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.BuildingBuild
+                    id = GameDataEventId.BuildingBuild
                 });
 
             await GameData.quests.Get();
@@ -270,21 +255,29 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.BuildingBuildCrystal
+                    id = GameDataEventId.BuildingBuildCrystal
                 });
 
             await GameData.quests.Get();
         }
 
-        public class Municipality
+        public abstract class Building
         {
+            public virtual AdminBRO.Building meta => null;
+            public T As<T>() where T : Building =>
+                this as T;
+            public bool Is<T>() where T : Building =>
+                this.GetType() == typeof(T);
+        }
+
+        public class Municipality : Building
+        {
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Municipality);
             public AdminBRO.MunicipalitySettings settings { get; set; }
 
             private DateTime lastTimeLeftGoldAccUpd;
             public float goldAccTimeLeftMs { get; set; }
-
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Municipality);
 
             public async Task GetTimeLeft()
             {
@@ -318,11 +311,12 @@ namespace Overlewd
             }
         }
 
-        public class MagicGuild
+        public class MagicGuild : Building
         {
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_MagicGuild);
             public List<AdminBRO.MagicGuildSkill> skills { get; set; }
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_MagicGuild);
+
             public AdminBRO.MagicGuildSkill GetSkillByType(string type) =>
                 skills.Find(s => s.type == type);
             public AdminBRO.MagicGuildSkill GetSkillById(int id) =>
@@ -343,9 +337,10 @@ namespace Overlewd
                 await GameData.characters.Get();
                 await GameData.player.Get();
 
-                UIManager.ThrowGameDataEvent(new GameDataEvent
+                UIManager.ThrowGameDataEvent(new MagicGuildDataEvent
                 {
-                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp
+                    id = GameDataEventId.MagicGuildSpellLvlUp,
+                    skillType = skillType
                 });
             }
 
@@ -356,18 +351,19 @@ namespace Overlewd
                 await GameData.characters.Get();
                 await GameData.player.Get();
 
-                UIManager.ThrowGameDataEvent(new GameDataEvent
+                UIManager.ThrowGameDataEvent(new MagicGuildDataEvent
                 {
-                    eventId = GameDataEvent.EventId.MagicGuildSpellLvlUp
+                    id = GameDataEventId.MagicGuildSpellLvlUp,
+                    skillType = skillType
                 });
             }
         }
 
-        public class Forge
+        public class Forge : Building
         {
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Forge);
             public AdminBRO.ForgePrice prices { get; set; }
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Forge);
 
             public async Task MergeEquipment(string mergeType, int[] mergeIds)
             {
@@ -378,7 +374,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.ForgeMergeEquip
+                    id = GameDataEventId.ForgeMergeEquip
                 });
             }
 
@@ -390,7 +386,7 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.ForgeMergeShards
+                    id = GameDataEventId.ForgeMergeShards
                 });
             }
 
@@ -402,51 +398,51 @@ namespace Overlewd
 
                 UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.ForgeExchangeShards
+                    id = GameDataEventId.ForgeExchangeShards
                 });
             }
         }
 
-        public class Castle
+        public class Castle : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Castle);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Castle);
         }
 
-        public class Catacombs
+        public class Catacombs : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Catacombs);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Catacombs);
         }
 
-        public class Laboratory
+        public class Laboratory : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Laboratory);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Laboratory);
         }
 
-        public class Aerostat
+        public class Aerostat : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Aerostat);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Aerostat);
         }
 
-        public class Harem
+        public class Harem : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Harem);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Harem);
         }
 
-        public class Market
+        public class Market : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Market);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Market);
         }
 
-        public class Portal
+        public class Portal : Building
         {
-            public AdminBRO.Building meta =>
-                GameData.buildings.GetBuildingByKey(AdminBRO.Building.Key_Portal);
+            public override AdminBRO.Building meta =>
+                GameData.buildings.GetBuildingMetaByKey(AdminBRO.Building.Key_Portal);
         }
     }
 
@@ -476,13 +472,10 @@ namespace Overlewd
             await GameData.characters.Get();
             await GameData.equipment.Get();
 
-            UIManager.ThrowGameDataEvent(new GameDataEvent
+            UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
-                eventId = GameDataEvent.EventId.GachaBuy,
-                data = new EventData
-                {
-                    buyResult = result
-                }
+                id = GameDataEventId.GachaBuy,
+                buyResult = result
             });
 
             return result;
@@ -501,21 +494,13 @@ namespace Overlewd
             await GameData.characters.Get();
             await GameData.equipment.Get();
 
-            UIManager.ThrowGameDataEvent(new GameDataEvent
+            UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
-                eventId = GameDataEvent.EventId.GachaBuy,
-                data = new EventData
-                {
-                    buyResult = result
-                }
+                id = GameDataEventId.GachaBuy,
+                buyResult = result
             });
 
             return result;
-        }
-
-        public class EventData : GameDataEvent.Data
-        {
-            public List<AdminBRO.GachaBuyResult> buyResult;
         }
     }
 
@@ -546,7 +531,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.CharacterLvlUp
+                id = GameDataEventId.CharacterLvlUp
             });
         }
 
@@ -557,7 +542,7 @@ namespace Overlewd
             await GameData.player.Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.CharacterSkillLvlUp
+                id = GameDataEventId.CharacterSkillLvlUp
             });
         }
 
@@ -571,7 +556,7 @@ namespace Overlewd
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.CharacterMerge
+                id = GameDataEventId.CharacterMerge
             });
         }
 
@@ -625,13 +610,17 @@ namespace Overlewd
     //equipment
     public class Equipment : BaseGameMeta
     {
+        public List<AdminBRO.EquipmentBase> equipmentBase { get; private set; } = new List<AdminBRO.EquipmentBase>();
         public List<AdminBRO.Equipment> equipment { get; private set; } = new List<AdminBRO.Equipment>();
 
         public override async Task Get()
         {
+            equipmentBase = await AdminBRO.equipmentBaseAsync();
             equipment = await AdminBRO.equipmentAsync();
         }
 
+        public AdminBRO.EquipmentBase GetBaseById(int? id) =>
+            equipmentBase.Find(e => e.id == id);
         public AdminBRO.Equipment GetById(int? id) =>
             equipment.Find(eq => eq.id == id);
 
@@ -683,7 +672,7 @@ namespace Overlewd
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.EquipmentEquipped
+                id = GameDataEventId.EquipmentEquipped
             });
         }
 
@@ -695,7 +684,7 @@ namespace Overlewd
 
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
-                eventId = GameDataEvent.EventId.EquipmentUnequipped
+                id = GameDataEventId.EquipmentUnequipped
             });
         }
     }
@@ -734,6 +723,7 @@ namespace Overlewd
             stages = await AdminBRO.eventStagesAsync();
 
             await GameData.characters.Get();
+            await GameData.equipment.Get();
             await GameData.quests.Get();
             await GameData.battlePass.Get();
             await GameData.player.Get();
@@ -769,20 +759,25 @@ namespace Overlewd
     //markets
     public class Markets : BaseGameMeta
     {
-        public List<AdminBRO.EventMarketItem> eventMarkets { get; private set; } = new List<AdminBRO.EventMarketItem>();
+        public List<AdminBRO.MarketItem> markets { get; private set; } = new List<AdminBRO.MarketItem>();
 
         public List<AdminBRO.TradableItem> tradables { get; private set; } = new List<AdminBRO.TradableItem>();
 
         public override async Task Get()
         {
-            eventMarkets = await AdminBRO.eventMarketsAsync();
+            markets = await AdminBRO.marketsAsync();
             tradables = await AdminBRO.tradablesAsync();
         }
 
-        public AdminBRO.EventMarketItem GetEventMarketById(int? id) =>
-            eventMarkets.Find(m => m.id == id);
+        public AdminBRO.MarketItem GetMarketById(int? id) =>
+            markets.Find(m => m.id == id);
         public AdminBRO.TradableItem GetTradableById(int? id) =>
             tradables.Find(t => t.id == id);
+
+        public AdminBRO.MarketItem mainMarket =>
+            markets.Find(m => m.isMain);
+        public List<AdminBRO.MarketItem> eventMarkets =>
+            markets.FindAll(m => m.isEvent);
 
         public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? marketId, int? tradableId)
         {
@@ -797,7 +792,7 @@ namespace Overlewd
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
                     {
-                        eventId = GameDataEvent.EventId.BuyTradable
+                        id = GameDataEventId.BuyTradable
                     });
             }
 
@@ -817,7 +812,7 @@ namespace Overlewd
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
                     {
-                        eventId = GameDataEvent.EventId.BuyTradable
+                        id = GameDataEventId.BuyTradable
                     });
             }
 
@@ -1151,16 +1146,16 @@ namespace Overlewd
         public AdminBRO.BuffItem activeBuff =>
             buffs.Find(b => b.active);
 
-        public async Task memoryBuy(int? id)
+        public async Task MemoryPieceOfGlassBuy(int? memoryId, string shardKey)
         {
-            if (id.HasValue)
+            if (memoryId.HasValue)
             {
-                await AdminBRO.memoryBuyAsync(id.Value);
+                await AdminBRO.memoryPieceOfGlassBuyAsync(memoryId.Value, shardKey);
                 memories = await AdminBRO.memoriesAsync();
             }
         }
 
-        public async Task matriarchSeduce(int? id)
+        public async Task MatriarchSeduce(int? id)
         {
             if (id.HasValue)
             {
@@ -1231,7 +1226,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.BuyPotions
+                    id = GameDataEventId.BuyPotions
                 });
         }
 
@@ -1243,7 +1238,7 @@ namespace Overlewd
             UIManager.ThrowGameDataEvent(
                 new GameDataEvent
                 {
-                    eventId = GameDataEvent.EventId.UsePotions
+                    id = GameDataEventId.UsePotions
                 });
         }
 

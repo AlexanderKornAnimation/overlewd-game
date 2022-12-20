@@ -97,7 +97,7 @@ public class AssetBundlesBuilder : EditorWindow
         EditorGUILayout.EndScrollView();
     }
 
-    [MenuItem("Assets/Open AssetBundles builder")]
+    [MenuItem("SupaDogeTools/Open AssetBundles builder")]
     static void OpenAssetBundlesBuilder()
     {
         GetWindow<AssetBundlesBuilder>(true, "CreateAssetBundles", true);

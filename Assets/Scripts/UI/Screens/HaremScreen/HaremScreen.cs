@@ -118,7 +118,7 @@ namespace Overlewd
             ulviBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ulvi.buff?.icon);
             ulviBuffActive.SetActive(GameData.matriarchs.Ulvi.buff?.active ?? false);
             ulviBuffDescription.text = 
-                UITools.ChangeTextSize(GameData.matriarchs.Ulvi.buff?.description, ulviBuffDescription.fontSize);
+                UITools.IncNumberSize(GameData.matriarchs.Ulvi.buff?.description, ulviBuffDescription.fontSize);
 
             adrielActive.gameObject.SetActive(GameData.matriarchs.Adriel.isOpen);
             adrielNotActive.gameObject.SetActive(!GameData.matriarchs.Adriel.isOpen);
@@ -126,7 +126,7 @@ namespace Overlewd
             adrielBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Adriel.buff?.icon);
             adrielBuffActive.SetActive(GameData.matriarchs.Adriel.buff?.active ?? false);
             adrielBuffDescription.text = 
-                UITools.ChangeTextSize(GameData.matriarchs.Adriel.buff?.description, adrielBuffDescription.fontSize);
+                UITools.IncNumberSize(GameData.matriarchs.Adriel.buff?.description, adrielBuffDescription.fontSize);
 
             ingieActive.gameObject.SetActive(GameData.matriarchs.Ingie.isOpen);
             ingieNotActive.gameObject.SetActive(!GameData.matriarchs.Ingie.isOpen);
@@ -134,7 +134,7 @@ namespace Overlewd
             ingieBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ingie.buff?.icon);
             ingieBuffActive.SetActive(GameData.matriarchs.Ingie.buff?.active ?? false);
             ingieBuffDescription.text = 
-                UITools.ChangeTextSize(GameData.matriarchs.Ingie.buff?.description, ingieBuffDescription.fontSize);
+                UITools.IncNumberSize(GameData.matriarchs.Ingie.buff?.description, ingieBuffDescription.fontSize);
 
             fayeActive.gameObject.SetActive(GameData.matriarchs.Faye.isOpen);
             fayeNotActive.gameObject.SetActive(!GameData.matriarchs.Faye.isOpen);
@@ -142,7 +142,7 @@ namespace Overlewd
             fayeBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Faye.buff?.icon);
             fayeBuffActive.SetActive(GameData.matriarchs.Faye.buff?.active ?? false);
             fayeBuffDescription.text =
-                UITools.ChangeTextSize(GameData.matriarchs.Faye.buff?.description, fayeBuffDescription.fontSize);
+                UITools.IncNumberSize(GameData.matriarchs.Faye.buff?.description, fayeBuffDescription.fontSize);
 
             liliActive.gameObject.SetActive(GameData.matriarchs.Lili.isOpen);
             liliNotActive.gameObject.SetActive(!GameData.matriarchs.Lili.isOpen);
@@ -150,7 +150,7 @@ namespace Overlewd
             liliBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Lili.buff?.icon);
             liliBuffActive.SetActive(GameData.matriarchs.Lili.buff?.active ?? false);
             liliBuffDescription.text =
-                UITools.ChangeTextSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
+                UITools.IncNumberSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
 
             if (UIManager.currentState.prevState != null)
             {

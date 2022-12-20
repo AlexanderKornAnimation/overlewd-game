@@ -45,7 +45,7 @@ namespace Overlewd
         [Tooltip("add this prefab here BattleUICanvas/Character/PlayerStats")]
         public CharacterPortrait PlayerStats;
         public CharacterPortrait EnemyStats;
-        Transform bPosPlayer, bPosEnemy;
+        public Transform bPosPlayer, bPosEnemy;
         int siblingPlayer, siblingEnemy;
 
         private SkillController[] skillControllers = new SkillController[3];
@@ -71,6 +71,8 @@ namespace Overlewd
         //statistic, trackers, notif flags
         private bool castAOEForNotify = false;
         private bool battleStart = false;
+
+        private float enemyDelay = 1.4f; //pause before the enemy makes a move
 
         //potions
         int potionMP => battleScene.GetBattleData().mana;
@@ -266,16 +268,6 @@ namespace Overlewd
                 QueueElements.Add(portraitQ);
             }
         }
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-                foreach (var cc in charControllerList)
-                    if (cc.isEnemy == true && !cc.isDead)
-                    {
-                        cc.health = cc.healthMax;
-                        cc.UpdateUI();
-                    }
-        }
 
         public bool CharPress(CharController ccOnPress)
         {
@@ -422,11 +414,11 @@ namespace Overlewd
         }
         public void Shake(float duration, float strenght) =>
             BattleCanvas.DOShakePosition(duration, strenght);
-
+        
         IEnumerator EnemyAttack()
         {
             //Must be empty
-            yield return new WaitForSeconds(1.5f); //Pause then show target stats
+            yield return new WaitForSeconds(enemyDelay);
             if (!ccOnSelect.isDead)
             {
                 int id = (ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0) ? Random.Range(0, ccOnSelect.skill.Count) : 0;
@@ -473,13 +465,13 @@ namespace Overlewd
             foreach (var item in skillControllers)
                 item.Unselect();
         }
-        public void BattleOut()
+        public void BattleOut(float delay = 0f)
         {
             UnselectButtons();
             ani.SetTrigger("BattleOut");
             if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)
             {
-                Step();
+                StartCoroutine(StepWithDelay(delay)); //battle out
                 unselect?.Invoke();
             }
             charOnSelect = -1;
@@ -538,12 +530,12 @@ namespace Overlewd
                     Debug.Log("LOOSING");
             }
             if (battleState == BattleState.ANIMATION && poison)
-                StartCoroutine(PoisonStep()); //if we dead from DOT on start move we call next step
+                StartCoroutine(StepWithDelay(2.5f)); //if we dead from DOT on start move we call next step
         }
-        IEnumerator PoisonStep()
+        IEnumerator StepWithDelay(float delay = 0)
         {
-            yield return new WaitForSeconds(0.5f);
-            Step();
+            yield return new WaitForSeconds(delay);
+            Step(); //poison
         }
         IEnumerator WinScreenWithDelay()
         {
@@ -594,7 +586,7 @@ namespace Overlewd
         public void StepLate(bool stun = false)
         {
             if (stun)
-                Step();
+                Step(); //late step
             else
             {
                 if (battleState != BattleState.LOSE && battleState != BattleState.WIN && battleState != BattleState.NEXTWAVE)

@@ -10,6 +10,7 @@ namespace Overlewd
     public class MemoryScreen : BaseFullScreenParent<MemoryScreenInData>
     {
         private Button marketButton;
+        private Button portalButton;
         private TextMeshProUGUI marketButtonText;
         private Button backButton;
 
@@ -50,6 +51,9 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
             
+            portalButton = canvas.Find("PortalButton").GetComponent<Button>();
+            portalButton.onClick.AddListener(PortalButtonClick);
+            
             marketButton = canvas.Find("MarketButton").GetComponent<Button>();
             marketButton.onClick.AddListener(MarketButtonClick);
             marketButtonText = marketButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
@@ -60,6 +64,13 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             Customize();
+
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UITools.DisableButton(backButton, !UIManager.currentState.prevState.ScreenTypeIs<SummoningScreen>());
+                    break;
+            }
 
             await Task.CompletedTask;
         }
@@ -112,33 +123,39 @@ namespace Overlewd
 
         public override void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.id)
             {
-                case UIEvent.Type.ChangeScreenComplete:
-                    switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
-                    {
-                        case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                            if (UIManager.currentState.prevState.ScreenTypeIs<PortalScreen>())
-                            {
-                                UIManager.MakeScreen<PortalScreen>().
-                                    SetData(new PortalScreenInData
-                                    {
-                                        activeButtonId = PortalScreen.TabShards,
-                                    }).DoShow();
-                            }
-                            break;
-                    }
+                case UIEventId.ChangeScreenComplete:
                     break;
             }
         }
 
+        private void PortalButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
+                    UIManager.MakeScreen<PortalScreen>().
+                        SetData(new PortalScreenInData
+                        {
+                            activeButtonId = PortalScreen.TabShards,
+                        }).DoShow();
+                    break;
+                default:
+                    UIManager.ShowScreen<PortalScreen>();
+                    break;
+            }
+            
+        }
+        
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    UIManager.ShowScreen<MapScreen>();
+                   UIManager.ShowScreen<MapScreen>();
                     break;
                 default:
                     UIManager.ToPrevScreen();

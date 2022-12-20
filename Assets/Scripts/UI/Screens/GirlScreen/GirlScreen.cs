@@ -260,7 +260,7 @@ namespace Overlewd
         {
             if (seduceSex)
             {
-                await GameData.matriarchs.matriarchSeduce(inputData.girlData.id);
+                await GameData.matriarchs.MatriarchSeduce(inputData.girlData.id);
             }
             await Task.CompletedTask;
         }
@@ -318,7 +318,7 @@ namespace Overlewd
             var time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             while (!String.IsNullOrEmpty(time))
             {
-                sexCooldownTimer.text = UITools.ChangeTextSize(time, sexCooldownTimer.fontSize);
+                sexCooldownTimer.text = UITools.IncNumberSize(time, sexCooldownTimer.fontSize);
                 yield return new WaitForSeconds(1.0f);
                 time = TimeTools.AvailableTimeToString(inputData.girlData.seduceAvailableAt);
             }
@@ -339,7 +339,7 @@ namespace Overlewd
 
             var buffIsActive = girlData?.buff?.active ?? false;
             buffTitle.gameObject.SetActive(buffIsActive);
-            buffDescription.text = UITools.ChangeTextSize(girlData?.buff?.description, buffDescription.fontSize);
+            buffDescription.text = UITools.IncNumberSize(girlData?.buff?.description, buffDescription.fontSize);
             buffHint.text = girlData?.buff?.postDescription;
             buffActive.SetActive(buffIsActive);
             buffIcon.sprite = ResourceManager.LoadSprite(girlData?.buff?.icon);

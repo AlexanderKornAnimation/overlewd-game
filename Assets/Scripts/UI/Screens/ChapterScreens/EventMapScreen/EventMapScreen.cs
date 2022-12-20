@@ -138,11 +138,11 @@ namespace Overlewd
                 }
             }
 
-            foreach (var eventMarketData in GameData.events.mapEventData.marketsData)
+            foreach (var marketData in GameData.events.mapEventData.marketsData)
             {
                 var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
-                shopButton.eventMarketId = eventMarketData.id;
-                shopButton.transform.localPosition = eventMarketData.mapPos.pos;
+                shopButton.marketId = marketData.id;
+                shopButton.transform.localPosition = marketData.mapPos.pos;
             }
 
             chapterSelector = NSEventMapScreen.ChapterSelector.GetInstance(transform);

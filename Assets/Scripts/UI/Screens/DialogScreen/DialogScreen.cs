@@ -176,7 +176,7 @@ namespace Overlewd
 
             if (dialogData.postAction == AdminBRO.Dialog.PostAction_Seduce)
             {
-                await GameData.matriarchs.matriarchSeduce(dialogData.matriarchId);
+                await GameData.matriarchs.MatriarchSeduce(dialogData.matriarchId);
             }
         }
 
@@ -209,10 +209,10 @@ namespace Overlewd
                     }
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    UIManager.MakeScreen<PortalScreen>().
-                        SetData(new PortalScreenInData
+                    UIManager.MakeScreen<MemoryScreen>().
+                        SetData(new MemoryScreenInData
                         {
-                            activeButtonId = PortalScreen.TabShards,
+                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
                         }).DoShow();
                     break;
                 case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):

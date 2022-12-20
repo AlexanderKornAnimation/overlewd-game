@@ -11,12 +11,18 @@ namespace Overlewd
     {
         public class CurrencyPack : MonoBehaviour
         {
-            private Image icon;
-            private TextMeshProUGUI description;
-            private TextMeshProUGUI price;
-            private TextMeshProUGUI discount;
-            private GameObject specialOffer;
+            public CurrencyPacksOffer packOffer { get; set; }
+            public int tradableId { get; set; }
+            public AdminBRO.TradableItem tradableData =>
+                GameData.markets.GetTradableById(tradableId);
+
             private Button button;
+            private Image icon;
+            private TextMeshProUGUI descriptionTitle;
+            private TextMeshProUGUI price;
+            private Transform mark;
+            private TextMeshProUGUI markTitle;
+        
             private void Awake()
             {
                 var canvas = transform.Find("Canvas");
@@ -24,13 +30,10 @@ namespace Overlewd
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
                 icon = button.transform.Find("Icon").GetComponent<Image>();
-                description = button.transform.Find("DescriptionBack/Description").GetComponent<TextMeshProUGUI>();
+                descriptionTitle = button.transform.Find("Description/Title").GetComponent<TextMeshProUGUI>();
                 price = button.transform.Find("Price").GetComponent<TextMeshProUGUI>();
-                
-                var markerBack = button.transform.Find("MarkerBack");
-                specialOffer = markerBack.Find("SpecialOffer").gameObject;
-                discount = markerBack.Find("Discount/Amount").GetComponent<TextMeshProUGUI>();
-                
+                mark = button.transform.Find("Mark");
+                markTitle = mark.Find("Title").GetComponent<TextMeshProUGUI>();
             }
 
             private void Start()
@@ -40,12 +43,29 @@ namespace Overlewd
 
             private void Customize()
             {
-                
+                var trData = tradableData;
+                icon.sprite = ResourceManager.LoadSprite(trData.imageUrl);
+                descriptionTitle.text = trData.name;
+                price.text = $"Buy for {UITools.PriceToString(trData.price)}";
+
+                mark.gameObject.SetActive(false);
+                if (!string.IsNullOrEmpty(trData.discount))
+                {
+                    markTitle.text = trData.discount;
+                    mark.gameObject.SetActive(true);
+                }
+                else if (!string.IsNullOrEmpty(trData.specialOfferLabel))
+                {
+                    markTitle.text = trData.specialOfferLabel;
+                    mark.gameObject.SetActive(true);
+                }
+
+                UITools.DisableButton(button, !trData.canBuy);
             }
 
-            private void ButtonClick()
+            private async void ButtonClick()
             {
-                
+                var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
             }
 
             public static CurrencyPack GetInstance(Transform parent)

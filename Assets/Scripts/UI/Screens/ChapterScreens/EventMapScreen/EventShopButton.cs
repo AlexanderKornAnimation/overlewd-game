@@ -10,9 +10,9 @@ namespace Overlewd
     {
         public class EventShopButton : BaseButton
         {
-            public int? eventMarketId { get; set; }
-            public AdminBRO.EventMarketItem eventMarketData =>
-                GameData.markets.GetEventMarketById(eventMarketId);
+            public int? marketId { get; set; }
+            public AdminBRO.MarketItem marketData =>
+                GameData.markets.GetMarketById(marketId);
 
             private TextMeshProUGUI description;
 
@@ -29,9 +29,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                var _eventMarketData = eventMarketData;
-
-                title.text = eventMarketData.name;
+                title.text = marketData.name;
             }
 
             protected override void ButtonClick()
@@ -40,7 +38,7 @@ namespace Overlewd
                 UIManager.MakeScreen<EventMarketScreen>().
                     SetData(new EventMarketScreenInData
                     {
-                        eventMarketId = eventMarketId
+                        marketId = marketId
                     }).DoShow();
             }
 

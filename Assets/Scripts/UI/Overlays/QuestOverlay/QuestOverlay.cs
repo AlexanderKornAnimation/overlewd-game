@@ -130,6 +130,7 @@ namespace Overlewd
             {
                 AdminBRO.QuestItem.QuestType_Main => mainQuestGrid,
                 AdminBRO.QuestItem.QuestType_Matriarch => matriarchQuestGrid,
+                AdminBRO.QuestItem.QuestType_MatriarchDaily => matriarchQuestGrid,
                 AdminBRO.QuestItem.QuestType_Side => sideQuestGrid,
                 _ => sideQuestGrid,
             };

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -32,17 +33,14 @@ namespace Overlewd
         private Button backButton;
         
         private Button mergeButton;
-        private Image[] mergePriceImage = new Image[2];
-        private TextMeshProUGUI[] mergePriceAmount = new TextMeshProUGUI[2];
 
-        private GameObject slotFull;
         private GameObject slotEmpty;
         private GameObject slotAdvanced;
         private GameObject slotEpic;
         private GameObject slotHeroic;
-        private Button slotButton;
-        private Image girlImage;
-        private TextMeshProUGUI girlName;
+        private Image slotCharacter;
+        private TextMeshProUGUI slotTitle;
+        private Transform slotFX;
 
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
@@ -74,16 +72,10 @@ namespace Overlewd
             slotAdvanced = slot.Find("SlotAdvanced").gameObject;
             slotEpic = slot.Find("SlotEpic").gameObject;
             slotHeroic = slot.Find("SlotHeroic").gameObject;
+            slotCharacter = slot.transform.Find("Ñharacter").GetComponent<Image>();
+            slotTitle = slot.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            slotFX = slot.Find("FX");
 
-            for (int i = 0; i < inputData?.characterData?.mergePrice?.Count; i++)
-            {
-                mergePriceImage[i] = mergeButton.transform.Find($"Resource{i + 1}").GetComponent<Image>();
-                mergePriceAmount[i] = mergePriceImage[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            }
-            
-            slotFull = slot.Find("SlotFull").gameObject;
-            girlImage = slotFull.transform.Find("Girl").GetComponent<Image>();
-            girlName = slotFull.transform.Find("GirlName").GetComponent<TextMeshProUGUI>();
             walletWidgetPos = canvas.Find("WalletWidgetPos");
             
             foreach (var i in tabIds)
@@ -145,6 +137,7 @@ namespace Overlewd
         
         public override async Task BeforeShowMakeAsync()
         {
+            MakeBubblesFX();
             Customize();
             
             EnterTab(activeTabId);
@@ -206,11 +199,14 @@ namespace Overlewd
             scrollViews[tabId].SetActive(false);
         }
 
-        public override void OnGameDataEvent(GameDataEvent eventData)
+        public override async void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.CharacterMerge:
+                case GameDataEventId.CharacterMerge:
+                    MakeTentaclesFX();
+                    await UniTask.Delay(900);
+                    
                     walletWidget.Customize();
                     EraseAllFromFlusk();
                     
@@ -283,8 +279,8 @@ namespace Overlewd
                 slotAdvanced.SetActive(false);
                 slotEpic.SetActive(false);
                 slotHeroic.SetActive(false);
-                slotFull.SetActive(false);
-                mergeButton.gameObject.SetActive(false);
+                slotCharacter.gameObject.SetActive(false);
+                slotTitle.gameObject.SetActive(false);
             }
             else
             {
@@ -315,11 +311,13 @@ namespace Overlewd
                     slotHeroic.SetActive(chData.isEpic);
                 }
 
-                slotFull.SetActive(true);
-                girlImage.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
-                girlName.text = chData.name;
-                mergeButton.gameObject.SetActive(flaskCharacters.Count > 1);
+                slotCharacter.gameObject.SetActive(true);
+                slotTitle.gameObject.SetActive(true);
+                slotCharacter.sprite = ResourceManager.LoadSprite(chData.teamEditSlotPersIcon);
+                slotTitle.text = chData.name;
             }
+
+            CustomizeMergeButton();
         }
 
         public void EraseFromFlask(NSLaboratoryScreen.Character ch)
@@ -386,9 +384,40 @@ namespace Overlewd
         private async void MergeButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            var ch1 = flaskCharacters.First();
-            var ch2 = flaskCharacters.Last();
+            var ch1 = flaskCharacters.FirstOrDefault();
+            var ch2 = flaskCharacters.LastOrDefault();
             await GameData.characters.Mrg(ch1.characterId, ch2.characterId);
+        }
+
+        private void CustomizeMergeButton()
+        {
+            var mergeChData = flaskCharacters.FirstOrDefault()?.characterData;
+            if (mergeChData == null)
+            {
+                mergeButton.gameObject.SetActive(false);
+                return;
+            }
+
+            var bPrice = mergeButton.transform.Find("Price").GetComponentsInChildren<Image>(true);
+            foreach (var bp in bPrice)
+            {
+                bp.gameObject.SetActive(false);
+            }
+
+            var bPriceId = 0;
+            foreach (var chPrice in mergeChData.mergePrice)
+            {
+                var bPriceImg = bPrice[bPriceId];
+                var bPriceCount = bPriceImg.GetComponentInChildren<TextMeshProUGUI>();
+                bPriceImg.gameObject.SetActive(true);
+
+                bPriceImg.sprite = ResourceManager.LoadSprite(chPrice.icon);
+                bPriceCount.text = chPrice.amount.ToString();
+                bPriceId++;
+            }
+
+            mergeButton.gameObject.SetActive(flaskCharacters.Count > 1);
+            UITools.DisableButton(mergeButton, !GameData.player.CanBuy(mergeChData.mergePrice));
         }
 
         private void BackButtonClick()
@@ -404,11 +433,21 @@ namespace Overlewd
                     break;
             }
         }
+
+        private void MakeBubblesFX()
+        {
+            SpineWidget.GetInstance(GameData.animations["uifx_colb_bubbles"], slotFX);
+        }
+
+        private void MakeTentaclesFX()
+        {
+            var fx = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_colb_tentacles"], slotFX);
+            fx.transform.SetAsFirstSibling();
+        }
     }
 
     public class LaboratoryScreenInData : BaseFullScreenInData
     {
-        public int? characterId;
-        public AdminBRO.Character characterData => GameData.characters.GetById(characterId);
+
     }
 }

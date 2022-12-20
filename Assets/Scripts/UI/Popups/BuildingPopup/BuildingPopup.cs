@@ -57,12 +57,11 @@ namespace Overlewd
 
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
-
-            buildButton = canvas.Find("BuildButton").GetComponent<Button>();
+            buildButton = canvas.Find("BuildButtons/BuildButton").GetComponent<Button>();
             buildButton.onClick.AddListener(BuildButtonClick);
             buildButtonText = buildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
-            crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
+            crystalBuildButton = canvas.Find("BuildButtons/CrystalBuildButton").GetComponent<Button>();
             crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
             crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
         }
@@ -112,23 +111,19 @@ namespace Overlewd
                 }
 
                 var crystalPriceAmount = nextLevelData?.crystalPrice?.FirstOrDefault()?.amount.ToString() ?? "-";
-                crystalBuildButtonText.text = buildingData.canUpgradeCrystal
-                    ? $"Summon building\nfor <color=white>{crystalPriceAmount}</color> crystals"
-                    : $"Summon building\nfor <color=red>{crystalPriceAmount}</color> crystals";
-
+                var amountColor = buildingData.canUpgradeCrystal ? "white" : "red";
+                crystalBuildButtonText.text =
+                    $"Summon building\nfor <color={amountColor}>{crystalPriceAmount}</color> crystals";
+                   
                 description.text = buildingData.description ?? "EMPTY";
                 buildingName.text = buildingData.name ?? "EMPTY";
 
                 walletWidget = WalletWidget.GetInstance(walletWidgetPos);
+                crystalBuildButton.gameObject.SetActive(nextLevelData.crystalPrice?.Count != 0);
+                
+                UITools.DisableButton(buildButton, !buildingData.canUpgrade);
             }
-
-            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
-            {
-                case (_, _):
-                    UITools.DisableButton(buildButton);
-                break;
-            }
-
+            
             await Task.CompletedTask;
         }
 
@@ -219,9 +214,8 @@ namespace Overlewd
 
     public class BuildingPopupInData : BasePopupInData
     {
-        public int? buildingId;
-
+        public int? buildingId { get; set; }
         public AdminBRO.Building buildingData =>
-            GameData.buildings.GetBuildingById(buildingId);
+            GameData.buildings.GetBuildingMetaById(buildingId);
     }
 }

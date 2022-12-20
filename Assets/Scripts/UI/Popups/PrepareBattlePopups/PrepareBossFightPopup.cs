@@ -391,7 +391,7 @@ namespace Overlewd
             iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
             icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
             title.text = GameData.matriarchs.activeBuff?.name;
-            descr.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, descr.fontSize);
+            descr.text = UITools.IncNumberSize(GameData.matriarchs.activeBuff?.description, descr.fontSize);
         }
     }
 

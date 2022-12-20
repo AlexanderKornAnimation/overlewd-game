@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Overlewd
@@ -8,9 +9,7 @@ namespace Overlewd
     namespace NSMarketOverlay
     {
         public class CurrencyPacksOffer : BaseOffer
-        {
-            private List<CurrencyPack> packs = new List<CurrencyPack>();
-            
+        {            
             private Transform content;
 
             protected override void Awake()
@@ -24,9 +23,12 @@ namespace Overlewd
             {
                 base.Customize();
 
-                for (int i = 0; i <= 6; i++)
+                var tData = offerButton.tabData;
+                foreach (var goodId in tData.goods)
                 {
-                    packs.Add(CurrencyPack.GetInstance(content));
+                    var pack = CurrencyPack.GetInstance(content);
+                    pack.packOffer = this;
+                    pack.tradableId = goodId;
                 }
             }
 

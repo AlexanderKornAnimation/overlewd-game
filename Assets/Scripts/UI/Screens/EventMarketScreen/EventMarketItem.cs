@@ -10,15 +10,17 @@ namespace Overlewd
     {
         public class EventMarketItem : MonoBehaviour
         {
-            public int? eventMarketId { get; set; }
-            public AdminBRO.EventMarketItem eventMarketData =>
-                GameData.markets.GetEventMarketById(eventMarketId.Value);
+            public int? marketId { get; set; }
+            public AdminBRO.MarketItem marketData =>
+                GameData.markets.GetMarketById(marketId.Value);
             public int? tradableId { get; set; }
             public AdminBRO.TradableItem tradableData =>
                 GameData.markets.GetTradableById(tradableId);
 
             private Image item;
+            private TextMeshProUGUI itemAmount;
             private TextMeshProUGUI description;
+            private TextMeshProUGUI discount;
 
             private Button buyButton;
             private TextMeshProUGUI buyPrice;
@@ -34,7 +36,9 @@ namespace Overlewd
                 var canvas = transform.Find("Canvas");
 
                 item = canvas.Find("Item").GetComponent<Image>();
+                itemAmount = item.transform.Find("Amount").GetComponent<TextMeshProUGUI>();
                 description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
+                discount = canvas.Find("DiscountBack/Discount").GetComponent<TextMeshProUGUI>();
 
                 buyButton = canvas.Find("Buy").GetComponent<Button>();
                 buyButton.onClick.AddListener(BuyButtonClick);
@@ -84,7 +88,7 @@ namespace Overlewd
                     buyPrice.text = _tradableData.price[0].amount.ToString();
                 }
 
-                item.gameObject.SetActive(true);
+                itemAmount.gameObject.SetActive(false);
                 item.sprite = ResourceManager.LoadSprite(_tradableData.imageUrl);
                 description.text = _tradableData.description;
             }
@@ -100,7 +104,7 @@ namespace Overlewd
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.markets.BuyTradable(eventMarketId, tradableId);
+                        await GameData.markets.BuyTradable(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
@@ -108,7 +112,7 @@ namespace Overlewd
                         UIManager.MakeNotification<BannerNotification>().
                             SetData(new BannerNotificationInData
                             {
-                                eventMarketId = eventMarketId,
+                                marketId = marketId,
                                 tradableId = tradableId
                             }).DoShow();
                     }
@@ -125,7 +129,7 @@ namespace Overlewd
                 {
                     if (!currencyData.nutaku)
                     {
-                        await GameData.markets.BuyTradable(eventMarketId, tradableId);
+                        await GameData.markets.BuyTradable(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
@@ -133,7 +137,7 @@ namespace Overlewd
                         UIManager.MakeNotification<BannerNotification>().
                             SetData(new BannerNotificationInData
                             {
-                                eventMarketId = eventMarketId,
+                                marketId = marketId,
                                 tradableId = tradableId
                             }).DoShow();
                     }

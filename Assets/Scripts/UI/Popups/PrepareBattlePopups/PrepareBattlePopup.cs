@@ -375,9 +375,9 @@ namespace Overlewd
 
         public override async void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.id)
             {
-                case UIEvent.Type.ChangeScreenComplete:
+                case UIEventId.ChangeScreenComplete:
                     switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
                     {
                         case (FTUE.CHAPTER_3, FTUE.SEX_1):
@@ -423,7 +423,7 @@ namespace Overlewd
             iconFaye.gameObject.SetActive(GameData.matriarchs.activeBuff?.matriarch?.isFaye ?? false);
             icon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.activeBuff?.icon);
             title.text = GameData.matriarchs.activeBuff?.name;
-            descr.text = UITools.ChangeTextSize(GameData.matriarchs.activeBuff?.description, descr.fontSize);
+            descr.text = UITools.IncNumberSize(GameData.matriarchs.activeBuff?.description, descr.fontSize);
         }
     }
 

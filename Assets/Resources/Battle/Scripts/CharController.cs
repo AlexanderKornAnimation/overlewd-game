@@ -58,16 +58,23 @@ namespace Overlewd
         public float mana = 100, manaMax = 100;
 
         public bool isDead = false;
+        public bool iHit = false; //check if a character hit any target, then add hitDelay to BattleOut action
 
         private Transform battleLayer;
         public Transform persPos;
         private Transform battlePos;
         private SpineWidget spineWidget;
         private float defenceDuration = 1f;
-        public float
-            preAttackDuration = 1f,
-            attackDuration = 1f,
-            vfxDuration = 0f;
+        public float preAttackDuration = 1f;
+        public float attackDuration = 1f;
+        public float vfxDuration = 0f;
+        
+        private float hitDelay = 1f; //BattleOut step delay
+        float defBuffDelay = 1.2f;
+        float defVfxDelay = 1.2f;
+        float buffDelay = 1.2f;
+        float buffVFXDelay = 1.2f;
+
         private RectTransform rt;
 
         public int
@@ -75,8 +82,6 @@ namespace Overlewd
             regen_poison, bless_healBlock,
             immunity, silence, curse;
         public bool stun;
-        float defBuffDelay = 1.2f, defVfxDelay = 1.2f;
-        float buffDelay = 1.2f, buffVFXDelay = 1.2f;
 
         [Tooltip("Reduce or add total damage in percentage up to 100")]
         public float defUp_defDown_dot = 0f;
@@ -274,7 +279,7 @@ namespace Overlewd
             foreach (var ps in passiveSkill)                            //on_attack Passive Skill Buff
                 if (ps.trigger == "on_attack")
                     if (ps.actionType == "heal")
-                        PassiveBuff(ps);
+                        AddEffect(ps, passive: true, buff: true); //passive buff
             damageTotal = damage * ((float)skillID.amount);
             damageTotal *= curseDotScale;
             damageTotal = Mathf.Round(damageTotal);
@@ -293,23 +298,24 @@ namespace Overlewd
 
             if (AOE) yield return new WaitForSeconds(vfxDuration);           //VFX Delay if it need (!=0)
 
-            foreach (var ps in passiveSkill)                            //on_attack Passive Skill DeBuff
+            foreach (var ps in passiveSkill)                            //on_attack Debuff
                 if (ps.trigger == "on_attack" && ps.actionType == "damage")
                     if (AOE)
                         if (isEnemy)
-                            foreach (var item in bm.enemyTargetList)
-                                PassiveDeBuff(ps, item);
+                            foreach (var trg in bm.enemyTargetList)
+                                AddEffect(ps, trg, passive: true, buff: false); //passive debuff
                         else
-                            foreach (var item in bm.enemyAllyList)
-                                PassiveDeBuff(ps, item);
+                            foreach (var trg in bm.enemyAllyList)
+                                AddEffect(ps, trg, passive: true, buff: false); //passive debuff
                     else
-                        PassiveDeBuff(ps, target);
+                        AddEffect(ps, target, passive: true, buff: false); //passive debuff
             spineWidget.PlayAnimation(ani_attack_name[id], false);
 
             yield return new WaitForSeconds(attackDuration);
             PlayIdle();
             BattleOut(AOE);
-            bm.BattleOut();
+            bm.BattleOut(iHit ? hitDelay : 0f);
+            iHit = false;
         }
 
         public void Defence(CharController attacker, int id, bool aoe = false) => StartCoroutine(PlayDefence(attacker, id, aoe));
@@ -344,6 +350,7 @@ namespace Overlewd
             {
                 AddEffect(attackerSkill);                       //calculate probability and add effect
                 attacker.psr?.HitEnemy();
+                attacker.iHit = true;
             }
             else
             {
@@ -361,9 +368,9 @@ namespace Overlewd
             {
                 if (ps?.trigger == "when_attacked")
                     if (ps.actionType == "heal")                //who is target "heal" = self    !"heal" = enemy
-                        PassiveBuff(ps);
+                        AddEffect(ps, passive: true, buff: true); //passive buff
                     else
-                        PassiveDeBuff(ps, attacker);
+                        AddEffect(ps, attacker, passive: true, buff: false); //BUG! passive debuff
             }
             var aDamage = attacker.damageTotal;
             float defScale = defUp_defDown != 0 ? aDamage * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
@@ -437,7 +444,7 @@ namespace Overlewd
                 yield return new WaitForSeconds(fadeTime);
                 Destroy(gameObject);
             }
-            
+
         }
 
         public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f, CharController attacker = null, AdminBRO.CharacterSkill aSkill = null)
@@ -450,7 +457,7 @@ namespace Overlewd
             if (crit)
                 value *= 2;
             value = Mathf.Round(value);
-            if (value >= 0)
+            if (value > 0)
             {
                 if (dodge)
                 {
@@ -538,124 +545,124 @@ namespace Overlewd
             yield return new WaitForSeconds(delay);
             if (vfx) Instantiate(vfx, transform);
         }
-        void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null, bool addManual = false)
+        void AddEffect(AdminBRO.CharacterSkill sk, CharController targetCC = null, bool addManual = false, bool passive = false, bool buff = true)
         {
             if (targetCC == null) targetCC = this;
-            bool hit = sk.effectProb + psr.effectProb >= Random.value;
+
+            if (passive)
+            {
+                if (skillCD[sk] > 0)
+                    return; //this one not a bug this is a feature, first move shut down status effect.
+                else
+                    skillCD[sk] = (int)sk.effectCooldownDuration;
+
+                bool isCrit = critrate >= Random.value;
+                Damage(sk.amount, true, false, isCrit);
+            }
+
+            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
+
             if (sk.effect != null)
-                if (hit)
+                if (hitEffect)
                 {
-                    psr?.EffectHit();
+                    psr?.EffectHit(); // this line probably make some issues
+
                     var duration = (int)sk.effectActingDuration;
                     float ea = sk.effectAmount;
                     float effectAmount = healthMax * ea;
+
                     switch (sk.effect)
                     {
                         case "defense_up":
+                            if (passive && !buff) { log.Add("Error: defUp on passive debuff", true); return; }
                             defUp_defDown = addManual ? defUp_defDown + duration : duration;
                             defUp_defDown_dot = ea;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_defence_up, "blue", buffDelay);
+                            DrawPopup(msg_defence_up, "yellow", buffDelay);
                             break;
                         case "defense_down":
-                            if (immunity == 0)
-                            {
-                                defUp_defDown = addManual ? defUp_defDown - duration : -duration; // -duration;
-                                defUp_defDown_dot = ea;
-                                StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_defence_down, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                            if (passive && buff) { log.Add("Error: defDown on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            defUp_defDown = addManual ? defUp_defDown - duration : -duration; // -duration;
+                            defUp_defDown_dot = ea;
+                            StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_defence_down, "red", buffDelay);
                             break;
                         case "focus":
+                            if (passive && !buff) { log.Add("Error: focus on passive debuff", true); return; }
                             focus_blind = addManual ? focus_blind + duration : duration;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_focus, "blue", buffDelay);
+                            DrawPopup(msg_focus, "yellow", buffDelay);
                             break;
                         case "blind":
-                            if (immunity == 0)
-                            {
-                                focus_blind = addManual ? focus_blind - duration : -duration; //-duration;
-                                StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_blind, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "yellow", buffDelay);
+                            if (passive && buff) { log.Add("Error: blind on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            focus_blind = addManual ? focus_blind - duration : -duration; //-duration;
+                            StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_blind, "red", buffDelay);
                             break;
                         case "regeneration":
+                            if (passive && !buff) { log.Add("Error: regen on passive debuff", true); return; }
                             regen_poison = addManual ? regen_poison + duration : duration;
                             regen_poison_dot = -effectAmount;
                             StartCoroutine(InstVFXDelay(vfx_green, selfVFX, buffVFXDelay));
                             DrawPopup(msg_regen, "purple", buffDelay);
                             break;
                         case "poison":
-                            if (immunity == 0)
-                            {
-                                regen_poison = addManual ? regen_poison - duration : -duration; //-duration;
-                                regen_poison_dot = effectAmount;
-                                StartCoroutine(InstVFXDelay(vfx_purple, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_poison, "green", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                            if (passive && buff) { log.Add("Error: poison on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            regen_poison = addManual ? regen_poison - duration : -duration; //-duration;
+                            regen_poison_dot = effectAmount;
+                            StartCoroutine(InstVFXDelay(vfx_purple, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_poison, "green", buffDelay);
                             break;
                         case "bless":
+                            if (passive && !buff) { log.Add("Error: bless on passive debuff", true); return; }
                             bless_healBlock = addManual ? bless_healBlock + duration : duration;
                             bless_dot = effectAmount;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_bless, "blue", buffDelay);
+                            DrawPopup(msg_bless, "yellow", buffDelay);
                             break;
                         case "heal_block":
-                            if (immunity == 0)
-                            {
-                                bless_healBlock = addManual ? bless_healBlock - duration : -duration;//-duration;
-                                StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_healblock, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                            if (passive && buff) { log.Add("Error: heal block on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            bless_healBlock = addManual ? bless_healBlock - duration : -duration;//-duration;
+                            StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_healblock, "red", buffDelay);
                             break;
                         case "silence":
-                            if (immunity == 0)
-                            {
-                                silence = addManual ? silence + duration : duration;
-                                StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_silence, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                            if (passive && buff) { log.Add("Error: silence on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            silence = addManual ? silence + duration : duration;
+                            StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_silence, "red", buffDelay);
                             break;
                         case "immunity":
+                            if (passive && !buff) { log.Add("Error: immunity on passive debuff", true); return; }
                             immunity = addManual ? immunity + duration : duration;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_immunity, "blue", buffDelay);
+                            DrawPopup(msg_immunity, "yellow", buffDelay);
                             break;
                         case "stun":
-                            if (immunity == 0)
-                            {
-                                stun = true;
-                                StartCoroutine(InstVFXDelay(vfx_stun, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_stun, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                            if (passive && buff) { log.Add("Error: stun on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            stun = true;
+                            StartCoroutine(InstVFXDelay(vfx_stun, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_stun, "red", buffDelay);
                             break;
                         case "curse":
-                            if (immunity == 0)
-                            {
-                                curse = addManual ? curse + duration : duration;
-                                curse_dot = ea; //Calculate in total damage
-                                StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
-                                DrawPopup(msg_curse, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
+                            if (passive && buff) { log.Add("Error: curse on passive buff", true); return; }
+                            if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
+                            curse = addManual ? curse + duration : duration;
+                            curse_dot = ea; //Calculate in total damage
+                            StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
+                            DrawPopup(msg_curse, "red", buffDelay);
                             break;
                         case "dispel":
                             Dispel();
                             break;
                         case "safeguard":
+                            if (passive && !buff) { log.Add("Error: safeguard on passive debuff", true); return; }
                             Safeguard();
                             break;
                         default:
@@ -666,173 +673,10 @@ namespace Overlewd
                 }
                 else
                 {
-                    //DrawPopup("Effect miss", "red");
-                    psr.EffectMiss();
+                    psr.EffectMiss(); //DrawPopup("Effect miss", "red");
                 }
         }
 
-        void PassiveBuff(AdminBRO.CharacterSkill sk)
-        {
-            if (skillCD[sk] > 0) //skip if skill on Cool Down
-                return;
-            else
-                skillCD[sk] = (int)sk.effectCooldownDuration;
-
-            bool isCrit = critrate >= Random.value;
-            Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
-
-            if (sk.effect != null)
-                if (hitEffect)
-                {
-                    var duration = (int)sk.effectActingDuration;
-                    float ea = sk.effectAmount;
-                    float effectAmount = healthMax * ea;
-
-                    switch (sk.effect)
-                    {
-                        case "defense_up":
-                            defUp_defDown = duration;
-                            defUp_defDown_dot = ea;
-                            StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_defence_up, "blue", buffDelay);
-                            break;
-                        case "focus":
-                            focus_blind = duration;
-                            StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_focus, "blue", buffDelay);
-                            break;
-                        case "regeneration":
-                            regen_poison = duration;
-                            regen_poison_dot = -effectAmount;
-                            StartCoroutine(InstVFXDelay(vfx_green, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_regen, "purple", buffDelay);
-                            break;
-                        case "bless":
-                            bless_healBlock = duration;
-                            bless_dot = effectAmount;
-                            StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_bless, "blue", buffDelay);
-                            break;
-                        case "immunity":
-                            immunity = duration;
-                            StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
-                            DrawPopup(msg_immunity, "blue", buffDelay);
-                            break;
-                        case "dispel":
-                            Dispel();
-                            break;
-                        case "safeguard":
-                            Safeguard();
-                            break;
-                        default:
-                            log.Add($"Unknow Value or Debuff Effect on Passive Heal AdminBRO.CharacterSkill.effect: {sk.effect}", true);
-                            break;
-                    }
-                    observer?.UpdateStatuses();
-                }
-        }
-        void PassiveDeBuff(AdminBRO.CharacterSkill sk, CharController targetCC)
-        {
-            if (skillCD[sk] > 0) //skip if skill on Cool Down
-                return;
-            else
-                skillCD[sk] = (int)sk.effectCooldownDuration;
-            bool isCrit = critrate >= Random.value;
-            targetCC.Damage(sk.amount, true, false, isCrit);
-            bool hitEffect = sk.effectProb + psr.effectProb >= Random.value;
-
-            if (sk.effect != null)
-                if (hitEffect)
-                {
-                    var duration = (int)sk.effectActingDuration;
-                    float ea = sk.effectAmount;
-                    float effectAmount = targetCC.healthMax * ea;
-                    switch (sk.effect)
-                    {
-                        case "defense_down":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.defUp_defDown = -duration;
-                                targetCC.defUp_defDown_dot = ea;
-                                StartCoroutine(InstVFXDelay(vfx_red, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_defence_down, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "blind":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.focus_blind = -duration;
-                                StartCoroutine(InstVFXDelay(vfx_red, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_blind, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "poison":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.regen_poison = -duration;
-                                targetCC.regen_poison_dot = effectAmount;
-                                StartCoroutine(InstVFXDelay(vfx_purple, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_poison, "green", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "heal_block":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.bless_healBlock = -duration;
-                                StartCoroutine(InstVFXDelay(vfx_red, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_healblock, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "silence":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.silence = duration;
-                                StartCoroutine(InstVFXDelay(vfx_red, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_silence, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "stun":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.stun = true;
-                                StartCoroutine(InstVFXDelay(vfx_stun, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_stun, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "curse":
-                            if (targetCC.immunity == 0)
-                            {
-                                targetCC.curse = duration;
-                                targetCC.curse_dot = ea; //Calculate in total damage
-                                StartCoroutine(InstVFXDelay(vfx_red, targetCC.selfVFX, buffVFXDelay));
-                                DrawPopup(msg_curse, "red", buffDelay);
-                            }
-                            else
-                                DrawPopup(msg_immunity, "green", buffDelay);
-                            break;
-                        case "dispel":
-                            Dispel();
-                            break;
-                        default:
-                            log.Add($"Unknow Value AdminBRO.CharacterSkill.effect: {sk.effect}", true);
-                            break;
-                    }
-                    observer?.UpdateStatuses();
-                }
-        }
         public void AddEffectManual(string effect)
         {
             var customSkill = new AdminBRO.CharacterSkill()
@@ -843,7 +687,7 @@ namespace Overlewd
                 effectProb = 1
             };
             buffDelay = 0; buffVFXDelay = 0;
-            AddEffect(customSkill, addManual: true);
+            AddEffect(customSkill, addManual: true); //custom add
             buffDelay = defBuffDelay; buffVFXDelay = defVfxDelay;
         }
         public void Dispel()
@@ -900,7 +744,7 @@ namespace Overlewd
             {
                 Damage(regen_poison_dot, true, false, false, poison: true);
                 regen_poison -= (int)Mathf.Sign(regen_poison);
-                delay = 0.5f;
+                delay = 0.75f;
             }
             if (stun && !isDead)
             {

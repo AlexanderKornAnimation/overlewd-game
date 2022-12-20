@@ -34,14 +34,14 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            var _marketData = inputData.eventMarketData;
+            var _marketData = inputData.marketData;
             var tradables = _marketData.tradablesData;
 
             foreach (var tradableData in tradables)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
                 eventMarketItem.tradableId = tradableData.id;
-                eventMarketItem.eventMarketId = _marketData.id;
+                eventMarketItem.marketId = _marketData.id;
             }
 
             Customize();
@@ -51,9 +51,9 @@ namespace Overlewd
 
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
-            switch (eventData?.eventId)
+            switch (eventData.id)
             {
-                case GameDataEvent.EventId.BuyTradable:
+                case GameDataEventId.BuyTradable:
                     Customize();
                     foreach (var marketItem in scrollViewContent.GetComponentsInChildren<NSEventMarketScreen.EventMarketItem>())
                     {
@@ -78,7 +78,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
-            var _marketData = inputData.eventMarketData;
+            var _marketData = inputData.marketData;
             var tradables = _marketData.tradablesData;
 
             foreach (var tData in tradables)
@@ -90,7 +90,7 @@ namespace Overlewd
                         UIManager.MakeNotification<BannerNotification>().
                             SetData(new BannerNotificationInData
                             {
-                                eventMarketId = _marketData.id,
+                                marketId = _marketData.id,
                                 tradableId = tData.id
                             }).DoShow();
                     }
@@ -101,8 +101,8 @@ namespace Overlewd
 
     public class EventMarketScreenInData : BaseFullScreenInData
     {
-        public int? eventMarketId;
-        public AdminBRO.EventMarketItem eventMarketData =>
-            GameData.markets.GetEventMarketById(eventMarketId.Value);
+        public int? marketId;
+        public AdminBRO.MarketItem marketData =>
+            GameData.markets.GetMarketById(marketId);
     }
 }

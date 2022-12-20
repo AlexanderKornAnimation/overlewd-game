@@ -101,7 +101,7 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            foreach (var buildingData in GameData.buildings.buildings)
+            foreach (var buildingData in GameData.buildings.buildingsMeta)
             {
                 if (buildingData.isBuilt)
                 {
@@ -109,60 +109,70 @@ namespace Overlewd
                     {
                         case AdminBRO.Building.Key_Harem:
                             haremButton = NSCastleScreen.HaremButton.GetInstance(harem);
+                            haremButton.buildingId = buildingData.id;
                             haremBuilding = NSCastleScreen.HaremBuilding.GetInstance(haremBuildingPos);
                             haremBuilding.buildingId = buildingData.id;
                             haremBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Market:
                             marketButton = NSCastleScreen.MarketButton.GetInstance(market);
+                            marketButton.buildingId = buildingData.id;
                             marketBuilding = NSCastleScreen.MarketBuilding.GetInstance(marketBuildingPos);
                             marketBuilding.buildingId = buildingData.id;
                             marketBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Forge:
                             forgeButton = NSCastleScreen.ForgeButton.GetInstance(forge);
+                            forgeButton.buildingId = buildingData.id;
                             forgeBuilding = NSCastleScreen.ForgeBuilding.GetInstance(forgeBuildingPos);
                             forgeBuilding.buildingId = buildingData.id;
                             forgeBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_MagicGuild:
                             magicGuildButton = NSCastleScreen.MagicGuildButton.GetInstance(magicGuild);
+                            magicGuildButton.buildingId = buildingData.id;
                             magicGuildBuilding = NSCastleScreen.MagicGuildBuilding.GetInstance(magicGuildBuildingPos);
                             magicGuildBuilding.buildingId = buildingData.id;
                             magicGuildBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Portal:
                             portalButton = NSCastleScreen.PortalButton.GetInstance(portal);
+                            portalButton.buildingId = buildingData.id;
                             portalBuilding = NSCastleScreen.PortalBuilding.GetInstance(portalBuildingPos);
                             portalBuilding.buildingId = buildingData.id;
                             portalBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Castle:
                             castleButton = NSCastleScreen.CastleButton.GetInstance(castle);
+                            castleButton.buildingId = buildingData.id;
                             castleBuilding = NSCastleScreen.CastleBuilding.GetInstance(castleBuildingPos);
                             castleBuilding.buildingId = buildingData.id;
                             castleBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Municipality:
                             municipalityButton = NSCastleScreen.MunicipalityButton.GetInstance(municipality);
+                            municipalityButton.buildingId = buildingData.id;
                             municipalityBuilding = NSCastleScreen.MunicipalityBuilding.GetInstance(municipalityBuildingPos);
                             municipalityBuilding.buildingId = buildingData.id;
                             municipalityBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Laboratory:
                             laboratoryButton = NSCastleScreen.LaboratoryButton.GetInstance(laboratory);
+                            laboratoryButton.buildingId = buildingData.id;
                             laboratoryBuilding = NSCastleScreen.LaboratoryBuilding.GetInstance(laboratoryBuildingPos);
                             laboratoryBuilding.buildingId = buildingData.id;
                             laboratoryBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Catacombs:
                             catacombsButton = NSCastleScreen.CatacombsButton.GetInstance(catacombs);
+                            catacombsButton.buildingId = buildingData.id;
                             catacombsBuilding = NSCastleScreen.CatacombsBuilding.GetInstance(catacombsBuildingPos);
                             catacombsBuilding.buildingId = buildingData.id;
                             catacombsBuilding.Customize();
                             break;
                         case AdminBRO.Building.Key_Aerostat:
                             aerostatButton = NSCastleScreen.AerostatButton.GetInstance(aerostat);
+                            aerostatButton.buildingId = buildingData.id;
                             aerostatBuilding = NSCastleScreen.AerostatBuilding.GetInstance(aerostatBuildingPos);
                             aerostatBuilding.buildingId = buildingData.id;
                             aerostatBuilding.Customize();
@@ -182,6 +192,7 @@ namespace Overlewd
             {
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
                     UITools.DisableButton(sidebarButton);
+                    marketButton?.DisableButton();
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
                     UITools.DisableButton(sidebarButton);
@@ -244,7 +255,7 @@ namespace Overlewd
 
             if (building.building != null && building.button != null)
             {
-                var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                var buildingData = GameData.buildings.GetBuildingMetaById(building.building.buildingId.Value);
                 
                 building.building.Hide();
                 if (buildingData.currentLevel == 0)
@@ -324,7 +335,7 @@ namespace Overlewd
             {
                 if (building.building.buildingId != null)
                 {
-                    var buildingData = GameData.buildings.GetBuildingById(building.building.buildingId.Value);
+                    var buildingData = GameData.buildings.GetBuildingMetaById(building.building.buildingId.Value);
                     await building.building.ShowAsync();
                 
                     if (buildingData.currentLevel == 0)
@@ -339,9 +350,9 @@ namespace Overlewd
 
         public override void OnUIEvent(UIEvent eventData)
         {
-            switch (eventData.type)
+            switch (eventData.id)
             {
-                case UIEvent.Type.ChangeScreenComplete:
+                case UIEventId.ChangeScreenComplete:
                     switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
                     {
                         case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):

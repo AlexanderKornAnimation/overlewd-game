@@ -46,7 +46,6 @@ namespace Overlewd
                 isLocked.SetActive(skillData.locked);
                 level.text = skillData.isLvlMax ? "MAX" : "Lvl " + skillData.currentSkillLevel;
                 title.text = skillData.current.name;
-                icon.sprite = ResourceManager.LoadSprite(skillData.current.icon);
                 isMax.gameObject.SetActive(skillData.isLvlMax);
                 UITools.DisableButton(isMax, !skillData.canUpgrade);
             }
@@ -56,7 +55,7 @@ namespace Overlewd
                 UIfx.Inst(UIfx.UIFX_OVERLORD_SPELLS, transform);
             }
 
-            private void OnLvlUp()
+            public void OnLvlUp()
             {
                 Customize();
                 PlayAnimation();
@@ -70,8 +69,6 @@ namespace Overlewd
                 {
                     spellId = skillData.current.id
                 }).DoShow();
-
-                UIManager.GetPopup<SpellPopup>().OnLvlUp += OnLvlUp;
             }
         }
     }

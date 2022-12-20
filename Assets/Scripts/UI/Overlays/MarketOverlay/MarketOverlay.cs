@@ -10,35 +10,43 @@ namespace Overlewd
 {
     public class MarketOverlay : BaseOverlayParent<MarketOverlayInData>
     {
-        private List<NSMarketOverlay.OfferButton> offers = new List<NSMarketOverlay.OfferButton>();
-        private NSMarketOverlay.OfferButton selectedOffer;
-
         private Button backButton;
-        private Transform canvas;
         private Transform offerButtonsContent;
-        private Transform walletWidgetPos;
         private WalletWidget walletWidget;
-        private Transform offerPos;
+        public Transform offerContentPos { get; private set; }
+
+        public List<NSMarketOverlay.OfferButton> offers =>
+            offerButtonsContent.GetComponentsInChildren<NSMarketOverlay.OfferButton>().ToList();
+        public NSMarketOverlay.OfferButton selectedOffer => offers.Find(o => o.isSelected);
 
         private void Awake()
         {
-            var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/MarketOverlay/Market", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/MarketOverlay/Market", transform);
 
-            canvas = screenInst.transform.Find("Canvas");
-            walletWidgetPos = canvas.Find("WalletWidgetPos");
+            var canvas = screenInst.transform.Find("Canvas");
             offerButtonsContent = canvas.Find("OfferButtonsScroll").Find("Viewport").Find("Content");
             backButton = canvas.Find("CloseButton").GetComponent<Button>();
             backButton.onClick.AddListener(CloseButtonClick);
-            offerPos = canvas.Find("OfferPos");
+            offerContentPos = canvas.Find("OfferContentPos");
+
+            walletWidget = WalletWidget.GetInstance(canvas.Find("WalletWidgetPos"));
         }
 
         public override async Task BeforeShowMakeAsync()
         {
-            AddOffers();
-            SelectOffer(offers.First());
-            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
-                
+            var mData = GameData.markets.mainMarket;
+            var tabsData = mData.tabs.Where(t => t.isVisible).
+                OrderBy(t => t.order).ToList();
+            foreach (var tData in tabsData)
+            {
+                var offerButton = NSMarketOverlay.OfferButton.GetInstance(offerButtonsContent);
+                offerButton.marketOverlay = this;
+                offerButton.tabId = tData.tabId;
+                offerButton.Deselect();
+            }
+
+            offers.FirstOrDefault()?.Select();
+
             await Task.CompletedTask;
         }
 
@@ -58,25 +66,6 @@ namespace Overlewd
             }
 
             await Task.CompletedTask;
-        }
-
-        private void AddOffers()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                var offerButton = NSMarketOverlay.OfferButton.GetInstance(offerButtonsContent);
-                offerButton.offerPos = offerPos;
-                offerButton.Customize();
-                offerButton.selectButton += SelectOffer;
-                offers.Add(offerButton);
-            }
-        }
-
-        private void SelectOffer(NSMarketOverlay.OfferButton offer)
-        {
-            selectedOffer?.Deselect();
-            offer?.Select();
-            selectedOffer = offer;
         }
 
         private void CloseButtonClick()

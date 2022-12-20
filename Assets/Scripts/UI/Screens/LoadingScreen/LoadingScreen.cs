@@ -191,18 +191,18 @@ namespace Overlewd
             SetDownloadBarProgress(0.0f);
             SetDownloadBarTitle("Autorize");
 
-#if !UNITY_EDITOR
-            var apiVersion = (await AdminBRO.versionAsync()).dData;
-            if (apiVersion.version.ToString() != AdminBRO.ApiVersion)
+            AdminBRO.ApiVersionResponse serverApiVersionsInfo = await AdminBRO.versionAsync();
+            if (!serverApiVersionsInfo.VersionAvailable(AdminBRO.ApiVersion))
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
-                errNotif.message = $"Invalid client API version. Server API version is {apiVersion.version}. " +
-                    $"Client API version is {AdminBRO.ApiVersion}";
+                errNotif.message =
+                    $"Invalid client API version\n" +
+                    $"Server API versions available: {string.Join(",", serverApiVersionsInfo.availableVersions)}\n" +
+                    $"Client API version: {AdminBRO.ApiVersion}";
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
             }
-#endif
 
             var loginResult = await AdminBRO.authLoginAsync();
             if (!loginResult.isSuccess)
@@ -254,6 +254,8 @@ namespace Overlewd
                 }
                 await Task.WhenAll(metaTasks);
             }
+
+            BuildInfoWidget.GetInstance(UIManager.systemNotifRoot);
 
             SetDownloadBarProgress(0.3f);
 

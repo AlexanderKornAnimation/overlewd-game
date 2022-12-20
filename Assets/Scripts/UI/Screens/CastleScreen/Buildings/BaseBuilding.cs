@@ -11,7 +11,8 @@ namespace Overlewd
         public abstract class BaseBuilding : MonoBehaviour
         {
             public int? buildingId { get; set; }
-            protected AdminBRO.Building buildingData => GameData.buildings.GetBuildingById(buildingId);
+            protected AdminBRO.Building buildingData => GameData.buildings.GetBuildingMetaById(buildingId);
+
             protected List<GameObject> levels = new List<GameObject>();
             protected GameObject currentLevel;
 

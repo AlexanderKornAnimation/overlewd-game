@@ -16,7 +16,7 @@ namespace Overlewd
             else
             {
                 if (log) log.text += ($"<color=\"red\">{text}</color>\n");
-                Debug.LogError(text);
+                Debug.LogWarning(text);
                 //FindObjectOfType<BattleManager>().debug = 2;
             }
         }

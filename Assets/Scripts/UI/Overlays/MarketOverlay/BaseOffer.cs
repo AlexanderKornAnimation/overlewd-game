@@ -9,6 +9,8 @@ namespace Overlewd
     {
          public abstract class BaseOffer : MonoBehaviour
         {
+            public OfferButton offerButton { get; set; }
+
             protected Transform canvas;
 
             protected virtual void Awake()

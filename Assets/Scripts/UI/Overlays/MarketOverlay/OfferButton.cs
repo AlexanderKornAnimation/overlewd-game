@@ -12,14 +12,19 @@ namespace Overlewd
     {
         public class OfferButton : MonoBehaviour
         {
+            public MarketOverlay marketOverlay { get; set; }
+            public int tabId { get; set; }
+            public AdminBRO.MarketItem.Tab tabData =>
+                GameData.markets.mainMarket?.GetTabById(tabId);
+
             private TextMeshProUGUI title;
             private TextMeshProUGUI notification;
             private Button button;
             private GameObject buttonSelected;
+
             private BaseOffer offer;
-            public Transform offerPos;
-            
-            public event Action<OfferButton> selectButton;
+
+            public bool isSelected => buttonSelected.activeSelf;
 
             void Awake()
             {
@@ -31,20 +36,35 @@ namespace Overlewd
                 notification = button.transform.Find("Notification").GetComponent<TextMeshProUGUI>();
             }
 
-            public void Customize()
+            void Start()
             {
-                offer = CurrencyPacksOffer.GetInstance(offerPos);
-                Deselect();
+                var tData = tabData;
+                offer = tData.viewType switch
+                {
+                    AdminBRO.MarketItem.Tab.ViewType_Bundle => Bundle.GetInstance(marketOverlay.offerContentPos),
+                    AdminBRO.MarketItem.Tab.ViewType_Pack => Bundle.GetInstance(marketOverlay.offerContentPos),
+                    AdminBRO.MarketItem.Tab.ViewType_GoodsList => CurrencyPacksOffer.GetInstance(marketOverlay.offerContentPos),
+                    _ => null
+                };
+
+                offer.offerButton = this;
+                title.text = tData.title;
+
+                if (!isSelected)
+                {
+                    offer?.Hide();
+                }
             }
 
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                selectButton?.Invoke(this);
+                Select();
             }
 
             public void Select()
             {
+                marketOverlay?.selectedOffer?.Deselect();
                 buttonSelected?.SetActive(true);
                 offer?.Show();
             }

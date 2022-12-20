@@ -50,6 +50,8 @@ namespace Overlewd
             skeletonGraphic.AnimationState.Start += StartListener;
             skeletonGraphic.AnimationState.Complete += CompleteListener;
             skeletonGraphic.AnimationState.Event += EventListener;
+
+            loopMode = skeletonGraphic.startingLoop;
         }
 
 

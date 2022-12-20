@@ -48,7 +48,8 @@ namespace Overlewd
 
             protected override void Customize()
             {
-                
+                var tData = offerButton.tabData;
+                girlArt.sprite = ResourceManager.LoadSprite(tData.promoGirlIcon);
             }
 
             public static Bundle GetInstance(Transform parent)
