@@ -2046,6 +2046,7 @@ namespace Overlewd
             public string rewardsClaimed;
             public string seduceAvailableAt;
             public string matriarchType;
+            public string narratorIcon;
 
             [JsonProperty(Required = Required.Default)]
             public MemoryShardItem basicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Basic);
