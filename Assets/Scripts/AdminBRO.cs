@@ -14,19 +14,14 @@ namespace Overlewd
     public static class AdminBRO
     {
         public const string ApiVersion = "17";
-#if UNITY_EDITOR
-        public const string ServerDomainURL = "http://dev.api.overlewd.com/";
-#elif DEV_BRANCH
-        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
-#elif TEST_BRANCH
-        public const string ServerDomainURL = "http://test.api.overlewd.com/";
-#elif RC_BRANCH
-        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
-#elif MASTER_BRANCH
-        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
-#else
-        public const string ServerDomainURL = "http://dev.api.overlewd.com/";
-#endif
+        public static string ServerDomainURL => Git.branch switch
+        {
+            GitRepoParams.BranchDevel => "http://dev.api.overlewd.com/",
+            GitRepoParams.BranchTest => "http://test.api.overlewd.com/",
+            GitRepoParams.BranchRC => "http://rc.api.overlewd.com/",
+            GitRepoParams.BranchMaster => "http://prod.api.overlewd.com/",
+            _ => "http://dev.api.overlewd.com/"
+        };
 
         private static string make_url(string url_part) => $"{ServerDomainURL}{url_part}";
 
