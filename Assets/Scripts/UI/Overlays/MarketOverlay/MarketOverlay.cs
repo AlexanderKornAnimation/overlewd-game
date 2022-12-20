@@ -34,10 +34,14 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            for (int i = 0; i < 3; i++)
+            var mData = GameData.markets.mainMarket;
+            var tabsData = mData.tabs.Where(t => t.isVisible).
+                OrderBy(t => t.order).ToList();
+            foreach (var tData in tabsData)
             {
                 var offerButton = NSMarketOverlay.OfferButton.GetInstance(offerButtonsContent);
                 offerButton.marketOverlay = this;
+                offerButton.tabId = tData.tabId;
                 offerButton.Deselect();
             }
 

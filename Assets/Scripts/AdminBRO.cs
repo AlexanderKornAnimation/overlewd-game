@@ -19,7 +19,7 @@ namespace Overlewd
 #elif DEV_BRANCH
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #elif TEST_BRANCH
-        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
+        public const string ServerDomainURL = "http://test.api.overlewd.com/";
 #elif RC_BRANCH
         public const string ServerDomainURL = "http://prod.api.overlewd.com/";
 #elif MASTER_BRANCH
@@ -276,17 +276,22 @@ namespace Overlewd
 
             public class Tab
             {
+                public int tabId;
                 public string title;
-                public bool isDefault;
-                public string icon;
-                public string banner;
+                public bool isVisible;
+                public string promoGirlIcon;
                 public string viewType;
                 public List<int> goods;
+                public int order;
+                public int? profit;
 
-                public const string ViewTab_GoodsList = "goods_list";
-                public const string ViewTab_Bundle = "bundle";
-                public const string ViewTab_Pack = "pack";
+                public const string ViewType_GoodsList = "goods_list";
+                public const string ViewType_Bundle = "bundle";
+                public const string ViewType_Pack = "pack";
             }
+
+            public Tab GetTabById(int tabId) =>
+                tabs.Find(t => t.tabId == tabId);
 
             [JsonProperty(Required = Required.Default)]
             public List<TradableItem> tradablesData =>
@@ -711,6 +716,7 @@ namespace Overlewd
             public string ftueQuestType;
             public string screenTarget;
             public int? matriarchEmpathyPointsReward;
+            public int? matriarchId;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
@@ -794,6 +800,10 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
+
+            [JsonProperty(Required = Required.Default)]
+            public MatriarchItem matriarchData =>
+                GameData.matriarchs.GetMatriarchById(matriarchId);
         }
 
         // //quests/{id}/claim-reward

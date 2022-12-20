@@ -13,6 +13,9 @@ namespace Overlewd
         public class OfferButton : MonoBehaviour
         {
             public MarketOverlay marketOverlay { get; set; }
+            public int tabId { get; set; }
+            public AdminBRO.MarketItem.Tab tabData =>
+                GameData.markets.mainMarket?.GetTabById(tabId);
 
             private TextMeshProUGUI title;
             private TextMeshProUGUI notification;
@@ -35,10 +38,17 @@ namespace Overlewd
 
             void Start()
             {
-                if (transform.GetSiblingIndex() % 2 == 0)
-                    offer = CurrencyPacksOffer.GetInstance(marketOverlay.offerContentPos);
-                else
-                    offer = Bundle.GetInstance(marketOverlay.offerContentPos);
+                var tData = tabData;
+                offer = tData.viewType switch
+                {
+                    AdminBRO.MarketItem.Tab.ViewType_Bundle => Bundle.GetInstance(marketOverlay.offerContentPos),
+                    AdminBRO.MarketItem.Tab.ViewType_Pack => Bundle.GetInstance(marketOverlay.offerContentPos),
+                    AdminBRO.MarketItem.Tab.ViewType_GoodsList => CurrencyPacksOffer.GetInstance(marketOverlay.offerContentPos),
+                    _ => null
+                };
+
+                offer.offerButton = this;
+                title.text = tData.title;
 
                 if (!isSelected)
                 {

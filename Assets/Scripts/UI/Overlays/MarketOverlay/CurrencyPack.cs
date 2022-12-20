@@ -11,6 +11,11 @@ namespace Overlewd
     {
         public class CurrencyPack : MonoBehaviour
         {
+            public CurrencyPacksOffer packOffer { get; set; }
+            public int tradableId { get; set; }
+            public AdminBRO.TradableItem tradableData =>
+                GameData.markets.GetTradableById(tradableId);
+
             private Image icon;
             private TextMeshProUGUI description;
             private TextMeshProUGUI price;
