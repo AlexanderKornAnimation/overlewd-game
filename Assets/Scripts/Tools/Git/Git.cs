@@ -9,16 +9,6 @@ using UnityEngine;
 
 namespace Overlewd
 {
-    public class GitRepoParams
-    {
-        public const string BranchDevel = "devel";
-        public const string BranchTest = "test";
-        public const string BranchRC = "rc";
-        public const string BranchMaster = "master";
-
-        public static bool isMaster => Git.branch == BranchMaster;
-    }
-
     public class GitException : InvalidOperationException
     {
         public GitException(int exitCode, string errors) : base(errors) =>

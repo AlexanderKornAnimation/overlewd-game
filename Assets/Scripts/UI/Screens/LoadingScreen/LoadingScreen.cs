@@ -192,13 +192,13 @@ namespace Overlewd
             SetDownloadBarTitle("Autorize");
 
             AdminBRO.ApiVersionResponse serverApiVersionsInfo = await AdminBRO.versionAsync();
-            if (!serverApiVersionsInfo.VersionAvailable(AdminBRO.ApiVersion))
+            if (!serverApiVersionsInfo.VersionAvailable(BuildParameters.ApiVersion))
             {
                 var errNotif = UIManager.MakeSystemNotif<SystemErrorNotif>();
                 errNotif.message =
                     $"Invalid client API version\n" +
                     $"Server API versions available: {string.Join(",", serverApiVersionsInfo.availableVersions)}\n" +
-                    $"Client API version: {AdminBRO.ApiVersion}";
+                    $"Client API version: {BuildParameters.ApiVersion}";
                 await errNotif.WaitChangeState();
                 Game.Quit();
                 return;
