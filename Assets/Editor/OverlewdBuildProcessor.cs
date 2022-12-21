@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using System.Linq;
 
 /*
 autoinc build version
@@ -16,7 +17,7 @@ https://github.com/PimDeWitte/UnityAutoIncrementBuildVersion
 public class OverlewdBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
 {
     public const string MajorBuildVersion = "1";
-    public const string MinorBuildVersion = Overlewd.AdminBRO.ApiVersion;
+    public const string MinorBuildVersion = Overlewd.BuildParameters.ApiVersion;
 
     public int callbackOrder { get { return 0; } }
 
@@ -35,8 +36,10 @@ public class OverlewdBuildProcessor : IPreprocessBuildWithReport, IPostprocessBu
     [MenuItem("SupaDogeTools/Inc Build Version")]
     static void IncBuildVersion()
     {
-        PlayerSettings.Android.bundleVersionCode++;
-        PlayerSettings.bundleVersion = $"{MajorBuildVersion}.{MinorBuildVersion}.{PlayerSettings.Android.bundleVersionCode}";
+        var patch = int.Parse(PlayerSettings.bundleVersion.Split('.').LastOrDefault());
+        patch++;
+        PlayerSettings.bundleVersion = $"{MajorBuildVersion}.{MinorBuildVersion}.{patch}";
+        PlayerSettings.Android.bundleVersionCode = patch;
         AssetDatabase.SaveAssets();
     }
 }

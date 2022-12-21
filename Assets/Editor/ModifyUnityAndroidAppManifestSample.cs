@@ -15,8 +15,8 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
         // If needed, add condition checks on whether you need to run the modification routine.
         // For example, specific configuration/app options enabled
 
-        //change Nutaku app params
-        RewriteNutakuParams(basePath);
+        //change Nutaku app params (only prod)
+        //RewriteNutakuParams(basePath);
 
         //second way
         //var androidManifest = new AndroidManifest(GetManifestPath(basePath));
@@ -44,7 +44,6 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
 
     public void RewriteNutakuParams(string basePath)
     {
-#if MASTER_BRANCH
         XDocument doc = XDocument.Load(GetManifestPath(basePath));
         var eApp = doc.Root.Element("application");
         var eAppMetaData = eApp.Elements("meta-data");
@@ -58,7 +57,6 @@ public class ModifyUnityAndroidAppManifestSample : IPostGenerateGradleAndroidPro
         e_sdk_en?.SetAttributeValue($"{AndroidXmlNamespace}value", "sandbox");
         e_sdk_en?.Remove();
         doc.Save(_manifestFilePath);
-#endif
     }
 }
 
