@@ -711,6 +711,7 @@ namespace Overlewd
             public string screenTarget;
             public int? matriarchEmpathyPointsReward;
             public int? matriarchId;
+            public string matriarchEmotionIcon;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
