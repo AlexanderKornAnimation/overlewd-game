@@ -139,7 +139,7 @@ namespace Overlewd
         {
             request.timeout = timeoutSec;
             request.SetRequestHeader("Authorization", $"Bearer {AdminBRO.tokens?.accessToken}");
-            request.SetRequestHeader("Version", AdminBRO.ApiVersion);
+            request.SetRequestHeader("Version", BuildParameters.ApiVersion);
 
             PushRequest(request);
             if (lockUserInput)
