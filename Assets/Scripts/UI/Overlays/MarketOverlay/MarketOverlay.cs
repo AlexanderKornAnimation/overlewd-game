@@ -35,8 +35,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var mData = GameData.markets.mainMarket;
-            var tabsData = mData.tabs.Where(t => t.isVisible).
-                OrderBy(t => t.order).ToList();
+            var tabsData = mData.tabs.OrderBy(t => t.order).ToList();
             foreach (var tData in tabsData)
             {
                 var offerButton = NSMarketOverlay.OfferButton.GetInstance(offerButtonsContent);

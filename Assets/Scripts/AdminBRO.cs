@@ -273,6 +273,11 @@ namespace Overlewd
                 public const string ViewType_GoodsList = "goods_list";
                 public const string ViewType_Bundle = "bundle";
                 public const string ViewType_Pack = "pack";
+
+                [JsonProperty(Required = Required.Default)]
+                public List<TradableItem> tradablesData =>
+                    goods.Select(goodId => GameData.markets.GetTradableById(goodId)).
+                    Where(trData => trData != null).ToList();
             }
 
             public Tab GetTabById(int tabId) =>
@@ -381,6 +386,10 @@ namespace Overlewd
             {
                 public int tradableId;
                 public int count;
+
+                [JsonProperty(Required = Required.Default)]
+                public TradableItem tradableData =>
+                    GameData.markets.GetTradableById(tradableId);
             }
 
             [JsonProperty(Required = Required.Default)]
