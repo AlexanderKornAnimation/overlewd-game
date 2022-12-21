@@ -7,6 +7,6 @@ namespace Overlewd
     public static class BuildParameters
     {
         public const string ApiVersion = "17";
-        public const string ServerDomainURL = "http://preprod.api.overlewd.com/";
+        public const string ServerDomainURL = "http://prod.api.overlewd.com/";
     }
 }
