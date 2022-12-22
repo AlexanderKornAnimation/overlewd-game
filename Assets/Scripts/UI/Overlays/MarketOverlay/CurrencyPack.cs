@@ -61,7 +61,21 @@ namespace Overlewd
                     discount.gameObject.SetActive(true);
                 }
 
-                UITools.DisableButton(button, !trData.canBuy);
+                CalcLockedState();
+            }
+
+            public void Refresh()
+            {
+                CalcLockedState();
+            }
+
+            private void CalcLockedState()
+            {
+                var trData = tradableData;
+                if (!trData.nutakuPriceValid)
+                {
+                    UITools.DisableButton(button, !trData.canBuy);
+                }
             }
 
             private async void ButtonClick()

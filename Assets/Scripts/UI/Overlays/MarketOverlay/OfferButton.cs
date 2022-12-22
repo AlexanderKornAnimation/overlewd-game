@@ -67,6 +67,7 @@ namespace Overlewd
                 marketOverlay?.selectedOffer?.Deselect();
                 buttonSelected?.SetActive(true);
                 offer?.Show();
+                Refresh();
             }
             
             public void Deselect()
@@ -74,6 +75,11 @@ namespace Overlewd
                 buttonSelected?.SetActive(false);
                 offer?.Hide();
             }
+
+            public void Refresh()
+            {
+                offer?.Refresh();
+            }    
 
             public static OfferButton GetInstance(Transform parent)
             {

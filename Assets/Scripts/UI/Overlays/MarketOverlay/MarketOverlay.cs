@@ -32,10 +32,21 @@ namespace Overlewd
             walletWidget = WalletWidget.GetInstance(canvas.Find("WalletWidgetPos"));
         }
 
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case GameDataEventId.BuyTradable:
+                    selectedOffer?.Refresh();
+                    break;
+            }
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             var mData = GameData.markets.mainMarket;
-            var tabsData = mData.tabs.OrderBy(t => t.order).ToList();
+            var tabsData = mData.tabs.Where(t => t.isVisible).
+                OrderBy(t => t.order).ToList();
             foreach (var tData in tabsData)
             {
                 var offerButton = NSMarketOverlay.OfferButton.GetInstance(offerButtonsContent);
@@ -45,6 +56,13 @@ namespace Overlewd
             }
 
             offers.FirstOrDefault()?.Select();
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeShowAsync()
+        {
+            selectedOffer?.Refresh();
 
             await Task.CompletedTask;
         }

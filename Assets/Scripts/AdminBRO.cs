@@ -268,7 +268,7 @@ namespace Overlewd
                 public string viewType;
                 public List<int> goods;
                 public int order;
-                public int? profit;
+                public string profit;
 
                 public const string ViewType_GoodsList = "goods_list";
                 public const string ViewType_Bundle = "bundle";

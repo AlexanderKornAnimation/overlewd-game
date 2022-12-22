@@ -54,8 +54,8 @@ namespace Overlewd
                 promoIcon.sprite = ResourceManager.LoadSprite(tradableData.imageUrl);
                 promoIcon.SetNativeSize();
                 description.text = _tradableData.description;
-                profit.gameObject.SetActive(_tabData.profit.HasValue);
-                profitTitle.text = $"profit <size=68>{_tabData.profit}%";
+                profit.gameObject.SetActive(!string.IsNullOrEmpty(_tabData.profit));
+                profitTitle.text = _tabData.profit;
                 discount.gameObject.SetActive(!string.IsNullOrEmpty(_tradableData.discount));
                 discountTitle.text = _tradableData.discount;
                 buyButtonTitle.text = "Buy pack for " + UITools.PriceToString(_tradableData.price);
