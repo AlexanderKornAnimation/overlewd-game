@@ -83,7 +83,7 @@ namespace Overlewd
                 var trData = tradableData;
                 if (trData.nutakuPriceValid)
                 {
-
+                    var payment = await NutakuApiHelper.PostPaymentAsync(this, trData);
                 }
                 else
                 {

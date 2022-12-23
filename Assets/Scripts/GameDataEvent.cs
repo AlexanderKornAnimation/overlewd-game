@@ -9,6 +9,7 @@ namespace Overlewd
         None,
 
         BuyTradable,
+        NutakuPayment,
 
         BuildingBuild,
         BuildingBuildCrystal,

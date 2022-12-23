@@ -37,6 +37,7 @@ namespace Overlewd
             switch (eventData.id)
             {
                 case GameDataEventId.BuyTradable:
+                case GameDataEventId.NutakuPayment:
                     selectedOffer?.Refresh();
                     break;
             }

@@ -66,11 +66,35 @@ namespace Overlewd
                     bundleItem.icon.sprite = ResourceManager.LoadSprite(trItem.tradableData.icon);
                     bundleItem.amount.text = trItem.count.ToString();
                 }
+
+                CalcLockedState();
             }
 
-            public void BuyButtonClick()
+            public override void Refresh()
             {
+                CalcLockedState();   
+            }
 
+            public async void BuyButtonClick()
+            {
+                var trData = tradableData;
+                if (trData.nutakuPriceValid)
+                {
+                    var payment = await NutakuApiHelper.PostPaymentAsync(this, trData);
+                }
+                else
+                {
+                    var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, trData.id);
+                }
+            }
+
+            private void CalcLockedState()
+            {
+                var trData = tradableData;
+                if (!trData.nutakuPriceValid)
+                {
+                    UITools.DisableButton(buyButton, !trData.canBuy);
+                }
             }
 
             public static Bundle GetInstance(Transform parent)
