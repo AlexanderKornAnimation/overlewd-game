@@ -471,6 +471,7 @@ namespace Overlewd
             await GameData.player.Get();
             await GameData.characters.Get();
             await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
 
             UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
@@ -493,6 +494,7 @@ namespace Overlewd
             await GameData.player.Get();
             await GameData.characters.Get();
             await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
 
             UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
@@ -1152,6 +1154,11 @@ namespace Overlewd
             {
                 await AdminBRO.memoryPieceOfGlassBuyAsync(memoryId.Value, shardKey);
                 memories = await AdminBRO.memoriesAsync();
+                memoryShards = await AdminBRO.memoryShardsAsync();
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    id = GameDataEventId.PieceOfMemoryBuy,
+                });
             }
         }
 

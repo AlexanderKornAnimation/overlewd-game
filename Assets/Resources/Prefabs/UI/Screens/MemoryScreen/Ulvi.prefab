@@ -27,7 +27,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2298709694304834430}
   - {fileID: 2298709694458550073}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -49,8 +48,9 @@ GameObject:
   - component: {fileID: 2298709693691955354}
   - component: {fileID: 2298709693691955355}
   - component: {fileID: 2888389688397674603}
+  - component: {fileID: 8967685579176675793}
   m_Layer: 0
-  m_Name: Shard6
+  m_Name: shard6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,6 +157,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8967685579176675793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709693691955353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709693853907010
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,8 +181,9 @@ GameObject:
   - component: {fileID: 2298709693853907023}
   - component: {fileID: 2298709693853907020}
   - component: {fileID: 5704810197973995714}
+  - component: {fileID: 829551574615135161}
   m_Layer: 0
-  m_Name: Shard3
+  m_Name: shard3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -277,6 +290,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &829551574615135161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709693853907010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709694264783717
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,8 +314,9 @@ GameObject:
   - component: {fileID: 2298709694264783718}
   - component: {fileID: 2298709694264783719}
   - component: {fileID: 6461452534227459110}
+  - component: {fileID: 9156459679757170171}
   m_Layer: 0
-  m_Name: Shard9
+  m_Name: shard9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -397,6 +423,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9156459679757170171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709694264783717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709694273940181
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,8 +447,9 @@ GameObject:
   - component: {fileID: 2298709694273940182}
   - component: {fileID: 2298709694273940183}
   - component: {fileID: 4445503596086592451}
+  - component: {fileID: 1895040040519984880}
   m_Layer: 0
-  m_Name: Shard2
+  m_Name: shard2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -517,81 +556,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &2298709694304834431
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2298709694304834430}
-  - component: {fileID: 2298709694304834424}
-  - component: {fileID: 2298709694304834425}
-  m_Layer: 0
-  m_Name: Background
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2298709694304834430
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2298709694304834431}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4515131546895882717}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2400, y: 1080}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &2298709694304834424
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2298709694304834431}
-  m_CullTransparentMesh: 1
---- !u!114 &2298709694304834425
+--- !u!114 &1895040040519984880
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2298709694304834431}
+  m_GameObject: {fileID: 2298709694273940181}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8020f30a4cfe19948abe359beb67eb35, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2298709694458550078
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,7 +607,7 @@ RectTransform:
   - {fileID: 2298709694264783716}
   - {fileID: 2298709694873445316}
   m_Father: {fileID: 4515131546895882717}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -658,8 +634,9 @@ GameObject:
   - component: {fileID: 2298709694564208061}
   - component: {fileID: 2298709694564208050}
   - component: {fileID: 6956730177446718069}
+  - component: {fileID: 8158430326982937497}
   m_Layer: 0
-  m_Name: Shard4
+  m_Name: shard4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -766,6 +743,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8158430326982937497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709694564208048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709694719623286
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,8 +767,9 @@ GameObject:
   - component: {fileID: 2298709694719623283}
   - component: {fileID: 2298709694719623280}
   - component: {fileID: 3321578133056381822}
+  - component: {fileID: 5172020536398338798}
   m_Layer: 0
-  m_Name: Shard8
+  m_Name: shard8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -886,6 +876,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5172020536398338798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709694719623286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709694873445317
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,8 +900,9 @@ GameObject:
   - component: {fileID: 2298709694873445318}
   - component: {fileID: 2298709694873445319}
   - component: {fileID: 1275376073176684179}
+  - component: {fileID: 2774787721703519151}
   m_Layer: 0
-  m_Name: Shard10
+  m_Name: shard10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1006,6 +1009,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2774787721703519151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709694873445317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709694935297186
 GameObject:
   m_ObjectHideFlags: 0
@@ -1018,8 +1033,9 @@ GameObject:
   - component: {fileID: 2298709694935297199}
   - component: {fileID: 2298709694935297196}
   - component: {fileID: 1138442328181235303}
+  - component: {fileID: 8634488473518977258}
   m_Layer: 0
-  m_Name: Shard1
+  m_Name: shard1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1126,6 +1142,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8634488473518977258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709694935297186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709695463463008
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,8 +1166,9 @@ GameObject:
   - component: {fileID: 2298709695463463021}
   - component: {fileID: 2298709695463463010}
   - component: {fileID: 7187274910678223558}
+  - component: {fileID: 3368826630720448322}
   m_Layer: 0
-  m_Name: Shard5
+  m_Name: shard5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1246,6 +1275,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3368826630720448322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709695463463008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2298709695488814218
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,8 +1299,9 @@ GameObject:
   - component: {fileID: 2298709695488814231}
   - component: {fileID: 2298709695488814228}
   - component: {fileID: 6112758463965760137}
+  - component: {fileID: 5880205879120334993}
   m_Layer: 0
-  m_Name: Shard7
+  m_Name: shard7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1366,3 +1408,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5880205879120334993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298709695488814218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34df9b29b8634903886d761c15966fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

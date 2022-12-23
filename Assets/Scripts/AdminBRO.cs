@@ -2115,6 +2115,9 @@ namespace Overlewd
             public int? sexSceneId;
             public List<Piece> pieces;
             public string memoryType;
+            public string memoryBackArt;
+            public string sexSceneClosed;
+            public string sexScenePreview;
 
             public class Piece
             {

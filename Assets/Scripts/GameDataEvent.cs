@@ -31,6 +31,8 @@ namespace Overlewd
         ForgeMergeShards,
         ForgeExchangeShards,
         ForgeMergeEquip,
+        
+        PieceOfMemoryBuy,
     }
 
     public class GameDataEvent

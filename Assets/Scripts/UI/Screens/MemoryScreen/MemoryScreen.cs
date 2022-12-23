@@ -13,14 +13,12 @@ namespace Overlewd
         private Button portalButton;
         private TextMeshProUGUI marketButtonText;
         private Button backButton;
+        private Image background;
+        private Button sexSceneButton;
 
-        private Image basicShard;
         private TextMeshProUGUI basicShardAmount;
-        private Image advancedShard;
         private TextMeshProUGUI advancedShardsAmount;
-        private Image epicShard;
         private TextMeshProUGUI epicShardsAmount;
-        private Image heroicShard;
         private TextMeshProUGUI heroicShardsAmount;
 
         private TextMeshProUGUI bagTitle;
@@ -35,18 +33,15 @@ namespace Overlewd
             var canvas = screenInst.transform.Find("Canvas");
             var bag = canvas.Find("Bag");
 
+            background = canvas.Find("Background").GetComponent<Image>();
+            sexSceneButton = background.GetComponent<Button>();
+            sexSceneButton.onClick.AddListener(SexSceneButtonClick);
+            
             bagTitle = bag.Find("TitleBack").Find("Title").GetComponent<TextMeshProUGUI>();
-            basicShard = bag.Find("BasicShard").GetComponent<Image>();
-            basicShardAmount = basicShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            
-            advancedShard = bag.Find("AdvancedShard").GetComponent<Image>();
-            advancedShardsAmount = advancedShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            
-            epicShard = bag.Find("EpicShard").GetComponent<Image>();
-            epicShardsAmount = epicShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
-            
-            heroicShard = bag.Find("HeroicShard").GetComponent<Image>();
-            heroicShardsAmount = heroicShard.transform.Find("Count").GetComponent<TextMeshProUGUI>();
+            basicShardAmount = bag.transform.Find("BasicShard/Count").GetComponent<TextMeshProUGUI>();
+            advancedShardsAmount = bag.transform.Find("AdvancedShard/Count").GetComponent<TextMeshProUGUI>();
+            epicShardsAmount = bag.transform.Find("EpicShard/Count").GetComponent<TextMeshProUGUI>();
+            heroicShardsAmount = bag.transform.Find("HeroicShard/Count").GetComponent<TextMeshProUGUI>();
             
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
@@ -77,25 +72,11 @@ namespace Overlewd
 
         private void Customize()
         {
-            marketButtonText.text = inputData?.girlKey switch
-            {
-                AdminBRO.MatriarchItem.Key_Ulvi => "Buy Ulvi`s Heirloom\nto get Ulvi`s shards",
-                AdminBRO.MatriarchItem.Key_Adriel => "Buy Adriel`s Heirloom\nto get Adriel`s shards",
-                AdminBRO.MatriarchItem.Key_Ingie => "Buy Ingie`s Heirloom\nto get Ingie`s shards",
-                AdminBRO.MatriarchItem.Key_Faye => "Buy Faye`s Heirloom\nto get Faye`s shards",
-                AdminBRO.MatriarchItem.Key_Lili => "Buy Lili`s Heirloom\nto get Lili`s shards",
-                _ => null
-            };
+            RefreshBag();
 
-            bagTitle.text = inputData?.girlKey switch
-            {
-                AdminBRO.MatriarchItem.Key_Ulvi => "Ulvi`s shards\nin your bag",
-                AdminBRO.MatriarchItem.Key_Adriel => "Adriel`s shards\nin your bag",
-                AdminBRO.MatriarchItem.Key_Ingie => "Ingie`s shards\nin your bag",
-                AdminBRO.MatriarchItem.Key_Faye => "Faye`s shards\nin your bag",
-                AdminBRO.MatriarchItem.Key_Lili => "Lili`s shards\nin your bag",
-                _ => null
-            };
+            marketButtonText.text = $"Buy {inputData?.girlKey + "'s"} Heirloom\nto get more shards";
+            bagTitle.text = $"{inputData?.girlKey + "'s"} shards\nin your bag";
+            background.sprite = ResourceManager.LoadSprite(inputData?.memoryData?.memoryBackArt);
             
             girlContent = inputData?.girlKey switch
             {
@@ -106,8 +87,31 @@ namespace Overlewd
                 AdminBRO.MatriarchItem.Key_Lili => NSMemoryScreen.UlviContent.GetInstance(contentPos),
                 _ => null
             };
+
+            if (girlContent != null)
+            {
+                girlContent.memoryId = inputData?.memoryId;
+            }
         }
 
+        private void SexSceneButtonClick()
+        {
+            UIManager.MakeScreen<SexScreen>().
+                SetData(new SexScreenInData
+                {
+                    dialogId = inputData?.memoryData?.sexSceneId,
+                }).
+                DoShow();
+        }
+        
+        private void RefreshBag()
+        {
+            basicShardAmount.text = inputData?.girlData?.basicShard?.amount.ToString();
+            advancedShardsAmount.text = inputData?.girlData?.advancedShard?.amount.ToString();
+            epicShardsAmount.text = inputData?.girlData?.epicShard?.amount.ToString();
+            heroicShardsAmount.text = inputData?.girlData?.heroicShard?.amount.ToString();
+        }
+        
         public override async Task AfterShowAsync()
         {
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
@@ -119,6 +123,17 @@ namespace Overlewd
             }
 
             await Task.CompletedTask;
+        }
+
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case GameDataEventId.PieceOfMemoryBuy:
+                    RefreshBag();
+                    sexSceneButton.interactable = inputData?.memoryData?.isOpen ?? false;
+                    break;
+            }
         }
 
         public override void OnUIEvent(UIEvent eventData)
@@ -146,7 +161,6 @@ namespace Overlewd
                     UIManager.ShowScreen<PortalScreen>();
                     break;
             }
-            
         }
         
         private void BackButtonClick()
@@ -172,5 +186,8 @@ namespace Overlewd
     public class MemoryScreenInData : BaseFullScreenInData
     {
         public string girlKey;
+        public AdminBRO.MatriarchItem girlData => GameData.matriarchs.GetMatriarchByKey(girlKey);
+        public int? memoryId;
+        public AdminBRO.MemoryItem memoryData => GameData.matriarchs.GetMemoryById(memoryId);
     }
 }
