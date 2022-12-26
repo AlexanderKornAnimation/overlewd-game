@@ -95,16 +95,17 @@ namespace Overlewd
                     //This is just a documented shortcut available on sandbox
                     //payment.callbackUrl = "https://skip.payment.handler";
                     //payment.finishPageUrl = "http://www.nutaku.net/";
+                    //payment.message = "Test Payment";
                     payment.callbackUrl = GameData.nutaku.settings.callbackUrl;
                     payment.finishPageUrl = GameData.nutaku.settings.completeUrl;
-                    payment.message = "Test Payment";
+                    payment.message = tradable.name;
 
                     PaymentItem item = new PaymentItem
                     {
                         itemId = tradable.id.ToString(),
                         itemName = tradable.name,
                         unitPrice = tradable.price.First().amount,
-                        imageUrl = "https://dogecoin.com/imgs/dogecoin-300.png",
+                        imageUrl = GameData.resources.GetById(tradable.imageUrl)?.url,// "https://dogecoin.com/imgs/dogecoin-300.png",
                         description = tradable.description
                     };
                     payment.paymentItems.Add(item);
