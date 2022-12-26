@@ -100,7 +100,6 @@ namespace Overlewd
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats")?.GetComponent<CharacterPortrait>();
             if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats")?.GetComponent<CharacterPortrait>();
-            EnemyStats.isBoss = bossLevel;
 
             //if (bossLevel) QueueUI.gameObject.SetActive(false);
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;

@@ -43,7 +43,8 @@ namespace Overlewd
             var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
 
             SetDownloadBarTitle("Check new resources");
-            var serverResourcesMeta = (await AdminBRO.resourcesAsync()).dData;
+            //var serverResourcesMeta = (await AdminBRO.resourcesAsync()).dData;
+            var serverResourcesMeta = GameData.resources.meta;
 
             if (serverResourcesMeta?.Any() ?? false)
             {
@@ -224,6 +225,7 @@ namespace Overlewd
             SetDownloadBarTitle("Download game data");
 
             var gameMeta = new List<BaseGameMeta> {
+                GameData.resources,
                 GameData.player,
                 GameData.currencies,
                 GameData.markets,

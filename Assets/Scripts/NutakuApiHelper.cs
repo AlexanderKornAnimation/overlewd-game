@@ -51,91 +51,127 @@ namespace Overlewd
 #endif
         }
 
-        public static async Task<Payment> PostPaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
+        private static async Task<BaseSystemNotif.State> ErrorHandling(string errorMsg)
         {
-            if (tradable?.nutakuPriceValid ?? false)
+            var errorNotif = UIManager.MakeSystemNotif<ServerErrorNotif>();
+            errorNotif.message = errorMsg;
+            var state = await errorNotif.WaitChangeState();
+            await errorNotif.CloseAsync();
+            return state;
+        }
+
+        public class NutakuPayment
+        {
+            public Payment payment;
+            public Exception exception;
+            public RawResult rawResult;
+            public string message;
+
+            public bool isValid => payment != null;
+            public string rawResultMsg => 
+                $"Http Status Code: {rawResult.statusCode}\n" +
+                $"Http Status Message: {Encoding.UTF8.GetString(rawResult.body)}";
+        }
+
+        public static async Task<NutakuPayment> PostPaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
+        {
+            if (!tradable?.nutakuPriceValid ?? true)
             {
-                logMessage("Nutaku tradable is not valid");
-                return default;
+                var errMsg = "Nutaku tradable data is not valid";
+                logMessage(errMsg);
+                return new NutakuPayment { message = errMsg };
             }
 
-            BeginLoading();
-            try
+            while (true)
             {
-                Payment payment = new Payment();
-                logMessage("");
-                logMessage("PostPayment Start");
-
-                //This is just a documented shortcut available on sandbox
-                //payment.callbackUrl = "https://skip.payment.handler";
-                //payment.finishPageUrl = "http://www.nutaku.net/";
-                payment.callbackUrl = GameData.nutaku.settings.callbackUrl;
-                payment.finishPageUrl = GameData.nutaku.settings.completeUrl;
-                payment.message = "Test Payment";
-
-                PaymentItem item = new PaymentItem
+                var paymentRequest = new UnityWebRequest("Nutaku payment");
+                BeginLoading(paymentRequest);
+                try
                 {
-                    itemId = tradable.id.ToString(),
-                    itemName = tradable.name,
-                    unitPrice = tradable.price.First().amount,
-                    imageUrl = "https://dogecoin.com/imgs/dogecoin-300.png",
-                    description = tradable.description
-                };
-                payment.paymentItems.Add(item);
+                    Payment payment = new Payment();
+                    logMessage("");
+                    logMessage("PostPayment Start");
 
-                bool rComplete = false;
-                Payment resultPayment = null;
-                RestApiHelper.PostPayment(payment, myMonoBehaviour, (RawResult rawResult) => 
+                    //This is just a documented shortcut available on sandbox
+                    //payment.callbackUrl = "https://skip.payment.handler";
+                    //payment.finishPageUrl = "http://www.nutaku.net/";
+                    //payment.message = "Test Payment";
+                    payment.callbackUrl = GameData.nutaku.settings.callbackUrl;
+                    payment.finishPageUrl = GameData.nutaku.settings.completeUrl;
+                    payment.message = tradable.name;
+
+                    PaymentItem item = new PaymentItem
+                    {
+                        itemId = tradable.id.ToString(),
+                        itemName = tradable.name,
+                        unitPrice = tradable.price.First().amount,
+                        imageUrl = GameData.resources.GetById(tradable.imageUrl)?.url,// "https://dogecoin.com/imgs/dogecoin-300.png",
+                        description = tradable.description
+                    };
+                    payment.paymentItems.Add(item);
+
+                    bool rComplete = false;
+                    NutakuPayment resultPayment = null;
+                    RestApiHelper.PostPayment(payment, myMonoBehaviour, (RawResult rawResult) =>
+                    {
+                        resultPayment = PostPaymentRawEncode(rawResult);
+                        rComplete = true;
+                    });
+                    await UniTask.WaitUntil(() => rComplete);
+                    EndLoading(paymentRequest);
+
+                    if (resultPayment.isValid)
+                    {
+                        UIManager.ThrowGameDataEvent(new GameDataEvent
+                        {
+                            id = GameDataEventId.NutakuPayment
+                        });
+                        return resultPayment;
+                    }
+
+                    var errMsg = "PostPayment Failure\n" + resultPayment.rawResultMsg;
+                    var errNotifState = await ErrorHandling(errMsg);
+                    switch (errNotifState)
+                    {
+                        case BaseSystemNotif.State.Cancel:
+                            return resultPayment;
+                    }
+                }
+                catch (Exception ex)
                 {
-                    resultPayment = PostPaymentCallback(rawResult);
-                    rComplete = true;
-                });
-                await UniTask.WaitUntil(() => rComplete);
-                return resultPayment;
-            }
-            catch (Exception ex)
-            {
-                logError("PostPayment Failure");
-                DumpError(ex);
-                EndLoading();
-                return default;
+                    logError("PostPayment Failure");
+                    DumpError(ex);
+                    EndLoading(paymentRequest);
+
+                    var errNotifState = await ErrorHandling(ex.Message);
+                    switch (errNotifState)
+                    {
+                        case BaseSystemNotif.State.Cancel:
+                            return new NutakuPayment { exception = ex };
+                    }
+                }
             }
         }
 
-        private static Payment PostPaymentCallback(RawResult rawResult)
+        private static NutakuPayment PostPaymentRawEncode(RawResult rawResult)
         {
-            try
+            if ((rawResult.statusCode > 199) && (rawResult.statusCode < 300))
             {
-                if ((rawResult.statusCode > 199) && (rawResult.statusCode < 300))
-                {
-                    Payment payment = new Payment();
-                    var result = RestApi.HandleRequestCallback<Payment>(rawResult);
+                Payment payment = new Payment();
+                var result = RestApi.HandleRequestCallback<Payment>(rawResult);
 
-                    logMessage("PostPayment Success");
-                    logMessage("Http Status Code: " + result.statusCode);
+                logMessage("PostPayment Success");
+                logMessage("Http Status Code: " + result.statusCode);
 
-                    payment = result.GetFirstEntry();
-                    OutputPaymentData(payment);
-                    return payment;
-                }
-                else
-                {
-                    logError("PostPayment Failure");
-                    logError("Http Status Code: " + (int)rawResult.statusCode);
-                    logError("Http Status Message: " + Encoding.UTF8.GetString(rawResult.body));
-                    return default;
-                }
+                payment = result.GetFirstEntry();
+                OutputPaymentData(payment);
+                return new NutakuPayment { payment = payment, rawResult = rawResult };
             }
-            catch (Exception ex)
-            {
-                logError("PostPayment Failure");
-                DumpError(ex);
-                return default;
-            }
-            finally
-            {
-                EndLoading();
-            }
+
+            logError("PostPayment Failure");
+            logError("Http Status Code: " + (int)rawResult.statusCode);
+            logError("Http Status Message: " + Encoding.UTF8.GetString(rawResult.body));
+            return new NutakuPayment { rawResult = rawResult };
         }
 
         public static async Task<Person> GetMyProfileAsync(MonoBehaviour myMonoBehaviour)
@@ -250,14 +286,20 @@ namespace Overlewd
             logException(ex);
         }
 
-        private static void BeginLoading()
+        private static void BeginLoading(UnityWebRequest request = null)
         {
-            
+            if (request == null)
+                return;
+            HttpCore.PushRequest(request);
+            UIManager.PushUserInputLocker(new UserInputLocker(request));
         }
 
-        private static void EndLoading()
+        private static void EndLoading(UnityWebRequest request = null)
         {
-            
+            if (request == null)
+                return;
+            HttpCore.PopRequest(request);
+            UIManager.PopUserInputLocker(new UserInputLocker(request));
         }
 
         private static void logMessage(string message, LogType logType = LogType.Log)

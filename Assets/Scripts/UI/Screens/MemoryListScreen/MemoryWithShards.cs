@@ -26,9 +26,6 @@ namespace Overlewd
 
             private Button memoryScreenButton;
             
-            public string girlKey { get; set; }
-            public AdminBRO.MatriarchItem girlData => GameData.matriarchs.GetMatriarchByKey(girlKey);
-
             protected override void Awake()
             {
                 base.Awake();
@@ -76,7 +73,8 @@ namespace Overlewd
                 UIManager.MakeScreen<MemoryScreen>().
                     SetData(new MemoryScreenInData
                 {
-                    girlKey = girlKey,
+                    memoryId = memoryId,
+                    girlKey = GameData.matriarchs.GetMatriarchById(memoryData?.matriarchId).key,
                 }).DoShow();
             }
             

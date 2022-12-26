@@ -11,6 +11,7 @@ namespace Overlewd
     {
         public static bool devMode { get; set; } = false;
         public static ProgressFlags progressFlags { get; } = new ProgressFlags();
+        public static ResourcesMeta resources { get; } = new ResourcesMeta();
         public static Quests quests { get; } = new Quests();
         public static FTUE ftue { get; } = new FTUE();
         public static Gacha gacha { get; } = new Gacha();
@@ -49,6 +50,20 @@ namespace Overlewd
             GameData.devMode ? false : !GameData.buildings.harem.meta.isBuilt;
         public bool eventsWidgetEnabled =>
             GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
+    }
+
+    //resources
+    public class ResourcesMeta : BaseGameMeta
+    {
+        public List<AdminBRO.NetworkResource> meta { get; private set; } = new List<AdminBRO.NetworkResource>();
+
+        public override async Task Get()
+        {
+            meta = await AdminBRO.resourcesAsync();
+        }
+
+        public AdminBRO.NetworkResource GetById(string id) =>
+            meta.Find(r => r.id == id);
     }
 
     //ftue
@@ -471,6 +486,7 @@ namespace Overlewd
             await GameData.player.Get();
             await GameData.characters.Get();
             await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
 
             UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
@@ -493,6 +509,7 @@ namespace Overlewd
             await GameData.player.Get();
             await GameData.characters.Get();
             await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
 
             UIManager.ThrowGameDataEvent(new GachaDataEvent
             {
@@ -1152,6 +1169,11 @@ namespace Overlewd
             {
                 await AdminBRO.memoryPieceOfGlassBuyAsync(memoryId.Value, shardKey);
                 memories = await AdminBRO.memoriesAsync();
+                memoryShards = await AdminBRO.memoryShardsAsync();
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    id = GameDataEventId.PieceOfMemoryBuy,
+                });
             }
         }
 

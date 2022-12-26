@@ -41,20 +41,13 @@ namespace Overlewd
 
              private void Customize()
              {
-                 BaseMemory memory;
-
                  foreach (var memoryData in GameData.matriarchs.memories)
                  {
-                     if (memoryData.matriarchId == girlData.id && memoryData.isVisible)
+                     if (memoryData.matriarchId == girlData.id && (memoryData.isVisible || memoryData.isOpen))
                      {
-                         if (memoryData.pieces == null)
-                         {
-                             memory = Memory.GetInstance(content);
-                         }
-                         else
-                         {
-                             memory = MemoryWithShards.GetInstance(content);
-                         }
+                          var memory = memoryData.pieces == null
+                             ? (BaseMemory) Memory.GetInstance(content)
+                             : MemoryWithShards.GetInstance(content);
 
                          memory.memoryId = memoryData.id;
                          memories.Add(memory);

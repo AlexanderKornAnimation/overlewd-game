@@ -32,6 +32,17 @@ namespace Overlewd
             walletWidget = WalletWidget.GetInstance(canvas.Find("WalletWidgetPos"));
         }
 
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case GameDataEventId.BuyTradable:
+                case GameDataEventId.NutakuPayment:
+                    selectedOffer?.Refresh();
+                    break;
+            }
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             var mData = GameData.markets.mainMarket;
@@ -46,6 +57,13 @@ namespace Overlewd
             }
 
             offers.FirstOrDefault()?.Select();
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeShowAsync()
+        {
+            selectedOffer?.Refresh();
 
             await Task.CompletedTask;
         }

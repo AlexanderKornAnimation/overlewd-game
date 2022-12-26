@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,51 +12,112 @@ namespace Overlewd
     {
         public class Bundle : BaseOffer
         {
-            private Image girlArt;
-            private TextMeshProUGUI profitAmount;
+            private Image girlIcon;
+            private Image promoIcon;
+            private Transform profit;
+            private TextMeshProUGUI profitTitle;
             private TextMeshProUGUI description;
-            private TextMeshProUGUI discount;
-            private Transform promoItem1;
-            private Transform promoItem2;
-            private Image promoBackground;
-            private Image[] currenciesImage = new Image[5];
-            private TextMeshProUGUI[] currenciesAmount = new TextMeshProUGUI[5];
+            private Transform discount;
+            private TextMeshProUGUI discountTitle;
+            private Transform items;
             private Button buyButton;
-            
+            private TextMeshProUGUI buyButtonTitle;
+
+            private AdminBRO.MarketItem.Tab tabData => offerButton.tabData;
+            private AdminBRO.TradableItem tradableData => tabData.tradablesData.FirstOrDefault();
+
             protected override void Awake()
             {
                 base.Awake();
-                
-                var background = canvas.Find("Background");
-                promoBackground = background.Find("Promo/Background").GetComponent<Image>();
-                description = background.Find("Promo/DescriptionBack/Description").GetComponent<TextMeshProUGUI>();
-                profitAmount = background.Find("ProfitBack/Title").GetComponent<TextMeshProUGUI>();
-                discount = background.Find("DiscountBack/Discount").GetComponent<TextMeshProUGUI>();
-                promoItem1 = promoBackground.transform.Find("HorizontalGrid/Item1");
-                promoItem1 = promoBackground.transform.Find("HorizontalGrid/Item2");
-                girlArt = canvas.Find("GirlArt").GetComponent<Image>();
-                buyButton = background.Find("BuyButton").GetComponent<Button>();
 
-                var currencies = background.Find("Currencies");
-                
-                for (int i = 0; i < currenciesImage.Length; i++)
-                {
-                    currenciesImage[i] = currencies.Find($"Currency{i + 1}").GetComponent<Image>();
-                    currenciesAmount[i] = currenciesImage[i].transform.Find("Amount").GetComponent<TextMeshProUGUI>();
-                    currenciesImage[i].gameObject.SetActive(false);
-                }
+                girlIcon = canvas.Find("GirlIcon").GetComponent<Image>();
+                var background = canvas.Find("Background");
+                promoIcon = background.Find("PromoIcon").GetComponent<Image>();
+                description = background.Find("PromoIcon/Description/Title").GetComponent<TextMeshProUGUI>();
+                profit = background.Find("Profit");
+                profitTitle = profit.Find("Title").GetComponent<TextMeshProUGUI>();
+                items = background.Find("Items");
+                discount = background.Find("Discount");
+                discountTitle = discount.Find("Title").GetComponent<TextMeshProUGUI>();
+                buyButton = background.Find("BuyButton").GetComponent<Button>();
+                buyButton.onClick.AddListener(BuyButtonClick);
+                buyButtonTitle = buyButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             }
 
             protected override void Customize()
             {
-                var tData = offerButton.tabData;
-                girlArt.sprite = ResourceManager.LoadSprite(tData.promoGirlIcon);
+                var _tabData = tabData;
+                var _tradableData = tradableData;
+
+                girlIcon.sprite = ResourceManager.LoadSprite(tabData.promoGirlIcon);
+                girlIcon.SetNativeSize();
+                promoIcon.sprite = ResourceManager.LoadSprite(tradableData.imageUrl);
+                promoIcon.SetNativeSize();
+                description.text = _tradableData.description;
+                profit.gameObject.SetActive(!string.IsNullOrEmpty(_tabData.profit));
+                profitTitle.text = _tabData.profit;
+                discount.gameObject.SetActive(!string.IsNullOrEmpty(_tradableData.discount));
+                discountTitle.text = _tradableData.discount;
+                buyButtonTitle.text = "Buy pack for " + UITools.PriceToString(_tradableData.price);
+
+                foreach (var trItem in _tradableData.itemPack)
+                {
+                    var bundleItem = BundleItem.GetInstance(items);
+                    bundleItem.icon.sprite = ResourceManager.LoadSprite(trItem.tradableData.icon);
+                    bundleItem.amount.text = trItem.count.ToString();
+                }
+
+                CalcLockedState();
+            }
+
+            public override void Refresh()
+            {
+                CalcLockedState();   
+            }
+
+            public async void BuyButtonClick()
+            {
+                var trData = tradableData;
+                if (trData.nutakuPriceValid)
+                {
+                    var payment = await NutakuApiHelper.PostPaymentAsync(this, trData);
+                }
+                else
+                {
+                    var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, trData.id);
+                }
+            }
+
+            private void CalcLockedState()
+            {
+                var trData = tradableData;
+                if (!trData.nutakuPriceValid)
+                {
+                    UITools.DisableButton(buyButton, !trData.canBuy);
+                }
             }
 
             public static Bundle GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<Bundle>("Prefabs/UI/Overlays/MarketOverlay/Bundle",
                     parent);
+            }
+
+            private class BundleItem : MonoBehaviour
+            {
+                public Image icon { get; set; }
+                public TextMeshProUGUI amount { get; set; }
+
+                void Awake()
+                {
+                    icon = GetComponent<Image>();
+                    amount = GetComponentInChildren<TextMeshProUGUI>();
+                }
+
+                public static BundleItem GetInstance(Transform parent)
+                {
+                    return ResourceManager.InstantiateWidgetPrefab<BundleItem>("Prefabs/UI/Overlays/MarketOverlay/BundleItem", parent);
+                }
             }
         }
     }

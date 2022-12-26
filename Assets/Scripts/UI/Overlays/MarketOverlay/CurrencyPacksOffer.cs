@@ -11,6 +11,8 @@ namespace Overlewd
         public class CurrencyPacksOffer : BaseOffer
         {            
             private Transform content;
+            private List<CurrencyPack> packs =>
+                content.GetComponentsInChildren<CurrencyPack>().ToList();
 
             protected override void Awake()
             {
@@ -29,6 +31,14 @@ namespace Overlewd
                     var pack = CurrencyPack.GetInstance(content);
                     pack.packOffer = this;
                     pack.tradableId = goodId;
+                }
+            }
+
+            public override void Refresh()
+            {
+                foreach (var pack in packs)
+                {
+                    pack.Refresh();
                 }
             }
 

@@ -24,7 +24,7 @@ public class DamagePopup : MonoBehaviour
     {
         text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         rt = GetComponent<RectTransform>();
-        ani = GetComponent<Animator>();
+        TryGetComponent<Animator>(out ani);
         backRt = transform.Find("Back")?.GetComponent<RectTransform>();
     }
 

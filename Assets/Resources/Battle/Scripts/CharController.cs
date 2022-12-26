@@ -150,7 +150,7 @@ namespace Overlewd
             healthMax = health;
             mana = (float)character.mana;
             manaMax = mana;
-            if (isBoss) battleScale = 1f;
+            if (isBoss) battleScale = 1.1f;
             var skillStash = character.skills;
             foreach (var sk in skillStash)
                 skillCD.Add(sk, (int)sk.effectCooldownDuration);
@@ -348,9 +348,12 @@ namespace Overlewd
 
             if (isHit)
             {
-                AddEffect(attackerSkill);                       //calculate probability and add effect
+                if (!isDodge)
+                {
+                    AddEffect(attackerSkill); //when attack
+                    attacker.iHit = true;
+                }
                 attacker.psr?.HitEnemy();
-                attacker.iHit = true;
             }
             else
             {
@@ -444,7 +447,6 @@ namespace Overlewd
                 yield return new WaitForSeconds(fadeTime);
                 Destroy(gameObject);
             }
-
         }
 
         public void Damage(float value, bool hit, bool dodge, bool crit, bool poison = false, float uiDelay = 0f, CharController attacker = null, AdminBRO.CharacterSkill aSkill = null)

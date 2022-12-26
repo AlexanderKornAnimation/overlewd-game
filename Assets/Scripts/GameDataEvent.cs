@@ -9,6 +9,7 @@ namespace Overlewd
         None,
 
         BuyTradable,
+        NutakuPayment,
 
         BuildingBuild,
         BuildingBuildCrystal,
@@ -30,6 +31,8 @@ namespace Overlewd
         ForgeMergeShards,
         ForgeExchangeShards,
         ForgeMergeEquip,
+        
+        PieceOfMemoryBuy,
     }
 
     public class GameDataEvent

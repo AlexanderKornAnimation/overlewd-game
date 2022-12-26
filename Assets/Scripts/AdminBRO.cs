@@ -268,11 +268,16 @@ namespace Overlewd
                 public string viewType;
                 public List<int> goods;
                 public int order;
-                public int? profit;
+                public string profit;
 
                 public const string ViewType_GoodsList = "goods_list";
                 public const string ViewType_Bundle = "bundle";
                 public const string ViewType_Pack = "pack";
+
+                [JsonProperty(Required = Required.Default)]
+                public List<TradableItem> tradablesData =>
+                    goods.Select(goodId => GameData.markets.GetTradableById(goodId)).
+                    Where(trData => trData != null).ToList();
             }
 
             public Tab GetTabById(int tabId) =>
@@ -381,6 +386,10 @@ namespace Overlewd
             {
                 public int tradableId;
                 public int count;
+
+                [JsonProperty(Required = Required.Default)]
+                public TradableItem tradableData =>
+                    GameData.markets.GetTradableById(tradableId);
             }
 
             [JsonProperty(Required = Required.Default)]
@@ -702,6 +711,7 @@ namespace Overlewd
             public string screenTarget;
             public int? matriarchEmpathyPointsReward;
             public int? matriarchId;
+            public string matriarchEmotionIcon;
 
             public const string Status_Open = "open";
             public const string Status_In_Progress = "in_progress";
@@ -2105,6 +2115,9 @@ namespace Overlewd
             public int? sexSceneId;
             public List<Piece> pieces;
             public string memoryType;
+            public string memoryBackArt;
+            public string sexSceneClosed;
+            public string sexScenePreview;
 
             public class Piece
             {
