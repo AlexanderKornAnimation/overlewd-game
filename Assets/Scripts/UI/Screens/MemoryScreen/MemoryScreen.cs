@@ -84,7 +84,7 @@ namespace Overlewd
                 AdminBRO.MatriarchItem.Key_Adriel => NSMemoryScreen.AdrielContent.GetInstance(contentPos),
                 AdminBRO.MatriarchItem.Key_Ingie => NSMemoryScreen.IngieContent.GetInstance(contentPos),
                 AdminBRO.MatriarchItem.Key_Faye => NSMemoryScreen.FayeContent.GetInstance(contentPos),
-                AdminBRO.MatriarchItem.Key_Lili => NSMemoryScreen.UlviContent.GetInstance(contentPos),
+                AdminBRO.MatriarchItem.Key_Lili => NSMemoryScreen.LiliContent.GetInstance(contentPos),
                 _ => null
             };
 
