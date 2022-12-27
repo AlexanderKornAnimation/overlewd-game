@@ -51,8 +51,8 @@ namespace Overlewd
 
 
         public float zoomSpeed = 0.15f;
-        private float idleScale = .9f, battleScale = 1.5f;
-        private float overIdleScale = .85f, overBattleScale = 1.4f; //0.93f
+        private float idleScale = 1f, battleScale = 1.4f;
+        private float overIdleScale = 1f, overBattleScale = 1.4f;
         public int battleOrder = 1;
         public float health = 100, healthMax = 100;
         public float mana = 100, manaMax = 100;
@@ -243,12 +243,12 @@ namespace Overlewd
         public void CharPortraitSet() => charStats?.SetUI(this);
         public void UpdateUI() => observer?.UpdateUI();
 
-        public void PlayIdle()
+        public void PlayIdle(bool loop = true)
         {
             //if (!isDead)
             //{
             character.sfxIdle?.Play();
-            spineWidget.PlayAnimation(ani_idle_name, true);
+            spineWidget.PlayAnimation(ani_idle_name, loop);
             //}
         }
 
@@ -332,10 +332,6 @@ namespace Overlewd
 
             yield return new WaitForSeconds(attacker.preAttackDuration + attacker.vfxDuration);
             character.sfxDefense?.Play();
-
-            if (!HEAL)
-                spineWidget.PlayAnimation(ani_defence_name, false);
-
             attackerSkill.sfxTarget?.Play();                    //Play on target SFX
 
             var isHit = (attacker.focus_blind == 0) ? attacker.accuracy + attacker.psr?.accyracy > Random.value
@@ -346,6 +342,8 @@ namespace Overlewd
             if (isDodge) psr?.Dodge();
             if (isCrit) attacker.psr?.Crit(); else attacker.psr?.CritMiss();
 
+            if (!HEAL && isHit)
+                spineWidget.PlayAnimation(ani_defence_name, false);
             if (isHit)
             {
                 if (!isDodge)
@@ -365,7 +363,7 @@ namespace Overlewd
                 var vfx = vfxGO.AddComponent<VFXManager>();
                 vfx.Setup(attackerSkill.vfxTarget, selfVFX);
             }
-            if (vfx_blood && !isDodge && !HEAL)
+            if (vfx_blood && !isDodge && !HEAL && isHit)
                 Instantiate(vfx_blood, selfVFX);
             foreach (var ps in passiveSkill)
             {
@@ -384,6 +382,8 @@ namespace Overlewd
 
             if (!HEAL && !stun) //skip play idle to avoid strange loop transitions
                 PlayIdle();
+            if (stun)
+                PlayIdle(false);
             BattleOut(AOE);
         }
 

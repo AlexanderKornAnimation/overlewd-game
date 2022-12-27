@@ -221,15 +221,7 @@ namespace Overlewd
 
             CustomizeBuff();
 
-            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
-            {
-                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
-                    if (!GameData.ftue.chapter2_battle1.isComplete)
-                    {
-                        UITools.DisableButton(battleButton, GameData.characters.myTeamCharacters.Count < 2);
-                    }
-                    break;
-            }
+
         }
 
         public override async Task BeforeShowDataAsync()
@@ -244,10 +236,17 @@ namespace Overlewd
             battleData = inputData.eventStageData?.battleData ?? inputData.ftueStageData?.battleData;
             Customize();
 
+            
             switch (inputData?.ftueStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_1, _):
                     UITools.DisableButton(editTeamButton);
+                    break;
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
+                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                    {
+                        UITools.DisableButton(battleButton, GameData.characters.myTeamCharacters.Count < 2);
+                    }
                     break;
             }
 
@@ -371,6 +370,16 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             await UITools.RightShowAsync(buffRect, 0.2f);
+            
+            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
+            {
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                    {
+                        GameData.ftue.chapter2.ShowNotifByKey("addgirltutor1");
+                    }
+                    break;
+            }
         }
 
         public override async void OnUIEvent(UIEvent eventData)

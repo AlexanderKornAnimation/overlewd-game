@@ -63,6 +63,7 @@ namespace Overlewd
         public class NutakuPayment
         {
             public Payment payment;
+            public WebViewEvent webViewResult;
             public Exception exception;
             public RawResult rawResult;
             public string message;
@@ -73,8 +74,15 @@ namespace Overlewd
                 $"Http Status Message: {Encoding.UTF8.GetString(rawResult.body)}";
         }
 
-        public static async Task<NutakuPayment> PostPaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
+        public static async Task<NutakuPayment> PaymentAsync(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
         {
+            if (!loggedIn)
+            {
+                var errMsg = "Nutaku user in not loggen in";
+                logMessage(errMsg);
+                return new NutakuPayment { message = errMsg };
+            }
+
             if (!tradable?.nutakuPriceValid ?? true)
             {
                 var errMsg = "Nutaku tradable data is not valid";
@@ -110,23 +118,42 @@ namespace Overlewd
                     };
                     payment.paymentItems.Add(item);
 
-                    bool rComplete = false;
+                    bool ppComplete = false;
                     NutakuPayment resultPayment = null;
                     RestApiHelper.PostPayment(payment, myMonoBehaviour, (RawResult rawResult) =>
                     {
                         resultPayment = PostPaymentRawEncode(rawResult);
-                        rComplete = true;
+                        ppComplete = true;
                     });
-                    await UniTask.WaitUntil(() => rComplete);
+                    await UniTask.WaitUntil(() => ppComplete);
                     EndLoading(paymentRequest);
 
                     if (resultPayment.isValid)
                     {
-                        UIManager.ThrowGameDataEvent(new GameDataEvent
+                        bool opComplete = false;
+                        SdkPlugin.OpenPaymentView(resultPayment.payment, (WebViewEvent result) =>
                         {
-                            id = GameDataEventId.NutakuPayment
+                            resultPayment.webViewResult = result;
+                            opComplete = true;
                         });
-                        return resultPayment;
+                        await UniTask.WaitUntil(() => opComplete);
+
+                        switch (resultPayment.webViewResult.kind)
+                        {
+                            case WebViewEventKind.Succeeded:
+                                await GameData.player.Get();
+                                UIManager.ThrowGameDataEvent(new GameDataEvent
+                                {
+                                    id = GameDataEventId.NutakuPayment
+                                });
+                                return resultPayment;
+                            case WebViewEventKind.Failed:
+                                resultPayment.message = "Web View Failed";
+                                return resultPayment;
+                            case WebViewEventKind.Cancelled:
+                                resultPayment.message = "Web View Cancelled";
+                                return resultPayment;
+                        }
                     }
 
                     var errMsg = "PostPayment Failure\n" + resultPayment.rawResultMsg;
@@ -139,7 +166,7 @@ namespace Overlewd
                 }
                 catch (Exception ex)
                 {
-                    logError("PostPayment Failure");
+                    logError("Payment Failure");
                     DumpError(ex);
                     EndLoading(paymentRequest);
 

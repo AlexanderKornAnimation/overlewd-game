@@ -92,6 +92,7 @@ namespace Overlewd
 
         private static List<UnityWebRequest> activeRequests = new List<UnityWebRequest>();
 
+        public static int trysCount { get; set; } = 3;
         public static int timeoutSec { get; set; } = defaultTimeoutSec;
         public static void RestoreDefaultTimeout()
         {
@@ -170,6 +171,7 @@ namespace Overlewd
 
         private static async Task<T> Send<T>(RequestParams requestParams, bool lockUserInput) where T : HttpCoreResponse, new()
         {
+            var _trysCount = trysCount;
             while (true)
             {
                 using var request = requestParams.Make();
@@ -182,9 +184,15 @@ namespace Overlewd
                 }
                 catch (UnityWebRequestException e)
                 {
+                    if (--_trysCount >= 0)
+                        continue;
+
                     var errNotifState = await ExceptionHandling(e);
                     switch (errNotifState)
                     {
+                        case BaseSystemNotif.State.Retry:
+                            _trysCount = trysCount;
+                            break;
                         case BaseSystemNotif.State.Cancel:
                             var response = new T();
                             response.Init(e);

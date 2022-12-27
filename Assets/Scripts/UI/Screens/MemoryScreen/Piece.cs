@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +30,7 @@ namespace Overlewd
                 ColorUtility.TryParseHtmlString("#9c5fee", out var colorEpic);
                 ColorUtility.TryParseHtmlString("#ffb526", out var colorHeroic);
 
-                gameObject.SetActive(!pieceData.isPurchased);
+                gameObject.SetActive(!pieceData?.isPurchased ?? true);
 
                 image.color = pieceData?.rarity switch
                 {

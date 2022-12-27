@@ -36,7 +36,7 @@ namespace Overlewd
         public void InitUI(CharController charC)
         {
             cc = charC;
-            BattlePortraitIco = transform.Find("Portrait")?.GetComponent<Image>();
+            BattlePortraitIco = transform.Find("pAnchor/Portrait")?.GetComponent<Image>();
             icoRT = BattlePortraitIco?.GetComponent<RectTransform>();
             sliderHP = transform.Find("sliderHP")?.GetComponent<Slider>();
             sliderMP = transform.Find("sliderMP")?.GetComponent<Slider>();
@@ -74,8 +74,8 @@ namespace Overlewd
             status_bar.cc = cc;
             UpdateUI();
         }
-        public void OpenDescription()
-        => cc.observer.OpenDescription();
+        public void OpenDescription() => cc.observer.OpenDescription();
+        public void CloseDescription() => cc.observer.CloseDescription();
 
         public void UpdateUI()
         {
