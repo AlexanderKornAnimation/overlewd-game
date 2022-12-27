@@ -11,10 +11,6 @@ namespace Overlewd
     {
         public class EventShortQuest : BaseQuest
         {
-            private const int rewardsCount = 6;
-            private Image[] rewards = new Image[rewardsCount];
-            private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[rewardsCount];
-
             private Button mapButton;
             private Button claimButton;
             private TextMeshProUGUI title;
@@ -23,11 +19,12 @@ namespace Overlewd
             private TextMeshProUGUI marker;
             private GameObject inProgress;
             private GameObject completed;
+            private Transform rewardGrid;
 
             void Awake()
             {
                 canvas = transform.Find("Canvas");
-                var grid = canvas.Find("Grid");
+                rewardGrid = canvas.Find("Grid");
 
                 title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
                 quest = canvas.Find("Quest").GetComponent<TextMeshProUGUI>();
@@ -41,13 +38,6 @@ namespace Overlewd
 
                 claimButton = canvas.Find("ClaimButton").GetComponent<Button>();
                 claimButton.onClick.AddListener(ClaimClick);
-
-                for (int i = 0; i < rewardsCount; i++)
-                {
-                    rewards[i] = grid.Find($"Reward{i + 1}").GetComponent<Image>();
-                    rewardsAmount[i] = rewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-                    rewards[i].gameObject.SetActive(false);
-                }
             }
 
             private void Start()
@@ -79,12 +69,17 @@ namespace Overlewd
                     inProgress.SetActive(_questData.inProgress);
                     claimButton.gameObject.SetActive(_questData.isCompleted);
                     progress.gameObject.SetActive(!_questData.isClaimed);
+
+                    var rewardIcons = rewardGrid.GetComponentsInChildren<Image>();
+                    var rewardAmounts = rewardGrid.GetComponentsInChildren<TextMeshProUGUI>();
                     
                     for (int i = 0; i < _questData.rewards?.Count; i++)
                     {
-                        rewards[i].gameObject.SetActive(true);
-                        rewards[i].sprite = ResourceManager.LoadSprite(_questData.rewards[i].icon);
-                        rewardsAmount[i].text = _questData.rewards[i].amount.ToString();
+                        if (i >= rewardIcons.Length)
+                            break;
+                        
+                        rewardIcons[i].sprite = ResourceManager.LoadSprite(_questData.rewards[i].icon);
+                        rewardAmounts[i].text = _questData.rewards[i].amount.ToString();
                     }
                 }
             }

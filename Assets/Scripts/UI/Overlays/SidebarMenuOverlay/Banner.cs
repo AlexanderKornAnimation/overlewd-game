@@ -14,14 +14,16 @@ namespace Overlewd
             private TextMeshProUGUI title;
             private Image image;
             private Button button;
+            private GameObject notifIsNew;
 
             private void Awake()
             {
                 var canvas = transform.Find("Canvas");
-                title = canvas.Find("Title").GetComponent<TextMeshProUGUI>();
+                title = canvas.Find("TitleBack/Title").GetComponent<TextMeshProUGUI>();
                 button = canvas.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
                 image = button.GetComponent<Image>();
+                notifIsNew = canvas.Find("NotifIsNew").gameObject;
             }
 
             private void ButtonClick()

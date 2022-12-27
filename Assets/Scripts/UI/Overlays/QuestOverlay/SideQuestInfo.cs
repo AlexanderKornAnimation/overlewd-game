@@ -16,13 +16,11 @@ namespace Overlewd
             private GameObject trustRewardBack;
             private TextMeshProUGUI trustPoints;
 
-            private Image[] rewards = new Image[6];
-            private TextMeshProUGUI[] rewardsAmount = new TextMeshProUGUI[6];
-
             private Button claimButton;
             private GameObject inProgress;
             private GameObject completed;
             private Button advanceButton;
+            private Transform rewardsGrid;
 
             private void Awake()
             {
@@ -35,14 +33,7 @@ namespace Overlewd
                 trustRewardBack = rewardWindow.Find("TrustRewardBack").gameObject;
                 trustPoints = trustRewardBack.transform.Find("Trust").GetComponent<TextMeshProUGUI>();
 
-                var rewardGrid = rewardWindow.Find("RewardGrid");
-
-                for (int i = 0; i < 6; i++)
-                {
-                    rewards[i] = rewardGrid.Find($"Reward{i + 1}").GetComponent<Image>();
-                    rewardsAmount[i] = rewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-                    rewards[i].gameObject.SetActive(false);
-                }
+                rewardsGrid = rewardWindow.Find("RewardGrid");
 
                 claimButton = rewardWindow.Find("ClaimButton").GetComponent<Button>();
                 claimButton.onClick.AddListener(ClaimButtonClick);
@@ -66,16 +57,20 @@ namespace Overlewd
                     title.text = questData.name;
                     progress.text = questData.goalCount.HasValue
                         ? $"{questData?.progressCount}/{questData?.goalCount}" : "";
+
+                    var rewardIcons = rewardsGrid.GetComponentsInChildren<Image>();
+                    var rewardAmounts = rewardsGrid.GetComponentsInChildren<TextMeshProUGUI>();
                     
                     for (int i = 0; i < questData.rewards?.Count; i++)
                     {
-                        var reward = rewards[i];
-                        var rewardAmount = rewardsAmount[i];
+                        if (i >= rewardIcons.Length)
+                            break;
+                        
                         var questItem = questData.rewards[i];
 
-                        reward.gameObject.SetActive(true);
-                        reward.sprite = ResourceManager.LoadSprite(questItem.icon);
-                        rewardAmount.text = questItem.amount.ToString();
+                        rewardIcons[i].gameObject.SetActive(true);
+                        rewardIcons[i].sprite = ResourceManager.LoadSprite(questItem.icon);
+                        rewardAmounts[i].text = questItem.amount.ToString();
                     }
                     
                     trustRewardBack.SetActive(questData.matriarchEmpathyPointsReward.HasValue);
