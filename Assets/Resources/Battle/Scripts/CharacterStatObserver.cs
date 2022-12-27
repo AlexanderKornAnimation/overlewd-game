@@ -183,7 +183,13 @@ namespace Overlewd
         }
         public void OpenDescription()
         {
-            charDescription.Open(cc);
+            charDescription?.Open(cc);
+            pressTime = 0f;
+            pressed = false;
+        }
+        public void CloseDescription()
+        {
+            charDescription?.Close();
             pressTime = 0f;
             pressed = false;
         }
@@ -195,12 +201,8 @@ namespace Overlewd
         public void OnPointerUp(PointerEventData eventData)
         {
             if (pressed)
-            {
-                charDescription.Close();
                 cc.Select();
-            }
-            pressTime = 0f;
-            pressed = false;
+            CloseDescription();
         }
 
         private void VfxInit()
