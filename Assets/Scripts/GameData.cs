@@ -524,15 +524,19 @@ namespace Overlewd
     //characters
     public class Characters : BaseGameMeta
     {
+        public List<AdminBRO.CharacterBase> charactersBase { get; private set; } = new List<AdminBRO.CharacterBase>();
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
         public List<AdminBRO.SkillEffect> effects { get; private set; } = new List<AdminBRO.SkillEffect>();
 
         public override async Task Get()
         {
+            charactersBase = await AdminBRO.charactersBaseAsync();
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
         }
 
+        public AdminBRO.CharacterBase GetBaseById(int? id) =>
+            charactersBase.Find(ch => ch.id == id);
         public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
         public AdminBRO.Character GetByClass(string chClass) =>
