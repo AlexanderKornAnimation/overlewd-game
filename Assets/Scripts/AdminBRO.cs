@@ -354,7 +354,8 @@ namespace Overlewd
             public string imageUrl;
             public string description;
             public List<PriceItem> price;
-            public string discount;
+            public List<PriceItem> priceWithoutDiscount;
+            public int? discount;
             public string specialOfferLabel;
             public List<TradablePack> itemPack;
             public int? currencyId;

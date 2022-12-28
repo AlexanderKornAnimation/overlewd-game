@@ -60,15 +60,13 @@ namespace Overlewd
         public static string RewardsToString(List<AdminBRO.RewardItem> rewards)
         {
             string result = "";
-            foreach (var reward in rewards)
+            foreach (var r in rewards)
             {
-                var tData = reward.tradableData;
+                var tData = r.tradableData;
                 if (tData?.type == AdminBRO.TradableItem.Type_Currency)
                 {
-                    var sprite = tData?.tmpCurrencySprite;
-                    result += String.IsNullOrEmpty(sprite) ?
-                        "" :
-                        String.IsNullOrEmpty(result) ? sprite : (" " + sprite);
+                    var sprite = tData.tmpCurrencySprite;
+                    result += string.IsNullOrEmpty(result) ? sprite : $" {sprite}";
                 }
             }
             return result;
@@ -80,13 +78,26 @@ namespace Overlewd
             foreach (var p in price)
             {
                 var sprite = p.tmpSprite;
-                result += String.IsNullOrEmpty(sprite) ?
-                        "" :
-                        String.IsNullOrEmpty(result) ? sprite + $" {p.amount}" : (" " + sprite + $" {p.amount}");
+                result += string.IsNullOrEmpty(result) ? $"{sprite} {p.amount}" : $" {sprite} {p.amount}";
             }
             return result;
         }
-        
+
+        public static string PriceToString(List<AdminBRO.PriceItem> price,
+            List<AdminBRO.PriceItem> discountPrice, int discountTextSize)
+        {
+            string result = "";
+            for (int i = 0; i < price.Count; i++)
+            {
+                var p = price[i];
+                var dp = discountPrice[i];
+                var sprite = p.tmpSprite;
+                var _s = $"{sprite} <s> {p.amount}  </s><color=#FF0000><size={discountTextSize}>{dp.amount}</size></color>";
+                result += string.IsNullOrEmpty(result) ? _s : $" {_s}";
+            }
+            return result;
+        }
+
         public static void DisableButton(Button button, bool disable = true)
         {
             var bColors = button.colors;

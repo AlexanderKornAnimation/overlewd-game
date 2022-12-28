@@ -47,12 +47,16 @@ namespace Overlewd
 
                 icon.sprite = ResourceManager.LoadSprite(trData.imageUrl);
                 descriptionTitle.text = trData.description;
-                price.text = $"Buy for {UITools.PriceToString(trData.price)}";
+
+                var hasDiscount = trData.discount.HasValue && trData.discount != 0;
+                price.text = hasDiscount ?
+                    $"Buy for {UITools.PriceToString(trData.priceWithoutDiscount, trData.price, 50)}" :
+                    $"Buy for {UITools.PriceToString(trData.price)}";
 
                 discount.gameObject.SetActive(false);
-                if (!string.IsNullOrEmpty(trData.discount))
+                if (hasDiscount)
                 {
-                    discountTitle.text = trData.discount;
+                    discountTitle.text = $"Discount\n-{trData.discount}%";
                     discount.gameObject.SetActive(true);
                 }
                 else if (!string.IsNullOrEmpty(trData.specialOfferLabel))

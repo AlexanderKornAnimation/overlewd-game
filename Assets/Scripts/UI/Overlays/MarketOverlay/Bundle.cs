@@ -56,9 +56,13 @@ namespace Overlewd
                 description.text = _tradableData.description;
                 profit.gameObject.SetActive(!string.IsNullOrEmpty(_tabData.profit));
                 profitTitle.text = _tabData.profit;
-                discount.gameObject.SetActive(!string.IsNullOrEmpty(_tradableData.discount));
-                discountTitle.text = _tradableData.discount;
-                buyButtonTitle.text = "Buy pack for " + UITools.PriceToString(_tradableData.price);
+
+                var hasDiscount = _tradableData.discount.HasValue && _tradableData.discount != 0;
+                discount.gameObject.SetActive(hasDiscount);
+                discountTitle.text = $"Discount\n<size=50>-{_tradableData.discount}%"; 
+                buyButtonTitle.text = hasDiscount ?
+                    "Buy pack for " + UITools.PriceToString(_tradableData.priceWithoutDiscount, _tradableData.price, 50) :
+                    "Buy pack for " + UITools.PriceToString(_tradableData.price);
 
                 foreach (var trItem in _tradableData.itemPack)
                 {
