@@ -1823,7 +1823,10 @@ namespace Overlewd
         {
             var form = new WWWForm();
             form.AddField("mergeType", mergeType);
-            form.AddField("ids", JsonHelper.SerializeObject(mergeIds));
+            foreach (var mId in mergeIds)
+            {
+                form.AddField("ids[]", mId);
+            }    
             return await HttpCore.PostAsync(make_url("forge/merge/equipment"), form);
         }
 
@@ -2270,7 +2273,10 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<BrewResult>> alchemyBrewAsync(int[] ingredientIds)
         {
             var form = new WWWForm();
-            form.AddField("ingredientIds", JsonHelper.SerializeObject(ingredientIds));
+            foreach (var iId in ingredientIds)
+            {
+                form.AddField("ingredientIds[]", iId);
+            }
             return await HttpCore.PostAsync<BrewResult>(make_url("alchemy/brew"), form);
         }
 
