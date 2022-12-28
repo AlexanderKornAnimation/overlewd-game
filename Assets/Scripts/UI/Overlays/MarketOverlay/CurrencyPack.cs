@@ -61,12 +61,12 @@ namespace Overlewd
                     discount.gameObject.SetActive(true);
                 }
 
-                CalcLockedState();
+                //CalcLockedState();
             }
 
             public void Refresh()
             {
-                CalcLockedState();
+                //CalcLockedState();
             }
 
             private void CalcLockedState()
@@ -87,7 +87,14 @@ namespace Overlewd
                 }
                 else
                 {
-                    var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                    if (trData.canBuy)
+                    {
+                        var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                    }
+                    else
+                    {
+                        packOffer.offerButton.marketOverlay.ToCrystalOffersTab();
+                    }
                 }
             }
 

@@ -67,12 +67,12 @@ namespace Overlewd
                     bundleItem.amount.text = trItem.count.ToString();
                 }
 
-                CalcLockedState();
+                //CalcLockedState();
             }
 
             public override void Refresh()
             {
-                CalcLockedState();   
+                //CalcLockedState();   
             }
 
             public async void BuyButtonClick()
@@ -84,7 +84,14 @@ namespace Overlewd
                 }
                 else
                 {
-                    var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, trData.id);
+                    if (trData.canBuy)
+                    {
+                        var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, trData.id);
+                    }
+                    else
+                    {
+                        offerButton.marketOverlay.ToCrystalOffersTab();
+                    }
                 }
             }
 

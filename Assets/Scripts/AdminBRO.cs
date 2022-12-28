@@ -269,6 +269,7 @@ namespace Overlewd
                 public List<int> goods;
                 public int order;
                 public string profit;
+                public bool isCrystalsOffer;
 
                 public const string ViewType_GoodsList = "goods_list";
                 public const string ViewType_Bundle = "bundle";
