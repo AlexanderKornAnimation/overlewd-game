@@ -156,9 +156,6 @@ namespace Overlewd
 
         private static async Task<BaseSystemNotif.State> ExceptionHandling(UnityWebRequestException e)
         {
-            PopRequest(e.UnityWebRequest);
-            UIManager.PopUserInputLocker(new UserInputLocker(e.UnityWebRequest));
-
             Debug.LogError(e.UnityWebRequest.url);
             Debug.LogError(e.Message);
 
@@ -184,7 +181,10 @@ namespace Overlewd
                 }
                 catch (UnityWebRequestException e)
                 {
-                    if (--_trysCount >= 0)
+                    PopRequest(e.UnityWebRequest);
+                    UIManager.PopUserInputLocker(new UserInputLocker(e.UnityWebRequest));
+
+                    if (--_trysCount > 0)
                         continue;
 
                     var errNotifState = await ExceptionHandling(e);

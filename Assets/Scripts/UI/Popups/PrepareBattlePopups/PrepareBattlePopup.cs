@@ -57,6 +57,8 @@ namespace Overlewd
         private int energyCost => inputData?.energyCost ?? 0;
         private int replayCost => inputData?.replayCost ?? 0;
         private (int scrollCost, int energyCost) fastBattleCost => (battlesCount * replayCost, battlesCount * energyCost);
+        private bool stageIsComplete =>
+            inputData?.ftueStageData?.isComplete ?? inputData?.eventStageData?.isComplete ?? false;
 
         void Awake()
         {
@@ -176,7 +178,6 @@ namespace Overlewd
                 allyChar.widgetPos = transform;
             }
 
-            var isStageComplete = inputData?.ftueStageData?.isComplete ?? inputData?.eventStageData.isComplete;
             if (battleData.firstRewards.Count > 0)
             {
                 var firstReward = battleData.firstRewards[0];
@@ -185,11 +186,8 @@ namespace Overlewd
                 firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward.icon);
                 firstTimeRewardCount.text = firstReward.amount.ToString();
 
-                if (isStageComplete.HasValue)
-                {
-                    firstTimeRewardStatus.SetActive(isStageComplete.Value);
-                    firstTimeReward.color = isStageComplete.Value ? Color.gray : Color.white;
-                }
+                firstTimeRewardStatus.SetActive(stageIsComplete);
+                firstTimeReward.color = stageIsComplete ? Color.gray : Color.white;
             }
 
             if (battleData.rewards.Count < 1)
@@ -203,25 +201,18 @@ namespace Overlewd
                 rewardsAmount[i].text = reward.amount.ToString();
             }
 
-            if (isStageComplete.HasValue)
-                fastBattleAvailable.SetActive(isStageComplete.Value);
-            
-            userHpAmount.text = GameData.player.hpPotionAmount.ToString();
-            userManaAmount.text = GameData.player.manaPotionAmount.ToString();
-            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
-            userScrollAmount.text = GameData.player.replayAmount.ToString();
+            fastBattleAvailable.SetActive(stageIsComplete);
+          
             allyTeamPotency.text = GameData.characters.myTeamPotency.ToString();
             stageTitle.text = battleData.title;
             
             battleButtonText.text =
                 $"Make them suffer\nwith <size=40>{TMPSprite.Energy}</size> {energyCost} energy!";
-            fastBattleText.text =
-                $"Give an order to hunt\nfor <size=40>{TMPSprite.Energy}</size> {fastBattleCost.energyCost} and {TMPSprite.Scroll} {fastBattleCost.scrollCost}";
-            CheckButtonState();
-
+            
             CustomizeBuff();
 
-
+            SetSkipButtonState();
+            SetPotionValues();
         }
 
         public override async Task BeforeShowDataAsync()
@@ -272,8 +263,8 @@ namespace Overlewd
                 {
                     await GameData.events.StageReplay(inputData.eventStageId.Value, battlesCount);
                 }
-                    
-                UIManager.HidePopup();
+
+                SetPotionValues();
             }
             else
             {
@@ -296,16 +287,16 @@ namespace Overlewd
         private void Inc()
         {
             uiBattlesCount.text = (battlesCount + 1).ToString();
-            CheckButtonState();
+            SetSkipButtonState();
         }
 
         private void Dec()
         {
             uiBattlesCount.text = (battlesCount - 1).ToString();
-            CheckButtonState();
+            SetSkipButtonState();
         }
 
-        private void CheckButtonState()
+        private void SetSkipButtonState()
         {
             fastBattleText.text =
                 $"Give an order to hunt\nfor {TMPSprite.Energy} {fastBattleCost.energyCost} and {TMPSprite.Scroll} {fastBattleCost.scrollCost}";
@@ -313,7 +304,13 @@ namespace Overlewd
             buttonMinus.gameObject.SetActive(battlesCount > 1);
         }
         
-
+        private void SetPotionValues()
+        {
+            userHpAmount.text = GameData.player.hpPotionAmount.ToString();
+            userManaAmount.text = GameData.player.manaPotionAmount.ToString();
+            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
+            userScrollAmount.text = GameData.player.replayAmount.ToString();
+        }
         
         private void PotionBuyButtonClick()
         {
