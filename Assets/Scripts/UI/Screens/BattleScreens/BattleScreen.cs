@@ -45,15 +45,15 @@ namespace Overlewd
             
             switch (inputData.ftueStageData?.lerningKey)
             {
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
-                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_2):
+                    if (!GameData.ftue.chapter2_battle2.isComplete)
                     {
                         GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor1");
                         await UIManager.WaitHideNotifications();
                         UIManager.MakeScreen<BattleGirlScreen>().
                             SetData(new BattleGirlScreenInData
                             {
-                                characterId = GameData.characters.slot1Ch.id,
+                                characterId = GameData.characters.slot1Ch?.id,
                             }).DoShow();
                     }
                     break;

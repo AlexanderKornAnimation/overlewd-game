@@ -145,7 +145,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ulvi_Reactions_battle_girls);
                     break;
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_2):
                     GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor2");
                     break;
                 case (FTUE.CHAPTER_2, _):
@@ -238,7 +238,7 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_2):
                     UIManager.ShowScreen<MapScreen>();
                     break;
                 default:

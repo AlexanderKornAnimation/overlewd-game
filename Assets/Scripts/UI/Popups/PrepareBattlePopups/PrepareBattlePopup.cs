@@ -242,8 +242,8 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, _):
                     UITools.DisableButton(editTeamButton);
                     break;
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
-                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_2):
+                    if (!GameData.ftue.chapter2_battle2.isComplete)
                     {
                         UITools.DisableButton(battleButton, GameData.characters.myTeamCharacters.Count < 2);
                     }
@@ -374,7 +374,7 @@ namespace Overlewd
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
-                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                    if (!GameData.ftue.chapter2_battle2.isComplete)
                     {
                         GameData.ftue.chapter2.ShowNotifByKey("addgirltutor1");
                     }
