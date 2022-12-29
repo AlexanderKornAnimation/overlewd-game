@@ -1662,6 +1662,10 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public (string chKey, string sKey)? lerningKey =>
                 GameData.devMode ? ((string, string)?)null : (ftueChapterData.key, key);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLastEnded =>
+                id == GameData.ftue.stats.lastEndedStage;
         }
 
         // /ftue-stages/{id}/start

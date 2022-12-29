@@ -182,9 +182,11 @@ namespace Overlewd
             }
 
             eventsPanel = EventsWidget.GetInstance(transform);
-            eventsPanel.Hide();
+            if (!GameData.progressFlags.eventsWidgetEnabled)
+            {
+                eventsPanel.Hide();
+            }
             questsPanel = QuestsWidget.GetInstance(transform);
-            questsPanel.Hide();
             buffPanel = BuffWidget.GetInstance(transform);
             DevWidget.GetInstance(transform);
 
@@ -273,10 +275,6 @@ namespace Overlewd
             {
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
                     {
-                        var showPanelTasks = new List<Task>();
-                        showPanelTasks.Add(questsPanel.ShowAsync());
-                        await Task.WhenAll(showPanelTasks);
-
                         if (GameData.buildings.castle.meta.isBuilt)
                         {
                             await castleButton.ShowAsync();
@@ -317,15 +315,7 @@ namespace Overlewd
                     }
                     break;
                 default:
-                    {
-                        var showPanelTasks = new List<Task>();
-                        showPanelTasks.Add(questsPanel.ShowAsync());
-                        if (GameData.progressFlags.eventsWidgetEnabled)
-                        {
-                            showPanelTasks.Add(eventsPanel.ShowAsync());
-                        }
-                        await Task.WhenAll(showPanelTasks);
-                    }
+                  
                     break;
             }
 
