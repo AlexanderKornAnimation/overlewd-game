@@ -269,6 +269,7 @@ namespace Overlewd
                 public List<int> goods;
                 public int order;
                 public string profit;
+                public bool isCrystalsOffer;
 
                 public const string ViewType_GoodsList = "goods_list";
                 public const string ViewType_Bundle = "bundle";
@@ -353,13 +354,14 @@ namespace Overlewd
             public string imageUrl;
             public string description;
             public List<PriceItem> price;
-            public string discount;
+            public List<PriceItem> priceWithoutDiscount;
+            public int? discount;
             public string specialOfferLabel;
             public List<TradablePack> itemPack;
             public int? currencyId;
             public int? currencyAmount;
             public int? limit;
-            public int? characterId;
+            public int? baseCharacterId;
             public int? baseEquipmentId;
             public int? potionCount;
             public string dateStart;
@@ -402,7 +404,9 @@ namespace Overlewd
             public string GetIconByRarity(string rarity, int? entityId = null) => type switch
             {
                 Type_Currency => GameData.currencies.GetById(entityId.HasValue ? entityId : currencyId)?.iconUrl,
-                Type_BattleCharacter => GameData.characters.GetById(entityId.HasValue ? entityId : characterId)?.GetIconByRarity(rarity),
+                Type_BattleCharacter => entityId.HasValue ?
+                    GameData.characters.GetById(entityId)?.GetIconByRarity(rarity) :
+                    GameData.characters.GetBaseById(baseCharacterId)?.GetIconByRarity(rarity),
                 Type_BattleCharacterEquipment => entityId.HasValue ?
                     GameData.equipment.GetById(entityId)?.GetIconByRarity(rarity) :
                     GameData.equipment.GetBaseById(baseEquipmentId)?.GetIconByRarity(rarity),
@@ -960,31 +964,29 @@ namespace Overlewd
             public bool isTypeBoss => type == Type_Boss;
         }
 
-        // /my/characters
+        // /battles/characters
+        // /battles/my/characters
         // /battles/my/characters/{id}
         // /battles/my/characters/{id}/levelup
         // /battles/my/characters/{characterId}/skills/{skillId}/levelup
         // /battles/my/characters/{tgtId}/merge/{srcId}
         // /battles/skills/effects
+        public static async Task<HttpCoreResponse<List<CharacterBase>>> charactersBaseAsync() =>
+            await HttpCore.GetAsync<List<CharacterBase>>(make_url("battles/characters"));
         public static async Task<HttpCoreResponse<List<Character>>> charactersAsync() =>
             await HttpCore.GetAsync<List<Character>>(make_url("battles/my/characters"));
-
         public static async Task<HttpCoreResponse> characterToSlotAsync(int characterId, string slotId)
         {
             var form = new WWWForm();
             form.AddField("teamPosition", slotId);
             return await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}"), form);
         }
-
         public static async Task<HttpCoreResponse> characterLvlupAsync(int characterId) =>
             await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/levelup"));
-
         public static async Task<HttpCoreResponse> chracterSkillLvlUp(int characterId, int skillId) =>
             await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/skills/{skillId}/levelup"));
-
-        public static async Task<HttpCoreResponse> charactersMrgAsync(int srcCharacterId, int trgtCharacterId) =>
-            await HttpCore.PostAsync(make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}"));
-
+        public static async Task<HttpCoreResponse<Character>> charactersMrgAsync(int srcCharacterId, int trgtCharacterId) =>
+            await HttpCore.PostAsync<Character>(make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}"));
         public static async Task<HttpCoreResponse<List<SkillEffect>>> skillEffectsAsync() =>
             await HttpCore.GetAsync<List<SkillEffect>>(make_url("battles/skills/effects"));
 
@@ -1020,9 +1022,53 @@ namespace Overlewd
         }
 
         [Serializable]
+        public class CharacterBase
+        {
+            public int? id;
+            public string basicIcon;
+            public string advancedIcon;
+            public string epicIcon;
+            public string heroicIcon;
+            public string teamEditSlotPersIcon;
+            public string fullScreenPersIcon;
+            public string battlePortraitIcon;
+            public string name;
+            public int characterClassId;
+            public int? animationId;
+            public float speed;
+            public float power;
+            public float constitution;
+            public float agility;
+            public int? skillNormalAttackId;
+            public int? skillPassiveId;
+            public int? skillSuperAttackId;
+            public int mana;
+            public int? sexSceneId;
+            public string sexSceneVisibleByRarity;
+            public string sexSceneClosedBanner;
+            public string sexSceneOpenedBanner;
+            public string key;
+            public int? sfxAttack1Id;
+            public int? sfxAttack2Id;
+            public int? sfxDefeatId;
+            public int? sfxDefenseId;
+            public int? sfxIdleId;
+
+            public string GetIconByRarity(string rarity) => rarity switch
+            {
+                Rarity.Basic => basicIcon,
+                Rarity.Advanced => advancedIcon,
+                Rarity.Epic => epicIcon,
+                Rarity.Heroic => heroicIcon,
+                _ => null
+            };
+        }
+
+        [Serializable]
         public class Character
         {
             public int? id;
+            public int? baseCharacterId;
             public string teamPosition;
             public string basicIcon;
             public string advancedIcon;
@@ -1066,6 +1112,10 @@ namespace Overlewd
             public const string TeamPosition_Slot1 = "slot1";
             public const string TeamPosition_Slot2 = "slot2";
             public const string TeamPosition_None = "none";
+
+            [JsonProperty(Required = Required.Default)]
+            public CharacterBase baseCharacterData =>
+                GameData.characters.GetBaseById(baseCharacterId);
 
             [JsonProperty(Required = Required.Default)]
             public int raritySortLevel => Rarity.SortValue(rarity);
@@ -1612,6 +1662,10 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public (string chKey, string sKey)? lerningKey =>
                 GameData.devMode ? ((string, string)?)null : (ftueChapterData.key, key);
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isLastEnded =>
+                id == GameData.ftue.stats.lastEndedStage;
         }
 
         // /ftue-stages/{id}/start
@@ -1823,7 +1877,10 @@ namespace Overlewd
         {
             var form = new WWWForm();
             form.AddField("mergeType", mergeType);
-            form.AddField("ids", JsonHelper.SerializeObject(mergeIds));
+            foreach (var mId in mergeIds)
+            {
+                form.AddField("ids[]", mId);
+            }    
             return await HttpCore.PostAsync(make_url("forge/merge/equipment"), form);
         }
 
@@ -2270,7 +2327,10 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<BrewResult>> alchemyBrewAsync(int[] ingredientIds)
         {
             var form = new WWWForm();
-            form.AddField("ingredientIds", JsonHelper.SerializeObject(ingredientIds));
+            foreach (var iId in ingredientIds)
+            {
+                form.AddField("ingredientIds[]", iId);
+            }
             return await HttpCore.PostAsync<BrewResult>(make_url("alchemy/brew"), form);
         }
 

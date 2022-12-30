@@ -98,6 +98,12 @@ namespace Overlewd
                 UIManager.HideOverlay();
             }
         }
+
+        public void ToCrystalOffersTab()
+        {
+            var crystalOffersTab = offers.Find(t => t.tabData.isCrystalsOffer);
+            crystalOffersTab?.Select();
+        }
     }
 
     public class MarketOverlayInData : BaseOverlayInData

@@ -204,7 +204,7 @@ namespace Overlewd
         {
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
+                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_2):
                     GameData.ftue.chapter2.ShowNotifByKey("ch2teamtutor1");
                     await UIManager.WaitHideNotifications();
                     break;

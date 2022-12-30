@@ -72,7 +72,7 @@ namespace Overlewd
             slotAdvanced = slot.Find("SlotAdvanced").gameObject;
             slotEpic = slot.Find("SlotEpic").gameObject;
             slotHeroic = slot.Find("SlotHeroic").gameObject;
-            slotCharacter = slot.transform.Find("Ñharacter").GetComponent<Image>();
+            slotCharacter = slot.transform.Find("Ð¡haracter").GetComponent<Image>();
             slotTitle = slot.transform.Find("Title").GetComponent<TextMeshProUGUI>();
             slotFX = slot.Find("FX");
 
@@ -386,7 +386,10 @@ namespace Overlewd
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             var ch1 = flaskCharacters.FirstOrDefault();
             var ch2 = flaskCharacters.LastOrDefault();
-            await GameData.characters.Mrg(ch1.characterId, ch2.characterId);
+            var newChar = await GameData.characters.Mrg(ch1.characterId, ch2.characterId);
+
+            var info = NSLaboratoryScreen.MergeInfoWidget.GetInstance(transform);
+            info.chId = newChar?.id;
         }
 
         private void CustomizeMergeButton()

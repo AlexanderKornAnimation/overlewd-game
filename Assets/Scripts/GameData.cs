@@ -48,6 +48,9 @@ namespace Overlewd
             GameData.devMode ? true : GameData.buildings.castle.meta.isBuilt;
         public bool lockBuff =>
             GameData.devMode ? false : !GameData.buildings.harem.meta.isBuilt;
+        public bool questWidgetEnabled =>
+            GameData.devMode ? true :
+            GameData.ftue.chapter1_battle1.isComplete && !GameData.ftue.chapter1_battle1.isLastEnded;
         public bool eventsWidgetEnabled =>
             GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
     }
@@ -524,15 +527,19 @@ namespace Overlewd
     //characters
     public class Characters : BaseGameMeta
     {
+        public List<AdminBRO.CharacterBase> charactersBase { get; private set; } = new List<AdminBRO.CharacterBase>();
         public List<AdminBRO.Character> characters { get; private set; } = new List<AdminBRO.Character>();
         public List<AdminBRO.SkillEffect> effects { get; private set; } = new List<AdminBRO.SkillEffect>();
 
         public override async Task Get()
         {
+            charactersBase = await AdminBRO.charactersBaseAsync();
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
         }
 
+        public AdminBRO.CharacterBase GetBaseById(int? id) =>
+            charactersBase.Find(ch => ch.id == id);
         public AdminBRO.Character GetById(int? id) =>
             characters.Find(ch => ch.id == id);
         public AdminBRO.Character GetByClass(string chClass) =>
@@ -563,18 +570,21 @@ namespace Overlewd
             });
         }
 
-        public async Task Mrg(int? srcID, int? tgtId)
+        public async Task<AdminBRO.Character> Mrg(int? srcID, int? tgtId)
         {
             if (!srcID.HasValue || !tgtId.HasValue)
-                return;
+                return null;
 
-            await AdminBRO.charactersMrgAsync(srcID.Value, tgtId.Value);
+            var result = await AdminBRO.charactersMrgAsync(srcID.Value, tgtId.Value);
+            
             await GameData.player.Get();
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
                 id = GameDataEventId.CharacterMerge
             });
+
+            return result.dData;
         }
 
         public async Task ToSlot1(int chId)

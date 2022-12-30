@@ -35,7 +35,6 @@ namespace Overlewd
         private Button skipButton;
         private Button autoplayButton;
         private Image autoplayButtonPressed;
-        private TextMeshProUGUI autoplayStatus;
 
         private GameObject cutIn;
         private Transform cutInAnimPos;
@@ -95,9 +94,7 @@ namespace Overlewd
 
             autoplayButton = canvas.Find("AutoplayButton").GetComponent<Button>();
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
-            autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<TextMeshProUGUI>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
-            autoplayButtonPressed.enabled = false;
 
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
@@ -427,14 +424,12 @@ namespace Overlewd
             if (isAutoplayButtonPressed)
             {
                 isAutoplayButtonPressed = true;
-                autoplayButtonPressed.enabled = true;
-                autoplayStatus.text = "ON";
+                autoplayButtonPressed.gameObject.SetActive(true);
             }
             else
             {
                 isAutoplayButtonPressed = false;
-                autoplayButtonPressed.enabled = false;
-                autoplayStatus.text = "OFF";
+                autoplayButtonPressed.gameObject.SetActive(false);
             }
         }
 
@@ -462,8 +457,9 @@ namespace Overlewd
         {
             while (currentReplicaId < dialogReplicas.Count)
             {
+                var timeToWait = dialogReplicas[currentReplicaId].message.Split().Length * 0.5f;
                 ShowCurrentReplica();
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(timeToWait);
                 currentReplicaId++;
             }
             AutoplayButtonClick();

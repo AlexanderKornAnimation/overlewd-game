@@ -47,12 +47,16 @@ namespace Overlewd
 
                 icon.sprite = ResourceManager.LoadSprite(trData.imageUrl);
                 descriptionTitle.text = trData.description;
-                price.text = $"Buy for {UITools.PriceToString(trData.price)}";
+
+                var hasDiscount = trData.discount.HasValue && trData.discount != 0;
+                price.text = hasDiscount ?
+                    $"Buy for {UITools.PriceToString(trData.priceWithoutDiscount, trData.price, 50)}" :
+                    $"Buy for {UITools.PriceToString(trData.price)}";
 
                 discount.gameObject.SetActive(false);
-                if (!string.IsNullOrEmpty(trData.discount))
+                if (hasDiscount)
                 {
-                    discountTitle.text = trData.discount;
+                    discountTitle.text = $"Discount\n-{trData.discount}%";
                     discount.gameObject.SetActive(true);
                 }
                 else if (!string.IsNullOrEmpty(trData.specialOfferLabel))
@@ -61,12 +65,12 @@ namespace Overlewd
                     discount.gameObject.SetActive(true);
                 }
 
-                CalcLockedState();
+                //CalcLockedState();
             }
 
             public void Refresh()
             {
-                CalcLockedState();
+                //CalcLockedState();
             }
 
             private void CalcLockedState()
@@ -87,7 +91,14 @@ namespace Overlewd
                 }
                 else
                 {
-                    var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                    if (trData.canBuy)
+                    {
+                        var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                    }
+                    else
+                    {
+                        packOffer.offerButton.marketOverlay.ToCrystalOffersTab();
+                    }
                 }
             }
 

@@ -136,9 +136,15 @@ namespace Overlewd
             }
 
             eventsPanel = EventsWidget.GetInstance(transform);
-            eventsPanel.Hide();
+            if (!GameData.progressFlags.eventsWidgetEnabled)
+            {
+                eventsPanel.Hide();
+            }
             questsPanel = QuestsWidget.GetInstance(transform);
-            questsPanel.Hide();
+            if (!GameData.progressFlags.questWidgetEnabled)
+            {
+                questsPanel.Hide();
+            }
             buffPanel = BuffWidget.GetInstance(transform);
             DevWidget.GetInstance(transform);
             chapterSelector = NSMapScreen.ChapterSelector.GetInstance(transform);
@@ -207,21 +213,10 @@ namespace Overlewd
                     break;
             }
 
-            var showPanelTasks = new List<Task>();
-            if (GameData.ftue.chapter1_battle1.isComplete)
-            {
-                showPanelTasks.Add(questsPanel.ShowAsync());
-
-                if (GameData.progressFlags.eventsWidgetEnabled)
-                {
-                    showPanelTasks.Add(eventsPanel.ShowAsync());
-                }
-            }
-            await Task.WhenAll(showPanelTasks);
-
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_1):
+                    await questsPanel.ShowAsync();
                     GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
                     break;
                 case (FTUE.CHAPTER_1, FTUE.SEX_2):
