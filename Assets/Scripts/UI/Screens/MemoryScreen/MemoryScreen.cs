@@ -64,6 +64,7 @@ namespace Overlewd
             {
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                     UITools.DisableButton(backButton, !UIManager.currentState.prevState.ScreenTypeIs<SummoningScreen>());
+                    UITools.DisableButton(portalButton, UIManager.currentState.prevState.ScreenTypeIs<SummoningScreen>());
                     break;
             }
 
@@ -112,19 +113,6 @@ namespace Overlewd
             heroicShardsAmount.text = inputData?.girlData?.heroicShard?.amount.ToString();
         }
         
-        public override async Task AfterShowAsync()
-        {
-            switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
-            {
-                case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    GameData.ftue.chapter2.ShowNotifByKey("ch2gachatutor4");
-                    await UIManager.WaitHideNotifications();
-                    break;
-            }
-
-            await Task.CompletedTask;
-        }
-
         public override void OnGameDataEvent(GameDataEvent eventData)
         {
             switch (eventData.id)

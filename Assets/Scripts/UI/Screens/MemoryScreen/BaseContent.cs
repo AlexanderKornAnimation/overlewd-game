@@ -23,7 +23,7 @@ namespace Overlewd
             private void Customize()
             {                
                 var pieces = transform.Find("Shards").GetComponentsInChildren<Piece>();
-
+                
                 foreach (var piece in pieces)
                 {
                     piece.memoryId = memoryId;
