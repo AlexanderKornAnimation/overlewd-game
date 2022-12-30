@@ -12,6 +12,8 @@ namespace Overlewd
         private Button backButton;
         private TextMeshProUGUI backButtonText;
 
+        private Button guestsRoomButton;
+
         private Button ulviButton;
         private Image ulviBuffIcon;
         private TextMeshProUGUI ulviBuffDescription;
@@ -64,6 +66,9 @@ namespace Overlewd
             backButtonText = backButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             backButton.onClick.AddListener(BackButtonClick);
 
+            guestsRoomButton = canvas.Find("GuestRoomButton").GetComponent<Button>();
+            guestsRoomButton.onClick.AddListener(GuestRoomButtonClick);
+
             ulviButton = canvas.Find("UlviButton").GetComponent<Button>();
             ulviButton.onClick.AddListener(UlviButtonClick);
             ulviBuffIcon = ulviButton.transform.Find("Buff").GetComponent<Image>();
@@ -115,6 +120,8 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            UITools.DisableButton(guestsRoomButton);
+            
             ulviBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ulvi.buff?.icon);
             ulviBuffActive.SetActive(GameData.matriarchs.Ulvi.buff?.active ?? false);
             ulviBuffDescription.text = 
@@ -217,6 +224,10 @@ namespace Overlewd
                     showOverlay = false,
                 });
             }
+        }
+        
+        private void GuestRoomButtonClick()
+        {
         }
 
         private void GirlButtonClick(string girlKey)

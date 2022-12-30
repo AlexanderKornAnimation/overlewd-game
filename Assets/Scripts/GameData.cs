@@ -570,18 +570,21 @@ namespace Overlewd
             });
         }
 
-        public async Task Mrg(int? srcID, int? tgtId)
+        public async Task<AdminBRO.Character> Mrg(int? srcID, int? tgtId)
         {
             if (!srcID.HasValue || !tgtId.HasValue)
-                return;
+                return null;
 
-            await AdminBRO.charactersMrgAsync(srcID.Value, tgtId.Value);
+            var result = await AdminBRO.charactersMrgAsync(srcID.Value, tgtId.Value);
+            
             await GameData.player.Get();
             await Get();
             UIManager.ThrowGameDataEvent(new GameDataEvent
             {
                 id = GameDataEventId.CharacterMerge
             });
+
+            return result.dData;
         }
 
         public async Task ToSlot1(int chId)

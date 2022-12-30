@@ -985,8 +985,8 @@ namespace Overlewd
             await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/levelup"));
         public static async Task<HttpCoreResponse> chracterSkillLvlUp(int characterId, int skillId) =>
             await HttpCore.PostAsync(make_url($"battles/my/characters/{characterId}/skills/{skillId}/levelup"));
-        public static async Task<HttpCoreResponse> charactersMrgAsync(int srcCharacterId, int trgtCharacterId) =>
-            await HttpCore.PostAsync(make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}"));
+        public static async Task<HttpCoreResponse<Character>> charactersMrgAsync(int srcCharacterId, int trgtCharacterId) =>
+            await HttpCore.PostAsync<Character>(make_url($"battles/my/characters/{trgtCharacterId}/merge/{srcCharacterId}"));
         public static async Task<HttpCoreResponse<List<SkillEffect>>> skillEffectsAsync() =>
             await HttpCore.GetAsync<List<SkillEffect>>(make_url("battles/skills/effects"));
 
