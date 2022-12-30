@@ -44,12 +44,16 @@ namespace Overlewd
             private async void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                var shardData = GameData.matriarchs.GetShardById(pieceData?.shardId, pieceData?.rarity);
-
-                if (shardData.amount > 0)
+                
+                if (pieceData != null && memoryId.HasValue)
                 {
-                    await GameData.matriarchs.MemoryPieceOfGlassBuy(memoryId, pieceData?.shardName);
-                    gameObject.SetActive(false);
+                    var shardData = GameData.matriarchs.GetShardById(pieceData?.shardId, pieceData?.rarity);
+
+                    if (shardData.amount > 0)
+                    {
+                        await GameData.matriarchs.MemoryPieceOfGlassBuy(memoryId, pieceData?.shardName);
+                        gameObject.SetActive(false);
+                    }
                 }
             }
         }

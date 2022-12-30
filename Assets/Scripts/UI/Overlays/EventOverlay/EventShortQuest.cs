@@ -73,11 +73,16 @@ namespace Overlewd
                     var rewardIcons = rewardGrid.GetComponentsInChildren<Image>();
                     var rewardAmounts = rewardGrid.GetComponentsInChildren<TextMeshProUGUI>();
                     
+                    foreach (var reward in rewardIcons)
+                    {
+                        reward.gameObject.SetActive(false);
+                    }
+                    
                     for (int i = 0; i < _questData.rewards?.Count; i++)
                     {
                         if (i >= rewardIcons.Length)
                             break;
-                        
+                        rewardIcons[i].gameObject.SetActive(true);
                         rewardIcons[i].sprite = ResourceManager.LoadSprite(_questData.rewards[i].icon);
                         rewardAmounts[i].text = _questData.rewards[i].amount.ToString();
                     }
