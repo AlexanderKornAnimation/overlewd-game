@@ -55,6 +55,8 @@ namespace Overlewd
 
         protected override void Awake()
         {
+            base.Awake();
+
             var canvas = transform.Find("Canvas");
             backRect = canvas.Find("BackRect").GetComponent<RectTransform>();
 
@@ -148,8 +150,10 @@ namespace Overlewd
             UITools.RightHide(backRect);
         }
 
-        private async Task FirstShowMarkedQuests()
+        private async void FirstShowMarkedQuests()
         {
+            UIManager.PushUserInputLocker(new UserInputLocker(this));
+
             markNewQuests.Reverse();
             foreach (var quest in markNewQuests)
             {
@@ -162,13 +166,13 @@ namespace Overlewd
                 await quest.WaitShow();
                 await quest.WaitMarkAsComplete();
             }
+
+            UIManager.PopUserInputLocker(new UserInputLocker(this));
         }
 
         public async Task ShowAsync()
         {
             await UITools.RightShowAsync(backRect);
-
-            await FirstShowMarkedQuests();
         }
 
         public async Task HideAsync()
@@ -176,7 +180,7 @@ namespace Overlewd
             await UITools.RightHideAsync(backRect);
         }
 
-        public async void Refresh()
+        private async void Refresh()
         {
             mainQuestButtonTitle.text = mainQuest?.name;
 
@@ -213,6 +217,9 @@ namespace Overlewd
         {
             switch (eventData.id)
             {
+                case UIEventId.ChangeScreenComplete:
+                    FirstShowMarkedQuests();
+                    break;
                 case UIEventId.HideOverlay:
                     if (eventData.SenderTypeIs<QuestOverlay>() ||
                         eventData.SenderTypeIs<EventOverlay>())
