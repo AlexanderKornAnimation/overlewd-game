@@ -458,6 +458,10 @@ namespace Overlewd
             public string hash;
             public int size;
             public string url;
+
+            public const string Type_Texture = "texture";
+            public const string Type_AssetBundle = "assetbundle";
+            public const string Type_Sound = "sound";
         }
 
         [Serializable]
