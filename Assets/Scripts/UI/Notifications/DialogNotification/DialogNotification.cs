@@ -52,8 +52,6 @@ namespace Overlewd
             var replicaSoundData = GameData.sounds.GetById(firstReplica?.replicaSoundId);
             replicaSound = SoundManager.GetEventInstance(replicaSoundData?.eventPath, replicaSoundData?.soundBankId);
 
-            StartCoroutine("CloseByTimerOrReplica");
-
             await Task.CompletedTask;
         }
 
@@ -66,10 +64,12 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            missclick.enabledClick = false;
             if (replicaSound == null)
             {
                 StartCoroutine(EnableMissclickByTimer());
             }
+            StartCoroutine(CloseByTimerOrReplica());
 
             await Task.CompletedTask;
         }
@@ -91,7 +91,6 @@ namespace Overlewd
 
         private IEnumerator EnableMissclickByTimer()
         {
-            missclick.enabledClick = false;
             yield return new WaitForSeconds(2.0f);
             missclick.enabledClick = true;
         }
@@ -99,12 +98,10 @@ namespace Overlewd
         private IEnumerator CloseByTimerOrReplica()
         {
             yield return new WaitForSeconds(4.0f);
-
             while (replicaSound?.IsPlaying() ?? false)
             {
                 yield return new WaitForSeconds(0.3f);
             }
-
             UIManager.HideNotification();
         }
     }

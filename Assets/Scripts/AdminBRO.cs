@@ -379,6 +379,7 @@ namespace Overlewd
             public const string Type_Currency = "currency";
             public const string Type_Pack = "pack";
             public const string Type_BattleCharacter = "battle-character";
+            public const string Type_BattleCharacterBoss = "battle-character-boss";
             public const string Type_BattleCharacterEquipment = "battle-character-equipment";
             public const string Type_MatriarchShard = "matriarch_shard";
             public const string Type_ManaPotion = "mana_potion";
