@@ -2196,13 +2196,23 @@ namespace Overlewd
             public const string Status_Open = "open";
 
             public const string MemoryType_Main = "main";
-            public const string MemoryType_Guest = "guest";
+            public const string MemoryType_Story = "story";
+            public const string MemoryType_Event = "event";
 
             [JsonProperty(Required = Required.Default)]
             public bool isVisible => status == Status_Visible;
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isMain => memoryType == MemoryType_Main;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isStory => memoryType == MemoryType_Event;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isEvent => memoryType == Status_Open;
 
             [JsonProperty(Required = Required.Default)]
             public List<Piece> basicPieces => pieces.FindAll(p => p.rarity == Rarity.Basic);
