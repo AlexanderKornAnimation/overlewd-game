@@ -58,6 +58,8 @@ namespace Overlewd
         private bool stageIsComplete =>
             inputData?.ftueStageData?.isComplete ?? inputData?.eventStageData?.isComplete ?? false;
 
+        private BaseBattleScreen.BossMiniGameInfo _bossMiniGameInfo { get; set; }
+
         void Awake()
         {
             var screenInst = ResourceManager.InstantiateScreenPrefab(
@@ -216,6 +218,7 @@ namespace Overlewd
         public override async Task BeforeShowDataAsync()
         {
             await GameData.player.Get();
+            _bossMiniGameInfo = await BaseBattleScreen.GetBossMiniGameInfoFromServer(inputData);
 
             await Task.CompletedTask;
         }
@@ -336,7 +339,9 @@ namespace Overlewd
                     SetData(new BaseBattleScreenInData
                     {
                         ftueStageId = inputData.ftueStageId,
-                        eventStageId = inputData.eventStageId
+                        eventStageId = inputData.eventStageId,
+
+                        bossMiniGameInfo = _bossMiniGameInfo,
                     }).DoShow();
             }
             else

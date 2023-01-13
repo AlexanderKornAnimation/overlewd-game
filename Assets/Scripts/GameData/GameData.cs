@@ -31,6 +31,7 @@ namespace Overlewd
         public static Potions potions { get; } = new Potions();
         public static NutakuMy nutaku { get; } = new NutakuMy();
         public static Alchemy alchemy { get; } = new Alchemy();
+        public static BossMiniGame bossMiniGame { get; } = new BossMiniGame();
     }
 
     public abstract class BaseGameMeta
@@ -1300,25 +1301,6 @@ namespace Overlewd
         public override async Task Get()
         {
             settings = await AdminBRO.nutakuSettingsAsync();
-        }
-    }
-
-    //alchemy
-    public class Alchemy : BaseGameMeta
-    {
-        public List<AdminBRO.AlchemyIngredient> ingredients { get; private set; } = new List<AdminBRO.AlchemyIngredient>();
-        public List<AdminBRO.AlchemyMixture> mixture { get; private set; } = new List<AdminBRO.AlchemyMixture>();
-        public List<AdminBRO.AlchemyRecipe> recipe { get; private set; } = new List<AdminBRO.AlchemyRecipe>();
-        public override async Task Get()
-        {
-            ingredients = await AdminBRO.alchemyIngredientsAsync();
-            mixture = await AdminBRO.alchemyMixturesAsync();
-            recipe = await AdminBRO.alchemyRecipesAsync();
-        }
-
-        public async Task<AdminBRO.BrewResult> Brew(int[] ingredientIds)
-        {
-            return await AdminBRO.alchemyBrewAsync(ingredientIds);
         }
     }
 }

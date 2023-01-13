@@ -107,23 +107,17 @@ namespace Overlewd
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.ftue.EndStage(inputData.ftueStageId.Value,
-                    new AdminBRO.BattleEndData
-                    {
-                        win = endBattleData.battleWin,
-                        mana = endBattleData.manaSpent,
-                        hp = endBattleData.hpSpent
-                    });
+                await GameData.ftue.EndStage(inputData.ftueStageId.Value, endBattleData.toServerEndData);
             }
             else
             {
-                await GameData.events.StageEnd(inputData.eventStageId.Value,
-                    new AdminBRO.BattleEndData
-                    {
-                        win = endBattleData.battleWin,
-                        mana = endBattleData.manaSpent,
-                        hp = endBattleData.hpSpent
-                    });
+                await GameData.events.StageEnd(inputData.eventStageId.Value, endBattleData.toServerEndData);
+            }
+
+            if (inputData.bossMiniGameInfo != null)
+            {
+                await GameData.bossMiniGame.MiniGameEnd(inputData.bossMiniGameInfo.battleParams.id,
+                    endBattleData.toServerEndData);
             }
         }
     }

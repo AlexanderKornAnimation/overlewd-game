@@ -244,7 +244,8 @@ namespace Overlewd
                 GameData.battlePass,
                 GameData.potions,
                 GameData.nutaku,
-                GameData.alchemy
+                GameData.alchemy,
+                GameData.bossMiniGame
             };
 
             foreach (var metaSplit in SplitGameMeta(gameMeta, 10))

@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Overlewd
 {
-    public static class AdminBRO
+    public static partial class AdminBRO
     {
         private static string make_url(string url_part) => $"{BuildParameters.ServerDomainURL}{url_part}";
 
@@ -1142,7 +1142,7 @@ namespace Overlewd
 
             public CharacterSkill GetSkillByType(string type) =>
                 skills.FirstOrDefault(s => s.type == type);
-            
+
             [JsonProperty(Required = Required.Default)]
             public string iconUrl => GetIconByRarity(rarity);
 
@@ -1282,7 +1282,7 @@ namespace Overlewd
                 SkillEffect.Key_Stun => TMPSprite.DebuffStun,
                 _ => null
             };
-            
+
             [JsonProperty(Required = Required.Default)]
             public Animation vfxSelf => GameData.animations.GetById(vfxSelfId);
 
@@ -1330,7 +1330,7 @@ namespace Overlewd
             public const string Key_Silence = "silence";
             public const string Key_Stun = "stun";
             public const string Key_AttackUp = "attack_up";
-            
+
         }
 
         // /battles/pass
@@ -1490,7 +1490,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string classMarker => CharacterClass.Marker(characterClass);
-            
+
             [JsonProperty(Required = Required.Default)]
             public string icon => GetIconByRarity(rarity);
 
@@ -1885,7 +1885,7 @@ namespace Overlewd
             foreach (var mId in mergeIds)
             {
                 form.AddField("ids[]", mId);
-            }    
+            }
             return await HttpCore.PostAsync(make_url("forge/merge/equipment"), form);
         }
 
@@ -2313,70 +2313,6 @@ namespace Overlewd
         {
             public string callbackUrl;
             public string completeUrl;
-        }
-
-        // /alchemy
-        // /alchemy/my/ingredients
-        // /alchemy/my/mixtures
-        // /alchemy/recipes
-        // /alchemy/brew
-        public static async Task<HttpCoreResponse<List<AlchemyIngredient>>> alchemyIngredientsAsync() =>
-            await HttpCore.GetAsync<List<AlchemyIngredient>>(make_url("alchemy/my/ingredients"));
-
-        public static async Task<HttpCoreResponse<List<AlchemyMixture>>> alchemyMixturesAsync() =>
-            await HttpCore.GetAsync<List<AlchemyMixture>>(make_url("alchemy/my/mixtures"));
-
-        public static async Task<HttpCoreResponse<List<AlchemyRecipe>>> alchemyRecipesAsync() =>
-            await HttpCore.GetAsync<List<AlchemyRecipe>>(make_url("alchemy/recipes"));
-
-        public static async Task<HttpCoreResponse<BrewResult>> alchemyBrewAsync(int[] ingredientIds)
-        {
-            var form = new WWWForm();
-            foreach (var iId in ingredientIds)
-            {
-                form.AddField("ingredientIds[]", iId);
-            }
-            return await HttpCore.PostAsync<BrewResult>(make_url("alchemy/brew"), form);
-        }
-
-        [Serializable]
-        public class AlchemyIngredient
-        {
-            public int ingredientId;
-            public int amount;
-            public string name;
-            public int dropChance;
-            public int dropChanceBoss;
-            public string icon;
-        }
-
-        [Serializable]
-        public class AlchemyMixture
-        {
-            public int mixtureId;
-            public int amount;
-            public string name;
-            public int magnitude;
-            public string mixtureType;
-            public string effectDescription;
-            public string icon;
-        }
-
-        [Serializable]
-        public class AlchemyRecipe
-        {
-            public int recipeId;
-            public string recipeName;
-            public List<int> ingredientIds;
-            public int resultMixtureId;
-        }
-
-        [Serializable]
-        public class BrewResult
-        {
-            public string result;
-            public int? usedRecipeId;
-            public int? resultMixtureId;
         }
     }
 }
