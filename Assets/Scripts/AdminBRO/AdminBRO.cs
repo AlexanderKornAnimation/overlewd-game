@@ -270,6 +270,8 @@ namespace Overlewd
                 public int order;
                 public string profit;
                 public bool isCrystalsOffer;
+                public string bannerArt;
+                public string bannerDescription;
 
                 public const string ViewType_GoodsList = "goods_list";
                 public const string ViewType_Bundle = "bundle";
@@ -2171,6 +2173,7 @@ namespace Overlewd
             public int id;
             public int userId;
             public string status;
+            public int? eventId;
             public int? matriarchId;
             public string title;
             public string label;
