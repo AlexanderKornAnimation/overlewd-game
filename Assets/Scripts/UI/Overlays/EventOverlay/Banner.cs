@@ -35,7 +35,7 @@ namespace Overlewd
             {
                 var eData = eventData;
 
-                banner.sprite = ResourceManager.LoadSprite(eData?.mapBannerImage);
+                banner.sprite = ResourceManager.LoadSprite(eData?.overlayBannerImage);
                 timer.text = UITools.IncNumberSizeTo(eData?.timePeriodLeft, 50f);
             }
 
