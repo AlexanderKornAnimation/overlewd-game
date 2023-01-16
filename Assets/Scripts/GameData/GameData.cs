@@ -814,26 +814,9 @@ namespace Overlewd
 
             var result = await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
             await GameData.player.Get();
-
-            if (result.dData.status == true)
-            {
-                UIManager.ThrowGameDataEvent(
-                    new GameDataEvent
-                    {
-                        id = GameDataEventId.BuyTradable
-                    });
-            }
-
-            return result;
-        }
-
-        public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? tradableId)
-        {
-            if (!tradableId.HasValue)
-                return new AdminBRO.TradableBuyStatus { status = false }; ;
-
-            var result = await AdminBRO.tradableBuyAsync(tradableId.Value);
-            await GameData.player.Get();
+            await GameData.characters.Get();
+            await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
 
             if (result.dData.status == true)
             {

@@ -429,9 +429,6 @@ namespace Overlewd
         public static async Task<HttpCoreResponse<TradableBuyStatus>> tradableBuyAsync(int marketId, int tradableId) =>
             await HttpCore.PostAsync<TradableBuyStatus>(make_url($"markets/{marketId}/tradable/{tradableId}/buy"));
 
-        public static async Task<HttpCoreResponse<TradableBuyStatus>> tradableBuyAsync(int tradableId) =>
-            await HttpCore.PostAsync<TradableBuyStatus>(make_url($"tradable/{tradableId}/buy"));
-
         [Serializable]
         public class TradableBuyStatus
         {
