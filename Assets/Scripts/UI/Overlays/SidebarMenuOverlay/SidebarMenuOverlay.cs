@@ -221,9 +221,7 @@ namespace Overlewd
         private void HaremButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            var notif = WalletNotifWidget.GetInstance(UIManager.systemNotifRoot);
-            notif.Show();
-            //UIManager.ShowScreen<HaremScreen>();
+            UIManager.ShowScreen<HaremScreen>();
         }
 
         private void MunicipalityButtonClick()
