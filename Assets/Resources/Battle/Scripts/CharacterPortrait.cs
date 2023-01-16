@@ -86,7 +86,7 @@ namespace Overlewd
             if (sliderMP) sliderMP.value = mp;
             status_bar?.UpdateStatuses();
             if (whiteSlider) StartCoroutine(HPChangePause());
-            if (textNameTag) textNameTag.text = $"{nameTag} turns";
+            if (textNameTag) textNameTag.text = $"{nameTag}'s turns";
             icoRT.anchoredPosition = cc.isBoss ? Vector2.zero : defaultPosX;
         }
         IEnumerator HPChangePause()

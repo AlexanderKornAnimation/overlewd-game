@@ -353,7 +353,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Suplies for Lord
+  m_text: Lord's supplies
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
   m_sharedMaterial: {fileID: -4931939531266473624, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
@@ -380,8 +380,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 47
-  m_fontSizeBase: 47
+  m_fontSize: 52
+  m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9505,7 +9505,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 525785923470737680}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -9935,8 +9935,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 177.4}
-  m_SizeDelta: {x: 2400, y: 725.3906}
+  m_AnchoredPosition: {x: 0, y: 282}
+  m_SizeDelta: {x: 2400, y: 940}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7925402225693430786
 CanvasRenderer:
@@ -17204,7 +17204,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cat Warrior turns
+  m_text: Overlord's turn
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f05df3879ace9494f872b61c73a4f76c, type: 2}
   m_sharedMaterial: {fileID: -9044617026594752746, guid: f05df3879ace9494f872b61c73a4f76c, type: 2}
@@ -17231,7 +17231,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50.7
+  m_fontSize: 58
   m_fontSizeBase: 58.5
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -22577,6 +22577,7 @@ GameObject:
   - component: {fileID: 6423733680285614766}
   - component: {fileID: 8290151346591001660}
   - component: {fileID: 8184455612769072399}
+  - component: {fileID: 753008843716618226}
   m_Layer: 0
   m_Name: text_rounds
   m_TagString: Untagged
@@ -22625,7 +22626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -22720,6 +22721,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &753008843716618226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7916517812685729837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c195825e8cbabe47a8e9a7c7fb8f6e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnOnGuiElements:
+  - {fileID: 124971870179351115}
+  aniVFXTestGO: {fileID: 5770044396577802707, guid: ff26b226903b6af4aa88943f33905d74, type: 3}
 --- !u!1 &8036904765065480640
 GameObject:
   m_ObjectHideFlags: 0

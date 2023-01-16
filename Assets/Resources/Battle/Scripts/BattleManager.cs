@@ -334,11 +334,11 @@ namespace Overlewd
 
                     if (!ccOnSelect.isEnemy && skillOnSelect != -1)
                         if (sc.isHeal)
-                        foreach (var cc in enemyTargetList)
-                            cc?.HighlightForHeal();
+                            foreach (var cc in enemyTargetList)
+                                cc?.HighlightForHeal();
                         else
-                        foreach (var cc in enemyAllyList)
-                            cc?.HighlightForHit();
+                            foreach (var cc in enemyAllyList)
+                                cc?.HighlightForHit();
                     else
                         foreach (var cc in charControllerList)
                             if (cc != ccOnSelect)
@@ -413,22 +413,81 @@ namespace Overlewd
         }
         public void Shake(float duration, float strenght) =>
             BattleCanvas.DOShakePosition(duration, strenght);
-        
+
+        bool EnemyBrain(bool aoe, bool heal)
+        {
+            bool canHit = false;
+            if (aoe)
+            {
+                ccTarget = null;
+                if (heal)
+                    foreach (var ally in enemyAllyList)
+                        if (ally.health < ally.healthMax)
+                            canHit = true;
+            }
+            else if (heal)
+            {
+                var targetToHeal = new List<CharController>();
+                foreach (var ally in enemyAllyList)
+                    if (ally.health < ally.healthMax)
+                        targetToHeal.Add(ally);
+
+                if (targetToHeal.Count > 0)
+                {
+                    ccTarget = targetToHeal[Random.Range(0, targetToHeal.Count)];
+                    canHit = true;
+                }
+                else
+                {
+                    //still choose target to heal if conditions of the target or a cooldown is fail
+                    ccTarget = enemyAllyList[Random.Range(0, enemyAllyList.Count)];
+                    //canHit = false; //for clarity
+                }
+            }
+            else
+            {
+                ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
+                canHit = true;
+            }
+            return canHit;
+        }
+
         IEnumerator EnemyAttack()
         {
             //Must be empty
             yield return new WaitForSeconds(enemyDelay);
             if (!ccOnSelect.isDead)
             {
-                int id = (ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0) ? Random.Range(0, ccOnSelect.skill.Count) : 0;
-                if (ccOnSelect.skill[id].AOE)
-                    ccTarget = null;
-                else if (ccOnSelect.skill[id].actionType == "heal")
-                    ccTarget = enemyAllyList[Random.Range(0, enemyAllyList.Count)];
-                else
-                    ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
+                //int id = (ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0) ? Random.Range(0, ccOnSelect.skill.Count) : 0;
+                var availableSkillsId = new List<int>();
+                //if cool down of skill == 0 we add them to the skill id list for randomise our attack
+                foreach (var item in ccOnSelect.skill)
+                    if (ccOnSelect.skillCD[item] == 0) 
+                        availableSkillsId.Add(ccOnSelect.skill.IndexOf(item));
+                Debug.Log($"availableSkillsId count: {availableSkillsId.Count}");
+                //if all skill on the CD we choose 1st skill as default to awoid crash report
+                int id = availableSkillsId.Count > 0 ? availableSkillsId[Random.Range(0, availableSkillsId.Count)] : 0;
+
+                bool aoe = ccOnSelect.skill[id].AOE;
+                bool heal = ccOnSelect.skill[id].actionType == "heal";
+
+                if (!EnemyBrain(aoe, heal))
+                {
+                    if (availableSkillsId.Count > 0)
+                    {
+
+                    }
+                    id = (id == 0) ? 1 : 0; //swap skill
+                    if (ccOnSelect.skillCD[ccOnSelect.skill[id]] == 0) //check if the second skill is on a cooldown
+                    {
+                        aoe = ccOnSelect.skill[id].AOE;
+                        heal = ccOnSelect.skill[id].actionType == "heal";
+                        EnemyBrain(aoe, heal);
+                    }
+                }
                 ccTarget?.Highlight();
                 //ccTarget?.CharPortraitSet();
+                Debug.Log($"use skill {id} - {ccOnSelect.skill[id].name}");
                 yield return new WaitForSeconds(0.5f);
                 AttackAction(id, isEnemyAttack: true);
             }
@@ -489,7 +548,7 @@ namespace Overlewd
             charControllerList.Remove(invoker);
 
             if (invoker.isEnemy)
-            { 
+            {
                 enemyIsDead++;
                 enemyAllyList.Remove(invoker);
             }
@@ -600,7 +659,7 @@ namespace Overlewd
                         StartCoroutine(EnemyAttack());
                         //Do not restart the animation if previous character on the same team
                         //if (battleState != prevState)
-                            charAni.SetTrigger("enemy");
+                        charAni.SetTrigger("enemy");
                     }
                     else
                     {
@@ -609,7 +668,7 @@ namespace Overlewd
                         bPosPlayer.SetSiblingIndex(siblingPlayer + 1);
                         if (!ccOnSelect.skill[0].AOE) ButtonPress(0);
                         //if (battleState != prevState)
-                            charAni.SetTrigger("player");
+                        charAni.SetTrigger("player");
                     }
                     prevState = battleState; //save prew state for portrait animation
                     ccOnSelect.Highlight();
