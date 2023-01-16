@@ -10,6 +10,7 @@ namespace Overlewd
 
         BuyTradable,
         NutakuPayment,
+        WalletStateChange,
 
         BuildingBuild,
         BuildingBuildCrystal,
@@ -50,5 +51,10 @@ namespace Overlewd
     public class GachaDataEvent : GameDataEvent
     {
         public List<AdminBRO.GachaBuyResult> buyResult { get; set; }
+    }
+
+    public class PlayerInfoDataEvent : GameDataEvent
+    {
+        public List<AdminBRO.PlayerInfo.WalletItem> walletChanges { get; set; }
     }
 }

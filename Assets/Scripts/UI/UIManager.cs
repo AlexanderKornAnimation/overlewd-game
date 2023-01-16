@@ -79,8 +79,7 @@ namespace Overlewd
         private static BaseNotification notif;
         private static Missclick notifMiss;
 
-        public static event Action<GameDataEvent> widgetsGameDataListeners;
-        public static event Action<UIEvent> widgetsUIEventListeners;
+        private static List<BaseWidget> widgets = new List<BaseWidget>();
 
         public enum UserInputLockerMode
         {
@@ -218,6 +217,14 @@ namespace Overlewd
         public static Missclick GetNotificationMissclickInstance() =>
             GetMissclickInstance(uiNotificationLayerGO.transform);
 
+        //Widgets
+        public static void RegisterWidget(BaseWidget widget) =>
+            widgets.Add(widget);
+        public static void UnregisterWidget(BaseWidget widget) =>
+            widgets.Remove(widget);
+        public static List<T> GetWidgets<T>() where T : BaseWidget =>
+            widgets.Where(w => w.GetType() == typeof(T)).Select(w => w as T).ToList();
+
         //Screen Instantiate
         private static Component GetScreenInstance(Type type, Transform parent)
         {
@@ -291,7 +298,10 @@ namespace Overlewd
             popup?.OnGameDataEvent(eventData);
             overlay?.OnGameDataEvent(eventData);
 
-            widgetsGameDataListeners?.Invoke(eventData);
+            foreach (var w in widgets)
+            {
+                w.OnGameDataEvent(eventData);
+            }
         }
 
         public static void ThrowUIEvent(UIEvent eventData)
@@ -300,7 +310,10 @@ namespace Overlewd
             popup?.OnUIEvent(eventData);
             overlay?.OnUIEvent(eventData);
 
-            widgetsUIEventListeners?.Invoke(eventData);
+            foreach (var w in widgets)
+            {
+                w.OnUIEvent(eventData);
+            }
         }
 
         //transition tools

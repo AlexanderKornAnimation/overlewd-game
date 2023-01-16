@@ -1,6 +1,8 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -42,9 +44,24 @@ namespace Overlewd
             stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {GameData.player.Stone.amount}";
         }
 
-        public override void OnGameDataEvent(GameDataEvent eventData)
+        public void ShowChangesAnim()
         {
             Customize();
+        }
+
+        public async Task WaitChangesAnim()
+        {
+            await UniTask.Delay(2000);
+        }
+
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case GameDataEventId.WalletStateChange:
+                    ShowChangesAnim();
+                    break;
+            }
         }
 
         public static WalletWidget GetInstance(Transform parent)

@@ -922,14 +922,58 @@ namespace Overlewd
     public class Player : BaseGameMeta
     {
         public AdminBRO.PlayerInfo info { get; private set; }
+        public AdminBRO.PlayerInfo prevInfo { get; private set; }
+        public List<AdminBRO.PlayerInfo.WalletItem> lastWalletChanges { get; private set; } =
+            new List<AdminBRO.PlayerInfo.WalletItem>();
 
         public override async Task Get()
         {
+            prevInfo = info;
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
 
             lastTimeUpd = DateTime.Now;
             accEnergyPoints = 0.0f;
+
+            CalcWalletChanges();
+        }
+
+        private void CalcWalletChanges()
+        {
+            if (prevInfo != null)
+            {
+                lastWalletChanges.Clear();
+                foreach (var cw in info.wallet)
+                {
+                    var pw = prevInfo.wallet.Find(pw => pw.currencyId == cw.currencyId);
+                    if (pw == null)
+                    {
+                        lastWalletChanges.Add(cw);
+                    }
+                    else
+                    {
+                        if (pw.amount != cw.amount)
+                        {
+                            lastWalletChanges.Add(cw);
+                        }
+                    }
+                }
+            }
+
+            if (lastWalletChanges.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(new PlayerInfoDataEvent
+                {
+                    id = GameDataEventId.WalletStateChange,
+                    walletChanges = lastWalletChanges
+                });
+
+                if (UIManager.GetWidgets<WalletWidget>().Count == 0)
+                {
+                    var notif = WalletNotifWidget.GetInstance(UIManager.systemNotifRoot);
+                    notif.Show();
+                }
+            }
         }
 
         private DateTime lastTimeUpd;
