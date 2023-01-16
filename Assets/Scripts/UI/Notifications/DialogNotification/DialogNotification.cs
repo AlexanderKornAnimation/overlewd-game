@@ -8,23 +8,6 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class DialogNotificationMissclick : NotificationMissclickColored
-    {
-        private IEnumerator EnableByTimer()
-        {
-            yield return new WaitForSeconds(2.0f);
-            missClickEnabled = true;
-        }
-
-        public void OnReset()
-        {
-            missClickEnabled = false;
-            StopCoroutine(EnableByTimer());
-            StartCoroutine(EnableByTimer());
-        }
-    }
-
-
     public class DialogNotification : BaseNotificationParent<DialogNotificationInData>
     {
         private Button button;
@@ -56,13 +39,6 @@ namespace Overlewd
             UIManager.HideNotification();
         }
 
-        public override BaseMissclick MakeMissclick()
-        {
-            var missclick = UIManager.MakeNotificationMissclick<DialogNotificationMissclick>();
-            missclick.missClickEnabled = false;
-            return missclick;
-        }
-
         public override async Task BeforeShowAsync()
         {
             var dialogData = inputData?.dialogData;
@@ -76,8 +52,6 @@ namespace Overlewd
             var replicaSoundData = GameData.sounds.GetById(firstReplica?.replicaSoundId);
             replicaSound = SoundManager.GetEventInstance(replicaSoundData?.eventPath, replicaSoundData?.soundBankId);
 
-            StartCoroutine("CloseByTimerOrReplica");
-
             await Task.CompletedTask;
         }
 
@@ -90,10 +64,12 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            missclick.enabledClick = false;
             if (replicaSound == null)
             {
-                UIManager.GetNotificationMissclick<DialogNotificationMissclick>()?.OnReset();
+                StartCoroutine(EnableMissclickByTimer());
             }
+            StartCoroutine(CloseByTimerOrReplica());
 
             await Task.CompletedTask;
         }
@@ -113,15 +89,19 @@ namespace Overlewd
             return gameObject.AddComponent<ScreenLeftHide>();
         }
 
+        private IEnumerator EnableMissclickByTimer()
+        {
+            yield return new WaitForSeconds(2.0f);
+            missclick.enabledClick = true;
+        }
+
         private IEnumerator CloseByTimerOrReplica()
         {
             yield return new WaitForSeconds(4.0f);
-
             while (replicaSound?.IsPlaying() ?? false)
             {
                 yield return new WaitForSeconds(0.3f);
             }
-
             UIManager.HideNotification();
         }
     }

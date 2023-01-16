@@ -19,9 +19,9 @@ namespace Overlewd
             
         }
         
-        public override BaseMissclick MakeMissclick()
+        public override void OnMissclick()
         {
-            return UIManager.MakeOverlayMissclick<OverlayMissclickColored>();
+            UIManager.HideOverlay();
         }
 
         public override ScreenShow Show()

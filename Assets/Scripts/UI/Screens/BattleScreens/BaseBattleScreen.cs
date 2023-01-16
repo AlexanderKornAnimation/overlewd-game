@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -63,10 +64,42 @@ namespace Overlewd
 			GameData.ftue.GetChapterByKey(chapterKey)?.ShowNotifByKey(notifKey, false);
 		}
 
+		private BattleManagerInData _battleManagerInData { get; set; }
 		public BattleManagerInData GetBattleData()
 		{
-			return inputData.hasFTUEStage ? BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
+			if (_battleManagerInData != null)
+            {
+				return _battleManagerInData;
+            }
+			_battleManagerInData = inputData.hasFTUEStage ? BattleManagerInData.InstFromFTUEStage(inputData.ftueStageData) :
 				inputData.hasEventStage ? BattleManagerInData.InstFromEventStage(inputData.eventStageData) : null;
+			_battleManagerInData?.SetBossMiniGameInfo(inputData.bossMiniGameInfo);
+			return _battleManagerInData;
+		}
+
+		public class BossMiniGameInfo
+		{
+			public AdminBRO.MiniGame info { get; set; }
+			public AdminBRO.MiniGame.Battle battleParams { get; set; }
+		}
+
+		public static async Task<BossMiniGameInfo> GetBossMiniGameInfoFromServer(BasePrepareBattlePopupInData prepareBattlePopupInData)
+		{
+			if (prepareBattlePopupInData.eventStageId.HasValue)
+			{
+				var enabled = await GameData.bossMiniGame.MiniGameEnabled(prepareBattlePopupInData.eventStageId.Value);
+				if (enabled)
+                {
+					var info = GameData.bossMiniGame.GetMiniGameDataByEventId(prepareBattlePopupInData.eventStageData.eventChapterData.eventId);
+					var battleParams = info.battles.FirstOrDefault();
+					return new BossMiniGameInfo
+					{
+						info = info,
+						battleParams = battleParams
+					};
+				}					
+			}
+			return null;
 		}
 	}
 
@@ -79,7 +112,7 @@ namespace Overlewd
 
 	public class BaseBattleScreenInData : BaseFullScreenInData
 	{
-
+		public BaseBattleScreen.BossMiniGameInfo bossMiniGameInfo { get; set; }
 	}
 
 	public class BattleManagerInData
@@ -93,6 +126,7 @@ namespace Overlewd
 
 		public List<AdminBRO.Character> myTeam { get; private set; } = new List<AdminBRO.Character>();
 		public List<EnemyWave> enemyWaves { get; private set; } = new List<EnemyWave>();
+		public BossMiniGame bossMiniGame { get; private set; }
 		public string ftueChapterKey { get; private set; }
 		public string ftueStageKey { get; private set; }
 		public AdminBRO.Battle battleData { get; private set; }
@@ -107,7 +141,28 @@ namespace Overlewd
 			public List<AdminBRO.Character> enemyTeam { get; set; } = new List<AdminBRO.Character>();
 		}
 
-		public static BattleManagerInData InstFromFTUEStage(AdminBRO.FTUEStageItem stage)
+		public class BossMiniGame
+        {
+			public BaseBattleScreen.BossMiniGameInfo info { get; set; }
+			public List<EnemyWave> enemyWaves { get; set; } = new List<EnemyWave>();
+		}
+
+		public void SetBossMiniGameInfo(BaseBattleScreen.BossMiniGameInfo bossMiniGameInfo)
+        {
+			if (bossMiniGameInfo != null)
+            {
+				bossMiniGame = new BossMiniGame();
+				bossMiniGame.info = bossMiniGameInfo;
+				foreach (var phase in bossMiniGameInfo.battleParams.battlePhases)
+				{
+					var wave = new EnemyWave();
+					wave.enemyTeam.AddRange(phase.enemyCharacters);
+					bossMiniGame.enemyWaves.Add(wave);
+				}
+            }
+        }
+
+        public static BattleManagerInData InstFromFTUEStage(AdminBRO.FTUEStageItem stage)
         {
 			var inst = InstFromBattleData(stage?.battleData);
 			if (inst != null)
@@ -172,9 +227,16 @@ namespace Overlewd
     }
 
 	public class BattleManagerOutData
-    {
+	{
 		public bool battleWin { get; set; } = false;
 		public int manaSpent { get; set; } = 0;
 		public int hpSpent { get; set; } = 0;
-    }
+		public AdminBRO.BattleEndData toServerEndData =>
+			new AdminBRO.BattleEndData
+			{
+				win = battleWin,
+				mana = manaSpent,
+				hp = hpSpent
+			};
+	}
 }

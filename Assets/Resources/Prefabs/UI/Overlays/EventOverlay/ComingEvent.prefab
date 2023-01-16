@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -4.8999023, y: 6.199951}
+  m_AnchoredPosition: {x: 10, y: 5}
   m_SizeDelta: {x: 422, y: 92}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4792925577592894215
@@ -65,9 +65,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Pre-registration now
+  m_text: 'Pre-register now
 
-    to get start bonus'
+    to get early bonus'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -203,8 +203,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 6<size=38>d</size>23<size=38>h</size>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 3bab55379fbc39f4d83e392a22130758, type: 2}
-  m_sharedMaterial: {fileID: -6957981053977887603, guid: 3bab55379fbc39f4d83e392a22130758, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f05df3879ace9494f872b61c73a4f76c, type: 2}
+  m_sharedMaterial: {fileID: -9044617026594752746, guid: f05df3879ace9494f872b61c73a4f76c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -485,7 +485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.5999756, y: 6.4000244}
+  m_AnchoredPosition: {x: 10, y: 5}
   m_SizeDelta: {x: 418, y: 94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5743687811862389849
@@ -516,9 +516,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'wait for start of event
-
-    to receive a reward'
+  m_text: "Wait for event\u2019s start to get your reward"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
