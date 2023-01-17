@@ -244,8 +244,8 @@ namespace Overlewd
         {            
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             
-            bool canPlayFastBattle = GameData.player.energyPoints >= fastBattleCost.energyCost &&
-                GameData.player.replayAmount >= fastBattleCost.scrollCost;
+            bool canPlayFastBattle = GameData.player.info.energyPointsAmount >= fastBattleCost.energyCost &&
+                GameData.player.info.replayAmount >= fastBattleCost.scrollCost;
             
             if (canPlayFastBattle)
             {
@@ -300,10 +300,10 @@ namespace Overlewd
 
         private void SetPotionValues()
         {
-            userHpAmount.text = GameData.player.hpPotionAmount.ToString();
-            userManaAmount.text = GameData.player.manaPotionAmount.ToString();
-            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
-            userScrollAmount.text = GameData.player.replayAmount.ToString();
+            userHpAmount.text = GameData.player.info.hpPotionAmount.ToString();
+            userManaAmount.text = GameData.player.info.manaPotionAmount.ToString();
+            userStaminaAmount.text = GameData.player.info.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
+            userScrollAmount.text = GameData.player.info.replayAmount.ToString();
         }
 
         private void PotionBuyButtonClick()
@@ -333,7 +333,7 @@ namespace Overlewd
         private void BattleButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_StartBattle);
-            if (GameData.player.energyPoints >= energyCost)
+            if (GameData.player.info.energyPointsAmount >= energyCost)
             {
                 UIManager.MakeScreen<BossFightScreen>().
                     SetData(new BaseBattleScreenInData
@@ -379,7 +379,7 @@ namespace Overlewd
 
         private void RefreshEnergy()
         {
-            userStaminaAmount.text = GameData.player.energyPoints + "/" + GameData.potions.baseEnergyVolume;
+            userStaminaAmount.text = GameData.player.info.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
         }
 
         private void CustomizeBuff()

@@ -9,10 +9,14 @@ namespace Overlewd
     {
         None,
 
+        ShowPopup,
         HidePopup,
+
+        ShowOverlay,
         HideOverlay,
 
         ChangeScreenComplete,
+        RestoreStateComplete
     }
 
     public class UIEvent

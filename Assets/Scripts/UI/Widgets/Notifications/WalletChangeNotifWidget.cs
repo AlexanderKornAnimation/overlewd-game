@@ -5,10 +5,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class WalletNotifWidget : BaseWidget
+    public class WalletChangeNotifWidget : BaseWidget
     {
         private Transform walletBack;
         private WalletWidget wallet;
@@ -26,6 +27,8 @@ namespace Overlewd
 
         public async void Show()
         {
+            await UniTask.Delay(100);
+            wallet.Customize(GameData.player.prevInfo);
             await UITools.BottomShowAsync(walletBack as RectTransform);
             wallet.ShowChangesAnim();
             await wallet.WaitChangesAnim();
@@ -33,10 +36,10 @@ namespace Overlewd
             Destroy(gameObject);
         }
 
-        public static WalletNotifWidget GetInstance(Transform parent)
+        public static WalletChangeNotifWidget GetInstance(Transform parent)
         {
-            return ResourceManager.InstantiateScreenPrefab<WalletNotifWidget>
-                ("Prefabs/UI/Widgets/Notifications/WalletNotifWidget", parent);
+            return ResourceManager.InstantiateScreenPrefab<WalletChangeNotifWidget>
+                ("Prefabs/UI/Widgets/Notifications/WalletChangeNotifWidget", parent);
         }
     }
 }

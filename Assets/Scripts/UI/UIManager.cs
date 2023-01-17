@@ -48,7 +48,7 @@ namespace Overlewd
         }
     }
 
-    public static class UIManager
+    public static partial class UIManager
     {
         private static Vector2 currentResolution;
         private static float currentAspectRatio;
@@ -292,30 +292,6 @@ namespace Overlewd
             uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
-        public static void ThrowGameDataEvent(GameDataEvent eventData)
-        {
-            screen?.OnGameDataEvent(eventData);
-            popup?.OnGameDataEvent(eventData);
-            overlay?.OnGameDataEvent(eventData);
-
-            foreach (var w in widgets)
-            {
-                w.OnGameDataEvent(eventData);
-            }
-        }
-
-        public static void ThrowUIEvent(UIEvent eventData)
-        {
-            screen?.OnUIEvent(eventData);
-            popup?.OnUIEvent(eventData);
-            overlay?.OnUIEvent(eventData);
-
-            foreach (var w in widgets)
-            {
-                w.OnUIEvent(eventData);
-            }
-        }
-
         //transition tools
         private static async Task WaitScreensPrepare(List<BaseScreen> screens)
         {
@@ -354,6 +330,12 @@ namespace Overlewd
             }
             await Task.WhenAll(processTasks);
         }
+
+        public static bool inTransitionState =>
+            (screen?.IsTransitionState() ?? false) ||
+            (popup?.IsTransitionState() ?? false) ||
+            (overlay?.IsTransitionState() ?? false) ||
+            restoreStateModeEnabled;
 
         //UI states
         public class StateParams
@@ -445,6 +427,8 @@ namespace Overlewd
             if (state == null)
                 return;
 
+            restoreStateModeEnabled = true;
+
             bool forceReopen = sParams?.forceRestore ?? false;
 
             var screenInData = sParams?.screenInData ?? state.screenInData;
@@ -493,6 +477,13 @@ namespace Overlewd
             {
                 await _hideOverlayAsync();
             }
+
+            restoreStateModeEnabled = false;
+
+            ThrowUIEvent(new UIEvent
+            {
+                id = UIEventId.RestoreStateComplete
+            });
         }
 
         public static State currentState => new State
@@ -508,19 +499,15 @@ namespace Overlewd
         public static async void ToPrevState(StateParams sParams = null)
         {
             await _waitRestoreStateModeDisabled();
-            restoreStateModeEnabled = true;
             await _restoreState(PopState(), sParams);
-            restoreStateModeEnabled = false;
         }
         public static async void ToPrevState(State state, StateParams sParams = null)
         {
             await _waitRestoreStateModeDisabled();
             if (prevStatesStack.Contains(state))
             {
-                restoreStateModeEnabled = true;
                 while (PopState() != state) { }
                 await _restoreState(state, sParams);
-                restoreStateModeEnabled = false;
             }
         }
         public static void ToPrevScreen(StateParams sParams = null)
@@ -530,21 +517,17 @@ namespace Overlewd
         public static async void ToState(State state, StateParams sParams = null)
         {
             await _waitRestoreStateModeDisabled();
-            restoreStateModeEnabled = true;
             PushState();
             await _restoreState(state, sParams);
-            restoreStateModeEnabled = false;
         }
         public static async void RemakeState()
         {
             await _waitRestoreStateModeDisabled();
-            restoreStateModeEnabled = true;
             await _restoreState(currentState,
                 new StateParams
                 {
                     forceRestore = true
                 });
-            restoreStateModeEnabled = false;
         }
 
         //Screen Layer
@@ -649,9 +632,24 @@ namespace Overlewd
                                         new List<Missclick>());
             await WaitScreenTransitions(new List<BaseScreen> { popup },
                                         new List<Missclick> { popupMiss });
+
+            ThrowUIEvent(new UIEvent
+            {
+                id = UIEventId.ShowPopup,
+                senderType = popup?.GetType()
+            });
         }
         public static async void HidePopup() => await HidePopupAsync();
         public static async Task HidePopupAsync()
+        {
+            if (popup == null)
+                return;
+
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(popup));
+            await _hidePopupAsync();
+        }
+        public static async Task _hidePopupAsync()
         {
             if (popup == null)
                 return;
@@ -661,17 +659,6 @@ namespace Overlewd
                 id = UIEventId.HidePopup,
                 senderType = popup?.GetType()
             };
-
-            await _waitRestoreStateModeDisabled();
-            PushState(CanPush(popup));
-            await _hidePopupAsync();
-
-            ThrowUIEvent(uiEventData);
-        }
-        public static async Task _hidePopupAsync()
-        {
-            if (popup == null)
-                return;
 
             var popupPrev = popup;
             popup = null;
@@ -687,6 +674,8 @@ namespace Overlewd
             });
             await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
                                         new List<Missclick> { popupMissPrev });
+
+            ThrowUIEvent(uiEventData);
         }
 
         //Overlay Layer
@@ -730,9 +719,24 @@ namespace Overlewd
                                         new List<Missclick>());
             await WaitScreenTransitions(new List<BaseScreen> { overlay },
                                         new List<Missclick> { overlayMiss });
+
+            ThrowUIEvent(new UIEvent
+            {
+                id = UIEventId.ShowOverlay,
+                senderType = overlay?.GetType()
+            });
         }
         public static async void HideOverlay() => await HideOverlayAsync();
         private static async Task HideOverlayAsync()
+        {
+            if (overlay == null)
+                return;
+
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(overlay));
+            await _hideOverlayAsync();
+        }
+        private static async Task _hideOverlayAsync()
         {
             if (overlay == null)
                 return;
@@ -742,17 +746,6 @@ namespace Overlewd
                 id = UIEventId.HideOverlay,
                 senderType = overlay.GetType()
             };
-
-            await _waitRestoreStateModeDisabled();
-            PushState(CanPush(overlay));
-            await _hideOverlayAsync();
-
-            ThrowUIEvent(uiEventData);
-        }
-        private static async Task _hideOverlayAsync()
-        {
-            if (overlay == null)
-                return;
 
             var overlayPrev = overlay;
             overlay = null;
@@ -768,6 +761,8 @@ namespace Overlewd
             });
             await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
                                         new List<Missclick> { overlayMissPrev });
+
+            ThrowUIEvent(uiEventData);
         }
 
         //Notification Layer

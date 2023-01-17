@@ -159,10 +159,10 @@ namespace Overlewd
             refillPrice.text = $"Use bottle to get" +
                 $" <size=35><sprite=\"AssetResources\" name=\"Energy\"></size>" +
                 $" {GameData.potions.baseEnergyVolume}";
-            staminaAmount.text = $"{GameData.player.energyPoints}/{GameData.potions.baseEnergyVolume}";
-            staminaBottleAmount.text = GameData.player.energyPotionAmount.ToString();
+            staminaAmount.text = $"{GameData.player.info.energyPointsAmount}/{GameData.potions.baseEnergyVolume}";
+            staminaBottleAmount.text = GameData.player.info.energyPotionAmount.ToString();
 
-            UITools.DisableButton(refillButton, GameData.player.energyPotionAmount < 1);
+            UITools.DisableButton(refillButton, GameData.player.info.energyPotionAmount < 1);
         }
 
         private void Refresh()

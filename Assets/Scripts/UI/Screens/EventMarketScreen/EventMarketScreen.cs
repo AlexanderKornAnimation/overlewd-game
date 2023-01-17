@@ -65,7 +65,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            moneyBackValue.text = $"{GameData.player.CatEars?.amount ?? 0}";
+            moneyBackValue.text = $"{GameData.player.info.CatEars?.amount ?? 0}";
         }
 
         private void BackButtonClick()

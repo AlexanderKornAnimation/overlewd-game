@@ -52,9 +52,4 @@ namespace Overlewd
     {
         public List<AdminBRO.GachaBuyResult> buyResult { get; set; }
     }
-
-    public class PlayerInfoDataEvent : GameDataEvent
-    {
-        public List<AdminBRO.PlayerInfo.WalletItem> walletChanges { get; set; }
-    }
 }

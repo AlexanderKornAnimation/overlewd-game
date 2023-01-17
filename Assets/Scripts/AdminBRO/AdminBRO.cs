@@ -226,6 +226,42 @@ namespace Overlewd
                 public string id;
                 public int userId;
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem Crystal => wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem Wood => wallet.Find(item => item.currencyId == GameData.currencies.Wood.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem Stone => wallet.Find(item => item.currencyId == GameData.currencies.Stone.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem Copper => wallet.Find(item => item.currencyId == GameData.currencies.Copper.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem Gold => wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem Gems => wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public WalletItem CatEars => wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
+
+            [JsonProperty(Required = Required.Default)]
+            public int hpPotionAmount => potion.hp;
+
+            [JsonProperty(Required = Required.Default)]
+            public int manaPotionAmount => potion.mana;
+
+            [JsonProperty(Required = Required.Default)]
+            public int energyPotionAmount => potion.energy;
+
+            [JsonProperty(Required = Required.Default)]
+            public int replayAmount => potion.replay;
+
+            [JsonProperty(Required = Required.Default)]
+            public int energyPointsAmount => energyPoints;
         }
 
         public static async Task<HttpCoreResponse> resetAsync() =>

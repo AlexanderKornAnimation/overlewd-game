@@ -923,8 +923,6 @@ namespace Overlewd
     {
         public AdminBRO.PlayerInfo info { get; private set; }
         public AdminBRO.PlayerInfo prevInfo { get; private set; }
-        public List<AdminBRO.PlayerInfo.WalletItem> lastWalletChanges { get; private set; } =
-            new List<AdminBRO.PlayerInfo.WalletItem>();
 
         public override async Task Get()
         {
@@ -940,39 +938,34 @@ namespace Overlewd
 
         private void CalcWalletChanges()
         {
+            var hasWalletChange = false;
             if (prevInfo != null)
             {
-                lastWalletChanges.Clear();
                 foreach (var cw in info.wallet)
                 {
                     var pw = prevInfo.wallet.Find(pw => pw.currencyId == cw.currencyId);
                     if (pw == null)
                     {
-                        lastWalletChanges.Add(cw);
+                        hasWalletChange = true;
+                        break;
                     }
                     else
                     {
                         if (pw.amount != cw.amount)
                         {
-                            lastWalletChanges.Add(cw);
+                            hasWalletChange = true;
+                            break;
                         }
                     }
                 }
             }
 
-            if (lastWalletChanges.Count > 0)
+            if (hasWalletChange)
             {
-                UIManager.ThrowGameDataEvent(new PlayerInfoDataEvent
+                UIManager.ThrowGameDataEvent(new GameDataEvent
                 {
-                    id = GameDataEventId.WalletStateChange,
-                    walletChanges = lastWalletChanges
+                    id = GameDataEventId.WalletStateChange
                 });
-
-                if (UIManager.GetWidgets<WalletWidget>().Count == 0)
-                {
-                    var notif = WalletNotifWidget.GetInstance(UIManager.systemNotifRoot);
-                    notif.Show();
-                }
             }
         }
 
@@ -986,12 +979,12 @@ namespace Overlewd
                 var dt = time - lastTimeUpd;
                 lastTimeUpd = time;
 
-                if (info.energyPoints < GameData.potions.baseEnergyVolume)
+                if (info.energyPointsAmount < GameData.potions.baseEnergyVolume)
                 {
                     accEnergyPoints += (float)dt.TotalMinutes * GameData.potions.energyRecoverySpeed;
                     int accPointsIntPart = (int)accEnergyPoints;
                     accEnergyPoints -= accPointsIntPart;
-                    info.energyPoints = Math.Min(info.energyPoints + accPointsIntPart, GameData.potions.baseEnergyVolume);
+                    info.energyPoints = Math.Min(info.energyPointsAmount + accPointsIntPart, GameData.potions.baseEnergyVolume);
                 }
                 else
                 {
@@ -1003,40 +996,12 @@ namespace Overlewd
             }
         }
 
-
         public async Task AddCrystals(int amount = 1000)
         {
             var crystalCurrencyId = GameData.currencies.Crystals.id;
             await AdminBRO.meCurrencyAsync(crystalCurrencyId, amount);
             await Get();
         }
-
-        public AdminBRO.PlayerInfo.WalletItem Crystal =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Wood =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Wood.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Stone =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Stone.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Copper =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Copper.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Gold =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Gems =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
-
-        public AdminBRO.PlayerInfo.WalletItem CatEars =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
-
-        public int hpPotionAmount => info.potion.hp;
-        public int manaPotionAmount => info.potion.mana;
-        public int energyPotionAmount => info.potion.energy;
-        public int replayAmount => info.potion.replay;
-        public int energyPoints => info.energyPoints;
 
         public bool CanBuy(List<AdminBRO.PriceItem> price)
         {
