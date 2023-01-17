@@ -55,13 +55,10 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var eventData = GameData.events.mapEventData;
-            if (GameData.events.mapChapter == null)
-            {
-                if (GameData.devMode)
-                    eventData.firstChapter.SetAsMapChapter();
-                else
-                    eventData.activeChapter.SetAsMapChapter();
-            }
+            if (GameData.devMode)
+                eventData?.firstChapter.SetAsMapChapter();
+            else
+                eventData?.activeChapter.SetAsMapChapter();
 
             var eventChapterData = GameData.events.mapChapter;
             if (eventChapterData == null)

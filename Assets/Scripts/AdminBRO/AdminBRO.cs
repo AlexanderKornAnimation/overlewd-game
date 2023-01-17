@@ -2116,6 +2116,12 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public MemoryShardItem heroicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Heroic);
 
+            [JsonProperty(Required = Required.Default)]
+            public bool isMain => matriarchType == MatriarchType_Main;
+            
+            [JsonProperty(Required = Required.Default)]
+            public bool isGuest => matriarchType == MatriarchType_Guest;
+
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
             public const string Key_Ingie = "Ingie";
@@ -2196,6 +2202,9 @@ namespace Overlewd
             public const string MemoryType_Story = "story";
             public const string MemoryType_Event = "event";
 
+            [JsonProperty(Required = Required.Default)]
+            public AdminBRO.MatriarchItem matriarchData => GameData.matriarchs.GetMatriarchById(matriarchId);
+            
             [JsonProperty(Required = Required.Default)]
             public bool isVisible => status == Status_Visible;
 

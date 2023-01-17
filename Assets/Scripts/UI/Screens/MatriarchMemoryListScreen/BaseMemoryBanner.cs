@@ -51,9 +51,7 @@ namespace Overlewd
 
             private Sprite GetMatriarchClosedBackground()
             {
-                var matriarch = GameData.matriarchs.GetMatriarchById(memoryData?.matriarchId);
-
-                return matriarch.key switch
+                return memoryData?.matriarchData?.key switch
                 {
                     AdminBRO.MatriarchItem.Key_Ulvi => ResourceManager.LoadSprite(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerUlvi"),
