@@ -120,8 +120,6 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
-            UITools.DisableButton(guestsRoomButton);
-            
             ulviBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ulvi.buff?.icon);
             ulviBuffActive.SetActive(GameData.matriarchs.Ulvi.buff?.active ?? false);
             ulviBuffDescription.text = 
@@ -228,6 +226,7 @@ namespace Overlewd
         
         private void GuestRoomButtonClick()
         {
+            UIManager.ShowScreen<GuestScreen>();
         }
 
         private void GirlButtonClick(string girlKey)
