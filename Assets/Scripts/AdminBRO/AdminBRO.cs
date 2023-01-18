@@ -28,7 +28,7 @@ namespace Overlewd
             public int amount;
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.CurrencyItem currencyData =>
+            public CurrencyItem currencyData =>
                 GameData.currencies.GetById(currencyId);
 
             [JsonProperty(Required = Required.Default)]
@@ -50,7 +50,7 @@ namespace Overlewd
             public float? probability;
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.TradableItem tradableData =>
+            public TradableItem tradableData =>
                 GameData.markets.GetTradableById(tradableId);
 
             [JsonProperty(Required = Required.Default)]
@@ -58,6 +58,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string tmpSprite => tradableData?.tmpCurrencySprite;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isCurrency => tradableData?.isCurrency ?? false;
         }
 
         [Serializable]
@@ -457,7 +460,14 @@ namespace Overlewd
             public string icon => GetIconByRarity(rarity);
 
             [JsonProperty(Required = Required.Default)]
-            public string tmpCurrencySprite => GameData.currencies.GetById(currencyId)?.tmpSprite;
+            public CurrencyItem currencyData =>
+                GameData.currencies.GetById(currencyId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string tmpCurrencySprite => currencyData?.tmpSprite;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isCurrency => currencyId.HasValue;
         }
 
         // /markets/{marketId}/tradable/{tradableId}/buy
@@ -781,34 +791,13 @@ namespace Overlewd
             public const string ScreenTarget_Portal = "portal";
 
             [JsonProperty(Required = Required.Default)]
-            public bool isNew
-            {
-                get => GameData.quests.newIds.Exists(qId => qId == id);
-                set
-                {
-                    if (!value)
-                    {
-                        GameData.quests.newIds.RemoveAll(qId => qId == id);
-                    }
-                }
-            }
+            public bool isNew { get; set; }
 
             [JsonProperty(Required = Required.Default)]
-            public bool isLastAdded =>
-                GameData.quests.lastAddedIds.Exists(qId => qId == id);
+            public bool isLastAdded { get; set; }
 
             [JsonProperty(Required = Required.Default)]
-            public bool markCompleted
-            {
-                get => GameData.quests.markCompletedIds.Exists(qId => qId == id);
-                set
-                {
-                    if (value && !markCompleted)
-                    {
-                        GameData.quests.markCompletedIds.Add(id);
-                    }
-                }
-            }
+            public bool markCompleted { get; set; }
 
             [JsonProperty(Required = Required.Default)]
             public bool isFTUE => type == Type_Ftue;

@@ -836,38 +836,40 @@ namespace Overlewd
     {
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
 
-        //local marks (runtime only)
-        public List<int> newIds { get; private set; } = new List<int>();
-        public List<int> lastAddedIds { get; private set; } = new List<int>();
-        public List<int> markCompletedIds { get; private set; } = new List<int>();
-
         public override async Task Get()
         {
-            if (quests.Count > 0)
-            {
-                var prevQuestsIds = quests.Select(q => q.id).ToList();
-                quests = await AdminBRO.questsAsync();
-                lastAddedIds = quests.Select(q => q.id).
-                    Where(qId => !prevQuestsIds.Exists(pqId => pqId == qId)).ToList();
-                newIds.AddRange(lastAddedIds);
+            var prevQuests = quests;
+            quests = await AdminBRO.questsAsync();
 
-                //clear trash from marks
-                newIds.RemoveAll(qId => !quests.Exists(q => qId == q.id));
-                markCompletedIds.RemoveAll(qId => !quests.Exists(q => qId == q.id));
-            }
-            else
+            //calc local marks
+            if (prevQuests.Count > 0)
             {
-                quests = await AdminBRO.questsAsync();
+                foreach (var q in quests)
+                {
+                    var pq = prevQuests.Find(pq => pq.id == q.id);
+                    if (pq != null)
+                    {
+                        q.isNew = pq.isNew;
+                        q.markCompleted = pq.markCompleted;
+                        q.isLastAdded = pq.isLastAdded;
+                    }
+                    else
+                    {
+                        q.isNew = true;
+                        q.markCompleted = false;
+                        q.isLastAdded = true;
+                    }
+                }
             }
+
+            UIManager.ThrowGameDataEvent(new QuestsUpdateDataEvent
+            {
+                id = GameDataEventId.QuestsUpdate
+            });
         }
 
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
-
-        public List<AdminBRO.QuestItem> newQuests =>
-            newIds.Select(qId => GetById(qId)).ToList();
-        public List<AdminBRO.QuestItem> lastAddedQuests =>
-            lastAddedIds.Select(qId => GetById(qId)).ToList();
 
         public async Task ClaimReward(int? id)
         {
@@ -876,6 +878,12 @@ namespace Overlewd
                 await AdminBRO.questClaimRewardAsync(id.Value);
                 await Get();
                 await GameData.player.Get();
+
+                UIManager.ThrowGameDataEvent(new QuestClaimRewardsDataEvent
+                {
+                    id = GameDataEventId.QuestClaimRewards,
+                    questId = id
+                });
             }
         }
     }
@@ -962,9 +970,9 @@ namespace Overlewd
 
             if (hasWalletChange)
             {
-                UIManager.ThrowGameDataEvent(new GameDataEvent
+                UIManager.ThrowGameDataEvent(new WalletChangeStateDataEvent
                 {
-                    id = GameDataEventId.WalletStateChange
+                    id = GameDataEventId.WalletChangeState
                 });
             }
         }

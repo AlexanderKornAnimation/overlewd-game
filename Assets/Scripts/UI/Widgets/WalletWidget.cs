@@ -87,7 +87,7 @@ namespace Overlewd
         {
             switch (eventData.id)
             {
-                case GameDataEventId.WalletStateChange:
+                case GameDataEventId.WalletChangeState:
                     ShowChangesAnim();
                     break;
             }

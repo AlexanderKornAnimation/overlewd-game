@@ -10,7 +10,10 @@ namespace Overlewd
 
         BuyTradable,
         NutakuPayment,
-        WalletStateChange,
+        WalletChangeState,
+
+        QuestsUpdate,
+        QuestClaimRewards,
 
         BuildingBuild,
         BuildingBuildCrystal,
@@ -38,9 +41,15 @@ namespace Overlewd
 
     public class GameDataEvent
     {
-        public GameDataEventId id = GameDataEventId.None;
+        public GameDataEventId id { get; set; } = GameDataEventId.None;
         public T As<T>() where T : GameDataEvent =>
             this as T;
+        public bool Is<T>() where T : GameDataEvent =>
+            this is T;
+        public virtual void Handle()
+        {
+
+        }
     }
 
     public class MagicGuildDataEvent : GameDataEvent
@@ -51,5 +60,52 @@ namespace Overlewd
     public class GachaDataEvent : GameDataEvent
     {
         public List<AdminBRO.GachaBuyResult> buyResult { get; set; }
+    }
+
+    public class WalletChangeStateDataEvent : GameDataEvent
+    {
+        public override void Handle()
+        {
+            WalletChangeNotifManager.Show();
+        }
+    }
+
+    public class QuestClaimRewardsDataEvent : GameDataEvent
+    {
+        public int? questId { get; set; }
+        public override void Handle()
+        {
+            var qData = GameData.quests.GetById(questId);
+            if (qData != null)
+            {
+                foreach (var r in qData.rewards.FindAll(r => r.isCurrency))
+                {
+                    PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                    {
+                        title = "Claim",
+                        message = $"{ r.amount } { r.tmpSprite }"
+                    });
+                }
+            }
+        }
+    }
+
+    public class QuestsUpdateDataEvent : GameDataEvent
+    {
+        public override void Handle()
+        {
+            foreach (var q in GameData.quests.quests)
+            {
+                if (q.isLastAdded)
+                {
+                    q.isLastAdded = false;
+                    PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                    {
+                        title = "Add quest",
+                        message = q.name
+                    });
+                }
+            }
+        }
     }
 }

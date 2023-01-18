@@ -13,12 +13,16 @@ namespace Overlewd
 {
     public static partial class UIManager
     {
-        private static List<GameDataEvent> gameDataEventsQuery { get; set; } = new List<GameDataEvent>();
+        private static List<GameDataEvent> gameDataEventsQueue { get; set; } = new List<GameDataEvent>();
+        public static void QueuedGameDataEvent(GameDataEvent eventData)
+        {
+            gameDataEventsQueue.Add(eventData);
+        }
         public static void ThrowGameDataEvent(GameDataEvent eventData)
         {
             if (inTransitionState)
             {
-                gameDataEventsQuery.Add(eventData);
+                QueuedGameDataEvent(eventData);
             }
             else
             {
@@ -28,16 +32,7 @@ namespace Overlewd
 
         private static void GameDataEventHandling(GameDataEvent eventData)
         {
-            switch (eventData.id)
-            {
-                case GameDataEventId.WalletStateChange:
-                    if (GetWidgets<WalletWidget>().Count == 0)
-                    {
-                        var notif = WalletChangeNotifWidget.GetInstance(systemNotifRoot);
-                        notif.Show();
-                    }
-                    break;
-            }
+            eventData?.Handle();
 
             screen?.OnGameDataEvent(eventData);
             popup?.OnGameDataEvent(eventData);
@@ -49,11 +44,11 @@ namespace Overlewd
             }
         }
 
-        private static void GameDataEventsQueryHandling()
+        private static void GameDataEventsQueueHandling()
         {
-            var tempQuery = new List<GameDataEvent>(gameDataEventsQuery);
-            gameDataEventsQuery.Clear();
-            foreach (var e in tempQuery)
+            var queue = new List<GameDataEvent>(gameDataEventsQueue);
+            gameDataEventsQueue.Clear();
+            foreach (var e in queue)
             {
                 GameDataEventHandling(e);
             }
@@ -66,12 +61,18 @@ namespace Overlewd
 
         private static void UIEventHandling(UIEvent eventData)
         {
+            //handling game data events queue
             switch (eventData.id)
             {
-                default:
+                case UIEventId.HideOverlay:
+                case UIEventId.ShowOverlay:
+                case UIEventId.HidePopup:
+                case UIEventId.ShowPopup:
+                case UIEventId.ChangeScreenComplete:
+                case UIEventId.RestoreStateComplete:
                     if (!inTransitionState)
                     {
-                        GameDataEventsQueryHandling();
+                        GameDataEventsQueueHandling();
                     }
                     break;
             }

@@ -13,19 +13,6 @@ namespace Overlewd
 {
     public static class UITools
     {
-        public static async void ClaimRewardsAsync(List<AdminBRO.RewardItem> rewards)
-        {
-            if (rewards == null)
-                return;
-            foreach (var r in rewards)
-            {
-                var notif = PopupNotifWidget.GetInstance(UIManager.systemNotifRoot);
-                notif.Play("Claim", $"{r.amount} {r.tmpSprite}");
-                await UniTask.Delay(1000);
-            }
-        }
-
-        
         public static string IncNumberSizeTo(string text, float size) => _incNumberSize(text, 0, size);
 
         public static string IncNumberSize(string text, float fontSize) => _incNumberSize(text, fontSize);
