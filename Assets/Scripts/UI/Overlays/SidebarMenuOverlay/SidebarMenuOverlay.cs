@@ -167,14 +167,22 @@ namespace Overlewd
                     break;
             }
 
+            InstBanners();
+           
+            await Task.CompletedTask;
+        }
+
+        private void InstBanners()
+        {
+            NSSidebarMenuOverlay.WeeklyLoginBanner.GetInstance(bannerContent);
+            
             for (int i = 0; i < 11; i++)
             {
                 NSSidebarMenuOverlay.Banner.GetInstance(bannerContent);
             }
-            
-            await Task.CompletedTask;
-        }
 
+        }
+        
         public override async Task AfterShowAsync()
         {
             await UITools.LeftShowAsync(bannerScroll.GetComponent<RectTransform>());
