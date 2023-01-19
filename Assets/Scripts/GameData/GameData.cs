@@ -930,49 +930,38 @@ namespace Overlewd
     public class Player : BaseGameMeta
     {
         public AdminBRO.PlayerInfo info { get; private set; }
-        public AdminBRO.PlayerInfo prevInfo { get; private set; }
 
         public override async Task Get()
         {
-            prevInfo = info;
+            var prevInfo = info;
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
 
             lastTimeUpd = DateTime.Now;
             accEnergyPoints = 0.0f;
 
-            CalcWalletChanges();
+            CheckWalletChanges(prevInfo);
         }
 
-        private void CalcWalletChanges()
+        private void CheckWalletChanges(AdminBRO.PlayerInfo prevInfo)
         {
-            var hasWalletChange = false;
-            if (prevInfo != null)
-            {
-                foreach (var cw in info.wallet)
-                {
-                    var pw = prevInfo.wallet.Find(pw => pw.currencyId == cw.currencyId);
-                    if (pw == null)
-                    {
-                        hasWalletChange = true;
-                        break;
-                    }
-                    else
-                    {
-                        if (pw.amount != cw.amount)
-                        {
-                            hasWalletChange = true;
-                            break;
-                        }
-                    }
-                }
-            }
+            if (prevInfo == null)
+                return;
+
+            var hasWalletChange = prevInfo.Copper.amount != info.Copper.amount;
+            hasWalletChange |= prevInfo.Crystal.amount != info.Crystal.amount;
+            hasWalletChange |= prevInfo.Wood.amount != info.Wood.amount;
+            hasWalletChange |= prevInfo.Gold.amount != info.Gold.amount;
+            hasWalletChange |= prevInfo.Stone.amount != info.Stone.amount;
+            hasWalletChange |= prevInfo.Gems.amount != info.Gems.amount;
 
             if (hasWalletChange)
             {
                 UIManager.ThrowGameDataEvent(new WalletChangeStateDataEvent
                 {
-                    id = GameDataEventId.WalletChangeState
+                    id = GameDataEventId.WalletChangeState,
+                    fromInfo = prevInfo,
+                    toInfo = info
                 });
             }
         }

@@ -12,60 +12,53 @@ namespace Overlewd
     public class WalletChangeNotifWidget : BaseWidget
     {
         private Transform walletBack;
-        private WalletWidget wallet;
+        private List<WalletWidget> extWallets;
+        private WalletWidget localWallet;
 
         protected override void Awake()
         {
             var canvas = transform.Find("Canvas");
             walletBack = canvas.Find("WalletBack");
 
-            if (UIManager.GetWidgets<WalletWidget>().Count == 0)
+            extWallets = UIManager.GetWidgets<WalletWidget>();
+            if (extWallets.Count == 0)
             {
-                wallet = WalletWidget.GetInstance(walletBack);
-                UIManager.UnregisterWidget(wallet);
+                localWallet = WalletWidget.GetInstance(walletBack);
             }
-
             UITools.BottomHide(walletBack as RectTransform);
         }
 
-        protected override void OnDestroy()
+        public async void Show(WalletChangeStateDataEvent eventData)
         {
+            WalletWidget.walletPlayerState = eventData.toInfo;
 
-        }
-
-        public async void Show()
-        {
-            if (wallet != null)
+            if (localWallet != null)
             {
-                await UniTask.Delay(100);
-                wallet.Customize(GameData.player.prevInfo);
                 await UITools.BottomShowAsync(walletBack as RectTransform);
-                wallet.ShowChangesAnim();
-                ShowAddPopups();
-                await wallet.WaitChangesAnim();
+                localWallet.ShowChangesAnim(eventData.fromInfo, eventData.toInfo);
+                ShowAddPopups(eventData.fromInfo, eventData.toInfo);
+                await UniTask.Delay(2000);
                 await UITools.BottomHideAsync(walletBack as RectTransform);
             }
             else
             {
-                ShowAddPopups();
+                extWallets.ForEach(w => w.ShowChangesAnim(eventData.fromInfo, eventData.toInfo));
+                ShowAddPopups(eventData.fromInfo, eventData.toInfo);
             }
             Destroy(gameObject);
         }
 
-        private void ShowAddPopups()
+        private void ShowAddPopups(AdminBRO.PlayerInfo from, AdminBRO.PlayerInfo to)
         {
-            var curInfo = GameData.player.info;
-            var prevInfo = GameData.player.prevInfo;
-
-            TryPopup(curInfo.Crystal.amount, prevInfo.Crystal.amount, GameData.currencies.Crystals.tmpSprite);
-            TryPopup(curInfo.Wood.amount, prevInfo.Wood.amount, GameData.currencies.Wood.tmpSprite);
-            TryPopup(curInfo.Stone.amount, prevInfo.Stone.amount, GameData.currencies.Stone.tmpSprite);
-            TryPopup(curInfo.Copper.amount, prevInfo.Copper.amount, GameData.currencies.Copper.tmpSprite);
-            TryPopup(curInfo.Gold.amount, prevInfo.Gold.amount, GameData.currencies.Gold.tmpSprite);
-            TryPopup(curInfo.Gems.amount, prevInfo.Gems.amount, GameData.currencies.Gems.tmpSprite);
+            TryPopup(from.Crystal.amount, to.Crystal.amount, GameData.currencies.Crystals.tmpSprite);
+            TryPopup(from.Wood.amount, to.Wood.amount, GameData.currencies.Wood.tmpSprite);
+            TryPopup(from.Stone.amount, to.Stone.amount, GameData.currencies.Stone.tmpSprite);
+            TryPopup(from.Copper.amount, to.Copper.amount, GameData.currencies.Copper.tmpSprite);
+            TryPopup(from.Gold.amount, to.Gold.amount, GameData.currencies.Gold.tmpSprite);
+            TryPopup(from.Gems.amount, to.Gems.amount, GameData.currencies.Gems.tmpSprite);
         }
 
-        private void TryPopup(int curAmount, int prevAmount, string tmpSprite)
+        private void TryPopup(int prevAmount, int curAmount, string tmpSprite)
         {
             if (curAmount > prevAmount)
             {
@@ -86,10 +79,10 @@ namespace Overlewd
 
     public static class WalletChangeNotifManager
     {
-        public static void Show()
+        public static void Show(WalletChangeStateDataEvent eventData)
         {
             var notifInst = WalletChangeNotifWidget.GetInstance(UIManager.systemNotifRoot);
-            notifInst.Show();
+            notifInst.Show(eventData);
         }
     }
 }

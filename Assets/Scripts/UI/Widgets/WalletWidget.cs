@@ -11,6 +11,13 @@ namespace Overlewd
 {
     public class WalletWidget : BaseWidget
     {
+        private static AdminBRO.PlayerInfo _walletPlayerState;
+        public static AdminBRO.PlayerInfo walletPlayerState
+        {
+            get => _walletPlayerState ?? GameData.player.info;
+            set => _walletPlayerState = value;
+        }
+
         private TextMeshProUGUI crystal;
         private TextMeshProUGUI wood;
         private TextMeshProUGUI stone;
@@ -35,41 +42,32 @@ namespace Overlewd
             Customize();
         }
 
-        public void Customize(AdminBRO.PlayerInfo playerInfo = null)
+        public void Customize()
         {
-            var pInfo = playerInfo ?? GameData.player.info;
-            crystal.text = $"{GameData.currencies.Crystals.tmpSprite}<size=44> {pInfo.Crystal.amount}";
-            wood.text = $"{GameData.currencies.Wood.tmpSprite}<size=44> {pInfo.Wood.amount}";
-            copper.text = $"{GameData.currencies.Copper.tmpSprite}<size=44> {pInfo.Copper.amount}";
-            gold.text = $"{GameData.currencies.Gold.tmpSprite}<size=44> {pInfo.Gold.amount}";
-            gems.text = $"{GameData.currencies.Gems.tmpSprite}<size=44> {pInfo.Gems.amount}";
-            stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {pInfo.Stone.amount}";
+            crystal.text = $"{GameData.currencies.Crystals.tmpSprite}<size=44> {walletPlayerState.Crystal.amount}";
+            wood.text = $"{GameData.currencies.Wood.tmpSprite}<size=44> {walletPlayerState.Wood.amount}";
+            copper.text = $"{GameData.currencies.Copper.tmpSprite}<size=44> {walletPlayerState.Copper.amount}";
+            gold.text = $"{GameData.currencies.Gold.tmpSprite}<size=44> {walletPlayerState.Gold.amount}";
+            gems.text = $"{GameData.currencies.Gems.tmpSprite}<size=44> {walletPlayerState.Gems.amount}";
+            stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {walletPlayerState.Stone.amount}";
         }
 
-        public void ShowChangesAnim()
+        public void ShowChangesAnim(AdminBRO.PlayerInfo from, AdminBRO.PlayerInfo to)
         {
             Customize();
 
-            var curInfo = GameData.player.info;
-            var prevInfo = GameData.player.prevInfo;
-
             var seq = DOTween.Sequence();
-            TryJoin(seq, crystal, curInfo.Crystal.amount, prevInfo.Crystal.amount);
-            TryJoin(seq, wood, curInfo.Wood.amount, prevInfo.Wood.amount);
-            TryJoin(seq, stone, curInfo.Stone.amount, prevInfo.Stone.amount);
-            TryJoin(seq, copper, curInfo.Copper.amount, prevInfo.Copper.amount);
-            TryJoin(seq, gold, curInfo.Gold.amount, prevInfo.Gold.amount);
-            TryJoin(seq, gems, curInfo.Gems.amount, prevInfo.Gems.amount);
+            TryJoin(seq, crystal, from.Crystal.amount, to.Crystal.amount);
+            TryJoin(seq, wood, from.Wood.amount, to.Wood.amount);
+            TryJoin(seq, stone, from.Stone.amount, to.Stone.amount);
+            TryJoin(seq, copper, from.Copper.amount, to.Copper.amount);
+            TryJoin(seq, gold, from.Gold.amount, to.Gold.amount);
+            TryJoin(seq, gems, from.Gems.amount, to.Gems.amount);
             seq.SetLink(gameObject);
             seq.Play();
         }
 
-        public async Task WaitChangesAnim()
-        {
-            await UniTask.Delay(2000);
-        }
-
-        private void TryJoin(Sequence seq, TextMeshProUGUI text, int curAmount, int prevAmount)
+        private void TryJoin(Sequence seq, TextMeshProUGUI text, int prevAmount, int curAmount)
         {
             if (curAmount > prevAmount)
             {
@@ -80,16 +78,6 @@ namespace Overlewd
             {
                 text.color = Color.red;
                 seq.Join(text.DOColor(Color.white, 0.8f));
-            }
-        }
-
-        public override void OnGameDataEvent(GameDataEvent eventData)
-        {
-            switch (eventData.id)
-            {
-                case GameDataEventId.WalletChangeState:
-                    ShowChangesAnim();
-                    break;
             }
         }
 

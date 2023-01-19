@@ -27,11 +27,6 @@ namespace Overlewd
             entityTitle = back.Find("EntityTitle").GetComponent<TextMeshProUGUI>();
         }
 
-        protected override void OnDestroy()
-        {
-
-        }
-
         public void Init(InitSettings settings)
         {
             title.text = settings.title;

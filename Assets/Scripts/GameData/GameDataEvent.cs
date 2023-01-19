@@ -64,9 +64,11 @@ namespace Overlewd
 
     public class WalletChangeStateDataEvent : GameDataEvent
     {
+        public AdminBRO.PlayerInfo fromInfo { get; set; }
+        public AdminBRO.PlayerInfo toInfo { get; set; }
         public override void Handle()
         {
-            WalletChangeNotifManager.Show();
+            WalletChangeNotifManager.Show(this);
         }
     }
 
