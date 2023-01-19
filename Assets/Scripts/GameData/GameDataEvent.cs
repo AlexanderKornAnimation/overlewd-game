@@ -80,7 +80,7 @@ namespace Overlewd
             var qData = GameData.quests.GetById(questId);
             if (qData != null)
             {
-                foreach (var r in qData.rewards.FindAll(r => r.isCurrency))
+                foreach (var r in qData.rewards.FindAll(r => !r.isCurrency))
                 {
                     PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
                     {

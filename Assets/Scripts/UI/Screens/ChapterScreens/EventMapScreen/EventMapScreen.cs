@@ -139,11 +139,12 @@ namespace Overlewd
                 }
             }
 
-            foreach (var marketData in GameData.events.mapEventData.marketsData)
+            var marketData = eventData.marketData;
+            if (marketData != null)
             {
                 var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
                 shopButton.marketId = marketData.id;
-                shopButton.transform.localPosition = marketData.mapPos.pos;
+                shopButton.transform.localPosition = GameData.events.mapChapter.marketMapPos.pos;
             }
             
             if (GameData.events.mapChapter.isComplete && GameData.events.mapChapter.nextChapterId.HasValue)

@@ -289,7 +289,6 @@ namespace Overlewd
             public string name;
             public string description;
             public string bannerImage;
-            public MapPosition mapPos;
             public List<int> tradables;
             public List<Tab> tabs;
             public string type;
@@ -528,6 +527,7 @@ namespace Overlewd
             public string name;
             public string mapImgUrl;
             public MapPosition nextChapterMapPos;
+            public MapPosition marketMapPos;
             public int eventId;
             public int? nextChapterId;
             public int? durationInDays;
@@ -561,7 +561,7 @@ namespace Overlewd
             }
 
             [JsonProperty(Required = Required.Default)]
-            public AdminBRO.EventItem eventData => GameData.events.GetEventById(eventId);
+            public EventItem eventData => GameData.events.GetEventById(eventId);
 
             [JsonProperty(Required = Required.Default)]
             public bool isActive => eventData?.activeChapter?.id == id;
@@ -606,13 +606,13 @@ namespace Overlewd
             public string overlayBannerImage;
             public string eventListBannerImage;
             public string bannerOverlayText;
-            public List<int> markets;
             public List<int> quests;
             public string createdAt;
             public string updatedAt;
             public List<int> chapters;
             public List<RewardItem> rewards;
             public int? narratorMatriarchId;
+            public int? marketId;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
@@ -653,8 +653,8 @@ namespace Overlewd
                 GameData.events.mapEventData = this;
 
             [JsonProperty(Required = Required.Default)]
-            public List<MarketItem> marketsData =>
-                markets.Select(id => GameData.markets.GetMarketById(id)).Where(data => data != null).ToList();
+            public MarketItem marketData =>
+                GameData.markets.GetMarketById(marketId);
 
             [JsonProperty(Required = Required.Default)]
             public bool isWeekly => type == Type_Weekly;
