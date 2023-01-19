@@ -8,9 +8,8 @@ namespace Overlewd
     {
         public class ButtonNextChapter : BaseButton
         {
-            public int eventId { get; set; }
-
-            public AdminBRO.EventItem eventData => GameData.events.GetEventById(eventId);
+            public int? chapterId { get; set; }
+            public AdminBRO.EventChapter chapterData => GameData.events.GetChapterById(chapterId);
 
             private void Start()
             {
@@ -19,12 +18,14 @@ namespace Overlewd
 
             private void Customize()
             {
-
+                title.text = chapterData.name;
             }
 
             protected override void ButtonClick()
             {
                 base.ButtonClick();
+                chapterData.SetAsMapChapter();
+                UIManager.ShowScreen<EventMapScreen>();
             }
 
             public static ButtonNextChapter GetInstance(Transform parent)

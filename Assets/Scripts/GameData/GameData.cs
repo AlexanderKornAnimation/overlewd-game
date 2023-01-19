@@ -1214,6 +1214,7 @@ namespace Overlewd
         {
             await AdminBRO.battlePassClaimAsync(battlePassId);
             await Get();
+            await GameData.player.Get();
         }
     }
 

@@ -104,9 +104,13 @@ namespace Overlewd
                 progressBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, progressBarWidth);
             }
 
-            private void ClaimAllButtonClick()
+            private async void ClaimAllButtonClick()
             {
-
+               SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+               if (passData != null)
+               {
+                   await GameData.battlePass.ClaimRewards(passData.id);
+               }
             }
 
             private void UpgradeButtonClick()

@@ -55,10 +55,14 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var eventData = GameData.events.mapEventData;
-            if (GameData.devMode)
-                eventData?.firstChapter.SetAsMapChapter();
-            else
-                eventData?.activeChapter.SetAsMapChapter();
+
+            if (GameData.events.mapChapter == null)
+            {
+                if (GameData.devMode)
+                    eventData?.firstChapter.SetAsMapChapter();
+                else
+                    eventData?.activeChapter.SetAsMapChapter();
+            }
 
             var eventChapterData = GameData.events.mapChapter;
             if (eventChapterData == null)
@@ -141,7 +145,14 @@ namespace Overlewd
                 shopButton.marketId = marketData.id;
                 shopButton.transform.localPosition = marketData.mapPos.pos;
             }
-
+            
+            if (GameData.events.mapChapter.isComplete && GameData.events.mapChapter.nextChapterId.HasValue)
+            {
+                var button = NSEventMapScreen.ButtonNextChapter.GetInstance(map);
+                button.transform.localPosition = GameData.events.mapChapter.nextChapterMapPos.pos;
+                button.chapterId = GameData.events.mapChapter.nextChapterId;
+            }
+            
             chapterSelector = NSEventMapScreen.ChapterSelector.GetInstance(transform);
             chapterSelector.Hide();
             chapterSelectorButtonName.text = eventChapterData.name;
