@@ -198,7 +198,7 @@ namespace Overlewd
         private void BannerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<EventMarketScreen>();
+            UIManager.ShowOverlay<EventMarketOverlay>();
         }
         
         private void ChapterSelectorButtonClick()

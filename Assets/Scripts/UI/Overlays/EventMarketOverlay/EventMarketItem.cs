@@ -147,7 +147,7 @@ namespace Overlewd
             public static EventMarketItem GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<EventMarketItem>
-                    ("Prefabs/UI/Screens/EventMarketScreen/Item", parent);
+                    ("Prefabs/UI/Overlays/EventMarketOverlay/Item", parent);
             }
         }
     }

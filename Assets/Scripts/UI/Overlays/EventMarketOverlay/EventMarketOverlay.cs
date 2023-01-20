@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Overlewd
 {
-    public class EventMarketScreen : BaseFullScreenParent<EventMarketScreenInData>
+    public class EventMarketOverlay : BaseOverlayParent<EventMarketOverlayInData>
     {
         private Button backButton;
 
@@ -15,10 +15,12 @@ namespace Overlewd
         private TextMeshProUGUI moneyBackValue;
 
         private Transform scrollViewContent;
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         void Awake()
         {
-            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Screens/EventMarketScreen/EventMarket", transform);
+            var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/EventMarketOverlay/EventMarket", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
 
@@ -27,9 +29,10 @@ namespace Overlewd
 
             moneyBackButton = canvas.Find("MoneyBack").GetComponent<Button>();
             moneyBackButton.onClick.AddListener(MoneyBackButtonClick);
-            moneyBackValue = moneyBackButton.transform.Find("EventCurrency").GetComponent<TextMeshProUGUI>();
+            moneyBackValue = moneyBackButton.transform.Find("CurrencyAmount").GetComponent<TextMeshProUGUI>();
 
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -59,6 +62,7 @@ namespace Overlewd
                     {
                         marketItem.Customize();
                     }
+                    walletWidget.Customize();
                     break;
             }
         }
@@ -66,6 +70,7 @@ namespace Overlewd
         private void Customize()
         {
             moneyBackValue.text = $"{GameData.player.info.CatEars?.amount ?? 0}";
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
         private void BackButtonClick()
@@ -99,7 +104,7 @@ namespace Overlewd
         }
     }
 
-    public class EventMarketScreenInData : BaseFullScreenInData
+    public class EventMarketOverlayInData : BaseOverlayInData
     {
         public int? marketId;
         public AdminBRO.MarketItem marketData =>

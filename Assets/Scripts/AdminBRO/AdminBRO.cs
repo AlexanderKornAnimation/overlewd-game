@@ -1296,7 +1296,6 @@ namespace Overlewd
                 SkillEffect.Key_Immunity => TMPSprite.BuffImmunity,
                 SkillEffect.Key_Regeneration => TMPSprite.BuffRegeneration,
                 SkillEffect.Key_Safeguard => TMPSprite.BuffSafeguard,
-                SkillEffect.Key_AttackUp => TMPSprite.BuffAttackUp,
                 SkillEffect.Key_Blind => TMPSprite.DebuffBlind,
                 SkillEffect.Key_Curse => TMPSprite.DebuffCurse,
                 SkillEffect.Key_DefenceDown => TMPSprite.DebuffDefenceDown,

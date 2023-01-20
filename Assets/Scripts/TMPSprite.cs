@@ -39,7 +39,6 @@ namespace Overlewd
         public const string BuffDispell = "<sprite=\"BuffsNDebuffs\" name=\"BuffDispell\">";
         public const string BuffRegeneration = "<sprite=\"BuffsNDebuffs\" name=\"BuffRegeneration\">";
         public const string BuffFocus = "<sprite=\"BuffsNDebuffs\" name=\"BuffFocus\">";
-        public const string BuffAttackUp = "<sprite=\"BuffsNDebuffs\" name=\"BuffAttackUp\">";
         public const string BuffSafeguard = "<sprite=\"BuffsNDebuffs\" name=\"BuffSafeguard\">";
         public const string BuffImmunity = "<sprite=\"BuffsNDebuffs\" name=\"BuffImmunity\">";
         public const string BuffDefenceUp = "<sprite=\"BuffsNDebuffs\" name=\"BuffDefenceUp\">";
@@ -54,7 +53,6 @@ namespace Overlewd
         public const string DebuffSilence = "<sprite=\"BuffsNDebuffs\" name=\"DebuffSilence\">";
         
         public const string IconImmunity = "<sprite=\"BuffsNDebuffs\" name=\"Immunity\">";
-        public const string IconAttackUp = "<sprite=\"BuffsNDebuffs\" name=\"AttackUp\">";
         public const string IconRegeneration = "<sprite=\"BuffsNDebuffs\" name=\"Regeneration\">";
         public const string IconSafeguard = "<sprite=\"BuffsNDebuffs\" name=\"Safeguard\">";
         public const string IconBlind = "<sprite=\"BuffsNDebuffs\" name=\"Blind\">";
@@ -69,7 +67,9 @@ namespace Overlewd
         public const string IconStun = "<sprite=\"BuffsNDebuffs\" name=\"Stun\">";
         public const string IconDispell = "<sprite=\"BuffsNDebuffs\" name=\"Dispell\">";
         public const string IconArrowUp = "<sprite=\"BuffsNDebuffs\" name=\"ArrowUp\">";
+        public const string IconArrowRight = "<sprite=\"BuffsNDebuffs\" name=\"ArrowRight\">";
         public const string IconArrowDown = "<sprite=\"BuffsNDebuffs\" name=\"ArrowDown\">";
+        public const string IconCrit = "<sprite=\"BuffsNDebuffs\" name=\"Crit\">";
         
         //asset NotificationNMarkers
         public const string MarkerSideQuest = "<sprite=\"NotificationsNMarkers\" name=\"MarkerSideQuest\">";
