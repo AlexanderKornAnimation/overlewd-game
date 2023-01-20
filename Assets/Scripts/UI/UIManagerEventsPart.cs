@@ -46,11 +46,10 @@ namespace Overlewd
 
         private static void GameDataEventsQueueHandling()
         {
-            var queue = new List<GameDataEvent>(gameDataEventsQueue);
-            gameDataEventsQueue.Clear();
-            foreach (var e in queue)
+            while (gameDataEventsQueue.Count > 0)
             {
-                GameDataEventHandling(e);
+                GameDataEventHandling(gameDataEventsQueue[0]);
+                gameDataEventsQueue.RemoveAt(0);
             }
         }
 

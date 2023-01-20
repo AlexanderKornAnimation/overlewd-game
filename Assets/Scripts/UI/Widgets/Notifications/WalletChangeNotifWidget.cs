@@ -58,7 +58,7 @@ namespace Overlewd
             TryPopup(from.Gems.amount, to.Gems.amount, GameData.currencies.Gems.tmpSprite);
         }
 
-        private void TryPopup(int prevAmount, int curAmount, string tmpSprite)
+        public static void TryPopup(int prevAmount, int curAmount, string tmpSprite)
         {
             if (curAmount > prevAmount)
             {

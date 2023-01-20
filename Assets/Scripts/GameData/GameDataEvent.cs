@@ -72,10 +72,26 @@ namespace Overlewd
             (fromInfo.Gold.amount != toInfo.Gold.amount) ||
             (fromInfo.Stone.amount != toInfo.Stone.amount) ||
             (fromInfo.Gems.amount != toInfo.Gems.amount);
+        public bool hasPotionsChanges => (fromInfo == null) ? false :
+            (fromInfo.hpPotionAmount != toInfo.hpPotionAmount) ||
+            (fromInfo.manaPotionAmount != toInfo.manaPotionAmount) ||
+            (fromInfo.energyPotionAmount != toInfo.energyPotionAmount) ||
+            (fromInfo.replayAmount != toInfo.replayAmount);
 
         public override void Handle()
         {
-            WalletChangeNotifManager.Show(this);
+            if (hasWalletChanges)
+            {
+                WalletChangeNotifManager.Show(this);
+            }
+
+            if (hasPotionsChanges)
+            {
+                WalletChangeNotifWidget.TryPopup(fromInfo.hpPotionAmount, toInfo.hpPotionAmount, "-");
+                WalletChangeNotifWidget.TryPopup(fromInfo.manaPotionAmount, toInfo.manaPotionAmount, "-");
+                WalletChangeNotifWidget.TryPopup(fromInfo.energyPotionAmount, toInfo.energyPotionAmount, "-");
+                WalletChangeNotifWidget.TryPopup(fromInfo.replayAmount, toInfo.replayAmount, TMPSprite.Scroll);
+            }
         }
     }
 
@@ -122,8 +138,8 @@ namespace Overlewd
                 var toShardState = toMemoryShards.Find(s => s.id == shardId);
                 PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
                 {
-                    title = $"Add shards {toShardState.matriarchData?.name}",
-                    message = $"+{toShardState.amount - fromShardState.amount}"
+                    title = $"Add {toShardState.matriarchData?.name} shards",
+                    message = $"+{toShardState.amount - fromShardState.amount} {toShardState.tmpSprite}"
                 });
             }
 

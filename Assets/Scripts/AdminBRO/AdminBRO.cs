@@ -2269,6 +2269,16 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public MatriarchItem matriarchData =>
                 GameData.matriarchs.GetMatriarchById(matriarchId);
+
+            [JsonProperty(Required = Required.Default)]
+            public string tmpSprite => rarity switch
+            {
+                Rarity.Basic => TMPSprite.ShardBasic,
+                Rarity.Advanced => TMPSprite.ShardAdvanced,
+                Rarity.Epic => TMPSprite.ShardEpic,
+                Rarity.Heroic => TMPSprite.ShardHeroic,
+                _ => ""
+            };
         }
 
         [Serializable]
