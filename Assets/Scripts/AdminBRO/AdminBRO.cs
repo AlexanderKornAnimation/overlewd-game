@@ -1586,7 +1586,7 @@ namespace Overlewd
             public FTUENotificationItem GetNotifByKey(string key) => notifications.Find(n => n.key == key);
             public FTUEStageItem GetStageById(int? id) => GameData.ftue.GetStageById(id);
             public FTUEStageItem GetStageByKey(string key) => stagesData.Find(s => s.key == key);
-            public AdminBRO.FTUEChapter SetAsMapChapter() => GameData.ftue.mapChapter = this;
+            public FTUEChapter SetAsMapChapter() => GameData.ftue.mapChapter = this;
             public void ShowNotifByKey(string key, bool checkShowRestriction = true)
             {
                 var notifData = GetNotifByKey(key);

@@ -158,6 +158,8 @@ namespace Overlewd
             chapterSelector.Hide();
             chapterSelectorButtonName.text = eventChapterData.name;
 
+            DevWidget.GetInstance(transform);
+
             await Task.CompletedTask;
         }
 
