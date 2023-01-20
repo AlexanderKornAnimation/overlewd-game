@@ -534,9 +534,22 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevCharacters = characters;
+
             charactersBase = await AdminBRO.charactersBaseAsync();
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromCharacters = prevCharacters,
+                toCharacters = characters
+            };
+            if (entitiesIncomeEventData.lastAddedCharacters.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.CharacterBase GetBaseById(int? id) =>
@@ -643,8 +656,21 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevEquipment = equipment;
+
             equipmentBase = await AdminBRO.equipmentBaseAsync();
             equipment = await AdminBRO.equipmentAsync();
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromEquipments = prevEquipment,
+                toEquipments = equipment
+            };
+            if (entitiesIncomeEventData.lastAddedEquipments.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.EquipmentBase GetBaseById(int? id) =>
@@ -851,21 +877,25 @@ namespace Overlewd
                     {
                         q.isNew = pq.isNew;
                         q.markCompleted = pq.markCompleted;
-                        q.isLastAdded = pq.isLastAdded;
                     }
                     else
                     {
                         q.isNew = true;
                         q.markCompleted = false;
-                        q.isLastAdded = true;
                     }
                 }
             }
 
-            UIManager.ThrowGameDataEvent(new QuestsUpdateDataEvent
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
             {
-                id = GameDataEventId.QuestsUpdate
-            });
+                id = GameDataEventId.EntitiesIncome,
+                fromQuests = prevQuests,
+                toQuests = quests
+            };
+            if (entitiesIncomeEventData.lastAddedQuests.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.QuestItem GetById(int? id) =>
@@ -878,12 +908,6 @@ namespace Overlewd
                 await AdminBRO.questClaimRewardAsync(id.Value);
                 await Get();
                 await GameData.player.Get();
-
-                UIManager.ThrowGameDataEvent(new QuestClaimRewardsDataEvent
-                {
-                    id = GameDataEventId.QuestClaimRewards,
-                    questId = id
-                });
             }
         }
     }
@@ -940,29 +964,15 @@ namespace Overlewd
             lastTimeUpd = DateTime.Now;
             accEnergyPoints = 0.0f;
 
-            CheckWalletChanges(prevInfo);
-        }
-
-        private void CheckWalletChanges(AdminBRO.PlayerInfo prevInfo)
-        {
-            if (prevInfo == null)
-                return;
-
-            var hasWalletChange = prevInfo.Copper.amount != info.Copper.amount;
-            hasWalletChange |= prevInfo.Crystal.amount != info.Crystal.amount;
-            hasWalletChange |= prevInfo.Wood.amount != info.Wood.amount;
-            hasWalletChange |= prevInfo.Gold.amount != info.Gold.amount;
-            hasWalletChange |= prevInfo.Stone.amount != info.Stone.amount;
-            hasWalletChange |= prevInfo.Gems.amount != info.Gems.amount;
-
-            if (hasWalletChange)
+            var walletChangeEventData =new WalletChangeStateDataEvent
             {
-                UIManager.ThrowGameDataEvent(new WalletChangeStateDataEvent
-                {
-                    id = GameDataEventId.WalletChangeState,
-                    fromInfo = prevInfo,
-                    toInfo = info
-                });
+                id = GameDataEventId.WalletChangeState,
+                fromInfo = prevInfo,
+                toInfo = info
+            };
+            if (walletChangeEventData.hasWalletChanges)
+            {
+                UIManager.ThrowGameDataEvent(walletChangeEventData);
             }
         }
 
@@ -1126,10 +1136,24 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevMemoryShards = memoryShards;
+
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
             memoryShards = await AdminBRO.memoryShardsAsync();
             buffs = await AdminBRO.buffsAsync();
+
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromMemoryShards = prevMemoryShards,
+                toMemoryShards = memoryShards
+            };
+            if (entitiesIncomeEventData.lastChangedMemoryShards.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>

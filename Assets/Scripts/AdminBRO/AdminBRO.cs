@@ -292,7 +292,6 @@ namespace Overlewd
             public List<int> tradables;
             public List<Tab> tabs;
             public string type;
-            public int? eventId;
 
             public const string Type_Main = "main";
             public const string Type_Event = "event";
@@ -792,9 +791,6 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isNew { get; set; }
-
-            [JsonProperty(Required = Required.Default)]
-            public bool isLastAdded { get; set; }
 
             [JsonProperty(Required = Required.Default)]
             public bool markCompleted { get; set; }
@@ -2261,7 +2257,7 @@ namespace Overlewd
         public class MemoryShardItem
         {
             public int id;
-            public int matriarchId;
+            public int? matriarchId;
             public string rarity;
             public string icon;
             public int amount;
@@ -2269,6 +2265,10 @@ namespace Overlewd
 
             public const string ShardType_Main = "main";
             public const string ShardType_Guest = "guest";
+
+            [JsonProperty(Required = Required.Default)]
+            public MatriarchItem matriarchData =>
+                GameData.matriarchs.GetMatriarchById(matriarchId);
         }
 
         [Serializable]
