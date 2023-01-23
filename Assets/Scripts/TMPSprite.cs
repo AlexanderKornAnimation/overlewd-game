@@ -30,6 +30,9 @@ namespace Overlewd
         public const string ShardAdvanced = "<sprite=\"AssetResources\" name=\"ShardAdvanced\">";
         public const string ShardBasic = "<sprite=\"AssetResources\" name=\"ShardBasic\">";
         public const string Scroll = "<sprite=\"AssetResources\" name=\"Scroll\">";
+        public const string BottleMana = "<sprite=\"AssetResources\" name=\"BottleMana\">";
+        public const string BottleHealth = "<sprite=\"AssetResources\" name=\"BottleHealth\">";
+        public const string BottleEnergy = "<sprite=\"AssetResources\" name=\"BottleEnergy\">";
         
         //asset EventCurrency
         public const string EventCurrencyEar = "<sprite=\"AssetEventCurrency\" name=\"Ear\">";
