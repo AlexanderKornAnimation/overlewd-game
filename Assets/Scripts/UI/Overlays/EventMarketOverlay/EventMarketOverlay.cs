@@ -76,7 +76,7 @@ namespace Overlewd
         private void BackButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ToPrevScreen();
+            UIManager.HideOverlay();
         }
 
         private void MoneyBackButtonClick()
