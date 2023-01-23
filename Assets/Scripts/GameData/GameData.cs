@@ -1010,25 +1010,9 @@ namespace Overlewd
             await Get();
         }
 
-        public bool CanBuy(List<AdminBRO.PriceItem> price)
-        {
-            if (price == null)
-                return false;
-        
-            foreach (var priceItem in price)
-            {
-                var walletCurrency = info.wallet.Find(item => item.currencyId == priceItem.currencyId);
-                if (walletCurrency == null)
-                {
-                    return false;
-                }
-                if (walletCurrency.amount < priceItem.amount)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        public bool CanBuy(List<AdminBRO.PriceItem> price) =>
+            !price?.Exists(p => info.fullWallet.
+            Exists(w => p.currencyId == w.currencyId && p.amount > w.amount)) ?? false;
     }
 
     //dialogs

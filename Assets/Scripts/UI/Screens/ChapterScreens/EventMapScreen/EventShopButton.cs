@@ -38,6 +38,7 @@ namespace Overlewd
                 UIManager.MakeOverlay<EventMarketOverlay>().
                     SetData(new EventMarketOverlayInData
                     {
+                        eventId = eventId,
                         marketId = marketId
                     }).DoShow();
             }

@@ -87,6 +87,7 @@ namespace Overlewd
                     if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(map);
+                        fightButton.eventId = eventData.id;
                         fightButton.stageId = stageData.id;
                         fightButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -99,6 +100,7 @@ namespace Overlewd
                     else if (battleData.isTypeBoss)
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(map);
+                        bossFightButton.eventId = eventData.id;
                         bossFightButton.stageId = stageData.id;
                         bossFightButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -115,6 +117,7 @@ namespace Overlewd
                     if (dialogData.isTypeDialog)
                     {
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(map);
+                        dialogButton.eventId = eventData.id;
                         dialogButton.stageId = stageData.id;
                         dialogButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -127,6 +130,7 @@ namespace Overlewd
                     else if (dialogData.isTypeSex)
                     {
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(map);
+                        sexButton.eventId = eventData.id;
                         sexButton.stageId = stageData.id;
                         sexButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -145,6 +149,7 @@ namespace Overlewd
                 if (marketData != null)
                 {
                     var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
+                    shopButton.eventId = eventData.id;
                     shopButton.marketId = market.marketId;
                     shopButton.transform.localPosition = market.mapPos.pos;
                 }

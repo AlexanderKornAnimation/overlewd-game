@@ -10,6 +10,10 @@ namespace Overlewd
     {
         public class BaseButton : MonoBehaviour
         {
+            public int? eventId { get; set; }
+            public AdminBRO.EventItem eventData =>
+                GameData.events.GetEventById(eventId);
+
             protected Transform canvas;
             protected Button button;
             protected TextMeshProUGUI title;

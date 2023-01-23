@@ -11,8 +11,8 @@ namespace Overlewd
     {
         private Button backButton;
 
-        private Button moneyBackButton;
-        private TextMeshProUGUI moneyBackValue;
+        private Button moreButton;
+        private TextMeshProUGUI moreCountTitle;
 
         private Transform scrollViewContent;
         private Transform walletWidgetPos;
@@ -27,12 +27,14 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButton.onClick.AddListener(BackButtonClick);
 
-            moneyBackButton = canvas.Find("MoneyBack").GetComponent<Button>();
-            moneyBackButton.onClick.AddListener(MoneyBackButtonClick);
-            moneyBackValue = moneyBackButton.transform.Find("CurrencyAmount").GetComponent<TextMeshProUGUI>();
+            moreButton = canvas.Find("MoreCurrenciesButton").GetComponent<Button>();
+            moreButton.onClick.AddListener(MoreButtonClick);
+            moreCountTitle = moreButton.transform.Find("CountTitle").GetComponent<TextMeshProUGUI>();
 
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
             walletWidgetPos = canvas.Find("WalletWidgetPos");
+
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -47,7 +49,7 @@ namespace Overlewd
                 eventMarketItem.marketId = _marketData.id;
             }
 
-            Customize();
+            SetMoreCountTitle();
 
             await Task.CompletedTask;
         }
@@ -57,20 +59,16 @@ namespace Overlewd
             switch (eventData.id)
             {
                 case GameDataEventId.BuyTradable:
-                    Customize();
                     foreach (var marketItem in scrollViewContent.GetComponentsInChildren<NSEventMarketScreen.EventMarketItem>())
                     {
                         marketItem.Customize();
                     }
                     walletWidget.Customize();
                     break;
+                case GameDataEventId.WalletChangeState:
+                    SetMoreCountTitle();
+                    break;
             }
-        }
-
-        private void Customize()
-        {
-            moneyBackValue.text = "-";
-            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
         private void BackButtonClick()
@@ -79,7 +77,17 @@ namespace Overlewd
             UIManager.HideOverlay();
         }
 
-        private void MoneyBackButtonClick()
+        private void SetMoreCountTitle()
+        {
+            var title = "You have";
+            foreach (var cd in inputData.eventData.currenciesData)
+            {
+                title = $"{title} {cd?.tmpSprite}{cd?.walletInfo?.amount}";
+            }
+            moreCountTitle.text = title;
+        }
+
+        private void MoreButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
@@ -106,8 +114,6 @@ namespace Overlewd
 
     public class EventMarketOverlayInData : BaseOverlayInData
     {
-        public int? marketId;
-        public AdminBRO.MarketItem marketData =>
-            GameData.markets.GetMarketById(marketId);
+
     }
 }

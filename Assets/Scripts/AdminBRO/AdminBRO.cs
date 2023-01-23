@@ -267,8 +267,11 @@ namespace Overlewd
             [JsonProperty(Required = Required.Default)]
             public int energyPointsAmount => energyPoints;
 
-            public WalletItem GetEventWalletById(int? currencyId) =>
-                walletEvent.Find(w => w.currencyId == currencyId);
+            [JsonProperty(Required = Required.Default)]
+            public List<WalletItem> fullWallet =>
+                new[] { wallet, walletEvent }.SelectMany(w => w).ToList();
+            public WalletItem GetWalletItemById(int? currencyId) =>
+                fullWallet.Find(w => w.currencyId == currencyId);
         }
 
         public static async Task<HttpCoreResponse> resetAsync() =>
@@ -354,6 +357,17 @@ namespace Overlewd
             public string createdAt;
             public string updatedAt;
 
+            public const string Key_Copper = "copper";
+            public const string Key_Crystals = "crystal";
+            public const string Key_Gems = "gems";
+            public const string Key_Gold = "gold";
+            public const string Key_Stone = "stone";
+            public const string Key_Wood = "wood";
+            public const string Key_Ears = "ears";
+            public const string Key_Horny = "horny";
+            public const string Key_Yen = "yen";
+            public const string Key_Ngold = "ngold";
+
             [JsonProperty(Required = Required.Default)]
             public string tmpSprite =>
                 key switch
@@ -369,16 +383,9 @@ namespace Overlewd
                     _ => ""
                 };
 
-            public const string Key_Copper = "copper";
-            public const string Key_Crystals = "crystal";
-            public const string Key_Gems = "gems";
-            public const string Key_Gold = "gold";
-            public const string Key_Stone = "stone";
-            public const string Key_Wood = "wood";
-            public const string Key_Ears = "ears";
-            public const string Key_Horny = "horny";
-            public const string Key_Yen = "yen";
-            public const string Key_Ngold = "ngold";
+            [JsonProperty(Required = Required.Default)]
+            public PlayerInfo.WalletItem walletInfo =>
+                GameData.player.info.GetWalletItemById(id);
         }
 
         // /tradable
@@ -681,6 +688,11 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public string timePeriodLeft => TimeTools.AvailableTimeToString(dateEnd);
+
+            [JsonProperty(Required = Required.Default)]
+            public List<CurrencyItem> currenciesData =>
+               currencies.Select(currencyId => GameData.currencies.GetById(currencyId)).
+                Where(cd => cd != null).ToList();
         }
 
 

@@ -51,9 +51,6 @@ namespace Overlewd
 
     public abstract class BaseNotificationInData : BaseScreenInData
     {
-        public new bool IsType<T>() where T : BaseNotificationInData =>
-            base.IsType<T>();
-        public new T As<T>() where T : BaseNotificationInData =>
-            base.As<T>();
+
     }
 }
