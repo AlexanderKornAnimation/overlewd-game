@@ -93,9 +93,9 @@ namespace Overlewd
 
             if (hasPotionsChanges)
             {
-                WalletChangeNotifWidget.TryPopup(fromInfo.hpPotionAmount, toInfo.hpPotionAmount, "-");
-                WalletChangeNotifWidget.TryPopup(fromInfo.manaPotionAmount, toInfo.manaPotionAmount, "-");
-                WalletChangeNotifWidget.TryPopup(fromInfo.energyPotionAmount, toInfo.energyPotionAmount, "-");
+                WalletChangeNotifWidget.TryPopup(fromInfo.hpPotionAmount, toInfo.hpPotionAmount, TMPSprite.BottleHealth);
+                WalletChangeNotifWidget.TryPopup(fromInfo.manaPotionAmount, toInfo.manaPotionAmount, TMPSprite.BottleMana);
+                WalletChangeNotifWidget.TryPopup(fromInfo.energyPotionAmount, toInfo.energyPotionAmount, TMPSprite.BottleEnergy);
                 WalletChangeNotifWidget.TryPopup(fromInfo.replayAmount, toInfo.replayAmount, TMPSprite.Scroll);
             }
 
