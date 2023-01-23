@@ -970,7 +970,7 @@ namespace Overlewd
                 fromInfo = prevInfo,
                 toInfo = info
             };
-            if (walletChangeEventData.hasWalletChanges)
+            if (walletChangeEventData.hasAnyChanges)
             {
                 UIManager.ThrowGameDataEvent(walletChangeEventData);
             }

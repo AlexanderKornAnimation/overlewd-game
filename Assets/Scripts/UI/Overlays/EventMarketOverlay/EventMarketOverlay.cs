@@ -69,7 +69,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            moneyBackValue.text = $"{GameData.player.info.CatEars?.amount ?? 0}";
+            moneyBackValue.text = "-";
             walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 

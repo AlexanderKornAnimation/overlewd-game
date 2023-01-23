@@ -77,6 +77,12 @@ namespace Overlewd
             (fromInfo.manaPotionAmount != toInfo.manaPotionAmount) ||
             (fromInfo.energyPotionAmount != toInfo.energyPotionAmount) ||
             (fromInfo.replayAmount != toInfo.replayAmount);
+        public bool hasEventWalletChanges => (fromInfo == null) ? false :
+            toInfo.walletEvent.Exists(we => fromInfo.walletEvent.Exists(pwe => pwe.currencyId == we.currencyId && pwe.amount != we.amount));
+        public bool hasAnyChanges =>
+            hasWalletChanges ||
+            hasPotionsChanges ||
+            hasEventWalletChanges;
 
         public override void Handle()
         {
@@ -91,6 +97,18 @@ namespace Overlewd
                 WalletChangeNotifWidget.TryPopup(fromInfo.manaPotionAmount, toInfo.manaPotionAmount, "-");
                 WalletChangeNotifWidget.TryPopup(fromInfo.energyPotionAmount, toInfo.energyPotionAmount, "-");
                 WalletChangeNotifWidget.TryPopup(fromInfo.replayAmount, toInfo.replayAmount, TMPSprite.Scroll);
+            }
+
+            if (hasEventWalletChanges)
+            {
+                foreach (var we in toInfo.walletEvent)
+                {
+                    var pwe = fromInfo.walletEvent.Find(_pwe => _pwe.currencyId == we.currencyId);
+                    if (pwe != null)
+                    {
+                        WalletChangeNotifWidget.TryPopup(pwe.amount, we.amount, we.currencyData.tmpSprite);
+                    }
+                }
             }
         }
     }

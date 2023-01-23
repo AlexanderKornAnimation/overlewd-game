@@ -206,6 +206,7 @@ namespace Overlewd
             public string name;
             public string locale;
             public List<WalletItem> wallet;
+            public List<WalletItem> walletEvent;
             public Potion potion;
             public int energyPoints;
             public List<Device> devices;
@@ -220,8 +221,11 @@ namespace Overlewd
 
             public class WalletItem
             {
-                public int currencyId;
+                public int? currencyId;
                 public int amount;
+
+                [JsonProperty(Required = Required.Default)]
+                public CurrencyItem currencyData => GameData.currencies.GetById(currencyId);
             }
 
             public class Device
@@ -249,9 +253,6 @@ namespace Overlewd
             public WalletItem Gems => wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
 
             [JsonProperty(Required = Required.Default)]
-            public WalletItem CatEars => wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
-
-            [JsonProperty(Required = Required.Default)]
             public int hpPotionAmount => potion.hp;
 
             [JsonProperty(Required = Required.Default)]
@@ -265,6 +266,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public int energyPointsAmount => energyPoints;
+
+            public WalletItem GetEventWalletById(int? currencyId) =>
+                walletEvent.Find(w => w.currencyId == currencyId);
         }
 
         public static async Task<HttpCoreResponse> resetAsync() =>
@@ -526,7 +530,6 @@ namespace Overlewd
             public string name;
             public string mapImgUrl;
             public MapPosition nextChapterMapPos;
-            public MapPosition marketMapPos;
             public int eventId;
             public int? nextChapterId;
             public int? durationInDays;
@@ -534,12 +537,22 @@ namespace Overlewd
             public int? order;
             public List<RewardItem> rewards;
             public int? battleEnergyPointsCost;
+            public List<Market> markets;
 
             public class EventChapterReward
             {
                 public string icon;
                 public int amount;
                 public int currency;
+            }
+            public class Market
+            {
+                public int? marketId;
+                public MapPosition mapPos;
+
+                [JsonProperty(Required = Required.Default)]
+                public MarketItem marketData =>
+                GameData.markets.GetMarketById(marketId);
             }
 
             [JsonProperty(Required = Required.Default)]
@@ -611,7 +624,6 @@ namespace Overlewd
             public List<int> chapters;
             public List<RewardItem> rewards;
             public int? narratorMatriarchId;
-            public int? marketId;
 
             public const string Type_Quarterly = "quarterly";
             public const string Type_Monthly = "monthly";
@@ -650,10 +662,6 @@ namespace Overlewd
 
             public EventItem SetAsMapEvent() =>
                 GameData.events.mapEventData = this;
-
-            [JsonProperty(Required = Required.Default)]
-            public MarketItem marketData =>
-                GameData.markets.GetMarketById(marketId);
 
             [JsonProperty(Required = Required.Default)]
             public bool isWeekly => type == Type_Weekly;
