@@ -18,19 +18,19 @@ namespace Overlewd
         private TextMeshProUGUI battleButtonText;
         private Button editTeamButton;
         private Button buffButton;
-        private Button staminaBuyButton;
-        private Button manaBuyButton;
-        private Button healthBuyButton;
-        private Button scrollBuyButton;
+        private Button buyBottlesButton;
 
+        private GameObject buff;
         private RectTransform buffRect;
         private Transform bossPos;
         private TextMeshProUGUI enemyTeamPotency;
         private Transform allyContent;
-        private TextMeshProUGUI userHpAmount;
-        private TextMeshProUGUI userManaAmount;
-        private TextMeshProUGUI userStaminaAmount;
-        private TextMeshProUGUI userScrollAmount;
+        private TextMeshProUGUI userBottleHpAmount;
+        private TextMeshProUGUI userBottleManaAmount;
+        private TextMeshProUGUI userBottleScrollAmount;
+        private TextMeshProUGUI userBottleStaminaAmount;
+        private TextMeshProUGUI battleButtonUserStaminaAmount;         
+        private TextMeshProUGUI fastBattleButtonUserStaminaAmount;     
         private TextMeshProUGUI allyTeamPotency;
         
         private GameObject fastBattleAvailable;
@@ -69,22 +69,10 @@ namespace Overlewd
             var levelTitle = canvas.Find("LevelTitle");
             var rewardsTr = canvas.Find("ResourceBack").Find("Rewards");
             var alliesBack = canvas.Find("AlliesBack");
-            var buff = canvas.Find("Buff");
             var charactersBack = canvas.Find("CharactersBackground");
             var bottlePanel = canvas.Find("BottlePanel");
+            buff = canvas.Find("Buff").gameObject;
 
-            staminaBuyButton = bottlePanel.Find("Stamina").Find("BuyButton").GetComponent<Button>();
-            staminaBuyButton.onClick.AddListener(PotionBuyButtonClick);
-
-            manaBuyButton = bottlePanel.Find("Mana").Find("BuyButton").GetComponent<Button>();
-            manaBuyButton.onClick.AddListener(PotionBuyButtonClick);
-
-            healthBuyButton = bottlePanel.Find("Health").Find("BuyButton").GetComponent<Button>();
-            healthBuyButton.onClick.AddListener(PotionBuyButtonClick);
-            
-            scrollBuyButton = bottlePanel.Find("Scroll").Find("BuyButton").GetComponent<Button>();
-            scrollBuyButton.onClick.AddListener(PotionBuyButtonClick);
-            
             bossPos = charactersBack.Find("BossPos");
             allyContent = charactersBack.Find("AllyCharacters");
             
@@ -98,7 +86,7 @@ namespace Overlewd
             editTeamButton = canvas.Find("EditTeamButton").GetComponent<Button>();
             editTeamButton.onClick.AddListener(EditTeamButtonClick);
 
-            buffButton = buff.Find("SwitchBuffButton").GetComponent<Button>();
+            buffButton = buff.transform.Find("SwitchBuffButton").GetComponent<Button>();
             buffRect = buff.GetComponent<RectTransform>();
 
             var fastBattle = canvas.Find("FastBattle");
@@ -112,11 +100,15 @@ namespace Overlewd
             fastBattleButton = fastBattleAvailable.transform.Find("Button").GetComponent<Button>();
             fastBattleButton.onClick.AddListener(FastBattleButtonClick);
             fastBattleText = fastBattleButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
-            
-            userHpAmount = bottlePanel.Find("Health").Find("Value").GetComponent<TextMeshProUGUI>();
-            userManaAmount = bottlePanel.Find("Mana").Find("Value").GetComponent<TextMeshProUGUI>();
-            userStaminaAmount = bottlePanel.Find("Stamina").Find("Value").GetComponent<TextMeshProUGUI>();
-            userScrollAmount = bottlePanel.Find("Scroll").Find("Value").GetComponent<TextMeshProUGUI>();
+
+            buyBottlesButton = bottlePanel.Find("BuyBottlesButton").GetComponent<Button>();
+            buyBottlesButton.onClick.AddListener(BuyBottlesButtonClick);
+            userBottleHpAmount = bottlePanel.Find("Health/Value").GetComponent<TextMeshProUGUI>();
+            userBottleManaAmount = bottlePanel.Find("Mana/Value").GetComponent<TextMeshProUGUI>();
+            userBottleStaminaAmount = bottlePanel.Find("Stamina/Value").GetComponent<TextMeshProUGUI>();
+            battleButtonUserStaminaAmount = battleButton.transform.Find("StaminaInfo/Stamina").GetComponent<TextMeshProUGUI>();
+            fastBattleButtonUserStaminaAmount = fastBattleButton.transform.Find("StaminaInfo/Stamina").GetComponent<TextMeshProUGUI>();
+            userBottleScrollAmount = bottlePanel.Find("Scroll/Value").GetComponent<TextMeshProUGUI>();
 
             buffButton.onClick.AddListener(BuffButtonClick);
             UITools.RightHide(buffRect);
@@ -300,13 +292,16 @@ namespace Overlewd
 
         private void SetPotionValues()
         {
-            userHpAmount.text = GameData.player.info.hpPotionAmount.ToString();
-            userManaAmount.text = GameData.player.info.manaPotionAmount.ToString();
-            userStaminaAmount.text = GameData.player.info.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
-            userScrollAmount.text = GameData.player.info.replayAmount.ToString();
+            var pInfo = GameData.player.info;
+            userBottleHpAmount.text = pInfo.hpPotionAmount.ToString();
+            userBottleManaAmount.text = pInfo.manaPotionAmount.ToString();
+            fastBattleButtonUserStaminaAmount.text = pInfo.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
+            battleButtonUserStaminaAmount.text = pInfo.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
+            userBottleScrollAmount.text = pInfo.replayAmount.ToString();
+            userBottleStaminaAmount.text = pInfo.energyPotionAmount.ToString();
         }
 
-        private void PotionBuyButtonClick()
+        private void BuyBottlesButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowPopup<BottlesPopup>();
@@ -362,7 +357,8 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
-            await UITools.RightShowAsync(buffRect, 0.2f);
+            if(buff.activeSelf)
+                await UITools.RightShowAsync(buffRect, 0.2f);
 
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
@@ -374,16 +370,24 @@ namespace Overlewd
 
         public override async Task BeforeHideAsync()
         {
-            await UITools.RightHideAsync(buffRect, 0.2f);
+            if(buff.activeSelf)
+                await UITools.RightHideAsync(buffRect, 0.2f);
         }
 
         private void RefreshEnergy()
         {
-            userStaminaAmount.text = GameData.player.info.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
+            fastBattleButtonUserStaminaAmount.text = GameData.player.info.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
+            battleButtonUserStaminaAmount.text = GameData.player.info.energyPointsAmount + "/" + GameData.potions.baseEnergyVolume;
         }
 
         private void CustomizeBuff()
         {
+            if (GameData.matriarchs?.activeBuff == null)
+            {                                           
+                buff.SetActive(false);                  
+                return;                                 
+            }
+            
             var iconUlvi = buffRect.Find("IconUlvi");
             var iconAdriel = buffRect.Find("IconAdriel");
             var iconIngie = buffRect.Find("IconIngie");
