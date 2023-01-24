@@ -340,7 +340,7 @@ namespace Overlewd
             var isCrit = attacker.critrate + attacker.psr?.crit > Random.value;
             if (isDodge)
             {
-                rt.DOAnchorPos(new Vector2(-230, 0), 0.1f);
+                if (isHit) rt.DOAnchorPos(new Vector2(-230, 0), 0.1f);
                 psr?.Dodge();
             }
             if (isCrit) attacker.psr?.Crit(); else attacker.psr?.CritMiss();
