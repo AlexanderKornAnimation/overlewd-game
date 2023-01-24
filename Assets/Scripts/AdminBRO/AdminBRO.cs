@@ -353,9 +353,9 @@ namespace Overlewd
             public string name;
             public string iconUrl;
             public string key;
-            public bool nutaku;
             public string createdAt;
             public string updatedAt;
+            public string currencyType;
 
             public const string Key_Copper = "copper";
             public const string Key_Crystals = "crystal";
@@ -367,6 +367,14 @@ namespace Overlewd
             public const string Key_Horny = "horny";
             public const string Key_Yen = "yen";
             public const string Key_Ngold = "ngold";
+
+            public const string CurrencyType_Main = "main";
+            public const string CurrencyType_Event = "event";
+            public const string CurrencyType_Fiat = "fiat";
+            public const string CurrencyType_Nutaku = "nutaku";
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isTypeNutaku => currencyType == CurrencyType_Nutaku;
 
             [JsonProperty(Required = Required.Default)]
             public string tmpSprite =>
@@ -450,7 +458,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool nutakuPriceValid =>
-                (price.Count == 1) && (price.First().currencyData?.nutaku ?? false);
+                !price.Exists(p => !p.currencyData?.isTypeNutaku ?? true);
 
             public string GetIconByRarity(string rarity, int? entityId = null) => type switch
             {

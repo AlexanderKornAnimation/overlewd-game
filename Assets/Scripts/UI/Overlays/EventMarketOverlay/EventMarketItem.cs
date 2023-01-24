@@ -102,7 +102,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 if (_tradableData.canBuy)
                 {
-                    if (!currencyData.nutaku)
+                    if (!currencyData.isTypeNutaku)
                     {
                         await GameData.markets.BuyTradable(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
@@ -127,7 +127,7 @@ namespace Overlewd
 
                 if (_tradableData.canBuy)
                 {
-                    if (!currencyData.nutaku)
+                    if (!currencyData.isTypeNutaku)
                     {
                         await GameData.markets.BuyTradable(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
