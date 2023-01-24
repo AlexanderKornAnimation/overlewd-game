@@ -217,14 +217,15 @@ namespace Overlewd
             foreach (var questId in eventData.quests)
             {
                 var questData = GameData.quests.GetById(questId);
-
-                var eventQuest = questData.hasDescription 
-                    ?  (NSEventOverlay.BaseQuest) NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent)
-                    :  NSEventOverlay.EventShortQuest.GetInstance(tabScrollViewContent);
-                
-                eventQuest.eventId = eventData.id;
-                eventQuest.questId = questId;
-                eventQuest.SetCanvasActive(false);
+                if (questData != null)
+                {
+                    var eventQuest = questData.hasDescription
+                        ? (NSEventOverlay.BaseQuest)NSEventOverlay.EventQuest.GetInstance(tabScrollViewContent)
+                        : NSEventOverlay.EventShortQuest.GetInstance(tabScrollViewContent);
+                    eventQuest.eventId = eventData.id;
+                    eventQuest.questId = questId;
+                    eventQuest.SetCanvasActive(false);
+                }
             }
         }
 
