@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -51,11 +52,6 @@ namespace Overlewd
             seq.Join(fadeSeq);
             seq.onComplete = () => Destroy(gameObject);
             seq.Play();
-
-            var seqPop = DOTween.Sequence();
-            seqPop.AppendInterval(1.0f);
-            seqPop.onComplete = () => PopupNotifManager.PopNotif();
-            seqPop.Play();
         }
 
         public static PopupNotifWidget GetInstance(Transform parent)
@@ -75,32 +71,26 @@ namespace Overlewd
     {
         private static List<PopupNotifWidget.InitSettings> notifSettingsQueue =
             new List<PopupNotifWidget.InitSettings>();
-        private static bool incomeForceShow { get; set; } = true;
+
+        private static bool doQueueEnabled { get; set; } = false;
+        private static async void DoQueue()
+        {
+            if (doQueueEnabled)
+                return;
+            doQueueEnabled = true;
+            while (notifSettingsQueue.Count > 0)
+            {
+                InstNotif(notifSettingsQueue[0]);
+                notifSettingsQueue.RemoveAt(0);
+                await UniTask.Delay(1000);
+            }
+            doQueueEnabled = false;
+        }
 
         public static void PushNotif(PopupNotifWidget.InitSettings nSetting)
         {
-            if (incomeForceShow && (notifSettingsQueue.Count == 0))
-            {
-                InstNotif(nSetting);
-            }
-            else
-            {
-                notifSettingsQueue.Add(nSetting);
-            }
-        }
-
-        public static void PopNotif()
-        {
-            var nSettings = notifSettingsQueue.FirstOrDefault();
-            if (nSettings != null)
-            {
-                notifSettingsQueue.RemoveAt(0);
-                InstNotif(nSettings);
-            }
-            else
-            {
-                incomeForceShow = true;
-            }
+            notifSettingsQueue.Add(nSetting);
+            DoQueue();
         }
 
         private static void InstNotif(PopupNotifWidget.InitSettings nSetting)
@@ -108,7 +98,6 @@ namespace Overlewd
             var notifInst = PopupNotifWidget.GetInstance(UIManager.systemNotifRoot);
             notifInst.Init(nSetting);
             notifInst.Play();
-            incomeForceShow = false;
         }
     }
 }
