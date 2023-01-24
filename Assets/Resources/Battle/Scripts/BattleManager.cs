@@ -226,6 +226,7 @@ namespace Overlewd
 
         IEnumerator NextWave()
         {
+            roundEnd?.Invoke();
             yield return new WaitForSeconds(3.5f);
             step = 0;
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
@@ -462,7 +463,7 @@ namespace Overlewd
                 var availableSkillsId = new List<int>();
                 //if cool down of skill == 0 we add them to the skill id list for randomise our attack
                 foreach (var item in ccOnSelect.skill)
-                    if (ccOnSelect.skillCD[item] == 0) 
+                    if (ccOnSelect.skillCD[item] == 0)
                         availableSkillsId.Add(ccOnSelect.skill.IndexOf(item));
                 Debug.Log($"availableSkillsId count: {availableSkillsId.Count}");
                 //if all skill on the CD we choose 1st skill as default to awoid crash report
