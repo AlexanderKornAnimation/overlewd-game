@@ -56,7 +56,11 @@ namespace Overlewd
                 offerButton.Deselect();
             }
 
-            offers.FirstOrDefault()?.Select();
+            var offer = inputData?.tabId != null
+                ? offers?.Find(t => t.tabId == inputData.tabId)
+                : offers.FirstOrDefault();
+            
+            offer?.Select();
 
             await Task.CompletedTask;
         }
@@ -108,5 +112,7 @@ namespace Overlewd
 
     public class MarketOverlayInData : BaseOverlayInData
     {
+        public int? tabId { get; set; }
+        public AdminBRO.MarketItem.Tab tabData => GameData.markets?.mainMarket?.GetTabById(tabId);
     }
 }

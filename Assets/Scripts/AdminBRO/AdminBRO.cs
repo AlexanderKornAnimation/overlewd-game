@@ -327,7 +327,7 @@ namespace Overlewd
                     Where(trData => trData != null).ToList();
             }
 
-            public Tab GetTabById(int tabId) =>
+            public Tab GetTabById(int? tabId) =>
                 tabs.Find(t => t.tabId == tabId);
 
             [JsonProperty(Required = Required.Default)]
