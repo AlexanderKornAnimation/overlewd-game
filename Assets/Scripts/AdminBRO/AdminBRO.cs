@@ -2248,6 +2248,7 @@ namespace Overlewd
 
             public const string Status_Visible = "visible";
             public const string Status_Open = "open";
+            public const string Status_Hiden = "hiden";
 
             public const string MemoryType_Main = "main";
             public const string MemoryType_Story = "story";
@@ -2261,6 +2262,9 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public bool isOpen => status == Status_Open;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isHiden => status == Status_Hiden;
             
             [JsonProperty(Required = Required.Default)]
             public bool isMain => memoryType == MemoryType_Main;

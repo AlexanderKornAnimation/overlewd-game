@@ -74,6 +74,7 @@ namespace Overlewd
         private void Customize()
         {
             RefreshBag();
+            CheckSexSceneButtonState();
 
             marketButtonText.text = $"Buy {inputData?.girlKey + "'s"} Heirloom\nto get more shards";
             bagTitle.text = $"{inputData?.girlKey + "'s"} shards\nin your bag";
@@ -119,11 +120,16 @@ namespace Overlewd
             {
                 case GameDataEventId.PieceOfMemoryBuy:
                     RefreshBag();
-                    sexSceneButton.interactable = inputData?.memoryData?.isOpen ?? false;
+                    CheckSexSceneButtonState();
                     break;
             }
         }
 
+        private void CheckSexSceneButtonState()
+        {
+            sexSceneButton.interactable = inputData?.memoryData?.isOpen ?? false;
+        }
+        
         public override void OnUIEvent(UIEvent eventData)
         {
             switch (eventData.id)

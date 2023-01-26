@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,6 +14,7 @@ namespace Overlewd
 
         private Button moreButton;
         private TextMeshProUGUI moreCountTitle;
+        private Image banner;
 
         private Transform scrollViewContent;
         private Transform walletWidgetPos;
@@ -30,6 +32,7 @@ namespace Overlewd
             moreButton = canvas.Find("MoreCurrenciesButton").GetComponent<Button>();
             moreButton.onClick.AddListener(MoreButtonClick);
             moreCountTitle = moreButton.transform.Find("CountTitle").GetComponent<TextMeshProUGUI>();
+            banner = canvas.Find("Banner").GetComponent<Image>();
 
             scrollViewContent = canvas.Find("ScrollView").Find("Viewport").Find("Content");
             walletWidgetPos = canvas.Find("WalletWidgetPos");
@@ -41,6 +44,7 @@ namespace Overlewd
         {
             var _marketData = inputData.marketData;
             var tradables = _marketData.tradablesData;
+            banner.sprite = ResourceManager.LoadSprite(_marketData.bannerImage);
 
             foreach (var tradableData in tradables)
             {
@@ -114,6 +118,5 @@ namespace Overlewd
 
     public class EventMarketOverlayInData : BaseOverlayInData
     {
-
     }
 }

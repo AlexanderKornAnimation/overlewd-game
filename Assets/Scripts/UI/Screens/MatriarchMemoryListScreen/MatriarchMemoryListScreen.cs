@@ -68,7 +68,7 @@ namespace Overlewd
             
             foreach (var memoryItem in memories)
             {
-                if(!memoryItem.isVisible || !memoryItem.isOpen)
+                if(memoryItem.isHiden)
                     continue;
                 
                 var content = memoryItem.memoryType switch

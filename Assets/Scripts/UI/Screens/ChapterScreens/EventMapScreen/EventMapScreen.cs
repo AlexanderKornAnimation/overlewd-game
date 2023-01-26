@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -206,7 +207,12 @@ namespace Overlewd
         private void BannerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowOverlay<EventMarketOverlay>();
+            UIManager.MakeOverlay<EventMarketOverlay>().
+                SetData(new EventMarketOverlayInData
+                {
+                    eventId = GameData.events.mapEventData.id,
+                    marketId = GameData.events.mapEventData?.activeChapter?.markets.FirstOrDefault()?.marketId,
+                }).DoShow();
         }
         
         private void ChapterSelectorButtonClick()

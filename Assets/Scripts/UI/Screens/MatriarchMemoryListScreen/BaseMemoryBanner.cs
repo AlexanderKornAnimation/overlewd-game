@@ -43,7 +43,7 @@ namespace Overlewd
                 {
                     background.sprite = ResourceManager.LoadSprite(memoryData.sexScenePreview);
                     closed.gameObject.SetActive(!memoryData.isOpen);
-                    closed.sprite = GetMatriarchClosedBackground();
+                    closed.sprite =  ResourceManager.LoadSprite(memoryData.sexSceneClosed) ?? GetMatriarchClosedBackground();
                     title.text = memoryData.title;
                     watchButton.gameObject.SetActive(memoryData.isOpen);
                 }
@@ -53,15 +53,15 @@ namespace Overlewd
             {
                 return memoryData?.matriarchData?.key switch
                 {
-                    AdminBRO.MatriarchItem.Key_Ulvi => ResourceManager.LoadSprite(
+                    AdminBRO.MatriarchItem.Key_Ulvi => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerUlvi"),
-                    AdminBRO.MatriarchItem.Key_Adriel => ResourceManager.LoadSprite(
+                    AdminBRO.MatriarchItem.Key_Adriel => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerAdriel"),
-                    AdminBRO.MatriarchItem.Key_Ingie => ResourceManager.LoadSprite(
+                    AdminBRO.MatriarchItem.Key_Ingie => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerIngie"),
-                    AdminBRO.MatriarchItem.Key_Faye => ResourceManager.LoadSprite(
+                    AdminBRO.MatriarchItem.Key_Faye => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerFaye"),
-                    AdminBRO.MatriarchItem.Key_Lili => ResourceManager.LoadSprite(
+                    AdminBRO.MatriarchItem.Key_Lili => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerLili"),
                     _ => null,
                 };
