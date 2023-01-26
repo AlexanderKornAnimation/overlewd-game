@@ -60,8 +60,6 @@ namespace Overlewd
             public void Customize()
             {
                 var _tradableData = tradableData;
-                var currencyId = _tradableData.price[0].currencyId;
-                var currencyData = GameData.currencies.GetById(currencyId);
 
                 if (_tradableData.soldOut)
                 {
@@ -75,7 +73,7 @@ namespace Overlewd
                     buyButton.gameObject.SetActive(false);
                     buyWithCountButton.gameObject.SetActive(true);
 
-                    buyWithCountPrice.text = _tradableData.price[0].amount.ToString();
+                    //buyWithCountPrice.text = _tradableData.price[0].amount.ToString();
 
                     buyWithCountCount.text = $"{_tradableData.currentCount}/{_tradableData.limit.Value}";
                 }
@@ -85,7 +83,7 @@ namespace Overlewd
                     buyButton.gameObject.SetActive(true);
                     buyWithCountButton.gameObject.SetActive(false);
 
-                    buyPrice.text = _tradableData.price[0].amount.ToString();
+                    //buyPrice.text = _tradableData.price[0].amount.ToString();
                 }
 
                 itemAmount.gameObject.SetActive(false);

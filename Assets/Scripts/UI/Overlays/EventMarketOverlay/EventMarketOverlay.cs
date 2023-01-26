@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Overlewd
 {
@@ -40,9 +41,7 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var _marketData = inputData.marketData;
-            var tradables = _marketData.tradablesData;
-
-            foreach (var tradableData in tradables)
+            foreach (var tradableData in _marketData.tradablesData)
             {
                 var eventMarketItem = NSEventMarketScreen.EventMarketItem.GetInstance(scrollViewContent);
                 eventMarketItem.tradableId = tradableData.id;
@@ -90,11 +89,8 @@ namespace Overlewd
         private void MoreButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-
             var _marketData = inputData.marketData;
-            var tradables = _marketData.tradablesData;
-
-            foreach (var tData in tradables)
+            foreach (var tData in _marketData.tradablesData)
             {
                 if (tData.promo)
                 {
