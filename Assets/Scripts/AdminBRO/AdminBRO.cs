@@ -311,7 +311,7 @@ namespace Overlewd
                 public string promoGirlIcon;
                 public string viewType;
                 public List<int> goods;
-                public int order;
+                public int? order;
                 public string profit;
                 public bool isCrystalsOffer;
                 public string bannerArt;
@@ -947,6 +947,8 @@ namespace Overlewd
             public List<DialogReplica> replicas;
             public int? matriarchId;
             public string postAction;
+            public string background;
+
 
             public const string Type_Dialog = "dialog";
             public const string Type_Sex = "sex";
@@ -2151,6 +2153,7 @@ namespace Overlewd
             public string seduceAvailableAt;
             public string matriarchType;
             public string narratorIcon;
+            public string haremIcon;
 
             [JsonProperty(Required = Required.Default)]
             public MemoryShardItem basicShard => GameData.matriarchs.GetShardByMatriarchId(id, Rarity.Basic);
