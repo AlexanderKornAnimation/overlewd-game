@@ -296,7 +296,6 @@ namespace Overlewd
             public string name;
             public string description;
             public string bannerImage;
-            public List<int> tradables;
             public List<Tab> tabs;
             public string type;
 
@@ -332,8 +331,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public List<TradableItem> tradablesData =>
-                tradables.Select(id => GameData.markets.GetTradableById(id)).
-                Where(data => data != null).OrderByDescending(item => item.promo).ToList();
+                    tabs.SelectMany(tabData => tabData.tradablesData).ToList();
 
             [JsonProperty(Required = Required.Default)]
             public bool isMain => type == Type_Main;
