@@ -141,42 +141,45 @@ namespace Overlewd
 
         public override void Handle()
         {
-            foreach (var q in lastAddedQuests)
+            /*foreach (var q in lastAddedQuests)
             {
                 PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
                 {
                     title = "Add quest",
                     message = q.name
                 });
-            }
+            }*/
 
-            foreach (var shardId in lastChangedMemoryShards)
+            if (!UIManager.HasScreen<SummoningScreen>())
             {
-                var fromShardState = fromMemoryShards.Find(s => s.id == shardId);
-                var toShardState = toMemoryShards.Find(s => s.id == shardId);
-                PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                foreach (var shardId in lastChangedMemoryShards)
                 {
-                    title = $"Add {toShardState.matriarchData?.name} shards",
-                    message = $"+{toShardState.amount - fromShardState.amount} {toShardState.tmpSprite}"
-                });
-            }
+                    var fromShardState = fromMemoryShards.Find(s => s.id == shardId);
+                    var toShardState = toMemoryShards.Find(s => s.id == shardId);
+                    PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                    {
+                        title = $"Add {toShardState.matriarchData?.name} shards",
+                        message = $"+{toShardState.amount - fromShardState.amount} {toShardState.tmpSprite}"
+                    });
+                }
 
-            foreach (var e in lastAddedEquipments)
-            {
-                PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                foreach (var e in lastAddedEquipments)
                 {
-                    title = "Add equipment",
-                    message = $"{e.name}"
-                });
-            }
+                    PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                    {
+                        title = "Add equipment",
+                        message = $"{e.name}"
+                    });
+                }
 
-            foreach (var c in lastAddedCharacters)
-            {
-                PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                foreach (var c in lastAddedCharacters)
                 {
-                    title = "Add battle character",
-                    message = $"{c.name}"
-                });
+                    PopupNotifManager.PushNotif(new PopupNotifWidget.InitSettings
+                    {
+                        title = "Add battle character",
+                        message = $"{c.name}"
+                    });
+                }
             }
         }
     }
