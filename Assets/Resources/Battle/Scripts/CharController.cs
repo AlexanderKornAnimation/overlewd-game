@@ -68,7 +68,7 @@ namespace Overlewd
         public float preAttackDuration = 1f;
         public float attackDuration = 1f;
         public float vfxDuration = 0f;
-        
+
         private float hitDelay = 1f; //BattleOut step delay
         float effectDefDelay = 1.2f;
         float effectActDelay = 0.4f;
@@ -113,12 +113,14 @@ namespace Overlewd
 
             msg_safeguard = "<size=90%><sprite=\"BuffsNDebuffs\" name=\"Safeguard\"></size> Safeguard",
             msg_dispel = "<size=90%><sprite=\"BuffsNDebuffs\" name=\"Dispell\"></size> Dispell";
-        private GameObject vfx_purple => bm.vfx.purple;
-        private GameObject vfx_red => bm.vfx.red;
-        private GameObject vfx_blue => bm.vfx.blue;
-        private GameObject vfx_green => bm.vfx.green;
-        private GameObject vfx_stun => bm.vfx.stun;
-        private GameObject vfx_blood => bm.vfx.blood;
+        private string msg_crit = "<sprite=\"BuffsNDebuffs\" name=\"Crit\"> Crit!";
+
+        private GameObject vfx_purple => bm.res.purple;
+        private GameObject vfx_red => bm.res.red;
+        private GameObject vfx_blue => bm.res.blue;
+        private GameObject vfx_green => bm.res.green;
+        private GameObject vfx_stun => bm.res.stun;
+        private GameObject vfx_blood => bm.res.blood;
 
         private void Start()
         {
@@ -338,9 +340,10 @@ namespace Overlewd
 
             var isDodge = dodge + psr?.dodge > Random.value;
             var isCrit = attacker.critrate + attacker.psr?.crit > Random.value;
-            if (isDodge)
+            if (isHit && isDodge)
             {
-                if (isHit) rt.DOAnchorPos(new Vector2(-230, 0), 0.1f);
+                var shiftPos = AOE ? new Vector2(-50, 0) : new Vector2(-230, 0);
+                rt.DOAnchorPos(rt.anchoredPosition + shiftPos, 0.1f); //shift character when dodge
                 psr?.Dodge();
             }
             if (isCrit) attacker.psr?.Crit(); else attacker.psr?.CritMiss();
@@ -365,12 +368,15 @@ namespace Overlewd
             {
                 var vfxGO = new GameObject($"vfx_{attackerSkill.vfxTarget.title}");
                 var vfx = vfxGO.AddComponent<VFXManager>();
-                vfx.Setup(attackerSkill.vfxTarget, selfVFX,invertX: true);
+                vfx.Setup(attackerSkill.vfxTarget, selfVFX, invertX: true);
                 targetVFXisSpawn = (vfxGO != null);
             }
             if (vfx_blood && !isDodge && !HEAL && isHit && !targetVFXisSpawn)
                 Instantiate(vfx_blood, selfVFX);
-            foreach (var ps in passiveSkill)
+            var aDamage = attacker.damageTotal;
+            float defScale = defUp_defDown != 0 ? aDamage * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
+            if (HEAL) aDamage = aDamage > 0 ? aDamage *= -1 : aDamage + defScale;
+            foreach (var ps in passiveSkill) //for hide popUps if we already dead
             {
                 if (ps?.trigger == "when_attacked")
                     if (ps.actionType == "heal")                  //who is target "heal" = self    !"heal" = enemy
@@ -378,11 +384,7 @@ namespace Overlewd
                     else
                         AddEffect(ps, attacker, passive: true, buff: false); //BUG! passive debuff
             }
-            var aDamage = attacker.damageTotal;
-            float defScale = defUp_defDown != 0 ? aDamage * defUp_defDown_dot * -Mathf.Sign(defUp_defDown) : 0f; //defence up down
-            if (HEAL) aDamage = aDamage > 0 ? aDamage *= -1 : aDamage + defScale;
             Damage(aDamage, isHit, isDodge, isCrit, uiDelay: 1.5f, attacker: attacker, aSkill: attackerSkill);
-
             yield return new WaitForSeconds(defenceDuration);
 
             if (!HEAL && !stun) //skip play idle to avoid strange loop transitions
@@ -418,7 +420,10 @@ namespace Overlewd
             UnHiglight();
             transform.SetParent(battlePos);
             if (AOE) return;
-            rt.DOAnchorPos(Vector2.zero, zoomSpeed);
+            if (isBoss)
+                rt.DOAnchorPos(new Vector2(0,-200), zoomSpeed);
+            else
+                rt.DOAnchorPos(Vector2.zero, zoomSpeed);
             rt.DOScale(battleScale, zoomSpeed);
         }
 
@@ -427,8 +432,8 @@ namespace Overlewd
             battleCry.ShowBattleCry(); //show battle cry if one of them will be added
             transform.SetParent(persPos);
             transform.SetSiblingIndex(0);
-            if (AOE) return;
             rt.DOAnchorPos(Vector2.zero, zoomSpeed);
+            if (AOE) return;
             rt.DOScale(idleScale, zoomSpeed);
         }
         IEnumerator PlayDead(float delay)
@@ -481,7 +486,7 @@ namespace Overlewd
                 health = Mathf.Round(health);
                 health = Mathf.Max(health, 0);
                 if (crit)
-                    DrawPopup($"Crit!\n{value}", "yellow", fast: true);
+                    DrawPopup($"{msg_crit}\n{value}", "yellow", fast: true);
                 else if (poison)
                     DrawPopup($"-{value}HP", "green", fast: false);
                 else

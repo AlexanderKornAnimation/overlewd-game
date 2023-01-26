@@ -19138,6 +19138,7 @@ MonoBehaviour:
   portraitScale: 1.5
   ccOnSelect: {fileID: 0}
   ccTarget: {fileID: 0}
+  background: {fileID: 8561078295274620326}
   ani: {fileID: 937329736}
   charAni: {fileID: 5357730785063779628}
   portraitPrefab: {fileID: 7345502320004135042, guid: 226c0e1cf39e78a4dad820b504df5e3c, type: 3}
@@ -19147,8 +19148,8 @@ MonoBehaviour:
   EnemyStatsContent: {fileID: 5496798229500404337}
   PlayerStats: {fileID: 8481323610088203379}
   EnemyStats: {fileID: 5647095579482221027}
-  bPosPlayer: {fileID: 0}
-  bPosEnemy: {fileID: 0}
+  bPosPlayer: {fileID: 283127335995940488}
+  bPosEnemy: {fileID: 727515030883017564}
   redColor: {r: 0.45098042, g: 0.09411766, b: 0.16078432, a: 1}
   aniRound: {fileID: 954758372175821236, guid: 8cc50c80ff3b12446b020114c4c39e64, type: 3}
   aniBoss: {fileID: 7832378659223795880, guid: 1e8bf0fca4d02524dbde685070f57333, type: 3}
@@ -19187,6 +19188,11 @@ MonoBehaviour:
   green: {fileID: 6055811017360518113, guid: 8ff2954e3d66e6e4bb3b54fc52c9a2ca, type: 3}
   stun: {fileID: 6055811017360518113, guid: 6c8f4c1183ce4aa4caa245752f8c9784, type: 3}
   blood: {fileID: 5541813711829063474, guid: 3ae697746f32e8c43b507c8e504647f3, type: 3}
+  backgrounds:
+  - {fileID: 21300000, guid: dc78bbf5b20721143b1cd130b8507365, type: 3}
+  - {fileID: 21300000, guid: 26d3d74468e2a994895c4e26be7ba893, type: 3}
+  - {fileID: 21300000, guid: c4577c8ac97b534438fd10c56743190f, type: 3}
+  - {fileID: 21300000, guid: d507df0b3cffd1843a48feb198e65a9f, type: 3}
 --- !u!1 &6279933092519458706
 GameObject:
   m_ObjectHideFlags: 0

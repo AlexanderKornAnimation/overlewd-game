@@ -34,7 +34,7 @@ namespace Overlewd
                 cc = charC;
                 status_bar.cc = cc;
                 status_bar_debuff.cc = cc;
-                if (!isOpen) { 
+                if (!isOpen) {
                     ChangeStats();
                     ani.SetTrigger("Open");
                 }

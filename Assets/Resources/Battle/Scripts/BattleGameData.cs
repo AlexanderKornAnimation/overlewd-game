@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Overlewd
 {
-    public class VFXData : MonoBehaviour
+    public class BattleGameData : MonoBehaviour
     {
 
         public GameObject purple, red, blue, green, stun;
         public GameObject blood;
 
+        public Sprite[] backgrounds;
     }
 }

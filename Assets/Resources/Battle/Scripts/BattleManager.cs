@@ -23,14 +23,15 @@ namespace Overlewd
         [HideInInspector] public List<CharController> enemyAllyList;
         [HideInInspector] public List<QueuePortraitController> QueueElements = null;
         [SerializeField] private float portraitScale = 1.5f;
-        [Tooltip("selected as current turn")] public CharController ccOnSelect;
-        [Tooltip("selected as target")] public CharController ccTarget = null;
+        [HideInInspector] [Tooltip("selected as current turn")] public CharController ccOnSelect;
+        [HideInInspector] [Tooltip("selected as target")] public CharController ccTarget = null;
+        [SerializeField] private Image background;
         public Animator ani, charAni;
 
         //new init
         private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
         public BattleLog log => GetComponent<BattleLog>();
-        public VFXData vfx => GetComponent<VFXData>();
+        public BattleGameData res => GetComponent<BattleGameData>();
         bool bossLevel => battleData.isTypeBoss;
         private List<AdminBRO.Character> playerTeam => battleScene.GetBattleData().myTeam;
         private List<AdminBRO.Character> enemyTeam;
@@ -100,6 +101,8 @@ namespace Overlewd
             if (EnemyStatsContent == null) EnemyStatsContent = transform.Find("BattleUICanvas/Enemys/Content.enemy");
             if (PlayerStats == null) PlayerStats = transform.Find("BattleUICanvas/Character/PlayerStats")?.GetComponent<CharacterPortrait>();
             if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats")?.GetComponent<CharacterPortrait>();
+            if (background == null) background = transform.Find("BattleCanvas/Background").GetComponent<Image>();
+            if (bossLevel) background.sprite = res.backgrounds[3];
 
             //if (bossLevel) QueueUI.gameObject.SetActive(false);
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
@@ -134,7 +137,7 @@ namespace Overlewd
 
             CreatePortraitQueue();
             maxStep = charControllerList.Count;
-            if (!bossLevel) QueueElements[0].Select(); //Scale Up First Element
+            QueueElements[0].Select(); //Scale Up First Element
             ccOnSelect = charControllerList[step];
 
             aniDropPoint = transform.Find("Animations");

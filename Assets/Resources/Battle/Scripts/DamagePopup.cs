@@ -10,7 +10,7 @@ public class DamagePopup : MonoBehaviour
     private RectTransform backRt;
 
     private string color = "",
-        white = "<color=#E8D9AC>",
+        white = "<color=#F6EFDB>",
         red = "<color=#F45353>",
         blue = "<color=#FFCD6B>",
         yellow = "<color=#FFCD6B>",
