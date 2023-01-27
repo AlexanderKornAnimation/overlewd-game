@@ -32,6 +32,7 @@ namespace Overlewd
         public static NutakuMy nutaku { get; } = new NutakuMy();
         public static Alchemy alchemy { get; } = new Alchemy();
         public static BossMiniGame bossMiniGame { get; } = new BossMiniGame();
+        public static DailyLogin dailyLogin { get; } = new DailyLogin();
     }
 
     public abstract class BaseGameMeta
@@ -1299,6 +1300,22 @@ namespace Overlewd
         public override async Task Get()
         {
             settings = await AdminBRO.nutakuSettingsAsync();
+        }
+    }
+
+    //daily login
+    public class DailyLogin : BaseGameMeta
+    {
+        public AdminBRO.DailyLogin info { get; private set; }
+
+        public override async Task Get()
+        {
+            info = await AdminBRO.dailyLoginAsync();
+        }
+
+        public async Task Collect(string dayName)
+        {
+            await AdminBRO.dailyLoginCollectAsync(dayName);
         }
     }
 }

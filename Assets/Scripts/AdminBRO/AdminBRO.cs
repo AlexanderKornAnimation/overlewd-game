@@ -2400,5 +2400,32 @@ namespace Overlewd
             public string callbackUrl;
             public string completeUrl;
         }
+
+        // daily login
+        // /daily-login
+        // /daily-login/{dayName}/collect
+        public static async Task<HttpCoreResponse<DailyLogin>> dailyLoginAsync() =>
+            await HttpCore.GetAsync<DailyLogin>(make_url("daily-login"));
+        public static async Task<HttpCoreResponse> dailyLoginCollectAsync(string dayName) =>
+            await HttpCore.PostAsync<HttpCoreResponse>(make_url($"daily-login/{dayName}/collect"));
+
+        [Serializable]
+        public class DailyLogin
+        {
+            public string bannerDescription;
+            public string bannerArt;
+            public string smallBannerForEventbook;
+            public string image;
+            public List<Day> days;
+
+            public class Day
+            {
+                public string dayName;
+                public string serialNumber;
+                public bool isLoggedIn;
+                public bool isCollected;
+                public List<RewardItem> rewards;
+            }
+        }
     }
 }
