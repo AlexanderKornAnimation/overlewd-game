@@ -215,7 +215,7 @@ namespace Overlewd
 
             switch (GameData.ftue.stats.lastEndedStageData?.lerningKey)
             {
-                case (FTUE.CHAPTER_1, FTUE.BATTLE_1):
+                case (FTUE.CHAPTER_1, FTUE.BATTLE_3):
                     await questsPanel.ShowAsync();
                     GameData.ftue.chapter1.ShowNotifByKey("qbtutor");
                     break;

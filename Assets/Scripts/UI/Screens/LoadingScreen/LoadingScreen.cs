@@ -316,7 +316,14 @@ namespace Overlewd
             var firstSexStage = GameData.ftue.chapter1_sex1;
             if (firstSexStage.isComplete)
             {
-                UIManager.ShowScreen<MapScreen>();
+                if (GameData.buildings.castle.meta.isBuilt)
+                {
+                    UIManager.ShowScreen<CastleScreen>();
+                }
+                else
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
             }
             else
             {

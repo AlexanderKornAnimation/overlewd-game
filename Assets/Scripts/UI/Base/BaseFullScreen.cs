@@ -24,9 +24,6 @@ namespace Overlewd
 
     public abstract class BaseFullScreenInData : BaseScreenInData
     {
-        public new bool IsType<T>() where T : BaseFullScreenInData =>
-            base.IsType<T>();
-        public new T As<T>() where T : BaseFullScreenInData =>
-            base.As<T>();
+
     }
 }

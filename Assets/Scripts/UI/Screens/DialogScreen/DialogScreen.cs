@@ -22,6 +22,7 @@ namespace Overlewd
         private Transform leftCharacterPos;
         private Transform midCharacterPos;
         private Transform rightCharacterPos;
+        private Image background;
 
         private Transform textContainer;
         private TextMeshProUGUI personageName;
@@ -78,6 +79,7 @@ namespace Overlewd
             leftCharacterPos = charactersPos.Find("LeftPos");
             midCharacterPos = charactersPos.Find("MiddlePos");
             rightCharacterPos = charactersPos.Find("RightPos");
+            background = canvas.Find("Background").GetComponent<Image>();
 
             textContainer = canvas.Find("TextContainer");
             nameBackground = canvas.Find("SubstrateName").gameObject;
@@ -103,6 +105,11 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            var dialogData = inputData?.dialogData;
+
+            if (dialogData?.background != null)
+                background.sprite = ResourceManager.LoadSprite(dialogData?.background);
+            
             switch (inputData.ftueStageData?.lerningKey)
             {
                 case (_, _):

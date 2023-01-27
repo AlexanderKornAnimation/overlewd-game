@@ -10,12 +10,12 @@ public class DamagePopup : MonoBehaviour
     private RectTransform backRt;
 
     private string color = "",
-        white = "<color=#FFFFFF>",
-        red = "<color=#FD4D4B>",
-        blue = "<color=#5C9BCC>",
-        yellow = "<color=#FFBA53>",
-        green = "<color=#81E41E>",
-        purple = "<color=#FF00E6>";
+        white = "<color=#F6EFDB>",
+        red = "<color=#F45353>",
+        blue = "<color=#FFCD6B>",
+        yellow = "<color=#FFCD6B>",
+        green = "<color=#A3DC45>",
+        purple = "<color=#F1A5F8>";
     private Animator ani;
 
     public float lifetime = .75f;

@@ -51,7 +51,7 @@ namespace Overlewd
             GameData.devMode ? false : !GameData.buildings.harem.meta.isBuilt;
         public bool questWidgetEnabled =>
             GameData.devMode ? true :
-            GameData.ftue.chapter1_battle1.isComplete && !GameData.ftue.chapter1_battle1.isLastEnded;
+            GameData.ftue.chapter1_battle3.isComplete && !GameData.ftue.chapter1_battle3.isLastEnded;
         public bool eventsWidgetEnabled =>
             GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
     }
@@ -534,9 +534,22 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevCharacters = characters;
+
             charactersBase = await AdminBRO.charactersBaseAsync();
             characters = await AdminBRO.charactersAsync();
             effects = await AdminBRO.skillEffectsAsync();
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromCharacters = prevCharacters,
+                toCharacters = characters
+            };
+            if (entitiesIncomeEventData.lastAddedCharacters.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.CharacterBase GetBaseById(int? id) =>
@@ -643,8 +656,21 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevEquipment = equipment;
+
             equipmentBase = await AdminBRO.equipmentBaseAsync();
             equipment = await AdminBRO.equipmentAsync();
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromEquipments = prevEquipment,
+                toEquipments = equipment
+            };
+            if (entitiesIncomeEventData.lastAddedEquipments.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.EquipmentBase GetBaseById(int? id) =>
@@ -814,26 +840,9 @@ namespace Overlewd
 
             var result = await AdminBRO.tradableBuyAsync(marketId.Value, tradableId.Value);
             await GameData.player.Get();
-
-            if (result.dData.status == true)
-            {
-                UIManager.ThrowGameDataEvent(
-                    new GameDataEvent
-                    {
-                        id = GameDataEventId.BuyTradable
-                    });
-            }
-
-            return result;
-        }
-
-        public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? tradableId)
-        {
-            if (!tradableId.HasValue)
-                return new AdminBRO.TradableBuyStatus { status = false }; ;
-
-            var result = await AdminBRO.tradableBuyAsync(tradableId.Value);
-            await GameData.player.Get();
+            await GameData.characters.Get();
+            await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
 
             if (result.dData.status == true)
             {
@@ -853,38 +862,44 @@ namespace Overlewd
     {
         public List<AdminBRO.QuestItem> quests { get; private set; } = new List<AdminBRO.QuestItem>();
 
-        //local marks (runtime only)
-        public List<int> newIds { get; private set; } = new List<int>();
-        public List<int> lastAddedIds { get; private set; } = new List<int>();
-        public List<int> markCompletedIds { get; private set; } = new List<int>();
-
         public override async Task Get()
         {
-            if (quests.Count > 0)
-            {
-                var prevQuestsIds = quests.Select(q => q.id).ToList();
-                quests = await AdminBRO.questsAsync();
-                lastAddedIds = quests.Select(q => q.id).
-                    Where(qId => !prevQuestsIds.Exists(pqId => pqId == qId)).ToList();
-                newIds.AddRange(lastAddedIds);
+            var prevQuests = quests;
+            quests = await AdminBRO.questsAsync();
 
-                //clear trash from marks
-                newIds.RemoveAll(qId => !quests.Exists(q => qId == q.id));
-                markCompletedIds.RemoveAll(qId => !quests.Exists(q => qId == q.id));
-            }
-            else
+            //calc local marks
+            if (prevQuests.Count > 0)
             {
-                quests = await AdminBRO.questsAsync();
+                foreach (var q in quests)
+                {
+                    var pq = prevQuests.Find(pq => pq.id == q.id);
+                    if (pq != null)
+                    {
+                        q.isNew = pq.isNew;
+                        q.markCompleted = pq.markCompleted;
+                    }
+                    else
+                    {
+                        q.isNew = true;
+                        q.markCompleted = false;
+                    }
+                }
+            }
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromQuests = prevQuests,
+                toQuests = quests
+            };
+            if (entitiesIncomeEventData.lastAddedQuests.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
             }
         }
 
         public AdminBRO.QuestItem GetById(int? id) =>
             quests.Find(q => q.id == id);
-
-        public List<AdminBRO.QuestItem> newQuests =>
-            newIds.Select(qId => GetById(qId)).ToList();
-        public List<AdminBRO.QuestItem> lastAddedQuests =>
-            lastAddedIds.Select(qId => GetById(qId)).ToList();
 
         public async Task ClaimReward(int? id)
         {
@@ -942,11 +957,23 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevInfo = info;
             info = await AdminBRO.meAsync();
             //var locale = await AdminBRO.localizationAsync("en");
 
             lastTimeUpd = DateTime.Now;
             accEnergyPoints = 0.0f;
+
+            var walletChangeEventData =new WalletChangeStateDataEvent
+            {
+                id = GameDataEventId.WalletChangeState,
+                fromInfo = prevInfo,
+                toInfo = info
+            };
+            if (walletChangeEventData.hasAnyChanges)
+            {
+                UIManager.ThrowGameDataEvent(walletChangeEventData);
+            }
         }
 
         private DateTime lastTimeUpd;
@@ -959,12 +986,12 @@ namespace Overlewd
                 var dt = time - lastTimeUpd;
                 lastTimeUpd = time;
 
-                if (info.energyPoints < GameData.potions.baseEnergyVolume)
+                if (info.energyPointsAmount < GameData.potions.baseEnergyVolume)
                 {
                     accEnergyPoints += (float)dt.TotalMinutes * GameData.potions.energyRecoverySpeed;
                     int accPointsIntPart = (int)accEnergyPoints;
                     accEnergyPoints -= accPointsIntPart;
-                    info.energyPoints = Math.Min(info.energyPoints + accPointsIntPart, GameData.potions.baseEnergyVolume);
+                    info.energyPoints = Math.Min(info.energyPointsAmount + accPointsIntPart, GameData.potions.baseEnergyVolume);
                 }
                 else
                 {
@@ -976,7 +1003,6 @@ namespace Overlewd
             }
         }
 
-
         public async Task AddCrystals(int amount = 1000)
         {
             var crystalCurrencyId = GameData.currencies.Crystals.id;
@@ -984,52 +1010,9 @@ namespace Overlewd
             await Get();
         }
 
-        public AdminBRO.PlayerInfo.WalletItem Crystal =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Crystals.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Wood =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Wood.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Stone =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Stone.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Copper =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Copper.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Gold =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Gold.id);
-
-        public AdminBRO.PlayerInfo.WalletItem Gems =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.Gems.id);
-
-        public AdminBRO.PlayerInfo.WalletItem CatEars =>
-            info.wallet.Find(item => item.currencyId == GameData.currencies.CatEars.id);
-
-        public int hpPotionAmount => info.potion.hp;
-        public int manaPotionAmount => info.potion.mana;
-        public int energyPotionAmount => info.potion.energy;
-        public int replayAmount => info.potion.replay;
-        public int energyPoints => info.energyPoints;
-
-        public bool CanBuy(List<AdminBRO.PriceItem> price)
-        {
-            if (price == null)
-                return false;
-        
-            foreach (var priceItem in price)
-            {
-                var walletCurrency = info.wallet.Find(item => item.currencyId == priceItem.currencyId);
-                if (walletCurrency == null)
-                {
-                    return false;
-                }
-                if (walletCurrency.amount < priceItem.amount)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+        public bool CanBuy(List<AdminBRO.PriceItem> price) =>
+            !price?.Exists(p => info.fullWallet.
+            Exists(w => p.currencyId == w.currencyId && p.amount > w.amount)) ?? false;
     }
 
     //dialogs
@@ -1137,10 +1120,24 @@ namespace Overlewd
 
         public override async Task Get()
         {
+            var prevMemoryShards = memoryShards;
+
             matriarchs = await AdminBRO.matriarchsAsync();
             memories = await AdminBRO.memoriesAsync();
             memoryShards = await AdminBRO.memoryShardsAsync();
             buffs = await AdminBRO.buffsAsync();
+
+
+            var entitiesIncomeEventData = new EntitiesIncomeDataEvent
+            {
+                id = GameDataEventId.EntitiesIncome,
+                fromMemoryShards = prevMemoryShards,
+                toMemoryShards = memoryShards
+            };
+            if (entitiesIncomeEventData.lastChangedMemoryShards.Count > 0)
+            {
+                UIManager.ThrowGameDataEvent(entitiesIncomeEventData);
+            }
         }
 
         public AdminBRO.MatriarchItem GetMatriarchById(int? id) =>
@@ -1225,6 +1222,7 @@ namespace Overlewd
         {
             await AdminBRO.battlePassClaimAsync(battlePassId);
             await Get();
+            await GameData.player.Get();
         }
     }
 

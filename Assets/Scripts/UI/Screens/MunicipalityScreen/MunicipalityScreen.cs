@@ -245,9 +245,6 @@ namespace Overlewd
         {
             await GameData.buildings.municipality.GoldCollect();
             CustomizeBanner();
-
-            PopupNotifWidget.GetInstance(transform).Play("Gold collect",
-                $"+{GameData.buildings.municipality.settings.moneyPerPeriod}" + TMPSprite.Gold);
         }
         
         public override async Task BeforeShowAsync()

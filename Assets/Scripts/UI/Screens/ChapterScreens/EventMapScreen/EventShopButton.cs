@@ -35,9 +35,10 @@ namespace Overlewd
             protected override void ButtonClick()
             {
                 base.ButtonClick();
-                UIManager.MakeScreen<EventMarketScreen>().
-                    SetData(new EventMarketScreenInData
+                UIManager.MakeOverlay<EventMarketOverlay>().
+                    SetData(new EventMarketOverlayInData
                     {
+                        eventId = eventId,
                         marketId = marketId
                     }).DoShow();
             }

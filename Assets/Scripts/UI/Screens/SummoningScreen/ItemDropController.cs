@@ -90,10 +90,11 @@ namespace Overlewd
 
             public void CanClick()
             {
-                if (grade != maxGrade + 1)
+                if (grade <= maxGrade)
                 {
                     canClick = true;
-                    partMat.material = parentDE.mat[grade - 1];
+                    if (parentDE.mat.Count > 0)
+                        partMat.material = parentDE?.mat[Mathf.Max(0, grade - 1)];
                 }
             }
             public void UpgradeOrOpen()

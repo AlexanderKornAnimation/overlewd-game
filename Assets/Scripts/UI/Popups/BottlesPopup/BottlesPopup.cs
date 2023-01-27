@@ -40,9 +40,6 @@ namespace Overlewd
         private Button manaMinusButton;
         private TextMeshProUGUI manaCount;
 
-        private Transform walletWidgetPos;
-        private WalletWidget walletWidget;
-
         private int _staminaCount => int.Parse(staminaCount.text);
         private int _scrollCount => int.Parse(scrollCount.text);
         private int _healthCount => int.Parse(healthCount.text);
@@ -86,7 +83,7 @@ namespace Overlewd
             staminaPlusButton.onClick.AddListener(StaminaPlusButtonClick);
             staminaMinusButton = stamina.Find("ButtonMinus").GetComponent<Button>();
             staminaMinusButton.onClick.AddListener(StaminaMinusButtonClick);
-            staminaCount = stamina.Find("Counter").Find("Count").GetComponent<TextMeshProUGUI>();
+            staminaCount = stamina.Find("Counter/Count").GetComponent<TextMeshProUGUI>();
 
             scrollBuyButton = scroll.Find("BuyButton").GetComponent<Button>();
             scrollBuyButton.onClick.AddListener(ScrollBuyButtonClick);
@@ -95,7 +92,7 @@ namespace Overlewd
             scrollMinusButton.onClick.AddListener(ScrollMinusButtonClick);
             scrollPlusButton = scroll.Find("ButtonPlus").GetComponent<Button>();
             scrollPlusButton.onClick.AddListener(ScrollPlusButtonClick);
-            scrollCount = scroll.Find("Counter").Find("Count").GetComponent<TextMeshProUGUI>();
+            scrollCount = scroll.Find("Counter/Count").GetComponent<TextMeshProUGUI>();
             
             healthBuyButton = health.Find("BuyButton").GetComponent<Button>();
             healthBuyButton.onClick.AddListener(HealthBuyButtonClick);
@@ -104,7 +101,7 @@ namespace Overlewd
             healthMinusButton.onClick.AddListener(HealthMinusButtonClick);
             healthPlusButton = health.Find("ButtonPlus").GetComponent<Button>();
             healthPlusButton.onClick.AddListener(HealthPlusButtonClick);
-            healthCount = health.Find("Counter").Find("Count").GetComponent<TextMeshProUGUI>();
+            healthCount = health.Find("Counter/Count").GetComponent<TextMeshProUGUI>();
             
             manaBuyButton = mana.Find("BuyButton").GetComponent<Button>();
             manaBuyButton.onClick.AddListener(ManaBuyButtonClick);
@@ -113,12 +110,10 @@ namespace Overlewd
             manaMinusButton.onClick.AddListener(ManaMinusButtonClick);
             manaPlusButton = mana.Find("ButtonPlus").GetComponent<Button>();
             manaPlusButton.onClick.AddListener(ManaPlusButtonClick);
-            manaCount = mana.Find("Counter").Find("Count").GetComponent<TextMeshProUGUI>();
+            manaCount = mana.Find("Counter/Count").GetComponent<TextMeshProUGUI>();
 
-            walletWidgetPos = canvas.Find("WalletWidgetPos");
-            
-            staminaAmount = staminaCounter.Find("Stamina").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
-            staminaBottleAmount = staminaCounter.Find("Bottle").Find("CounterBack").Find("Count").GetComponent<TextMeshProUGUI>();
+            staminaAmount = staminaCounter.Find("Stamina/Count").GetComponent<TextMeshProUGUI>();
+            staminaBottleAmount = staminaCounter.Find("Bottle/Count").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowDataAsync()
@@ -134,7 +129,6 @@ namespace Overlewd
             scrollCount.text = 1.ToString();
             healthCount.text = 1.ToString();
             manaCount.text = 1.ToString();
-            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
 
             Refresh();
             StartCoroutine(GameData.player.UpdLocalEnergyPoints(RefreshEnergyPanel));
@@ -159,10 +153,10 @@ namespace Overlewd
             refillPrice.text = $"Use bottle to get" +
                 $" <size=35><sprite=\"AssetResources\" name=\"Energy\"></size>" +
                 $" {GameData.potions.baseEnergyVolume}";
-            staminaAmount.text = $"{GameData.player.energyPoints}/{GameData.potions.baseEnergyVolume}";
-            staminaBottleAmount.text = GameData.player.energyPotionAmount.ToString();
+            staminaAmount.text = $"{GameData.player.info.energyPointsAmount}/{GameData.potions.baseEnergyVolume}";
+            staminaBottleAmount.text = GameData.player.info.energyPotionAmount.ToString();
 
-            UITools.DisableButton(refillButton, GameData.player.energyPotionAmount < 1);
+            UITools.DisableButton(refillButton, GameData.player.info.energyPotionAmount < 1);
         }
 
         private void Refresh()
@@ -170,25 +164,24 @@ namespace Overlewd
             CheckIncButtonsState();
             CheckBuyButtonsState();
             RefreshEnergyPanel();
-            walletWidget.Customize();
         }
 
         private void CheckBuyButtonsState()
         {
             var staminaPrice = UITools.PriceMul(GameData.potions.energyInfo.price, _staminaCount);
-            staminaBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(staminaPrice);
+            staminaBuyButtonTitle.text = "<size=38>" + UITools.PriceToString(staminaPrice);
             UITools.DisableButton(staminaBuyButton, !GameData.player.CanBuy(staminaPrice));
 
             var scrollPrice = UITools.PriceMul(GameData.potions.replayInfo.price, _scrollCount);
-            scrollBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(scrollPrice);
+            scrollBuyButtonTitle.text = "<size=38>" + UITools.PriceToString(scrollPrice);
             UITools.DisableButton(scrollBuyButton, !GameData.player.CanBuy(scrollPrice));
 
             var healthPrice = UITools.PriceMul(GameData.potions.hpInfo.price, _healthCount);
-            healthBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(healthPrice);
+            healthBuyButtonTitle.text = "<size=38>" + UITools.PriceToString(healthPrice);
             UITools.DisableButton(healthBuyButton, !GameData.player.CanBuy(healthPrice));
 
             var manaPrice = UITools.PriceMul(GameData.potions.manaInfo.price, _manaCount);
-            manaBuyButtonTitle.text = "Buy for " + "<size=38>" + UITools.PriceToString(manaPrice);
+            manaBuyButtonTitle.text = "<size=38>" + UITools.PriceToString(manaPrice);
             UITools.DisableButton(manaBuyButton, !GameData.player.CanBuy(manaPrice));
         }
 

@@ -72,7 +72,7 @@ namespace Overlewd
 
                     var rewardIcons = rewardGrid.GetComponentsInChildren<Image>();
                     var rewardAmounts = rewardGrid.GetComponentsInChildren<TextMeshProUGUI>();
-                    
+
                     foreach (var reward in rewardIcons)
                     {
                         reward.gameObject.SetActive(false);
@@ -94,6 +94,7 @@ namespace Overlewd
                 Destroy(mapButton.gameObject.GetComponent<Selector>());
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 eventData.SetAsMapEvent();
+                eventData.activeChapter.SetAsMapChapter();
                 UIManager.ShowScreen<EventMapScreen>();
             }
 

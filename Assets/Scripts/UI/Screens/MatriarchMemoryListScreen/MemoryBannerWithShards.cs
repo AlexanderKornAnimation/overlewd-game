@@ -65,7 +65,7 @@ namespace Overlewd
                     SetData(new MemoryScreenInData
                     {
                         memoryId = memoryId,
-                        girlKey = GameData.matriarchs.GetMatriarchById(memoryData?.matriarchId).key,
+                        girlKey = memoryData?.matriarchData.key,
                     }).DoShow();
             }
 

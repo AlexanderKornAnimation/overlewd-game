@@ -39,36 +39,19 @@ namespace Overlewd
         public const string UI_GenericDialogNotificationShow = "event:/UI/PopUps/Text/Generic_Text_Window_PopUp";
 
         //battle
-        /// <summary>
-        /// Sound for click at mana potion button
-        /// </summary>
+        //Sound for click at mana potion button
         public const string UI_Battle_Healpotion = "event:/UI/Battle_Interface/Misc/Healpotion";
-        /// <summary>
-        /// Sound for click at mana potion button
-        /// </summary>
+        //Sound for click at mana potion button
         public const string UI_Battle_Manapotion = "event:/UI/Battle_Interface/Misc/Manapotion";
-        /// <summary>
-        /// Sound for melee attack
-        /// </summary>
+        //Sound for melee attack
         public const string UI_Battle_Attack = "event:/UI/Battle_Interface/Actions/Attack";
-        /// <summary>
-        /// Sound for selection character
-        /// </summary>
+        //Sound for selection character
         public const string UI_Battle_SelectPers = "event:/UI/Battle_Interface/Misc/Hero_select";
-        /// <summary>
-        /// Sound for Overlord's basic attack. Should be played after starting animation
-        /// </summary>
+        //Sound for Overlord's basic attack. Should be played after starting animation
         public const string Battle_Overlord_hit = "event:/Animations/Battle/Generic_Hits/Overlord_hit";
-        /// <summary>
-        /// Sound for Overlord's first AOE attack 
-        /// </summary>
+        //Sound for Overlord's first AOE attack 
         public const string Batlle_Overlord_AOE_Hits_AOE1 = "event:/Animations/Battle/Overlord_AOE_Hits/AOE1";
-
-        //battle bg music
-        /// <summary>
-        /// Background battle music
-        /// </summary>
-        public const string Music_Battle_BGM_1 = "event:/Music/BattleScreen/Battle_BGM_1";
+        
 
         //screens bg music
         public const string Castle_Screen_BGM_Attn = "snapshot:/Castle_Screen_BGM_Attn";//переходы между экранами замка
@@ -76,6 +59,7 @@ namespace Overlewd
         public const string Music_SexScreen = "event:/Music/LewdScreen/BGM_SexScene_1";
         public const string Music_DialogScreen = "event:/Music/DialogueScreen/BGM_Dialogue_Chill_1";
         public const string Music_MapScreen = "event:/Music/MapScreen/BGM_MapScene_1";
+        public const string Music_Battle_BGM_1 = "event:/Music/BattleScreen/Battle_BGM_1";
 
         //gacha
         public const string Gacha_x1_open = "event:/Animations/Gacha/x1/Gacha_x1_open";

@@ -107,6 +107,10 @@ namespace Overlewd
 
     public abstract class BaseScreenInData
     {
+        public int? eventId { get; set; }
+        public AdminBRO.EventItem eventData =>
+            GameData.events.GetEventById(eventId);
+
         public int? eventStageId { get; set; }
         public AdminBRO.EventStageItem eventStageData => 
             GameData.events.GetStageById(eventStageId);
@@ -129,6 +133,10 @@ namespace Overlewd
 
         public bool hasEventStage => eventStageId.HasValue;
         public bool hasFTUEStage => ftueStageId.HasValue;
+
+        public int? marketId { get; set; }
+        public AdminBRO.MarketItem marketData =>
+            GameData.markets.GetMarketById(marketId);
 
         protected bool IsType<T>() where T : BaseScreenInData =>
             this.GetType() == typeof(T);

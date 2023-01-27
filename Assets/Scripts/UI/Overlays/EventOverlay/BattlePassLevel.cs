@@ -14,82 +14,107 @@ namespace Overlewd
             public int battlePassId { get; set; }
             public AdminBRO.BattlePass passData =>
                 GameData.battlePass.GetById(battlePassId);
-            public AdminBRO.BattlePass.Level levelData { get; set; }
+            public int levelId { get; set; }
+            public AdminBRO.BattlePass.Level levelData =>
+                passData.levels[levelId];
+
             public bool reached =>
                 levelData.pointsThreshold <= passData.currentPointsCount;
 
+            private Transform freeRewards;
+            private Transform premiumRewards;
             private TextMeshProUGUI level;
             public RectTransform levelReached { get; private set; }
 
-            private Image[] freeRewards = new Image[2];
-            private TextMeshProUGUI[] freeRewardsAmounts = new TextMeshProUGUI[2];
-            private Transform[] freeRewardsMarkDone = new Transform[2];
-            private Image[] premRewards = new Image[2];
-            private TextMeshProUGUI[] premRewardsAmounts = new TextMeshProUGUI[2];
-            private Transform[] premRewardsMarkDone = new Transform[2];
-            private Transform[] premRewardsMarkLock = new Transform[2];
-
-            private Transform canvas;
-
-            private void Awake()
+            void Awake()
             {
-                canvas = transform.Find("Canvas");
+                var canvas = transform.Find("Canvas");
                 var levelBackground = canvas.Find("LevelBackground");
-                var freeRewardsTr = canvas.Find("FreeRewards");
-                var premiumRewardsTr = canvas.Find("PremiumRewards");
-                
+                freeRewards = canvas.Find("FreeRewards");
+                premiumRewards = canvas.Find("PremiumRewards");
                 level = levelBackground.Find("Level").GetComponent<TextMeshProUGUI>();
                 levelReached = levelBackground.Find("LevelReached") as RectTransform;
-
-                for (int i = 0; i < freeRewards.Length; i++)
-                {
-                    freeRewards[i] = freeRewardsTr.Find($"Reward{i + 1}").GetComponent<Image>();
-                    freeRewardsAmounts[i] = freeRewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-                    freeRewardsMarkDone[i] = freeRewards[i].transform.Find("MarkDone");
-                    freeRewards[i].gameObject.SetActive(false);
-
-                    premRewards[i] = premiumRewardsTr.Find($"Reward{i + 1}").GetComponent<Image>();
-                    premRewardsAmounts[i] = premRewards[i].transform.Find("Count").GetComponent<TextMeshProUGUI>();
-                    premRewardsMarkDone[i] = premRewards[i].transform.Find("MarkDone");
-                    premRewardsMarkLock[i] = premRewards[i].transform.Find("MarkLock");
-                    premRewards[i].gameObject.SetActive(false);
-                }
             }
 
-            private void Start()
+            void Start()
             {
+                foreach (var rData in levelData.defaultReward)
+                {
+                    var reward = Reward.GetInstance(freeRewards);
+                    reward.icon = ResourceManager.LoadSprite(rData.icon);
+                    reward.amount = rData.amount.Value;
+                }
+                foreach (var rData in levelData.premiumReward)
+                {
+                    var reward = Reward.GetInstance(premiumRewards);
+                    reward.icon = ResourceManager.LoadSprite(rData.icon);
+                    reward.amount = rData.amount.Value;
+                }
+
                 Customize();
             }
 
             public void Customize()
             {
-                var battlePassData = passData;
-
                 level.text = levelData.pointsThreshold.ToString();
                 levelReached.gameObject.SetActive(reached);
 
-                for (int i = 0; i < 2; i++)
-                {
-                    if (i < levelData.defaultReward.Count)
-                    {
-                        freeRewards[i].gameObject.SetActive(true);
-                        freeRewards[i].sprite = ResourceManager.LoadSprite(levelData.defaultReward[i].icon);
-                        freeRewardsAmounts[i].text = levelData.defaultReward[i].amount?.ToString();
-                    }
+                SetRewardMarks();
+            }
 
-                    if (i < levelData.premiumReward.Count)
-                    {
-                        premRewards[i].gameObject.SetActive(true);
-                        premRewards[i].sprite = ResourceManager.LoadSprite(levelData.premiumReward[i].icon);
-                        premRewardsAmounts[i].text = levelData.premiumReward[i].amount?.ToString();
-                    }
+            private void SetRewardMarks()
+            {
+                foreach (var r in freeRewards.GetComponentsInChildren<Reward>())
+                {
+                    r.isDone = levelData.isDefaultRewardClaimed;
+                    r.isLocked = false;
                 }
+                foreach (var r in premiumRewards.GetComponentsInChildren<Reward>())
+                {
+                    r.isDone = levelData.isPremiumRewardClaimed;
+                    r.isLocked = !passData.isPremium;
+                }
+            }
+
+            public void Refresh()
+            {
+                SetRewardMarks();
             }
             
             public static BattlePassLevel GetInstance(Transform parent)
             {
                 return ResourceManager.InstantiateWidgetPrefab<BattlePassLevel>(
                     "Prefabs/UI/Overlays/EventOverlay/BattlePassLevel", parent);
+            }
+
+            private class Reward : MonoBehaviour
+            {
+                public Sprite icon
+                {
+                    get => transform.GetComponent<Image>().sprite;
+                    set => transform.GetComponent<Image>().sprite = value;
+                }
+                public int amount
+                {
+                    get => int.Parse(transform.Find("Count").GetComponent<TextMeshProUGUI>().text);
+                    set => transform.Find("Count").GetComponent<TextMeshProUGUI>().text = value.ToString();
+                }
+                public bool isDone
+                {
+                    get => transform.Find("MarkDone").gameObject.activeSelf;
+                    set => transform.Find("MarkDone").gameObject.SetActive(value);
+                }
+                public bool isLocked
+                {
+                    get => transform.Find("MarkLock").gameObject.activeSelf;
+                    set => transform.Find("MarkLock").gameObject.SetActive(value);
+                }
+
+                public static Reward GetInstance(Transform parent)
+                {
+                    return ResourceManager.InstantiateWidgetPrefab<Reward>(
+                        "Prefabs/UI/Overlays/EventOverlay/BattlePassReward", parent);
+                }
             }
         }
     }
