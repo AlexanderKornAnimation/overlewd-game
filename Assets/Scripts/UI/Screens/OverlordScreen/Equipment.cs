@@ -64,7 +64,7 @@ namespace Overlewd
                 
                 OnClick?.Invoke(this);
 
-
+                await Task.CompletedTask;
             }
 
             public static Equipment GetInstance(Transform parent)

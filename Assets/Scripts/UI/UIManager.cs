@@ -48,7 +48,7 @@ namespace Overlewd
         }
     }
 
-    public static class UIManager
+    public static partial class UIManager
     {
         private static Vector2 currentResolution;
         private static float currentAspectRatio;
@@ -73,14 +73,13 @@ namespace Overlewd
 
         private static BaseFullScreen screen;
         private static BasePopup popup;
-        private static BaseMissclick popupMiss;
+        private static Missclick popupMiss;
         private static BaseOverlay overlay;
-        private static BaseMissclick overlayMiss;
+        private static Missclick overlayMiss;
         private static BaseNotification notif;
-        private static BaseMissclick notifMiss;
+        private static Missclick notifMiss;
 
-        public static event Action<GameDataEvent> widgetsGameDataListeners;
-        public static event Action<UIEvent> widgetsUIEventListeners;
+        private static List<BaseWidget> widgets = new List<BaseWidget>();
 
         public enum UserInputLockerMode
         {
@@ -202,30 +201,29 @@ namespace Overlewd
         }
 
         //Missclick Instantiate
-        private static T GetMissclickInstance<T>(Transform parent) where T : BaseMissclick
+        private static Missclick GetMissclickInstance(Transform parent)
         {
-            var missclickGO = new GameObject(typeof(T).Name);
+            var missclickGO = new GameObject(typeof(Missclick).Name);
             var missclickGO_screenRectTransform = missclickGO.AddComponent<RectTransform>();
             missclickGO_screenRectTransform.SetParent(parent, false);
             missclickGO_screenRectTransform.SetAsFirstSibling();
             UITools.SetStretch(missclickGO_screenRectTransform);
-            return missclickGO.AddComponent<T>();
+            return missclickGO.AddComponent<Missclick>();
         }
+        public static Missclick GetPopupMissclickInstance() =>
+            GetMissclickInstance(uiPopupLayerGO.transform);
+        public static Missclick GetOverlayMissclickInstance() =>
+            GetMissclickInstance(uiOverlayLayerGO.transform);
+        public static Missclick GetNotificationMissclickInstance() =>
+            GetMissclickInstance(uiNotificationLayerGO.transform);
 
-        public static T GetPopupMissclickInstance<T>() where T : PopupMissclick
-        {
-            return GetMissclickInstance<T>(uiPopupLayerGO.transform);
-        }
-
-        public static T GetOverlayMissclickInstance<T>() where T : OverlayMissclick
-        {
-            return GetMissclickInstance<T>(uiOverlayLayerGO.transform);
-        }
-
-        public static T GetNotificationMissclickInstance<T>() where T : NotificationMissclick
-        {
-            return GetMissclickInstance<T>(uiNotificationLayerGO.transform);
-        }
+        //Widgets
+        public static void RegisterWidget(BaseWidget widget) =>
+            widgets.Add(widget);
+        public static void UnregisterWidget(BaseWidget widget) =>
+            widgets.Remove(widget);
+        public static List<T> GetWidgets<T>() where T : BaseWidget =>
+            widgets.Where(w => w.GetType() == typeof(T)).Select(w => w as T).ToList();
 
         //Screen Instantiate
         private static Component GetScreenInstance(Type type, Transform parent)
@@ -294,24 +292,6 @@ namespace Overlewd
             uiEventSystem_baseInput = uiEventSystem.AddComponent<BaseInput>();
         }
 
-        public static void ThrowGameDataEvent(GameDataEvent eventData)
-        {
-            screen?.OnGameDataEvent(eventData);
-            popup?.OnGameDataEvent(eventData);
-            overlay?.OnGameDataEvent(eventData);
-
-            widgetsGameDataListeners?.Invoke(eventData);
-        }
-
-        public static void ThrowUIEvent(UIEvent eventData)
-        {
-            screen?.OnUIEvent(eventData);
-            popup?.OnUIEvent(eventData);
-            overlay?.OnUIEvent(eventData);
-
-            widgetsUIEventListeners?.Invoke(eventData);
-        }
-
         //transition tools
         private static async Task WaitScreensPrepare(List<BaseScreen> screens)
         {
@@ -327,7 +307,7 @@ namespace Overlewd
             }
         }
 
-        private static async Task WaitScreenTransitions(List<BaseScreen> screens, List<BaseMissclick> missclicks)
+        private static async Task WaitScreenTransitions(List<BaseScreen> screens, List<Missclick> missclicks)
         {
             var prepareTasks = new List<Task>();
             foreach (var screen in screens)
@@ -350,6 +330,12 @@ namespace Overlewd
             }
             await Task.WhenAll(processTasks);
         }
+
+        public static bool inTransitionState =>
+            (screen?.IsTransitionState() ?? false) ||
+            (popup?.IsTransitionState() ?? false) ||
+            (overlay?.IsTransitionState() ?? false) ||
+            restoreStateModeEnabled;
 
         //UI states
         public class StateParams
@@ -441,6 +427,8 @@ namespace Overlewd
             if (state == null)
                 return;
 
+            restoreStateModeEnabled = true;
+
             bool forceReopen = sParams?.forceRestore ?? false;
 
             var screenInData = sParams?.screenInData ?? state.screenInData;
@@ -489,6 +477,13 @@ namespace Overlewd
             {
                 await _hideOverlayAsync();
             }
+
+            restoreStateModeEnabled = false;
+
+            ThrowUIEvent(new UIEvent
+            {
+                id = UIEventId.RestoreStateComplete
+            });
         }
 
         public static State currentState => new State
@@ -504,19 +499,15 @@ namespace Overlewd
         public static async void ToPrevState(StateParams sParams = null)
         {
             await _waitRestoreStateModeDisabled();
-            restoreStateModeEnabled = true;
             await _restoreState(PopState(), sParams);
-            restoreStateModeEnabled = false;
         }
         public static async void ToPrevState(State state, StateParams sParams = null)
         {
             await _waitRestoreStateModeDisabled();
             if (prevStatesStack.Contains(state))
             {
-                restoreStateModeEnabled = true;
                 while (PopState() != state) { }
                 await _restoreState(state, sParams);
-                restoreStateModeEnabled = false;
             }
         }
         public static void ToPrevScreen(StateParams sParams = null)
@@ -526,21 +517,17 @@ namespace Overlewd
         public static async void ToState(State state, StateParams sParams = null)
         {
             await _waitRestoreStateModeDisabled();
-            restoreStateModeEnabled = true;
             PushState();
             await _restoreState(state, sParams);
-            restoreStateModeEnabled = false;
         }
         public static async void RemakeState()
         {
             await _waitRestoreStateModeDisabled();
-            restoreStateModeEnabled = true;
             await _restoreState(currentState,
                 new StateParams
                 {
                     forceRestore = true
                 });
-            restoreStateModeEnabled = false;
         }
 
         //Screen Layer
@@ -591,9 +578,9 @@ namespace Overlewd
                 screen
             });
             await WaitScreenTransitions(new List<BaseScreen> { popupPrev, overlayPrev, screenPrev },
-                                        new List<BaseMissclick> { popupMissPrev, overlayMissPrev });
+                                        new List<Missclick> { popupMissPrev, overlayMissPrev });
             await WaitScreenTransitions(new List<BaseScreen> { screen },
-                                        new List<BaseMissclick>());
+                                        new List<Missclick>());
 
             MemoryOprimizer.ChangeScreen();
 
@@ -605,14 +592,6 @@ namespace Overlewd
         }
 
         //Popup Layer
-        public static T GetPopupMissclick<T>() where T : PopupMissclick => popupMiss as T;
-        public static bool HasPopupMissclick<T>() where T : PopupMissclick => popupMiss?.GetType() == typeof(T);
-        public static T MakePopupMissclick<T>() where T : PopupMissclick
-        {
-            var miss = HasPopupMissclick<T>() ? popupMiss : GetPopupMissclickInstance<T>();
-            miss.transform.SetAsFirstSibling();
-            return miss as T;
-        }
         public static T GetPopup<T>() where T : BasePopup => popup as T;
         public static bool HasPopup<T>() where T : BasePopup => popup?.GetType() == typeof(T);
         private static BasePopup MakePopup(Type type) => GetPopupInstance(type);
@@ -634,16 +613,15 @@ namespace Overlewd
 
             var popupPrev = popup;
             popup = _popup;
-            var popupMissPrev = popupMiss;
-            popupMiss = popup?.MakeMissclick();
 
             popupPrev?.Hide();
             popup?.Show();
-            if (popupMiss != popupMissPrev)
+            if (popupMiss == null)
             {
-                popupMissPrev?.Hide();
-                popupMiss?.Show();
+                popupMiss = GetPopupMissclickInstance();
+                popupMiss.Show();
             }
+            popupMiss.target = popup;
 
             await WaitScreensPrepare(new List<BaseScreen>
             {
@@ -651,12 +629,27 @@ namespace Overlewd
                 popup
             });
             await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
-                                        new List<BaseMissclick> { popupMissPrev });
+                                        new List<Missclick>());
             await WaitScreenTransitions(new List<BaseScreen> { popup },
-                                        new List<BaseMissclick> { popupMiss });
+                                        new List<Missclick> { popupMiss });
+
+            ThrowUIEvent(new UIEvent
+            {
+                id = UIEventId.ShowPopup,
+                senderType = popup?.GetType()
+            });
         }
         public static async void HidePopup() => await HidePopupAsync();
         public static async Task HidePopupAsync()
+        {
+            if (popup == null)
+                return;
+
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(popup));
+            await _hidePopupAsync();
+        }
+        public static async Task _hidePopupAsync()
         {
             if (popup == null)
                 return;
@@ -666,17 +659,6 @@ namespace Overlewd
                 id = UIEventId.HidePopup,
                 senderType = popup?.GetType()
             };
-
-            await _waitRestoreStateModeDisabled();
-            PushState(CanPush(popup));
-            await _hidePopupAsync();
-
-            ThrowUIEvent(uiEventData);
-        }
-        public static async Task _hidePopupAsync()
-        {
-            if (popup == null)
-                return;
 
             var popupPrev = popup;
             popup = null;
@@ -691,18 +673,12 @@ namespace Overlewd
                 popupPrev
             });
             await WaitScreenTransitions(new List<BaseScreen> { popupPrev },
-                                        new List<BaseMissclick> { popupMissPrev });
+                                        new List<Missclick> { popupMissPrev });
+
+            ThrowUIEvent(uiEventData);
         }
 
         //Overlay Layer
-        public static T GetOverlayMissclick<T>() where T : OverlayMissclick => overlayMiss as T;
-        public static bool HasOverlayMissclick<T>() where T : OverlayMissclick => overlayMiss?.GetType() == typeof(T);
-        public static T MakeOverlayMissclick<T>() where T : OverlayMissclick
-        {
-            var miss = HasOverlayMissclick<T>() ? overlayMiss : GetOverlayMissclickInstance<T>();
-            miss.transform.SetAsFirstSibling();
-            return miss as T;
-        }
         public static T GetOverlay<T>() where T : BaseOverlay => overlay as T;
         public static bool HasOverlay<T>() where T : BaseOverlay => overlay?.GetType() == typeof(T);
         private static BaseOverlay MakeOverlay(Type type) => GetOverlayInstance(type);
@@ -724,16 +700,15 @@ namespace Overlewd
 
             var overlayPrev = overlay;
             overlay = _overlay;
-            var overlayMissPrev = overlayMiss;
-            overlayMiss = overlay?.MakeMissclick();
 
             overlayPrev?.Hide();
             overlay?.Show();
-            if (overlayMiss != overlayMissPrev)
+            if (overlayMiss == null)
             {
-                overlayMissPrev?.Hide();
-                overlayMiss?.Show();
+                overlayMiss = GetOverlayMissclickInstance();
+                overlayMiss.Show();
             }
+            overlayMiss.target = overlay;
 
             await WaitScreensPrepare(new List<BaseScreen>
             {
@@ -741,12 +716,27 @@ namespace Overlewd
                 overlay
             });
             await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
-                                        new List<BaseMissclick> { overlayMissPrev });
+                                        new List<Missclick>());
             await WaitScreenTransitions(new List<BaseScreen> { overlay },
-                                        new List<BaseMissclick> { overlayMiss });
+                                        new List<Missclick> { overlayMiss });
+
+            ThrowUIEvent(new UIEvent
+            {
+                id = UIEventId.ShowOverlay,
+                senderType = overlay?.GetType()
+            });
         }
         public static async void HideOverlay() => await HideOverlayAsync();
         private static async Task HideOverlayAsync()
+        {
+            if (overlay == null)
+                return;
+
+            await _waitRestoreStateModeDisabled();
+            PushState(CanPush(overlay));
+            await _hideOverlayAsync();
+        }
+        private static async Task _hideOverlayAsync()
         {
             if (overlay == null)
                 return;
@@ -756,17 +746,6 @@ namespace Overlewd
                 id = UIEventId.HideOverlay,
                 senderType = overlay.GetType()
             };
-
-            await _waitRestoreStateModeDisabled();
-            PushState(CanPush(overlay));
-            await _hideOverlayAsync();
-
-            ThrowUIEvent(uiEventData);
-        }
-        private static async Task _hideOverlayAsync()
-        {
-            if (overlay == null)
-                return;
 
             var overlayPrev = overlay;
             overlay = null;
@@ -781,18 +760,12 @@ namespace Overlewd
                 overlayPrev
             });
             await WaitScreenTransitions(new List<BaseScreen> { overlayPrev },
-                                        new List<BaseMissclick> { overlayMissPrev });
+                                        new List<Missclick> { overlayMissPrev });
+
+            ThrowUIEvent(uiEventData);
         }
 
         //Notification Layer
-        public static T GetNotificationMissclick<T>() where T : NotificationMissclick => notifMiss as T;
-        public static bool HasNotificationMissclick<T>() where T : NotificationMissclick => notifMiss?.GetType() == typeof(T);
-        public static T MakeNotificationMissclick<T>() where T : NotificationMissclick
-        {
-            var miss = HasNotificationMissclick<T>() ? notifMiss : GetNotificationMissclickInstance<T>();
-            miss.transform.SetAsFirstSibling();
-            return miss as T;
-        }
         public static T GetNotification<T>() where T : BaseNotification => notif as T;
         public static bool HasNotification<T>() where T : BaseNotification => notif?.GetType() == typeof(T);
         public static async Task WaitHideNotifications()
@@ -810,16 +783,15 @@ namespace Overlewd
 
             var notifPrev = notif;
             notif = _notif;
-            var notifMissPrev = notifMiss;
-            notifMiss = notif?.MakeMissclick();
 
             notifPrev?.Hide();
             notif?.Show();
-            if (notifMiss != notifMissPrev)
+            if (notifMiss == null)
             {
-                notifMissPrev?.Hide();
-                notifMiss?.Show();
+                notifMiss = GetNotificationMissclickInstance();
+                notifMiss.Show();
             }
+            notifMiss.target = notif;
 
             await WaitScreensPrepare(new List<BaseScreen> 
             {
@@ -827,9 +799,9 @@ namespace Overlewd
                 notif
             });
             await WaitScreenTransitions(new List<BaseScreen> { notifPrev },
-                                        new List<BaseMissclick> { notifMissPrev });
+                                        new List<Missclick>());
             await WaitScreenTransitions(new List<BaseScreen> { notif },
-                                        new List<BaseMissclick> { notifMiss });
+                                        new List<Missclick> { notifMiss });
         }
         public static async void HideNotification() => await HideNotificationAsync();
         private static async Task HideNotificationAsync()
@@ -850,7 +822,7 @@ namespace Overlewd
                 notifPrev
             });
             await WaitScreenTransitions(new List<BaseScreen> { notifPrev },
-                                        new List<BaseMissclick> { notifMissPrev });
+                                        new List<Missclick> { notifMissPrev });
         }
 
         //System notifications layer

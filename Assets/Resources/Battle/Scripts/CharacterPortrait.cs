@@ -9,7 +9,6 @@ namespace Overlewd
     public class CharacterPortrait : MonoBehaviour
     {
         public CharController cc;
-        public bool isBoss = false; //activate mask
         private TextMeshProUGUI textHP;
         private TextMeshProUGUI textMP;
         [SerializeField]
@@ -17,8 +16,10 @@ namespace Overlewd
         private Slider sliderHP;
         private Slider sliderMP;
         private Slider whiteSlider;
-        private Image icon;
+
         private Image BattlePortraitIco;
+        private RectTransform icoRT;
+        Vector2 defaultPosX = new Vector2(-256, 0);
 
         private StatusEffects status_bar;
 
@@ -35,12 +36,15 @@ namespace Overlewd
         public void InitUI(CharController charC)
         {
             cc = charC;
-            BattlePortraitIco = transform.Find("Portrait")?.GetComponent<Image>();
+            BattlePortraitIco = transform.Find("pAnchor/Portrait")?.GetComponent<Image>();
+            icoRT = BattlePortraitIco?.GetComponent<RectTransform>();
             sliderHP = transform.Find("sliderHP")?.GetComponent<Slider>();
             sliderMP = transform.Find("sliderMP")?.GetComponent<Slider>();
             whiteSlider = sliderHP.transform.Find("WhiteSlider")?.GetComponent<Slider>();
             textHP = transform.Find("sliderHP/Text")?.GetComponent<TextMeshProUGUI>();
             textMP = transform.Find("sliderMP/Text")?.GetComponent<TextMeshProUGUI>();
+            if (icoRT != null)
+                defaultPosX = icoRT.anchoredPosition;
             if (textNameTag == null)
                 textNameTag = transform.Find("Nametag/Text")?.GetComponent<TextMeshProUGUI>();
 
@@ -70,8 +74,8 @@ namespace Overlewd
             status_bar.cc = cc;
             UpdateUI();
         }
-        public void OpenDescription()
-        => cc.observer.OpenDescription();
+        public void OpenDescription() => cc.observer.OpenDescription();
+        public void CloseDescription() => cc.observer.CloseDescription();
 
         public void UpdateUI()
         {
@@ -82,7 +86,8 @@ namespace Overlewd
             if (sliderMP) sliderMP.value = mp;
             status_bar?.UpdateStatuses();
             if (whiteSlider) StartCoroutine(HPChangePause());
-            if (textNameTag) textNameTag.text = $"{nameTag} turns";
+            if (textNameTag) textNameTag.text = $"{nameTag}'s turns";
+            icoRT.anchoredPosition = cc.isBoss ? Vector2.zero : defaultPosX;
         }
         IEnumerator HPChangePause()
         {

@@ -28,7 +28,7 @@ namespace Overlewd
 
             private Transform canvas;
 
-            private void Awake()
+            void Awake()
             {
                 canvas = transform.Find("Canvas");
                 var finalRewards = canvas.Find("FinalRewards");
@@ -45,27 +45,32 @@ namespace Overlewd
                 upgradeButton.onClick.AddListener(UpgradeButtonClick);
             }
 
-            private void Start()
+            void Start()
             {
+                for (int levelId = 0; levelId < passData.levels.Count - 1; levelId++)
+                {
+                    var newLevel = BattlePassLevel.GetInstance(content);
+                    newLevel.battlePassId = passData.id;
+                    newLevel.levelId = levelId;
+                }
+
                 Customize();
             }
 
             private void Customize()
             {
-                var data = passData;
-                foreach (var level in data.levels.GetRange(0, data.levels.Count - 1))
-                {
-                    var newLevel = BattlePassLevel.GetInstance(content);
-                    newLevel.battlePassId = data.id;
-                    newLevel.levelData = level;
-                }
-
-                var finalLevel = data.levels.Last();
+                var finalLevel = passData.levels.Last();
                 freeFinalReward.sprite = ResourceManager.LoadSprite(finalLevel?.defaultReward?.First()?.icon);
                 premiumFinalReward.sprite = ResourceManager.LoadSprite(finalLevel?.premiumReward?.First()?.icon);
                 titleFinalReward.text = $"Reach {finalLevel?.pointsThreshold} points to get final reward!";
+            }
 
-                StartCoroutine(CalcProgressBarWidth());
+            private void Refresh()
+            {
+                foreach (var level in content.GetComponentsInChildren<BattlePassLevel>())
+                {
+                    level.Refresh();
+                }
             }
 
             public void SetCanvasActive(bool value)
@@ -76,37 +81,52 @@ namespace Overlewd
                 }
             }
 
-            private IEnumerator CalcProgressBarWidth()
+            private void Update()
             {
-                yield return new WaitForEndOfFrame();
-                yield return new WaitForEndOfFrame();
+                if (!canvas.gameObject.activeSelf)
+                    return;
 
+                CalcProgressBarWidth();
+            }
+
+            private void CalcProgressBarWidth()
+            {
                 var levels = content.GetComponentsInChildren<BattlePassLevel>();
                 var scrollContentWorldRT = content.GetComponent<RectTransform>().WorldRect();
+
+                var content_hlg = content.GetComponent<HorizontalLayoutGroup>();
+                content_hlg.enabled = false;
+                content_hlg.enabled = true;
+
                 var progressBarWidth = 0.0f;
-                for (int levelId = 0; levelId < levels.Length; levelId++)
+                if (levels.Last().reached)
                 {
-                    var level = levels[levelId];
-                    if (level.reached)
+                    progressBarWidth = 50.0f + scrollContentWorldRT.width + 50.0f;
+                }
+                else
+                {
+                    foreach (var level in levels)
                     {
-                        if (levelId == (levels.Length - 1))
-                        {
-                            progressBarWidth = 50.0f + scrollContentWorldRT.width + 50.0f;
-                        }
-                        else
+                        if (level.reached)
                         {
                             var reachedImgWorldRect = level.levelReached.WorldRect();
                             progressBarWidth = 50.0f + (reachedImgWorldRect.center.x - scrollContentWorldRT.xMin);
+                            continue;
                         }
-
+                        break;
                     }
                 }
                 progressBarRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, progressBarWidth);
             }
 
-            private void ClaimAllButtonClick()
+            private async void ClaimAllButtonClick()
             {
-
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                if (passData != null)
+                {
+                    await GameData.battlePass.ClaimRewards(passData.id);
+                    Refresh();
+                }
             }
 
             private void UpgradeButtonClick()

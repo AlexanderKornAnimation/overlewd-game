@@ -91,31 +91,31 @@ namespace Overlewd
                 classIcon.text = chData.classMarker;
                 charName.text = chData.name;
                 
-                speedStat.text = "+" + chData.speed;
+                speedStat.text = chData.speed.ToString();
                 speedBack.SetActive(chData.speed != 0);
 
-                powerStat.text = "+" + chData.power;
+                powerStat.text = chData.power.ToString();
                 powerBack.SetActive(chData.power != 0);
 
-                constitutionStat.text = "+" + chData.constitution;
+                constitutionStat.text = chData.constitution.ToString();
                 constitutionBack.SetActive(chData.constitution != 0.0f);
 
-                agilityStat.text = "+" + chData.agility;
+                agilityStat.text = chData.agility.ToString();
                 agilityBack.SetActive(chData.agility != 0.0f);
                 
-                accuracyStat.text = "+" + chData.accuracy * 100;
+                accuracyStat.text = (chData.accuracy * 100).ToString();
                 accuracyBack.SetActive(chData.accuracy > 0.0f);
                     
-                dodgeStat.text = "+" + chData.dodge * 100;
+                dodgeStat.text = (chData.dodge * 100).ToString();
                 dodgeBack.SetActive(chData.dodge > 0.0f);
 
-                critRateStat.text = "+" + chData.critrate * 100;
+                critRateStat.text = (chData.critrate * 100).ToString();
                 critRateBack.SetActive(chData.critrate > 0.0f);
                     
-                healthStat.text = "+" + chData.health;
+                healthStat.text = chData.health.ToString();
                 healthBack.SetActive(chData.health > 0);
                     
-                damageStat.text ="+" + chData.damage;
+                damageStat.text = chData.damage.ToString();
                 damageBack.SetActive(chData.damage > 0);
             }
         }

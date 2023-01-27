@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,12 +56,13 @@ namespace Overlewd
         public override async Task BeforeShowMakeAsync()
         {
             var eventData = GameData.events.mapEventData;
+
             if (GameData.events.mapChapter == null)
             {
                 if (GameData.devMode)
-                    eventData.firstChapter.SetAsMapChapter();
+                    eventData?.firstChapter.SetAsMapChapter();
                 else
-                    eventData.activeChapter.SetAsMapChapter();
+                    eventData?.activeChapter.SetAsMapChapter();
             }
 
             var eventChapterData = GameData.events.mapChapter;
@@ -86,6 +88,7 @@ namespace Overlewd
                     if (battleData.isTypeBattle)
                     {
                         var fightButton = NSEventMapScreen.FightButton.GetInstance(map);
+                        fightButton.eventId = eventData.id;
                         fightButton.stageId = stageData.id;
                         fightButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -98,6 +101,7 @@ namespace Overlewd
                     else if (battleData.isTypeBoss)
                     {
                         var bossFightButton = NSEventMapScreen.FightButton.GetInstance(map);
+                        bossFightButton.eventId = eventData.id;
                         bossFightButton.stageId = stageData.id;
                         bossFightButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -114,6 +118,7 @@ namespace Overlewd
                     if (dialogData.isTypeDialog)
                     {
                         var dialogButton = NSEventMapScreen.DialogButton.GetInstance(map);
+                        dialogButton.eventId = eventData.id;
                         dialogButton.stageId = stageData.id;
                         dialogButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -126,6 +131,7 @@ namespace Overlewd
                     else if (dialogData.isTypeSex)
                     {
                         var sexButton = NSEventMapScreen.SexButton.GetInstance(map);
+                        sexButton.eventId = eventData.id;
                         sexButton.stageId = stageData.id;
                         sexButton.transform.localPosition = stageData.mapPos.pos;
 
@@ -138,16 +144,30 @@ namespace Overlewd
                 }
             }
 
-            foreach (var marketData in GameData.events.mapEventData.marketsData)
+            foreach (var market in eventChapterData.markets)
             {
-                var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
-                shopButton.marketId = marketData.id;
-                shopButton.transform.localPosition = marketData.mapPos.pos;
+                var marketData = market.marketData;
+                if (marketData != null)
+                {
+                    var shopButton = NSEventMapScreen.EventShopButton.GetInstance(map);
+                    shopButton.eventId = eventData.id;
+                    shopButton.marketId = market.marketId;
+                    shopButton.transform.localPosition = market.mapPos.pos;
+                }
             }
-
+            
+            if (GameData.events.mapChapter.isComplete && GameData.events.mapChapter.nextChapterId.HasValue)
+            {
+                var button = NSEventMapScreen.ButtonNextChapter.GetInstance(map);
+                button.transform.localPosition = GameData.events.mapChapter.nextChapterMapPos.pos;
+                button.chapterId = GameData.events.mapChapter.nextChapterId;
+            }
+            
             chapterSelector = NSEventMapScreen.ChapterSelector.GetInstance(transform);
             chapterSelector.Hide();
             chapterSelectorButtonName.text = eventChapterData.name;
+
+            DevWidget.GetInstance(transform);
 
             await Task.CompletedTask;
         }
@@ -187,7 +207,12 @@ namespace Overlewd
         private void BannerButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.ShowScreen<EventMarketScreen>();
+            UIManager.MakeOverlay<EventMarketOverlay>().
+                SetData(new EventMarketOverlayInData
+                {
+                    eventId = GameData.events.mapEventData.id,
+                    marketId = GameData.events.mapEventData?.activeChapter?.markets.FirstOrDefault()?.marketId,
+                }).DoShow();
         }
         
         private void ChapterSelectorButtonClick()

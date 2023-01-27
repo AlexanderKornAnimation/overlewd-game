@@ -20,8 +20,8 @@ namespace Overlewd
             private Image icon;
             private TextMeshProUGUI descriptionTitle;
             private TextMeshProUGUI price;
-            private Transform mark;
-            private TextMeshProUGUI markTitle;
+            private Transform discount;
+            private TextMeshProUGUI discountTitle;
         
             private void Awake()
             {
@@ -32,8 +32,8 @@ namespace Overlewd
                 icon = button.transform.Find("Icon").GetComponent<Image>();
                 descriptionTitle = button.transform.Find("Description/Title").GetComponent<TextMeshProUGUI>();
                 price = button.transform.Find("Price").GetComponent<TextMeshProUGUI>();
-                mark = button.transform.Find("Mark");
-                markTitle = mark.Find("Title").GetComponent<TextMeshProUGUI>();
+                discount = button.transform.Find("Discount");
+                discountTitle = discount.Find("Title").GetComponent<TextMeshProUGUI>();
             }
 
             private void Start()
@@ -44,28 +44,62 @@ namespace Overlewd
             private void Customize()
             {
                 var trData = tradableData;
-                icon.sprite = ResourceManager.LoadSprite(trData.imageUrl);
-                descriptionTitle.text = trData.name;
-                price.text = $"Buy for {UITools.PriceToString(trData.price)}";
 
-                mark.gameObject.SetActive(false);
-                if (!string.IsNullOrEmpty(trData.discount))
+                icon.sprite = ResourceManager.LoadSprite(trData.imageUrl);
+                descriptionTitle.text = trData.description;
+
+                var hasDiscount = trData.discount.HasValue && trData.discount != 0;
+                price.text = hasDiscount ?
+                    $"Buy for {UITools.PriceToString(trData.priceWithoutDiscount, trData.price, 50)}" :
+                    $"Buy for {UITools.PriceToString(trData.price)}";
+
+                discount.gameObject.SetActive(false);
+                if (hasDiscount)
                 {
-                    markTitle.text = trData.discount;
-                    mark.gameObject.SetActive(true);
+                    discountTitle.text = $"Discount\n-{trData.discount}%";
+                    discount.gameObject.SetActive(true);
                 }
                 else if (!string.IsNullOrEmpty(trData.specialOfferLabel))
                 {
-                    markTitle.text = trData.specialOfferLabel;
-                    mark.gameObject.SetActive(true);
+                    discountTitle.text = trData.specialOfferLabel;
+                    discount.gameObject.SetActive(true);
                 }
 
-                UITools.DisableButton(button, !trData.canBuy);
+                //CalcLockedState();
+            }
+
+            public void Refresh()
+            {
+                //CalcLockedState();
+            }
+
+            private void CalcLockedState()
+            {
+                var trData = tradableData;
+                if (!trData.nutakuPriceValid)
+                {
+                    UITools.DisableButton(button, !trData.canBuy);
+                }
             }
 
             private async void ButtonClick()
             {
-                var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                var trData = tradableData;
+                if (trData.nutakuPriceValid)
+                {
+                    var payment = await NutakuApiHelper.PaymentAsync(this, trData);
+                }
+                else
+                {
+                    if (trData.canBuy)
+                    {
+                        var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                    }
+                    else
+                    {
+                        packOffer.offerButton.marketOverlay.ToCrystalOffersTab();
+                    }
+                }
             }
 
             public static CurrencyPack GetInstance(Transform parent)

@@ -102,11 +102,9 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override BaseMissclick MakeMissclick()
+        public override void OnMissclick()
         {
-            var missClick = UIManager.MakePopupMissclick<PopupMissclickColored>();
-            missClick.missClickEnabled = false;
-            return missClick;
+
         }
 
         private void NextButtonClick()

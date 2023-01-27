@@ -20,7 +20,7 @@ namespace Overlewd
         {
             if (spineVFXPrefab != null) Create(spineVFXPrefab);
         }
-        public float Setup(AdminBRO.Animation sw, Transform spawnPoint, float preDelay = 0f)
+        public float Setup(AdminBRO.Animation sw, Transform spawnPoint, float preDelay = 0f, bool invertX = false)
         {
             delay = preDelay;
             spineWidget = SpineWidget.GetInstance(sw, spawnPoint);
@@ -28,6 +28,8 @@ namespace Overlewd
                 duration = spineWidget.GetAnimationDuaration(animationName);
             else
                 FindObjectOfType<BattleManager>().log.Add(sw.title + ": Data Corrupted", true);
+            if (invertX)
+                spineWidget.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
             spineWidget?.PlayAnimation(animationName, false);
             spineWidget?.Pause();
             StartCoroutine(StartAfterDelay());

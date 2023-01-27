@@ -19,9 +19,9 @@ namespace Overlewd
             
         }
         
-        public override BaseMissclick MakeMissclick()
+        public override void OnMissclick()
         {
-            return UIManager.MakeNotificationMissclick<NotificationMissclickColored>();
+            UIManager.HideNotification();
         }
 
         public override ScreenShow Show()
@@ -51,9 +51,6 @@ namespace Overlewd
 
     public abstract class BaseNotificationInData : BaseScreenInData
     {
-        public new bool IsType<T>() where T : BaseNotificationInData =>
-            base.IsType<T>();
-        public new T As<T>() where T : BaseNotificationInData =>
-            base.As<T>();
+
     }
 }

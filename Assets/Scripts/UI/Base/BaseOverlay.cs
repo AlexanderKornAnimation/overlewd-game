@@ -19,9 +19,9 @@ namespace Overlewd
             
         }
         
-        public override BaseMissclick MakeMissclick()
+        public override void OnMissclick()
         {
-            return UIManager.MakeOverlayMissclick<OverlayMissclickColored>();
+            UIManager.HideOverlay();
         }
 
         public override ScreenShow Show()
@@ -51,9 +51,6 @@ namespace Overlewd
 
     public abstract class BaseOverlayInData : BaseScreenInData
     {
-        public new bool IsType<T>() where T : BaseOverlayInData =>
-            base.IsType<T>();
-        public new T As<T>() where T : BaseOverlayInData =>
-            base.As<T>();
+
     }
 }

@@ -22,6 +22,7 @@ namespace Overlewd
         private Transform leftCharacterPos;
         private Transform midCharacterPos;
         private Transform rightCharacterPos;
+        private Image background;
 
         private Transform textContainer;
         private TextMeshProUGUI personageName;
@@ -35,7 +36,6 @@ namespace Overlewd
         private Button skipButton;
         private Button autoplayButton;
         private Image autoplayButtonPressed;
-        private TextMeshProUGUI autoplayStatus;
 
         private GameObject cutIn;
         private Transform cutInAnimPos;
@@ -79,6 +79,7 @@ namespace Overlewd
             leftCharacterPos = charactersPos.Find("LeftPos");
             midCharacterPos = charactersPos.Find("MiddlePos");
             rightCharacterPos = charactersPos.Find("RightPos");
+            background = canvas.Find("Background").GetComponent<Image>();
 
             textContainer = canvas.Find("TextContainer");
             nameBackground = canvas.Find("SubstrateName").gameObject;
@@ -95,9 +96,7 @@ namespace Overlewd
 
             autoplayButton = canvas.Find("AutoplayButton").GetComponent<Button>();
             autoplayButtonPressed = canvas.Find("AutoplayButton").Find("ButtonPressed").GetComponent<Image>();
-            autoplayStatus = canvas.Find("AutoplayButton").Find("Status").GetComponent<TextMeshProUGUI>();
             autoplayButton.onClick.AddListener(AutoplayButtonClick);
-            autoplayButtonPressed.enabled = false;
 
             cutIn = canvas.Find("CutIn").gameObject;
             cutInAnimPos = cutIn.transform.Find("AnimPos");
@@ -106,6 +105,11 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            var dialogData = inputData?.dialogData;
+
+            if (dialogData?.background != null)
+                background.sprite = ResourceManager.LoadSprite(dialogData?.background);
+            
             switch (inputData.ftueStageData?.lerningKey)
             {
                 case (_, _):
@@ -209,10 +213,10 @@ namespace Overlewd
                     }
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
-                    UIManager.MakeScreen<MemoryScreen>().
-                        SetData(new MemoryScreenInData
+                    UIManager.MakeScreen<PortalScreen>().
+                        SetData(new PortalScreenInData
                         {
-                            girlKey = AdminBRO.MatriarchItem.Key_Ulvi,
+                            activeButtonId = PortalScreen.TabShards,
                         }).DoShow();
                     break;
                 case (FTUE.CHAPTER_3, FTUE.DIALOGUE_4):
@@ -427,14 +431,12 @@ namespace Overlewd
             if (isAutoplayButtonPressed)
             {
                 isAutoplayButtonPressed = true;
-                autoplayButtonPressed.enabled = true;
-                autoplayStatus.text = "ON";
+                autoplayButtonPressed.gameObject.SetActive(true);
             }
             else
             {
                 isAutoplayButtonPressed = false;
-                autoplayButtonPressed.enabled = false;
-                autoplayStatus.text = "OFF";
+                autoplayButtonPressed.gameObject.SetActive(false);
             }
         }
 
@@ -462,8 +464,9 @@ namespace Overlewd
         {
             while (currentReplicaId < dialogReplicas.Count)
             {
+                var timeToWait = dialogReplicas[currentReplicaId].message.Split().Length * 0.5f;
                 ShowCurrentReplica();
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(timeToWait);
                 currentReplicaId++;
             }
             AutoplayButtonClick();

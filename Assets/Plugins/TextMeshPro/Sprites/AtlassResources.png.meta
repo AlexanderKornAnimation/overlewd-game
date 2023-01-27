@@ -4,37 +4,49 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 2616350404080957483
-    second: Crystal
+    second: AtlassResources_0
   - first:
       213: 2127633610578606466
-    second: Energy
+    second: AtlassResources_1
   - first:
       213: -7141604917554757085
-    second: Wood
+    second: AtlassResources_2
   - first:
       213: -743511443358387319
-    second: Gold
+    second: AtlassResources_3
   - first:
       213: 3947195480940314052
-    second: Gem
+    second: AtlassResources_4
   - first:
       213: 5059433486762437235
-    second: Copper
+    second: AtlassResources_5
   - first:
       213: 3444606948907574042
-    second: Stone
+    second: AtlassResources_6
   - first:
       213: 8147973984281822809
-    second: ShardGold
+    second: AtlassResources_7
   - first:
       213: 8395222161685788416
-    second: ShardPurpule
+    second: AtlassResources_8
   - first:
       213: -5971012798137527651
-    second: ShardGray
+    second: AtlassResources_9
   - first:
       213: -6482307829155475010
-    second: ShardGreen
+    second: AtlassResources_10
+  - first:
+      213: -993202262546807618
+    second: AtlassResources_11
+  - first:
+      213: -8407243826890346299
+    second: AtlassResources_12
+  - first:
+      213: -6126439907901630273
+    second: AtlassResources_13
+  - first:
+      213: -5791438562382507097
+    second: AtlassResources_14
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -160,15 +172,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Crystal
+      name: AtlassResources_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 156
-        width: 45
+        x: 4
+        y: 219
+        width: 42
         height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -181,15 +193,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Energy
+      name: AtlassResources_1
       rect:
         serializedVersion: 2
         x: 52
-        y: 156
+        y: 219
         width: 44
         height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -202,15 +214,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wood
+      name: AtlassResources_2
       rect:
         serializedVersion: 2
-        x: 112
-        y: 154
+        x: 109
+        y: 218
         width: 45
         height: 35
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -223,15 +235,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gold
+      name: AtlassResources_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 109
+        x: 3
+        y: 173
         width: 43
         height: 38
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -244,15 +256,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gem
+      name: AtlassResources_4
       rect:
         serializedVersion: 2
         x: 55
-        y: 108
+        y: 172
         width: 45
         height: 43
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -265,15 +277,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Copper
+      name: AtlassResources_5
       rect:
         serializedVersion: 2
-        x: 112
-        y: 111
+        x: 109
+        y: 175
         width: 45
         height: 30
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -286,15 +298,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stone
+      name: AtlassResources_6
       rect:
         serializedVersion: 2
-        x: 0
-        y: 66
+        x: 2
+        y: 130
         width: 45
         height: 37
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -307,15 +319,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardGold
+      name: AtlassResources_7
       rect:
         serializedVersion: 2
         x: 56
-        y: 56
+        y: 120
         width: 40
         height: 47
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -328,15 +340,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardPurpule
+      name: AtlassResources_8
       rect:
         serializedVersion: 2
-        x: 105
-        y: 56
+        x: 111
+        y: 120
         width: 40
         height: 47
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -349,15 +361,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardGray
+      name: AtlassResources_9
       rect:
         serializedVersion: 2
-        x: 56
-        y: 0
-        width: 40
-        height: 47
+        x: 6
+        y: 66
+        width: 38
+        height: 45
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -370,15 +382,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ShardGreen
+      name: AtlassResources_10
       rect:
         serializedVersion: 2
-        x: 105
-        y: 0
+        x: 56
+        y: 64
         width: 40
         height: 47
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -386,6 +398,90 @@ TextureImporter:
       bones: []
       spriteID: eb15476cf573a06a0800000000000000
       internalID: -6482307829155475010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AtlassResources_11
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 64
+        width: 40
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb488ceedcf6732f0800000000000000
+      internalID: -993202262546807618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AtlassResources_12
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 5
+        width: 35
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c0fa1e6848735b80800000000000000
+      internalID: -8407243826890346299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AtlassResources_13
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 5
+        width: 38
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb81fbfec538afaa0800000000000000
+      internalID: -6126439907901630273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AtlassResources_14
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 4
+        width: 38
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a311b6df4da0afa0800000000000000
+      internalID: -5791438562382507097
       vertices: []
       indices: 
       edges: []

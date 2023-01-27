@@ -1,6 +1,9 @@
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +11,13 @@ namespace Overlewd
 {
     public class WalletWidget : BaseWidget
     {
+        private static AdminBRO.PlayerInfo _walletPlayerState;
+        public static AdminBRO.PlayerInfo walletPlayerState
+        {
+            get => _walletPlayerState ?? GameData.player.info;
+            set => _walletPlayerState = value;
+        }
+
         private TextMeshProUGUI crystal;
         private TextMeshProUGUI wood;
         private TextMeshProUGUI stone;
@@ -34,17 +44,41 @@ namespace Overlewd
 
         public void Customize()
         {
-            crystal.text = $"{GameData.currencies.Crystals.tmpSprite}<size=44> {GameData.player.Crystal.amount}";
-            wood.text = $"{GameData.currencies.Wood.tmpSprite}<size=44> {GameData.player.Wood.amount}";
-            copper.text = $"{GameData.currencies.Copper.tmpSprite}<size=44> {GameData.player.Copper.amount}";
-            gold.text = $"{GameData.currencies.Gold.tmpSprite}<size=44> {GameData.player.Gold.amount}";
-            gems.text = $"{GameData.currencies.Gems.tmpSprite}<size=44> {GameData.player.Gems.amount}";
-            stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {GameData.player.Stone.amount}";
+            crystal.text = $"{GameData.currencies.Crystals.tmpSprite}<size=44> {walletPlayerState.Crystal.amount}";
+            wood.text = $"{GameData.currencies.Wood.tmpSprite}<size=44> {walletPlayerState.Wood.amount}";
+            copper.text = $"{GameData.currencies.Copper.tmpSprite}<size=44> {walletPlayerState.Copper.amount}";
+            gold.text = $"{GameData.currencies.Gold.tmpSprite}<size=44> {walletPlayerState.Gold.amount}";
+            gems.text = $"{GameData.currencies.Gems.tmpSprite}<size=44> {walletPlayerState.Gems.amount}";
+            stone.text = $"{GameData.currencies.Stone.tmpSprite}<size=44> {walletPlayerState.Stone.amount}";
         }
 
-        public override void OnGameDataEvent(GameDataEvent eventData)
+        public void ShowChangesAnim(AdminBRO.PlayerInfo from, AdminBRO.PlayerInfo to)
         {
             Customize();
+
+            var seq = DOTween.Sequence();
+            TryJoin(seq, crystal, from.Crystal.amount, to.Crystal.amount);
+            TryJoin(seq, wood, from.Wood.amount, to.Wood.amount);
+            TryJoin(seq, stone, from.Stone.amount, to.Stone.amount);
+            TryJoin(seq, copper, from.Copper.amount, to.Copper.amount);
+            TryJoin(seq, gold, from.Gold.amount, to.Gold.amount);
+            TryJoin(seq, gems, from.Gems.amount, to.Gems.amount);
+            seq.SetLink(gameObject);
+            seq.Play();
+        }
+
+        private void TryJoin(Sequence seq, TextMeshProUGUI text, int prevAmount, int curAmount)
+        {
+            if (curAmount > prevAmount)
+            {
+                text.color = Color.green;
+                seq.Join(text.DOColor(Color.white, 0.8f));
+            }
+            if (curAmount < prevAmount)
+            {
+                text.color = Color.red;
+                seq.Join(text.DOColor(Color.white, 0.8f));
+            }
         }
 
         public static WalletWidget GetInstance(Transform parent)

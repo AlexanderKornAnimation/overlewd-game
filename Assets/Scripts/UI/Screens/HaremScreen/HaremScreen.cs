@@ -12,6 +12,8 @@ namespace Overlewd
         private Button backButton;
         private TextMeshProUGUI backButtonText;
 
+        private Button guestsRoomButton;
+
         private Button ulviButton;
         private Image ulviBuffIcon;
         private TextMeshProUGUI ulviBuffDescription;
@@ -63,6 +65,9 @@ namespace Overlewd
             backButton = canvas.Find("BackButton").GetComponent<Button>();
             backButtonText = backButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             backButton.onClick.AddListener(BackButtonClick);
+
+            guestsRoomButton = canvas.Find("GuestRoomButton").GetComponent<Button>();
+            guestsRoomButton.onClick.AddListener(GuestRoomButtonClick);
 
             ulviButton = canvas.Find("UlviButton").GetComponent<Button>();
             ulviButton.onClick.AddListener(UlviButtonClick);
@@ -217,6 +222,11 @@ namespace Overlewd
                     showOverlay = false,
                 });
             }
+        }
+        
+        private void GuestRoomButtonClick()
+        {
+            UIManager.ShowScreen<GuestScreen>();
         }
 
         private void GirlButtonClick(string girlKey)

@@ -183,7 +183,13 @@ namespace Overlewd
         }
         public void OpenDescription()
         {
-            charDescription.Open(cc);
+            charDescription?.Open(cc);
+            pressTime = 0f;
+            pressed = false;
+        }
+        public void CloseDescription()
+        {
+            charDescription?.Close();
             pressTime = 0f;
             pressed = false;
         }
@@ -195,12 +201,8 @@ namespace Overlewd
         public void OnPointerUp(PointerEventData eventData)
         {
             if (pressed)
-            {
-                charDescription.Close();
                 cc.Select();
-            }
-            pressTime = 0f;
-            pressed = false;
+            CloseDescription();
         }
 
         private void VfxInit()
@@ -317,6 +319,7 @@ namespace Overlewd
                         {
                             GUI.Label(new Rect(pos.x + 40, pos.y - 250 + k * 180 - i * 2, 180, 480),
                             $"Skill {k} Name: {item.name}\n" +
+                            $"CD: {item.effectCooldownDuration}\n" +
                             $"Damage Amount: {item.amount}\n" + //scale in % - (amount/100)
                             $"AOE: {item.AOE}   EffectProb: {item.effectProb}\n" +
                             $"isHeal: {item.actionType}\n" +
@@ -328,6 +331,7 @@ namespace Overlewd
                         {
                             GUI.Label(new Rect(pos.x + 60, pos.y - 250 + k * 180 - i * 2, 180, 480),
                             $"Skill {k} Name: {item.name}\n" +
+                            $"CD: {item.effectCooldownDuration}\n" +
                             $"Damage Amount: {item.amount}\n" + //scale in % - (amount/100)
                             $"AOE: {item.AOE}   EffectProb: {item.effectProb}\n" +
                             $"isHeal: {item.actionType}\n" +

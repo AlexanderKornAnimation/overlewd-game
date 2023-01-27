@@ -43,7 +43,8 @@ namespace Overlewd
             var localResourcesMeta = ResourceManager.GetLocalResourcesMeta();
 
             SetDownloadBarTitle("Check new resources");
-            var serverResourcesMeta = (await AdminBRO.resourcesAsync()).dData;
+            //var serverResourcesMeta = (await AdminBRO.resourcesAsync()).dData;
+            var serverResourcesMeta = GameData.resources.meta;
 
             if (serverResourcesMeta?.Any() ?? false)
             {
@@ -224,6 +225,7 @@ namespace Overlewd
             SetDownloadBarTitle("Download game data");
 
             var gameMeta = new List<BaseGameMeta> {
+                GameData.resources,
                 GameData.player,
                 GameData.currencies,
                 GameData.markets,
@@ -242,7 +244,8 @@ namespace Overlewd
                 GameData.battlePass,
                 GameData.potions,
                 GameData.nutaku,
-                GameData.alchemy
+                GameData.alchemy,
+                GameData.bossMiniGame
             };
 
             foreach (var metaSplit in SplitGameMeta(gameMeta, 10))
@@ -313,7 +316,14 @@ namespace Overlewd
             var firstSexStage = GameData.ftue.chapter1_sex1;
             if (firstSexStage.isComplete)
             {
-                UIManager.ShowScreen<MapScreen>();
+                if (GameData.buildings.castle.meta.isBuilt)
+                {
+                    UIManager.ShowScreen<CastleScreen>();
+                }
+                else
+                {
+                    UIManager.ShowScreen<MapScreen>();
+                }
             }
             else
             {

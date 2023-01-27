@@ -32,6 +32,17 @@ namespace Overlewd
             walletWidget = WalletWidget.GetInstance(canvas.Find("WalletWidgetPos"));
         }
 
+        public override void OnGameDataEvent(GameDataEvent eventData)
+        {
+            switch (eventData.id)
+            {
+                case GameDataEventId.BuyTradable:
+                case GameDataEventId.NutakuPayment:
+                    selectedOffer?.Refresh();
+                    break;
+            }
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             var mData = GameData.markets.mainMarket;
@@ -45,7 +56,18 @@ namespace Overlewd
                 offerButton.Deselect();
             }
 
-            offers.FirstOrDefault()?.Select();
+            var offer = inputData?.tabId != null
+                ? offers?.Find(t => t.tabId == inputData.tabId)
+                : offers.FirstOrDefault();
+            
+            offer?.Select();
+
+            await Task.CompletedTask;
+        }
+
+        public override async Task BeforeShowAsync()
+        {
+            selectedOffer?.Refresh();
 
             await Task.CompletedTask;
         }
@@ -80,9 +102,17 @@ namespace Overlewd
                 UIManager.HideOverlay();
             }
         }
+
+        public void ToCrystalOffersTab()
+        {
+            var crystalOffersTab = offers.Find(t => t.tabData.isCrystalsOffer);
+            crystalOffersTab?.Select();
+        }
     }
 
     public class MarketOverlayInData : BaseOverlayInData
     {
+        public int? tabId { get; set; }
+        public AdminBRO.MarketItem.Tab tabData => GameData.markets?.mainMarket?.GetTabById(tabId);
     }
 }

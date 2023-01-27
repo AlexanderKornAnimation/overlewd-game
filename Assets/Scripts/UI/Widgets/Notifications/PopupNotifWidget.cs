@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Overlewd
 {
@@ -26,16 +28,20 @@ namespace Overlewd
             entityTitle = back.Find("EntityTitle").GetComponent<TextMeshProUGUI>();
         }
 
-        public void Play(string sTitle, string sMessage)
+        public void Init(InitSettings settings)
         {
-            title.text = sTitle;
-            entityTitle.text = sMessage;
+            title.text = settings.title;
+            entityTitle.text = settings.message;
 
             backCG.alpha = 0.0f;
-            var backEndPosY = back.position.y + canvasRT.rect.height * 0.3f;
             var tPos = back.position;
             tPos.y += canvasRT.rect.height * 0.05f;
             back.position = tPos;
+        }
+
+        public void Play()
+        {
+            var backEndPosY = back.position.y + canvasRT.rect.height * 0.3f;
 
             var seq = DOTween.Sequence();
             seq.Join(back.DOMoveY(backEndPosY, 2.1f));
@@ -52,6 +58,46 @@ namespace Overlewd
         {
             return ResourceManager.InstantiateScreenPrefab<PopupNotifWidget>
                 ("Prefabs/UI/Widgets/Notifications/PopupNotifWidget", parent);
+        }
+
+        public class InitSettings
+        {
+            public string title;
+            public string message;
+        }
+    }
+
+    public static class PopupNotifManager
+    {
+        private static List<PopupNotifWidget.InitSettings> notifSettingsQueue =
+            new List<PopupNotifWidget.InitSettings>();
+
+        private static bool doQueueEnabled { get; set; } = false;
+        private static async void DoQueue()
+        {
+            if (doQueueEnabled)
+                return;
+            doQueueEnabled = true;
+            while (notifSettingsQueue.Count > 0)
+            {
+                InstNotif(notifSettingsQueue[0]);
+                notifSettingsQueue.RemoveAt(0);
+                await UniTask.Delay(1000);
+            }
+            doQueueEnabled = false;
+        }
+
+        public static void PushNotif(PopupNotifWidget.InitSettings nSetting)
+        {
+            notifSettingsQueue.Add(nSetting);
+            DoQueue();
+        }
+
+        private static void InstNotif(PopupNotifWidget.InitSettings nSetting)
+        {
+            var notifInst = PopupNotifWidget.GetInstance(UIManager.systemNotifRoot);
+            notifInst.Init(nSetting);
+            notifInst.Play();
         }
     }
 }

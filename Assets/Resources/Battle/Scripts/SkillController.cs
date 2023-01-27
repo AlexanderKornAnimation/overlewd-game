@@ -65,7 +65,7 @@ namespace Overlewd
                 textManaCost = goManaCost.transform.Find("text").GetComponent<TextMeshProUGUI>();
         }
         private void Start() => StatInit();
-        
+
         private void StatInit()
         {
             if (slider != null)
@@ -89,7 +89,8 @@ namespace Overlewd
 
         public void ReplaceSkill(AdminBRO.CharacterSkill sk, Dictionary<AdminBRO.CharacterSkill, int> cd, bool isOverlord = false)
         {
-            if (sk != null) {
+            if (sk != null)
+            {
                 if (!cd.TryGetValue(sk, out cooldownCount))
                     cooldownCount = 0;
             }
@@ -171,7 +172,7 @@ namespace Overlewd
             }
         }
         public bool SkillOnCD() => cooldownCount > 0;
-        
+
         private void Update()
         {
             if (pressed && !potion)
@@ -197,6 +198,7 @@ namespace Overlewd
         }
         public void OnPointerUp(PointerEventData eventData)
         {
+            skillDescription?.Close();
             if (pressed)
             {
                 charDescription.Close();
