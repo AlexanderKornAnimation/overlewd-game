@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7745756351054281107}
   - component: {fileID: 6393805130691451495}
   m_Layer: 0
-  m_Name: NeedMore
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1243267071914839989}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 5493923600242969607}
   - component: {fileID: 8820642266544450089}
   m_Layer: 0
-  m_Name: EarBackground
+  m_Name: MoreCurrencyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,8 +300,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8635793978279155768}
   - {fileID: 2744278195930356441}
+  - {fileID: 8635793978279155768}
   m_Father: {fileID: 7027239212789846876}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1021,7 +1021,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Buy badass
 
-    equipment for ears'
+    equipment'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -1117,7 +1117,7 @@ GameObject:
   - component: {fileID: 1052386072157802774}
   - component: {fileID: 1251769369326258741}
   m_Layer: 0
-  m_Name: EventCurrency
+  m_Name: CountTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1135,12 +1135,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1243267071914839989}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 35, y: 36}
-  m_SizeDelta: {x: 0, y: 30}
+  m_AnchoredPosition: {x: 25.322388, y: 16.6448}
+  m_SizeDelta: {x: 0, y: 56.6134}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &4992840593397229364
 CanvasRenderer:
@@ -1205,7 +1205,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1213,7 +1213,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

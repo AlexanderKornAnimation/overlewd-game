@@ -46,7 +46,8 @@ namespace Overlewd
                 $"platform: {Application.platform}\n" +
                 $"buildVersion: {Application.version}\n" +
                 $"cloudBuildTime: {buildManifest?.buildStartTime}\n" +
-                $"cloudBuildVersion: {buildManifest?.cloudBuildTargetName}-{buildManifest?.buildNumber}";
+                $"cloudBuildVersion: {buildManifest?.cloudBuildTargetName}-{buildManifest?.buildNumber}\n" +
+                $"serverURL: {BuildParameters.ServerDomainURL}";
         }
 
         public static BuildInfoWidget GetInstance(Transform parent)

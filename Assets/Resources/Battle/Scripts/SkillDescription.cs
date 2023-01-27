@@ -49,8 +49,11 @@ namespace Overlewd
         }
         public void Close()
         {
-            isOpen = false;
-            ani.SetTrigger("Close");
+            if (isOpen) 
+            { 
+                ani.SetTrigger("Close");
+                isOpen = false;
+            }
         }
     }
 }

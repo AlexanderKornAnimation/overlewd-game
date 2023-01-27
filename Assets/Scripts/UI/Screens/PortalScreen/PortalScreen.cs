@@ -81,15 +81,6 @@ namespace Overlewd
             await Task.CompletedTask;
         }
 
-        public override async void OnUIEvent(UIEvent eventData)
-        {
-            switch (eventData.id)
-            {
-                case UIEventId.ChangeScreenComplete:
-                    break;
-            }
-        }
-
         public override async Task AfterShowAsync()
         {
 

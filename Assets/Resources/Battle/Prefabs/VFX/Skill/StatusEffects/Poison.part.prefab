@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2739174178457564508}
   - component: {fileID: 5967826267943416543}
   m_Layer: 0
-  m_Name: Poison
+  m_Name: Poison.part
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4919,7 +4919,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6696979027352526473
 RectTransform:
   m_ObjectHideFlags: 0

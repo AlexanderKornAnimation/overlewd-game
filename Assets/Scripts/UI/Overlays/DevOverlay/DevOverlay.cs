@@ -82,6 +82,7 @@ namespace Overlewd
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             await AdminBRO.resetAsync();
+            LocalStates.Reset();
             Game.Quit();
         }
 

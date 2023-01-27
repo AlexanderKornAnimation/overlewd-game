@@ -281,8 +281,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 233, y: -35.5}
-  m_SizeDelta: {x: 294, y: 71}
+  m_AnchoredPosition: {x: 282.5, y: -47.8}
+  m_SizeDelta: {x: 434, y: 99}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5049959154343195398
 CanvasRenderer:
@@ -674,7 +674,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -132, y: -30}
+  m_AnchoredPosition: {x: -186.2, y: -32.7}
   m_SizeDelta: {x: 215, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1890959393284813484
@@ -1139,7 +1139,7 @@ RectTransform:
   m_GameObject: {fileID: 767873190730123358}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4099414513352932827}
   m_Father: {fileID: 2038210726067784829}
@@ -1147,8 +1147,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 31, y: -0}
-  m_SizeDelta: {x: 221, y: 70}
+  m_AnchoredPosition: {x: -200, y: 0}
+  m_SizeDelta: {x: 221, y: 56.2655}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &884740616354152969
 CanvasRenderer:
@@ -1178,7 +1178,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1ccb39a75bbbe8347b86ceede55afc34, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 947c87b51290daa409dd7e6b623a099d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1514,15 +1514,15 @@ RectTransform:
   m_GameObject: {fileID: 842934948357380523}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2855112584592428658}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 22, y: -12}
-  m_SizeDelta: {x: 123.12, y: 38}
+  m_AnchoredPosition: {x: 200, y: -5.1}
+  m_SizeDelta: {x: 118.9, y: 38}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &2409771798383540458
 CanvasRenderer:
@@ -1552,7 +1552,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Selected
+  m_text: Equipped
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
   m_sharedMaterial: {fileID: -4931939531266473624, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
@@ -2000,7 +2000,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 693c77fda171d0748b6b16b8240a8663, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 22e9ef47c6286eb43ba76dc4d44ef677, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2323,7 +2323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Potency
+  m_text: Vigor
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
   m_sharedMaterial: {fileID: -4931939531266473624, guid: d36950e44fc3a8f4e9b2e88222544783, type: 2}
@@ -2357,7 +2357,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -3289,7 +3289,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Equip weapon to \nmake girl stronger"
+  m_text: Equip weapon
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -5194,7 +5194,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 2.7}
   m_SizeDelta: {x: 134, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6006869999600930526
@@ -6530,9 +6530,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Back to your
-
-    businesses'
+  m_text: Back to scheming
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -10845,7 +10843,7 @@ RectTransform:
   m_GameObject: {fileID: 7560276329628666448}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6558426939919478780}
   m_Father: {fileID: 3914548813702505308}
@@ -10853,8 +10851,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 31, y: -0}
-  m_SizeDelta: {x: 221, y: 70}
+  m_AnchoredPosition: {x: -200, y: -0}
+  m_SizeDelta: {x: 221, y: 56.2655}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6195517843117505346
 CanvasRenderer:
@@ -10884,7 +10882,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1ccb39a75bbbe8347b86ceede55afc34, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 947c87b51290daa409dd7e6b623a099d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10922,14 +10920,14 @@ RectTransform:
   m_GameObject: {fileID: 7639123919542955602}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8467362955155518583}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 22, y: -12}
+  m_AnchoredPosition: {x: 200, y: -5.1}
   m_SizeDelta: {x: 123.12, y: 38}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &3548845205622636845

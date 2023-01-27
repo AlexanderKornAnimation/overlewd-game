@@ -45,15 +45,15 @@ namespace Overlewd
             
             switch (inputData.ftueStageData?.lerningKey)
             {
-                case (FTUE.CHAPTER_2, FTUE.BATTLE_1):
-                    if (!GameData.ftue.chapter2_battle1.isComplete)
+                case (FTUE.CHAPTER_2, FTUE.BATTLE_2):
+                    if (!GameData.ftue.chapter2_battle2.isComplete)
                     {
                         GameData.ftue.chapter2.ShowNotifByKey("ch2teamupgradetutor1");
                         await UIManager.WaitHideNotifications();
                         UIManager.MakeScreen<BattleGirlScreen>().
                             SetData(new BattleGirlScreenInData
                             {
-                                characterId = GameData.characters.slot1Ch.id,
+                                characterId = GameData.characters.slot1Ch?.id,
                             }).DoShow();
                     }
                     break;
@@ -107,23 +107,17 @@ namespace Overlewd
         {
             if (inputData.ftueStageId.HasValue)
             {
-                await GameData.ftue.EndStage(inputData.ftueStageId.Value,
-                    new AdminBRO.BattleEndData
-                    {
-                        win = endBattleData.battleWin,
-                        mana = endBattleData.manaSpent,
-                        hp = endBattleData.hpSpent
-                    });
+                await GameData.ftue.EndStage(inputData.ftueStageId.Value, endBattleData.toServerEndData);
             }
             else
             {
-                await GameData.events.StageEnd(inputData.eventStageId.Value,
-                    new AdminBRO.BattleEndData
-                    {
-                        win = endBattleData.battleWin,
-                        mana = endBattleData.manaSpent,
-                        hp = endBattleData.hpSpent
-                    });
+                await GameData.events.StageEnd(inputData.eventStageId.Value, endBattleData.toServerEndData);
+            }
+
+            if (inputData.bossMiniGameInfo != null)
+            {
+                await GameData.bossMiniGame.MiniGameEnd(inputData.bossMiniGameInfo.battleParams.id,
+                    endBattleData.toServerEndData);
             }
         }
     }

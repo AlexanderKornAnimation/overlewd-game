@@ -274,7 +274,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Go to the market
+  m_text: 'Go to market
 
     to buy resources'
   m_isRightToLeft: 0
@@ -487,7 +487,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Go to map to grind
 
-    some resources'
+    resources'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -764,7 +764,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &4789507439670709292
 MonoBehaviour:
   m_ObjectHideFlags: 0

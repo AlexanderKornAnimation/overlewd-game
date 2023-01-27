@@ -33,7 +33,11 @@ namespace Overlewd
 
             private void Customize()
             {
-                text.text = questData.description;
+                var _questData = questData;
+
+                text.text = _questData.description;
+                girlEmotion.sprite = ResourceManager.LoadSprite(_questData.matriarchEmotionIcon);
+                girlEmotion.SetNativeSize();
             }
             
             public static QuestDescription GetInstance(Transform parent)

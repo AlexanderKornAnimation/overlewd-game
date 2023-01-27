@@ -19,9 +19,9 @@ namespace Overlewd
             
         }
 
-        public override BaseMissclick MakeMissclick()
+        public override void OnMissclick()
         {
-            return UIManager.MakePopupMissclick<PopupMissclickColored>();
+            UIManager.HidePopup();
         }
 
         public override ScreenShow Show()
@@ -51,9 +51,6 @@ namespace Overlewd
 
     public abstract class BasePopupInData : BaseScreenInData
     {
-        public new bool IsType<T>() where T : BasePopupInData =>
-            base.IsType<T>();
-        public new T As<T>() where T : BasePopupInData =>
-            base.As<T>();
+
     }
 }

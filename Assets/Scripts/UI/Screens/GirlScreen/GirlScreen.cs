@@ -293,12 +293,12 @@ namespace Overlewd
 
             if (inputData == null)
             {
-                UIManager.ShowScreen<MemoryListScreen>();
+                UIManager.ShowScreen<MatriarchMemoryListScreen>();
             }
             else
             {
-                UIManager.MakeScreen<MemoryListScreen>().
-                    SetData(new MemoryListScreenInData
+                UIManager.MakeScreen<MatriarchMemoryListScreen>().
+                    SetData(new MatriarchMemoryListScreenInData
                     {
                         girlKey = inputData.girlKey,
                         ftueStageId = inputData.ftueStageId,

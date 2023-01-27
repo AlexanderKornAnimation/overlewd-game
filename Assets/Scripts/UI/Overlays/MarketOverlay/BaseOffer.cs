@@ -27,6 +27,11 @@ namespace Overlewd
             {
                 
             }
+
+            public virtual void Refresh()
+            {
+
+            }
             
             public void Show()
             {

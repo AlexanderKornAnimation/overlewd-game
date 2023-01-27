@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -167,14 +168,28 @@ namespace Overlewd
                     break;
             }
 
-            for (int i = 0; i < 11; i++)
-            {
-                NSSidebarMenuOverlay.Banner.GetInstance(bannerContent);
-            }
-            
+            InstBanners();
+           
             await Task.CompletedTask;
         }
 
+        private void InstBanners()
+        { 
+            NSSidebarMenuOverlay.WeeklyLoginBanner.GetInstance(bannerContent);
+
+            var marketTabs = GameData.markets.mainMarket?.tabs.Where(t => t.isVisible).
+                OrderBy(t => t.order);
+
+            foreach (var mTab in marketTabs)
+            {
+                if (mTab.bannerDescription != null && mTab.bannerArt != null)
+                {
+                    var banner = NSSidebarMenuOverlay.Banner.GetInstance(bannerContent);
+                    banner.tabId = mTab.tabId;
+                }
+            }
+        }
+        
         public override async Task AfterShowAsync()
         {
             await UITools.LeftShowAsync(bannerScroll.GetComponent<RectTransform>());
