@@ -8,7 +8,7 @@ namespace Overlewd
 {
     namespace NSSidebarMenuOverlay
     {
-        public class WeeklyLoginBanner : MonoBehaviour
+        public class DailyLoginBanner : MonoBehaviour
         {
             private Image background;
             private GameObject rewardsAvailable;
@@ -36,13 +36,13 @@ namespace Overlewd
             private void ButtonClick()
             {
                 SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                UIManager.ShowPopup<WeeklyLoginPopup>();
+                UIManager.ShowOverlay<DailyLoginOverlay>();
             }
 
-            public static WeeklyLoginBanner GetInstance(Transform parent)
+            public static DailyLoginBanner GetInstance(Transform parent)
             {
-                return ResourceManager.InstantiateWidgetPrefab<WeeklyLoginBanner>(
-                    "Prefabs/UI/Overlays/SidebarMenuOverlay/WeeklyLoginBanner", parent);
+                return ResourceManager.InstantiateWidgetPrefab<DailyLoginBanner>(
+                    "Prefabs/UI/Overlays/SidebarMenuOverlay/DailyLoginBanner", parent);
             }
         }
     }

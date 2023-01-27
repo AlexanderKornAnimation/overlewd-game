@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    public class WeeklyLoginPopup : BasePopupParent<WeeklyLoginPopupInData>
+    public class DailyLoginOverlay : BaseOverlayParent<DailyLoginOverlayInData>
     {
         private Image background;
         private Transform rewardsGrid;
@@ -16,7 +16,7 @@ namespace Overlewd
         private void Awake()
         {
             var screenInst =
-                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Popups/WeeklyLoginPopup/WeeklyLoginPopup", transform);
+                ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Overlays/DailyLoginOverlay/DailyLoginOverlay", transform);
             
             var canvas = screenInst.transform.Find("Canvas");
             
@@ -29,7 +29,7 @@ namespace Overlewd
         private void CloseButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.HidePopup();
+            UIManager.HideOverlay();
         }
 
         public override async Task BeforeShowMakeAsync()
@@ -40,7 +40,7 @@ namespace Overlewd
 
         private void Customize()
         {
-            var rewards = rewardsGrid.GetComponentsInChildren<NSWeeklyLoginPopup.RewardItem>();
+            var rewards = rewardsGrid.GetComponentsInChildren<NSDailyLoginOverlay.RewardItem>();
 
             foreach (var reward in rewards)
             {
@@ -49,7 +49,8 @@ namespace Overlewd
         }
     }
 
-    public class WeeklyLoginPopupInData : BasePopupInData
+    public class DailyLoginOverlayInData : BaseOverlayInData
     {
+
     }
 }

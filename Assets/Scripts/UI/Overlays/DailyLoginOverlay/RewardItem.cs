@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Overlewd
 {
-    namespace NSWeeklyLoginPopup
+    namespace NSDailyLoginOverlay
     {
         public class RewardItem : MonoBehaviour
         {
