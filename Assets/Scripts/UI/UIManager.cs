@@ -584,7 +584,7 @@ namespace Overlewd
 
             MemoryOprimizer.ChangeScreen();
 
-            ThrowUIEvent(new UIEvent
+            ThrowUIEvent(new ChangeScreenCompleteUIEvent
             {
                 id = UIEventId.ChangeScreenComplete,
                 senderType = screen?.GetType()

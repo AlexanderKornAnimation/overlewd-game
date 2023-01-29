@@ -30,5 +30,23 @@ namespace Overlewd
         public Type senderType { get; set; }
         public bool SenderTypeIs<T>() =>
             senderType == typeof(T);
+        public virtual void Handle()
+        {
+
+        }
+    }
+
+    public class ChangeScreenCompleteUIEvent : UIEvent
+    {
+        public override void Handle()
+        {
+            if (UIManager.currentState.prevScreenState.ScreenTypeIs<LoadingScreen>())
+            {
+                if (GameData.dailyLogin.info != null)
+                {
+                    UIManager.ShowOverlay<DailyLoginOverlay>();
+                }
+            }
+        }
     }
 }

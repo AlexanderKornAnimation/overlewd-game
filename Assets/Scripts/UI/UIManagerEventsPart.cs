@@ -76,6 +76,8 @@ namespace Overlewd
                     break;
             }
 
+            eventData?.Handle();
+
             screen?.OnUIEvent(eventData);
             popup?.OnUIEvent(eventData);
             overlay?.OnUIEvent(eventData);

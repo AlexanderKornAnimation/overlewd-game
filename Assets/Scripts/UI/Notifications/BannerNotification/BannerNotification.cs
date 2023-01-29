@@ -79,7 +79,7 @@ namespace Overlewd
         private async void BuyButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            await GameData.markets.BuyTradable(inputData.marketId, inputData.tradableId);
+            await GameData.markets.Payment(inputData.marketId, inputData.tradableId);
             UIManager.ShowNotification<NutakuBuyingNotification>();
         }
     }

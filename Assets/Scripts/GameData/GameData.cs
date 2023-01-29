@@ -834,7 +834,7 @@ namespace Overlewd
         public List<AdminBRO.MarketItem> eventMarkets =>
             markets.FindAll(m => m.isEvent);
 
-        public async Task<AdminBRO.TradableBuyStatus> BuyTradable(int? marketId, int? tradableId)
+        public async Task<AdminBRO.TradableBuyStatus> Payment(int? marketId, int? tradableId)
         {
             if (!marketId.HasValue || !tradableId.HasValue)
                 return new AdminBRO.TradableBuyStatus { status = false };
@@ -854,6 +854,24 @@ namespace Overlewd
                     });
             }
 
+            return result;
+        }
+
+        public async Task<NutakuApiHelper.NutakuPayment> NutakuPayment(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
+        {
+            var result = await NutakuApiHelper.PaymentAsync(myMonoBehaviour, tradable);
+            if (result.isSucceess)
+            {
+                await GameData.player.Get();
+                await GameData.characters.Get();
+                await GameData.equipment.Get();
+                await GameData.matriarchs.Get();
+
+                UIManager.ThrowGameDataEvent(new GameDataEvent
+                {
+                    id = GameDataEventId.NutakuPayment
+                });
+            }
             return result;
         }
     }
@@ -1316,6 +1334,11 @@ namespace Overlewd
         public async Task Collect(string dayName)
         {
             await AdminBRO.dailyLoginCollectAsync(dayName);
+            await Get();
+            await GameData.player.Get();
+            await GameData.characters.Get();
+            await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
         }
     }
 }

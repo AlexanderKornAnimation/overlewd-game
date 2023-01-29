@@ -84,13 +84,13 @@ namespace Overlewd
                 var trData = tradableData;
                 if (trData.nutakuPriceValid)
                 {
-                    var payment = await NutakuApiHelper.PaymentAsync(this, trData);
+                    var payment = await GameData.markets.NutakuPayment(this, trData);
                 }
                 else
                 {
                     if (trData.canBuy)
                     {
-                        var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, trData.id);
+                        var result = await GameData.markets.Payment(GameData.markets.mainMarket.id, trData.id);
                     }
                     else
                     {

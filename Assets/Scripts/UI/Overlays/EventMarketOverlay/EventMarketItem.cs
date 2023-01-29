@@ -102,7 +102,7 @@ namespace Overlewd
                 {
                     if (!currencyData.isTypeNutaku)
                     {
-                        await GameData.markets.BuyTradable(marketId, tradableId);
+                        await GameData.markets.Payment(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
@@ -127,7 +127,7 @@ namespace Overlewd
                 {
                     if (!currencyData.isTypeNutaku)
                     {
-                        await GameData.markets.BuyTradable(marketId, tradableId);
+                        await GameData.markets.Payment(marketId, tradableId);
                         UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
