@@ -2201,9 +2201,9 @@ namespace Overlewd
                 name switch
                 {
                     Key_Ulvi => true,
-                    Key_Adriel => GameData.ftue.chapter1_dialogue3.isComplete,
-                    Key_Ingie => GameData.ftue.chapter2_dialogue4.isComplete,
-                    Key_Faye => false,
+                    Key_Adriel => GameData.ftue.chapter2_battle5.isComplete,
+                    Key_Ingie => GameData.ftue.chapter3_dialogue3.isComplete,
+                    Key_Faye => GameData.ftue.chapter4_dialogue3.isComplete,
                     Key_Lili => false,
                     _ => false
                 };

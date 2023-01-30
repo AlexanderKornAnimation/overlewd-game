@@ -77,6 +77,7 @@ namespace Overlewd
         public const string CHAPTER_1 = "chapter1";
         public const string CHAPTER_2 = "chapter2";
         public const string CHAPTER_3 = "chapter3";
+        public const string CHAPTER_4 = "chapter4";
         public const string BATTLE_1 = "battle1";
         public const string BATTLE_2 = "battle2";
         public const string BATTLE_3 = "battle3";
@@ -138,6 +139,21 @@ namespace Overlewd
         public AdminBRO.FTUEStageItem chapter3_sex1 => chapter3.GetStageByKey(SEX_1);
         public AdminBRO.FTUEStageItem chapter3_sex2 => chapter3.GetStageByKey(SEX_2);
         public AdminBRO.FTUEStageItem chapter3_sex3 => chapter3.GetStageByKey(SEX_3);
+
+        //chapter_4
+        public AdminBRO.FTUEChapter chapter4 => GetChapterByKey(CHAPTER_4);
+        public AdminBRO.FTUEStageItem chapter4_battle1 => chapter4.GetStageByKey(BATTLE_1);
+        public AdminBRO.FTUEStageItem chapter4_battle2 => chapter4.GetStageByKey(BATTLE_2);
+        public AdminBRO.FTUEStageItem chapter4_battle3 => chapter4.GetStageByKey(BATTLE_3);
+        public AdminBRO.FTUEStageItem chapter4_battle4 => chapter4.GetStageByKey(BATTLE_4);
+        public AdminBRO.FTUEStageItem chapter4_dialogue1 => chapter4.GetStageByKey(DIALOGUE_1);
+        public AdminBRO.FTUEStageItem chapter4_dialogue2 => chapter4.GetStageByKey(DIALOGUE_2);
+        public AdminBRO.FTUEStageItem chapter4_dialogue3 => chapter4.GetStageByKey(DIALOGUE_3);
+        public AdminBRO.FTUEStageItem chapter4_dialogue4 => chapter4.GetStageByKey(DIALOGUE_4);
+        public AdminBRO.FTUEStageItem chapter4_dialogue5 => chapter4.GetStageByKey(DIALOGUE_5);
+        public AdminBRO.FTUEStageItem chapter4_sex1 => chapter4.GetStageByKey(SEX_1);
+        public AdminBRO.FTUEStageItem chapter4_sex2 => chapter4.GetStageByKey(SEX_2);
+        public AdminBRO.FTUEStageItem chapter4_sex3 => chapter4.GetStageByKey(SEX_3);
 
         public AdminBRO.FTUEChapter GetChapterByKey(string key) => info.chapters.Find(ch => ch.key == key);
         public AdminBRO.FTUEChapter GetChapterById(int? id) => info.chapters.Find(ch => ch.id == id);
