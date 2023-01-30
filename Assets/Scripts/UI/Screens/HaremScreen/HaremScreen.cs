@@ -157,6 +157,8 @@ namespace Overlewd
             liliBuffDescription.text =
                 UITools.IncNumberSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
 
+            UITools.DisableButton(guestsRoomButton, GameData.progressFlags.guestRoomOpen);
+            
             if (UIManager.currentState.prevState != null)
             {
                 if (UIManager.currentState.prevState.ScreenTypeIs<MapScreen>() || UIManager.currentState.prevState.ScreenTypeIs<EventMapScreen>())

@@ -55,6 +55,9 @@ namespace Overlewd
             GameData.ftue.chapter1_battle3.isComplete && !GameData.ftue.chapter1_battle3.isLastEnded;
         public bool eventsWidgetEnabled =>
             GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
+        
+        public bool guestRoomOpen =>
+            GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
     }
 
     //resources
