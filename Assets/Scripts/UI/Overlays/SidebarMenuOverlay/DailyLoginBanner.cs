@@ -30,7 +30,7 @@ namespace Overlewd
 
             private void Customize()
             {
-                
+                background.sprite = ResourceManager.LoadSprite(GameData.dailyLogin.info.bannerArt);
             }
 
             private void ButtonClick()

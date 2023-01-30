@@ -1469,16 +1469,9 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
-            public float speedBoost;
-            public float powerBoost;
-            public float constitutionBoost;
-            public float agilityBoost;
-            public float accuracyBoost;
-            public float dodgeBoost;
-            public float critrateBoost;
-            public float healthBoost;
-            public float damageBoost;
-            public float manaBoost;
+            public float basicToAdvancedBoost;
+            public float advancedToEpicBoost;
+            public float epicToHeroicBoost;
 
             public string GetIconByRarity(string rarity) => rarity switch
             {
@@ -2417,15 +2410,48 @@ namespace Overlewd
             public string smallBannerForEventbook;
             public string image;
             public List<Day> days;
+            public bool isViewedToday;
 
             public class Day
             {
                 public string dayName;
-                public string serialNumber;
                 public bool isLoggedIn;
                 public bool isCollected;
+                public bool isCanCollect;
                 public List<RewardItem> rewards;
+
+                public const string DayName_Day1 = "day1";
+                public const string DayName_Day2 = "day2";
+                public const string DayName_Day3 = "day3";
+                public const string DayName_Day4 = "day4";
+                public const string DayName_Day5 = "day5";
+                public const string DayName_Day6 = "day6";
+                public const string DayName_Day7 = "day7";
             }
+
+            public Day GetDayByName(string dayName) =>
+                days?.Find(d => d.dayName == dayName);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day1 => GetDayByName(Day.DayName_Day1);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day2 => GetDayByName(Day.DayName_Day2);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day3 => GetDayByName(Day.DayName_Day3);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day4 => GetDayByName(Day.DayName_Day4);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day5 => GetDayByName(Day.DayName_Day5);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day6 => GetDayByName(Day.DayName_Day6);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day7 => GetDayByName(Day.DayName_Day7);
         }
     }
 }

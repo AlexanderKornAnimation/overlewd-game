@@ -42,9 +42,13 @@ namespace Overlewd
         {
             if (UIManager.currentState.prevScreenState.ScreenTypeIs<LoadingScreen>())
             {
-                if (GameData.dailyLogin.info != null)
+                if (GameData.dailyLogin.isValid)
                 {
-                    UIManager.ShowOverlay<DailyLoginOverlay>();
+                    if (!GameData.dailyLogin.info.isViewedToday && 
+                        GameData.buildings.aerostat.meta.isBuilt)
+                    {
+                        UIManager.ShowOverlay<DailyLoginOverlay>();
+                    }
                 }
             }
         }
