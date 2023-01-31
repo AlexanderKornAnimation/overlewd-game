@@ -415,7 +415,7 @@ namespace Overlewd
                     ccTarget.Defence(ccOnSelect, id, aoe: HEAL);
                 }
                 charAni.SetTrigger("fadeOut");
-                ccOnSelect.skillCD[ccOnSelect.skill[id]] = Mathf.RoundToInt(ccOnSelect.skill[id].effectCooldownDuration);
+                ccOnSelect.skillCD[ccOnSelect.skill[id]] = Mathf.RoundToInt(ccOnSelect.skill[id].effectCooldownDuration) + 1;
                 battleState = BattleState.ANIMATION;
             }
         }
