@@ -430,6 +430,7 @@ namespace Overlewd
             public int? matriarchShardId;
             public string rarity;
             public int? ingredientId;
+            public int? collectableId;
 
             public const string Type_Default = "default";
             public const string Type_Currency = "currency";
@@ -440,6 +441,7 @@ namespace Overlewd
             public const string Type_MatriarchShard = "matriarch_shard";
             public const string Type_ManaPotion = "mana_potion";
             public const string Type_HpPotion = "hp_potion";
+            public const string Type_Collectable = "collectable";
 
             public class TradablePack
             {
@@ -784,6 +786,7 @@ namespace Overlewd
             public string status;
             public int progressCount;
             public string type;
+            public string questDifficulty;
             public int? eventId;
             public int? ftueChapterId;
             public string ftueQuestType;
@@ -799,6 +802,9 @@ namespace Overlewd
 
             public const string Type_Ftue = "ftue";
             public const string Type_Event = "event";
+
+            public const string Difficulty_Easy = "easy";
+            public const string Difficulty_Hard = "hard";
 
             public const string QuestType_Main = "main";
             public const string QuestType_Side = "side";
