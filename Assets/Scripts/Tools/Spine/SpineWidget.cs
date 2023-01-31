@@ -204,22 +204,5 @@ namespace Overlewd
             var layerFirst = animationData?.layouts?.First();
             return GetInstance(layerFirst, parent, true);
         }
-
-        public static SpineWidget GetInstanceDisposable(AdminBRO.Animation animationData, Transform parent)
-        {
-            var layerFirst = animationData?.layouts?.First();
-            var inst = GetInstance(layerFirst, parent, false);
-            inst.destroyAfterComplete = true;
-            inst.raycastTarget = false;
-            return inst;
-        }
-
-        public static SpineWidget GetInstanceDisposable(string prefabPath, Transform parent)
-        {
-            var inst = GetInstance(prefabPath, parent);
-            inst.destroyAfterComplete = true;
-            inst.raycastTarget = false;
-            return inst;
-        }
     }
 }

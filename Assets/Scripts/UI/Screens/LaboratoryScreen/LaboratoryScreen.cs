@@ -439,12 +439,12 @@ namespace Overlewd
 
         private void MakeBubblesFX()
         {
-            SpineWidget.GetInstance(GameData.animations["uifx_colb_bubbles"], slotFX);
+            UIfx.Inst(UIfx.UIFX_COLB_BUBBLES, slotFX);
         }
 
         private void MakeTentaclesFX()
         {
-            var fx = SpineWidget.GetInstanceDisposable(GameData.animations["uifx_colb_tentacles"], slotFX);
+            var fx = UIfx.InstDisposable(UIfx.UIFX_COLB_TENTACLES, slotFX);
             fx.transform.SetAsFirstSibling();
         }
     }

@@ -12,19 +12,46 @@ namespace Overlewd
         public const string UIFX_LVLUP02 = "uifx_lvlup02";
         public const string UIFX_OVERLORD_SPELLS = "uifx_overlord_spells";
 
+        //laboratory
+        public const string UIFX_COLB_BUBBLES = "uifx_colb_bubbles";
+        public const string UIFX_COLB_TENTACLES = "uifx_colb_tentacles";
+
         public const string LOCAL_UIFX_SCREEN_TAP = "Prefabs/FX/uifx_tap/uifx_tap";
         public const string LOCAL_UIFX_SCREEN_TAP_PC = "Prefabs/FX/uifx_tap/uifx_tap_pc";
+        public const string LOCAL_UIFX_TUTOR_HINT_TAP = "Prefabs/FX/uifx_notification/idle";
 
-        public static void Inst(string animDataTitle, Transform parent, Vector2 offset = default(Vector2))
+        public static SpineWidget Inst(string animDataTitle, Transform parent, Vector2 offset = default(Vector2))
         {
-            var vfx = SpineWidget.GetInstanceDisposable(GameData.animations[animDataTitle], parent);
+            var vfx = SpineWidget.GetInstance(GameData.animations[animDataTitle], parent);
+            vfx.raycastTarget = false;
             vfx.transform.localPosition += (Vector3)offset;
+            return vfx;
         }
 
-        public static void InstLocal(string prefabPath, Transform parent, Vector2 offset = default(Vector2))
+        public static SpineWidget InstDisposable(string animDataTitle, Transform parent, Vector2 offset = default(Vector2))
         {
-            var vfx = SpineWidget.GetInstanceDisposable(prefabPath, parent);
+            var vfx = SpineWidget.GetInstance(GameData.animations[animDataTitle], parent);
+            vfx.destroyAfterComplete = true;
+            vfx.raycastTarget = false;
             vfx.transform.localPosition += (Vector3)offset;
+            return vfx;
+        }
+
+        public static SpineWidget InstLocal(string prefabPath, Transform parent, Vector2 offset = default(Vector2))
+        {
+            var vfx = SpineWidget.GetInstance(prefabPath, parent);
+            vfx.raycastTarget = false;
+            vfx.transform.localPosition += (Vector3)offset;
+            return vfx;
+        }
+
+        public static SpineWidget InstLocalDisposable(string prefabPath, Transform parent, Vector2 offset = default(Vector2))
+        {
+            var vfx = SpineWidget.GetInstance(prefabPath, parent);
+            vfx.destroyAfterComplete = true;
+            vfx.raycastTarget = false;
+            vfx.transform.localPosition += (Vector3)offset;
+            return vfx;
         }
     }
 }
