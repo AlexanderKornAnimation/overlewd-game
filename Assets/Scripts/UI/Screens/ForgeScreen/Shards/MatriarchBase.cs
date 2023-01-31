@@ -46,7 +46,7 @@ namespace Overlewd
                     {
                         AdminBRO.MatriarchItem.Key_Ulvi => transform.Find("Ulvi"),
                         AdminBRO.MatriarchItem.Key_Adriel => transform.Find("Adriel"),
-                        AdminBRO.MatriarchItem.Key_Ingie => transform.Find("Ingie"),
+                        AdminBRO.MatriarchItem.Key_Inge => transform.Find("Ingie"),
                         AdminBRO.MatriarchItem.Key_Faye => transform.Find("Faye"),
                         AdminBRO.MatriarchItem.Key_Lili => transform.Find("Lili"),
                         _ => null

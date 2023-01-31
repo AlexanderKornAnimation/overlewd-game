@@ -242,9 +242,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                         GameData.ftue.chapter2.ShowNotifByKey("ch2shardstutor1");
                     break;
-                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
-                    GameData.ftue.chapter3.ShowNotifByKey("ch3aerotutor1");
-                    break;
+               
 
             }
 
@@ -279,6 +277,14 @@ namespace Overlewd
                             if (!GameData.buildings.portal.meta.isBuilt)
                             {
                                 GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                                await UIManager.WaitHideNotifications();
+                                UIManager.ShowScreen<CastleScreen>();
+                            }
+                            break;
+                        case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                            if (!GameData.buildings.aerostat.meta.isBuilt)
+                            {
+                                GameData.ftue.chapter3.ShowNotifByKey("ch3aerotutor1");
                                 await UIManager.WaitHideNotifications();
                                 UIManager.ShowScreen<CastleScreen>();
                             }

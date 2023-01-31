@@ -251,6 +251,7 @@ namespace Overlewd
                         municipalityButton?.DisableButton();
                     }
                     break;
+
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
@@ -309,9 +310,16 @@ namespace Overlewd
                     }
                     break;
                 case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
-                    if (GameData.buildings.aerostat.meta.isBuilt)
+                    if (!GameData.buildings.aerostat.meta.isBuilt)
                     {
-                        UIManager.ShowOverlay<EventOverlay>();
+                        UITools.DisableButton(sidebarButton);
+                        portalButton?.DisableButton();
+                        castleButton?.DisableButton();
+                        marketButton?.DisableButton();
+                        haremButton?.DisableButton();
+                        laboratoryButton?.DisableButton();
+                        magicGuildButton?.DisableButton();
+                        forgeButton?.DisableButton();
                     }
                     break;
                 default:
@@ -353,6 +361,12 @@ namespace Overlewd
                                     {
                                         activeTabId = ForgeScreen.TabBattleGirlsEquip
                                     }).DoShow();
+                            }
+                            break;
+                        case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                            if (GameData.buildings.aerostat.meta.isBuilt)
+                            {
+                                UIManager.ShowOverlay<EventOverlay>();
                             }
                             break;
                     }

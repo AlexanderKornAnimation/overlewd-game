@@ -2172,7 +2172,7 @@ namespace Overlewd
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
-            public const string Key_Ingie = "Ingie";
+            public const string Key_Inge = "Inge";
             public const string Key_Faye = "Faye";
             public const string Key_Lili = "Lili";
 
@@ -2194,7 +2194,7 @@ namespace Overlewd
             public bool isAdriel => name == Key_Adriel;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isIngie => name == Key_Ingie;
+            public bool isIngie => name == Key_Inge;
 
             [JsonProperty(Required = Required.Default)]
             public bool isFaye => name == Key_Faye;
@@ -2208,7 +2208,7 @@ namespace Overlewd
                 {
                     Key_Ulvi => true,
                     Key_Adriel => GameData.ftue.chapter2_battle5.isComplete,
-                    Key_Ingie => GameData.ftue.chapter3_dialogue3.isComplete,
+                    Key_Inge => GameData.ftue.chapter3_dialogue3.isComplete,
                     Key_Faye => GameData.ftue.chapter4_dialogue3.isComplete,
                     Key_Lili => false,
                     _ => false

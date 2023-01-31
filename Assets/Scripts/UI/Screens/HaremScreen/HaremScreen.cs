@@ -28,13 +28,13 @@ namespace Overlewd
         private GameObject adrielBuffActive;
         private GameObject adrielNotActive;
 
-        private Button ingieButton;
-        private Image ingieBuffIcon;
-        private Transform ingieActive;
+        private Button ingeButton;
+        private Image ingeBuffIcon;
+        private Transform ingeActive;
         private TextMeshProUGUI ingieName;
-        private TextMeshProUGUI ingieBuffDescription;
-        private GameObject ingieBuffActive;
-        private GameObject ingieNotActive;
+        private TextMeshProUGUI ingeBuffDescription;
+        private GameObject ingeBuffActive;
+        private GameObject ingeNotActive;
 
         private Button fayeButton;
         private Image fayeBuffIcon;
@@ -85,14 +85,14 @@ namespace Overlewd
             adrielName = adrielButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
             adrielNotActive = adrielButton.transform.Find("NotActive").gameObject;
 
-            ingieButton = canvas.Find("IngieButton").GetComponent<Button>();
-            ingieButton.onClick.AddListener(IngieButtonClick);
-            ingieActive = ingieButton.transform.Find("Active");
-            ingieBuffIcon = ingieActive.Find("Buff").GetComponent<Image>();
-            ingieBuffDescription = ingieActive.Find("Description").GetComponent<TextMeshProUGUI>();
-            ingieBuffActive = ingieActive.Find("BuffActive").gameObject;
-            ingieName = ingieButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
-            ingieNotActive = ingieButton.transform.Find("NotActive").gameObject;
+            ingeButton = canvas.Find("IngieButton").GetComponent<Button>();
+            ingeButton.onClick.AddListener(IngieButtonClick);
+            ingeActive = ingeButton.transform.Find("Active");
+            ingeBuffIcon = ingeActive.Find("Buff").GetComponent<Image>();
+            ingeBuffDescription = ingeActive.Find("Description").GetComponent<TextMeshProUGUI>();
+            ingeBuffActive = ingeActive.Find("BuffActive").gameObject;
+            ingieName = ingeButton.transform.Find("Name").GetComponent<TextMeshProUGUI>();
+            ingeNotActive = ingeButton.transform.Find("NotActive").gameObject;
 
             fayeButton = canvas.Find("FayeButton").GetComponent<Button>();
             fayeButton.onClick.AddListener(FayeButtonClick);
@@ -133,13 +133,13 @@ namespace Overlewd
             adrielBuffDescription.text = 
                 UITools.IncNumberSize(GameData.matriarchs.Adriel.buff?.description, adrielBuffDescription.fontSize);
 
-            ingieActive.gameObject.SetActive(GameData.matriarchs.Ingie.isOpen);
-            ingieNotActive.gameObject.SetActive(!GameData.matriarchs.Ingie.isOpen);
-            ingieButton.interactable = GameData.matriarchs.Ingie.isOpen;
-            ingieBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ingie.buff?.icon);
-            ingieBuffActive.SetActive(GameData.matriarchs.Ingie.buff?.active ?? false);
-            ingieBuffDescription.text = 
-                UITools.IncNumberSize(GameData.matriarchs.Ingie.buff?.description, ingieBuffDescription.fontSize);
+            ingeActive.gameObject.SetActive(GameData.matriarchs.Ingie.isOpen);
+            ingeNotActive.gameObject.SetActive(!GameData.matriarchs.Ingie.isOpen);
+            ingeButton.interactable = GameData.matriarchs.Ingie.isOpen;
+            ingeBuffIcon.sprite = ResourceManager.LoadSprite(GameData.matriarchs.Ingie.buff?.icon);
+            ingeBuffActive.SetActive(GameData.matriarchs.Ingie.buff?.active ?? false);
+            ingeBuffDescription.text = 
+                UITools.IncNumberSize(GameData.matriarchs.Ingie.buff?.description, ingeBuffDescription.fontSize);
 
             fayeActive.gameObject.SetActive(GameData.matriarchs.Faye.isOpen);
             fayeNotActive.gameObject.SetActive(!GameData.matriarchs.Faye.isOpen);
@@ -157,7 +157,7 @@ namespace Overlewd
             liliBuffDescription.text =
                 UITools.IncNumberSize(GameData.matriarchs.Lili.buff?.description, liliBuffDescription.fontSize);
 
-            UITools.DisableButton(guestsRoomButton, GameData.progressFlags.guestRoomOpen);
+            UITools.DisableButton(guestsRoomButton, !GameData.progressFlags.guestRoomOpen);
             
             if (UIManager.currentState.prevState != null)
             {
@@ -228,6 +228,7 @@ namespace Overlewd
         
         private void GuestRoomButtonClick()
         {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
             UIManager.ShowScreen<GuestScreen>();
         }
 
@@ -253,7 +254,7 @@ namespace Overlewd
 
         private void IngieButtonClick()
         {
-            GirlButtonClick(AdminBRO.MatriarchItem.Key_Ingie);
+            GirlButtonClick(AdminBRO.MatriarchItem.Key_Inge);
         }
 
         private void FayeButtonClick()

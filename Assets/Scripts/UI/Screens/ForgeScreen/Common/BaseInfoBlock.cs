@@ -86,7 +86,7 @@ namespace Overlewd
             {
                 AdminBRO.MatriarchItem.Key_Ulvi => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/UlviHeadShardsForge"),
                 AdminBRO.MatriarchItem.Key_Adriel => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/AdrielHeadShardsForge"),
-                AdminBRO.MatriarchItem.Key_Ingie => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/IngieHeadShardsForge"),
+                AdminBRO.MatriarchItem.Key_Inge => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/IngieHeadShardsForge"),
                 AdminBRO.MatriarchItem.Key_Faye => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/FayeHeadShardsForge"),
                 AdminBRO.MatriarchItem.Key_Lili => Resources.Load<Sprite>("Prefabs/UI/Screens/ForgeScreen/Images/Slots/LiliHeadShardsForge"),
                 _ => null

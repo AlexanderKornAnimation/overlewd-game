@@ -14,7 +14,7 @@ namespace Overlewd
         private List<Image> resources = new List<Image>();
         private List<TextMeshProUGUI> count = new List<TextMeshProUGUI>();
 
-        private Transform spawnPoint;
+        private Image spellImage;
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
 
@@ -34,7 +34,7 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
+            spellImage = canvas.Find("Background/SpellImage").GetComponent<Image>();
             walletWidgetPos = canvas.Find("WalletWidgetPos");
 
             spellName = canvas.Find("SpellName").GetComponent<TextMeshProUGUI>();
@@ -87,8 +87,8 @@ namespace Overlewd
                 var color = spellData.canCrystallvlUp ? "white" : "red";
                 crystalBuildButtonText.text = $"Summon building\nfor <color={color}>{crystalPrice}</color> crystals";
             }
-            
-            FireballSpell.GetInstance(spawnPoint);
+
+            spellImage.sprite = GetSpellImageByType(spellData?.type);
             walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
@@ -130,6 +130,18 @@ namespace Overlewd
             }
         }
 
+        private Sprite GetSpellImageByType(string spellType)
+        {
+            return spellType switch
+            {
+                AdminBRO.MagicGuildSkill.Type_ActiveSkill => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/ActiveSpellStep1"),
+                AdminBRO.MagicGuildSkill.Type_UltimateSkill => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/UltimateSpellStep1"),
+                AdminBRO.MagicGuildSkill.Type_PassiveSkill1 => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/PassiveSpell1"),
+                AdminBRO.MagicGuildSkill.Type_PassiveSkill2 => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/PassiveSpell2"),
+                _ => null
+            };
+        }
+        
         private void CloseButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

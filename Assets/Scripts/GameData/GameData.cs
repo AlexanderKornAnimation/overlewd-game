@@ -56,8 +56,7 @@ namespace Overlewd
         public bool eventsWidgetEnabled =>
             GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
         
-        public bool guestRoomOpen =>
-            GameData.devMode ? true : GameData.buildings.aerostat.meta.isBuilt;
+        public bool guestRoomOpen => GameData.buildings.aerostat.meta.isBuilt;
     }
 
     //resources
@@ -1196,7 +1195,7 @@ namespace Overlewd
         public AdminBRO.MatriarchItem Adriel =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Adriel);
         public AdminBRO.MatriarchItem Ingie =>
-            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Ingie);
+            GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Inge);
         public AdminBRO.MatriarchItem Faye =>
             GetMatriarchByKey(AdminBRO.MatriarchItem.Key_Faye);
         public AdminBRO.MatriarchItem Lili =>
