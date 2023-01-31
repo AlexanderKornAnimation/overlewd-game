@@ -44,8 +44,7 @@ namespace Overlewd
             {
                 if (GameData.dailyLogin.isValid)
                 {
-                    if (!GameData.dailyLogin.info.isViewedToday && 
-                        GameData.buildings.aerostat.meta.isBuilt)
+                    if (!GameData.dailyLogin.info.isViewedToday)
                     {
                         UIManager.ShowOverlay<DailyLoginOverlay>();
                     }

@@ -1343,7 +1343,8 @@ namespace Overlewd
     //daily login
     public class DailyLogin : BaseGameMeta
     {
-        public bool isValid => info != null;
+        public bool isValid => (info != null) &&
+            GameData.buildings.aerostat.meta.isBuilt;
         public AdminBRO.DailyLogin info { get; private set; }
 
         public override async Task Get()
