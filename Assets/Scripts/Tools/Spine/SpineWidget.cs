@@ -199,10 +199,10 @@ namespace Overlewd
             return sw;
         }
 
-        public static SpineWidget GetInstance(AdminBRO.Animation animationData, Transform parent)
+        public static SpineWidget GetInstance(AdminBRO.Animation animationData, Transform parent, bool loop = true)
         {
             var layerFirst = animationData?.layouts?.First();
-            return GetInstance(layerFirst, parent, true);
+            return GetInstance(layerFirst, parent, loop);
         }
     }
 }

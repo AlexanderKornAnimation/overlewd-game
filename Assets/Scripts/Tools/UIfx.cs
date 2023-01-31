@@ -30,7 +30,7 @@ namespace Overlewd
 
         public static SpineWidget InstDisposable(string animDataTitle, Transform parent, Vector2 offset = default(Vector2))
         {
-            var vfx = SpineWidget.GetInstance(GameData.animations[animDataTitle], parent);
+            var vfx = SpineWidget.GetInstance(GameData.animations[animDataTitle], parent, false);
             vfx.destroyAfterComplete = true;
             vfx.raycastTarget = false;
             vfx.transform.localPosition += (Vector3)offset;
