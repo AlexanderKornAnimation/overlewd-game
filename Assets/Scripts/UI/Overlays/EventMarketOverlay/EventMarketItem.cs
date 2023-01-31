@@ -103,16 +103,10 @@ namespace Overlewd
                     if (!currencyData.isTypeNutaku)
                     {
                         await GameData.markets.Payment(marketId, tradableId);
-                        UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
                     {
-                        UIManager.MakeNotification<BannerNotification>().
-                            SetData(new BannerNotificationInData
-                            {
-                                marketId = marketId,
-                                tradableId = tradableId
-                            }).DoShow();
+                        
                     }
                 }
             }
@@ -128,16 +122,10 @@ namespace Overlewd
                     if (!currencyData.isTypeNutaku)
                     {
                         await GameData.markets.Payment(marketId, tradableId);
-                        UIManager.ShowNotification<BuyingNotification>();
                     }
                     else
                     {
-                        UIManager.MakeNotification<BannerNotification>().
-                            SetData(new BannerNotificationInData
-                            {
-                                marketId = marketId,
-                                tradableId = tradableId
-                            }).DoShow();
+                        
                     }
                 }
             }

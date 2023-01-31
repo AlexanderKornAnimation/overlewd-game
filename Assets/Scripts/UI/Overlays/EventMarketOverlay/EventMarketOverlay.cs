@@ -101,12 +101,7 @@ namespace Overlewd
                 {
                     if (tData.canBuy)
                     {
-                        UIManager.MakeNotification<BannerNotification>().
-                            SetData(new BannerNotificationInData
-                            {
-                                marketId = _marketData.id,
-                                tradableId = tData.id
-                            }).DoShow();
+                        
                     }
                 }
             }
