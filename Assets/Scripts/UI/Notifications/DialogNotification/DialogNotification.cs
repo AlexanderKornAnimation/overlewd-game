@@ -10,7 +10,6 @@ namespace Overlewd
 {
     public class DialogNotification : BaseNotificationParent<DialogNotificationInData>
     {
-        private Button button;
         private TextMeshProUGUI text;
         private Transform emotionBack;
         private Transform emotionPos;
@@ -22,21 +21,10 @@ namespace Overlewd
             var screenInst = ResourceManager.InstantiateScreenPrefab("Prefabs/UI/Notifications/DialogNotification/DialogNotification", transform);
 
             var canvas = screenInst.transform.Find("Canvas");
- 
-            button = canvas.Find("Button").GetComponent<Button>();
-            button.onClick.AddListener(ButtonClick);
-            button.gameObject.SetActive(false);
-
             var banner = canvas.Find("Banner");
             text = banner.Find("Text").GetComponent<TextMeshProUGUI>();
             emotionBack = banner.Find("EmotionBack");
             emotionPos = emotionBack.Find("EmotionPos");
-        }
-
-        protected virtual void ButtonClick()
-        {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            UIManager.HideNotification();
         }
 
         public override async Task BeforeShowAsync()
@@ -57,6 +45,7 @@ namespace Overlewd
 
         public override async Task BeforeHideAsync()
         {
+            replicaSound?.Stop();
             StopCoroutine("CloseByTimerOrReplica");
 
             await Task.CompletedTask;
@@ -65,10 +54,8 @@ namespace Overlewd
         public override async Task AfterShowAsync()
         {
             missclick.enabledClick = false;
-            if (replicaSound == null)
-            {
-                StartCoroutine(EnableMissclickByTimer());
-            }
+
+            StartCoroutine(EnableMissclickByTimer());
             StartCoroutine(CloseByTimerOrReplica());
 
             await Task.CompletedTask;
