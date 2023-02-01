@@ -131,11 +131,6 @@ namespace Overlewd
                 slotEmptyHint.SetActive(true);
                 slotFull.SetActive(false);
             }
-
-            protected void ButtonClick()
-            {
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            }
         }
     }
 }

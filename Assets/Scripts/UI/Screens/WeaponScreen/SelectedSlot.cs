@@ -21,7 +21,7 @@ namespace Overlewd
 
             private async void EquipButtonClick()
             {
-                ButtonClick();
+                SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Equip_ON);
                 await GameData.equipment.Equip(chId.Value, equipId.Value);
             }
         }

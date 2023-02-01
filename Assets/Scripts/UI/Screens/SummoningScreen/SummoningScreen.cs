@@ -36,6 +36,7 @@ namespace Overlewd
 
         public override async Task AfterShowAsync()
         {
+            SoundManager.GetEventInstance(FMODEventPath.SFX_UI_Portal_Portal_Animation);
             portalFullScreenAnim.Play();
             await UniTask.WaitUntil(() => portalFullScreenAnim.isComplete);
             Destroy(portalFullScreenAnim.gameObject);
