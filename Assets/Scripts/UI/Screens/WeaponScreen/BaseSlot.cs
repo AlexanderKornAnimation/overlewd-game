@@ -15,7 +15,19 @@ namespace Overlewd
             protected Image icon;
             protected GameObject slotEmptyHint;
             protected TextMeshProUGUI equipName;
-            
+
+            protected GameObject speedBack;
+            protected TextMeshProUGUI speedStat;
+
+            protected GameObject powerBack;
+            protected TextMeshProUGUI powerStat;
+
+            protected GameObject constitutionBack;
+            protected TextMeshProUGUI constitutionStat;
+
+            protected GameObject agilityBack;
+            protected TextMeshProUGUI agilityStat;
+
             protected GameObject accuracyBack;
             protected TextMeshProUGUI accuracyStat;
             
@@ -43,6 +55,19 @@ namespace Overlewd
                 icon = slotFull.transform.Find("WeaponIcon").GetComponent<Image>();
 
                 var stats = slotFull.transform.Find("Stats");
+
+                speedBack = stats.Find("Speed").gameObject;
+                speedStat = speedBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                
+                powerBack = stats.Find("Power").gameObject;
+                powerStat = powerBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                
+                constitutionBack = stats.Find("Constitution").gameObject;
+                constitutionStat = constitutionBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                
+                agilityBack = stats.Find("Agility").gameObject;
+                agilityStat = agilityBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
+                
                 accuracyBack = stats.Find("Accuracy").gameObject;
                 accuracyStat = accuracyBack.transform.Find("Stat").GetComponent<TextMeshProUGUI>();
                 
@@ -65,6 +90,19 @@ namespace Overlewd
                 {
                     icon.sprite = ResourceManager.LoadSprite(equipData.icon);
                     equipName.text = equipData.name;
+
+                    speedStat.text = equipData.speed.ToString();
+                    speedBack.SetActive(equipData.speed > 0.0f);
+                    
+                    powerStat.text = equipData.power.ToString();
+                    powerBack.SetActive(equipData.power > 0.0f);
+                    
+                    constitutionStat.text = equipData.constitution.ToString();
+                    constitutionBack.SetActive(equipData.constitution > 0.0f);
+                    
+                    agilityStat.text = equipData.agility.ToString();
+                    agilityBack.SetActive(equipData.agility > 0.0f);
+                    
                     accuracyStat.text = (equipData.accuracy * 100).ToString();
                     accuracyBack.SetActive(equipData.accuracy > 0.0f);
                     

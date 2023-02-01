@@ -195,6 +195,10 @@ namespace Overlewd
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_4):
                     UITools.DisableButton(sidebarButton);
                     marketButton?.DisableButton();
+                    if (GameData.buildings.castle.meta.isBuilt)
+                    {
+                        municipalityButton?.DisableButton();
+                    }
                     break;
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_1):
                     UITools.DisableButton(sidebarButton);
@@ -251,7 +255,19 @@ namespace Overlewd
                         municipalityButton?.DisableButton();
                     }
                     break;
-
+                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                    if (!GameData.buildings.aerostat.meta.isBuilt)
+                    {
+                        UITools.DisableButton(sidebarButton);
+                        portalButton?.DisableButton();
+                        castleButton?.DisableButton();
+                        marketButton?.DisableButton();
+                        haremButton?.DisableButton();
+                        laboratoryButton?.DisableButton();
+                        magicGuildButton?.DisableButton();
+                        forgeButton?.DisableButton();
+                    }
+                    break;
             }
 
             var building = GetBuildingByKey(inputData?.buildedBuildingKey);
@@ -309,21 +325,7 @@ namespace Overlewd
                         GameData.ftue.chapter3.ShowNotifByKey("ch3guildtutor2");
                     }
                     break;
-                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
-                    if (!GameData.buildings.aerostat.meta.isBuilt)
-                    {
-                        UITools.DisableButton(sidebarButton);
-                        portalButton?.DisableButton();
-                        castleButton?.DisableButton();
-                        marketButton?.DisableButton();
-                        haremButton?.DisableButton();
-                        laboratoryButton?.DisableButton();
-                        magicGuildButton?.DisableButton();
-                        forgeButton?.DisableButton();
-                    }
-                    break;
                 default:
-                  
                     break;
             }
 
