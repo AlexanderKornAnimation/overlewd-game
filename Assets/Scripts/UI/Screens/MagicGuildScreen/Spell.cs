@@ -52,7 +52,7 @@ namespace Overlewd
 
             private void PlayAnimation()
             {
-                UIfx.Inst(UIfx.UIFX_OVERLORD_SPELLS, transform);
+                UIfx.InstDisposable(UIfx.UIFX_OVERLORD_SPELLS, transform);
             }
 
             public void OnLvlUp()

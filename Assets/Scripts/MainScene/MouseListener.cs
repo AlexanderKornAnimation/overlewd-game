@@ -23,9 +23,9 @@ namespace Overlewd
                 Vector2  mousePosGlobal = Input.mousePosition;
                 var vfxOffset = mousePosGlobal - rootCenterGlobal;
 #if UNITY_ANDROID && !UNITY_EDITOR
-                UIfx.InstLocal(UIfx.LOCAL_UIFX_SCREEN_TAP, UIManager.systemNotifRoot, vfxOffset);
+                UIfx.InstLocalDisposable(UIfx.LOCAL_UIFX_SCREEN_TAP, UIManager.systemNotifRoot, vfxOffset);
 #else
-                UIfx.InstLocal(UIfx.LOCAL_UIFX_SCREEN_TAP_PC, UIManager.systemNotifRoot, vfxOffset);
+                UIfx.InstLocalDisposable(UIfx.LOCAL_UIFX_SCREEN_TAP_PC, UIManager.systemNotifRoot, vfxOffset);
 #endif
             }
             else if (!Input.GetMouseButton(0) && mousePressed)

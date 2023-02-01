@@ -147,7 +147,7 @@ namespace Overlewd
             {
                 battleScale = bossBattleScale;
             }
-            health = (float)character.health;
+            health = Mathf.Round((float)character.health);
             healthMax = health;
             mana = (float)character.mana;
             manaMax = mana;

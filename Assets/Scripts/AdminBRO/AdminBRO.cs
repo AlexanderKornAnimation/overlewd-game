@@ -430,6 +430,7 @@ namespace Overlewd
             public int? matriarchShardId;
             public string rarity;
             public int? ingredientId;
+            public int? collectableId;
 
             public const string Type_Default = "default";
             public const string Type_Currency = "currency";
@@ -440,6 +441,7 @@ namespace Overlewd
             public const string Type_MatriarchShard = "matriarch_shard";
             public const string Type_ManaPotion = "mana_potion";
             public const string Type_HpPotion = "hp_potion";
+            public const string Type_Collectable = "collectable";
 
             public class TradablePack
             {
@@ -784,6 +786,7 @@ namespace Overlewd
             public string status;
             public int progressCount;
             public string type;
+            public string questDifficulty;
             public int? eventId;
             public int? ftueChapterId;
             public string ftueQuestType;
@@ -799,6 +802,9 @@ namespace Overlewd
 
             public const string Type_Ftue = "ftue";
             public const string Type_Event = "event";
+
+            public const string Difficulty_Easy = "easy";
+            public const string Difficulty_Hard = "hard";
 
             public const string QuestType_Main = "main";
             public const string QuestType_Side = "side";
@@ -1469,16 +1475,9 @@ namespace Overlewd
             public float health;
             public float damage;
             public float mana;
-            public float speedBoost;
-            public float powerBoost;
-            public float constitutionBoost;
-            public float agilityBoost;
-            public float accuracyBoost;
-            public float dodgeBoost;
-            public float critrateBoost;
-            public float healthBoost;
-            public float damageBoost;
-            public float manaBoost;
+            public float basicToAdvancedBoost;
+            public float advancedToEpicBoost;
+            public float epicToHeroicBoost;
 
             public string GetIconByRarity(string rarity) => rarity switch
             {
@@ -2173,7 +2172,7 @@ namespace Overlewd
 
             public const string Key_Ulvi = "Ulvi";
             public const string Key_Adriel = "Adriel";
-            public const string Key_Ingie = "Ingie";
+            public const string Key_Inge = "Inge";
             public const string Key_Faye = "Faye";
             public const string Key_Lili = "Lili";
 
@@ -2195,7 +2194,7 @@ namespace Overlewd
             public bool isAdriel => name == Key_Adriel;
 
             [JsonProperty(Required = Required.Default)]
-            public bool isIngie => name == Key_Ingie;
+            public bool isIngie => name == Key_Inge;
 
             [JsonProperty(Required = Required.Default)]
             public bool isFaye => name == Key_Faye;
@@ -2208,9 +2207,9 @@ namespace Overlewd
                 name switch
                 {
                     Key_Ulvi => true,
-                    Key_Adriel => GameData.ftue.chapter1_dialogue3.isComplete,
-                    Key_Ingie => GameData.ftue.chapter2_dialogue4.isComplete,
-                    Key_Faye => false,
+                    Key_Adriel => GameData.ftue.chapter2_battle5.isComplete,
+                    Key_Inge => GameData.ftue.chapter3_dialogue3.isComplete,
+                    Key_Faye => GameData.ftue.chapter4_dialogue3.isComplete,
                     Key_Lili => false,
                     _ => false
                 };
@@ -2399,6 +2398,66 @@ namespace Overlewd
         {
             public string callbackUrl;
             public string completeUrl;
+        }
+
+        // daily login
+        // /daily-login
+        // /daily-login/{dayName}/collect
+        public static async Task<HttpCoreResponse<DailyLogin>> dailyLoginAsync() =>
+            await HttpCore.GetAsync<DailyLogin>(make_url("daily-login"));
+        public static async Task<HttpCoreResponse> dailyLoginCollectAsync(string dayName) =>
+            await HttpCore.PostAsync<HttpCoreResponse>(make_url($"daily-login/{dayName}/collect"));
+
+        [Serializable]
+        public class DailyLogin
+        {
+            public string bannerDescription;
+            public string bannerArt;
+            public string smallBannerForEventbook;
+            public string image;
+            public List<Day> days;
+            public bool isViewedToday;
+
+            public class Day
+            {
+                public string dayName;
+                public bool isLoggedIn;
+                public bool isCollected;
+                public bool isCanCollect;
+                public List<RewardItem> rewards;
+
+                public const string DayName_Day1 = "day1";
+                public const string DayName_Day2 = "day2";
+                public const string DayName_Day3 = "day3";
+                public const string DayName_Day4 = "day4";
+                public const string DayName_Day5 = "day5";
+                public const string DayName_Day6 = "day6";
+                public const string DayName_Day7 = "day7";
+            }
+
+            public Day GetDayByName(string dayName) =>
+                days?.Find(d => d.dayName == dayName);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day1 => GetDayByName(Day.DayName_Day1);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day2 => GetDayByName(Day.DayName_Day2);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day3 => GetDayByName(Day.DayName_Day3);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day4 => GetDayByName(Day.DayName_Day4);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day5 => GetDayByName(Day.DayName_Day5);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day6 => GetDayByName(Day.DayName_Day6);
+
+            [JsonProperty(Required = Required.Default)]
+            public Day day7 => GetDayByName(Day.DayName_Day7);
         }
     }
 }

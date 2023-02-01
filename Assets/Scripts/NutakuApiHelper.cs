@@ -69,6 +69,8 @@ namespace Overlewd
             public string message;
 
             public bool isValid => payment != null;
+            public bool isSucceess =>
+                webViewResult.kind == WebViewEventKind.Succeeded;
             public string rawResultMsg => 
                 $"Http Status Code: {rawResult.statusCode}\n" +
                 $"Http Status Message: {Encoding.UTF8.GetString(rawResult.body)}";
@@ -141,11 +143,6 @@ namespace Overlewd
                         switch (resultPayment.webViewResult.kind)
                         {
                             case WebViewEventKind.Succeeded:
-                                await GameData.player.Get();
-                                UIManager.ThrowGameDataEvent(new GameDataEvent
-                                {
-                                    id = GameDataEventId.NutakuPayment
-                                });
                                 return resultPayment;
                             case WebViewEventKind.Failed:
                                 resultPayment.message = "Web View Failed";

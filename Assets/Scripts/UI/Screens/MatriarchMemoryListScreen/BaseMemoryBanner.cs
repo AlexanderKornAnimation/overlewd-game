@@ -57,7 +57,7 @@ namespace Overlewd
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerUlvi"),
                     AdminBRO.MatriarchItem.Key_Adriel => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerAdriel"),
-                    AdminBRO.MatriarchItem.Key_Ingie => ResourceManager.InstantiateAsset<Sprite>(
+                    AdminBRO.MatriarchItem.Key_Inge => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerIngie"),
                     AdminBRO.MatriarchItem.Key_Faye => ResourceManager.InstantiateAsset<Sprite>(
                         "Prefabs/UI/Screens/MatriarchMemoryListScreen/Images/LockedMemoryBannerFaye"),

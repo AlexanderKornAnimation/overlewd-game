@@ -10,7 +10,7 @@ namespace Overlewd
         public float dodge { get; private set; } = 0f;
         public float effectProb { get; private set; } = 0f;
 
-        public float scaler_big = 0.125f, scaler_small = 0.06f;
+        public float scaler_big = 0.02f, scaler_small = 0.04f;
         public float defaultStat = 0f;
 
         public void SetupPSR(BattleManagerInData.BattleFlow flow, bool isEnemy)

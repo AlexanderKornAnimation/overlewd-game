@@ -23,8 +23,8 @@ namespace Overlewd
         [HideInInspector] public List<CharController> enemyAllyList;
         [HideInInspector] public List<QueuePortraitController> QueueElements = null;
         [SerializeField] private float portraitScale = 1.5f;
-        [HideInInspector] [Tooltip("selected as current turn")] public CharController ccOnSelect;
-        [HideInInspector] [Tooltip("selected as target")] public CharController ccTarget = null;
+        [HideInInspector][Tooltip("selected as current turn")] public CharController ccOnSelect;
+        [HideInInspector][Tooltip("selected as target")] public CharController ccTarget = null;
         [SerializeField] private Image background;
         public Animator ani, charAni;
 
@@ -33,9 +33,11 @@ namespace Overlewd
         public BattleLog log => GetComponent<BattleLog>();
         public BattleGameData res => GetComponent<BattleGameData>();
         bool bossLevel => battleData.isTypeBoss;
+        bool isCatEvent = false;
         private List<AdminBRO.Character> playerTeam => battleScene.GetBattleData().myTeam;
         private List<AdminBRO.Character> enemyTeam;
-
+        private List<AdminBRO.Character> enemyTeamBossEncounter;
+        private BossEncounterPopup bePopup;
         private Transform BattleCanvas => transform.Find("BattleCanvas");
         public GameObject portraitPrefab; //attach to BM in inspector; "content" is ui spawn point
         public Transform QueueUI;
@@ -52,7 +54,7 @@ namespace Overlewd
         private SkillController[] skillControllers = new SkillController[3];
         private SkillController[] passiveControllers = new SkillController[2];
         private SkillController potion_mp, potion_hp;
-        private RectTransform skillPanelWidthScale;
+
         private int skillOnSelect = -1; //-1 unselect
         private int charOnSelect = -1; // 0 - allay 1 - enemy
 
@@ -67,7 +69,6 @@ namespace Overlewd
         public RoundEnd roundEnd;
         [SerializeField] private Color redColor;
         private Transform aniDropPoint;
-        [SerializeField] private GameObject aniRound, aniBoss, aniWave;
 
         //statistic, trackers, notif flags
         private bool castAOEForNotify = false;
@@ -87,9 +88,15 @@ namespace Overlewd
 
         private void Start()
         {
+            //bossLevel = battleData.isTypeBoss;
+            //isCatEvent = battleScene.GetBattleData().bossMiniGame != null;
+
             battleScene = FindObjectOfType<BaseBattleScreen>();
+            //log = GetComponent<BattleLog>();
+            //res = GetComponent<BattleGameData>();
 
             enemyTeam = battleScene.GetBattleData().enemyWaves[wave].enemyTeam; //wave 0
+            enemyTeamBossEncounter = isCatEvent ? battleScene.GetBattleData().enemyWaves.Last().enemyTeam : null;
             maxWave = battleScene.GetBattleData().enemyWaves.Count - 1;
             Debug.Log($"Battle ID: {battleData.id}");
 
@@ -103,8 +110,6 @@ namespace Overlewd
             if (EnemyStats == null) EnemyStats = transform.Find("BattleUICanvas/Character/EnemyStats")?.GetComponent<CharacterPortrait>();
             if (background == null) background = transform.Find("BattleCanvas/Background").GetComponent<Image>();
             if (bossLevel) background.sprite = res.backgrounds[3];
-
-            //if (bossLevel) QueueUI.gameObject.SetActive(false);
             if (portraitPrefab == null) portraitPrefab = Resources.Load("Battle/Prefabs/Battle/Portrait") as GameObject;
 
             bPosPlayer = transform.Find("BattleCanvas/BattleLayer/battlePos1");
@@ -118,7 +123,6 @@ namespace Overlewd
                 skillControllers[x] = transform.Find($"BattleUICanvas/Character/Buttons/Skills/Button_{x}").GetComponent<SkillController>();
                 skillControllers[x].OnClickAction.AddListener(delegate { ButtonPress(x); });
             }
-            skillPanelWidthScale = transform.Find("BattleUICanvas/Character/Buttons/Skills/").GetComponent<RectTransform>();
             passiveControllers[0] = transform.Find("BattleUICanvas/Character/Buttons/Skills/Button_0/Passives/Button_0").GetComponent<SkillController>();
             passiveControllers[1] = transform.Find("BattleUICanvas/Character/Buttons/Skills/Button_0/Passives/Button_1").GetComponent<SkillController>();
             if (potion_mp == null) potion_mp = transform.Find("BattleUICanvas/Character/Buttons/Bottles/Potion_mp").GetComponent<SkillController>();
@@ -155,12 +159,12 @@ namespace Overlewd
         IEnumerator ShowStartAnimation()
         {
             yield return new WaitForSeconds(.7f);
-            if (bossLevel && aniBoss)
-                Instantiate(aniBoss, aniDropPoint);
-            else if (aniWave)
-                Instantiate(aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp("Wave 1");
-            else if (aniRound)
-                Instantiate(aniRound, aniDropPoint).GetComponent<AnimationController>().SetUp("Round 1");
+            if (bossLevel && res.aniBoss)
+                Instantiate(res.aniBoss, aniDropPoint);
+            else if (res.aniWave)
+                Instantiate(res.aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp("Wave 1");
+            else if (res.aniRound)
+                Instantiate(res.aniRound, aniDropPoint).GetComponent<AnimationController>().SetUp("Round 1");
         }
         IEnumerator PreBattlePause()
         {
@@ -227,7 +231,7 @@ namespace Overlewd
             }
         }
 
-        IEnumerator NextWave()
+        public IEnumerator NextWave()
         {
             roundEnd?.Invoke();
             yield return new WaitForSeconds(3.5f);
@@ -256,8 +260,8 @@ namespace Overlewd
             ccOnSelect = charControllerList[step];
             battleState = BattleState.ANIMATION;
             ccOnSelect.UpadeteDot();
-            if (aniWave)
-                Instantiate(aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp($"Wave {wave + 1}");
+            if (res.aniWave)
+                Instantiate(res.aniWave, aniDropPoint).GetComponent<AnimationController>().SetUp($"Wave {wave + 1}");
         }
         private void CreatePortraitQueue()
         {
@@ -411,7 +415,7 @@ namespace Overlewd
                     ccTarget.Defence(ccOnSelect, id, aoe: HEAL);
                 }
                 charAni.SetTrigger("fadeOut");
-                ccOnSelect.skillCD[ccOnSelect.skill[id]] = Mathf.RoundToInt(ccOnSelect.skill[id].effectCooldownDuration);
+                ccOnSelect.skillCD[ccOnSelect.skill[id]] = Mathf.RoundToInt(ccOnSelect.skill[id].effectCooldownDuration) + 1;
                 battleState = BattleState.ANIMATION;
             }
         }
@@ -445,7 +449,6 @@ namespace Overlewd
                 {
                     //still choose target to heal if conditions of the target or a cooldown is fail
                     ccTarget = enemyAllyList[Random.Range(0, enemyAllyList.Count)];
-                    //canHit = false; //for clarity
                 }
             }
             else
@@ -462,25 +465,21 @@ namespace Overlewd
             yield return new WaitForSeconds(enemyDelay);
             if (!ccOnSelect.isDead)
             {
-                //int id = (ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0) ? Random.Range(0, ccOnSelect.skill.Count) : 0;
+                /*int id = (ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0) ? Random.Range(0, ccOnSelect.skill.Count) : 0;
                 var availableSkillsId = new List<int>();
-                //if cool down of skill == 0 we add them to the skill id list for randomise our attack
+                if cool down of skill == 0 we add them to the skill id list for randomise our attack
                 foreach (var item in ccOnSelect.skill)
                     if (ccOnSelect.skillCD[item] == 0)
-                        availableSkillsId.Add(ccOnSelect.skill.IndexOf(item));
-                Debug.Log($"availableSkillsId count: {availableSkillsId.Count}");
-                //if all skill on the CD we choose 1st skill as default to awoid crash report
-                int id = availableSkillsId.Count > 0 ? availableSkillsId[Random.Range(0, availableSkillsId.Count)] : 0;
-
+                        availableSkillsId.Add(ccOnSelect.skill.IndexOf(item)); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if all skill on the CD we choose 1st skill as default to awoid crash report
+                int id = availableSkillsId.Count > 0 ? availableSkillsId[Random.Range(0, availableSkillsId.Count)] : 0;*/
+                bool checkCD = ccOnSelect.skillCD[ccOnSelect.skill[1]] == 0;
+                bool silent = ccOnSelect.silence > 0;
+                int id = checkCD && !silent ? 1 : 0;
                 bool aoe = ccOnSelect.skill[id].AOE;
                 bool heal = ccOnSelect.skill[id].actionType == "heal";
-
-                if (!EnemyBrain(aoe, heal))
-                {
-                    if (availableSkillsId.Count > 0)
-                    {
-
-                    }
+                EnemyBrain(aoe, heal);
+                /*{
                     id = (id == 0) ? 1 : 0; //swap skill
                     if (ccOnSelect.skillCD[ccOnSelect.skill[id]] == 0) //check if the second skill is on a cooldown
                     {
@@ -488,10 +487,9 @@ namespace Overlewd
                         heal = ccOnSelect.skill[id].actionType == "heal";
                         EnemyBrain(aoe, heal);
                     }
-                }
+                }*/
                 ccTarget?.Highlight();
                 //ccTarget?.CharPortraitSet();
-                Debug.Log($"use skill {id} - {ccOnSelect.skill[id].name}");
                 yield return new WaitForSeconds(0.5f);
                 AttackAction(id, isEnemyAttack: true);
             }
@@ -572,10 +570,22 @@ namespace Overlewd
                 }
                 else
                 {
-                    battleState = BattleState.NEXTWAVE;
-                    wave++;
-                    StartCoroutine(NextWave());
-                    BattleNotif("chapter1", "battle1", "battletutor3");
+                    if (isCatEvent && wave >= maxWave - 1)
+                    {
+                        battleState = BattleState.NEXTWAVE;
+                        wave++;
+                        bePopup = Instantiate(res.encounterPopup).GetComponent<BossEncounterPopup>();
+                        bePopup.bm = this;
+                        //show cat event popup. wait for player action. active StartCoroutine(NextWave());
+                        return;
+                    }
+                    else
+                    {
+                        battleState = BattleState.NEXTWAVE;
+                        wave++;
+                        StartCoroutine(NextWave());
+                        BattleNotif("chapter1", "battle1", "battletutor3");
+                    }
                 }
             }
             if (charNum == charIsDead)
@@ -629,8 +639,8 @@ namespace Overlewd
                 roundTMP.text = $"Round {round}";
                 log.Add($"Round {round}");
                 step = 0;
-                if (aniRound)
-                    Instantiate(aniRound, aniDropPoint).GetComponent<AnimationController>().SetUp($"Round {round}");
+                if (res.aniRound)
+                    Instantiate(res.aniRound, aniDropPoint).GetComponent<AnimationController>().SetUp($"Round {round}");
             }
             if (castAOEForNotify == true)
             {

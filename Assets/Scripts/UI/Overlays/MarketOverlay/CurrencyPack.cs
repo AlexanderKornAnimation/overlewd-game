@@ -87,16 +87,28 @@ namespace Overlewd
                 var trData = tradableData;
                 if (trData.nutakuPriceValid)
                 {
-                    var payment = await NutakuApiHelper.PaymentAsync(this, trData);
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                    var payment = await GameData.markets.NutakuPayment(this, trData);
+                    if (payment.isSucceess)
+                    {
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Success);
+                    }
+                    else
+                    {
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Fail);
+                    }
                 }
                 else
                 {
                     if (trData.canBuy)
                     {
-                        var result = await GameData.markets.BuyTradable(GameData.markets.mainMarket.id, tradableId);
+                        SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                        var result = await GameData.markets.Payment(GameData.markets.mainMarket.id, tradableId);
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Success);
                     }
                     else
                     {
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Fail);
                         packOffer.offerButton.marketOverlay.ToCrystalOffersTab();
                     }
                 }

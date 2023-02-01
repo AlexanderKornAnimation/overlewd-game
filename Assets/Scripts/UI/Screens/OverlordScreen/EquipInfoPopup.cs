@@ -266,9 +266,13 @@ namespace Overlewd
 
                 if (overlordData.id.HasValue && selectedEquipId.HasValue)
                 {
-                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                    SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Equip_ON);
                     await GameData.equipment.Equip(overlordData.id.Value, selectedEquipId.Value);
                     OnEquip?.Invoke(equipId, selectedEquipId.Value);
+                }
+                else
+                {
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                 }
                 
                 Destroy(gameObject);

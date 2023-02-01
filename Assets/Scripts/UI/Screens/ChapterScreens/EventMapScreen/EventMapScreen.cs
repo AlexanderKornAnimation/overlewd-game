@@ -19,6 +19,7 @@ namespace Overlewd
         private TextMeshProUGUI timer;
 
         private Button sidebarButton;
+        private Button castleButton;
 
         private BuffWidget buffPanel;
         private Button chapterSelectorButton;
@@ -46,12 +47,17 @@ namespace Overlewd
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
+            castleButton = canvas.Find("CastleButton").GetComponent<Button>();
+            castleButton.onClick.AddListener(CastleButtonClick);
+            castleButton.GetComponent<Image>().alphaHitTestMinimumThreshold = 1f;
 
             chapterSelectorButton = canvas.Find("ChapterSelectorButton").GetComponent<Button>();
             chapterSelectorButton.onClick.AddListener(ChapterSelectorButtonClick);
             chapterSelectorButtonName = chapterSelectorButton.transform.Find("ChapterName").GetComponent<TextMeshProUGUI>();
             chapterSelectroMarkers = chapterSelectorButton.transform.Find("Markers").GetComponent<TextMeshProUGUI>();
         }
+
+     
 
         public override async Task BeforeShowMakeAsync()
         {
@@ -213,6 +219,12 @@ namespace Overlewd
                     eventId = GameData.events.mapEventData.id,
                     marketId = GameData.events.mapEventData?.activeChapter?.markets.FirstOrDefault()?.marketId,
                 }).DoShow();
+        }
+        
+        private void CastleButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<CastleScreen>();
         }
         
         private void ChapterSelectorButtonClick()
