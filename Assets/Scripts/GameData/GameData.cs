@@ -1242,6 +1242,9 @@ namespace Overlewd
         public override async Task Get()
         {
             passes = await AdminBRO.battlePassesAsync();
+            await GameData.player.Get();
+            await GameData.equipment.Get();
+            await GameData.matriarchs.Get();
         }
 
         public AdminBRO.BattlePass GetByEventId(int? eventId) =>

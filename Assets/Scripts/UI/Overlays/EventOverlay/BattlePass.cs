@@ -129,9 +129,17 @@ namespace Overlewd
                 }
             }
 
-            private void UpgradeButtonClick()
+            
+            
+            private async void UpgradeButtonClick()
             {
+                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
 
+                if (passData != null && !passData.isPremium && GameData.player.CanBuy(passData.premiumPrice))
+                {
+                    await GameData.battlePass.BuyPremium(passData.id);
+                    Refresh();
+                }
             }
 
             public static BattlePass GetInstance(Transform parent)
