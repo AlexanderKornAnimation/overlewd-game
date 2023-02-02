@@ -40,6 +40,8 @@ namespace Overlewd
         private Button manaMinusButton;
         private TextMeshProUGUI manaCount;
 
+        private TextMeshProUGUI timer;
+
         private int _staminaCount => int.Parse(staminaCount.text);
         private int _scrollCount => int.Parse(scrollCount.text);
         private int _healthCount => int.Parse(healthCount.text);
@@ -65,10 +67,10 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
             var staminaCounter = canvas.Find("StaminaCounter");
-            var stamina = canvas.Find("Stamina");
-            var scroll = canvas.Find("Scroll");
-            var health = canvas.Find("Health");
-            var mana = canvas.Find("Mana");
+            var stamina = canvas.Find("Background/Grid/Stamina");
+            var scroll = canvas.Find("Background/Grid/Scroll");
+            var health = canvas.Find("Background/Grid/Health");
+            var mana = canvas.Find("Background/Grid/Mana");
 
             closeButton = canvas.Find("CloseButton").GetComponent<Button>();
             closeButton.onClick.AddListener(CloseButtonClick);
@@ -114,6 +116,8 @@ namespace Overlewd
 
             staminaAmount = staminaCounter.Find("Stamina/Count").GetComponent<TextMeshProUGUI>();
             staminaBottleAmount = staminaCounter.Find("Bottle/Count").GetComponent<TextMeshProUGUI>();
+
+            timer = staminaCounter.Find("TimerBack/Timer").GetComponent<TextMeshProUGUI>();
         }
 
         public override async Task BeforeShowDataAsync()
