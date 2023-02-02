@@ -17,6 +17,7 @@ namespace Overlewd
         private TextMeshProUGUI staminaBottleAmount;
 
         private Button staminaBuyButton;
+        private TextMeshProUGUI staminaDescription;
         private TextMeshProUGUI staminaBuyButtonTitle;
         private Button staminaMinusButton;
         private Button staminaPlusButton;
@@ -39,6 +40,12 @@ namespace Overlewd
         private Button manaPlusButton;
         private Button manaMinusButton;
         private TextMeshProUGUI manaCount;
+
+        private GameObject timerBackground;
+        private TextMeshProUGUI timer;
+        
+        private Transform walletWidgetPos;
+        private WalletWidget walletWidget;
 
         private int _staminaCount => int.Parse(staminaCount.text);
         private int _scrollCount => int.Parse(scrollCount.text);
@@ -65,10 +72,10 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
             var staminaCounter = canvas.Find("StaminaCounter");
-            var stamina = canvas.Find("Stamina");
-            var scroll = canvas.Find("Scroll");
-            var health = canvas.Find("Health");
-            var mana = canvas.Find("Mana");
+            var stamina = canvas.Find("Background/Stamina");
+            var scroll = canvas.Find("Background/Scroll");
+            var health = canvas.Find("Background/Health");
+            var mana = canvas.Find("Background/Mana");
 
             closeButton = canvas.Find("CloseButton").GetComponent<Button>();
             closeButton.onClick.AddListener(CloseButtonClick);
@@ -79,6 +86,7 @@ namespace Overlewd
             staminaBuyButton = stamina.Find("BuyButton").GetComponent<Button>();
             staminaBuyButton.onClick.AddListener(StaminaBuyButtonClick);
             staminaBuyButtonTitle = staminaBuyButton.GetComponentInChildren<TextMeshProUGUI>();
+            staminaDescription = stamina.Find("Description").GetComponent<TextMeshProUGUI>();
             staminaPlusButton = stamina.Find("ButtonPlus").GetComponent<Button>();
             staminaPlusButton.onClick.AddListener(StaminaPlusButtonClick);
             staminaMinusButton = stamina.Find("ButtonMinus").GetComponent<Button>();
@@ -114,6 +122,11 @@ namespace Overlewd
 
             staminaAmount = staminaCounter.Find("Stamina/Count").GetComponent<TextMeshProUGUI>();
             staminaBottleAmount = staminaCounter.Find("Bottle/Count").GetComponent<TextMeshProUGUI>();
+
+            timerBackground = staminaCounter.Find("TimerBackground").gameObject;
+            timer = timerBackground.transform.Find("Timer").GetComponent<TextMeshProUGUI>();
+
+            walletWidgetPos = canvas.Find("WalletWidgetPos");
         }
 
         public override async Task BeforeShowDataAsync()
@@ -125,6 +138,9 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            staminaDescription.text = $"Replenish {TMPSprite.Energy} {GameData.potions.energyPerPotion}";
+            walletWidget = WalletWidget.GetInstance(walletWidgetPos);
+            
             staminaCount.text = 1.ToString();
             scrollCount.text = 1.ToString();
             healthCount.text = 1.ToString();
