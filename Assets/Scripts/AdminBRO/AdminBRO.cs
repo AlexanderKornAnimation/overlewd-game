@@ -892,19 +892,43 @@ namespace Overlewd
         // /dialogs
         // /dialogs/{id}/start
         // /dialogs/{id}/end
+        // /dialogs/character
+        // /dialogs/character/skin
         public static async Task<HttpCoreResponse<List<Dialog>>> dialogsAsync() =>
             await HttpCore.GetAsync<List<Dialog>>(make_url("dialogs"));
         public static async Task<HttpCoreResponse> dialogStartAsync(int id) =>
             await HttpCore.PostAsync(make_url($"dialogs/{id}/start"));
         public static async Task<HttpCoreResponse> dialogEndAsync(int id) =>
             await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"dialogs/{id}/end"));
+        public static async Task<HttpCoreResponse<List<DialogCharacter>>> dialogCharactersAsync() =>
+            await HttpCore.GetAsync<List<DialogCharacter>>(make_url("dialogs/character"));
+        public static async Task<HttpCoreResponse<List<DialogCharacterSkin>>> dialogCharacterSkinsAsync() =>
+            await HttpCore.GetAsync<List<DialogCharacterSkin>>(make_url("dialogs/character/skin"));
 
+        [Serializable]
+        public class DialogCharacter
+        {
+            public int id;
+            public string name;
+        }
+
+        [Serializable]
+        public class DialogCharacterSkin
+        {
+            public int id;
+            public string name;
+            public int? characterId;
+            public int? dialogAnimationId;
+            public string characterSkinImage;
+        }
 
         [Serializable]
         public class DialogReplica
         {
             public int id;
             public int sort;
+            public int? characterId;
+            public int? characterSkinId;
             public string characterName;
             public string characterSkin;
             public string characterPosition;

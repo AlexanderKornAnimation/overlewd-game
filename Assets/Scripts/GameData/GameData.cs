@@ -1085,10 +1085,14 @@ namespace Overlewd
     public class Dialogs : BaseGameMeta
     {
         public static List<AdminBRO.Dialog> dialogs { get; private set; } = new List<AdminBRO.Dialog>();
+        public static List<AdminBRO.DialogCharacter> characters { get; private set; } = new List<AdminBRO.DialogCharacter>();
+        public static List<AdminBRO.DialogCharacterSkin> skins { get; private set; } = new List<AdminBRO.DialogCharacterSkin>();
 
         public override async Task Get()
         {
             dialogs = await AdminBRO.dialogsAsync();
+            characters = await AdminBRO.dialogCharactersAsync();
+            skins = await AdminBRO.dialogCharacterSkinsAsync();
         }
 
         public AdminBRO.Dialog GetById(int? id) =>
