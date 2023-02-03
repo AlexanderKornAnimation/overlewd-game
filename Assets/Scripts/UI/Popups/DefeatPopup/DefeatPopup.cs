@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,9 @@ namespace Overlewd
         private Button haremButton;
         private Button editTeamButton;
         private Button repeatButton;
+        private TextMeshProUGUI repeatButtonTitle;
         private Button mapButton;
+        private TextMeshProUGUI staminaCounter;
 
         void Awake()
         {
@@ -37,6 +40,8 @@ namespace Overlewd
 
             repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
             repeatButton.onClick.AddListener(RepeatButtonClick);
+            repeatButtonTitle = repeatButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            staminaCounter = repeatButton.transform.Find("StaminaCounter/Stamina").GetComponent<TextMeshProUGUI>();
 
             mapButton = canvas.Find("MapButton").GetComponent<Button>();
             mapButton.onClick.AddListener(MapButtonClick);
@@ -44,6 +49,16 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            var energyCost = inputData.hasFTUEStage
+                ? GameData.ftue.mapChapter.battleEnergyPointsCost
+                : GameData.events.mapChapter.battleEnergyPointsCost;
+            
+            repeatButtonTitle.text = $"Do it again\nfor {TMPSprite.Energy} {energyCost}";
+            var pInfo = GameData.player.info;
+            var canReplay = pInfo.energyPointsAmount - energyCost >= GameData.potions.baseEnergyVolume;
+            UITools.DisableButton(repeatButton, !canReplay);
+            staminaCounter.text = pInfo.energyPointsAmount - energyCost + "/" + GameData.potions.baseEnergyVolume;
+            
             switch (inputData.ftueStageData?.lerningKey)
             {
                 case (FTUE.CHAPTER_1, FTUE.BATTLE_2):
