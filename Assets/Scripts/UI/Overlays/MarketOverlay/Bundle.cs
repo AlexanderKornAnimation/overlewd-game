@@ -86,7 +86,7 @@ namespace Overlewd
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
                     var payment = await GameData.markets.NutakuPayment(this, trData);
-                    if (payment.isSucceess)
+                    if (payment.isSuccess)
                     {
                         SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Success);
                     }

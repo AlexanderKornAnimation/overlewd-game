@@ -208,7 +208,7 @@ namespace Overlewd
             public List<WalletItem> wallet;
             public List<WalletItem> walletEvent;
             public Potion potion;
-            public int energyPoints;
+            public float energyPoints;
             public List<Device> devices;
 
             public class Potion
@@ -265,7 +265,7 @@ namespace Overlewd
             public int replayAmount => potion.replay;
 
             [JsonProperty(Required = Required.Default)]
-            public int energyPointsAmount => energyPoints;
+            public int energyPointsAmount => (int)energyPoints;
 
             [JsonProperty(Required = Required.Default)]
             public List<WalletItem> fullWallet =>
@@ -431,6 +431,7 @@ namespace Overlewd
             public string rarity;
             public int? ingredientId;
             public int? collectableId;
+            public int? battlePassId;
 
             public const string Type_Default = "default";
             public const string Type_Currency = "currency";
@@ -442,6 +443,7 @@ namespace Overlewd
             public const string Type_ManaPotion = "mana_potion";
             public const string Type_HpPotion = "hp_potion";
             public const string Type_Collectable = "collectable";
+            public const string Type_BattlePass = "battle_pass";
 
             public class TradablePack
             {
@@ -496,6 +498,10 @@ namespace Overlewd
         public class TradableBuyStatus
         {
             public bool status;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isSuccess => status;
+
         }
 
         // /resources
@@ -1391,8 +1397,6 @@ namespace Overlewd
         // /battles/pass/{id}/claim
         public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
             await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
-        public static async Task<HttpCoreResponse> battlePassBuyPremiumAsync(int battlePassId) =>
-            await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/buy-premium"));
         public static async Task<HttpCoreResponse> battlePassClaimAsync(int battlePassId) =>
             await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/claim"));
 
@@ -1403,7 +1407,6 @@ namespace Overlewd
             public int id;
             public int? eventId;
             public List<Level> levels;
-            public List<PriceItem> premiumPrice;
             public int currentPointsCount;
             public bool isPremium;
 
@@ -1415,6 +1418,10 @@ namespace Overlewd
                 public bool isDefaultRewardClaimed;
                 public bool isPremiumRewardClaimed;
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public TradableItem linkedTradableData =>
+                GameData.markets.tradables.Find(t => t.battlePassId == id);
         }
 
         // /characters/equipment
