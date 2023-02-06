@@ -920,6 +920,10 @@ namespace Overlewd
             public int? characterId;
             public int? dialogAnimationId;
             public string characterSkinImage;
+
+            [JsonProperty(Required = Required.Default)]
+            public DialogCharacter characterData =>
+                GameData.dialogs.GetCharacterById(characterId);
         }
 
         [Serializable]
@@ -950,26 +954,21 @@ namespace Overlewd
             public const string CharacterPosition_Right = "right";
             public const string CharacterPosition_Middle = "middle";
 
-            public const string CharacterName_Overlord = "Overlord";
-            public const string CharacterName_Ulvi = "Ulvi";
-            public const string CharacterName_Faye = "Faye";
-            public const string CharacterName_Adriel = "Adriel";
-            public const string CharacterName_Dragon = "Dragon";
-            public const string CharacterName_Inge = "Inge";
-            public const string CharacterName_Lili = "Lili";
-            public const string CharacterName_Pisha = "Pisha";
-            public const string CharacterName_Valkyrie = "Valkyrie";
+            [JsonProperty(Required = Required.Default)]
+            public bool isLeft =>
+                characterPosition == CharacterPosition_Left;
 
-            public const string CharacterSkin_Overlord = "Overlord";
-            public const string CharacterSkin_Ulvi = "Ulvi";
-            public const string CharacterSkin_UlviWolf = "UlviWolf";
-            public const string CharacterSkin_Adriel = "Adriel";
-            public const string CharacterSkin_Inge = "Inge";
-            public const string CharacterSkin_Dragon = "Dragon";
-            public const string CharacterSkin_Faye = "Faye";
-            public const string CharacterSkin_Lili = "Lili";
-            public const string CharacterSkin_Pisha = "Pisha";
-            public const string CharacterSkin_Valkyrie = "Valkyrie";
+            [JsonProperty(Required = Required.Default)]
+            public bool isRight =>
+                characterPosition == CharacterPosition_Right;
+
+            [JsonProperty(Required = Required.Default)]
+            public DialogCharacter characterData =>
+                GameData.dialogs.GetCharacterById(characterId);
+
+            [JsonProperty(Required = Required.Default)]
+            public DialogCharacterSkin skinData =>
+                GameData.dialogs.GetSkinById(characterSkinId);
         }
 
         [Serializable]

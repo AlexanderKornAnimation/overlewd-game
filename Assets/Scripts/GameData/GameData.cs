@@ -1097,6 +1097,10 @@ namespace Overlewd
 
         public AdminBRO.Dialog GetById(int? id) =>
             dialogs.Find(d => d.id == id);
+        public AdminBRO.DialogCharacter GetCharacterById(int? id) =>
+            characters.Find(ch => ch.id == id);
+        public AdminBRO.DialogCharacterSkin GetSkinById(int? id) =>
+            skins.Find(s => s.id == id);
 
         public async Task Start(int id)
         {
