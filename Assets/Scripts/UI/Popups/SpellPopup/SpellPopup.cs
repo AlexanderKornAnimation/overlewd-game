@@ -21,10 +21,9 @@ namespace Overlewd
         private TextMeshProUGUI spellName;
         private TextMeshProUGUI description;
 
-        private Button crystalBuildButton;
-        private TextMeshProUGUI crystalBuildButtonText;
-        
         private Button buildButton;
+        private TextMeshProUGUI buildButtonTitle;
+        
         private Button closeButton;
 
         private void Awake()
@@ -40,12 +39,9 @@ namespace Overlewd
             spellName = canvas.Find("SpellName").GetComponent<TextMeshProUGUI>();
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
-            crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
-            crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
-            crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            
             buildButton = canvas.Find("BuildButton").GetComponent<Button>();
-            buildButton.onClick.AddListener(BuildButtonClick);
+            buildButton.onClick.AddListener(CrystalBuildButtonClick);
+            buildButtonTitle = buildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             
             closeButton = canvas.Find("BackButton").GetComponent<Button>();
             closeButton.onClick.AddListener(CloseButtonClick);
@@ -85,7 +81,7 @@ namespace Overlewd
 
                 var crystalPrice = spellData.priceCrystal?.FirstOrDefault()?.amount;
                 var color = spellData.canCrystallvlUp ? "white" : "red";
-                crystalBuildButtonText.text = $"Summon building\nfor <color={color}>{crystalPrice}</color> crystals";
+                buildButtonTitle.text = $"Learn on your own\nfor <color={color}>{crystalPrice}</color> crystals";
             }
 
             spellImage.sprite = GetSpellImageByType(spellData?.type);
@@ -101,25 +97,6 @@ namespace Overlewd
                 {
                     SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
                     await GameData.buildings.magicGuild.SkillLvlUpCrystal(spellData.type);
-                    UIManager.HidePopup();
-                }
-                else
-                {
-                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                    UIManager.ShowPopup<DeclinePopup>();
-                }
-            }
-        }
-
-        private async void BuildButtonClick()
-        {
-            var spellData = inputData?.spellData;
-            if (spellData != null)
-            {
-                if (spellData.canlvlUp)
-                {
-                    SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-                    await GameData.buildings.magicGuild.SkillLvlUp(spellData.type);
                     UIManager.HidePopup();
                 }
                 else
