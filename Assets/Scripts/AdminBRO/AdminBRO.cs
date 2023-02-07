@@ -2428,6 +2428,14 @@ namespace Overlewd
         {
             public string callbackUrl;
             public string completeUrl;
+
+            public string proxyClientgameUrl;
+            public string proxyOsapiUrl;
+            public string clientgameUrl;
+            public string osapiUrl;
+            public string consumerKey;
+            public string consumerSecret;
+            public string appId;
         }
 
         // daily login
