@@ -58,7 +58,7 @@ namespace Overlewd
             dodge.text = $"{cc.dodge * 100}%";
             crit.text = $"{cc.critrate * 100}%";
             health.text = cc.healthMax.ToString();
-            damage.text = cc.damage.ToString();
+            damage.text = $" {cc.damage * cc.skill[0].amount}";
             status_bar.UpdateStatuses(true);
             status_bar_debuff.UpdateStatuses(true);
             titleBuffs.SetActive(haveAnyStatus);
