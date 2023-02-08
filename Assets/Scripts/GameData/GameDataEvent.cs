@@ -151,7 +151,10 @@ namespace Overlewd
                 });
             }*/
 
-            if (!UIManager.HasScreen<SummoningScreen>())
+            var notifNewEntities = !UIManager.HasScreen<SummoningScreen>() &&
+                !UIManager.HasScreen<PortalScreen>();
+
+            if (notifNewEntities)
             {
                 foreach (var shardId in lastChangedMemoryShards)
                 {
