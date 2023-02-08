@@ -15,6 +15,8 @@ namespace Overlewd
 
         private Button nextButton;
         private Button repeatButton;
+        private TextMeshProUGUI staminaCounter;
+        private TextMeshProUGUI repeatButtonTitle;
         private Image firstTimeReward;
         private TextMeshProUGUI firstTimeRewardAmount;
         private GameObject firstTimeRewardStatus;
@@ -35,6 +37,9 @@ namespace Overlewd
             repeatButton = canvas.Find("RepeatButton").GetComponent<Button>();
             repeatButton.onClick.AddListener(RepeatButtonClick);
 
+            repeatButtonTitle = repeatButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            staminaCounter = repeatButton.transform.Find("StaminaCounter/Stamina").GetComponent<TextMeshProUGUI>();
+
             firstTimeReward = grid.Find("FirstTimeReward").GetComponent<Image>();
             firstTimeRewardAmount = firstTimeReward.transform.Find("Count").GetComponent<TextMeshProUGUI>();
             firstTimeRewardStatus = firstTimeReward.transform.Find("ClaimStatus").gameObject;
@@ -50,12 +55,25 @@ namespace Overlewd
 
         public override async Task BeforeShowMakeAsync()
         {
+            if (inputData == null)
+                return;
+            
             var battleData = inputData?.ftueStageData?.battleData ?? inputData?.eventStageData?.battleData;
+            
 
             var firstReward = battleData?.firstRewards?.FirstOrDefault();
 
             firstTimeReward.sprite = ResourceManager.LoadSprite(firstReward?.icon);
             firstTimeRewardAmount.text = firstReward?.amount.ToString();
+            var energyCost = inputData.hasFTUEStage
+                ? GameData.ftue.mapChapter.battleEnergyPointsCost
+                : GameData.events.mapChapter.battleEnergyPointsCost;
+            
+            repeatButtonTitle.text = $"Do it again\nfor {TMPSprite.Energy} {energyCost}";
+            var pInfo = GameData.player.info;
+            var canReplay = pInfo.energyPointsAmount - energyCost >= GameData.potions.baseEnergyVolume;
+            UITools.DisableButton(repeatButton, !canReplay);
+            staminaCounter.text = pInfo.energyPointsAmount - energyCost + "/" + GameData.potions.baseEnergyVolume;
             var isStageComplete = inputData?.ftueStageData?.isComplete ?? inputData?.eventStageData?.isComplete;
             
             if (isStageComplete.HasValue)
@@ -101,7 +119,7 @@ namespace Overlewd
 
             await Task.CompletedTask;
         }
-
+        
         public override void OnMissclick()
         {
 

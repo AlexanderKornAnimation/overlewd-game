@@ -18,10 +18,7 @@ namespace Overlewd
         
         private Coroutine autoplayCoroutine;
 
-        private Transform charactersPos;
-        private Transform leftCharacterPos;
-        private Transform midCharacterPos;
-        private Transform rightCharacterPos;
+        private Transform characters;
         private Image background;
 
         private Transform textContainer;
@@ -46,28 +43,11 @@ namespace Overlewd
 
         private bool isAutoplayButtonPressed = false;
 
-        private Dictionary<string, NSDialogScreen.DialogCharacter> characters = 
-            new Dictionary<string, NSDialogScreen.DialogCharacter>();
-        private Dictionary<string, Transform> slots = new Dictionary<string, Transform>();
-        private Dictionary<string, string> slot_character = new Dictionary<string, string>();
-        private Dictionary<string, string> character_slot = new Dictionary<string, string>();
-
-        private Dictionary<string, string> dialogCharacterPrefabPath = new Dictionary<string, string>
-        {
-            [AdminBRO.DialogReplica.CharacterSkin_Overlord] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Overlord",
-            [AdminBRO.DialogReplica.CharacterSkin_Ulvi] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Ulvi",
-            [AdminBRO.DialogReplica.CharacterSkin_UlviWolf] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/UlviWolf",
-            [AdminBRO.DialogReplica.CharacterSkin_Adriel] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Adriel",
-            [AdminBRO.DialogReplica.CharacterSkin_Inge] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Inge",
-            [AdminBRO.DialogReplica.CharacterSkin_Dragon] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Dragon",
-            [AdminBRO.DialogReplica.CharacterSkin_Faye] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Faye",
-            [AdminBRO.DialogReplica.CharacterSkin_Lili] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Lili",
-            [AdminBRO.DialogReplica.CharacterSkin_Pisha] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Pisha",
-            [AdminBRO.DialogReplica.CharacterSkin_Valkyrie] = "Prefabs/UI/Screens/DialogScreen/PersPrefabs/Valkyrie",
-        };
-
         private SpineScene cutInAnimation;
         private SpineScene emotionAnimation;
+
+        private NSDialogScreen.CharacterBase leftCh;
+        private NSDialogScreen.CharacterBase rightCh;
 
         private void Awake()
         {
@@ -75,10 +55,7 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            charactersPos = canvas.Find("CharactersPos");
-            leftCharacterPos = charactersPos.Find("LeftPos");
-            midCharacterPos = charactersPos.Find("MiddlePos");
-            rightCharacterPos = charactersPos.Find("RightPos");
+            characters = canvas.Find("Characters");
             background = canvas.Find("Background").GetComponent<Image>();
 
             textContainer = canvas.Find("TextContainer");
@@ -245,96 +222,6 @@ namespace Overlewd
             }
         }
 
-        private void HideCharacterByName(string keyName)
-        {
-            if (keyName == null)
-                return;
-            if (!characters.ContainsKey(keyName))
-                return;
-
-            Destroy(characters[keyName].gameObject);
-            characters[keyName] = null;
-            var keyPos = character_slot[keyName];
-            character_slot[keyName] = null;
-            if (keyPos != null)
-            {
-                slot_character[keyPos] = null;
-            }
-        }
-
-        private void HideCharacterBySlot(string keyPos)
-        {
-            if (keyPos == null)
-                return;
-            if (!slots.ContainsKey(keyPos))
-                return;
-
-            var keyName = slot_character[keyPos];
-            HideCharacterByName(keyName);
-        }
-
-        private void ShowCharacter(string keyName, string keyPos)
-        {
-            if (keyName == null || keyPos == null)
-                return;
-            if (!characters.ContainsKey(keyName))
-                return;
-            if (!slots.ContainsKey(keyPos))
-                return;
-
-            if (character_slot[keyName] == keyPos)
-                return;
-
-            if (slot_character[keyPos] != null)
-            {
-                HideCharacterBySlot(keyPos);
-            }
-
-            if (characters[keyName] == null)
-            {
-                var slot = slots[keyPos];
-                var prefabPath = dialogCharacterPrefabPath[keyName];
-                characters[keyName] = NSDialogScreen.DialogCharacter.GetInstance(prefabPath, slot);
-
-                slot_character[keyPos] = keyName;
-                character_slot[keyName] = keyPos;
-                slot.SetAsLastSibling();
-            }
-            else
-            {
-                var curKeyPos = character_slot[keyName];
-                slot_character[curKeyPos] = null;
-                character_slot[keyName] = null;
-
-                var slot = slots[keyPos];
-                characters[keyName].transform.SetParent(slot, false);
-
-                slot_character[keyPos] = keyName;
-                character_slot[keyName] = keyPos;
-                slot.SetAsLastSibling();
-            }
-        }
-
-        private void CharacterSelect(string keyName)
-        {
-            if (keyName == null)
-                return;
-            if (!characters.ContainsKey(keyName))
-                return;
-
-            characters[keyName]?.Select();
-        }
-
-        private void CharacterDeselect(string keyName)
-        {
-            if (keyName == null)
-                return;
-            if (!characters.ContainsKey(keyName))
-                return;
-
-            characters[keyName]?.Deselect();
-        }
-
         private void Initialize()
         {
             dialogReplicas = dialogData.replicas.OrderBy(r => r.sort).ToList();
@@ -347,41 +234,21 @@ namespace Overlewd
                     });
             }
 
-            slots[AdminBRO.DialogReplica.CharacterPosition_Left] = leftCharacterPos;
-            slots[AdminBRO.DialogReplica.CharacterPosition_Right] = rightCharacterPos;
-            slots[AdminBRO.DialogReplica.CharacterPosition_Middle] = midCharacterPos;
-            slot_character[AdminBRO.DialogReplica.CharacterPosition_Left] = null;
-            slot_character[AdminBRO.DialogReplica.CharacterPosition_Right] = null;
-            slot_character[AdminBRO.DialogReplica.CharacterPosition_Middle] = null;
+            var firstLeftReplica = dialogReplicas.Find(r => r.isLeft);
+            var firstRightReplica = dialogReplicas.Find(r => r.isRight);
 
-            foreach (var replica in dialogReplicas)
+            if (firstLeftReplica != null)
             {
-                var keyName = replica.characterSkin;
-                var keyPos = replica.characterPosition;
+                leftCh = NSDialogScreen.CharacterLeft.GetInstance(characters);
+                leftCh.characterId = firstLeftReplica.characterId;
+                leftCh.skinId = firstLeftReplica.characterSkinId;
+            }
 
-                if (String.IsNullOrEmpty(keyName))
-                {
-                    continue;
-                }
-
-                bool addKeyName = false;
-                if (!characters.ContainsKey(keyName))
-                {
-                    characters[keyName] = null;
-                    character_slot[keyName] = null;
-                    addKeyName = true;
-                }
-
-                if (characters[keyName] == null)
-                {
-                    if (keyPos != null && addKeyName) 
-                    {
-                        if (slot_character[keyPos] == null)
-                        {
-                            ShowCharacter(keyName, keyPos);
-                        }
-                    }
-                }
+            if (firstRightReplica != null)
+            {
+                rightCh = NSDialogScreen.CharacterRight.GetInstance(characters);
+                rightCh.characterId = firstRightReplica.characterId;
+                rightCh.skinId = firstRightReplica.characterSkinId;
             }
         }
 
@@ -574,33 +441,40 @@ namespace Overlewd
             var replica = dialogReplicas[currentReplicaId];
             var prevReplica = (currentReplicaId > 0) ? dialogReplicas[currentReplicaId - 1] : null;
 
-            if (prevReplica != null)
-            {
-                var keyName = prevReplica.characterSkin;
-                var keyPos = prevReplica.characterPosition;
-
-                if (keyPos == null)
-                {
-                    HideCharacterByName(keyName);
-                }
-                else
-                {
-                    CharacterDeselect(keyName);
-                }
-            }
-
-
             if (replica != null)
             {
                 personageName.text = replica.characterName;
                 text.text = replica.message;
-
-                var keyName = replica.characterSkin;
-                var keyPos = replica.characterPosition;
-
-                ShowCharacter(keyName, keyPos);
-                CharacterSelect(keyName);
                 nameBackground.SetActive(replica.characterName != null);
+
+                if (replica.isLeft)
+                {
+                    rightCh?.Deselect();
+
+                    if (replica.characterSkinId != leftCh?.skinId)
+                    {
+                        leftCh?.Hide();
+
+                        leftCh = NSDialogScreen.CharacterLeft.GetInstance(characters);
+                        leftCh.characterId = replica.characterId;
+                        leftCh.skinId = replica.characterSkinId;
+                    }
+                    leftCh?.Select();
+                }
+                else if (replica.isRight)
+                {
+                    leftCh?.Deselect();
+
+                    if (replica.characterSkinId != rightCh?.skinId)
+                    {
+                        rightCh?.Hide();
+
+                        rightCh = NSDialogScreen.CharacterRight.GetInstance(characters);
+                        rightCh.characterId = replica.characterId;
+                        rightCh.skinId = replica.characterSkinId;
+                    }
+                    rightCh?.Select();
+                }
             }
 
             ShowPersEmotion(replica, prevReplica);

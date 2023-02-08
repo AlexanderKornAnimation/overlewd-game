@@ -29,11 +29,10 @@ namespace Overlewd
         public Animator ani, charAni;
 
         //new init
-        private AdminBRO.Battle battleData => battleScene.GetBattleData().battleData;
-        public BattleLog log => GetComponent<BattleLog>();
-        public BattleGameData res => GetComponent<BattleGameData>();
-        bool bossLevel => battleData.isTypeBoss;
-        bool isCatEvent = false;
+        private AdminBRO.Battle battleData;
+        public BattleLog log;
+        public BattleGameData res;
+        bool bossLevel, isCatEvent = false;
         private List<AdminBRO.Character> playerTeam => battleScene.GetBattleData().myTeam;
         private List<AdminBRO.Character> enemyTeam;
         private List<AdminBRO.Character> enemyTeamBossEncounter;
@@ -76,24 +75,24 @@ namespace Overlewd
 
         private float enemyDelay = 1.4f; //pause before the enemy makes a move
 
-        //potions
-        int potionMP => battleScene.GetBattleData().mana;
-        int potionHP => battleScene.GetBattleData().hp;
-
         int usedMP = 0, usedHP = 0;
 
         public int debug = 0;
         [SerializeField]
         GameObject debugObj;
+        private void Awake()
+        {
+            log = GetComponent<BattleLog>();
+            res = GetComponent<BattleGameData>();
+            battleScene = FindObjectOfType<BaseBattleScreen>();
+        }
 
         private void Start()
         {
-            //bossLevel = battleData.isTypeBoss;
-            //isCatEvent = battleScene.GetBattleData().bossMiniGame != null;
-
-            battleScene = FindObjectOfType<BaseBattleScreen>();
-            //log = GetComponent<BattleLog>();
-            //res = GetComponent<BattleGameData>();
+            battleData = battleScene.GetBattleData().battleData;
+            bossLevel = battleData.isTypeBoss;
+            isCatEvent = battleScene.GetBattleData().bossMiniGame != null;
+            Debug.Log($"CatEvent {isCatEvent}");
 
             enemyTeam = battleScene.GetBattleData().enemyWaves[wave].enemyTeam; //wave 0
             enemyTeamBossEncounter = isCatEvent ? battleScene.GetBattleData().enemyWaves.Last().enemyTeam : null;
@@ -127,8 +126,8 @@ namespace Overlewd
             passiveControllers[1] = transform.Find("BattleUICanvas/Character/Buttons/Skills/Button_0/Passives/Button_1").GetComponent<SkillController>();
             if (potion_mp == null) potion_mp = transform.Find("BattleUICanvas/Character/Buttons/Bottles/Potion_mp").GetComponent<SkillController>();
             if (potion_hp == null) potion_hp = transform.Find("BattleUICanvas/Character/Buttons/Bottles/Potion_hp").GetComponent<SkillController>();
-            potion_hp.potionAmount = potionHP;
-            potion_mp.potionAmount = potionMP;
+            potion_mp.potionAmount = battleScene.GetBattleData().mana;
+            potion_hp.potionAmount = battleScene.GetBattleData().hp;
             potion_mp?.OnClickAction.AddListener(UseMPPotion);
             potion_hp?.OnClickAction.AddListener(UseHPPotion);
 
@@ -197,8 +196,9 @@ namespace Overlewd
                 battleStart = true;
             }
         }
-        void DropCharactersFromList(List<AdminBRO.Character> characterList, bool isEnemy)
+        void DropCharactersFromList(List<AdminBRO.Character> characterList, bool isEnemy, bool catEncounter = false)
         {
+            
             var orderCount = 3;
             var k = 1;
             foreach (var c in characterList)
@@ -217,6 +217,11 @@ namespace Overlewd
                     cc.isEnemy = true; //Add Enemy flag
                     cc.isBoss = bossLevel;
                     cc.charStats = EnemyStats;
+                    if (catEncounter)
+                    {
+                        cc.idleScale = 1.2f;
+                        cc.battleScale = 1.6f;
+                    }
                     enemyAllyList.Add(cc);
                     enemyNum++;
                 }
@@ -231,10 +236,10 @@ namespace Overlewd
             }
         }
 
-        public IEnumerator NextWave()
+        public IEnumerator NextWave(float delay = 3.5f, bool catEncounter = false)
         {
             roundEnd?.Invoke();
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(delay);
             step = 0;
             if (wavesTMP) wavesTMP.text = $"Wave {wave + 1}/{maxWave + 1}";
             //Destroy phase ============================================================
@@ -252,7 +257,7 @@ namespace Overlewd
             enemyAllyList.Clear(); //Clear Ally List before add new
             //Create phase =============================================================
             var waveList = battleScene.GetBattleData().enemyWaves[wave].enemyTeam;
-            DropCharactersFromList(waveList, true); //create
+            DropCharactersFromList(waveList, true, catEncounter); //create
             charControllerList.Sort(SortBySpeed);   //sort
             maxStep = charControllerList.Count;
             CreatePortraitQueue();                  //drop new portraits with sorting
@@ -453,8 +458,10 @@ namespace Overlewd
             }
             else
             {
-                ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
-                canHit = true;
+                if (enemyTargetList.Count > 0) { 
+                    ccTarget = enemyTargetList[Random.Range(0, enemyTargetList.Count)];
+                    canHit = true;
+                }
             }
             return canHit;
         }
@@ -478,7 +485,10 @@ namespace Overlewd
                 int id = checkCD && !silent ? 1 : 0;
                 bool aoe = ccOnSelect.skill[id].AOE;
                 bool heal = ccOnSelect.skill[id].actionType == "heal";
-                EnemyBrain(aoe, heal);
+                if ( !EnemyBrain(aoe, heal))
+                {
+                    log.Add($"{ccOnSelect.Name} have no target");
+                }
                 /*{
                     id = (id == 0) ? 1 : 0; //swap skill
                     if (ccOnSelect.skillCD[ccOnSelect.skill[id]] == 0) //check if the second skill is on a cooldown
@@ -574,8 +584,14 @@ namespace Overlewd
                     {
                         battleState = BattleState.NEXTWAVE;
                         wave++;
-                        bePopup = Instantiate(res.encounterPopup).GetComponent<BossEncounterPopup>();
-                        bePopup.bm = this;
+                        if (res.encounterPopup != null)
+                        {
+                            bePopup = Instantiate(res.encounterPopup, transform).GetComponent<BossEncounterPopup>();
+                            var bossChar = enemyTeamBossEncounter[0];
+                            var sprt = ResourceManager.LoadSprite(bossChar.GetIconByRarity(bossChar.rarity));
+                            bePopup.SetUp(sprt, true);
+                            bePopup.bm = this;
+                        }
                         //show cat event popup. wait for player action. active StartCoroutine(NextWave());
                         return;
                     }
@@ -590,16 +606,25 @@ namespace Overlewd
             }
             if (charNum == charIsDead)
             {
-                battleState = BattleState.LOSE;
-                if (battleScene != null)
-                    battleScene.EndBattle(new BattleManagerOutData
+                if (isCatEvent && wave >= maxWave)
+                {
+                    battleState = BattleState.LOSE;
+                    if (res.encounterPopup != null)
                     {
-                        battleWin = false,
-                        manaSpent = usedMP,
-                        hpSpent = usedHP
-                    });
-                if (CheckBattleGameData("chapter1", "battle2"))
-                    Debug.Log("LOOSING");
+                        bePopup = Instantiate(res.encounterPopup, transform).GetComponent<BossEncounterPopup>();
+                        var bossChar = enemyTeamBossEncounter[0];
+                        var sprt = ResourceManager.LoadSprite(bossChar.GetIconByRarity(bossChar.rarity));
+                        bePopup.SetUp(sprt, false);
+                        bePopup.bm = this;
+                    }
+                }
+                else
+                {
+                    battleState = BattleState.LOSE;
+                    LoseBattle();
+                    if (CheckBattleGameData("chapter1", "battle2"))
+                        Debug.Log("LOOSING");
+                }
             }
             if (battleState == BattleState.ANIMATION && poison)
                 StartCoroutine(StepWithDelay(2.5f)); //if we dead from DOT on start move we call next step
@@ -609,9 +634,9 @@ namespace Overlewd
             yield return new WaitForSeconds(delay);
             Step(); //poison
         }
-        IEnumerator WinScreenWithDelay()
+        public IEnumerator WinScreenWithDelay(float delay = 3.5f)
         {
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(delay);
             if (battleScene != null)
                 battleScene.EndBattle(new BattleManagerOutData
                 {
@@ -619,6 +644,15 @@ namespace Overlewd
                     manaSpent = usedMP,
                     hpSpent = usedHP
                 });
+        }
+        public void LoseBattle()
+        {
+            battleScene?.EndBattle(new BattleManagerOutData
+            {
+                battleWin = false,
+                manaSpent = usedMP,
+                hpSpent = usedHP
+            });
         }
 
         private void Step()

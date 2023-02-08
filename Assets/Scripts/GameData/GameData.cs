@@ -642,29 +642,16 @@ namespace Overlewd
             characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
         public AdminBRO.Character overlord =>
             GetByClass(AdminBRO.CharacterClass.Overlord);
+        public List<AdminBRO.Character> myTeamFull =>
+            myTeamCharacters.Concat(new[] { overlord }).ToList();
         public List<AdminBRO.Character> orderByLevel =>
             characters.OrderBy(ch => ch.level).ToList();
         public AdminBRO.Character slot1Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
-
-        public int myTeamPotency
-        {
-            get
-            {
-                int potency = 0;
-
-                potency += overlord.potency;
-
-                foreach (var character in myTeamCharacters)
-                {
-                    potency += character.potency;
-                }
-
-                return potency;
-            }
-        }
+        public int teamPotency =>
+            myTeamFull.Sum(ch => ch.potency);
     }
 
     //equipment
@@ -863,7 +850,7 @@ namespace Overlewd
             await GameData.equipment.Get();
             await GameData.matriarchs.Get();
 
-            if (result.dData.status == true)
+            if (result.dData?.status ?? false)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
@@ -878,7 +865,7 @@ namespace Overlewd
         public async Task<NutakuApiHelper.NutakuPayment> NutakuPayment(MonoBehaviour myMonoBehaviour, AdminBRO.TradableItem tradable)
         {
             var result = await NutakuApiHelper.PaymentAsync(myMonoBehaviour, tradable);
-            if (result.isSucceess)
+            if (result.isSuccess)
             {
                 await GameData.player.Get();
                 await GameData.characters.Get();
@@ -891,6 +878,27 @@ namespace Overlewd
                 });
             }
             return result;
+        }
+
+        public async Task<bool> GeneralPurchaseFlow(AdminBRO.TradableItem trData, MonoBehaviour myMonoBehaviour)
+        {
+            if (trData == null)
+                return false;
+
+            if (trData.nutakuPriceValid)
+            {
+                var payment = await GameData.markets.NutakuPayment(myMonoBehaviour, trData);
+                return payment.isSuccess;
+            }
+            else
+            {
+                if (trData.canBuy)
+                {
+                    var result = await GameData.markets.Payment(mainMarket?.id, trData?.id);
+                    return result.isSuccess;
+                }
+                return false;
+            }
         }
     }
 
@@ -999,9 +1007,8 @@ namespace Overlewd
             //var locale = await AdminBRO.localizationAsync("en");
 
             lastTimeUpd = DateTime.Now;
-            accEnergyPoints = 0.0f;
 
-            var walletChangeEventData =new WalletChangeStateDataEvent
+            var walletChangeEventData = new WalletChangeStateDataEvent
             {
                 id = GameDataEventId.WalletChangeState,
                 fromInfo = prevInfo,
@@ -1014,7 +1021,10 @@ namespace Overlewd
         }
 
         private DateTime lastTimeUpd;
-        private float accEnergyPoints = 0.0f;
+        public bool baseEnergyPointsReached =>
+            info.energyPointsAmount >= GameData.potions.baseEnergyVolume;
+        public TimeSpan baseEnergyPointsTimeRemain { get; private set; } = TimeSpan.FromMinutes(0.0f);
+        public TimeSpan oneEnergyPointTimeRemain { get; private set; } = TimeSpan.FromMinutes(0.0f);
         public IEnumerator UpdLocalEnergyPoints(Action action)
         {
             while (true)
@@ -1023,16 +1033,21 @@ namespace Overlewd
                 var dt = time - lastTimeUpd;
                 lastTimeUpd = time;
 
-                if (info.energyPointsAmount < GameData.potions.baseEnergyVolume)
+                if (!baseEnergyPointsReached)
                 {
-                    accEnergyPoints += (float)dt.TotalMinutes * GameData.potions.energyRecoverySpeed;
-                    int accPointsIntPart = (int)accEnergyPoints;
-                    accEnergyPoints -= accPointsIntPart;
-                    info.energyPoints = Math.Min(info.energyPointsAmount + accPointsIntPart, GameData.potions.baseEnergyVolume);
+                    info.energyPoints += (float)dt.TotalMinutes * GameData.potions.energyRecoverySpeed;
+                    info.energyPoints = Math.Min(info.energyPoints, GameData.potions.baseEnergyVolume);
+
+                    var onePointRemain = Mathf.Ceil(info.energyPoints) - info.energyPoints;
+                    oneEnergyPointTimeRemain = TimeSpan.FromMinutes(onePointRemain / GameData.potions.energyRecoverySpeed);
+
+                    var basePointsRemain = GameData.potions.baseEnergyVolume - info.energyPoints;
+                    baseEnergyPointsTimeRemain = TimeSpan.FromMinutes(basePointsRemain / GameData.potions.energyRecoverySpeed);
                 }
                 else
                 {
-                    accEnergyPoints = 0.0f;
+                    baseEnergyPointsTimeRemain = TimeSpan.FromMinutes(0.0f);
+                    oneEnergyPointTimeRemain = TimeSpan.FromMinutes(0.0f);
                 }
 
                 action?.Invoke();
@@ -1048,22 +1063,31 @@ namespace Overlewd
         }
 
         public bool CanBuy(List<AdminBRO.PriceItem> price) =>
-            !price?.Exists(p => info.fullWallet.
-            Exists(w => p.currencyId == w.currencyId && p.amount > w.amount)) ?? false;
+            !price?.Exists(p =>
+            info.fullWallet.Exists(w => p.currencyId == w.currencyId && p.amount > w.amount) ||
+            !info.fullWallet.Exists(w => p.currencyId == w.currencyId)) ?? false;
     }
 
     //dialogs
     public class Dialogs : BaseGameMeta
     {
         public static List<AdminBRO.Dialog> dialogs { get; private set; } = new List<AdminBRO.Dialog>();
+        public static List<AdminBRO.DialogCharacter> characters { get; private set; } = new List<AdminBRO.DialogCharacter>();
+        public static List<AdminBRO.DialogCharacterSkin> skins { get; private set; } = new List<AdminBRO.DialogCharacterSkin>();
 
         public override async Task Get()
         {
             dialogs = await AdminBRO.dialogsAsync();
+            characters = await AdminBRO.dialogCharactersAsync();
+            skins = await AdminBRO.dialogCharacterSkinsAsync();
         }
 
         public AdminBRO.Dialog GetById(int? id) =>
             dialogs.Find(d => d.id == id);
+        public AdminBRO.DialogCharacter GetCharacterById(int? id) =>
+            characters.Find(ch => ch.id == id);
+        public AdminBRO.DialogCharacterSkin GetSkinById(int? id) =>
+            skins.Find(s => s.id == id);
 
         public async Task Start(int id)
         {
@@ -1252,9 +1276,10 @@ namespace Overlewd
         public AdminBRO.BattlePass GetById(int id) =>
             passes.Find(p => p.id == id);
 
-        public async Task BuyPremium(int battlePassId)
+        public async Task BuyPremium(int battlePassId, MonoBehaviour myMonoBehaviour)
         {
-            await AdminBRO.battlePassBuyPremiumAsync(battlePassId);
+            var passData = GetById(battlePassId);
+            await GameData.markets.GeneralPurchaseFlow(passData?.linkedTradableData, myMonoBehaviour);
             await Get();
         }
 

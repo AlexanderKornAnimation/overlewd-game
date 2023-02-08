@@ -208,7 +208,7 @@ namespace Overlewd
             public List<WalletItem> wallet;
             public List<WalletItem> walletEvent;
             public Potion potion;
-            public int energyPoints;
+            public float energyPoints;
             public List<Device> devices;
 
             public class Potion
@@ -265,11 +265,11 @@ namespace Overlewd
             public int replayAmount => potion.replay;
 
             [JsonProperty(Required = Required.Default)]
-            public int energyPointsAmount => energyPoints;
+            public int energyPointsAmount => (int)energyPoints;
 
             [JsonProperty(Required = Required.Default)]
             public List<WalletItem> fullWallet =>
-                new[] { wallet, walletEvent }.SelectMany(w => w).ToList();
+                wallet.Concat(walletEvent).ToList();
             public WalletItem GetWalletItemById(int? currencyId) =>
                 fullWallet.Find(w => w.currencyId == currencyId);
         }
@@ -431,6 +431,7 @@ namespace Overlewd
             public string rarity;
             public int? ingredientId;
             public int? collectableId;
+            public int? battlePassId;
 
             public const string Type_Default = "default";
             public const string Type_Currency = "currency";
@@ -442,6 +443,7 @@ namespace Overlewd
             public const string Type_ManaPotion = "mana_potion";
             public const string Type_HpPotion = "hp_potion";
             public const string Type_Collectable = "collectable";
+            public const string Type_BattlePass = "battle_pass";
 
             public class TradablePack
             {
@@ -496,6 +498,10 @@ namespace Overlewd
         public class TradableBuyStatus
         {
             public bool status;
+
+            [JsonProperty(Required = Required.Default)]
+            public bool isSuccess => status;
+
         }
 
         // /resources
@@ -886,19 +892,47 @@ namespace Overlewd
         // /dialogs
         // /dialogs/{id}/start
         // /dialogs/{id}/end
+        // /dialogs/character
+        // /dialogs/character/skin
         public static async Task<HttpCoreResponse<List<Dialog>>> dialogsAsync() =>
             await HttpCore.GetAsync<List<Dialog>>(make_url("dialogs"));
         public static async Task<HttpCoreResponse> dialogStartAsync(int id) =>
             await HttpCore.PostAsync(make_url($"dialogs/{id}/start"));
         public static async Task<HttpCoreResponse> dialogEndAsync(int id) =>
             await HttpCore.PostAsync<List<GenRewardItem>>(make_url($"dialogs/{id}/end"));
+        public static async Task<HttpCoreResponse<List<DialogCharacter>>> dialogCharactersAsync() =>
+            await HttpCore.GetAsync<List<DialogCharacter>>(make_url("dialogs/character"));
+        public static async Task<HttpCoreResponse<List<DialogCharacterSkin>>> dialogCharacterSkinsAsync() =>
+            await HttpCore.GetAsync<List<DialogCharacterSkin>>(make_url("dialogs/character/skin"));
 
+        [Serializable]
+        public class DialogCharacter
+        {
+            public int id;
+            public string name;
+        }
+
+        [Serializable]
+        public class DialogCharacterSkin
+        {
+            public int id;
+            public string name;
+            public int? characterId;
+            public int? dialogAnimationId;
+            public string characterSkinImage;
+
+            [JsonProperty(Required = Required.Default)]
+            public DialogCharacter characterData =>
+                GameData.dialogs.GetCharacterById(characterId);
+        }
 
         [Serializable]
         public class DialogReplica
         {
             public int id;
             public int sort;
+            public int? characterId;
+            public int? characterSkinId;
             public string characterName;
             public string characterSkin;
             public string characterPosition;
@@ -920,26 +954,21 @@ namespace Overlewd
             public const string CharacterPosition_Right = "right";
             public const string CharacterPosition_Middle = "middle";
 
-            public const string CharacterName_Overlord = "Overlord";
-            public const string CharacterName_Ulvi = "Ulvi";
-            public const string CharacterName_Faye = "Faye";
-            public const string CharacterName_Adriel = "Adriel";
-            public const string CharacterName_Dragon = "Dragon";
-            public const string CharacterName_Inge = "Inge";
-            public const string CharacterName_Lili = "Lili";
-            public const string CharacterName_Pisha = "Pisha";
-            public const string CharacterName_Valkyrie = "Valkyrie";
+            [JsonProperty(Required = Required.Default)]
+            public bool isLeft =>
+                characterPosition == CharacterPosition_Left;
 
-            public const string CharacterSkin_Overlord = "Overlord";
-            public const string CharacterSkin_Ulvi = "Ulvi";
-            public const string CharacterSkin_UlviWolf = "UlviWolf";
-            public const string CharacterSkin_Adriel = "Adriel";
-            public const string CharacterSkin_Inge = "Inge";
-            public const string CharacterSkin_Dragon = "Dragon";
-            public const string CharacterSkin_Faye = "Faye";
-            public const string CharacterSkin_Lili = "Lili";
-            public const string CharacterSkin_Pisha = "Pisha";
-            public const string CharacterSkin_Valkyrie = "Valkyrie";
+            [JsonProperty(Required = Required.Default)]
+            public bool isRight =>
+                characterPosition == CharacterPosition_Right;
+
+            [JsonProperty(Required = Required.Default)]
+            public DialogCharacter characterData =>
+                GameData.dialogs.GetCharacterById(characterId);
+
+            [JsonProperty(Required = Required.Default)]
+            public DialogCharacterSkin skinData =>
+                GameData.dialogs.GetSkinById(characterSkinId);
         }
 
         [Serializable]
@@ -1391,8 +1420,6 @@ namespace Overlewd
         // /battles/pass/{id}/claim
         public static async Task<HttpCoreResponse<List<BattlePass>>> battlePassesAsync() =>
             await HttpCore.GetAsync<List<BattlePass>>(make_url("battles/pass"));
-        public static async Task<HttpCoreResponse> battlePassBuyPremiumAsync(int battlePassId) =>
-            await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/buy-premium"));
         public static async Task<HttpCoreResponse> battlePassClaimAsync(int battlePassId) =>
             await HttpCore.PostAsync(make_url($"battles/pass/{battlePassId}/claim"));
 
@@ -1403,7 +1430,6 @@ namespace Overlewd
             public int id;
             public int? eventId;
             public List<Level> levels;
-            public List<PriceItem> premiumPrice;
             public int currentPointsCount;
             public bool isPremium;
 
@@ -1415,6 +1441,10 @@ namespace Overlewd
                 public bool isDefaultRewardClaimed;
                 public bool isPremiumRewardClaimed;
             }
+
+            [JsonProperty(Required = Required.Default)]
+            public TradableItem linkedTradableData =>
+                GameData.markets.tradables.Find(t => t.battlePassId == id);
         }
 
         // /characters/equipment
@@ -2398,6 +2428,14 @@ namespace Overlewd
         {
             public string callbackUrl;
             public string completeUrl;
+
+            public string proxyClientgameUrl;
+            public string proxyOsapiUrl;
+            public string clientgameUrl;
+            public string osapiUrl;
+            public string consumerKey;
+            public string consumerSecret;
+            public string appId;
         }
 
         // daily login

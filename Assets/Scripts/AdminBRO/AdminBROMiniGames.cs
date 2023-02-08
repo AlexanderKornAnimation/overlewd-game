@@ -92,6 +92,7 @@ namespace Overlewd
         public class MiniGameEnabled
         {
             public bool isActive;
+            public bool isRewardEnabled;
         }
 
         [Serializable]
@@ -113,11 +114,16 @@ namespace Overlewd
                 public string title;
                 public List<RewardItem> rewards;
                 public List<BattlePhase> battlePhases;
+                public float? requiredTeamPotency;
             }
             public class BattlePhase
             {
                 public List<Character> enemyCharacters;
             }
+
+            public Battle GetBattleByTeamPotency(float temPotency) =>
+                battles.OrderByDescending(b => b.requiredTeamPotency).
+                Where(b => temPotency >= b.requiredTeamPotency).FirstOrDefault();
         }
     }
 }

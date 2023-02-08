@@ -69,7 +69,7 @@ namespace Overlewd
             public string message;
 
             public bool isValid => payment != null;
-            public bool isSucceess =>
+            public bool isSuccess =>
                 webViewResult.kind == WebViewEventKind.Succeeded;
             public string rawResultMsg => 
                 $"Http Status Code: {rawResult.statusCode}\n" +

@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Overlewd
@@ -29,7 +27,7 @@ namespace Overlewd
             effectSlot = transform.Find("Skill/status").GetComponent<Image>();
             counterTurnsGO = transform.Find("CounterTurns").gameObject;
             coolDown = counterTurnsGO.transform.Find("Counter").GetComponent<TextMeshProUGUI>();
-            level = transform.Find("Skill/level/text").GetComponent <TextMeshProUGUI>();
+            level = transform.Find("Skill/level/text").GetComponent<TextMeshProUGUI>();
             btn.onClick.AddListener(Close);
         }
         public void Open(SkillController skillController)
@@ -49,8 +47,8 @@ namespace Overlewd
         }
         public void Close()
         {
-            if (isOpen) 
-            { 
+            if (isOpen)
+            {
                 ani.SetTrigger("Close");
                 isOpen = false;
             }
