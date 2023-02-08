@@ -65,19 +65,20 @@ namespace Overlewd
     {
         public AdminBRO.PlayerInfo fromInfo { get; set; }
         public AdminBRO.PlayerInfo toInfo { get; set; }
-        public bool hasWalletChanges => (fromInfo == null) ? false :
+        public bool isValid => (fromInfo != null) && (toInfo != null);
+        public bool hasWalletChanges => !isValid ? false :
             (fromInfo.Copper.amount != toInfo.Copper.amount) ||
             (fromInfo.Crystal.amount != toInfo.Crystal.amount) ||
             (fromInfo.Wood.amount != toInfo.Wood.amount) ||
             (fromInfo.Gold.amount != toInfo.Gold.amount) ||
             (fromInfo.Stone.amount != toInfo.Stone.amount) ||
             (fromInfo.Gems.amount != toInfo.Gems.amount);
-        public bool hasPotionsChanges => (fromInfo == null) ? false :
+        public bool hasPotionsChanges => !isValid ? false :
             (fromInfo.hpPotionAmount != toInfo.hpPotionAmount) ||
             (fromInfo.manaPotionAmount != toInfo.manaPotionAmount) ||
             (fromInfo.energyPotionAmount != toInfo.energyPotionAmount) ||
             (fromInfo.replayAmount != toInfo.replayAmount);
-        public bool hasEventWalletChanges => (fromInfo == null) ? false :
+        public bool hasEventWalletChanges => !isValid ? false :
             toInfo.walletEvent.Exists(we => fromInfo.walletEvent.Exists(pwe => pwe.currencyId == we.currencyId && pwe.amount != we.amount));
         public bool hasAnyChanges =>
             hasWalletChanges ||

@@ -850,7 +850,7 @@ namespace Overlewd
             await GameData.equipment.Get();
             await GameData.matriarchs.Get();
 
-            if (result.dData.status == true)
+            if (result.dData?.status ?? false)
             {
                 UIManager.ThrowGameDataEvent(
                     new GameDataEvent
