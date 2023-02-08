@@ -38,10 +38,9 @@ namespace Overlewd
         public AdminBRO.MiniGame GetMiniGameDataByEventId(int eventId) =>
             bossMiniGames.Find(mg => mg.eventId == eventId);
 
-        public async Task<bool> MiniGameEnabled(int eventStageId)
+        public async Task<AdminBRO.MiniGameEnabled> MiniGameEnabled(int eventStageId)
         {
-            var result = await AdminBRO.miniGameEnabledAsync(eventStageId);
-            return result.dData.isActive;
+            return await AdminBRO.miniGameEnabledAsync(eventStageId);
         }
 
         public async Task<int> MiniGameChance(int eventId)

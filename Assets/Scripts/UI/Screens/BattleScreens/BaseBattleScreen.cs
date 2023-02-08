@@ -81,21 +81,23 @@ namespace Overlewd
 		{
 			public AdminBRO.MiniGame info { get; set; }
 			public AdminBRO.MiniGame.Battle battleParams { get; set; }
+			public bool rewardEnabled { get; set; }
 		}
 
 		public static async Task<BossMiniGameInfo> GetBossMiniGameInfoFromServer(BasePrepareBattlePopupInData prepareBattlePopupInData)
 		{
 			if (prepareBattlePopupInData.eventStageId.HasValue)
 			{
-				var enabled = await GameData.bossMiniGame.MiniGameEnabled(prepareBattlePopupInData.eventStageId.Value);
-				if (enabled)
+				var enabledStruct = await GameData.bossMiniGame.MiniGameEnabled(prepareBattlePopupInData.eventStageId.Value);
+				if (enabledStruct.isActive)
                 {
 					var info = GameData.bossMiniGame.GetMiniGameDataByEventId(prepareBattlePopupInData.eventStageData.eventChapterData.eventId);
 					var battleParams = info.battles.FirstOrDefault();
 					return new BossMiniGameInfo
 					{
 						info = info,
-						battleParams = battleParams
+						battleParams = battleParams,
+						rewardEnabled = enabledStruct.isRewardEnabled
 					};
 				}					
 			}

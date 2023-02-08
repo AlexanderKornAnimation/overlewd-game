@@ -92,6 +92,7 @@ namespace Overlewd
         public class MiniGameEnabled
         {
             public bool isActive;
+            public bool isRewardEnabled;
         }
 
         [Serializable]
