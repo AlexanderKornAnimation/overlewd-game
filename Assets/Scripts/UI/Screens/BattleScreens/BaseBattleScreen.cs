@@ -92,7 +92,7 @@ namespace Overlewd
 				if (enabledStruct.isActive)
                 {
 					var info = GameData.bossMiniGame.GetMiniGameDataByEventId(prepareBattlePopupInData.eventStageData.eventChapterData.eventId);
-					var battleParams = info.battles.FirstOrDefault();
+					var battleParams = info.GetBattleByTeamPotency(GameData.characters.teamPotency);
 					return new BossMiniGameInfo
 					{
 						info = info,
