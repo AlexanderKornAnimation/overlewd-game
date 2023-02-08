@@ -269,7 +269,7 @@ namespace Overlewd
 
             [JsonProperty(Required = Required.Default)]
             public List<WalletItem> fullWallet =>
-                new[] { wallet, walletEvent }.SelectMany(w => w).ToList();
+                wallet.Concat(walletEvent).ToList();
             public WalletItem GetWalletItemById(int? currencyId) =>
                 fullWallet.Find(w => w.currencyId == currencyId);
         }

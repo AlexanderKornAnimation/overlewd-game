@@ -148,7 +148,7 @@ namespace Overlewd
                 }
             }
             
-            teamPotency.text = GameData.characters.myTeamPotency.ToString();
+            teamPotency.text = GameData.characters.teamPotency.ToString();
             CustomizeSlots();
             SortCharactersInTabs();
         }
@@ -157,7 +157,7 @@ namespace Overlewd
         {
             var overlordData = GameData.characters.overlord;
             overlordPotency.text = overlordData.potency.ToString();
-            teamPotency.text = GameData.characters.myTeamPotency.ToString();
+            teamPotency.text = GameData.characters.teamPotency.ToString();
             
             var orderedCharacters = GameData.characters.orderByLevel;
             foreach (var ch in orderedCharacters)

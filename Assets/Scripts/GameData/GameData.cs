@@ -642,29 +642,16 @@ namespace Overlewd
             characters.FindAll(ch => ch.teamPosition != AdminBRO.Character.TeamPosition_None);
         public AdminBRO.Character overlord =>
             GetByClass(AdminBRO.CharacterClass.Overlord);
+        public List<AdminBRO.Character> myTeamFull =>
+            myTeamCharacters.Concat(new[] { overlord }).ToList();
         public List<AdminBRO.Character> orderByLevel =>
             characters.OrderBy(ch => ch.level).ToList();
         public AdminBRO.Character slot1Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot1);
         public AdminBRO.Character slot2Ch =>
             characters.Find(ch => ch.teamPosition == AdminBRO.Character.TeamPosition_Slot2);
-
-        public int myTeamPotency
-        {
-            get
-            {
-                int potency = 0;
-
-                potency += overlord.potency;
-
-                foreach (var character in myTeamCharacters)
-                {
-                    potency += character.potency;
-                }
-
-                return potency;
-            }
-        }
+        public int teamPotency =>
+            myTeamFull.Sum(ch => ch.potency);
     }
 
     //equipment
