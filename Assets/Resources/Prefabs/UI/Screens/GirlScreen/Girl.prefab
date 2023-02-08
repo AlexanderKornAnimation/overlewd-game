@@ -1739,7 +1739,7 @@ GameObject:
   - component: {fileID: 6857852072178447647}
   - component: {fileID: 3943949581341205030}
   m_Layer: 0
-  m_Name: Text
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2403,7 +2403,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bb61c24274aa434f82834dbebdda711, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0f7a14e5b8fe5d14893934647b664424, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3971,7 +3971,7 @@ GameObject:
   - component: {fileID: 416712140660418107}
   - component: {fileID: 4816478823611392821}
   m_Layer: 0
-  m_Name: Text
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3993,8 +3993,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 48.5, y: 4}
-  m_SizeDelta: {x: 157, y: 72}
+  m_AnchoredPosition: {x: 36.82202, y: 4}
+  m_SizeDelta: {x: 180.3561, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &416712140660418107
 CanvasRenderer:
@@ -4024,7 +4024,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Get 's daily quest
+  m_text: Get inge's daily quest
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
   m_sharedMaterial: {fileID: -5923455208869972878, guid: b5910baf12309a742ae495894a87a0bb, type: 2}
@@ -4279,7 +4279,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bb61c24274aa434f82834dbebdda711, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a76cd50df9e6d0f4481ba60f7c9d3d21, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4483,7 +4483,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bb61c24274aa434f82834dbebdda711, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a67868a7d447d5249a8482f193bfdf69, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4723,7 +4723,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 2400, y: 1080}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7627915318791715909
 CanvasRenderer:
@@ -4798,7 +4798,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 2400, y: 1080}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5312925983805694699
 CanvasRenderer:
@@ -4904,7 +4904,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3bb61c24274aa434f82834dbebdda711, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 82d2505c8c3568043a8760425dece53d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5248,7 +5248,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 2400, y: 1080}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1949812359489155825
 CanvasRenderer:
@@ -5457,7 +5457,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_SizeDelta: {x: 2400, y: 1080}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2645044490317729318
 CanvasRenderer:
@@ -5724,7 +5724,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0.5, y: 0}
-  m_SizeDelta: {x: 1559, y: 1080}
+  m_SizeDelta: {x: 2400, y: 1080}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1967513592633703321
 CanvasRenderer:

@@ -174,8 +174,11 @@ namespace Overlewd
         }
 
         private void InstBanners()
-        { 
-            NSSidebarMenuOverlay.WeeklyLoginBanner.GetInstance(bannerContent);
+        {
+            if (GameData.dailyLogin.isValid)
+            {
+                NSSidebarMenuOverlay.DailyLoginBanner.GetInstance(bannerContent);
+            }
 
             var marketTabs = GameData.markets.mainMarket?.tabs.Where(t => t.isVisible).
                 OrderBy(t => t.order);

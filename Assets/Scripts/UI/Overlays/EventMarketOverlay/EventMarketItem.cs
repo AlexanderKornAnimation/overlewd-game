@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -93,51 +94,41 @@ namespace Overlewd
 
             private async void BuyButtonClick()
             {
-                var _tradableData = tradableData;
-                var currencyId = _tradableData.price[0].currencyId;
-                var currencyData = GameData.currencies.GetById(currencyId);
-
-                SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                if (_tradableData.canBuy)
-                {
-                    if (!currencyData.isTypeNutaku)
-                    {
-                        await GameData.markets.BuyTradable(marketId, tradableId);
-                        UIManager.ShowNotification<BuyingNotification>();
-                    }
-                    else
-                    {
-                        UIManager.MakeNotification<BannerNotification>().
-                            SetData(new BannerNotificationInData
-                            {
-                                marketId = marketId,
-                                tradableId = tradableId
-                            }).DoShow();
-                    }
-                }
+                await Buy();
             }
 
             private async void BuyWithCountButtonClick()
             {
-                var _tradableData = tradableData;
-                var currencyId = _tradableData.price[0].currencyId;
-                var currencyData = GameData.currencies.GetById(currencyId);
+                await Buy();
+            }
 
-                if (_tradableData.canBuy)
+            private async Task Buy()
+            {
+                var trData = tradableData;
+                if (trData.nutakuPriceValid)
                 {
-                    if (!currencyData.isTypeNutaku)
+                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                    var payment = await GameData.markets.NutakuPayment(this, trData);
+                    if (payment.isSuccess)
                     {
-                        await GameData.markets.BuyTradable(marketId, tradableId);
-                        UIManager.ShowNotification<BuyingNotification>();
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Success);
                     }
                     else
                     {
-                        UIManager.MakeNotification<BannerNotification>().
-                            SetData(new BannerNotificationInData
-                            {
-                                marketId = marketId,
-                                tradableId = tradableId
-                            }).DoShow();
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Fail);
+                    }
+                }
+                else
+                {
+                    if (trData.canBuy)
+                    {
+                        SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+                        var result = await GameData.markets.Payment(marketId, tradableId);
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Success);
+                    }
+                    else
+                    {
+                        SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Shop_Buy_Fail);
                     }
                 }
             }

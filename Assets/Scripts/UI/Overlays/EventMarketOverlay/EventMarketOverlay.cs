@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace Overlewd
 {
@@ -93,23 +92,7 @@ namespace Overlewd
 
         private void MoreButtonClick()
         {
-            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-            var _marketData = inputData.marketData;
-            foreach (var tData in _marketData.tradablesData)
-            {
-                if (tData.promo)
-                {
-                    if (tData.canBuy)
-                    {
-                        UIManager.MakeNotification<BannerNotification>().
-                            SetData(new BannerNotificationInData
-                            {
-                                marketId = _marketData.id,
-                                tradableId = tData.id
-                            }).DoShow();
-                    }
-                }
-            }
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);            
         }
     }
 

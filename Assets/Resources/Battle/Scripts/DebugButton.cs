@@ -20,7 +20,6 @@ namespace Overlewd
             foreach (var item in turnOnGuiElements)
                 item.SetActive(false);
         }
-
         public void OnPointerDown(PointerEventData eventData)
         {
             time = 0f;

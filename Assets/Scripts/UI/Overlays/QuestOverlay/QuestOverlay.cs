@@ -78,7 +78,7 @@ namespace Overlewd
                 SoundManager.PlayOneShot(FMODEventPath.UI_QuestOverlayHide);
         }
 
-        public async override Task BeforeShowMakeAsync()
+        public override async Task BeforeShowMakeAsync()
         {
             foreach (var questItem in ftueQuests)
             {
@@ -94,7 +94,11 @@ namespace Overlewd
                 }
             }
 
-            var questForSelect = questButtons.Find(qb => qb.questId == inputData?.questId) ?? questButtons.FirstOrDefault();
+            var questForSelect = GameData.ftue.stats.lastEndedStageData?.lerningKey switch
+            {
+                (FTUE.CHAPTER_2, FTUE.DIALOGUE_2) => questButtons.FirstOrDefault(qb => qb.questData.isFTUEMatriarch),
+                _ => questButtons.Find(qb => qb.questId == inputData?.questId) ?? questButtons.FirstOrDefault()
+            };            
             questForSelect?.Select();
 
             await Task.CompletedTask;

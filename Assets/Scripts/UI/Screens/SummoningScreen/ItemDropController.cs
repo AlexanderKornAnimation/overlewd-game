@@ -71,6 +71,7 @@ namespace Overlewd
             {
                 if (canClick)
                 {
+                    SoundManager.PlayOneShot(FMODEventPath.SFX_UI_Gacha_Shards_x1_reveal);
                     white.sprite = whiteSprites[shape];
                     //if (shape == 0)
                         ani?.Play("Base Layer.SwitchShard");

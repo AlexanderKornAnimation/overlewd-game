@@ -54,7 +54,9 @@ namespace Overlewd
         private GameObject bannerNotification;
 
         private Button sexButton;
+        private TextMeshProUGUI sexButtonTitle;
         private Button dialogButton;
+        private TextMeshProUGUI dialogButtonTitle;
         private Button backButton;
 
         private Transform sexCooldown;
@@ -121,13 +123,16 @@ namespace Overlewd
             bannerNotification = banner.Find("Notification").GetComponent<GameObject>();
 
             sexButton = canvas.Find("SexButton").GetComponent<Button>();
-            dialogButton = canvas.Find("DialogButton").GetComponent<Button>();
-            backButton = canvas.Find("BackButton").GetComponent<Button>();
-            
-            backButton.onClick.AddListener(BackButtonClick);
             sexButton.onClick.AddListener(SexButtonClick);
+            sexButtonTitle = sexButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            
+            dialogButton = canvas.Find("DialogButton").GetComponent<Button>();
             dialogButton.onClick.AddListener(DialogButtonClick);
-
+            dialogButtonTitle = dialogButton.transform.Find("Title").GetComponent<TextMeshProUGUI>();
+            
+            backButton = canvas.Find("BackButton").GetComponent<Button>();
+            backButton.onClick.AddListener(BackButtonClick);
+            
             sexCooldown = sexButton.transform.Find("Cooldown");
             sexCooldownTimer = sexCooldown.Find("Timer").GetComponent<TextMeshProUGUI>();
         }
@@ -202,6 +207,8 @@ namespace Overlewd
             receivedTier1.SetActive(lvlProgressStep1.gameObject.activeSelf);
             receivedTier2.SetActive(lvlProgressStep2.gameObject.activeSelf);
             receivedTier3.SetActive(lvlProgressStep3.gameObject.activeSelf);
+            sexButtonTitle.text = $"Get {inputData?.girlKey}'s\nbuff";
+            dialogButtonTitle.text = $"Get {inputData?.girlKey}'s\ndaily quest";
             
             if (!String.IsNullOrEmpty(girlData.seduceAvailableAt))
             {
@@ -248,7 +255,7 @@ namespace Overlewd
                 case AdminBRO.MatriarchItem.Key_Adriel:
                     SoundManager.PlayOneShot(FMODEventPath.VO_Adriel_Reactions_matriarch_screen);
                     break;
-                case AdminBRO.MatriarchItem.Key_Ingie:
+                case AdminBRO.MatriarchItem.Key_Inge:
                     SoundManager.PlayOneShot(FMODEventPath.VO_Ingie_Reactions_matriarch_screen);
                     break;
             }

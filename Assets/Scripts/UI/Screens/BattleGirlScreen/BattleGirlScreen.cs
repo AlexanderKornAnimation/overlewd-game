@@ -277,7 +277,7 @@ namespace Overlewd
                 if (characterData.canLvlUp)
                 {
                     await GameData.characters.LvlUp(inputData.characterId.Value);
-                    UIfx.Inst(UIfx.UIFX_LVLUP02, levelBack);
+                    UIfx.InstDisposable(UIfx.UIFX_LVLUP02, levelBack);
                     Customize();
                 }
                 else

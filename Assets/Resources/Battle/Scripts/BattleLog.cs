@@ -16,8 +16,10 @@ namespace Overlewd
             else
             {
                 if (log) log.text += ($"<color=\"red\">{text}</color>\n");
-                Debug.LogWarning(text);
-                //FindObjectOfType<BattleManager>().debug = 2;
+                Debug.LogError(text);
+#if UNITY_EDITOR
+                FindObjectOfType<BattleManager>().PressDebug();
+#endif
             }
         }
         /*private void OnGUI()

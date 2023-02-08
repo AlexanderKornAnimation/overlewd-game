@@ -20,6 +20,7 @@ namespace Overlewd
         private Button chapterSelectorButton;
         private TextMeshProUGUI chapterSelectorButtonName;
         private Button sidebarButton;
+        private Button castleButton;
         private TextMeshProUGUI chapterSelectorButtonMarkers;
 
         private EventsWidget eventsPanel;
@@ -40,14 +41,24 @@ namespace Overlewd
 
             sidebarButton = canvas.Find("SidebarButton").GetComponent<Button>();
             sidebarButton.onClick.AddListener(SidebarButtonClick);
+            castleButton = canvas.Find("CastleButton").GetComponent<Button>();
+            castleButton.onClick.AddListener(CastleButtonClick);
+            castleButton.GetComponent<Image>().alphaHitTestMinimumThreshold = 1f;
 
             map = canvas.Find("Map");
             background = map.Find("Background").GetComponent<Image>();
         }
 
+        private void CastleButtonClick()
+        {
+            SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
+            UIManager.ShowScreen<CastleScreen>();
+        }
+
         public override async Task BeforeShowMakeAsync()
         {
             sidebarButton.gameObject.SetActive(GameData.progressFlags.showSidebarButton);
+            castleButton.gameObject.SetActive(GameData.progressFlags.showSidebarButton);
 
             if (GameData.ftue.mapChapter == null)
             {
@@ -231,9 +242,7 @@ namespace Overlewd
                 case (FTUE.CHAPTER_2, FTUE.DIALOGUE_3):
                         GameData.ftue.chapter2.ShowNotifByKey("ch2shardstutor1");
                     break;
-                case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
-                    GameData.ftue.chapter3.ShowNotifByKey("ch3aerotutor1");
-                    break;
+               
 
             }
 
@@ -268,6 +277,14 @@ namespace Overlewd
                             if (!GameData.buildings.portal.meta.isBuilt)
                             {
                                 GameData.ftue.chapter2.ShowNotifByKey("ch2portaltutor1");
+                                await UIManager.WaitHideNotifications();
+                                UIManager.ShowScreen<CastleScreen>();
+                            }
+                            break;
+                        case (FTUE.CHAPTER_3, FTUE.DIALOGUE_5):
+                            if (!GameData.buildings.aerostat.meta.isBuilt)
+                            {
+                                GameData.ftue.chapter3.ShowNotifByKey("ch3aerotutor1");
                                 await UIManager.WaitHideNotifications();
                                 UIManager.ShowScreen<CastleScreen>();
                             }
