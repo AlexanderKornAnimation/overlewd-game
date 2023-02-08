@@ -67,7 +67,7 @@ namespace Overlewd
                     if (characterData.CanSkillLvlUpByPrice(skillData))
                     {
                         await GameData.characters.SkillLvlUp(characterId.Value, skillData.id);
-                        UIfx.Inst(UIfx.UIFX_LVLUP01, levelBack.transform);
+                        UIfx.InstDisposable(UIfx.UIFX_LVLUP01, levelBack.transform);
                         Customize();
                     }
                     else

@@ -10,5 +10,7 @@ namespace Overlewd
         public GameObject blood;
 
         public Sprite[] backgrounds;
+        public GameObject aniRound, aniBoss, aniWave;
+        public GameObject encounterPopup;
     }
 }

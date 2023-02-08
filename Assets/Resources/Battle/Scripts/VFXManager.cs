@@ -1,8 +1,5 @@
-using Spine.Unity;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-using Spine;
 
 
 namespace Overlewd
@@ -43,6 +40,27 @@ namespace Overlewd
             spineWidget?.Pause();
             StartCoroutine(StartAfterDelay());
         }
+        public void Create(string name, Transform spawnPoint, float preDelay = 0f, bool invertX = false)
+        {
+            delay = preDelay;
+            spineWidget = SpineWidget.GetInstance(GameData.animations.GetByTitle(name), spawnPoint);
+            if (spineWidget != null)
+            {
+                duration = spineWidget.GetAnimationDuaration(animationName);
+                if (invertX)
+                    spineWidget.GetComponent<RectTransform>().localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                FindObjectOfType<BattleManager>().log.Add($"Can't load Spine VFX of Animation {name} from VFXManager", true);
+                Destroy(gameObject);
+                return;
+            }
+
+            spineWidget?.PlayAnimation(animationName, false);
+            spineWidget?.Pause();
+            StartCoroutine(StartAfterDelay());
+        }
 
         IEnumerator StartAfterDelay()
         {
@@ -50,7 +68,7 @@ namespace Overlewd
             spineWidget?.Play();
             yield return new WaitForSeconds(duration);
             Destroy(spineWidget?.gameObject);
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }

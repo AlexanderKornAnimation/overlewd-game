@@ -54,7 +54,7 @@ namespace Overlewd
         
 
         //screens bg music
-        public const string Castle_Screen_BGM_Attn = "snapshot:/Castle_Screen_BGM_Attn";//переходы между экранами замка
+        public const string Castle_Screen_BGM_Attn = "snapshot:/Castle_Screen_BGM_Attn";//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         public const string Music_CastleScreen = "event:/Music/CastleScreen/CastleScreen_BGM";
         public const string Music_SexScreen = "event:/Music/LewdScreen/BGM_SexScene_1";
         public const string Music_DialogScreen = "event:/Music/DialogueScreen/BGM_Dialogue_Chill_1";
@@ -64,24 +64,34 @@ namespace Overlewd
         //gacha
         public const string Gacha_x1_open = "event:/Animations/Gacha/x1/Gacha_x1_open";
         public const string Gacha_x10_open = "event:/Animations/Gacha/x10/Gacha_x10_open";
+        public const string SFX_UI_Portal_Portal_Animation = "event:/Animations/Gacha/Portal/Portal_Animation";
+        public const string SFX_UI_Gacha_Shards_x1_reveal  = "event:/Animations/Gacha/x1/Gacha_x1_reveal";
+
+        //Shop
+        public const string SFX_UI_Shop_Buy_Success = "event:/UI/Shop/Buy_Success";
+        public const string SFX_UI_Shop_Buy_Fail = "event:/UI/Shop/Buy_Failure";
 
         //castle screen
         public const string Castle_BuildingAppear = "event:/Animations/Castle_Scenes/Building_Appear";
         public const string Castle_BuildingUpgrade = "event:/Animations/Castle_Scenes/Building_Upgrade";
 
+        //Items_Management
+        public const string SFX_UI_Equip_ON = "event:/UI/Equipment/Equip_ON";
+        public const string SFX_UI_Equip_OFF = "event:/UI/Equipment/Equip_OFF";
+
         //VO
-        //Победа / Поражение в бою. Проигрывать только если следом не идет туториальная озвучка.
+        //пїЅпїЅпїЅпїЅпїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
         public const string VO_Ulvi_Winning_a_battle = "event:/VO/Placeholders/Ulvi/Reactions/Winning_a_battle";
         public const string VO_Ulvi_Losing_a_battle = "event:/VO/Placeholders/Ulvi/Reactions/Losing_a_battle";
         public const string VO_Adriel_Winning_a_battle = "event:/VO/Placeholders/Adriel/Reactions/Winning_a_battle";
         public const string VO_Adriel_Losing_a_battle = "event:/VO/Placeholders/Adriel/Reactions/Losing_a_battle";
         public const string VO_Inge_Winning_a_battle = "event:/VO/Placeholders/Inge/Reactions/Winning_a_battle";
         public const string VO_Inge_Losing_a_battle = "event:/VO/Placeholders/Inge/Reactions/Losing_a_battle";
-        //При надевании шмотки на оверлорда.
+        //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
         public const string VO_Ulvi_equipping_armor = "event:/VO/Placeholders/Ulvi/Reactions/equipping_armor";
         public const string VO_Adriel_equipping_armor = "event:/VO/Placeholders/Adriel/Reactions/equipping_armor";
         public const string VO_Inge_equipping_armor = "event:/VO/Placeholders/Inge/Reactions/equipping_armor";
-        //При заходе на экраны (понятно по названию):
+        //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ):
         public const string VO_Ulvi_Reactions_catacombs = "event:/VO/Placeholders/Ulvi/Reactions/catacombs";
         public const string VO_Ulvi_Reactions_forge = "event:/VO/Placeholders/Ulvi/Reactions/forge";
         public const string VO_Ulvi_Reactions_harem = "event:/VO/Placeholders/Ulvi/Reactions/harem";
@@ -114,7 +124,7 @@ namespace Overlewd
         public const string VO_Ingie_Reactions_matriarch_screen = "event:/VO/Placeholders/Ingie/Reactions/matriarch_screen";
         public const string VO_Ingie_Reactions_market = "event:/VO/Placeholders/Ingie/Reactions/market";
         public const string VO_Ingie_Reactions_eventbook = "event:/VO/Placeholders/Ingie/Reactions/eventbook";
-        //Так же при повышении репутации / лояльности с Ульви нужно проигрывать данный ивент:
+        //пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ / пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ:
         public const string VO_Ulvi_loyalty_increase = "event:/VO/Placeholders/Ulvi/Reactions/loyalty_increase";
         public const string VO_Adriel_loyalty_increase = "event:/VO/Placeholders/Adriel/Reactions/loyalty_increase";
         public const string VO_Ingie_loyalty_increase = "event:/VO/Placeholders/Inge/Reactions/loyalty_increase";

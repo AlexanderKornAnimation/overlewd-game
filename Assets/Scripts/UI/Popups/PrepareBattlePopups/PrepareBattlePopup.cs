@@ -196,7 +196,7 @@ namespace Overlewd
 
             fastBattleAvailable.SetActive(stageIsComplete);
           
-            allyTeamPotency.text = GameData.characters.myTeamPotency.ToString();
+            allyTeamPotency.text = GameData.characters.teamPotency.ToString();
             stageTitle.text = battleData.title;
             
             battleButtonText.text =

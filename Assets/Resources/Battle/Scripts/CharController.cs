@@ -51,7 +51,7 @@ namespace Overlewd
 
 
         public float zoomSpeed = 0.15f;
-        private float idleScale = 1f, battleScale = 1.4f;
+        public float idleScale = 1f, battleScale = 1.4f;
         private float overBattleScale = 1.4f, bossBattleScale = 1.4f;
         public int battleOrder = 1;
         public float health = 100, healthMax = 100;
@@ -147,7 +147,7 @@ namespace Overlewd
             {
                 battleScale = bossBattleScale;
             }
-            health = (float)character.health;
+            health = Mathf.Round((float)character.health);
             healthMax = health;
             mana = (float)character.mana;
             manaMax = mana;
@@ -243,13 +243,19 @@ namespace Overlewd
         public void CharPortraitSet() => charStats?.SetUI(this);
         public void UpdateUI() => observer?.UpdateUI();
 
-        public void PlayIdle(bool loop = true)
+        public void PlayIdle()
         {
-            //if (!isDead)
-            //{
             character.sfxIdle?.Play();
-            spineWidget.PlayAnimation(ani_idle_name, loop);
-            //}
+            spineWidget.PlayAnimation(ani_idle_name, !stun);
+            if (stun)
+                StartCoroutine(PauseSW());
+            else
+                spineWidget?.Play();
+        }
+        IEnumerator PauseSW()
+        {
+            yield return new WaitForSeconds(0.3f);
+            spineWidget?.Pause();
         }
 
         public void Attack(int attackID, bool AOE = false, CharController target = null) =>
@@ -265,17 +271,6 @@ namespace Overlewd
             preAttackDuration = spineWidget.GetAnimationDuaration(ani_pAttack_name[id]);    //send to target Defence Animation
             attackDuration = spineWidget.GetAnimationDuaration(ani_attack_name[id]);
 
-            if (skillID.vfxAOE != null && skillID.AOE)                 //VFX AOE            is here cuz we need vfxDuration
-            {
-                var vfxGO = new GameObject($"vfx_{skillID.vfxAOE.title}");
-                var vfx = vfxGO.AddComponent<VFXManager>();
-                var spawnPoint = topVFX;
-                var heal = skillID.actionType == "heal";
-                spawnPoint = (isOverlord) ? topVFX : (isEnemy == heal || !isEnemy == !heal) ? topVFX_R : topVFX_L;
-                vfxDuration = vfx.Setup(skillID.vfxAOE, spawnPoint, preAttackDuration + zoomSpeed);
-                if (!isOverlord) vfxDuration = 0f;
-            }
-
             yield return new WaitForSeconds(zoomSpeed);
             foreach (var ps in passiveSkill)                            //on_attack Passive Skill Buff
                 if (ps.trigger == "on_attack")
@@ -284,10 +279,20 @@ namespace Overlewd
             damageTotal = damage * ((float)skillID.amount);
             damageTotal *= curseDotScale;
             damageTotal = Mathf.Round(damageTotal);
-            spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW                      
+            spineWidget.PlayAnimation(ani_pAttack_name[id], false);     //Play SW
             skillSFX[id]?.Play();                                       //SFX
 
             yield return new WaitForSeconds(preAttackDuration);
+            if (skillID.vfxAOE != null && skillID.AOE)                 //VFX AOE            is here cuz we need vfxDuration
+            {
+                var vfxGO = new GameObject($"vfx_{skillID.vfxAOE.title}");
+                var vfx = vfxGO.AddComponent<VFXManager>();
+                var spawnPoint = topVFX;
+                var heal = skillID.actionType == "heal";
+                spawnPoint = (isOverlord) ? topVFX : (isEnemy == heal || !isEnemy == !heal) ? topVFX_R : topVFX_L;
+                vfxDuration = vfx.Setup(skillID.vfxAOE, spawnPoint, 0f);
+                if (!isOverlord) vfxDuration = 0f;
+            }
             if (skillID.vfxSelf != null)                                //VFX Self
             {
                 var vfxGO = new GameObject($"vfx_{skillID.vfxSelf.title}");
@@ -324,7 +329,7 @@ namespace Overlewd
         IEnumerator PlayDefence(CharController attacker, int id, bool AOE = false)
         {
             BattleIn(AOE);
-            if (stun) PlayIdle();
+            PlayIdle();
             var attackerSkill = attacker.skill[id];
             bool HEAL = attackerSkill.actionType == "heal";
             yield return new WaitForSeconds(zoomSpeed);
@@ -390,7 +395,7 @@ namespace Overlewd
             if (!HEAL && !stun) //skip play idle to avoid strange loop transitions
                 PlayIdle();
             if (stun)
-                PlayIdle(false);
+                PlayIdle();
             BattleOut(AOE);
         }
 
@@ -421,7 +426,7 @@ namespace Overlewd
             transform.SetParent(battlePos);
             if (AOE) return;
             if (isBoss)
-                rt.DOAnchorPos(new Vector2(0,-200), zoomSpeed);
+                rt.DOAnchorPos(new Vector2(0, -200), zoomSpeed);
             else
                 rt.DOAnchorPos(Vector2.zero, zoomSpeed);
             rt.DOScale(battleScale, zoomSpeed);
@@ -439,6 +444,7 @@ namespace Overlewd
         IEnumerator PlayDead(float delay)
         {
             yield return new WaitForSeconds(0.5f + delay); //need for avoid idle animation state if isDead
+            spineWidget?.Play();
             character.sfxDefeat?.Play();
             float duration = 0;
             if (isOverlord)
@@ -451,6 +457,7 @@ namespace Overlewd
             {
                 var fadeTime = 0.2f;
                 spineWidget.PlayAnimation(ani_defeat_name, false);
+                new GameObject($"fx_self_death").AddComponent<VFXManager>().Create("fx_self_death", selfVFX, 0f, false); //khehehe
                 duration = spineWidget.GetAnimationDuaration(ani_defeat_name);
                 yield return new WaitForSeconds(duration - fadeTime);
                 observer?.FadeOut(fadeTime);
@@ -592,14 +599,14 @@ namespace Overlewd
                     switch (sk.effect)
                     {
                         case "defense_up":
-                            if (passive && !buff) { log.Add("Error: defUp on passive debuff", true); return; }
+                            if (passive && !buff) { log.Add($"Error {Name}: defUp on passive debuff", true); return; }
                             defUp_defDown = addManual ? defUp_defDown + duration : duration;
                             defUp_defDown_dot = ea;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
                             DrawPopup(msg_defence_up, "yellow", buffDelay, passive: passive);
                             break;
                         case "defense_down":
-                            if (passive && buff) { log.Add("Error: defDown on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: defDown on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             defUp_defDown = addManual ? defUp_defDown - duration : -duration; // -duration;
                             defUp_defDown_dot = ea;
@@ -607,27 +614,27 @@ namespace Overlewd
                             DrawPopup(msg_defence_down, "red", buffDelay, passive: passive);
                             break;
                         case "focus":
-                            if (passive && !buff) { log.Add("Error: focus on passive debuff", true); return; }
+                            if (passive && !buff) { log.Add($"Error {Name}: focus on passive debuff", true); return; }
                             focus_blind = addManual ? focus_blind + duration : duration;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
                             DrawPopup(msg_focus, "yellow", buffDelay, passive: passive);
                             break;
                         case "blind":
-                            if (passive && buff) { log.Add("Error: blind on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: blind on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             focus_blind = addManual ? focus_blind - duration : -duration; //-duration;
                             StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
                             DrawPopup(msg_blind, "red", buffDelay, passive: passive);
                             break;
                         case "regeneration":
-                            if (passive && !buff) { log.Add("Error: regen on passive debuff", true); return; }
+                            if (passive && !buff) { log.Add($"Error {Name}: regen on passive debuff", true); return; }
                             regen_poison = addManual ? regen_poison + duration : duration;
                             regen_poison_dot = -effectAmount;
                             StartCoroutine(InstVFXDelay(vfx_green, selfVFX, buffVFXDelay));
                             DrawPopup(msg_regen, "purple", buffDelay, passive: passive);
                             break;
                         case "poison":
-                            if (passive && buff) { log.Add("Error: poison on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: poison on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             regen_poison = addManual ? regen_poison - duration : -duration; //-duration;
                             regen_poison_dot = effectAmount;
@@ -635,41 +642,41 @@ namespace Overlewd
                             DrawPopup(msg_poison, "green", buffDelay, passive: passive);
                             break;
                         case "bless":
-                            if (passive && !buff) { log.Add("Error: bless on passive debuff", true); return; }
+                            if (passive && !buff) { log.Add($"Error {Name}: bless on passive debuff", true); return; }
                             bless_healBlock = addManual ? bless_healBlock + duration : duration;
                             bless_dot = effectAmount;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
                             DrawPopup(msg_bless, "yellow", buffDelay, passive: passive);
                             break;
                         case "heal_block":
-                            if (passive && buff) { log.Add("Error: heal block on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: heal block on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             bless_healBlock = addManual ? bless_healBlock - duration : -duration;//-duration;
                             StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
                             DrawPopup(msg_healblock, "red", buffDelay, passive: passive);
                             break;
                         case "silence":
-                            if (passive && buff) { log.Add("Error: silence on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: silence on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             silence = addManual ? silence + duration : duration;
                             StartCoroutine(InstVFXDelay(vfx_red, selfVFX, buffVFXDelay));
                             DrawPopup(msg_silence, "red", buffDelay, passive: passive);
                             break;
                         case "immunity":
-                            if (passive && !buff) { log.Add("Error: immunity on passive debuff", true); return; }
+                            if (passive && !buff) { log.Add($"Error {Name}: immunity on passive debuff", true); return; }
                             immunity = addManual ? immunity + duration : duration;
                             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffVFXDelay));
                             DrawPopup(msg_immunity, "yellow", buffDelay, passive: passive);
                             break;
                         case "stun":
-                            if (passive && buff) { log.Add("Error: stun on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: stun on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             stun = true;
                             StartCoroutine(InstVFXDelay(vfx_stun, selfVFX, buffVFXDelay));
                             DrawPopup(msg_stun, "red", buffDelay, passive: passive);
                             break;
                         case "curse":
-                            if (passive && buff) { log.Add("Error: curse on passive buff", true); return; }
+                            if (passive && buff) { log.Add($"Error {Name}: curse on passive buff", true); return; }
                             if (immunity != 0) { DrawPopup(msg_immunity, "green", buffDelay); return; }
                             curse = addManual ? curse + duration : duration;
                             curse_dot = ea; //Calculate in total damage
@@ -680,7 +687,7 @@ namespace Overlewd
                             Dispel(passive: passive);
                             break;
                         case "safeguard":
-                            if (passive && !buff) { log.Add("Error: safeguard on passive debuff", true); return; }
+                            if (passive && !buff) { log.Add($"Error {Name}: safeguard on passive debuff", true); return; }
                             Safeguard(passive: passive);
                             break;
                         default:
@@ -716,7 +723,7 @@ namespace Overlewd
             immunity = 0;
             silence = 0;
             curse = 0;
-            stun = false;
+            stun = false; spineWidget?.Play();
             StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));
             DrawPopup(msg_dispel, "green", buffDelay, passive: passive);
             observer?.UpdateStatuses();
@@ -725,7 +732,7 @@ namespace Overlewd
         {
             if (stun)
             {
-                stun = false;
+                stun = false; spineWidget?.Play();
                 DrawPopup("- " + msg_stun, "green", buffDelay, passive: passive);
                 observer?.UpdateStatuses();
                 StartCoroutine(InstVFXDelay(vfx_blue, selfVFX, buffDelay));

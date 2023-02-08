@@ -14,17 +14,16 @@ namespace Overlewd
         private List<Image> resources = new List<Image>();
         private List<TextMeshProUGUI> count = new List<TextMeshProUGUI>();
 
-        private Transform spawnPoint;
+        private Image spellImage;
         private Transform walletWidgetPos;
         private WalletWidget walletWidget;
 
         private TextMeshProUGUI spellName;
         private TextMeshProUGUI description;
 
-        private Button crystalBuildButton;
-        private TextMeshProUGUI crystalBuildButtonText;
-        
         private Button buildButton;
+        private TextMeshProUGUI buildButtonTitle;
+        
         private Button closeButton;
 
         private void Awake()
@@ -34,18 +33,15 @@ namespace Overlewd
 
             var canvas = screenInst.transform.Find("Canvas");
 
-            spawnPoint = canvas.Find("Background").Find("ImageSpawnPoint");
+            spellImage = canvas.Find("Background/SpellImage").GetComponent<Image>();
             walletWidgetPos = canvas.Find("WalletWidgetPos");
 
             spellName = canvas.Find("SpellName").GetComponent<TextMeshProUGUI>();
             description = canvas.Find("Description").GetComponent<TextMeshProUGUI>();
 
-            crystalBuildButton = canvas.Find("CrystalBuildButton").GetComponent<Button>();
-            crystalBuildButton.onClick.AddListener(CrystalBuildButtonClick);
-            crystalBuildButtonText = crystalBuildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-            
             buildButton = canvas.Find("BuildButton").GetComponent<Button>();
-            buildButton.onClick.AddListener(BuildButtonClick);
+            buildButton.onClick.AddListener(CrystalBuildButtonClick);
+            buildButtonTitle = buildButton.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             
             closeButton = canvas.Find("BackButton").GetComponent<Button>();
             closeButton.onClick.AddListener(CloseButtonClick);
@@ -85,10 +81,10 @@ namespace Overlewd
 
                 var crystalPrice = spellData.priceCrystal?.FirstOrDefault()?.amount;
                 var color = spellData.canCrystallvlUp ? "white" : "red";
-                crystalBuildButtonText.text = $"Summon building\nfor <color={color}>{crystalPrice}</color> crystals";
+                buildButtonTitle.text = $"Learn on your own\nfor <color={color}>{crystalPrice}</color> crystals";
             }
-            
-            FireballSpell.GetInstance(spawnPoint);
+
+            spellImage.sprite = GetSpellImageByType(spellData?.type);
             walletWidget = WalletWidget.GetInstance(walletWidgetPos);
         }
 
@@ -111,25 +107,18 @@ namespace Overlewd
             }
         }
 
-        private async void BuildButtonClick()
+        private Sprite GetSpellImageByType(string spellType)
         {
-            var spellData = inputData?.spellData;
-            if (spellData != null)
+            return spellType switch
             {
-                if (spellData.canlvlUp)
-                {
-                    SoundManager.PlayOneShot(FMODEventPath.UI_FreeSpellLearnButton);
-                    await GameData.buildings.magicGuild.SkillLvlUp(spellData.type);
-                    UIManager.HidePopup();
-                }
-                else
-                {
-                    SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);
-                    UIManager.ShowPopup<DeclinePopup>();
-                }
-            }
+                AdminBRO.MagicGuildSkill.Type_ActiveSkill => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/ActiveSpellStep1"),
+                AdminBRO.MagicGuildSkill.Type_UltimateSkill => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/UltimateSpellStep1"),
+                AdminBRO.MagicGuildSkill.Type_PassiveSkill1 => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/PassiveSpell1"),
+                AdminBRO.MagicGuildSkill.Type_PassiveSkill2 => ResourceManager.InstantiateAsset<Sprite>("Prefabs/UI/Popups/SpellPopup/Images/PassiveSpell2"),
+                _ => null
+            };
         }
-
+        
         private void CloseButtonClick()
         {
             SoundManager.PlayOneShot(FMODEventPath.UI_GenericButtonClick);

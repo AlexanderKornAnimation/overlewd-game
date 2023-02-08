@@ -28,7 +28,7 @@ namespace Overlewd
                 locked = transform.Find("Locked").gameObject;
                 button = transform.Find("Button").GetComponent<Button>();
                 button.onClick.AddListener(ButtonClick);
-                girlArt = transform.Find("GirlArt").GetComponent<Image>();
+                girlArt = transform.Find("Mask/GirlArt").GetComponent<Image>();
                 girlName = transform.Find("GirlName").GetComponent<TextMeshProUGUI>();
             }
 
